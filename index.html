@@ -3,83 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jimmie.Fun</title>
+    <title>Jimmie.Fun - För Sverige</title>
     <style>
-        /* Modern design */
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #0f172a; /* Mörkblå/svart bakgrund */
-            color: #ffffff;
+            font-family: 'Arial Black', sans-serif;
+            background-color: #005293; /* SD-Blå */
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            text-align: center;
+            overflow: hidden;
+            /* Skapar ett mönster av gula ränder i bakgrunden */
+            background-image: linear-gradient(45deg, #004a85 25%, transparent 25%, transparent 50%, #004a85 50%, #004a85 75%, transparent 75%, transparent);
+            background-size: 100px 100px;
         }
 
         .container {
-            padding: 40px;
-            border-radius: 20px;
-            background: #1e293b;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            border: 2px solid #38bdf8; /* Ljusblå ram */
+            padding: 50px;
+            background: white;
+            border: 8px solid #fecc00; /* Gul ram */
+            border-radius: 0px; /* Mer kantigt och rejält */
+            box-shadow: 0 0 0 10px #005293, 0 20px 50px rgba(0,0,0,0.5);
+            text-align: center;
+            max-width: 450px;
         }
 
         h1 {
-            font-size: 3rem;
-            color: #38bdf8;
+            font-size: 4rem;
+            color: #005293;
             margin: 0;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            text-shadow: 3px 3px #fecc00;
+            letter-spacing: -2px;
         }
 
         p {
-            font-size: 1.2rem;
-            color: #94a3b8;
-            margin-top: 10px;
-            margin-bottom: 25px;
+            font-size: 1.5rem;
+            color: #333;
+            font-weight: bold;
+            margin: 10px 0 30px;
         }
 
-        /* KNAPPEN SOM LEDER TILL GAMES.HTML */
+        /* Knappen */
         .btn-enter {
-            display: inline-block;
-            padding: 15px 30px;
-            background-color: #38bdf8;
-            color: #0f172a;
+            display: block;
+            padding: 20px;
+            background-color: #fecc00;
+            color: #005293;
             text-decoration: none;
-            font-weight: bold;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+            font-weight: 900;
+            font-size: 1.5rem;
+            border: 4px solid #005293;
+            transition: 0.2s;
         }
 
         .btn-enter:hover {
-            transform: scale(1.1); /* Blir lite större */
-            background-color: #ffffff;
-            box-shadow: 0 0 25px rgba(56, 189, 248, 0.6); /* Lyser blått */
+            background-color: #005293;
+            color: #fecc00;
+            border-color: #fecc00;
+            transform: scale(1.05);
         }
 
-        .footer {
-            margin-top: 30px;
-            font-size: 0.9rem;
-            opacity: 0.7;
+        .sweden-bar {
+            height: 10px;
+            background: linear-gradient(90deg, #005293 45%, #fecc00 45%, #fecc00 55%, #005293 55%);
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
-
     <div class="container">
-        <h1>Jimmie.Fun</h1>
-        <p>Gjord av Wille</p>
-        
-        <a href="games.html" class="btn-enter">KLICKA HÄR</a>
-        
-        <div class="footer">
-            <small>© 2026 - Skapad med kod</small>
-        </div>
+        <div class="sweden-bar"></div>
+        <h1>JIMMIE.FUN</h1>
+        <p>Gjord av Wille 🇸🇪</p>
+        <a href="games.html" class="btn-enter">TILL SPELEN</a>
+        <div style="margin-top:20px; color:#005293; font-size: 2rem;">🇸🇪 🇸🇪 🇸🇪</div>
     </div>
-
 </body>
 </html>
