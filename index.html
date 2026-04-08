@@ -7,23 +7,46 @@
     <style>
         body {
             font-family: 'Arial Black', sans-serif;
-            background-color: #005293; /* SD-Blå */
+            background-color: #005293;
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             overflow: hidden;
-            /* Skapar ett mönster av gula ränder i bakgrunden */
             background-image: linear-gradient(45deg, #004a85 25%, transparent 25%, transparent 50%, #004a85 50%, #004a85 75%, transparent 75%, transparent);
             background-size: 100px 100px;
+        }
+
+        /* Den kodade flaggan */
+        .flag-box {
+            width: 60px;
+            height: 40px;
+            background-color: #005293;
+            position: relative;
+            margin: 0 auto 20px auto;
+            border: 1px solid #ddd;
+        }
+        .flag-yellow-v {
+            position: absolute;
+            width: 10px;
+            height: 100%;
+            background-color: #fecc00;
+            left: 20px;
+        }
+        .flag-yellow-h {
+            position: absolute;
+            width: 100%;
+            height: 100px; /* Stor nog för att täcka */
+            height: 10px;
+            background-color: #fecc00;
+            top: 15px;
         }
 
         .container {
             padding: 50px;
             background: white;
-            border: 8px solid #fecc00; /* Gul ram */
-            border-radius: 0px; /* Mer kantigt och rejält */
+            border: 8px solid #fecc00;
             box-shadow: 0 0 0 10px #005293, 0 20px 50px rgba(0,0,0,0.5);
             text-align: center;
             max-width: 450px;
@@ -44,7 +67,6 @@
             margin: 10px 0 30px;
         }
 
-        /* Knappen */
         .btn-enter {
             display: block;
             padding: 20px;
@@ -63,21 +85,17 @@
             border-color: #fecc00;
             transform: scale(1.05);
         }
-
-        .sweden-bar {
-            height: 10px;
-            background: linear-gradient(90deg, #005293 45%, #fecc00 45%, #fecc00 55%, #005293 55%);
-            margin-bottom: 20px;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="sweden-bar"></div>
+        <div class="flag-box">
+            <div class="flag-yellow-h"></div>
+            <div class="flag-yellow-v"></div>
+        </div>
         <h1>JIMMIE.FUN</h1>
-        <p>Gjord av Wille 🇸🇪</p>
+        <p>Gjord av Wille</p>
         <a href="games.html" class="btn-enter">TILL SPELEN</a>
-        <div style="margin-top:20px; color:#005293; font-size: 2rem;">🇸🇪 🇸🇪 🇸🇪</div>
     </div>
 </body>
 </html>
