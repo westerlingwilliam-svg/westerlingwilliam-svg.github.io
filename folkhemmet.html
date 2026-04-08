@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bygg Folkhemmet - Synergi Edition</title>
+    <title>Bygg Folkhemmet - Klassisk Stil</title>
     <style>
         * { user-select: none; -webkit-user-select: none; box-sizing: border-box; font-family: 'Arial Black', sans-serif; }
         body { background-color: #005293; color: #333; margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
         
         .header { 
-            background: #fecc00; padding: 20px; text-align: center; 
+            background: #fecc00; padding: 15px; text-align: center; 
             border-bottom: 5px solid #005293; box-shadow: 0 5px 15px rgba(0,0,0,0.3); 
         }
 
         .main-layout { 
-            display: grid; grid-template-columns: 350px 1fr 350px; 
+            display: grid; grid-template-columns: 320px 1fr 350px; 
             gap: 20px; padding: 20px; flex-grow: 1; 
         }
 
@@ -36,21 +36,24 @@
         }
         .main-clicker:active { transform: translateY(5px); box-shadow: 0 5px 0 #b38f00; }
 
+        /* FIXADE KNAPPAR */
         .buy-button { 
-            background: #f0f0f0; border: 3px solid #005293; padding: 10px; margin: 8px 0; 
-            cursor: pointer; display: flex; flex-direction: column;
-            width: 100%; border-radius: 5px; font-family: inherit; 
+            background: #f0f0f0; border: 3px solid #005293; padding: 8px 12px; margin: 6px 0; 
+            cursor: pointer; width: 100%; border-radius: 5px; font-family: inherit;
+            display: block; text-align: left;
         }
-        .buy-button:hover:not(.disabled) { background: #e0e0e0; }
-        .buy-button .top-row { display: flex; justify-content: space-between; width: 100%; font-size: 1rem; }
-        .buy-button .info-row { font-size: 0.7rem; color: #666; margin-top: 4px; font-family: 'Arial', sans-serif; font-weight: bold; }
         .buy-button.disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
+        .btn-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
+        .btn-sub { font-family: 'Arial', sans-serif; font-size: 0.75rem; color: #444; font-weight: bold; }
 
         .ach-card { background: #f9f9f9; border: 2px solid #005293; padding: 10px; margin-bottom: 10px; border-radius: 8px; }
         .progress-container { background: #ddd; height: 12px; width: 100%; border-radius: 10px; margin-top: 5px; overflow: hidden; border: 1px solid #005293; }
         .progress-bar { background: linear-gradient(90deg, #005293, #fecc00); height: 100%; width: 0%; transition: width 0.2s; }
         
-        .claim-btn { width: 100%; margin-top: 8px; padding: 8px; background: #666; border: 2px solid #444; color: white; cursor: not-allowed; border-radius: 4px; }
+        .claim-btn { 
+            width: 100%; margin-top: 8px; padding: 8px; background: #666; 
+            border: 2px solid #444; color: white; font-weight: bold; cursor: not-allowed; border-radius: 4px; 
+        }
         .claim-btn.ready { background: #28a745; border-color: #1e7e34; cursor: pointer; animation: pulse 1s infinite; }
 
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
@@ -62,22 +65,22 @@
 
     <div class="header">
         <h1>BYGG FOLKHEMMET 🇸🇪</h1>
-        <div style="font-size: 2rem;">Välfärd: <span id="money">0</span> kr</div>
-        <div style="font-size: 1rem;">+<span id="pps">0</span>/sek | +<span id="mpc">1</span>/klick</div>
+        <div style="font-size: 1.8rem;">Välfärd: <span id="money">0</span> kr</div>
+        <div style="font-size: 0.9rem;">+<span id="pps">0</span>/sek | +<span id="mpc">1</span>/klick</div>
     </div>
 
     <div class="main-layout">
         <div class="panel">
-            <h3>BUTIK</h3>
+            <h3 style="margin-top:0;">BUTIK</h3>
             <button class="buy-button" id="hammer-btn" onclick="buyHammer()">
-                <div class="top-row"><b>Jimmies Hammare</b> <span id="hammer-cost">15</span> kr</div>
-                <div class="info-row">Ökar din klickstyrka</div>
+                <div class="btn-header"><b>Hammare</b> <span><span id="hammer-cost">15</span> kr</span></div>
+                <div class="btn-sub">Mer kraft i varje klick</div>
             </button>
             <button class="buy-button" id="auto-btn" onclick="buyAuto()">
-                <div class="top-row"><b>Auto-Hammare</b> <span id="auto-cost">100</span> kr</div>
-                <div class="info-row">Klickar automatiskt 1 gång/sek</div>
+                <div class="btn-header"><b>Auto-Klick</b> <span><span id="auto-cost">100</span> kr</span></div>
+                <div class="btn-sub">Klickar själv 1 gång/sek</div>
             </button>
-            <hr>
+            <hr style="border: 1px solid #fecc00; margin: 15px 0;">
             <div id="building-list"></div>
         </div>
 
@@ -86,13 +89,13 @@
                 <span style="font-size: 5rem;">🏠</span>
                 <b>KLICKA!</b>
             </div>
-            <a href="games.html" style="background:#333; color:white; padding:10px; text-decoration:none; border:2px solid #fecc00;">TILLBAKA</a>
+            <a href="games.html" style="background:#333; color:white; padding:10px; text-decoration:none; border:2px solid #fecc00; border-radius:5px;">TILLBAKA</a>
         </div>
 
         <div class="panel">
-            <h3>UPPDRAG</h3>
+            <h3 style="margin-top:0;">UPPDRAG</h3>
             <div id="ach-license-area">
-                <button class="buy-button" onclick="buyLicense()" style="background:#fecc00;">LÅS UPP JIMMIE (1000 kr)</button>
+                <button class="buy-button" onclick="buyLicense()" style="background:#fecc00; text-align:center;"><b>LÅS UPP JIMMIE (1000 kr)</b></button>
             </div>
             <div id="ach-container"></div>
         </div>
@@ -103,7 +106,7 @@
             money: 0, clicks: 0, mpc: 1, autoClicks: 0,
             hammerPrice: 15, autoPrice: 100,
             hasLicense: false,
-            achLevels: { click: 0, money: 0, b0: 0, b1: 0, b2: 0, b3: 0 },
+            achLevels: { click: 0, money: 0, b0: 0 },
             bCounts: [0, 0, 0, 0, 0, 0, 0],
             bCosts: [15, 100, 500, 2500, 15000, 100000, 1000000]
         };
@@ -122,16 +125,13 @@
         };
 
         function getProduction(id) {
-            // Varje ägd byggnad ger 1% extra till alla av samma typ
             let bonus = 1 + (data.bCounts[id] * 0.01);
             return buildings[id].inc * bonus;
         }
 
         function getTotalPPS() {
             let pps = 0;
-            for(let i=0; i<buildings.length; i++) {
-                pps += data.bCounts[i] * getProduction(i);
-            }
+            for(let i=0; i<buildings.length; i++) pps += data.bCounts[i] * getProduction(i);
             return pps;
         }
 
@@ -191,32 +191,27 @@
             document.getElementById("money").innerText = Math.floor(data.money).toLocaleString();
             document.getElementById("mpc").innerText = data.mpc;
             document.getElementById("pps").innerText = Math.floor(getTotalPPS()).toLocaleString();
-            
             document.getElementById("hammer-btn").classList.toggle("disabled", data.money < data.hammerPrice);
             document.getElementById("auto-btn").classList.toggle("disabled", data.money < data.autoPrice);
-            
             for(let i=0; i<buildings.length; i++) {
                 const btn = document.getElementById("build-"+i);
                 if(btn) btn.classList.toggle("disabled", data.money < data.bCosts[i]);
             }
-            localStorage.setItem('folkhem_save_synergy', JSON.stringify(data));
+            localStorage.setItem('folkhem_save_final', JSON.stringify(data));
         }
 
         function renderEverything() {
             document.getElementById("hammer-cost").innerText = data.hammerPrice.toLocaleString();
             document.getElementById("auto-cost").innerText = data.autoPrice.toLocaleString();
-            
             let bHtml = "";
             buildings.forEach((b, i) => {
-                let currentProd = getProduction(i).toFixed(1);
                 bHtml += `
                     <button class="buy-button" id="build-${i}" onclick="buyBuilding(${i})">
-                        <div class="top-row"><b>${b.name} (${data.bCounts[i]})</b> <span>${data.bCosts[i].toLocaleString()} kr</span></div>
-                        <div class="info-row">Ger just nu: ${currentProd}/sek styck</div>
+                        <div class="btn-header"><b>${b.name} (${data.bCounts[i]})</b> <span>${data.bCosts[i].toLocaleString()} kr</span></div>
+                        <div class="btn-sub">Ger just nu: ${getProduction(i).toFixed(1)}/sek</div>
                     </button>`;
             });
             document.getElementById("building-list").innerHTML = bHtml;
-
             document.getElementById("ach-license-area").style.display = data.hasLicense ? "none" : "block";
             if (data.hasLicense) {
                 let html = "";
@@ -227,29 +222,25 @@
                         const val = getValByType(type);
                         html += `
                             <div class="ach-card">
-                                <b>${ach.t}</b><br><small>Belöning: ${ach.reward} kr</small>
+                                <div style="font-size:0.9rem;"><b>${ach.t}</b></div>
                                 <div class="progress-container"><div class="progress-bar" style="width: ${Math.min(100, (val/ach.target)*100)}%"></div></div>
-                                <button class="claim-btn ${val >= ach.target ? 'ready' : ''}" onclick="claimAch('${type}')">HÄMTA</button>
+                                <button class="claim-btn ${val >= ach.target ? 'ready' : ''}" onclick="claimAch('${type}')">${val >= ach.target ? 'HÄMTA ' + ach.reward + ' kr' : 'LÅST'}</button>
                             </div>`;
                     }
                 });
-                document.getElementById("ach-container").innerHTML = html || "<p>Bra jobbat!</p>";
+                document.getElementById("ach-container").innerHTML = html;
             }
             updateNumbersOnly();
         }
 
-        // Gameloop: 10 gånger per sekund
         setInterval(() => {
             data.money += getTotalPPS() / 10;
-            // Hantera Auto-hammare
-            if(data.autoClicks > 0) {
-                data.money += (data.autoClicks * data.mpc) / 10;
-            }
+            if(data.autoClicks > 0) data.money += (data.autoClicks * data.mpc) / 10;
             updateNumbersOnly();
         }, 100);
 
         window.onload = () => {
-            let s = localStorage.getItem('folkhem_save_synergy');
+            let s = localStorage.getItem('folkhem_save_final');
             if (s) Object.assign(data, JSON.parse(s));
             renderEverything();
         };
