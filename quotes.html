@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jimmie Quotes</title>
+    <style>
+        body {
+            font-family: 'Arial Black', sans-serif;
+            background-color: #005293;
+            color: white;
+            text-align: center;
+            padding: 50px 20px;
+            margin: 0;
+        }
+        .quote-box {
+            background: white;
+            color: #005293;
+            padding: 40px;
+            border: 10px solid #fecc00;
+            max-width: 600px;
+            margin: 40px auto;
+            font-size: 1.8rem;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-next {
+            background: #fecc00;
+            color: #005293;
+            border: none;
+            padding: 20px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-bottom: 5px solid #b38f00;
+        }
+        .btn-next:active { border-bottom: none; transform: translateY(5px); }
+        
+        .back-link {
+            display: block;
+            margin-top: 50px;
+            color: #fecc00;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>JIMMIE QUOTES</h1>
+
+    <div class="quote-box" id="quote-text">
+        "Man ska kunna lita på Sverige."
+    </div>
+
+    <button class="btn-next" onclick="newQuote()">NÄSTA CITAT</button>
+
+    <a href="games.html" class="back-link">← Tillbaka till spelen</a>
+
+    <script>
+        const quotes = [
+            '"Man ska kunna lita på Sverige."',
+            '"Vi säger vad du tänker."',
+            '"Nu är det ordning och reda som gäller."',
+            '"Heja Sverige!"',
+            '"Vi är det enda oppositionspartiet på riktigt."',
+            '"Det här är bara början."'
+        ];
+
+        function newQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            document.getElementById('quote-text').innerText = quotes[randomIndex];
+        }
+    </script>
+</body>
+</html>
