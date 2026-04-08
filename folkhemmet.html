@@ -47,13 +47,21 @@
             color: #005293;
             text-shadow: 3px 3px 0px rgba(255,255,255,0.7), 0 0 15px rgba(0,82,147,0.4);
         }
+        
+        /* Centrerad stat-container */
+        .stat-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
         .header .stat-box {
             display: inline-block;
             background: #005293;
             color: #fecc00;
             padding: 8px 25px;
             border-radius: 12px;
-            margin: 5px 10px;
             border: 3px solid white;
             font-size: 1.4rem;
         }
@@ -177,6 +185,7 @@
         .ach-card { 
             background: #fdfdfd; border: 4px solid #005293; 
             padding: 15px; margin-bottom: 20px; border-radius: 15px;
+            display: flex; flex-direction: column;
         }
         .progress-container { 
             background: #ddd; height: 22px; width: 100%; 
@@ -214,16 +223,24 @@
             text-decoration:none; border:4px solid #fecc00; 
             border-radius:15px; font-size: 1.2rem;
         }
+
+        /* Container för uppdrag så vi kan sortera dem */
+        #ach-container {
+            display: flex;
+            flex-direction: column;
+        }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h1>BYGG FOLKHEMMET</h1>
-        <div class="stat-box">💰 Välfärd: <b><span id="money">0</span></b> kr</div>
-        <div class="stat-box">+<span id="pps">0</span>/sek</div>
-        <div class="stat-box">+<span id="mpc">1</span>/klick</div>
-        <div class="stat-box" style="background: #fecc00; color: #005293;">🏆 Bonus: <span id="bonus-val">0</span>%</div>
+        <div class="stat-container">
+            <div class="stat-box">💰 Välfärd: <b><span id="money">0</span></b> kr</div>
+            <div class="stat-box">+<span id="pps">0</span>/sek</div>
+            <div class="stat-box">+<span id="mpc">1</span>/klick</div>
+            <div class="stat-box" style="background: #fecc00; color: #005293;">🏆 Bonus: <span id="bonus-val">0</span>%</div>
+        </div>
     </div>
 
     <div class="main-layout">
@@ -269,7 +286,6 @@
     </div>
 
     <script>
-        // NY LAGRINGSNYCKEL FÖR RESET
         const STORAGE_KEY = 'folkhem_hardcore_v8_final';
 
         let data = {
@@ -331,7 +347,6 @@
         function calculateMPC() {
             let pps = getTotalPPS();
             let base = 1 + (data.hammerLevel * 1);
-            // NERF: Sänkt till 0.0016 (ungefär 1/3 av tidigare 0.005)
             let bonus = (pps * 0.0016) * data.hammerLevel; 
             return Math.max(1, Math.floor(base + bonus));
         }
@@ -390,6 +405,7 @@
             }
             if(type === 'click') return data.clicks;
             if(type === 'money') return data.money;
+            if(type === 'b0') return data.bCounts[0]; // FIXAD: Röd stuga är index 0
             if(type === 'total') return data.bCounts.reduce((a, b) => a + b, 0);
             return 0;
         }
@@ -428,24 +444,33 @@
 
             document.getElementById("ach-license-area").style.display = data.hasLicense ? "none" : "block";
             if (data.hasLicense) {
-                let achHtml = "";
+                let achList = [];
                 Object.keys(achChains).forEach(type => {
                     const level = data.achLevels[type];
                     if (level < achChains[type].length) {
                         const ach = achChains[type][level];
                         const val = getValByType(type, level);
                         const isReady = val >= ach.target;
-                        achHtml += `
-                            <div class="ach-card" style="order: ${isReady ? -1 : 1}">
-                                <div style="display:flex; justify-content:space-between;"><b>${ach.t}</b> <span style="color:#28a745;">+${ach.reward} kr</span></div>
-                                <div style="font-size:0.75rem; margin:5px 0; color:#555;">Krav: ${ach.req}</div>
-                                <div class="progress-container">
-                                    <div class="progress-bar" style="width: ${Math.min(100, (val/ach.target)*100)}%"></div>
-                                    <div class="progress-text">${Math.floor(val).toLocaleString()} / ${ach.target.toLocaleString()}</div>
-                                </div>
-                                <button class="claim-btn ${isReady ? 'ready' : ''}" onclick="claimAch('${type}')">${isReady ? 'HÄMTA BELÖNING' : 'LÅST'}</button>
-                            </div>`;
+                        achList.push({ type, level, ach, val, isReady });
                     }
+                });
+
+                // Sortera: Klarade (isReady) hamnar först
+                achList.sort((a, b) => b.isReady - a.isReady);
+
+                let achHtml = "";
+                achList.forEach(item => {
+                    const { type, ach, val, isReady } = item;
+                    achHtml += `
+                        <div class="ach-card">
+                            <div style="display:flex; justify-content:space-between;"><b>${ach.t}</b> <span style="color:#28a745;">+${ach.reward} kr</span></div>
+                            <div style="font-size:0.75rem; margin:5px 0; color:#555;">Krav: ${ach.req}</div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: ${Math.min(100, (val/ach.target)*100)}%"></div>
+                                <div class="progress-text">${Math.floor(val).toLocaleString()} / ${ach.target.toLocaleString()}</div>
+                            </div>
+                            <button class="claim-btn ${isReady ? 'ready' : ''}" onclick="claimAch('${type}')">${isReady ? 'HÄMTA BELÖNING' : 'LÅST'}</button>
+                        </div>`;
                 });
                 document.getElementById("ach-container").innerHTML = achHtml;
             }
