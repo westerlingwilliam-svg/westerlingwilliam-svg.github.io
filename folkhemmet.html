@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bygg Folkhemmet - Jimmie Edition FIX</title>
+    <title>Bygg Folkhemmet - Pro Edition</title>
     <style>
         * { user-select: none; -webkit-user-select: none; box-sizing: border-box; font-family: 'Arial Black', sans-serif; }
         body { background-color: #005293; color: #333; margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
@@ -25,7 +25,7 @@
 
         .center-area { 
             display: flex; flex-direction: column; align-items: center; 
-            justify-content: flex-start; padding-top: 30px; /* Håller knappen högt upp */
+            justify-content: flex-start; padding-top: 30px;
         }
 
         .main-clicker { 
@@ -43,7 +43,14 @@
         }
         .buy-button.disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
 
-        .ach-card { background: #f9f9f9; border: 2px solid #005293; padding: 10px; margin-bottom: 10px; border-radius: 8px; }
+        /* Achievement Animering */
+        .ach-card { 
+            background: #f9f9f9; border: 2px solid #005293; padding: 10px; 
+            margin-bottom: 10px; border-radius: 8px;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
         .progress-container { background: #ddd; height: 15px; width: 100%; border-radius: 10px; margin-top: 5px; overflow: hidden; border: 1px solid #005293; }
         .progress-bar { background: linear-gradient(90deg, #005293, #fecc00); height: 100%; width: 0%; transition: width 0.2s; }
         
@@ -53,7 +60,6 @@
             cursor: not-allowed; border-radius: 4px; font-family: inherit; 
         }
         .claim-btn.ready { background: #28a745; border-color: #1e7e34; cursor: pointer; animation: pulse 1s infinite; }
-        .claimed { background: #005293 !important; border-color: #003d6e !important; cursor: default; }
 
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
 
@@ -79,8 +85,7 @@
                 <b>Jimmies Hammare</b> <span><span id="hammer-cost">15</span> kr</span>
             </button>
             <hr>
-            <div id="building-list">
-                </div>
+            <div id="building-list"></div>
         </div>
 
         <div class="center-area">
@@ -92,7 +97,7 @@
         </div>
 
         <div class="panel">
-            <h3>JIMMIES UPPDRAG</h3>
+            <h3>AKTIVA UPPDRAG</h3>
             <div id="ach-license-area">
                 <button class="buy-button" onclick="buyLicense()" style="background:#fecc00;">LÅS UPP JIMMIE (1000 kr)</button>
             </div>
@@ -100,35 +105,44 @@
         </div>
     </div>
 
-    <div style="text-align:center; padding: 20px;">
-        <button onclick="if(confirm('Nollställ?')){localStorage.clear();location.reload();}" style="opacity:0.4; cursor:pointer;">Nollställ spelet</button>
-    </div>
-
     <script>
         let data = {
             money: 0, clicks: 0, mpc: 1, hammerPrice: 15,
-            hasLicense: false, claimedAchs: [],
+            hasLicense: false,
+            achLevels: { click: 0, money: 0, b0: 0, b1: 0, b2: 0, b3: 0 }, // Håller koll på vilken nivå man är på
             bCounts: [0, 0, 0, 0, 0, 0, 0],
             bCosts: [15, 100, 500, 2000, 10000, 50000, 250000]
         };
 
         const buildings = [
-            { name: "Röd Stuga", inc: 1 },
-            { name: "Hyreshus", inc: 5 },
-            { name: "Sjukhus", inc: 20 },
-            { name: "Industri", inc: 100 },
-            { name: "Universitet", inc: 450 },
-            { name: "Kärnkraft", inc: 2000 },
+            { name: "Röd Stuga", inc: 1 }, { name: "Hyreshus", inc: 5 },
+            { name: "Sjukhus", inc: 20 }, { name: "Industri", inc: 100 },
+            { name: "Universitet", inc: 450 }, { name: "Kärnkraft", inc: 2000 },
             { name: "Välfärdsstat", inc: 10000 }
         ];
 
-        const achs = [
-            { id: 0, t: "Jimmies Debut", d: "Klicka 50 gånger", target: 50, reward: 500, check: () => data.clicks },
-            { id: 1, t: "Stugägare", d: "Bygg 10 Röda Stugor", target: 10, reward: 1200, check: () => data.bCounts[0] },
-            { id: 2, t: "Miljonprogrammet", d: "Bygg 5 Hyreshus", target: 5, reward: 3000, check: () => data.bCounts[1] },
-            { id: 3, t: "Riksbankschef", d: "Ha 10 000 kr", target: 10000, reward: 5000, check: () => data.money },
-            { id: 4, t: "Elitutbildning", d: "Bygg 3 Universitet", target: 3, reward: 25000, check: () => data.bCounts[4] }
-        ];
+        // Achievement-kedjor
+        const achChains = {
+            click: [
+                { t: "Klick-nybörjare", target: 50, reward: 500 },
+                { t: "Klick-proffs", target: 250, reward: 2500 },
+                { t: "Klick-mästare", target: 1000, reward: 10000 },
+                { t: "Klick-legend", target: 5000, reward: 50000 }
+            ],
+            money: [
+                { t: "Spara slant", target: 10000, reward: 2000 },
+                { t: "Riksbankschef", target: 100000, reward: 20000 },
+                { t: "Miljardär-drömmar", target: 1000000, reward: 250000 }
+            ],
+            b0: [
+                { t: "Stugby", target: 10, reward: 1000 },
+                { t: "Småstadsidyll", target: 50, reward: 10000 }
+            ],
+            b1: [
+                { t: "Bostadskö-fixare", target: 10, reward: 5000 },
+                { t: "Miljonprogrammet", target: 50, reward: 50000 }
+            ]
+        };
 
         function doClick(e) {
             data.money += data.mpc; data.clicks++;
@@ -158,12 +172,23 @@
             if (data.money >= 1000) { data.money -= 1000; data.hasLicense = true; renderEverything(); }
         }
 
-        function claimReward(id) {
-            const a = achs.find(x => x.id === id);
-            if (a.check() >= a.target && !data.claimedAchs.includes(id)) {
-                data.money += a.reward; data.claimedAchs.push(id);
+        function claimAch(type) {
+            const level = data.achLevels[type];
+            const ach = achChains[type][level];
+            const currentVal = getValByType(type);
+
+            if (currentVal >= ach.target) {
+                data.money += ach.reward;
+                data.achLevels[type]++; // Gå till nästa nivå i kedjan
                 renderEverything();
             }
+        }
+
+        function getValByType(type) {
+            if(type === 'click') return data.clicks;
+            if(type === 'money') return data.money;
+            if(type.startsWith('b')) return data.bCounts[parseInt(type.substring(1))];
+            return 0;
         }
 
         function updateNumbersOnly() {
@@ -177,63 +202,71 @@
             }
 
             if(data.hasLicense) {
-                achs.forEach(a => {
-                    const val = a.check();
-                    const bar = document.getElementById("bar-" + a.id);
-                    if(bar) bar.style.width = Math.min(100, (val/a.target)*100) + "%";
-                    const btn = document.getElementById("btn-ach-" + a.id);
-                    if(val >= a.target && btn && !btn.classList.contains('ready') && !data.claimedAchs.includes(a.id)) {
-                        renderEverything();
+                // Uppdatera progress bars utan att rita om hela korten
+                Object.keys(achChains).forEach(type => {
+                    const level = data.achLevels[type];
+                    if (level < achChains[type].length) {
+                        const ach = achChains[type][level];
+                        const val = getValByType(type);
+                        const bar = document.getElementById("bar-" + type);
+                        const text = document.getElementById("text-" + type);
+                        if(bar) bar.style.width = Math.min(100, (val/ach.target)*100) + "%";
+                        if(text) text.innerText = `${Math.floor(val)} / ${ach.target}`;
+                        
+                        const btn = document.getElementById("btn-" + type);
+                        if(btn && val >= ach.target) btn.classList.add("ready");
                     }
                 });
             }
-            localStorage.setItem('folkhem_save_v4', JSON.stringify(data));
+            localStorage.setItem('folkhem_save_v5', JSON.stringify(data));
         }
 
         function renderEverything() {
             document.getElementById("hammer-cost").innerText = data.hammerPrice;
-            let bHtml = "";
-            let pps = 0;
+            let bHtml = ""; let pps = 0;
             buildings.forEach((b, i) => {
                 pps += data.bCounts[i] * b.inc;
-                bHtml += `
-                    <button class="buy-button" id="build-${i}" onclick="buyBuilding(${i})">
-                        <b>${b.name} (${data.bCounts[i]})</b> <span>${data.bCosts[i]} kr</span>
-                    </button>`;
+                bHtml += `<button class="buy-button" id="build-${i}" onclick="buyBuilding(${i})">
+                    <b>${b.name} (${data.bCounts[i]})</b> <span>${data.bCosts[i]} kr</span>
+                </button>`;
             });
             document.getElementById("building-list").innerHTML = bHtml;
-            document.getElementById("pps").innerText = pps;
+            document.getElementById("pps").innerText = pps.toLocaleString();
 
             document.getElementById("ach-license-area").style.display = data.hasLicense ? "none" : "block";
+            
             if (data.hasLicense) {
                 let html = "";
-                achs.forEach(a => {
-                    const val = a.check();
-                    const isDone = val >= a.target;
-                    const isClaimed = data.claimedAchs.includes(a.id);
-                    html += `
-                        <div class="ach-card">
-                            <b>${a.t}</b><br><small>${a.d}</small>
-                            <div class="progress-container"><div id="bar-${a.id}" class="progress-bar" style="width: ${Math.min(100, (val/a.target)*100)}%"></div></div>
-                            <button id="btn-ach-${a.id}" class="claim-btn ${isDone && !isClaimed ? 'ready' : ''} ${isClaimed ? 'claimed' : ''}" onclick="claimReward(${a.id})">
-                                ${isClaimed ? 'HÄMTAD ✓' : (isDone ? 'CLAIM ' + a.reward + ' kr' : 'LÅST')}
-                            </button>
-                        </div>`;
+                Object.keys(achChains).forEach(type => {
+                    const level = data.achLevels[type];
+                    if (level < achChains[type].length) {
+                        const ach = achChains[type][level];
+                        const val = getValByType(type);
+                        const isReady = val >= ach.target;
+                        
+                        html += `
+                            <div class="ach-card">
+                                <b>${ach.t}</b><br><small>Belöning: ${ach.reward} kr</small>
+                                <div class="progress-container"><div id="bar-${type}" class="progress-bar" style="width: ${Math.min(100, (val/ach.target)*100)}%"></div></div>
+                                <div id="text-${type}" style="font-size:0.7rem; text-align:right;">${Math.floor(val)} / ${ach.target}</div>
+                                <button id="btn-${type}" class="claim-btn ${isReady ? 'ready' : ''}" onclick="claimAch('${type}')">
+                                    ${isReady ? 'HÄMTA BELÖNING' : 'LÅST'}
+                                </button>
+                            </div>`;
+                    }
                 });
-                document.getElementById("ach-container").innerHTML = html;
+                document.getElementById("ach-container").innerHTML = html || "<p>Alla uppdrag klara! Vänta på expansion...</p>";
             }
             updateNumbersOnly();
         }
 
         setInterval(() => {
-            let pps = 0;
-            buildings.forEach((b, i) => pps += data.bCounts[i] * b.inc);
-            data.money += pps / 10;
-            updateNumbersOnly();
+            let pps = 0; buildings.forEach((b, i) => pps += data.bCounts[i] * b.inc);
+            data.money += pps / 10; updateNumbersOnly();
         }, 100);
 
         window.onload = () => {
-            let s = localStorage.getItem('folkhem_save_v4');
+            let s = localStorage.getItem('folkhem_save_v5');
             if (s) Object.assign(data, JSON.parse(s));
             renderEverything();
         };
