@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bygg Folkhemmet - Fixad Version</title>
+    <title>Bygg Folkhemmet - Slutgiltig Fix</title>
     <style>
-        /* Förhindrar blåmarkering av text */
         * {
             user-select: none;
             -webkit-user-select: none;
@@ -27,7 +26,6 @@
             padding: 20px;
             text-align: center;
             border-bottom: 5px solid #005293;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
         .main-layout {
@@ -42,10 +40,7 @@
             background: white;
             padding: 15px;
             border: 5px solid #fecc00;
-            min-height: 550px;
         }
-
-        .panel h3 { color: #005293; text-align: center; border-bottom: 3px solid #005293; margin-top: 0; }
 
         .center-area {
             display: flex;
@@ -57,69 +52,48 @@
         .main-clicker {
             background: #fff;
             border: 10px solid #fecc00;
-            width: 280px;
-            height: 280px;
+            width: 250px;
+            height: 250px;
             border-radius: 50%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            transition: transform 0.05s;
             box-shadow: 0 10px 0 #b38f00;
         }
 
-        .main-clicker:active { 
-            transform: translateY(10px); 
-            box-shadow: 0 0px 0 #b38f00; 
-        }
+        .main-clicker:active { transform: translateY(5px); box-shadow: 0 5px 0 #b38f00; }
 
-        /* KNAPPARNA */
-        .upgrade-btn {
+        /* ALLA KNAPPAR ANVÄNDER DENNA KLASS */
+        .buy-button {
             background: #f0f0f0;
             border: 3px solid #005293;
-            padding: 12px;
+            padding: 15px;
             margin: 10px 0;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.9rem;
             width: 100%;
-            text-align: left;
+            font-family: inherit;
+            font-size: 1rem;
         }
 
-        .upgrade-btn:hover:not(.disabled) { background: #e0e0e0; transform: scale(1.02); }
-        .upgrade-btn:active:not(.disabled) { transform: scale(0.98); }
-
-        .upgrade-btn.disabled { 
+        .buy-button.disabled {
             background: #ccc !important;
-            color: #777 !important;
+            opacity: 0.5;
             cursor: not-allowed;
-            opacity: 0.6;
             border-color: #999;
         }
 
-        .ach-card {
-            padding: 10px;
-            margin: 5px 0;
-            border: 2px solid #ddd;
-            background: #eee;
-            font-size: 0.8rem;
-        }
+        .buy-button:hover:not(.disabled) { background: #ddd; }
+
+        .ach-card { padding: 10px; margin: 5px 0; border: 2px solid #ddd; background: #eee; font-size: 0.8rem; }
         .ach-card.unlocked { background: #fecc00; border-color: #005293; }
 
-        .bottom-controls { text-align: center; padding: 30px; }
-
-        .btn-reset { 
-            background: #ff4444; 
-            color: white; 
-            border: 2px solid white; 
-            padding: 8px 15px; 
-            cursor: pointer; 
-            font-weight: bold;
-            border-radius: 5px;
-        }
+        .bottom-controls { text-align: center; padding: 40px; }
+        .btn-reset { background: #ff4444; color: white; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; }
 
         .plus-one {
             position: absolute;
@@ -128,66 +102,58 @@
             font-size: 2rem;
             pointer-events: none;
             animation: fly 0.8s forwards;
-            z-index: 999;
             text-shadow: 2px 2px 0px #005293;
         }
-        @keyframes fly { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-120px); } }
+        @keyframes fly { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-100px); } }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h1>BYGG FOLKHEMMET 🇸🇪</h1>
-        <div style="font-size: 2.5rem; color: #005293;"><span id="money">0</span> kr</div>
-        <div>Inkomst: <span id="pps">0</span> kr/sek | Per klick: <span id="mpc">1</span> kr</div>
+        <div style="font-size: 2rem;">Välfärd: <span id="money">0</span> kr</div>
+        <div style="font-size: 1rem;">+<span id="pps">0</span>/sek | +<span id="mpc">1</span>/klick</div>
     </div>
 
     <div class="main-layout">
         <div class="panel">
             <h3>BUTIK</h3>
-            <div id="click-section">
-                <button class="upgrade-btn" id="click-btn" onclick="buyClickUpgrade()">
-                    <span><b>Bättre Hammare</b><br><small>+1 kr per klick</small></span>
-                    <span id="click-cost">15</span><span> kr</span>
-                </button>
-            </div>
+            <button class="buy-button" id="hammer-btn" onclick="buyHammer()">
+                <b>Bättre Hammare</b>
+                <span id="hammer-cost">15</span> kr
+            </button>
             <hr>
-            <div id="building-list"></div>
+            <div id="building-container"></div>
         </div>
 
         <div class="center-area">
-            <div class="main-clicker" onclick="clickMoney(event)">
-                <span style="font-size: 6rem;">🏠</span>
-                <b style="color:#005293">BYGG!</b>
+            <div class="main-clicker" onclick="doClick(event)">
+                <span style="font-size: 5rem;">🏠</span>
+                <b>BYGG!</b>
             </div>
-            <div style="margin-top: 30px;">
-                <a href="games.html" style="color: white; text-decoration: none; background: #333; padding: 12px 25px; border: 2px solid #fecc00; font-weight: bold;">TILLBAKA</a>
-            </div>
+            <br>
+            <a href="games.html" style="background:#333; color:white; padding:10px; text-decoration:none; border:2px solid #fecc00;">TILLBAKA</a>
         </div>
 
         <div class="panel">
             <h3>PRESTATIONER</h3>
-            <div id="ach-license">
-                <button class="upgrade-btn" id="license-btn" onclick="unlockAchievements()" style="background: #fecc00; color: #005293; font-weight: bold;">
-                    LÅS UPP LICENS (1000 kr)
-                </button>
-            </div>
+            <button class="buy-button" id="lic-btn" onclick="buyLicense()" style="background:#fecc00;">
+                KÖP LICENS (1000 kr)
+            </button>
             <div id="ach-list"></div>
         </div>
     </div>
 
     <div class="bottom-controls">
-        <button class="btn-reset" onclick="resetGame()">NOLLSTÄLL SPELET</button>
+        <button class="btn-reset" onclick="hardReset()">NOLLSTÄLL ALLT</button>
     </div>
 
     <script>
-        // All data samlad i ett objekt
-        let state = {
+        let data = {
             money: 0,
-            totalClicks: 0,
+            clicks: 0,
             mpc: 1,
-            clickCost: 15,
-            pps: 0,
+            hammerPrice: 15,
             hasLicense: false,
             unlockedAch: [],
             buildings: [
@@ -198,138 +164,119 @@
             ]
         };
 
-        const achievements = [
-            { id: 0, title: "Flitig Arbetare", desc: "Klicka 100 gånger", check: () => state.totalClicks >= 100 },
-            { id: 1, title: "Småföretagare", desc: "Äg 10 Röda Stugor", check: () => state.buildings[0].count >= 10 },
-            { id: 2, title: "Rikeman", desc: "Ha 5000 kr på kontot", check: () => state.money >= 5000 },
-            { id: 3, title: "Industrimagnat", desc: "Äg 5 Svenska Industrier", check: () => state.buildings[3].count >= 5 }
+        const achs = [
+            { id: 0, t: "Flitig", d: "100 klick", c: () => data.clicks >= 100 },
+            { id: 1, t: "Stugägare", d: "10 stugor", c: () => data.buildings[0].count >= 10 },
+            { id: 2, t: "Rik", d: "5000 kr", c: () => data.money >= 5000 }
         ];
 
-        function clickMoney(e) {
-            state.money += state.mpc;
-            state.totalClicks++;
-            
-            // Spawn flygande text
+        function doClick(e) {
+            data.money += data.mpc;
+            data.clicks++;
             const t = document.createElement("div");
             t.className = "plus-one";
-            t.innerText = "+" + state.mpc;
-            t.style.left = e.pageX + "px"; 
-            t.style.top = e.pageY + "px";
+            t.innerText = "+" + data.mpc;
+            t.style.left = e.pageX + "px"; t.style.top = e.pageY + "px";
             document.body.appendChild(t);
             setTimeout(() => t.remove(), 800);
-            
-            updateUI();
+            update();
         }
 
-        function buyClickUpgrade() {
-            if (state.money >= state.clickCost) {
-                state.money -= state.clickCost;
-                state.mpc += 1;
-                state.clickCost = Math.round(state.clickCost * 2.2);
-                updateUI();
+        function buyHammer() {
+            if (data.money >= data.hammerPrice) {
+                data.money -= data.hammerPrice;
+                data.mpc += 1;
+                data.hammerPrice = Math.round(data.hammerPrice * 2);
+                update();
             }
         }
 
-        function buyBuilding(id) {
-            let b = state.buildings[id];
-            if (state.money >= b.cost) {
-                state.money -= b.cost;
+        function buyB(id) {
+            let b = data.buildings[id];
+            if (data.money >= b.cost) {
+                data.money -= b.cost;
                 b.count++;
                 b.cost = Math.round(b.cost * 1.15);
-                calculatePPS();
-                updateUI();
+                update();
             }
         }
 
-        function unlockAchievements() {
-            if (state.money >= 1000) {
-                state.money -= 1000;
-                state.hasLicense = true;
-                updateUI();
+        function buyLicense() {
+            if (data.money >= 1000) {
+                data.money -= 1000;
+                data.hasLicense = true;
+                update();
             }
         }
 
-        function calculatePPS() {
-            state.pps = state.buildings.reduce((sum, b) => sum + (b.count * b.income), 0);
-        }
+        function update() {
+            document.getElementById("money").innerText = Math.floor(data.money);
+            document.getElementById("mpc").innerText = data.mpc;
+            document.getElementById("hammer-cost").innerText = data.hammerPrice;
+            
+            let pps = data.buildings.reduce((s, b) => s + (b.count * b.income), 0);
+            document.getElementById("pps").innerText = pps;
 
-        function updateUI() {
-            // Pengar och inkomst
-            document.getElementById("money").innerText = Math.floor(state.money);
-            document.getElementById("pps").innerText = state.pps;
-            document.getElementById("mpc").innerText = state.mpc;
-            document.getElementById("click-cost").innerText = state.clickCost;
+            // Hammer knapp
+            document.getElementById("hammer-btn").className = "buy-button" + (data.money < data.hammerPrice ? " disabled" : "");
 
-            // Hammare-knapp status
-            const cBtn = document.getElementById("click-btn");
-            if(state.money < state.clickCost) cBtn.classList.add("disabled");
-            else cBtn.classList.remove("disabled");
-
-            // Byggnadsknappar (Renderas på nytt för att säkerställa klick-funktion)
-            let bList = document.getElementById("building-list");
-            bList.innerHTML = "";
-            state.buildings.forEach((b) => {
-                let canAfford = state.money >= b.cost;
-                bList.innerHTML += `
-                    <button class="upgrade-btn ${canAfford ? '' : 'disabled'}" onclick="buyBuilding(${b.id})">
-                        <span><b>${b.name}</b> (${b.count})<br><small>+${b.income} kr/s</small></span>
-                        <span>${b.cost} kr</span>
-                    </button>`;
+            // Byggnader
+            let container = document.getElementById("building-container");
+            container.innerHTML = "";
+            data.buildings.forEach(b => {
+                let dis = data.money < b.cost ? " disabled" : "";
+                container.innerHTML += `<button class="buy-button${dis}" onclick="buyB(${b.id})">
+                    <b>${b.name} (${b.count})</b> ${b.cost} kr
+                </button>`;
             });
 
-            // Prestationer
-            document.getElementById("ach-license").style.display = state.hasLicense ? "none" : "block";
-            const lBtn = document.getElementById("license-btn");
-            if(state.money < 1000) lBtn.classList.add("disabled");
-            else lBtn.classList.remove("disabled");
+            // Licens & Ach
+            document.getElementById("lic-btn").style.display = data.hasLicense ? "none" : "block";
+            document.getElementById("lic-btn").className = "buy-button" + (data.money < 1000 ? " disabled" : "");
 
-            if (state.hasLicense) {
-                achievements.forEach(a => {
-                    if (!state.unlockedAch.includes(a.id) && a.check()) {
-                        state.unlockedAch.push(a.id);
-                    }
+            let alist = document.getElementById("ach-list");
+            alist.innerHTML = "";
+            if (data.hasLicense) {
+                achs.forEach(a => {
+                    if (!data.unlockedAch.includes(a.id) && a.c()) data.unlockedAch.push(a.id);
+                    let done = data.unlockedAch.includes(a.id);
+                    alist.innerHTML += `<div class="ach-card ${done ? 'unlocked' : ''}">
+                        <b>${done ? '🏆' : '🔒'} ${a.t}</b><br><small>${a.d}</small>
+                    </div>`;
                 });
             }
 
-            let aList = document.getElementById("ach-list");
-            aList.innerHTML = "";
-            achievements.forEach(a => {
-                let isDone = state.unlockedAch.includes(a.id);
-                aList.innerHTML += `
-                    <div class="ach-card ${isDone ? 'unlocked' : ''}">
-                        <b>${isDone ? '🏆 ' + a.title : '🔒 ???'}</b><br>
-                        <small>${a.desc}</small>
-                    </div>`;
-            });
-
-            // Spara allt
-            localStorage.setItem('folkhem_final_v3', JSON.stringify(state));
+            localStorage.setItem('folkhem_save_v4', JSON.stringify(data));
         }
 
-        function resetGame() {
-            if(confirm("Vill du verkligen börja om? Allt raderas!")) {
+        function hardReset() {
+            if (confirm("RENSA ALLT?")) {
                 localStorage.clear();
-                window.location.reload(true); // Tvingar omladdning
+                data = {
+                    money: 0, clicks: 0, mpc: 1, hammerPrice: 15, hasLicense: false, unlockedAch: [],
+                    buildings: [
+                        { id: 0, name: "Röd Stuga", cost: 15, income: 1, count: 0 },
+                        { id: 1, name: "Hyreshus", cost: 100, income: 5, count: 0 },
+                        { id: 2, name: "Sjukhus", cost: 500, income: 20, count: 0 },
+                        { id: 3, name: "Svensk Industri", cost: 2000, income: 100, count: 0 }
+                    ]
+                };
+                update();
+                location.reload();
             }
         }
 
-        function loadGame() {
-            let saved = localStorage.getItem('folkhem_final_v3');
-            if (saved) {
-                state = JSON.parse(saved);
-                calculatePPS();
-            }
-            updateUI();
-        }
-
-        // Gameloop för pengar (10 gånger i sekunden)
         setInterval(() => {
-            state.money += state.pps / 10;
-            updateUI();
+            let pps = data.buildings.reduce((s, b) => s + (b.count * b.income), 0);
+            data.money += pps / 10;
+            update();
         }, 100);
 
-        // Kör vid start
-        window.onload = loadGame;
+        window.onload = () => {
+            let s = localStorage.getItem('folkhem_save_v4');
+            if (s) data = JSON.parse(s);
+            update();
+        };
     </script>
 </body>
 </html>
