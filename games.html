@@ -10,7 +10,7 @@
             background-color: #f0f0f0;
             margin: 0;
             padding: 20px;
-            border-top: 15px solid #fecc00; /* Gul kant högst upp */
+            border-top: 15px solid #fecc00;
         }
 
         header {
@@ -22,11 +22,15 @@
             text-align: center;
         }
 
-        header h1 {
-            margin: 0;
-            font-size: 3rem;
-            text-shadow: 2px 2px #333;
+        /* Flaggan i headern */
+        .header-flag {
+            width: 45px; height: 30px;
+            background: #005293; position: relative;
+            display: inline-block; vertical-align: middle;
+            margin: 0 15px; border: 1px solid #fff;
         }
+        .f-y-v { position: absolute; width: 8px; height: 100%; background: #fecc00; left: 15px; }
+        .f-y-h { position: absolute; width: 100%; height: 8px; background: #fecc00; top: 11px; }
 
         .game-grid {
             display: grid;
@@ -39,67 +43,63 @@
         .game-card {
             background: white;
             border: 3px solid #005293;
-            padding: 20px;
+            padding: 30px 20px;
             text-decoration: none;
             color: #005293;
             font-weight: bold;
             text-align: center;
             transition: 0.3s;
-            position: relative;
-            overflow: hidden;
         }
 
-        /* Hover-effekt med gult och blått */
         .game-card:hover {
             background-color: #fecc00;
-            border-color: #005293;
             transform: translateY(-10px);
         }
 
-        .game-card h3 {
-            margin: 10px 0;
-            font-size: 1.4rem;
-            z-index: 2;
+        /* Liten flagga på varje kort */
+        .card-flag {
+            width: 30px; height: 20px; background: #005293;
+            position: relative; margin: 0 auto 15px;
         }
-
-        /* En liten Sverigeflagga-detalj på varje kort */
-        .game-card::before {
-            content: "🇸🇪";
-            font-size: 1.5rem;
-            display: block;
-            margin-bottom: 10px;
-        }
+        .cf-v { position: absolute; width: 6px; height: 100%; background: #fecc00; left: 10px; }
+        .cf-h { position: absolute; width: 100%; height: 6px; background: #fecc00; top: 7px; }
 
         .back-btn {
             display: inline-block;
-            margin-top: 20px;
+            margin-top: 40px;
             color: white;
             text-decoration: none;
-            background: #333;
-            padding: 10px 20px;
-            border-radius: 5px;
+            background: #005293;
+            padding: 15px 30px;
+            font-weight: bold;
+            border: 2px solid #fecc00;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>🇸🇪 JIMMIE.FUN 🇸🇪</h1>
-        <p>Sveriges roligaste grid - Gjord av Wille</p>
+        <div class="header-flag"><div class="f-y-h"></div><div class="f-y-v"></div></div>
+        <h1 style="display:inline-block; vertical-align:middle;">JIMMIE.FUN</h1>
+        <div class="header-flag"><div class="f-y-h"></div><div class="f-y-v"></div></div>
     </header>
 
     <div class="game-grid">
-        <a href="#" class="game-card"><h3>Sverige-quiz</h3></a>
-        <a href="#" class="game-card"><h3>Bygg Folkhemmet</h3></a>
-        <a href="#" class="game-card"><h3>SD-Clicker</h3></a>
-        <a href="#" class="game-card"><h3>Hitta Jimmie</h3></a>
-        <a href="#" class="game-card"><h3>Ordning & Reda</h3></a>
-        <a href="#" class="game-card"><h3>Svenska Milstolpar</h3></a>
-    </div>
+        <a href="quotes.html" class="game-card">
+            <div class="card-flag"><div class="cf-h"></div><div class="cf-v"></div></div>
+            <h3>Jimmie Quotes</h3>
+        </a>
+        <a href="#" class="game-card">
+            <div class="card-flag"><div class="cf-h"></div><div class="cf-v"></div></div>
+            <h3>Bygg Folkhemmet</h3>
+        </a>
+        <a href="#" class="game-card">
+            <div class="card-flag"><div class="cf-h"></div><div class="cf-v"></div></div>
+            <h3>SD-Clicker</h3>
+        </a>
+        </div>
 
-    <center>
-        <a href="index.html" class="back-btn">Tillbaka till start</a>
-    </center>
+    <center><a href="index.html" class="back-btn">TILLBAKA TILL START</a></center>
 
 </body>
 </html>
