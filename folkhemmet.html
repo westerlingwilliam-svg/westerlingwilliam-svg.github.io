@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bygg Folkhemmet - Spelet</title>
+    <title>Bygg Folkhemmet - Pro Version</title>
     <style>
         body {
             font-family: 'Arial Black', sans-serif;
@@ -16,7 +16,6 @@
             min-height: 100vh;
         }
 
-        /* Header / Stats */
         .header {
             background: #fecc00;
             width: 100%;
@@ -26,28 +25,23 @@
             border-bottom: 5px solid #005293;
         }
 
-        .stats {
-            font-size: 2rem;
-            color: #005293;
-            margin: 10px 0;
-        }
+        .stats { font-size: 2rem; color: #005293; margin: 10px 0; }
 
-        /* Spelytan */
         .game-area {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 20px;
-            padding: 40px;
-            max-width: 1000px;
+            padding: 20px;
+            max-width: 1200px;
         }
 
-        /* Huvudknappen (Klicka för pengar) */
+        /* Clicker */
         .main-clicker {
             background: #fff;
             border: 8px solid #fecc00;
-            width: 250px;
-            height: 250px;
+            width: 200px;
+            height: 200px;
             border-radius: 50%;
             display: flex;
             flex-direction: column;
@@ -55,186 +49,242 @@
             align-items: center;
             cursor: pointer;
             transition: transform 0.1s;
-            box-shadow: 0 10px 0 #b38f00;
-            margin-bottom: 20px;
+            box-shadow: 0 8px 0 #b38f00;
         }
+        .main-clicker:active { transform: translateY(8px); box-shadow: 0 0px 0 #b38f00; }
 
-        .main-clicker:active {
-            transform: translateY(10px);
-            box-shadow: 0 0px 0 #b38f00;
-        }
-
-        .main-clicker h2 { margin: 0; color: #005293; font-size: 1.2rem; }
-        .main-clicker .icon { font-size: 4rem; }
-
-        /* Uppgraderingsmeny */
-        .shop {
+        /* Paneler */
+        .panel {
             background: white;
             padding: 20px;
             border: 5px solid #fecc00;
-            width: 350px;
+            width: 300px;
+            min-height: 400px;
         }
-
-        .shop h3 { color: #005293; text-align: center; border-bottom: 2px solid #005293; padding-bottom: 10px; }
+        .panel h3 { color: #005293; text-align: center; border-bottom: 3px solid #005293; padding-bottom: 10px; }
 
         .upgrade-btn {
             background: #f0f0f0;
             border: 2px solid #005293;
-            padding: 15px;
-            margin: 10px 0;
+            padding: 10px;
+            margin: 5px 0;
             display: flex;
             justify-content: space-between;
-            align-items: center;
             cursor: pointer;
-            width: 100%;
-            font-weight: bold;
-            transition: 0.2s;
+            font-size: 0.9rem;
         }
+        .upgrade-btn.disabled { opacity: 0.4; cursor: not-allowed; }
 
-        .upgrade-btn:hover:not(.disabled) { background: #e0e0e0; }
-        .upgrade-btn.disabled { opacity: 0.5; cursor: not-allowed; }
-
-        .upgrade-info { text-align: left; }
-        .upgrade-price { color: #d35400; }
-
-        /* Bakåtknapp */
-        .back-link {
-            margin-top: auto;
-            margin-bottom: 20px;
-            color: #fecc00;
-            text-decoration: none;
-            font-weight: bold;
+        /* Achievement stil */
+        .achievement-item {
+            background: #e8f4fd;
+            border: 1px solid #005293;
+            padding: 10px;
+            margin: 5px 0;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
         }
+        .locked { filter: grayscale(1); opacity: 0.5; }
 
-        /* Flygande text-effekt */
+        .controls { margin: 20px; }
+        .btn-action {
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 0 10px;
+        }
+        .btn-reset { background: #ff4444; color: white; }
+        .btn-back { background: #333; color: white; text-decoration: none; padding: 10px 20px; display: inline-block; }
+
         .plus-one {
             position: absolute;
             color: #fecc00;
             font-weight: bold;
             animation: flyUp 1s forwards;
             pointer-events: none;
+            z-index: 100;
         }
-
-        @keyframes flyUp {
-            0% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-100px); }
-        }
+        @keyframes flyUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-100px); } }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h1>BYGG FOLKHEMMET 🇸🇪</h1>
-        <div class="stats">Välfärdspäng: <span id="money">0</span> kr</div>
-        <div style="font-size: 1.1rem;">Produktion: <span id="pps">0</span> kr / sek</div>
+        <div class="stats"><span id="money">0</span> kr</div>
+        <div>Produktion: <span id="pps">0</span> kr/sek</div>
     </div>
 
     <div class="game-area">
-        <div class="main-clicker" onclick="clickMoney(event)">
-            <div class="icon">🏠</div>
-            <h2>BYGG MER</h2>
+        <div class="panel">
+            <h3>BYGGNADER</h3>
+            <div id="shop-list"></div>
         </div>
 
-        <div class="shop">
-            <h3>UPPGRADERINGAR</h3>
-            
-            <div id="u1" class="upgrade-btn disabled" onclick="buyUpgrade(0)">
-                <div class="upgrade-info">
-                    <span>Röd Stuga</span><br>
-                    <small>+1 kr/sek</small>
-                </div>
-                <div class="upgrade-price"><span id="p0">15</span> kr</div>
+        <div style="text-align:center;">
+            <div class="main-clicker" onclick="clickMoney(event)">
+                <span style="font-size:4rem;">🏠</span>
+                <small>KLICKA</small>
             </div>
+            <div class="controls">
+                <a href="games.html" class="btn-back">TILLBAKA</a>
+                <button class="btn-action btn-reset" onclick="resetGame()">BÖRJA OM</button>
+            </div>
+        </div>
 
-            <div id="u2" class="upgrade-btn disabled" onclick="buyUpgrade(1)">
-                <div class="upgrade-info">
-                    <span>Hyreshus</span><br>
-                    <small>+5 kr/sek</small>
-                </div>
-                <div class="upgrade-price"><span id="p1">100</span> kr</div>
-            </div>
-
-            <div id="u3" class="upgrade-btn disabled" onclick="buyUpgrade(2)">
-                <div class="upgrade-info">
-                    <span>Sjukhus</span><br>
-                    <small>+20 kr/sek</small>
-                </div>
-                <div class="upgrade-price"><span id="p2">500</span> kr</div>
-            </div>
-
-            <div id="u4" class="upgrade-btn disabled" onclick="buyUpgrade(3)">
-                <div class="upgrade-info">
-                    <span>Svensk Industri</span><br>
-                    <small>+100 kr/sek</small>
-                </div>
-                <div class="upgrade-price"><span id="p3">2000</span> kr</div>
-            </div>
+        <div class="panel">
+            <h3>PRESTATIONER</h3>
+            <button class="upgrade-btn" id="buy-achieve" onclick="buyAchievement()" style="width:100%;">
+                KÖP ACHIEVEMENT (1000 kr)
+            </button>
+            <div id="achievement-list"></div>
         </div>
     </div>
-
-    <a href="games.html" class="back-link">← TILLBAKA TILL SPELEN</a>
 
     <script>
         let money = 0;
         let pps = 0;
+        let ownedAchievements = 0;
 
         const upgrades = [
             { name: "Röd Stuga", cost: 15, income: 1, count: 0 },
             { name: "Hyreshus", cost: 100, income: 5, count: 0 },
             { name: "Sjukhus", cost: 500, income: 20, count: 0 },
-            { name: "Svensk Industri", cost: 2000, income: 100, count: 0 }
+            { name: "Svensk Industri", cost: 2000, income: 100, count: 0 },
+            { name: "Kärnkraftverk", cost: 10000, income: 500, count: 0 }
         ];
+
+        const achievementTitles = [
+            "Sverigevän", "Folkhemsbyggare", "Landsfader", "Välfärdens Väktare", 
+            "Blågult Hjärta", "Ordning & Reda", "Svensk Mästare", "Kung av Sverige"
+        ];
+
+        // LADDA SPARAD PROGRESS
+        function loadGame() {
+            const saved = localStorage.getItem('folkhemmet_save');
+            if (saved) {
+                const data = JSON.parse(saved);
+                money = data.money;
+                ownedAchievements = data.ownedAchievements || 0;
+                data.upgrades.forEach((u, i) => {
+                    upgrades[i].count = u.count;
+                    upgrades[i].cost = u.cost;
+                });
+                calculatePPS();
+            }
+            renderShop();
+            renderAchievements();
+        }
+
+        function saveGame() {
+            const data = {
+                money: money,
+                ownedAchievements: ownedAchievements,
+                upgrades: upgrades
+            };
+            localStorage.setItem('folkhemmet_save', JSON.stringify(data));
+        }
+
+        function calculatePPS() {
+            pps = upgrades.reduce((sum, u) => sum + (u.count * u.income), 0);
+        }
 
         function clickMoney(e) {
             money += 1;
-            spawnText(e);
+            const text = document.createElement("div");
+            text.className = "plus-one";
+            text.innerText = "+1";
+            text.style.left = e.pageX + "px"; text.style.top = e.pageY + "px";
+            document.body.appendChild(text);
+            setTimeout(() => text.remove(), 1000);
             updateUI();
         }
 
-        function spawnText(e) {
-            const text = document.createElement("div");
-            text.innerText = "+1";
-            text.className = "plus-one";
-            text.style.left = e.pageX + "px";
-            text.style.top = e.pageY + "px";
-            document.body.appendChild(text);
-            setTimeout(() => text.remove(), 1000);
+        function buyUpgrade(index) {
+            if (money >= upgrades[index].cost) {
+                money -= upgrades[index].cost;
+                upgrades[index].count++;
+                upgrades[index].cost = Math.round(upgrades[index].cost * 1.15);
+                calculatePPS();
+                updateUI();
+                saveGame();
+            }
         }
 
-        function buyUpgrade(index) {
-            const u = upgrades[index];
-            if (money >= u.cost) {
-                money -= u.cost;
-                u.count++;
-                pps += u.income;
-                u.cost = Math.round(u.cost * 1.15); // Priset ökar
+        function buyAchievement() {
+            if (money >= 1000 && ownedAchievements < achievementTitles.length) {
+                money -= 1000;
+                ownedAchievements++;
                 updateUI();
+                renderAchievements();
+                saveGame();
             }
+        }
+
+        function renderShop() {
+            const list = document.getElementById("shop-list");
+            list.innerHTML = "";
+            upgrades.forEach((u, i) => {
+                list.innerHTML += `
+                    <div id="u-${i}" class="upgrade-btn" onclick="buyUpgrade(${i})">
+                        <div><b>${u.name}</b> (${u.count})<br><small>+${u.income} kr/s</small></div>
+                        <div class="price">${u.cost} kr</div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderAchievements() {
+            const list = document.getElementById("achievement-list");
+            list.innerHTML = "";
+            achievementTitles.forEach((title, i) => {
+                const isLocked = i >= ownedAchievements;
+                list.innerHTML += `
+                    <div class="achievement-item ${isLocked ? 'locked' : ''}">
+                        <span style="font-size:1.5rem; margin-right:10px;">${isLocked ? '🔒' : '🏆'}</span>
+                        <div><b>${isLocked ? '???' : title}</b><br>
+                        <small>${isLocked ? 'Lås upp för 1000 kr' : 'Upplåst!'}</small></div>
+                    </div>
+                `;
+            });
         }
 
         function updateUI() {
             document.getElementById("money").innerText = Math.floor(money);
-            document.getElementById("pps").innerText = pps;
+            document.getElementById("pps").innerText = pps.toFixed(1);
             
             upgrades.forEach((u, i) => {
-                const btn = document.getElementById("u" + (i+1));
-                const priceLabel = document.getElementById("p" + i);
-                priceLabel.innerText = u.cost;
-                
-                if (money >= u.cost) {
-                    btn.classList.remove("disabled");
-                } else {
-                    btn.classList.add("disabled");
-                }
+                const btn = document.getElementById(`u-${i}`);
+                if (money >= u.cost) btn.classList.remove("disabled");
+                else btn.classList.add("disabled");
+                btn.querySelector(".price").innerText = u.cost + " kr";
+                btn.querySelector("b").innerText = `${u.name} (${u.count})`;
             });
+
+            const achBtn = document.getElementById("buy-achieve");
+            if (money < 1000 || ownedAchievements >= achievementTitles.length) achBtn.classList.add("disabled");
+            else achBtn.classList.remove("disabled");
         }
 
-        // Automatisk produktion varje sekund
+        function resetGame() {
+            if (confirm("Är du säker på att du vill nollställa allt? All din progress försvinner!")) {
+                localStorage.removeItem('folkhemmet_save');
+                location.reload();
+            }
+        }
+
+        // Loop
         setInterval(() => {
             money += pps / 10;
             updateUI();
         }, 100);
 
+        // Autosave var 30:e sekund
+        setInterval(saveGame, 30000);
+
+        loadGame();
     </script>
 </body>
 </html>
