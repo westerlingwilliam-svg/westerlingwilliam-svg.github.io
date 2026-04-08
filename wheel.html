@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Valhjulet - Jimmie.Fun</title>
     <style>
+        @keyframes pulse {
+            0% { transform: scale(1); text-shadow: 0 0 10px #fecc00; }
+            50% { transform: scale(1.1); text-shadow: 0 0 30px #fecc00; }
+            100% { transform: scale(1); text-shadow: 0 0 10px #fecc00; }
+        }
+
         body {
             font-family: 'Segoe UI', sans-serif;
             background: radial-gradient(circle, #005293, #001f3f);
@@ -35,7 +41,6 @@
             box-shadow: 0 0 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,0,0,0.5);
         }
 
-        /* Pekaren i mitten */
         .pointer {
             position: absolute;
             top: -20px;
@@ -85,10 +90,11 @@
 
         #result-text {
             margin-top: 20px;
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: bold;
-            height: 50px;
+            height: 60px;
             color: #fecc00;
+            text-align: center;
         }
 
         .back-btn {
@@ -96,8 +102,9 @@
             color: white;
             text-decoration: none;
             opacity: 0.6;
+            transition: 0.3s;
         }
-        .back-btn:hover { opacity: 1; }
+        .back-btn:hover { opacity: 1; text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -118,41 +125,31 @@
     <script>
         const canvas = document.getElementById("wheel");
         const ctx = canvas.getContext("2d");
-        const parties = [
-            "SD", "S", "M", "V", "MP", "C", "L", "KD", "AFS"
-        ];
-        
-        // Färger för tårtbitarna
-        const colors = [
-            "#fecc00", "#e3000f", "#019cdb", "#af0000", 
-            "#83cf39", "#006d3e", "#0069b4", "#005ea1", "#1a1a1a"
-        ];
+        const parties = ["SD", "S", "M", "V", "MP", "C", "L", "KD", "AFS"];
+        const colors = ["#fecc00", "#e3000f", "#019cdb", "#af0000", "#83cf39", "#006d3e", "#0069b4", "#005ea1", "#1a1a1a"];
 
         const centerX = canvas.width / 2;
         const centerY = canvas.height / 2;
         const radius = canvas.width / 2;
         const sliceAngle = (2 * Math.PI) / parties.length;
 
-        // Rita hjulet
         function drawWheel() {
             parties.forEach((name, i) => {
                 const angle = i * sliceAngle;
-                
-                // Rita tårtbit
                 ctx.beginPath();
                 ctx.fillStyle = colors[i];
                 ctx.moveTo(centerX, centerY);
                 ctx.arc(centerX, centerY, radius, angle, angle + sliceAngle);
                 ctx.fill();
+                ctx.strokeStyle = "rgba(0,0,0,0.2)";
                 ctx.stroke();
 
-                // Rita text
                 ctx.save();
                 ctx.translate(centerX, centerY);
                 ctx.rotate(angle + sliceAngle / 2);
                 ctx.textAlign = "right";
-                ctx.fillStyle = (i === 0) ? "#005293" : "white"; // SD har blå text på gul bakgrund
-                ctx.font = "bold 24px Arial";
+                ctx.fillStyle = (i === 0) ? "#005293" : "white";
+                ctx.font = "bold 22px Arial";
                 ctx.fillText(name, radius - 20, 10);
                 ctx.restore();
             });
@@ -164,29 +161,28 @@
             const btn = document.getElementById("spinBtn");
             const result = document.getElementById("result-text");
             btn.disabled = true;
-            result.innerText = "";
+            result.innerText = "Anlyserar folkviljan...";
+            result.style.animation = "none";
 
             // LOGIKEN: 
-            // Varje tårtbit är 40 grader (360/9).
-            // Vi vill att hjulet ska stanna på SD (index 0).
-            // Pekaren är högst upp (270 grader i canvas-koordinater).
+            // För att alltid landa på SD (index 0) som börjar på 0 grader i Canvas:
+            // Pekaren är vid -90 grader (klockan 12).
+            // Vi nollställer nuvarande position med -(currentRotation % 360) 
+            // och lägger till ett fast antal varv plus korrigeringen för att SD-mitten ska hamna uppåt.
             
-            const extraSpins = 5 + Math.floor(Math.random() * 5); // 5-10 extra varv
+            const extraSpins = 5 + Math.floor(Math.random() * 3);
+            const degPerSlice = 360 / parties.length;
             
-            // Vi räknar ut målvinkeln så att index 0 (SD) hamnar vid pekaren (klockan 12)
-            // SD börjar på 0 till sliceAngle. För att den ska vara uppe måste vi rotera 
-            // så att mitten på tårtbiten (-sliceAngle/2) är på -90 grader.
-            const targetRotation = (extraSpins * 360) - (sliceAngle * (180/Math.PI) / 2) - 90;
+            // Beräkna hur mycket vi ska lägga till för att hamna på mitten av SD-biten (index 0)
+            const stopAt = (extraSpins * 360) - (currentRotation % 360) - (degPerSlice / 2) - 90;
             
-            currentRotation += targetRotation;
-            canvas.style.transform = `rotate(-${currentRotation}deg)`;
+            currentRotation += stopAt;
+            canvas.style.transform = `rotate(${currentRotation}deg)`;
 
             setTimeout(() => {
                 result.innerText = "DET BLIR SD! 🌸";
                 btn.disabled = false;
-                
-                // Lite konfetti-känsla
-                result.style.animation = "pulse 0.5s infinite";
+                result.style.animation = "pulse 0.8s infinite ease-in-out";
             }, 5000);
         }
 
