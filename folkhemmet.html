@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bygg Folkhemmet - Pro Edition</title>
+    <title>Bygg Folkhemmet - Synergi Edition</title>
     <style>
         * { user-select: none; -webkit-user-select: none; box-sizing: border-box; font-family: 'Arial Black', sans-serif; }
         body { background-color: #005293; color: #333; margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
@@ -14,7 +14,7 @@
         }
 
         .main-layout { 
-            display: grid; grid-template-columns: 320px 1fr 350px; 
+            display: grid; grid-template-columns: 350px 1fr 350px; 
             gap: 20px; padding: 20px; flex-grow: 1; 
         }
 
@@ -37,36 +37,24 @@
         .main-clicker:active { transform: translateY(5px); box-shadow: 0 5px 0 #b38f00; }
 
         .buy-button { 
-            background: #f0f0f0; border: 3px solid #005293; padding: 12px; margin: 8px 0; 
-            cursor: pointer; display: flex; justify-content: space-between; 
-            align-items: center; width: 100%; border-radius: 5px; font-family: inherit; 
+            background: #f0f0f0; border: 3px solid #005293; padding: 10px; margin: 8px 0; 
+            cursor: pointer; display: flex; flex-direction: column;
+            width: 100%; border-radius: 5px; font-family: inherit; 
         }
+        .buy-button:hover:not(.disabled) { background: #e0e0e0; }
+        .buy-button .top-row { display: flex; justify-content: space-between; width: 100%; font-size: 1rem; }
+        .buy-button .info-row { font-size: 0.7rem; color: #666; margin-top: 4px; font-family: 'Arial', sans-serif; font-weight: bold; }
         .buy-button.disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
 
-        /* Achievement Animering */
-        .ach-card { 
-            background: #f9f9f9; border: 2px solid #005293; padding: 10px; 
-            margin-bottom: 10px; border-radius: 8px;
-            animation: slideIn 0.3s ease-out;
-        }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .progress-container { background: #ddd; height: 15px; width: 100%; border-radius: 10px; margin-top: 5px; overflow: hidden; border: 1px solid #005293; }
+        .ach-card { background: #f9f9f9; border: 2px solid #005293; padding: 10px; margin-bottom: 10px; border-radius: 8px; }
+        .progress-container { background: #ddd; height: 12px; width: 100%; border-radius: 10px; margin-top: 5px; overflow: hidden; border: 1px solid #005293; }
         .progress-bar { background: linear-gradient(90deg, #005293, #fecc00); height: 100%; width: 0%; transition: width 0.2s; }
         
-        .claim-btn { 
-            width: 100%; margin-top: 8px; padding: 10px; background: #666; 
-            border: 2px solid #444; color: white; font-weight: bold; 
-            cursor: not-allowed; border-radius: 4px; font-family: inherit; 
-        }
+        .claim-btn { width: 100%; margin-top: 8px; padding: 8px; background: #666; border: 2px solid #444; color: white; cursor: not-allowed; border-radius: 4px; }
         .claim-btn.ready { background: #28a745; border-color: #1e7e34; cursor: pointer; animation: pulse 1s infinite; }
 
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
-
-        .plus-one { 
-            position: absolute; color: #fecc00; font-weight: bold; font-size: 1.5rem; 
-            pointer-events: none; animation: fly 0.8s forwards; text-shadow: 2px 2px 0px #005293; z-index: 1000; 
-        }
+        .plus-one { position: absolute; color: #fecc00; font-weight: bold; font-size: 1.5rem; pointer-events: none; animation: fly 0.8s forwards; text-shadow: 2px 2px 0px #005293; z-index: 1000; }
         @keyframes fly { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-100px); } }
     </style>
 </head>
@@ -82,7 +70,12 @@
         <div class="panel">
             <h3>BUTIK</h3>
             <button class="buy-button" id="hammer-btn" onclick="buyHammer()">
-                <b>Jimmies Hammare</b> <span><span id="hammer-cost">15</span> kr</span>
+                <div class="top-row"><b>Jimmies Hammare</b> <span id="hammer-cost">15</span> kr</div>
+                <div class="info-row">Ökar din klickstyrka</div>
+            </button>
+            <button class="buy-button" id="auto-btn" onclick="buyAuto()">
+                <div class="top-row"><b>Auto-Hammare</b> <span id="auto-cost">100</span> kr</div>
+                <div class="info-row">Klickar automatiskt 1 gång/sek</div>
             </button>
             <hr>
             <div id="building-list"></div>
@@ -97,7 +90,7 @@
         </div>
 
         <div class="panel">
-            <h3>AKTIVA UPPDRAG</h3>
+            <h3>UPPDRAG</h3>
             <div id="ach-license-area">
                 <button class="buy-button" onclick="buyLicense()" style="background:#fecc00;">LÅS UPP JIMMIE (1000 kr)</button>
             </div>
@@ -107,55 +100,63 @@
 
     <script>
         let data = {
-            money: 0, clicks: 0, mpc: 1, hammerPrice: 15,
+            money: 0, clicks: 0, mpc: 1, autoClicks: 0,
+            hammerPrice: 15, autoPrice: 100,
             hasLicense: false,
-            achLevels: { click: 0, money: 0, b0: 0, b1: 0, b2: 0, b3: 0 }, // Håller koll på vilken nivå man är på
+            achLevels: { click: 0, money: 0, b0: 0, b1: 0, b2: 0, b3: 0 },
             bCounts: [0, 0, 0, 0, 0, 0, 0],
-            bCosts: [15, 100, 500, 2000, 10000, 50000, 250000]
+            bCosts: [15, 100, 500, 2500, 15000, 100000, 1000000]
         };
 
         const buildings = [
-            { name: "Röd Stuga", inc: 1 }, { name: "Hyreshus", inc: 5 },
-            { name: "Sjukhus", inc: 20 }, { name: "Industri", inc: 100 },
-            { name: "Universitet", inc: 450 }, { name: "Kärnkraft", inc: 2000 },
-            { name: "Välfärdsstat", inc: 10000 }
+            { name: "Röd Stuga", inc: 1 }, { name: "Hyreshus", inc: 8 },
+            { name: "Sjukhus", inc: 45 }, { name: "Industri", inc: 180 },
+            { name: "Universitet", inc: 750 }, { name: "Kärnkraft", inc: 3500 },
+            { name: "Välfärdsstat", inc: 15000 }
         ];
 
-        // Achievement-kedjor
         const achChains = {
-            click: [
-                { t: "Klick-nybörjare", target: 50, reward: 500 },
-                { t: "Klick-proffs", target: 250, reward: 2500 },
-                { t: "Klick-mästare", target: 1000, reward: 10000 },
-                { t: "Klick-legend", target: 5000, reward: 50000 }
-            ],
-            money: [
-                { t: "Spara slant", target: 10000, reward: 2000 },
-                { t: "Riksbankschef", target: 100000, reward: 20000 },
-                { t: "Miljardär-drömmar", target: 1000000, reward: 250000 }
-            ],
-            b0: [
-                { t: "Stugby", target: 10, reward: 1000 },
-                { t: "Småstadsidyll", target: 50, reward: 10000 }
-            ],
-            b1: [
-                { t: "Bostadskö-fixare", target: 10, reward: 5000 },
-                { t: "Miljonprogrammet", target: 50, reward: 50000 }
-            ]
+            click: [{ t: "Klick-start", target: 50, reward: 500 }, { t: "Klick-maskin", target: 500, reward: 5000 }],
+            money: [{ t: "Småsparare", target: 5000, reward: 1000 }, { t: "Miljonär", target: 1000000, reward: 200000 }],
+            b0: [{ t: "Stugby", target: 10, reward: 500 }, { t: "Småland", target: 50, reward: 10000 }]
         };
+
+        function getProduction(id) {
+            // Varje ägd byggnad ger 1% extra till alla av samma typ
+            let bonus = 1 + (data.bCounts[id] * 0.01);
+            return buildings[id].inc * bonus;
+        }
+
+        function getTotalPPS() {
+            let pps = 0;
+            for(let i=0; i<buildings.length; i++) {
+                pps += data.bCounts[i] * getProduction(i);
+            }
+            return pps;
+        }
 
         function doClick(e) {
             data.money += data.mpc; data.clicks++;
-            const t = document.createElement("div"); t.className = "plus-one"; t.innerText = "+" + data.mpc;
-            t.style.left = e.pageX + "px"; t.style.top = e.pageY + "px";
-            document.body.appendChild(t); setTimeout(() => t.remove(), 800);
+            if(e) {
+                const t = document.createElement("div"); t.className = "plus-one"; t.innerText = "+" + data.mpc;
+                t.style.left = e.pageX + "px"; t.style.top = e.pageY + "px";
+                document.body.appendChild(t); setTimeout(() => t.remove(), 800);
+            }
             updateNumbersOnly();
         }
 
         function buyHammer() {
             if (data.money >= data.hammerPrice) {
                 data.money -= data.hammerPrice; data.mpc++;
-                data.hammerPrice = Math.round(data.hammerPrice * 2.1);
+                data.hammerPrice = Math.round(data.hammerPrice * 2.2);
+                renderEverything();
+            }
+        }
+
+        function buyAuto() {
+            if (data.money >= data.autoPrice) {
+                data.money -= data.autoPrice; data.autoClicks++;
+                data.autoPrice = Math.round(data.autoPrice * 2.5);
                 renderEverything();
             }
         }
@@ -163,23 +164,18 @@
         function buyBuilding(id) {
             if (data.money >= data.bCosts[id]) {
                 data.money -= data.bCosts[id]; data.bCounts[id]++;
-                data.bCosts[id] = Math.round(data.bCosts[id] * 1.15);
+                data.bCosts[id] = Math.round(data.bCosts[id] * 1.18);
                 renderEverything();
             }
         }
 
-        function buyLicense() {
-            if (data.money >= 1000) { data.money -= 1000; data.hasLicense = true; renderEverything(); }
-        }
+        function buyLicense() { if (data.money >= 1000) { data.money -= 1000; data.hasLicense = true; renderEverything(); } }
 
         function claimAch(type) {
             const level = data.achLevels[type];
-            const ach = achChains[type][level];
-            const currentVal = getValByType(type);
-
-            if (currentVal >= ach.target) {
-                data.money += ach.reward;
-                data.achLevels[type]++; // Gå till nästa nivå i kedjan
+            if (getValByType(type) >= achChains[type][level].target) {
+                data.money += achChains[type][level].reward;
+                data.achLevels[type]++;
                 renderEverything();
             }
         }
@@ -194,47 +190,34 @@
         function updateNumbersOnly() {
             document.getElementById("money").innerText = Math.floor(data.money).toLocaleString();
             document.getElementById("mpc").innerText = data.mpc;
+            document.getElementById("pps").innerText = Math.floor(getTotalPPS()).toLocaleString();
+            
             document.getElementById("hammer-btn").classList.toggle("disabled", data.money < data.hammerPrice);
+            document.getElementById("auto-btn").classList.toggle("disabled", data.money < data.autoPrice);
             
             for(let i=0; i<buildings.length; i++) {
                 const btn = document.getElementById("build-"+i);
                 if(btn) btn.classList.toggle("disabled", data.money < data.bCosts[i]);
             }
-
-            if(data.hasLicense) {
-                // Uppdatera progress bars utan att rita om hela korten
-                Object.keys(achChains).forEach(type => {
-                    const level = data.achLevels[type];
-                    if (level < achChains[type].length) {
-                        const ach = achChains[type][level];
-                        const val = getValByType(type);
-                        const bar = document.getElementById("bar-" + type);
-                        const text = document.getElementById("text-" + type);
-                        if(bar) bar.style.width = Math.min(100, (val/ach.target)*100) + "%";
-                        if(text) text.innerText = `${Math.floor(val)} / ${ach.target}`;
-                        
-                        const btn = document.getElementById("btn-" + type);
-                        if(btn && val >= ach.target) btn.classList.add("ready");
-                    }
-                });
-            }
-            localStorage.setItem('folkhem_save_v5', JSON.stringify(data));
+            localStorage.setItem('folkhem_save_synergy', JSON.stringify(data));
         }
 
         function renderEverything() {
-            document.getElementById("hammer-cost").innerText = data.hammerPrice;
-            let bHtml = ""; let pps = 0;
+            document.getElementById("hammer-cost").innerText = data.hammerPrice.toLocaleString();
+            document.getElementById("auto-cost").innerText = data.autoPrice.toLocaleString();
+            
+            let bHtml = "";
             buildings.forEach((b, i) => {
-                pps += data.bCounts[i] * b.inc;
-                bHtml += `<button class="buy-button" id="build-${i}" onclick="buyBuilding(${i})">
-                    <b>${b.name} (${data.bCounts[i]})</b> <span>${data.bCosts[i]} kr</span>
-                </button>`;
+                let currentProd = getProduction(i).toFixed(1);
+                bHtml += `
+                    <button class="buy-button" id="build-${i}" onclick="buyBuilding(${i})">
+                        <div class="top-row"><b>${b.name} (${data.bCounts[i]})</b> <span>${data.bCosts[i].toLocaleString()} kr</span></div>
+                        <div class="info-row">Ger just nu: ${currentProd}/sek styck</div>
+                    </button>`;
             });
             document.getElementById("building-list").innerHTML = bHtml;
-            document.getElementById("pps").innerText = pps.toLocaleString();
 
             document.getElementById("ach-license-area").style.display = data.hasLicense ? "none" : "block";
-            
             if (data.hasLicense) {
                 let html = "";
                 Object.keys(achChains).forEach(type => {
@@ -242,31 +225,31 @@
                     if (level < achChains[type].length) {
                         const ach = achChains[type][level];
                         const val = getValByType(type);
-                        const isReady = val >= ach.target;
-                        
                         html += `
                             <div class="ach-card">
                                 <b>${ach.t}</b><br><small>Belöning: ${ach.reward} kr</small>
-                                <div class="progress-container"><div id="bar-${type}" class="progress-bar" style="width: ${Math.min(100, (val/ach.target)*100)}%"></div></div>
-                                <div id="text-${type}" style="font-size:0.7rem; text-align:right;">${Math.floor(val)} / ${ach.target}</div>
-                                <button id="btn-${type}" class="claim-btn ${isReady ? 'ready' : ''}" onclick="claimAch('${type}')">
-                                    ${isReady ? 'HÄMTA BELÖNING' : 'LÅST'}
-                                </button>
+                                <div class="progress-container"><div class="progress-bar" style="width: ${Math.min(100, (val/ach.target)*100)}%"></div></div>
+                                <button class="claim-btn ${val >= ach.target ? 'ready' : ''}" onclick="claimAch('${type}')">HÄMTA</button>
                             </div>`;
                     }
                 });
-                document.getElementById("ach-container").innerHTML = html || "<p>Alla uppdrag klara! Vänta på expansion...</p>";
+                document.getElementById("ach-container").innerHTML = html || "<p>Bra jobbat!</p>";
             }
             updateNumbersOnly();
         }
 
+        // Gameloop: 10 gånger per sekund
         setInterval(() => {
-            let pps = 0; buildings.forEach((b, i) => pps += data.bCounts[i] * b.inc);
-            data.money += pps / 10; updateNumbersOnly();
+            data.money += getTotalPPS() / 10;
+            // Hantera Auto-hammare
+            if(data.autoClicks > 0) {
+                data.money += (data.autoClicks * data.mpc) / 10;
+            }
+            updateNumbersOnly();
         }, 100);
 
         window.onload = () => {
-            let s = localStorage.getItem('folkhem_save_v5');
+            let s = localStorage.getItem('folkhem_save_synergy');
             if (s) Object.assign(data, JSON.parse(s));
             renderEverything();
         };
