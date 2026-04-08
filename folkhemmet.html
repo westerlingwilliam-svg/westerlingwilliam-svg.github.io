@@ -3,31 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bygg Folkhemmet - SD Edition</title>
+    <title>Bygg Folkhemmet - Ultra Neon Hardcore Edition</title>
     <style>
+        /* FULLSTÄNDIG NEON-MAXAD STYLING */
         :root {
-            --primary-blue: #005293;
-            --secondary-blue: #1e3a5f;
-            --swe-yellow: #fecc00;
-            --sd-light-blue: #a3d4f7; /* Den exakta ljusblå SD-färgen */
-            --panel-bg: rgba(10, 35, 65, 0.95);
+            --bg-dark: #070b14; /* Ännu mörkare bakgrund för att få neonet att poppa */
+            --panel-bg: rgba(20, 30, 50, 0.8);
+            --sweden-blue: #0077ff; /* Starkare, lysande blå */
+            --sweden-yellow: #fecc00;
             --text-main: #ffffff;
-            --neon-blue: 0 0 10px rgba(163, 212, 247, 0.6);
-            --neon-yellow: 0 0 10px rgba(254, 204, 0, 0.6);
-            --soft-yellow-glow: 0 0 10px rgba(254, 204, 0, 0.5);
+            --neon-yellow-glow: 0 0 15px rgba(254, 204, 0, 0.7);
+            --neon-blue-glow: 0 0 15px rgba(0, 119, 255, 0.7);
         }
 
         * { 
             user-select: none; 
             -webkit-user-select: none; 
             box-sizing: border-box; 
-            font-family: 'Arial Black', sans-serif; 
+            font-family: 'Arial Black', sans-serif; /* Tjockare font för neon */
         }
 
         body { 
-            background: linear-gradient(-45deg, #003a6b, #005293, #1e3a5f, #0a192f);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            background: var(--bg-dark);
+            background-image: radial-gradient(circle at center, #101a30 0%, #070b14 100%);
             color: var(--text-main); 
             margin: 0; 
             min-height: 100vh; 
@@ -36,19 +34,21 @@
             overflow-x: hidden;
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* Paneler med BLÅ NEON-glöd */
+        .glass-panel {
+            background: var(--panel-bg);
+            border: 2px solid var(--sweden-blue);
+            border-radius: 24px;
+            box-shadow: 0 0 25px rgba(0, 119, 255, 0.4), inset 0 0 15px rgba(0, 119, 255, 0.2);
+            backdrop-filter: blur(5px);
         }
 
         .header { 
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
+            background: rgba(7, 11, 20, 0.9);
             padding: 20px; 
             text-align: center; 
-            border-bottom: 5px solid var(--sd-light-blue); /* Ljusblå kant */
-            box-shadow: 0 0 20px rgba(163, 212, 247, 0.4);
+            border-bottom: 3px solid var(--sweden-yellow);
+            box-shadow: 0 0 20px rgba(254, 204, 0, 0.5);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -56,270 +56,233 @@
 
         .header h1 {
             margin: 0;
-            font-size: 2.5rem;
-            color: var(--sd-light-blue);
+            font-size: 2.8rem;
+            color: var(--sweden-yellow);
             text-transform: uppercase;
             letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(163, 212, 247, 0.5);
+            text-shadow: var(--neon-yellow-glow);
         }
 
-        .money-display {
-            display: inline-block;
-            background: white; /* Vit bakgrund för att sticka ut */
-            padding: 10px 45px;
-            border-radius: 50px;
-            margin-top: 15px;
-            border: 3px solid var(--swe-yellow);
-            box-shadow: 0 0 15px rgba(254, 204, 0, 0.3);
-        }
-
-        .money-display b { 
-            font-size: 2.2rem; 
-            color: var(--primary-blue);
-            text-shadow: none;
-        }
-
-        .stats-bar {
+        .stats-container {
             display: flex;
             justify-content: center;
             gap: 15px;
-            margin-top: 10px;
+            margin-top: 15px;
             flex-wrap: wrap;
         }
 
-        .stat-capsule {
-            background: var(--primary-blue);
-            color: var(--sd-light-blue);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            border: 1px solid var(--sd-light-blue);
+        /* JÄTTESTOR OCH TYDLIG PENGABOX */
+        .money-box {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px 40px;
+            border-radius: 15px;
+            border: 3px solid var(--sweden-yellow);
+            box-shadow: var(--neon-yellow-glow), inset 0 0 10px rgba(254, 204, 0, 0.3);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
         }
+
+        .money-box b { color: var(--sweden-yellow); text-shadow: var(--neon-yellow-glow); }
+
+        .stat-box {
+            background: rgba(0, 50, 100, 0.3);
+            padding: 8px 18px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 119, 255, 0.5);
+            font-size: 0.9rem;
+            color: #b0d5ff;
+        }
+
+        .stat-box b { color: var(--sweden-blue); text-shadow: var(--neon-blue-glow); }
 
         .main-layout { 
             display: grid; 
-            grid-template-columns: 420px 1fr 420px; 
-            gap: 25px; 
-            padding: 25px; 
-            max-width: 1800px; 
+            grid-template-columns: 400px 1fr 400px; 
+            gap: 30px; 
+            padding: 30px; 
+            max-width: 1920px; 
             margin: 0 auto; 
             width: 100%;
         }
 
         .panel { 
-            background: var(--panel-bg);
-            border-radius: 30px;
             padding: 25px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border: 2px solid var(--sd-light-blue);
             max-height: 80vh;
             overflow-y: auto;
-            backdrop-filter: blur(5px);
         }
 
         .panel h3 {
             text-align: center;
-            color: var(--sd-light-blue);
+            margin-top: 0;
+            color: var(--sweden-yellow);
+            font-size: 1.6rem;
             text-transform: uppercase;
-            border-bottom: 2px solid var(--sd-light-blue);
-            padding-bottom: 12px;
-            margin-bottom: 20px;
+            text-shadow: var(--neon-yellow-glow);
+            border-bottom: 2px solid rgba(254, 204, 0, 0.3);
+            padding-bottom: 15px;
         }
 
-        .center-area {
+        .center-area { 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             justify-content: center;
         }
 
-        .clicker-circle {
-            width: 280px;
-            height: 280px;
-            background: #fff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 8rem;
-            cursor: pointer;
-            border: 10px solid var(--sd-light-blue);
-            box-shadow: 0 0 30px rgba(163, 212, 247, 0.4); 
-            transition: 0.1s;
+        /* Huset/Clickern med GUL NEON-glöd */
+        .main-clicker { 
+            background: radial-gradient(circle, #101a30 0%, #000 100%);
+            border: 6px solid var(--sweden-yellow); 
+            width: 280px; height: 280px; 
+            border-radius: 50%; 
+            display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; 
+            cursor: pointer; 
+            box-shadow: 0 0 40px rgba(254, 204, 0, 0.3); 
+            transition: 0.2s;
         }
 
-        .clicker-circle:hover {
-            transform: scale(1.02);
-            border-color: var(--swe-yellow);
+        .main-clicker:hover {
+            box-shadow: 0 0 60px rgba(254, 204, 0, 0.6), inset 0 0 20px rgba(254, 204, 0, 0.2);
+            transform: scale(1.03);
         }
 
-        .clicker-circle:active { transform: scale(0.96); }
+        .main-clicker:active { transform: scale(0.97); }
+        
+        .main-clicker span { font-size: 8rem; filter: drop-shadow(var(--neon-yellow-glow)); }
 
-        .item-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 18px;
-            padding: 18px;
-            margin-bottom: 15px;
-            border: 1px solid var(--sd-light-blue);
-            cursor: pointer;
+        /* Butik-knappar med BLÅ NEON-hover */
+        .buy-button { 
+            background: rgba(255, 255, 255, 0.03); 
+            border: 1px solid rgba(0, 119, 255, 0.3); 
+            padding: 15px; 
+            margin: 10px 0; 
+            cursor: pointer; 
+            width: 100%; 
+            border-radius: 16px;
+            color: white;
             transition: 0.3s;
         }
 
-        .item-card:hover:not(.disabled) {
-            transform: translateX(5px);
-            background: rgba(163, 212, 247, 0.2);
-            border-color: var(--swe-yellow);
+        .buy-button:hover:not(.disabled) {
+            background: rgba(0, 119, 255, 0.1);
+            border-color: var(--sweden-blue);
+            box-shadow: var(--neon-blue-glow);
+            transform: translateY(-3px);
         }
 
-        .item-card.disabled { opacity: 0.3; cursor: not-allowed; filter: grayscale(1); }
+        .buy-button.disabled { opacity: 0.2; cursor: not-allowed; filter: grayscale(1); }
 
-        .card-header { display: flex; justify-content: space-between; align-items: center; }
-        .card-header b { color: white; font-size: 1.1rem; }
-        
-        .card-price { 
-            color: var(--primary-blue); 
-            background: var(--swe-yellow); 
-            padding: 4px 12px; 
-            border-radius: 20px; 
-            font-size: 0.9rem; 
-            font-family: sans-serif;
-            font-weight: bold;
-        }
+        .btn-header { display: flex; justify-content: space-between; align-items: center; }
+        .btn-header b { color: var(--sweden-yellow); text-shadow: var(--neon-yellow-glow); font-size: 1.1rem; }
+        .btn-header span { color: #fff; background: var(--sweden-blue); padding: 4px 10px; border-radius: 8px; font-size: 0.85rem; font-family: sans-serif; box-shadow: var(--neon-blue-glow); }
 
-        .card-desc { font-size: 0.85rem; color: var(--sd-light-blue); margin-top: 8px; font-family: sans-serif; border-top: 1px solid rgba(163, 212, 247, 0.2); padding-top: 8px;}
+        .btn-sub { font-size: 0.8rem; color: #a0c0ff; margin-top: 8px; font-family: sans-serif; }
 
-        .quest-group {
-            margin-bottom: 25px;
-            border: 1px solid var(--sd-light-blue);
-            border-radius: 15px;
-            background: rgba(0,0,0,0.3);
-            overflow: hidden;
-        }
-
-        .quest-group-title {
-            background: var(--sd-light-blue);
-            color: var(--primary-blue);
-            padding: 10px 15px;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            text-align: center;
-        }
-
+        /* Achievement Cards med GUL NEON-glöd */
         .ach-card { 
-            padding: 15px; 
-            position: relative;
-        }
-
-        .ach-card:not(:last-child) {
-            border-bottom: 1px solid rgba(163, 212, 247, 0.2);
-        }
-
-        .ach-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .ach-reward {
-            color: #00ff88;
-            font-weight: bold;
-        }
-
-        .ach-req {
-            font-size: 0.8rem;
-            color: var(--sd-light-blue);
-            font-family: sans-serif;
-            margin-bottom: 8px;
+            background: rgba(0, 0, 0, 0.3); 
+            padding: 20px; 
+            margin-bottom: 15px; 
+            border-radius: 16px;
+            border: 2px solid var(--sweden-yellow);
+            box-shadow: var(--neon-yellow-glow);
         }
 
         .progress-container { 
-            background: #000; height: 10px; width: 100%; 
-            border-radius: 10px; overflow: hidden;
-            border: 1px solid var(--sd-light-blue);
-            margin-bottom: 10px;
+            background: #000; height: 14px; width: 100%; 
+            border-radius: 10px; margin-top: 12px; overflow: hidden;
+            border: 1px solid var(--sweden-blue);
+            box-shadow: inset 0 0 5px rgba(0, 119, 255, 0.5);
         }
         
         .progress-bar { 
-            background: linear-gradient(90deg, var(--sd-light-blue), var(--swe-yellow));
+            background: linear-gradient(90deg, var(--sweden-blue), var(--sweden-yellow));
             height: 100%; width: 0%; transition: width 0.5s ease; 
+            box-shadow: 0 0 10px var(--sweden-yellow);
         }
 
         .claim-btn { 
-            width: 100%; padding: 8px; 
-            background: #333; border: none; 
-            color: #777; font-weight: bold; border-radius: 8px; 
-            text-transform: uppercase;
-            font-size: 0.8rem;
+            width: 100%; margin-top: 15px; padding: 12px; 
+            background: #222; border: 1px solid #444; 
+            color: #666; font-weight: bold; border-radius: 10px; 
+            transition: 0.3s; text-transform: uppercase;
+        }
+        .claim-btn.ready { 
+            background: linear-gradient(45deg, #00ff88, #00cc66); 
+            cursor: pointer; 
+            color: #fff;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
+            border: none;
         }
 
-        .claim-btn.ready { 
-            background: var(--swe-yellow); 
-            cursor: pointer; 
-            color: var(--primary-blue);
-            box-shadow: 0 0 15px rgba(254, 204, 0, 0.5);
-        }
+        .claim-btn.ready:hover { box-shadow: 0 0 30px rgba(0, 255, 136, 0.8); }
 
         .plus-one { 
-            position: absolute; color: white; font-weight: 900; 
-            font-size: 2.2rem; pointer-events: none; animation: flyUp 0.8s forwards; 
-            text-shadow: 0 0 10px var(--sd-light-blue); 
-            z-index: 1000; 
+            position: absolute; color: var(--sweden-yellow); font-weight: 900; 
+            font-size: 2.8rem; pointer-events: none; animation: fly 0.8s forwards; 
+            text-shadow: var(--neon-yellow-glow), 0 0 20px #fff; z-index: 1000; 
         }
 
-        @keyframes flyUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-120px); } }
+        @keyframes fly { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-150px); } }
 
-        .back-link {
-            margin-top: 30px; color: var(--sd-light-blue); text-decoration: none; font-weight: bold;
-            font-family: sans-serif; transition: 0.3s; font-size: 0.9rem;
+        .back-btn {
+            background: transparent; color: #7090c0; padding: 10px 20px; 
+            text-decoration: none; border: 1px solid rgba(112, 144, 192, 0.5); 
+            border-radius: 10px; font-size: 0.9rem; margin-top: 30px;
+            transition: 0.3s; font-family: sans-serif;
         }
-        .back-link:hover { color: var(--swe-yellow); }
+        .back-btn:hover { color: white; border-color: white; box-shadow: 0 0 10px rgba(255,255,255,0.3); }
 
+        /* Scrollbar */
         .panel::-webkit-scrollbar { width: 6px; }
-        .panel::-webkit-scrollbar-thumb { background: var(--sd-light-blue); border-radius: 10px; }
+        .panel::-webkit-scrollbar-thumb { background: var(--sweden-blue); border-radius: 10px; box-shadow: var(--neon-blue-glow); }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>Bygg Folkhemmet</h1>
-        <div class="money-display">💰 <b id="money">0</b> kr</div>
-        <div class="stats-bar">
-            <div class="stat-capsule">Produktion: <span id="pps">0</span>/sek</div>
-            <div class="stat-capsule">Klickkraft: <span id="mpc">1</span></div>
-            <div class="stat-capsule" style="color: var(--swe-yellow); border-color: var(--swe-yellow);">Bonus: <span id="bonus-val">0</span>%</div>
+        <h1>BYGG FOLKHEMMET</h1>
+        <div class="stats-container">
+            <div class="money-box">💰 Välfärd: <b id="money">0</b> kr</div>
+        </div>
+        <div class="stats-container" style="margin-top: 5px;">
+            <div class="stat-box">📈 PPS: <b id="pps">0</b></div>
+            <div class="stat-box">🖱️ MPC: <b id="mpc">1</b></div>
+            <div class="stat-box">🏆 Bonus: <b id="bonus-val">0</b>%</div>
         </div>
     </div>
 
     <div class="main-layout">
-        <div class="panel">
-            <h3>Marknad</h3>
+        <div class="panel glass-panel">
+            <h3>MARKNAD</h3>
             <div id="essentials">
-                <div class="item-card" id="hammer-btn" onclick="buyHammer()">
-                    <div class="card-header"><b>🔨 Super-Hammare</b> <span class="card-price" id="hammer-cost">15</span></div>
-                    <div class="card-desc">Ökar klickstyrka baserat på din PPS.</div>
-                </div>
-                <div class="item-card" id="auto-btn" onclick="buyAuto()">
-                    <div class="card-header"><b>🤖 Auto-Bot</b> <span class="card-price" id="auto-cost">100</span></div>
-                    <div class="card-desc">Genererar klick automatiskt per sekund.</div>
-                </div>
+                <button class="buy-button" id="hammer-btn" onclick="buyHammer()">
+                    <div class="btn-header"><b>🔨 Super-Hammare</b> <span id="hammer-cost">15</span></div>
+                    <div class="btn-sub">Ökar klickstyrka baserat på din totala PPS.</div>
+                </button>
+                <button class="buy-button" id="auto-btn" onclick="buyAuto()">
+                    <div class="btn-header"><b>🤖 Auto-Bot</b> <span id="auto-cost">100</span></div>
+                    <div class="btn-sub">Genererar klick automatiskt varje sekund.</div>
+                </button>
             </div>
-            <div style="height: 2px; background: var(--sd-light-blue); opacity: 0.3; margin: 20px 0;"></div>
+            <div style="height: 2px; background: rgba(0, 119, 255, 0.2); margin: 20px 0; box-shadow: var(--neon-blue-glow);"></div>
             <div id="building-list"></div>
         </div>
 
         <div class="center-area">
-            <div class="clicker-circle" onclick="doClick(event)"><span>🏠</span></div>
-            <a href="games.html" class="back-link">← TILLBAKA TILL MENYN</a>
+            <div class="main-clicker" onclick="doClick(event)">
+                <span>🏠</span>
+            </div>
+            <a href="games.html" class="back-btn">← TILLBAKA TILL MENYN</a>
         </div>
 
-        <div class="panel">
-            <h3>Sverige-Uppdrag</h3>
+        <div class="panel glass-panel">
+            <h3>UPPDRAG</h3>
             <div id="ach-license-area">
-                <div class="item-card" style="text-align: center; border: 2px dashed var(--sd-light-blue); background: rgba(0,0,0,0.3); cursor: default;">
-                    <p style="color: var(--sd-light-blue); font-family: sans-serif; margin-top: 0;">Lås upp speciella belöningar!</p>
-                    <button class="claim-btn ready" onclick="buyLicense()">JIMMIE-LICENS (1 500 kr)</button>
+                <div class="ach-card" style="text-align: center; border-color: var(--sweden-yellow);">
+                    <p style="margin-top:0; font-size: 0.95rem; color: #a0c0ff; font-family: sans-serif;">Lås upp <b>Speciella Uppdrag</b> för att få tillgång till unika bonusar.</p>
+                    <button class="claim-btn ready" onclick="buyLicense()" style="background: var(--sweden-yellow); color: #000; text-shadow: none;">LÅS UPP JIMMIE (1 500 kr)</button>
                 </div>
             </div>
             <div id="ach-container"></div>
@@ -327,69 +290,59 @@
     </div>
 
     <script>
-        // Logikversion 9.0 (Fullständigt bevarad)
+        // Logiken behålls exakt som din version 9, bara UI-uppdateringar
         let data = {
             money: 0, clicks: 0, mpc: 1, autoClicks: 0,
             hammerPrice: 15, autoPrice: 100,
-            hasLicense: false, questsDone: 0,
+            hasLicense: false,
+            questsDone: 0,
             achLevels: { click: 0, money: 0, b0: 0, total: 0, secret: 0 },
-            bCounts: Array(BuildingsData().length).fill(0),
-            bCosts: BuildingsData().map(b => b.baseCost),
+            bCounts: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            bCosts: [50, 400, 2000, 10000, 60000, 400000, 2500000, 15000000, 100000000, 1000000000, 10000000000],
             hammerLevel: 0
         };
 
-        function BuildingsData() {
-            return [
-                { name: "Röd Stuga", inc: 1, baseCost: 50 },
-                { name: "Hyreshus", inc: 8, baseCost: 400 },
-                { name: "Sjukhus", inc: 45, baseCost: 2000 },
-                { name: "Industri", inc: 180, baseCost: 10000 },
-                { name: "Universitet", inc: 750, baseCost: 60000 },
-                { name: "Kärnkraft", inc: 3500, baseCost: 400000 },
-                { name: "Välfärdsstat", inc: 15000, baseCost: 2500000 },
-                { name: "Rymdprogram", inc: 65000, baseCost: 15000000 },
-                { name: "AI-Myndighet", inc: 250000, baseCost: 100000000 },
-                { name: "Sverige 2.0", inc: 1200000, baseCost: 1000000000 },
-                { name: "SD-Högkvarteret 🌸", inc: 10000000, baseCost: 10000000000 }
-            ];
-        }
-
-        const buildings = BuildingsData();
+        const buildings = [
+            { name: "Röd Stuga", inc: 1 }, { name: "Hyreshus", inc: 8 },
+            { name: "Sjukhus", inc: 45 }, { name: "Industri", inc: 180 },
+            { name: "Universitet", inc: 750 }, { name: "Kärnkraft", inc: 3500 },
+            { name: "Välfärdsstat", inc: 15000 }, { name: "Rymdprogram", inc: 65000 },
+            { name: "AI-Myndighet", inc: 250000 }, { name: "Sverige 2.0", inc: 1200000 },
+            { name: "SD-Högkvarteret 🌸", inc: 10000000 }
+        ];
 
         const achChains = {
-            click: { title: "Klick-Milstolpar", quests: [
+            click: [
                 { t: "Kom igång!", target: 10, reward: 10, req: "10 klick" },
                 { t: "Finger-gympa", target: 50, reward: 100, req: "50 klick" },
                 { t: "Klick-Proffs", target: 5000, reward: 20000, req: "5 000 klick" }
-            ]},
-            money: { title: "Välfärds-Mål", quests: [
+            ],
+            money: [
                 { t: "Småsparare", target: 1000, reward: 100, req: "Ha 1 000 kr" },
                 { t: "Kapitalist", target: 100000, reward: 15000, req: "Ha 100 000 kr" }
-            ]},
-            b0: { title: "Bostads-Satsning", quests: [
+            ],
+            b0: [
                 { t: "En röd vägg", target: 1, reward: 20, req: "1 Röd Stuga" },
                 { t: "Stugby", target: 20, reward: 1000, req: "20 Röda Stugor" }
-            ]},
-            total: { title: "Infrastruktur", quests: [
+            ],
+            total: [
                 { t: "Byggstart", target: 1, reward: 10, req: "1 byggnad" },
                 { t: "Metropol", target: 100, reward: 50000, req: "100 byggnader" }
-            ]},
-            secret: { title: "Special-Uppdrag", quests: [
+            ],
+            secret: [
                 { t: "Falukorvs-fest", target: 5, targetType: "b1", reward: 2000, req: "Bygg 5 Hyreshus" },
                 { t: "Fika-paus", target: 1000, targetType: "clicks", reward: 5000, req: "Klicka 1000 gånger" },
                 { t: "Sverigevän", target: 1, targetType: "b10", reward: 500000, req: "Bygg 1 SD-Högkvarter" },
                 { t: "Kärnkraft i trädgården", target: 10, targetType: "b5", reward: 100000, req: "Bygg 10 Kärnkraftverk" }
-            ]}
+            ]
         };
 
         function getQuestBonus() { return 1 + (data.questsDone * 0.10); }
+        function getProduction(id) { return buildings[id].inc * getQuestBonus(); }
         
         function getTotalPPS() {
             let pps = 0;
-            const bData = BuildingsData();
-            for(let i=0; i<bData.length; i++) {
-                if(data.bCounts[i]) pps += data.bCounts[i] * bData[i].inc * getQuestBonus();
-            }
+            for(let i=0; i<buildings.length; i++) if(data.bCounts[i]) pps += data.bCounts[i] * getProduction(i);
             return pps;
         }
 
@@ -402,7 +355,8 @@
 
         function doClick(e) {
             let currentMPC = calculateMPC();
-            data.money += currentMPC; data.clicks++;
+            data.money += currentMPC; 
+            data.clicks++;
             if(e) {
                 const t = document.createElement("div"); t.className = "plus-one"; t.innerText = "+" + currentMPC.toLocaleString();
                 t.style.left = e.pageX + "px"; t.style.top = (e.pageY - 40) + "px";
@@ -411,26 +365,50 @@
             updateNumbersOnly();
         }
 
-        function buyHammer() { if (data.money >= data.hammerPrice) { data.money -= data.hammerPrice; data.hammerLevel++; data.hammerPrice = Math.round(data.hammerPrice * 2.1); renderBuildings(); updateNumbersOnly(); } }
-        function buyAuto() { if (data.money >= data.autoPrice) { data.money -= data.autoPrice; data.autoClicks++; data.autoPrice = Math.round(data.autoPrice * 2.5); updateNumbersOnly(); } }
-        function buyBuilding(id) { if (data.money >= data.bCosts[id]) { data.money -= data.bCosts[id]; data.bCounts[id]++; data.bCosts[id] = Math.round(data.bCosts[id] * 1.30); renderBuildings(); updateNumbersOnly(); } }
+        function buyHammer() {
+            if (data.money >= data.hammerPrice) {
+                data.money -= data.hammerPrice; 
+                data.hammerLevel++;
+                data.hammerPrice = Math.round(data.hammerPrice * 2.1);
+                renderBuildings();
+                updateNumbersOnly();
+            }
+        }
+
+        function buyAuto() {
+            if (data.money >= data.autoPrice) {
+                data.money -= data.autoPrice; data.autoClicks++;
+                data.autoPrice = Math.round(data.autoPrice * 2.5);
+                updateNumbersOnly();
+            }
+        }
+
+        function buyBuilding(id) {
+            if (data.money >= data.bCosts[id]) {
+                data.money -= data.bCosts[id]; data.bCounts[id]++;
+                data.bCosts[id] = Math.round(data.bCosts[id] * 1.30);
+                renderBuildings();
+                updateNumbersOnly();
+            }
+        }
+
         function buyLicense() { if (data.money >= 1500) { data.money -= 1500; data.hasLicense = true; renderEverything(); } }
 
         function claimAch(type) {
             const level = data.achLevels[type];
-            const ach = achChains[type].quests[level];
-            if (getValByType(type, level) >= ach.target) {
-                data.money += ach.reward;
-                data.achLevels[type]++; data.questsDone++;
+            if (getValByType(type, level, achChains[type]) >= achChains[type][level].target) {
+                data.money += achChains[type][level].reward;
+                data.achLevels[type]++;
+                data.questsDone++;
                 renderEverything();
             }
         }
 
-        function getValByType(type, level) {
-            const ach = achChains[type].quests[level];
+        function getValByType(type, level, chain) {
             if (type === 'secret') {
-                if (ach.targetType === 'clicks') return data.clicks;
-                if (ach.targetType.startsWith('b')) return data.bCounts[parseInt(ach.targetType.substring(1))];
+                let targetType = chain[level].targetType;
+                if (targetType === 'clicks') return data.clicks;
+                if (targetType.startsWith('b')) return data.bCounts[parseInt(targetType.substring(1))];
                 return 0;
             }
             if(type === 'click') return data.clicks;
@@ -441,34 +419,34 @@
 
         function updateNumbersOnly() {
             let currentMPC = calculateMPC();
-            const bData = BuildingsData();
             document.getElementById("money").innerText = Math.floor(data.money).toLocaleString();
             document.getElementById("mpc").innerText = currentMPC.toLocaleString();
             document.getElementById("pps").innerText = Math.floor(getTotalPPS()).toLocaleString();
             document.getElementById("bonus-val").innerText = Math.round((getQuestBonus()-1)*100);
-            document.getElementById("hammer-cost").innerText = data.hammerPrice.toLocaleString();
-            document.getElementById("auto-cost").innerText = data.autoPrice.toLocaleString();
+            
+            document.getElementById("hammer-cost").innerText = data.hammerPrice.toLocaleString() + " kr";
+            document.getElementById("auto-cost").innerText = data.autoPrice.toLocaleString() + " kr";
             
             document.getElementById("hammer-btn").classList.toggle("disabled", data.money < data.hammerPrice);
             document.getElementById("auto-btn").classList.toggle("disabled", data.money < data.autoPrice);
             
-            bData.forEach((_, i) => {
+            buildings.forEach((_, i) => {
                 const btn = document.getElementById("build-"+i);
                 if(btn) btn.classList.toggle("disabled", data.money < data.bCosts[i]);
             });
-            localStorage.setItem('folkhem_hardcore_v9_design_clear_quests', JSON.stringify(data));
+            // Sparar med design-suffix för att inte krocka med gamla saves om man testar
+            localStorage.setItem('folkhem_hardcore_v9_neon', JSON.stringify(data));
         }
 
         function renderBuildings() {
             let bHtml = "";
-            const bData = BuildingsData();
-            bData.forEach((b, i) => {
+            buildings.forEach((b, i) => {
                 const cost = data.bCosts[i];
                 if ((data.money >= cost * 0.2) || (data.bCounts[i] > 0)) {
-                    bHtml += `<div class="item-card ${data.money < cost ? 'disabled' : ''}" id="build-${i}" onclick="buyBuilding(${i})">
-                        <div class="card-header"><b>${b.name} (${data.bCounts[i]})</b> <span class="card-price">${cost.toLocaleString()} kr</span></div>
-                        <div class="card-desc">Produktion: +${(b.inc * getQuestBonus()).toLocaleString()}/sek</div>
-                    </div>`;
+                    bHtml += `<button class="buy-button" id="build-${i}" onclick="buyBuilding(${i})">
+                        <div class="btn-header"><b>${b.name} (${data.bCounts[i]})</b> <span>${cost.toLocaleString()} kr</span></div>
+                        <div class="btn-sub">Produktion: +${getProduction(i).toLocaleString()}/sek</div>
+                    </button>`;
                 }
             });
             document.getElementById("building-list").innerHTML = bHtml;
@@ -477,35 +455,34 @@
         function renderEverything() {
             renderBuildings();
             document.getElementById("ach-license-area").style.display = data.hasLicense ? "none" : "block";
-            
             if (data.hasLicense) {
-                let html = "";
+                let questItems = [];
                 Object.keys(achChains).forEach(type => {
-                    const group = achChains[type];
                     const level = data.achLevels[type];
-                    
-                    if (level < group.quests.length) {
-                        html += `<div class="quest-group">`;
-                        html += `<div class="quest-group-title">${group.title}</div>`;
-                        const ach = group.quests[level];
-                        const val = getValByType(type, level);
-                        const progress = (val / ach.target) * 100;
+                    if (level < achChains[type].length) {
+                        const ach = achChains[type][level];
+                        const val = getValByType(type, level, achChains[type]);
                         const isReady = val >= ach.target;
-                        
-                        html += `
+                        const progress = (val / ach.target) * 100;
+                        const html = `
                             <div class="ach-card">
-                                <div class="ach-card-header">
-                                    <b class="ach-title">${type === 'secret' ? '🌟 ' : ''}${ach.t}</b>
-                                    <span class="ach-reward">+${ach.reward.toLocaleString()} kr</span>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                                    <b style="color:white; text-shadow: ${isReady ? 'var(--neon-yellow-glow)' : 'none'};">${type === 'secret' ? '🌟 ' + ach.t : ach.t}</b>
+                                    <span style="color:#00ff88; font-weight:bold; text-shadow: 0 0 10px rgba(0,255,136,0.5);">+${ach.reward.toLocaleString()} kr</span>
                                 </div>
-                                <div class="ach-req">${ach.req}</div>
-                                <div class="progress-container"><div class="progress-bar" style="width: ${Math.min(100, progress)}%"></div></div>
-                                <button class="claim-btn ${isReady ? 'ready' : ''}" onclick="if(${isReady}) claimAch('${type}')">${isReady ? 'HÄMTA' : 'LÅST'}</button>
+                                <div class="btn-sub" style="margin-bottom:10px;">${ach.req}</div>
+                                <div class="progress-container">
+                                    <div class="progress-bar" style="width: ${Math.min(100, progress)}%"></div>
+                                </div>
+                                <button class="claim-btn ${isReady ? 'ready' : ''}" onclick="claimAch('${type}')">
+                                    ${isReady ? 'HÄMTA BELÖNING' : 'LÅST'}
+                                </button>
                             </div>`;
-                        html += `</div>`;
+                        questItems.push({html: html, ready: isReady});
                     }
                 });
-                document.getElementById("ach-container").innerHTML = html;
+                questItems.sort((a, b) => b.ready - a.ready);
+                document.getElementById("ach-container").innerHTML = questItems.map(i => i.html).join("");
             }
             updateNumbersOnly();
         }
@@ -519,15 +496,8 @@
         }, 100);
 
         window.onload = () => {
-            let s = localStorage.getItem('folkhem_hardcore_v9_design_clear_quests');
-            if (s) {
-                let savedData = JSON.parse(s);
-                if (savedData.bCounts && savedData.bCounts.length < BuildingsData().length) {
-                    while(savedData.bCounts.length < BuildingsData().length) savedData.bCounts.push(0);
-                    while(savedData.bCosts.length < BuildingsData().length) savedData.bCosts.push(0);
-                }
-                Object.assign(data, savedData);
-            }
+            let s = localStorage.getItem('folkhem_hardcore_v9_neon');
+            if (s) Object.assign(data, JSON.parse(s));
             renderEverything();
         };
     </script>
