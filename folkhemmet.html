@@ -236,7 +236,7 @@
             money: 0, clicks: 0, mpc: 1, autoClicks: 0,
             hammerPrice: 15, autoPrice: 100,
             hasLicense: false,
-            achLevels: { click: 0, money: 0, b0: 0, b1: 0, b3: 0, auto: 0, pps: 0, b7: 0, sd: 0 },
+            achLevels: { click: 0, money: 0, b0: 0, b1: 0, b3: 0, auto: 0, pps: 0, sd: 0 },
             bCounts: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             bCosts: [15, 100, 500, 2500, 15000, 100000, 1000000, 7500000, 50000000, 500000000, 5000000000]
         };
@@ -252,8 +252,7 @@
             { name: "Rymdprogram", inc: 65000 },
             { name: "AI-Myndighet", inc: 250000 },
             { name: "Sverige 2.0", inc: 1200000 },
-            // DEN NYA ELIT-BYGGNADEN
-            { name: "SD-Högkvarteret 🌸", inc: 8000000 }
+            { name: "SD-Högkvarteret 🌸", inc: 10000000 } // Tio miljoner i sekunden!
         ];
 
         const achChains = {
@@ -268,16 +267,10 @@
                 { t: "Miljonär", target: 1000000, reward: 200000, req: "Ha 1 000 000 kr på kontot" }
             ],
             b0: [
-                { t: "Stugby", target: 10, reward: 500, req: "Bygg 10 Röda Stugor" },
-                { t: "Smålands-kung", target: 50, reward: 10000, req: "Bygg 50 Röda Stugor" }
+                { t: "Stugby", target: 10, reward: 500, req: "Bygg 10 Röda Stugor" }
             ],
             b1: [
-                { t: "Bostads-fixare", target: 10, reward: 2500, req: "Bygg 10 Hyreshus" },
-                { t: "Miljonprogrammet", target: 50, reward: 50000, req: "Bygg 50 Hyreshus" }
-            ],
-            b3: [
-                { t: "Industri-ägare", target: 5, reward: 10000, req: "Bygg 5 Industrier" },
-                { t: "Produktions-chef", target: 20, reward: 100000, req: "Bygg 20 Industrier" }
+                { t: "Bostads-fixare", target: 10, reward: 2500, req: "Bygg 10 Hyreshus" }
             ],
             auto: [
                 { t: "Automatisering", target: 10, reward: 5000, req: "Köp 10 Auto-Klick" },
@@ -285,10 +278,10 @@
             ],
             pps: [
                 { t: "Tillväxt", target: 1000, reward: 15000, req: "Nå 1 000 kr/sek" },
-                { t: "Boom", target: 100000, reward: 500000, req: "Nå 100 000 kr/sek" }
+                { t: "Galaktisk PPS", target: 1000000, reward: 5000000, req: "Nå 1 000 000 kr/sek" }
             ],
             sd: [
-                { t: "Partiledarens Val", target: 1, reward: 10000000, req: "Bygg ett SD-Högkvarter" }
+                { t: "Blåsippans Makt", target: 1, reward: 50000000, req: "Bygg 1 SD-Högkvarter" }
             ]
         };
 
@@ -356,7 +349,7 @@
             if(type === 'money') return data.money;
             if(type === 'auto') return data.autoClicks;
             if(type === 'pps') return getTotalPPS();
-            if(type === 'sd') return data.bCounts[10]; // SD-byggnaden
+            if(type === 'sd') return data.bCounts[10] || 0; // ID 10 är SD-byggnaden
             if(type.startsWith('b')) return data.bCounts[parseInt(type.substring(1))];
             return 0;
         }
@@ -383,7 +376,8 @@
             let bHtml = "";
             buildings.forEach((b, i) => {
                 const cost = data.bCosts[i];
-                const canSee = (data.money >= cost * 0.7) || (data.bCounts[i] > 0);
+                // Man ser byggnaden om man har råd eller redan äger den
+                const canSee = (data.money >= cost * 0.5) || (data.bCounts[i] > 0);
                 if (canSee) {
                     bHtml += `
                         <button class="buy-button" id="build-${i}" onclick="buyBuilding(${i})">
@@ -403,7 +397,7 @@
                         const ach = achChains[type][level];
                         const val = getValByType(type);
                         const isReady = val >= ach.target;
-                        const canSeeAch = (val >= ach.target * 0.5) || isReady;
+                        const canSeeAch = (val >= ach.target * 0.1) || isReady;
 
                         if (canSeeAch) {
                             html += `
@@ -440,14 +434,17 @@
                 let saved = JSON.parse(s);
                 Object.assign(data, saved);
                 
-                // FIX: Se till att alla nya uppdragstyper finns i den gamla sparfilen
                 Object.keys(achChains).forEach(key => {
                     if (data.achLevels[key] === undefined) data.achLevels[key] = 0;
                 });
                 
-                // FIX: Se till att listan med byggnader är tillräckligt lång
+                // Se till att arrayerna har plats för den nya SD-byggnaden (ID 10)
                 while(data.bCounts.length < buildings.length) data.bCounts.push(0);
-                while(data.bCosts.length < buildings.length) data.bCosts.push(data.bCosts[data.bCosts.length-1] * 10);
+                while(data.bCosts.length < buildings.length) {
+                    data.bCosts.push(data.bCosts[data.bCosts.length-1] * 10);
+                }
+                // Tvinga rätt kostnad för sista byggnaden om den nollats
+                data.bCosts[10] = data.bCosts[10] || 5000000000;
             }
             renderEverything();
         };
