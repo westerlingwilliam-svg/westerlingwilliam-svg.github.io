@@ -3,8 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bygg Folkhemmet - Fixad Version</title>
+    <title>Bygg Folkhemmet - Snabb & Smidig</title>
     <style>
+        /* Förhindrar att text markeras när man klickar snabbt */
+        * {
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
         body {
             font-family: 'Arial Black', sans-serif;
             background-color: #005293;
@@ -58,11 +64,14 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            transition: transform 0.1s;
+            transition: transform 0.05s; /* Snabbare respons */
             box-shadow: 0 10px 0 #b38f00;
         }
 
-        .main-clicker:active { transform: translateY(10px); box-shadow: 0 0px 0 #b38f00; }
+        .main-clicker:active { 
+            transform: translateY(10px) scale(0.98); 
+            box-shadow: 0 0px 0 #b38f00; 
+        }
 
         .upgrade-btn {
             background: #f0f0f0;
@@ -72,13 +81,18 @@
             cursor: pointer;
             display: flex;
             justify-content: space-between;
+            align-items: center;
             font-size: 0.85rem;
+            transition: 0.1s;
         }
+
+        .upgrade-btn:hover:not(.disabled) { background: #e0e0e0; }
+
         .upgrade-btn.disabled { 
             background: #ccc !important;
             color: #777 !important;
             cursor: not-allowed;
-            border-color: #999;
+            opacity: 0.6;
         }
 
         .ach-card {
@@ -90,7 +104,7 @@
         }
         .ach-card.unlocked { background: #fecc00; border-color: #005293; }
 
-        .bottom-controls { text-align: center; padding: 20px; margin-top: auto; }
+        .bottom-controls { text-align: center; padding: 20px; }
 
         .btn-reset { 
             background: rgba(255, 68, 68, 0.4); 
@@ -99,7 +113,7 @@
             padding: 5px 10px; 
             cursor: pointer; 
             font-size: 0.7rem;
-            margin-top: 50px;
+            margin-top: 20px;
             border-radius: 3px;
         }
 
@@ -107,12 +121,13 @@
             position: absolute;
             color: #fecc00;
             font-weight: bold;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             pointer-events: none;
-            animation: fly 1s forwards;
+            animation: fly 0.8s forwards;
             z-index: 999;
+            text-shadow: 2px 2px 0px #005293;
         }
-        @keyframes fly { 0% { opacity: 1; } 100% { opacity: 0; transform: translateY(-100px); } }
+        @keyframes fly { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-120px); } }
     </style>
 </head>
 <body>
@@ -127,9 +142,9 @@
         <div class="panel">
             <h3>BUTIK</h3>
             <div id="click-upgrades">
-                <div class="upgrade-btn" id="click-btn" onclick="buyClickUpgrade()">
+                <div class="upgrade-btn" id="click-btn" onclick="buyClickUpgrade(event)">
                     <div><b>Bättre Hammare</b><br><small>+1 kr per klick</small></div>
-                    <div id="click-cost">20 kr</div>
+                    <div id="click-cost">15 kr</div>
                 </div>
             </div>
             <hr>
@@ -152,14 +167,13 @@
                 <button class="upgrade-btn" id="license-btn" onclick="unlockAchievements()" style="width:100%; background: #fecc00;">
                     LÅS UPP LICENS (1000 kr)
                 </button>
-                <p style="font-size: 0.7rem; text-align: center;">Köp licensen för att börja klara utmaningar!</p>
             </div>
             <div id="ach-list"></div>
         </div>
     </div>
 
     <div class="bottom-controls">
-        <button class="btn-reset" onclick="resetGame()">Nollställ all progress (Reset)</button>
+        <button class="btn-reset" onclick="resetGame()">Nollställ all progress</button>
     </div>
 
     <script>
@@ -167,7 +181,7 @@
             money: 0,
             totalClicks: 0,
             mpc: 1,
-            clickCost: 20, // Billigare startpris!
+            clickCost: 15,
             pps: 0,
             hasLicense: false,
             unlockedAch: [],
@@ -199,14 +213,17 @@
             t.innerText = "+" + state.mpc;
             t.style.left = e.pageX + "px"; t.style.top = e.pageY + "px";
             document.body.appendChild(t);
-            setTimeout(() => t.remove(), 1000);
+            setTimeout(() => t.remove(), 800);
         }
 
-        function buyClickUpgrade() {
+        function buyClickUpgrade(e) {
+            // Förhindrar att klicket går "igenom" till andra element
+            if(e) e.stopPropagation();
+            
             if (state.money >= state.clickCost) {
                 state.money -= state.clickCost;
                 state.mpc += 1;
-                state.clickCost = Math.round(state.clickCost * 2.2);
+                state.clickCost = Math.round(state.clickCost * 2.1);
                 updateUI();
             }
         }
@@ -240,12 +257,10 @@
             document.getElementById("mpc").innerText = state.mpc;
             document.getElementById("click-cost").innerText = state.clickCost + " kr";
 
-            // Fixad hammare knapp
             const cBtn = document.getElementById("click-btn");
             if(state.money < state.clickCost) cBtn.classList.add("disabled");
             else cBtn.classList.remove("disabled");
 
-            // Fixad bygglista
             let bList = document.getElementById("building-list");
             bList.innerHTML = "";
             state.buildings.forEach((b, i) => {
@@ -288,10 +303,6 @@
             let saved = localStorage.getItem('folkhem_save_final');
             if (saved) {
                 state = JSON.parse(saved);
-                // Säkerställ att startpriset korrigeras om man startar om
-                if(state.totalClicks === 0 && state.money === 0 && state.mpc === 1) {
-                    state.clickCost = 20;
-                }
                 calculatePPS();
             }
             updateUI();
