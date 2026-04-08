@@ -405,7 +405,7 @@
             }
             if(type === 'click') return data.clicks;
             if(type === 'money') return data.money;
-            if(type === 'b0') return data.bCounts[0]; // FIXAD: Röd stuga är index 0
+            if(type === 'b0') return data.bCounts[0]; 
             if(type === 'total') return data.bCounts.reduce((a, b) => a + b, 0);
             return 0;
         }
@@ -455,7 +455,6 @@
                     }
                 });
 
-                // Sortera: Klarade (isReady) hamnar först
                 achList.sort((a, b) => b.isReady - a.isReady);
 
                 let achHtml = "";
