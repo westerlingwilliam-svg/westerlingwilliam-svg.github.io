@@ -24,7 +24,6 @@
             flex-direction: column; 
         }
         
-        /* Neonram och skugga för paneler */
         .neon-box {
             box-shadow: 
                 0 0 10px rgba(254, 204, 0, 0.5),
@@ -57,7 +56,7 @@
 
         .main-layout { 
             display: grid; 
-            grid-template-columns: 450px 1fr 450px; /* BREDADE BUTIK OCH UPPDRAG */
+            grid-template-columns: 450px 1fr 450px; 
             gap: 25px; padding: 25px; flex-grow: 1; 
             max-width: 1800px; margin: 0 auto; width: 100%;
         }
@@ -96,7 +95,6 @@
         .main-clicker:active { transform: translateY(8px); box-shadow: 0 7px 0 #b38f00, 0 0 15px rgba(254, 204, 0, 0.8); }
         .main-clicker b { color: #005293; font-size: 1.5rem; text-shadow: 1px 1px 0 white; }
 
-        /* KNAPPAR */
         .buy-button { 
             background: #f0f0f0; border: 4px solid #005293; 
             padding: 10px 15px; margin: 8px 0; 
@@ -113,7 +111,6 @@
             box-shadow: 0 0 15px rgba(254, 204, 0, 0.6);
         }
         .buy-button.disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(0.8); }
-        .buy-button.disabled:hover { transform: none; box-shadow: none; border-color: #005293; }
 
         .btn-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; font-size: 1.2rem;}
         .btn-header b { color: #005293; text-shadow: 1px 1px 0 white; }
@@ -121,7 +118,6 @@
 
         .btn-sub { font-family: 'Arial', sans-serif; font-size: 0.85rem; color: #444; font-weight: bold; background: rgba(0,0,0,0.05); padding: 4px; border-radius: 4px;}
 
-        /* ACHIEVEMENTS */
         .ach-card { 
             background: #f9f9f9; border: 3px solid #005293; 
             padding: 12px; margin-bottom: 15px; border-radius: 12px;
@@ -171,7 +167,6 @@
             box-shadow: 0 0 10px rgba(40, 167, 69, 0.6);
         }
         .claim-btn.ready:hover { transform: scale(1.03); background: #34ce57; }
-        .claim-btn.claimed { background: #005293 !important; border-color: #003d6e !important; cursor: default; box-shadow: none;}
 
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.6); } 70% { box-shadow: 0 0 0 15px rgba(40, 167, 69, 0); } 100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); } }
 
@@ -189,9 +184,8 @@
             transition: 0.2s;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
-        .back-btn:hover { background: #fecc00; color: #005293; box-shadow: 0 0 15px rgba(254, 204, 0, 0.6); }
+        .back-btn:hover { background: #fecc00; color: #005293; }
 
-        /* Scrollbar styling för panelerna */
         .panel::-webkit-scrollbar { width: 10px; }
         .panel::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 10px; }
         .panel::-webkit-scrollbar-thumb { background: #005293; border-radius: 10px; border: 2px solid #fecc00; }
@@ -211,14 +205,16 @@
     <div class="main-layout">
         <div class="panel neon-box" style="max-height: 80vh; overflow-y: auto;">
             <h3>BUTIK</h3>
-            <button class="buy-button" id="hammer-btn" onclick="buyHammer()">
-                <div class="btn-header"><b>Hammare</b> <span><span id="hammer-cost">15</span> kr</span></div>
-                <div class="btn-sub">Mera makt i varje klick</div>
-            </button>
-            <button class="buy-button" id="auto-btn" onclick="buyAuto()">
-                <div class="btn-header"><b>Auto-Klick</b> <span><span id="auto-cost">100</span> kr</span></div>
-                <div class="btn-sub">Klickar själv 1 gång/sek</div>
-            </button>
+            <div id="essentials">
+                <button class="buy-button" id="hammer-btn" onclick="buyHammer()">
+                    <div class="btn-header"><b>Hammare</b> <span><span id="hammer-cost">15</span> kr</span></div>
+                    <div class="btn-sub">Mera makt i varje klick</div>
+                </button>
+                <button class="buy-button" id="auto-btn" onclick="buyAuto()">
+                    <div class="btn-header"><b>Auto-Klick</b> <span><span id="auto-cost">100</span> kr</span></div>
+                    <div class="btn-sub">Klickar själv 1 gång/sek</div>
+                </button>
+            </div>
             <hr style="border: 3px solid #fecc00; margin: 15px 0; border-radius: 3px;">
             <div id="building-list"></div>
         </div>
@@ -258,7 +254,6 @@
             { name: "Välfärdsstat", inc: 15000 }
         ];
 
-        // Achievement-kedjor med tydliga krav och belöningar
         const achChains = {
             click: [
                 { t: "Klick-start", target: 50, reward: 500, req: "Klicka 50 gånger" },
@@ -303,6 +298,7 @@
                 document.body.appendChild(t); setTimeout(() => t.remove(), 800);
             }
             updateNumbersOnly();
+            renderEverything(); // Uppdatera visibility vid varje klick
         }
 
         function buyHammer() {
@@ -355,26 +351,34 @@
             document.getElementById("hammer-btn").classList.toggle("disabled", data.money < data.hammerPrice);
             document.getElementById("auto-btn").classList.toggle("disabled", data.money < data.autoPrice);
             
-            for(let i=0; i<buildings.length; i++) {
+            buildings.forEach((_, i) => {
                 const btn = document.getElementById("build-"+i);
                 if(btn) btn.classList.toggle("disabled", data.money < data.bCosts[i]);
-            }
+            });
             localStorage.setItem('folkhem_save_final_ultra', JSON.stringify(data));
         }
 
         function renderEverything() {
             document.getElementById("hammer-cost").innerText = data.hammerPrice.toLocaleString();
             document.getElementById("auto-cost").innerText = data.autoPrice.toLocaleString();
+            
+            // Render Butik med "Visibility Logic" (Visa om man har 70% av pengarna eller redan äger en)
             let bHtml = "";
             buildings.forEach((b, i) => {
-                bHtml += `
-                    <button class="buy-button" id="build-${i}" onclick="buyBuilding(${i})">
-                        <div class="btn-header"><b>${b.name} (${data.bCounts[i]})</b> <span>${data.bCosts[i].toLocaleString()} kr</span></div>
-                        <div class="btn-sub">Ger just nu: ${getProduction(i).toFixed(1)}/sek styck</div>
-                    </button>`;
+                const cost = data.bCosts[i];
+                const canSee = (data.money >= cost * 0.7) || (data.bCounts[i] > 0);
+                
+                if (canSee) {
+                    bHtml += `
+                        <button class="buy-button" id="build-${i}" onclick="buyBuilding(${i})">
+                            <div class="btn-header"><b>${b.name} (${data.bCounts[i]})</b> <span>${cost.toLocaleString()} kr</span></div>
+                            <div class="btn-sub">Ger just nu: ${getProduction(i).toFixed(1)}/sek styck</div>
+                        </button>`;
+                }
             });
             document.getElementById("building-list").innerHTML = bHtml;
 
+            // Render Uppdrag med "Visibility Logic" (Visa om man har nått 50% av målet)
             document.getElementById("ach-license-area").style.display = data.hasLicense ? "none" : "block";
             if (data.hasLicense) {
                 let html = "";
@@ -384,23 +388,26 @@
                         const ach = achChains[type][level];
                         const val = getValByType(type);
                         const isReady = val >= ach.target;
-                        
-                        html += `
-                            <div class="ach-card neon-box">
-                                <div style="display:flex; justify-content:space-between; align-items:center;">
-                                    <b>${ach.t}</b>
-                                    <span style="font-family:Arial; font-weight:bold; color:#28a745; background:rgba(40,167,69,0.1); padding:2px 6px; border-radius:5px;">+${ach.reward.toLocaleString()} kr</span>
-                                </div>
-                                <div class="ach-req-box">Krav: ${ach.req}</div>
-                                <div class="progress-container"><div id="bar-${type}" class="progress-bar" style="width: ${Math.min(100, (val/ach.target)*100)}%"></div></div>
-                                <div id="text-${type}" style="font-family:Arial; font-size:0.8rem; font-weight:bold; text-align:right; margin-top:2px;">${Math.floor(val).toLocaleString()} / ${ach.target.toLocaleString()}</div>
-                                <button id="btn-${type}" class="claim-btn ${isReady ? 'ready' : ''}" onclick="claimAch('${type}')">
-                                    ${isReady ? 'HÄMTA BELÖNING' : 'LÅST'}
-                                </button>
-                            </div>`;
+                        const canSeeAch = (val >= ach.target * 0.5) || isReady;
+
+                        if (canSeeAch) {
+                            html += `
+                                <div class="ach-card neon-box">
+                                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                                        <b>${ach.t}</b>
+                                        <span style="font-family:Arial; font-weight:bold; color:#28a745; background:rgba(40,167,69,0.1); padding:2px 6px; border-radius:5px;">+${ach.reward.toLocaleString()} kr</span>
+                                    </div>
+                                    <div class="ach-req-box">Krav: ${ach.req}</div>
+                                    <div class="progress-container"><div id="bar-${type}" class="progress-bar" style="width: ${Math.min(100, (val/ach.target)*100)}%"></div></div>
+                                    <div id="text-${type}" style="font-family:Arial; font-size:0.8rem; font-weight:bold; text-align:right; margin-top:2px;">${Math.floor(val).toLocaleString()} / ${ach.target.toLocaleString()}</div>
+                                    <button id="btn-${type}" class="claim-btn ${isReady ? 'ready' : ''}" onclick="claimAch('${type}')">
+                                        ${isReady ? 'HÄMTA BELÖNING' : 'LÅST'}
+                                    </button>
+                                </div>`;
+                        }
                     }
                 });
-                document.getElementById("ach-container").innerHTML = html || "<p style='text-align:center; font-weight:bold; color:#005293;'>Alla uppdrag slutförda! Bra jobbat för Folkhemmet!</p>";
+                document.getElementById("ach-container").innerHTML = html || "<p style='text-align:center; font-weight:bold; color:#005293;'>Inga nya uppdrag tillgängliga just nu...</p>";
             }
             updateNumbersOnly();
         }
@@ -410,6 +417,8 @@
             data.money += pps / 10;
             if(data.autoClicks > 0) data.money += (data.autoClicks * data.mpc) / 10;
             updateNumbersOnly();
+            // Vi kör inte renderEverything i loopen för prestanda, 
+            // men visibility uppdateras vid klick eller köp.
         }, 100);
 
         window.onload = () => {
