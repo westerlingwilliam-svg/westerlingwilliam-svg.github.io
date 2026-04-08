@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riksdags Opinion Tycoon - ELITE EDITION</title>
+    <title>Riksdags Opinion Tycoon - OMEGA EDITION</title>
     <style>
         :root {
             --sd-blue: #005293;
             --sd-yellow: #fecc00;
             --dark-blue: #001a33;
+            --gold: #ffd700;
         }
 
         body {
@@ -22,7 +23,7 @@
             align-items: center;
         }
 
-        /* Bakgrundsanimation */
+        /* Bakgrundsanimation från Elite Edition */
         .bg-glow {
             position: fixed;
             top: 50%; left: 50%;
@@ -31,6 +32,12 @@
             transform: translate(-50%, -50%);
             z-index: -1;
             pointer-events: none;
+            animation: pulse 5s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.4; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
         }
 
         .stats-header {
@@ -48,8 +55,8 @@
         }
 
         .stat-item { text-align: center; }
-        .stat-label { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0.8; }
-        .stat-num { font-size: 2.2rem; font-weight: 900; color: var(--sd-yellow); text-shadow: 0 0 15px rgba(254, 204, 0, 0.5); }
+        .stat-label { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0.8; color: var(--sd-yellow); }
+        .stat-num { font-size: 2.2rem; font-weight: 900; text-shadow: 0 0 15px rgba(254, 204, 0, 0.5); }
 
         /* Opinion Bar */
         .progress-wrapper {
@@ -91,7 +98,7 @@
             z-index: 5;
         }
 
-        /* Dashboard grid */
+        /* Dashboard grid (3 på bredden) */
         .dashboard {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -107,8 +114,6 @@
             padding: 25px;
             border: 1px solid rgba(255,255,255,0.1);
             transition: 0.3s;
-            position: relative;
-            overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -120,8 +125,7 @@
             border-color: var(--sd-yellow);
         }
 
-        .upgrade-card h3 { color: var(--sd-yellow); margin-top: 0; font-size: 1.4rem; }
-        .price-tag { font-weight: bold; font-size: 1.1rem; margin: 10px 0; }
+        .upgrade-card h3 { color: var(--sd-yellow); margin: 0; font-size: 1.4rem; }
 
         .buy-btn {
             width: 100%;
@@ -134,53 +138,63 @@
             text-transform: uppercase;
             cursor: pointer;
             box-shadow: 0 5px 0 #b38f00;
+            margin-top: 10px;
         }
 
         .buy-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #b38f00; }
         .buy-btn:disabled { background: #555; box-shadow: none; cursor: not-allowed; color: #888; }
 
-        /* Victory */
-        #victory-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 82, 147, 0.98);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 5000;
-            text-align: center;
+        /* Jimmie-knappen för att tjäna pengar snabbt */
+        .jimmie-btn {
+            width: 150px; height: 150px;
+            border-radius: 50%;
+            background: var(--sd-blue);
+            border: 6px solid var(--sd-yellow);
+            color: white;
+            font-weight: 900;
+            cursor: pointer;
+            margin-bottom: 40px;
+            transition: 0.1s;
+            box-shadow: 0 0 30px rgba(0, 82, 147, 0.5);
         }
 
-        /* Popups */
+        .jimmie-btn:active { transform: scale(0.9); }
+
+        /* Popups / Modaler */
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 999; display: none;
+        }
+
         .modal {
-            position: fixed;
-            top: 50%; left: 50%;
+            position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%) scale(0.8);
             background: #fff; color: #222;
             padding: 40px; border-radius: 30px;
             z-index: 1000; display: none;
             text-align: center; width: 450px;
-            box-shadow: 0 0 100px rgba(0,0,0,0.9);
             border: 10px solid var(--sd-blue);
         }
+
         .modal.active { display: block; animation: popIn 0.3s forwards; }
 
         @keyframes popIn { to { transform: translate(-50%, -50%) scale(1); } }
 
-        .overlay {
+        /* Victory Screen */
+        #victory-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); z-index: 999; display: none;
+            background: var(--sd-blue); z-index: 5000;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
         }
     </style>
 </head>
-<body>
+<body onclick="spawnParticle(event)">
 
     <div id="victory-screen">
-        <h1>50.0%</h1>
-        <h2>VI HAR MAJORITET!</h2>
-        <p style="font-size: 1.5rem;">Sverige har valt sin väg. Folkhemmet 2.0 är här.</p>
-        <a href="games.html" class="buy-btn" style="text-decoration:none; padding: 20px 50px; display:inline-block; width: auto;">TILLBAKA TILL START</a>
+        <h1 style="font-size: 8rem; color: var(--sd-yellow); margin: 0;">50.0%</h1>
+        <h2 style="font-size: 3rem;">ABSOLUT MAJORITET!</h2>
+        <p>Du har vunnit valet och makten i Sverige.</p>
+        <button class="buy-btn" onclick="location.reload()" style="width: auto; padding: 20px 60px;">SPELA IGEN</button>
     </div>
 
     <div class="bg-glow"></div>
@@ -188,15 +202,15 @@
     <div class="stats-header">
         <div class="stat-item">
             <div class="stat-label">Budget</div>
-            <div class="stat-num" id="money">0 kr</div>
+            <div class="stat-num" id="money-val">0 kr</div>
         </div>
         <div class="stat-item">
             <div class="stat-label">Opinion</div>
             <div class="stat-num" id="opinion-val">20.00%</div>
         </div>
         <div class="stat-item">
-            <div class="stat-label">Väljare/sek</div>
-            <div class="stat-num" id="growth-val">0.00%</div>
+            <div class="stat-label">Opinions-växt</div>
+            <div class="stat-num" id="growth-val">+0.000%</div>
         </div>
     </div>
 
@@ -208,85 +222,52 @@
         <div style="position:absolute; left: 4%; top: 55px; font-size: 0.7rem;">4% SPÄRREN</div>
         
         <div class="milestone-marker" style="left: 50.1%; border-color: gold;"></div>
-        <div style="position:absolute; left: 48%; top: 55px; font-size: 0.7rem; color: gold;">MAJORITET (50%)</div>
+        <div style="position:absolute; left: 45%; top: 55px; font-size: 0.8rem; color: gold; font-weight: bold;">MAJORITET (50%)</div>
     </div>
+
+    <button class="jimmie-btn" onclick="clickMoney(event)">HÅLL ETT TAL<br><small>+ Pengar</small></button>
 
     <div class="dashboard" id="shop"></div>
 
     <div class="overlay" id="overlay"></div>
     <div class="modal" id="event-modal">
-        <h2 id="ev-title">TITEL</h2>
-        <p id="ev-desc">BESKRIVNING</p>
+        <h2 id="ev-title">HÄNDELSE</h2>
+        <p id="ev-desc">Vad gör du?</p>
         <div id="ev-choices"></div>
     </div>
 
     <center style="padding: 40px;">
-        <a href="games.html" style="color: white; text-transform: uppercase; letter-spacing: 2px;">Tillbaka till huvudmenyn</a>
+        <a href="games.html" style="color: white; text-decoration: none; opacity: 0.5;">Tillbaka till menyn</a>
     </center>
 
     <script>
         let state = {
-            money: 100000, 
+            money: 150000,
             opinion: 20.0,
-            moneyRate: 500, // Mycket snabbare pengar
-            opinionRate: 0.005, // Mycket långsammare opinion (per 0.1s)
-            gameActive: true
+            moneyRate: 800,
+            opinionRate: 0.0001, // Extremt långsamt (per 0.1s)
+            clickPower: 750,
+            active: true
         };
 
         const upgrades = [
-            { id: 0, name: "Snyggare Kostym", desc: "Jimmie ser fräschare ut i TV.", cost: 5000, oRate: 0.002, mRate: 100 },
-            { id: 1, name: "Meme-fabrik", desc: "Dank memes för att nå ungdomarna.", cost: 15000, oRate: 0.008, mRate: 250 },
-            { id: 2, name: "Eget Flygblad", desc: "Information direkt i brevlådan.", cost: 35000, oRate: 0.015, mRate: 600 },
-            { id: 3, name: "YouTube-shorts", desc: "Klipp som aldrig tar slut.", cost: 80000, oRate: 0.035, mRate: 1500 },
-            { id: 4, name: "Korv-turné", desc: "Mätta väljare är glada väljare.", cost: 180000, oRate: 0.08, mRate: 100 },
-            { id: 5, name: "Kärnkraft-merch", desc: "T-shirts som lyser i mörkret.", cost: 400000, oRate: 0.15, mRate: 5000 },
-            { id: 6, name: "Blågult Flygplan", desc: "Hela himlen blir blågul.", cost: 1000000, oRate: 0.3, mRate: 10000 },
-            { id: 7, name: "Sanningens Hus", desc: "Eget mediehus vid Sergels Torg.", cost: 3500000, oRate: 0.7, mRate: 25000 },
-            { id: 8, name: "AI-Strateg", desc: "En dator som förutspår varje röst.", cost: 10000000, oRate: 1.5, mRate: 70000 },
-            { id: 9, name: "Statsminister-svit", desc: "Förberedelserna är klara.", cost: 25000000, oRate: 4.0, mRate: 200000 }
+            { id: 1, name: "Ny Slips", desc: "Ser proffsigare ut i TV.", cost: 10000, o: 0.0002, m: 200 },
+            { id: 2, name: "Meme-fabrik", desc: "Nå de unga väljarna.", cost: 25000, o: 0.0008, m: 500 },
+            { id: 3, name: "YouTube-shorts", desc: "Algoritmen älskar dig.", cost: 80000, o: 0.002, m: 1200 },
+            { id: 4, name: "Eget Flygblad", desc: "Information till alla hem.", cost: 200000, o: 0.006, m: 3000 },
+            { id: 5, name: "Kampanjbuss", desc: "Turnera i hela landet.", cost: 500000, o: 0.015, m: 8000 },
+            { id: 6, name: "Kärnkraft-Merch", desc: "Sälj lysande tröjor.", cost: 1200000, o: 0.04, m: 20000 },
+            { id: 7, name: "Eget Mediehus", desc: "Sänd nyheter dygnet runt.", cost: 4000000, o: 0.12, m: 60000 },
+            { id: 8, name: "AI-Talskrivare", desc: "Perfekta tal varje gång.", cost: 10000000, o: 0.35, m: 150000 },
+            { id: 9, name: "Sanningens Torn", desc: "Ett monument i huvudstaden.", cost: 25000000, o: 1.0, m: 400000 },
+            { id: 10, name: "Slutspurten", desc: "Allt eller inget.", cost: 75000000, o: 5.0, m: 0 }
         ];
 
         const events = [
-            { 
-                t: "SVT-DEBATT", 
-                d: "Du blir avbruten av programledaren. Vad gör du?", 
-                choices: [
-                    { t: "Säg 'Låt mig tala till punkt!'", o: 0.5, m: 0 },
-                    { t: "Le och vänta på din tur", o: 0.1, m: 10000 }
-                ]
-            },
-            { 
-                t: "MATLAGNINGS-TV", 
-                d: "Du ska laga mat i TV4. Vad bjuder du på?", 
-                choices: [
-                    { t: "Klassisk falukorv i ugn", o: 0.8, m: 0 },
-                    { t: "En lyxig hummersoppa", o: -0.2, m: 50000 }
-                ]
-            },
-            { 
-                t: "TWITTER-STORM", 
-                d: "Ett gammalt klipp sprids igen. Hur svarar du?", 
-                choices: [
-                    { t: "Gör en 're-make' av klippet", o: 1.2, m: 0 },
-                    { t: "Ignorera totalt", o: 0, m: 20000 }
-                ]
-            },
-            { 
-                t: "DONATION", 
-                d: "En anonym supporter vill skänka pengar.", 
-                choices: [
-                    { t: "Tacka och ta emot", o: -0.1, m: 150000 },
-                    { t: "Be dem köpa merch istället", o: 0.4, m: 30000 }
-                ]
-            },
-            { 
-                t: "SKANDAL HOS MOTSTÅNDAREN", 
-                d: "Oppositionen har gjort bort sig rejält. Hur reagerar du?", 
-                choices: [
-                    { t: "Lägg ut en hånfull meme", o: 1.5, m: 0 },
-                    { t: "Var den 'vuxne i rummet'", o: 0.3, m: 100000 }
-                ]
-            }
+            { t: "TV4 NYHETERNA", d: "Du får en tuff fråga om invandring.", c: [{t:"Svara lugnt", o:0.4, m:0}, {t:"Gå till attack", o:1.2, m:-50000}]},
+            { t: "DONATION", d: "En anonym person ger ett bidrag.", c: [{t:"Tacka (Pengar)", o:-0.2, m:200000}, {t:"Neka (Heder)", o:0.5, m:0}]},
+            { t: "MATLAGNING", d: "Du lagar korv i TV. Hur går det?", c: [{t:"Det blir succé!", o:0.8, m:0}, {t:"Du bränner den", o:-0.4, m:10000}]},
+            { t: "TWITTER-STORM", d: "Ett gammalt citat dyker upp.", c: [{t:"Be om ursäkt", o:0.1, m:0}, {t:"Dubbla ner", o:1.5, m:0}]}
         ];
 
         function initShop() {
@@ -294,43 +275,51 @@
             shop.innerHTML = "";
             upgrades.forEach(u => {
                 shop.innerHTML += `
-                    <div class="upgrade-card" id="card-${u.id}">
+                    <div class="upgrade-card" id="u-${u.id}">
                         <div>
                             <h3>${u.name}</h3>
                             <p>${u.desc}</p>
                         </div>
                         <div>
-                            <div class="price-tag">${u.cost.toLocaleString()} kr</div>
-                            <button class="buy-btn" id="btn-${u.id}" onclick="buyUpgrade(${u.id})">KÖP</button>
+                            <div style="font-weight:bold">${u.cost.toLocaleString()} kr</div>
+                            <button class="buy-btn" id="btn-${u.id}" onclick="buyItem(${u.id})">KÖP NU</button>
                         </div>
                     </div>
                 `;
             });
         }
 
-        function buyUpgrade(id) {
-            const idx = upgrades.findIndex(x => x.id === id);
-            const u = upgrades[idx];
+        function clickMoney(e) {
+            state.money += state.clickPower;
+            updateUI();
+        }
+
+        function buyItem(id) {
+            const i = upgrades.findIndex(x => x.id === id);
+            const u = upgrades[i];
             if (state.money >= u.cost) {
                 state.money -= u.cost;
-                state.opinionRate += u.oRate;
-                state.moneyRate += u.mRate;
-                upgrades.splice(idx, 1);
-                document.getElementById(`card-${id}`).remove();
+                state.opinionRate += u.o;
+                state.moneyRate += u.m;
+                upgrades.splice(i, 1);
+                document.getElementById(`u-${id}`).remove();
                 updateUI();
             }
         }
 
         function updateUI() {
-            if (!state.gameActive) return;
-            document.getElementById('money').innerText = Math.floor(state.money).toLocaleString() + " kr";
-            document.getElementById('opinion-val').innerText = state.opinion.toFixed(2) + "%";
-            document.getElementById('growth-val').innerText = "+" + (state.opinionRate * 10).toFixed(3) + "%";
+            if (!state.active) return;
+            document.getElementById('money-val').innerText = Math.floor(state.money).toLocaleString() + " kr";
+            document.getElementById('opinion-val').innerText = state.opinion.toFixed(3) + "%";
+            document.getElementById('growth-val').innerText = "+" + (state.opinionRate * 10).toFixed(4) + "%";
             
-            let barWidth = (state.opinion / 50) * 100;
-            document.getElementById('opinion-bar').style.width = Math.min(barWidth, 100) + "%";
+            let w = (state.opinion / 50) * 100;
+            document.getElementById('opinion-bar').style.width = Math.min(w, 100) + "%";
 
-            if (state.opinion >= 50.0) winGame();
+            if (state.opinion >= 50) {
+                state.active = false;
+                document.getElementById('victory-screen').style.display = 'flex';
+            }
 
             upgrades.forEach(u => {
                 const btn = document.getElementById(`btn-${u.id}`);
@@ -338,53 +327,48 @@
             });
         }
 
-        function winGame() {
-            state.gameActive = false;
-            document.getElementById('victory-screen').style.display = 'flex';
-        }
-
         function triggerEvent() {
-            if (!state.gameActive) return;
+            if (!state.active) return;
             const ev = events[Math.floor(Math.random() * events.length)];
             document.getElementById('ev-title').innerText = ev.t;
             document.getElementById('ev-desc').innerText = ev.d;
-            const choiceBox = document.getElementById('ev-choices');
-            choiceBox.innerHTML = "";
-            
-            ev.choices.forEach(c => {
+            const cBox = document.getElementById('ev-choices');
+            cBox.innerHTML = "";
+            ev.c.forEach(choice => {
                 const b = document.createElement('button');
-                b.className = "buy-btn";
-                b.style.margin = "10px 0";
-                b.innerText = c.t;
+                b.className = "buy-btn"; b.style.margin = "10px 0";
+                b.innerText = choice.t;
                 b.onclick = () => {
-                    state.opinion += c.o;
-                    state.money += c.m;
-                    closeModal();
+                    state.opinion += choice.o;
+                    state.money += choice.m;
+                    document.getElementById('overlay').style.display = 'none';
+                    document.getElementById('event-modal').classList.remove('active');
+                    updateUI();
                 };
-                choiceBox.appendChild(b);
+                cBox.appendChild(b);
             });
-
             document.getElementById('overlay').style.display = 'block';
             document.getElementById('event-modal').classList.add('active');
         }
 
-        function closeModal() {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('event-modal').classList.remove('active');
-            updateUI();
+        function spawnParticle(e) {
+            if (e.target.className !== 'jimmie-btn') return;
+            const p = document.createElement('div');
+            p.innerText = "+" + state.clickPower + "kr";
+            p.style.cssText = `position:fixed; left:${e.clientX}px; top:${e.clientY}px; color:var(--sd-yellow); font-weight:bold; pointer-events:none; z-index:9999;`;
+            document.body.appendChild(p);
+            p.animate([{transform:'translateY(0)', opacity:1}, {transform:'translateY(-100px)', opacity:0}], 1000).onfinish = () => p.remove();
         }
 
-        // Loop - 10 gånger i sekunden
         setInterval(() => {
-            if (state.gameActive) {
+            if (state.active) {
                 state.money += state.moneyRate / 10;
                 state.opinion += state.opinionRate;
                 updateUI();
             }
         }, 100);
 
-        setInterval(triggerEvent, 25000); // Popup var 25:e sekund
-
+        setInterval(triggerEvent, 25000);
         initShop();
         updateUI();
     </script>
