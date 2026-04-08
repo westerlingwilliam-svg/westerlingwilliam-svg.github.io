@@ -7,72 +7,125 @@
     <style>
         body {
             font-family: 'Arial Black', sans-serif;
-            background-color: #005293;
+            background-color: #005293; /* SD-Blå */
             color: white;
             text-align: center;
             padding: 50px 20px;
             margin: 0;
+            background-image: linear-gradient(45deg, #004a85 25%, transparent 25%, transparent 50%, #004a85 50%, #004a85 75%, transparent 75%, transparent);
+            background-size: 80px 80px;
         }
-        .quote-box {
+
+        /* Den kodade flaggan högst upp */
+        .flag-box {
+            width: 80px; height: 50px;
+            background-color: #005293;
+            position: relative;
+            margin: 0 auto 20px auto;
+            border: 2px solid white;
+        }
+        .f-y-v { position: absolute; width: 12px; height: 100%; background: #fecc00; left: 25px; }
+        .f-y-h { position: absolute; width: 100%; height: 12px; background: #fecc00; top: 19px; }
+
+        .quote-container {
             background: white;
             color: #005293;
-            padding: 40px;
+            padding: 50px 30px;
             border: 10px solid #fecc00;
-            max-width: 600px;
-            margin: 40px auto;
-            font-size: 1.8rem;
-            min-height: 150px;
+            max-width: 700px;
+            margin: 30px auto;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
             display: flex;
-            align-items: center;
+            flex-direction: column;
             justify-content: center;
+            align-items: center;
+            min-height: 250px;
         }
+
+        #quote-text {
+            font-size: 2.2rem;
+            line-height: 1.2;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
         .btn-next {
             background: #fecc00;
             color: #005293;
-            border: none;
-            padding: 20px 40px;
-            font-size: 1.2rem;
-            font-weight: bold;
+            border: 4px solid #005293;
+            padding: 20px 45px;
+            font-size: 1.4rem;
+            font-weight: 900;
             cursor: pointer;
-            border-bottom: 5px solid #b38f00;
+            transition: 0.2s;
+            text-transform: uppercase;
         }
-        .btn-next:active { border-bottom: none; transform: translateY(5px); }
-        
-        .back-link {
-            display: block;
-            margin-top: 50px;
+
+        .btn-next:hover {
+            background: #005293;
             color: #fecc00;
+            border-color: #fecc00;
+            transform: scale(1.05);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 40px;
+            color: white;
             text-decoration: none;
-            font-size: 1.1rem;
+            background: rgba(0,0,0,0.3);
+            padding: 10px 20px;
+            border: 2px solid #fecc00;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-    <h1>JIMMIE QUOTES</h1>
-
-    <div class="quote-box" id="quote-text">
-        "Man ska kunna lita på Sverige."
+    <div class="flag-box">
+        <div class="f-y-h"></div>
+        <div class="f-y-v"></div>
     </div>
 
-    <button class="btn-next" onclick="newQuote()">NÄSTA CITAT</button>
+    <h1>JIMMIE QUOTES</h1>
 
-    <a href="games.html" class="back-link">← Tillbaka till spelen</a>
+    <div class="quote-container">
+        <div id="quote-text">
+            "Jag ska va helt rak och ärlig."
+        </div>
+        <button class="btn-next" onclick="newQuote()">NÄSTA CITAT</button>
+    </div>
+
+    <a href="games.html" class="back-link">← TILLBAKA TILL SPELEN</a>
 
     <script>
+        // Här är citaten du bad om plus några extra kända
         const quotes = [
-            '"Man ska kunna lita på Sverige."',
-            '"Vi säger vad du tänker."',
-            '"Nu är det ordning och reda som gäller."',
-            '"Heja Sverige!"',
-            '"Vi är det enda oppositionspartiet på riktigt."',
-            '"Det här är bara början."'
+            "Jag ska va helt rak och ärlig.",
+            "Om man tar hit mellanöstern, så blir Sverige mer som mellanöstern.",
+            "Vilken planet bor du på? Har du inte sett hur Sverige ser ut?",
+            "Vem är brun? Vem är brun frågar jag.",
+            "Nu är det min tur att prata nu, du har pratat tillräkligt med strunt.",
+            "Mitt Europa bygger murar.",
+            "Sverige ska bli bra igen.",
+            "Vi säger vad du tänker.",
         ];
 
         function newQuote() {
+            const quoteElement = document.getElementById('quote-text');
+            // Slumpar ett citat
             const randomIndex = Math.floor(Math.random() * quotes.length);
-            document.getElementById('quote-text').innerText = quotes[randomIndex];
+            
+            // Enkel animation: ändra texten
+            quoteElement.style.opacity = 0;
+            setTimeout(() => {
+                quoteElement.innerText = '"' + quotes[randomIndex] + '"';
+                quoteElement.style.opacity = 1;
+            }, 100);
         }
+        
+        // Sätt ett citat direkt när man laddar sidan
+        window.onload = newQuote;
     </script>
 </body>
 </html>
