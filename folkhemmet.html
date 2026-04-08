@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bygg Folkhemmet - Spelet</title>
+    <style>
+        body {
+            font-family: 'Arial Black', sans-serif;
+            background-color: #005293;
+            color: #333;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Header / Stats */
+        .header {
+            background: #fecc00;
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border-bottom: 5px solid #005293;
+        }
+
+        .stats {
+            font-size: 2rem;
+            color: #005293;
+            margin: 10px 0;
+        }
+
+        /* Spelytan */
+        .game-area {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 40px;
+            max-width: 1000px;
+        }
+
+        /* Huvudknappen (Klicka för pengar) */
+        .main-clicker {
+            background: #fff;
+            border: 8px solid #fecc00;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.1s;
+            box-shadow: 0 10px 0 #b38f00;
+            margin-bottom: 20px;
+        }
+
+        .main-clicker:active {
+            transform: translateY(10px);
+            box-shadow: 0 0px 0 #b38f00;
+        }
+
+        .main-clicker h2 { margin: 0; color: #005293; font-size: 1.2rem; }
+        .main-clicker .icon { font-size: 4rem; }
+
+        /* Uppgraderingsmeny */
+        .shop {
+            background: white;
+            padding: 20px;
+            border: 5px solid #fecc00;
+            width: 350px;
+        }
+
+        .shop h3 { color: #005293; text-align: center; border-bottom: 2px solid #005293; padding-bottom: 10px; }
+
+        .upgrade-btn {
+            background: #f0f0f0;
+            border: 2px solid #005293;
+            padding: 15px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .upgrade-btn:hover:not(.disabled) { background: #e0e0e0; }
+        .upgrade-btn.disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .upgrade-info { text-align: left; }
+        .upgrade-price { color: #d35400; }
+
+        /* Bakåtknapp */
+        .back-link {
+            margin-top: auto;
+            margin-bottom: 20px;
+            color: #fecc00;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* Flygande text-effekt */
+        .plus-one {
+            position: absolute;
+            color: #fecc00;
+            font-weight: bold;
+            animation: flyUp 1s forwards;
+            pointer-events: none;
+        }
+
+        @keyframes flyUp {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-100px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>BYGG FOLKHEMMET 🇸🇪</h1>
+        <div class="stats">Välfärdspäng: <span id="money">0</span> kr</div>
+        <div style="font-size: 1.1rem;">Produktion: <span id="pps">0</span> kr / sek</div>
+    </div>
+
+    <div class="game-area">
+        <div class="main-clicker" onclick="clickMoney(event)">
+            <div class="icon">🏠</div>
+            <h2>BYGG MER</h2>
+        </div>
+
+        <div class="shop">
+            <h3>UPPGRADERINGAR</h3>
+            
+            <div id="u1" class="upgrade-btn disabled" onclick="buyUpgrade(0)">
+                <div class="upgrade-info">
+                    <span>Röd Stuga</span><br>
+                    <small>+1 kr/sek</small>
+                </div>
+                <div class="upgrade-price"><span id="p0">15</span> kr</div>
+            </div>
+
+            <div id="u2" class="upgrade-btn disabled" onclick="buyUpgrade(1)">
+                <div class="upgrade-info">
+                    <span>Hyreshus</span><br>
+                    <small>+5 kr/sek</small>
+                </div>
+                <div class="upgrade-price"><span id="p1">100</span> kr</div>
+            </div>
+
+            <div id="u3" class="upgrade-btn disabled" onclick="buyUpgrade(2)">
+                <div class="upgrade-info">
+                    <span>Sjukhus</span><br>
+                    <small>+20 kr/sek</small>
+                </div>
+                <div class="upgrade-price"><span id="p2">500</span> kr</div>
+            </div>
+
+            <div id="u4" class="upgrade-btn disabled" onclick="buyUpgrade(3)">
+                <div class="upgrade-info">
+                    <span>Svensk Industri</span><br>
+                    <small>+100 kr/sek</small>
+                </div>
+                <div class="upgrade-price"><span id="p3">2000</span> kr</div>
+            </div>
+        </div>
+    </div>
+
+    <a href="games.html" class="back-link">← TILLBAKA TILL SPELEN</a>
+
+    <script>
+        let money = 0;
+        let pps = 0;
+
+        const upgrades = [
+            { name: "Röd Stuga", cost: 15, income: 1, count: 0 },
+            { name: "Hyreshus", cost: 100, income: 5, count: 0 },
+            { name: "Sjukhus", cost: 500, income: 20, count: 0 },
+            { name: "Svensk Industri", cost: 2000, income: 100, count: 0 }
+        ];
+
+        function clickMoney(e) {
+            money += 1;
+            spawnText(e);
+            updateUI();
+        }
+
+        function spawnText(e) {
+            const text = document.createElement("div");
+            text.innerText = "+1";
+            text.className = "plus-one";
+            text.style.left = e.pageX + "px";
+            text.style.top = e.pageY + "px";
+            document.body.appendChild(text);
+            setTimeout(() => text.remove(), 1000);
+        }
+
+        function buyUpgrade(index) {
+            const u = upgrades[index];
+            if (money >= u.cost) {
+                money -= u.cost;
+                u.count++;
+                pps += u.income;
+                u.cost = Math.round(u.cost * 1.15); // Priset ökar
+                updateUI();
+            }
+        }
+
+        function updateUI() {
+            document.getElementById("money").innerText = Math.floor(money);
+            document.getElementById("pps").innerText = pps;
+            
+            upgrades.forEach((u, i) => {
+                const btn = document.getElementById("u" + (i+1));
+                const priceLabel = document.getElementById("p" + i);
+                priceLabel.innerText = u.cost;
+                
+                if (money >= u.cost) {
+                    btn.classList.remove("disabled");
+                } else {
+                    btn.classList.add("disabled");
+                }
+            });
+        }
+
+        // Automatisk produktion varje sekund
+        setInterval(() => {
+            money += pps / 10;
+            updateUI();
+        }, 100);
+
+    </script>
+</body>
+</html>
