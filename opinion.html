@@ -91,12 +91,12 @@
             z-index: 5;
         }
 
-        /* Spelyta */
+        /* Spelyta - Nu med 3 i bredd */
         .dashboard {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 25px;
-            width: 90%;
+            width: 95%;
             max-width: 1200px;
             padding-bottom: 100px;
         }
@@ -109,6 +109,9 @@
             transition: 0.3s;
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .upgrade-card:hover {
@@ -136,6 +139,20 @@
         .buy-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #b38f00; }
         .buy-btn:disabled { background: #555; box-shadow: none; cursor: not-allowed; color: #888; }
 
+        /* Segerskärm */
+        #victory-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 82, 147, 0.98);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 5000;
+            text-align: center;
+        }
+        #victory-screen h1 { font-size: 6rem; color: var(--sd-yellow); margin: 0; text-shadow: 0 0 30px rgba(254,204,0,0.5); }
+
         /* Popups */
         .modal {
             position: fixed;
@@ -148,7 +165,6 @@
             box-shadow: 0 0 100px rgba(0,0,0,0.9);
             border: 10px solid var(--sd-blue);
         }
-
         .modal.active { display: block; animation: popIn 0.3s forwards; }
 
         @keyframes popIn { to { transform: translate(-50%, -50%) scale(1); } }
@@ -157,27 +173,23 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.8); z-index: 999; display: none;
         }
-
-        .particle {
-            position: absolute; pointer-events: none;
-            animation: fly 1s forwards; color: var(--sd-yellow);
-            font-weight: bold; z-index: 200;
-        }
-
-        @keyframes fly {
-            0% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(-100px); opacity: 0; }
-        }
     </style>
 </head>
-<body onclick="spawnText(event)">
+<body>
+
+    <div id="victory-screen">
+        <h1>50.0%</h1>
+        <h2>VI HAR MAJORITET!</h2>
+        <p style="font-size: 1.5rem;">Sverige är räddat. Folkhemmet är återställt.</p>
+        <a href="games.html" class="buy-btn" style="text-decoration:none; padding: 20px 50px; display:inline-block; width: auto;">TILLBAKA TILL START</a>
+    </div>
 
     <div class="bg-glow"></div>
 
     <div class="stats-header">
         <div class="stat-item">
             <div class="stat-label">Budget</div>
-            <div class="stat-num" id="money">10 000 kr</div>
+            <div class="stat-num" id="money">0 kr</div>
         </div>
         <div class="stat-item">
             <div class="stat-label">Opinion</div>
@@ -185,7 +197,7 @@
         </div>
         <div class="stat-item">
             <div class="stat-label">Väljare/sek</div>
-            <div class="stat-num" id="growth-val">0.05%</div>
+            <div class="stat-num" id="growth-val">0.00%</div>
         </div>
     </div>
 
@@ -215,22 +227,26 @@
     </center>
 
     <script>
-        // --- SPEL-DATA ---
         let state = {
-            money: 25000, // VI BÖRJAR MED MER!
+            money: 75000, // Mer pengar direkt!
             opinion: 20.0,
-            moneyRate: 50,
+            moneyRate: 150,
             opinionRate: 0.05,
-            level: 1
+            gameActive: true
         };
 
+        // Enorma listan på saker (Single Purchase)
         const upgrades = [
-            { id: 0, name: "Snyggare Kostym", desc: "Jimmie ser fräschare ut i TV.", cost: 1000, oRate: 0.02, mRate: 5 },
-            { id: 1, name: "Meme-fabrik", desc: "Anställ ungdomar för att göra dank memes.", cost: 5000, oRate: 0.15, mRate: 0 },
-            { id: 2, name: "Eget Flygblad", desc: "Dela ut papper till hela orten.", cost: 15000, oRate: 0.50, mRate: 100 },
-            { id: 3, name: "YouTube-Imperium", desc: "Riks 2.0 - dygnet runt sändningar.", cost: 50000, oRate: 2.50, mRate: 500 },
-            { id: 4, name: "Korv-turné", desc: "Gratis falukorv till alla väljare!", cost: 150000, oRate: 8.00, mRate: -200 },
-            { id: 5, name: "Kärnkraftverk", desc: "Bygg ett personligt verk i trädgården.", cost: 500000, oRate: 25.00, mRate: 2000 }
+            { id: 0, name: "Snyggare Kostym", desc: "Jimmie ser fräschare ut i TV.", cost: 2000, oRate: 0.05, mRate: 20 },
+            { id: 1, name: "Meme-fabrik", desc: "Anställ ungdomar för att göra dank memes.", cost: 8000, oRate: 0.15, mRate: 50 },
+            { id: 2, name: "Eget Flygblad", desc: "Dela ut papper till hela orten.", cost: 15000, oRate: 0.40, mRate: 100 },
+            { id: 3, name: "YouTube-Imperium", desc: "Riks 2.0 - dygnet runt sändningar.", cost: 45000, oRate: 1.20, mRate: 400 },
+            { id: 4, name: "Korv-turné", desc: "Gratis falukorv till alla väljare!", cost: 90000, oRate: 3.00, mRate: -50 },
+            { id: 5, name: "Kärnkraftverk", desc: "Bygg ett personligt verk i trädgården.", cost: 250000, oRate: 8.00, mRate: 2000 },
+            { id: 6, name: "Blågult Flygplan", desc: "Flyg över Stockholm med banderoll.", cost: 500000, oRate: 12.00, mRate: 500 },
+            { id: 7, name: "Sanningens Hus", desc: "Ett gigantiskt högkvarter vid riksdagen.", cost: 1200000, oRate: 20.00, mRate: 5000 },
+            { id: 8, name: "AI-Jimmie", desc: "En AI som debatterar på alla språk samtidigt.", cost: 3000000, oRate: 45.00, mRate: 15000 },
+            { id: 9, name: "Sverige-Appen", desc: "Installeras automatiskt på alla mobiler.", cost: 7000000, oRate: 100.00, mRate: 40000 }
         ];
 
         const events = [
@@ -238,82 +254,90 @@
                 t: "INTERVJU I AFTONBLADET", 
                 d: "De ställer en vinklad fråga om klimatet.", 
                 choices: [
-                    { t: "Svara logiskt", o: 2, m: 5000 },
-                    { t: "Gå därifrån", o: -1, m: 0 }
+                    { t: "Svara logiskt", o: 1.5, m: 5000 },
+                    { t: "Gå därifrån", o: -0.5, m: 0 }
                 ]
             },
             { 
                 t: "TRENDAR PÅ TIKTOK", 
                 d: "En video på Jimmie som dansar går viralt!", 
                 choices: [
-                    { t: "Följ upp med en till!", o: 5, m: 0 },
-                    { t: "Radera videon", o: -2, m: 0 }
+                    { t: "Följ upp med en till!", o: 3, m: 0 },
+                    { t: "Radera videon", o: -1, m: 0 }
                 ]
             }
         ];
 
-        // --- LOGIK ---
-
         function initShop() {
             const shop = document.getElementById('shop');
+            shop.innerHTML = ""; // Rensa
             upgrades.forEach(u => {
                 shop.innerHTML += `
                     <div class="upgrade-card" id="card-${u.id}">
-                        <h3>${u.name}</h3>
-                        <p>${u.desc}</p>
-                        <div class="price-tag">Pris: <span id="cost-${u.id}">${u.cost.toLocaleString()}</span> kr</div>
-                        <button class="buy-btn" id="btn-${u.id}" onclick="buyUpgrade(${u.id})">Investera</button>
+                        <div>
+                            <h3>${u.name}</h3>
+                            <p>${u.desc}</p>
+                        </div>
+                        <div>
+                            <div class="price-tag">Pris: <span id="cost-${u.id}">${u.cost.toLocaleString()}</span> kr</div>
+                            <button class="buy-btn" id="btn-${u.id}" onclick="buyUpgrade(${u.id})">KÖP</button>
+                        </div>
                     </div>
                 `;
             });
         }
 
         function buyUpgrade(id) {
-            const u = upgrades[id];
+            const index = upgrades.findIndex(u => u.id === id);
+            const u = upgrades[index];
+            
             if (state.money >= u.cost) {
                 state.money -= u.cost;
                 state.opinionRate += u.oRate;
                 state.moneyRate += u.mRate;
-                u.cost = Math.floor(u.cost * 1.6);
                 
-                // Cool effekt
-                document.getElementById(`card-${id}`).style.borderColor = "#fff";
-                setTimeout(() => document.getElementById(`card-${id}`).style.borderColor = "rgba(255,255,255,0.1)", 200);
+                // Ta bort från listan och DOM
+                upgrades.splice(index, 1);
+                const card = document.getElementById(`card-${id}`);
+                card.style.transform = "scale(0)";
+                setTimeout(() => {
+                    card.remove();
+                }, 300);
                 
                 updateUI();
             }
         }
 
         function updateUI() {
+            if (!state.gameActive) return;
+
             document.getElementById('money').innerText = Math.floor(state.money).toLocaleString() + " kr";
             document.getElementById('opinion-val').innerText = state.opinion.toFixed(2) + "%";
             document.getElementById('growth-val').innerText = "+" + state.opinionRate.toFixed(2) + "%";
-            document.getElementById('opinion-bar').style.width = Math.min(state.opinion, 100) + "%";
+            
+            // Baren fylls baserat på 0-50%
+            let barWidth = (state.opinion / 50) * 100;
+            document.getElementById('opinion-bar').style.width = Math.min(barWidth, 100) + "%";
 
+            // Kolla vinst
+            if (state.opinion >= 50.0) {
+                winGame();
+            }
+
+            // Uppdatera knappar
             upgrades.forEach(u => {
                 const btn = document.getElementById(`btn-${u.id}`);
-                const costSpan = document.getElementById(`cost-${u.id}`);
-                costSpan.innerText = u.cost.toLocaleString();
-                btn.disabled = state.money < u.cost;
+                if (btn) btn.disabled = state.money < u.cost;
             });
-
-            if(state.opinion >= 50.1) {
-                document.body.style.background = "linear-gradient(to bottom, #005293, #fecc00)";
-            }
         }
 
-        function spawnText(e) {
-            const p = document.createElement('div');
-            p.className = 'particle';
-            p.innerText = "+1 röst";
-            p.style.left = e.pageX + "px";
-            p.style.top = e.pageY + "px";
-            document.body.appendChild(p);
-            state.opinion += 0.001;
-            setTimeout(() => p.remove(), 1000);
+        function winGame() {
+            state.gameActive = false;
+            document.getElementById('victory-screen').style.display = 'flex';
         }
 
         function triggerEvent() {
+            if (!state.gameActive) return;
             const ev = events[Math.floor(Math.random() * events.length)];
             document.getElementById('ev-title').innerText = ev.t;
             document.getElementById('ev-desc').innerText = ev.d;
@@ -343,14 +367,16 @@
             updateUI();
         }
 
-        // Loopar
+        // Loop
         setInterval(() => {
-            state.money += state.moneyRate / 10;
-            if(state.opinion < 100) state.opinion += state.opinionRate / 10;
-            updateUI();
+            if (state.gameActive) {
+                state.money += state.moneyRate / 10;
+                state.opinion += state.opinionRate / 10;
+                updateUI();
+            }
         }, 100);
 
-        setInterval(triggerEvent, 40000); // Händelse var 40:e sek
+        setInterval(triggerEvent, 40000);
 
         initShop();
         updateUI();
