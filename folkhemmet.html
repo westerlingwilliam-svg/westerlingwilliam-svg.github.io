@@ -106,7 +106,6 @@
             transition: width 0.2s;
         }
         
-        /* Fixad Claim-knapp */
         .claim-btn {
             width: 100%;
             margin-top: 8px;
@@ -225,6 +224,9 @@
             { id: 5, t: "Jimmies Storbygge", d: "Bygg 50 byggnader totalt", target: 50, reward: 50000, check: () => data.bCounts.reduce((a,b)=>a+b, 0) }
         ];
 
+        // Håller koll på senast ritade HTML för att undvika onödiga omskrivningar
+        let lastAchHTML = "";
+
         function doClick(e) {
             data.money += data.mpc;
             data.clicks++;
@@ -263,23 +265,21 @@
             }
         }
 
-        // Fixad Claim-funktion: Denna kallas nu via onclick direkt
         function claimReward(id) {
             const a = achs.find(x => x.id === id);
             const val = a.check();
             if (val >= a.target && !data.claimedAchs.includes(id)) {
                 data.money += a.reward;
                 data.claimedAchs.push(id);
+                // Tvinga omskrivning direkt vid claim
+                lastAchHTML = ""; 
                 updateUI();
             }
         }
 
         function updateUI() {
-            // Header
             document.getElementById("money").innerText = Math.floor(data.money);
             document.getElementById("mpc").innerText = data.mpc;
-            
-            // Butik
             document.getElementById("hammer-cost").innerText = data.hammerPrice;
             document.getElementById("hammer-btn").className = "buy-button" + (data.money < data.hammerPrice ? " disabled" : "");
 
@@ -292,7 +292,7 @@
             }
             document.getElementById("pps").innerText = pps;
 
-            // Achievements
+            // Achievements logik
             document.getElementById("ach-license-area").style.display = data.hasLicense ? "none" : "block";
             const achCont = document.getElementById("ach-container");
             
@@ -304,7 +304,6 @@
                     const isDone = val >= a.target;
                     const isClaimed = data.claimedAchs.includes(a.id);
 
-                    // Skapa knappens HTML dynamiskt men med en ren onclick
                     html += `
                         <div class="ach-card">
                             <div style="font-size:0.9rem;"><b>${a.t}</b></div>
@@ -314,13 +313,17 @@
                             </div>
                             <button class="claim-btn ${isDone && !isClaimed ? 'ready' : ''} ${isClaimed ? 'claimed' : ''}" 
                                     onclick="claimReward(${a.id})">
-                                ${isClaimed ? 'HÄMTAT ✓' : (isDone ? 'CLAIM ' + a.reward + ' kr' : 'LÅST')}
+                                ${isClaimed ? 'HÄMTAD ✓' : (isDone ? 'CLAIM ' + a.reward + ' kr' : 'LÅST')}
                             </button>
                         </div>
                     `;
                 });
-                // Uppdatera bara om innehållet faktiskt ändrats för att spara prestanda
-                if(achCont.innerHTML !== html) achCont.innerHTML = html;
+
+                // VIKTIG FIX: Skriv bara till DOM om något faktiskt ändrats.
+                // Detta gör att knapparna förblir klickbara.
+                if(achCont.innerHTML !== html) {
+                    achCont.innerHTML = html;
+                }
             }
 
             localStorage.setItem('folkhem_save_jimmie_v2', JSON.stringify(data));
@@ -333,7 +336,6 @@
             }
         }
 
-        // Loop 10ggr i sekunden
         setInterval(() => {
             let pps = 0;
             for(let i=0; i<4; i++) pps += data.bCounts[i] * bIncomes[i];
