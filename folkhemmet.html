@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bygg Folkhemmet - Premium Neon Edition</title>
+    <title>Bygg Folkhemmet - SD Edition</title>
     <style>
         :root {
             --primary-blue: #005293;
             --secondary-blue: #1e3a5f;
             --swe-yellow: #fecc00;
-            --sd-light-blue: #a3d4f7;
-            --panel-bg: rgba(10, 25, 47, 0.90);
+            --sd-light-blue: #a3d4f7; /* Den exakta ljusblå SD-färgen */
+            --panel-bg: rgba(10, 35, 65, 0.95);
             --text-main: #ffffff;
-            --neon-blue: 0 0 10px rgba(0, 82, 147, 0.6);
+            --neon-blue: 0 0 10px rgba(163, 212, 247, 0.6);
             --neon-yellow: 0 0 10px rgba(254, 204, 0, 0.6);
-            /* Softare glöd för klick-effekter */
             --soft-yellow-glow: 0 0 10px rgba(254, 204, 0, 0.5);
         }
 
@@ -44,12 +43,12 @@
         }
 
         .header { 
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(10px);
             padding: 20px; 
             text-align: center; 
-            border-bottom: 4px solid var(--swe-yellow);
-            box-shadow: 0 0 15px rgba(254, 204, 0, 0.4);
+            border-bottom: 5px solid var(--sd-light-blue); /* Ljusblå kant */
+            box-shadow: 0 0 20px rgba(163, 212, 247, 0.4);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -58,26 +57,26 @@
         .header h1 {
             margin: 0;
             font-size: 2.5rem;
-            color: var(--swe-yellow);
+            color: var(--sd-light-blue);
             text-transform: uppercase;
             letter-spacing: 2px;
-            text-shadow: var(--neon-yellow);
+            text-shadow: 0 0 10px rgba(163, 212, 247, 0.5);
         }
 
         .money-display {
             display: inline-block;
-            background: rgba(0, 0, 0, 0.8);
+            background: white; /* Vit bakgrund för att sticka ut */
             padding: 10px 45px;
             border-radius: 50px;
             margin-top: 15px;
             border: 3px solid var(--swe-yellow);
-            box-shadow: 0 0 15px rgba(254, 204, 0, 0.3), inset 0 0 10px rgba(254, 204, 0, 0.2);
+            box-shadow: 0 0 15px rgba(254, 204, 0, 0.3);
         }
 
         .money-display b { 
             font-size: 2.2rem; 
-            color: var(--swe-yellow);
-            text-shadow: 0 0 8px rgba(254, 204, 0, 0.6);
+            color: var(--primary-blue);
+            text-shadow: none;
         }
 
         .stats-bar {
@@ -89,18 +88,13 @@
         }
 
         .stat-capsule {
-            background: rgba(0, 82, 147, 0.5);
-            color: #cce4ff;
+            background: var(--primary-blue);
+            color: var(--sd-light-blue);
             padding: 5px 15px;
             border-radius: 20px;
             font-size: 0.9rem;
             font-weight: bold;
-            border: 1px solid rgba(0, 82, 147, 0.6);
-        }
-
-        .stat-capsule span {
-            color: white;
-            text-shadow: 0 0 5px rgba(255,255,255,0.5);
+            border: 1px solid var(--sd-light-blue);
         }
 
         .main-layout { 
@@ -117,8 +111,8 @@
             background: var(--panel-bg);
             border-radius: 30px;
             padding: 25px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 15px rgba(0, 82, 147, 0.3);
-            border: 2px solid var(--primary-blue);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 2px solid var(--sd-light-blue);
             max-height: 80vh;
             overflow-y: auto;
             backdrop-filter: blur(5px);
@@ -126,10 +120,9 @@
 
         .panel h3 {
             text-align: center;
-            color: var(--swe-yellow);
+            color: var(--sd-light-blue);
             text-transform: uppercase;
-            text-shadow: var(--neon-yellow);
-            border-bottom: 2px solid rgba(254, 204, 0, 0.3);
+            border-bottom: 2px solid var(--sd-light-blue);
             padding-bottom: 12px;
             margin-bottom: 20px;
         }
@@ -141,84 +134,76 @@
             justify-content: center;
         }
 
-        /* NEDTONAD Clicker */
         .clicker-circle {
             width: 280px;
             height: 280px;
-            background: radial-gradient(circle, #1a2b4a 0%, #050a14 100%);
+            background: #fff;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 8rem;
             cursor: pointer;
-            border: 6px solid #b38f00; /* Mattare guld */
-            box-shadow: 0 10px 20px rgba(0,0,0,0.4); 
-            transition: 0.2s;
+            border: 10px solid var(--sd-light-blue);
+            box-shadow: 0 0 30px rgba(163, 212, 247, 0.4); 
+            transition: 0.1s;
         }
 
         .clicker-circle:hover {
-            box-shadow: 0 0 30px rgba(254, 204, 0, 0.4);
-            border-color: var(--swe-yellow);
             transform: scale(1.02);
+            border-color: var(--swe-yellow);
         }
 
         .clicker-circle:active { transform: scale(0.96); }
-        /* Softare emoji-glöd */
-        .clicker-circle span { filter: drop-shadow(0 0 10px rgba(254, 204, 0, 0.3)); }
 
         .item-card {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 18px;
             padding: 18px;
             margin-bottom: 15px;
-            border: 1px solid rgba(0, 82, 147, 0.4);
+            border: 1px solid var(--sd-light-blue);
             cursor: pointer;
             transition: 0.3s;
         }
 
         .item-card:hover:not(.disabled) {
             transform: translateX(5px);
+            background: rgba(163, 212, 247, 0.2);
             border-color: var(--swe-yellow);
-            background: rgba(0, 82, 147, 0.25);
-            box-shadow: 0 0 15px rgba(254, 204, 0, 0.4);
         }
 
         .item-card.disabled { opacity: 0.3; cursor: not-allowed; filter: grayscale(1); }
 
         .card-header { display: flex; justify-content: space-between; align-items: center; }
-        .card-header b { color: white; font-size: 1.1rem; text-shadow: 0 0 5px rgba(255,255,255,0.4); }
+        .card-header b { color: white; font-size: 1.1rem; }
         
         .card-price { 
-            color: var(--swe-yellow); 
-            background: rgba(0, 0, 0, 0.6); 
+            color: var(--primary-blue); 
+            background: var(--swe-yellow); 
             padding: 4px 12px; 
             border-radius: 20px; 
             font-size: 0.9rem; 
-            border: 1px solid rgba(254, 204, 0, 0.5);
             font-family: sans-serif;
+            font-weight: bold;
         }
 
-        .card-desc { font-size: 0.85rem; color: #b0d5ff; margin-top: 8px; font-family: sans-serif; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px;}
+        .card-desc { font-size: 0.85rem; color: var(--sd-light-blue); margin-top: 8px; font-family: sans-serif; border-top: 1px solid rgba(163, 212, 247, 0.2); padding-top: 8px;}
 
-        /* UPPDRAGS-STYLING */
         .quest-group {
             margin-bottom: 25px;
-            border: 1px solid rgba(0, 82, 147, 0.3);
+            border: 1px solid var(--sd-light-blue);
             border-radius: 15px;
-            background: rgba(0,0,0,0.2);
+            background: rgba(0,0,0,0.3);
             overflow: hidden;
         }
 
         .quest-group-title {
-            background: rgba(0, 82, 147, 0.4);
-            color: white;
+            background: var(--sd-light-blue);
+            color: var(--primary-blue);
             padding: 10px 15px;
             font-size: 1.1rem;
             text-transform: uppercase;
-            border-bottom: 1px solid rgba(0, 82, 147, 0.3);
             text-align: center;
-            text-shadow: 0 0 5px rgba(255,255,255,0.5);
         }
 
         .ach-card { 
@@ -226,9 +211,8 @@
             position: relative;
         }
 
-        /* Linje mellan uppdrag */
         .ach-card:not(:last-child) {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(163, 212, 247, 0.2);
         }
 
         .ach-card-header {
@@ -238,21 +222,14 @@
             margin-bottom: 8px;
         }
 
-        .ach-title {
-            color: white;
-            font-size: 1rem;
-        }
-
         .ach-reward {
             color: #00ff88;
             font-weight: bold;
-            font-size: 0.9rem;
-            text-shadow: 0 0 10px rgba(0,255,136,0.4);
         }
 
         .ach-req {
             font-size: 0.8rem;
-            color: #a0c0ff;
+            color: var(--sd-light-blue);
             font-family: sans-serif;
             margin-bottom: 8px;
         }
@@ -260,49 +237,47 @@
         .progress-container { 
             background: #000; height: 10px; width: 100%; 
             border-radius: 10px; overflow: hidden;
-            border: 1px solid rgba(0, 119, 255, 0.4);
+            border: 1px solid var(--sd-light-blue);
             margin-bottom: 10px;
         }
         
         .progress-bar { 
-            background: linear-gradient(90deg, var(--primary-blue), var(--swe-yellow));
+            background: linear-gradient(90deg, var(--sd-light-blue), var(--swe-yellow));
             height: 100%; width: 0%; transition: width 0.5s ease; 
         }
 
         .claim-btn { 
             width: 100%; padding: 8px; 
-            background: #222; border: 1px solid #444; 
-            color: #666; font-weight: bold; border-radius: 8px; 
-            transition: 0.3s; text-transform: uppercase;
+            background: #333; border: none; 
+            color: #777; font-weight: bold; border-radius: 8px; 
+            text-transform: uppercase;
             font-size: 0.8rem;
         }
+
         .claim-btn.ready { 
-            background: linear-gradient(45deg, #00ff88, #00cc66); 
+            background: var(--swe-yellow); 
             cursor: pointer; 
-            color: #fff;
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
-            border: none;
+            color: var(--primary-blue);
+            box-shadow: 0 0 15px rgba(254, 204, 0, 0.5);
         }
 
-        /* NEDTONAD klicktext */
         .plus-one { 
             position: absolute; color: white; font-weight: 900; 
             font-size: 2.2rem; pointer-events: none; animation: flyUp 0.8s forwards; 
-            text-shadow: 0 0 5px rgba(255,255,255,0.8), 0 0 10px rgba(254, 204, 0, 0.4); 
+            text-shadow: 0 0 10px var(--sd-light-blue); 
             z-index: 1000; 
         }
 
         @keyframes flyUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-120px); } }
 
         .back-link {
-            margin-top: 30px; color: #7090c0; text-decoration: none; font-weight: bold;
+            margin-top: 30px; color: var(--sd-light-blue); text-decoration: none; font-weight: bold;
             font-family: sans-serif; transition: 0.3s; font-size: 0.9rem;
         }
-        .back-link:hover { color: white; text-shadow: 0 0 10px rgba(255,255,255,0.4); }
+        .back-link:hover { color: var(--swe-yellow); }
 
-        /* Scrollbar */
         .panel::-webkit-scrollbar { width: 6px; }
-        .panel::-webkit-scrollbar-thumb { background: rgba(0, 82, 147, 0.6); border-radius: 10px; }
+        .panel::-webkit-scrollbar-thumb { background: var(--sd-light-blue); border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -313,7 +288,7 @@
         <div class="stats-bar">
             <div class="stat-capsule">Produktion: <span id="pps">0</span>/sek</div>
             <div class="stat-capsule">Klickkraft: <span id="mpc">1</span></div>
-            <div class="stat-capsule" style="color: var(--swe-yellow); border-color: rgba(254, 204, 0, 0.5);">Bonus: <span id="bonus-val">0</span>%</div>
+            <div class="stat-capsule" style="color: var(--swe-yellow); border-color: var(--swe-yellow);">Bonus: <span id="bonus-val">0</span>%</div>
         </div>
     </div>
 
@@ -330,7 +305,7 @@
                     <div class="card-desc">Genererar klick automatiskt per sekund.</div>
                 </div>
             </div>
-            <div style="height: 2px; background: rgba(0, 82, 147, 0.3); margin: 20px 0;"></div>
+            <div style="height: 2px; background: var(--sd-light-blue); opacity: 0.3; margin: 20px 0;"></div>
             <div id="building-list"></div>
         </div>
 
@@ -342,18 +317,17 @@
         <div class="panel">
             <h3>Sverige-Uppdrag</h3>
             <div id="ach-license-area">
-                <div class="item-card" style="text-align: center; border: 2px dashed rgba(163, 212, 247, 0.4); background: rgba(0,0,0,0.3); cursor: default;">
-                    <p style="color: #a0c0ff; font-family: sans-serif; margin-top: 0;">Lås upp speciella belöningar!</p>
-                    <button class="claim-btn ready" onclick="buyLicense()" style="background: linear-gradient(45deg, #fecc00, #ffdb4d); color: #000; box-shadow: 0 0 15px rgba(254, 204, 0, 0.5); border: none;">JIMMIE-LICENS (1 500 kr)</button>
+                <div class="item-card" style="text-align: center; border: 2px dashed var(--sd-light-blue); background: rgba(0,0,0,0.3); cursor: default;">
+                    <p style="color: var(--sd-light-blue); font-family: sans-serif; margin-top: 0;">Lås upp speciella belöningar!</p>
+                    <button class="claim-btn ready" onclick="buyLicense()">JIMMIE-LICENS (1 500 kr)</button>
                 </div>
             </div>
-            <div id="ach-container">
-                </div>
+            <div id="ach-container"></div>
         </div>
     </div>
 
     <script>
-        // Logikversion 9.0 (Bevarad)
+        // Logikversion 9.0 (Fullständigt bevarad)
         let data = {
             money: 0, clicks: 0, mpc: 1, autoClicks: 0,
             hammerPrice: 15, autoPrice: 100,
@@ -422,7 +396,7 @@
         function calculateMPC() {
             let pps = getTotalPPS();
             let base = 1 + (data.hammerLevel * 1);
-            let productionBonus = (pps * 0.016) * data.hammerLevel; // 1/6 styrka
+            let productionBonus = (pps * 0.016) * data.hammerLevel;
             return Math.max(1, Math.floor(base + productionBonus));
         }
 
@@ -462,7 +436,6 @@
             if(type === 'click') return data.clicks;
             if(type === 'money') return data.money;
             if(type === 'total') return data.bCounts.reduce((a, b) => a + b, 0);
-            if(type.startsWith('b')) return data.bCounts[parseInt(type.substring(1))];
             return 0;
         }
 
@@ -514,8 +487,6 @@
                     if (level < group.quests.length) {
                         html += `<div class="quest-group">`;
                         html += `<div class="quest-group-title">${group.title}</div>`;
-                        
-                        // Visa bara det aktuella uppdraget i kedjan
                         const ach = group.quests[level];
                         const val = getValByType(type, level);
                         const progress = (val / ach.target) * 100;
@@ -531,8 +502,7 @@
                                 <div class="progress-container"><div class="progress-bar" style="width: ${Math.min(100, progress)}%"></div></div>
                                 <button class="claim-btn ${isReady ? 'ready' : ''}" onclick="if(${isReady}) claimAch('${type}')">${isReady ? 'HÄMTA' : 'LÅST'}</button>
                             </div>`;
-                            
-                        html += `</div>`; // Stäng quest-group
+                        html += `</div>`;
                     }
                 });
                 document.getElementById("ach-container").innerHTML = html;
@@ -552,10 +522,9 @@
             let s = localStorage.getItem('folkhem_hardcore_v9_design_clear_quests');
             if (s) {
                 let savedData = JSON.parse(s);
-                // Fix för gamla saves med felaktig array-längd
                 if (savedData.bCounts && savedData.bCounts.length < BuildingsData().length) {
                     while(savedData.bCounts.length < BuildingsData().length) savedData.bCounts.push(0);
-                    while(savedData.bCosts.length < BuildingsData().length) savedData.bCosts.push(0); // Uppdateras via BuildingsData baseCost sen
+                    while(savedData.bCosts.length < BuildingsData().length) savedData.bCosts.push(0);
                 }
                 Object.assign(data, savedData);
             }
