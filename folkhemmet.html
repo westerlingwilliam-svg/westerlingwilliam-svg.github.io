@@ -3,64 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bygg Folkhemmet - Ultra Neon Hardcore Edition</title>
+    <title>Bygg Folkhemmet - Sverige Edition</title>
     <style>
-        /* FULLSTÄNDIG NEON-MAXAD STYLING */
         :root {
-            --bg-dark: #070b14; /* Ännu mörkare bakgrund för att få neonet att poppa */
-            --panel-bg: rgba(20, 30, 50, 0.8);
-            --sweden-blue: #0077ff; /* Starkare, lysande blå */
-            --sweden-yellow: #fecc00;
-            --text-main: #ffffff;
-            --neon-yellow-glow: 0 0 15px rgba(254, 204, 0, 0.7);
-            --neon-blue-glow: 0 0 15px rgba(0, 119, 255, 0.7);
+            --swe-blue: #005293;
+            --swe-yellow: #fecc00;
+            --sd-light-blue: #a3d4f7;
+            --bg-light: #f4f7fa;
+            --panel-bg: #ffffff;
+            --text-dark: #1a2b3c;
+            --shadow: 0 8px 30px rgba(0, 82, 147, 0.1);
         }
 
         * { 
             user-select: none; 
             -webkit-user-select: none; 
             box-sizing: border-box; 
-            font-family: 'Arial Black', sans-serif; /* Tjockare font för neon */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body { 
-            background: var(--bg-dark);
-            background-image: radial-gradient(circle at center, #101a30 0%, #070b14 100%);
-            color: var(--text-main); 
+            background: linear-gradient(135deg, var(--bg-light) 0%, #e1e9f0 100%);
+            color: var(--text-dark); 
             margin: 0; 
             min-height: 100vh; 
             display: flex; 
             flex-direction: column; 
-            overflow-x: hidden;
-        }
-
-        /* Paneler med BLÅ NEON-glöd */
-        .glass-panel {
-            background: var(--panel-bg);
-            border: 2px solid var(--sweden-blue);
-            border-radius: 24px;
-            box-shadow: 0 0 25px rgba(0, 119, 255, 0.4), inset 0 0 15px rgba(0, 119, 255, 0.2);
-            backdrop-filter: blur(5px);
         }
 
         .header { 
-            background: rgba(7, 11, 20, 0.9);
+            background: var(--panel-bg);
             padding: 20px; 
             text-align: center; 
-            border-bottom: 3px solid var(--sweden-yellow);
-            box-shadow: 0 0 20px rgba(254, 204, 0, 0.5);
-            position: sticky;
-            top: 0;
+            border-bottom: 5px solid var(--swe-yellow);
+            box-shadow: var(--shadow);
             z-index: 100;
         }
 
         .header h1 {
             margin: 0;
-            font-size: 2.8rem;
-            color: var(--sweden-yellow);
+            font-size: 2.5rem;
+            color: var(--swe-blue);
+            font-weight: 900;
+            letter-spacing: -1px;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: var(--neon-yellow-glow);
         }
 
         .stats-container {
@@ -71,172 +57,167 @@
             flex-wrap: wrap;
         }
 
-        /* JÄTTESTOR OCH TYDLIG PENGABOX */
         .money-box {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 15px 40px;
-            border-radius: 15px;
-            border: 3px solid var(--sweden-yellow);
-            box-shadow: var(--neon-yellow-glow), inset 0 0 10px rgba(254, 204, 0, 0.3);
-            font-size: 2.2rem;
-            margin-bottom: 10px;
+            background: var(--swe-blue);
+            color: white;
+            padding: 15px 45px;
+            border-radius: 50px;
+            border: 3px solid var(--swe-yellow);
+            font-size: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 82, 147, 0.3);
+            margin-bottom: 5px;
         }
 
-        .money-box b { color: var(--sweden-yellow); text-shadow: var(--neon-yellow-glow); }
+        .money-box b { color: var(--swe-yellow); }
 
         .stat-box {
-            background: rgba(0, 50, 100, 0.3);
-            padding: 8px 18px;
-            border-radius: 10px;
-            border: 1px solid rgba(0, 119, 255, 0.5);
-            font-size: 0.9rem;
-            color: #b0d5ff;
+            background: white;
+            padding: 8px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--sd-light-blue);
+            font-weight: bold;
+            color: var(--swe-blue);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
-
-        .stat-box b { color: var(--sweden-blue); text-shadow: var(--neon-blue-glow); }
 
         .main-layout { 
             display: grid; 
-            grid-template-columns: 400px 1fr 400px; 
+            grid-template-columns: 420px 1fr 420px; 
             gap: 30px; 
             padding: 30px; 
-            max-width: 1920px; 
+            max-width: 1800px; 
             margin: 0 auto; 
             width: 100%;
         }
 
         .panel { 
+            background: var(--panel-bg);
+            border-radius: 25px;
             padding: 25px; 
-            max-height: 80vh;
+            max-height: 78vh;
             overflow-y: auto;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0, 82, 147, 0.05);
         }
 
         .panel h3 {
             text-align: center;
             margin-top: 0;
-            color: var(--sweden-yellow);
-            font-size: 1.6rem;
-            text-transform: uppercase;
-            text-shadow: var(--neon-yellow-glow);
-            border-bottom: 2px solid rgba(254, 204, 0, 0.3);
-            padding-bottom: 15px;
+            color: var(--swe-blue);
+            font-size: 1.5rem;
+            border-bottom: 3px solid var(--sd-light-blue);
+            padding-bottom: 12px;
+            margin-bottom: 20px;
         }
 
         .center-area { 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            justify-content: center;
+            justify-content: flex-start;
+            padding-top: 40px;
         }
 
-        /* Huset/Clickern med GUL NEON-glöd */
         .main-clicker { 
-            background: radial-gradient(circle, #101a30 0%, #000 100%);
-            border: 6px solid var(--sweden-yellow); 
-            width: 280px; height: 280px; 
+            background: white;
+            border: 8px solid var(--swe-yellow); 
+            width: 300px; height: 300px; 
             border-radius: 50%; 
-            display: flex; flex-direction: column; 
+            display: flex; 
             justify-content: center; align-items: center; 
             cursor: pointer; 
-            box-shadow: 0 0 40px rgba(254, 204, 0, 0.3); 
-            transition: 0.2s;
+            box-shadow: 0 15px 35px rgba(0, 82, 147, 0.15);
+            transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
         }
 
         .main-clicker:hover {
-            box-shadow: 0 0 60px rgba(254, 204, 0, 0.6), inset 0 0 20px rgba(254, 204, 0, 0.2);
-            transform: scale(1.03);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 45px rgba(0, 82, 147, 0.2);
+            border-color: var(--swe-blue);
         }
 
-        .main-clicker:active { transform: scale(0.97); }
+        .main-clicker:active { transform: scale(0.95); }
         
-        .main-clicker span { font-size: 8rem; filter: drop-shadow(var(--neon-yellow-glow)); }
+        .main-clicker span { font-size: 9rem; filter: drop-shadow(0 4px 5px rgba(0,0,0,0.1)); }
 
-        /* Butik-knappar med BLÅ NEON-hover */
         .buy-button { 
-            background: rgba(255, 255, 255, 0.03); 
-            border: 1px solid rgba(0, 119, 255, 0.3); 
-            padding: 15px; 
-            margin: 10px 0; 
+            background: #fdfdfd; 
+            border: 2px solid #edf2f7; 
+            padding: 16px; 
+            margin: 12px 0; 
             cursor: pointer; 
             width: 100%; 
-            border-radius: 16px;
-            color: white;
-            transition: 0.3s;
+            border-radius: 18px;
+            transition: 0.2s;
+            text-align: left;
         }
 
         .buy-button:hover:not(.disabled) {
-            background: rgba(0, 119, 255, 0.1);
-            border-color: var(--sweden-blue);
-            box-shadow: var(--neon-blue-glow);
-            transform: translateY(-3px);
+            background: white;
+            border-color: var(--sd-light-blue);
+            box-shadow: 0 5px 15px rgba(163, 212, 247, 0.4);
+            transform: translateX(5px);
         }
 
-        .buy-button.disabled { opacity: 0.2; cursor: not-allowed; filter: grayscale(1); }
+        .buy-button.disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); background: #f0f0f0; }
 
         .btn-header { display: flex; justify-content: space-between; align-items: center; }
-        .btn-header b { color: var(--sweden-yellow); text-shadow: var(--neon-yellow-glow); font-size: 1.1rem; }
-        .btn-header span { color: #fff; background: var(--sweden-blue); padding: 4px 10px; border-radius: 8px; font-size: 0.85rem; font-family: sans-serif; box-shadow: var(--neon-blue-glow); }
+        .btn-header b { color: var(--swe-blue); font-size: 1.1rem; }
+        .btn-header span { color: white; background: var(--swe-blue); padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; }
 
-        .btn-sub { font-size: 0.8rem; color: #a0c0ff; margin-top: 8px; font-family: sans-serif; }
+        .btn-sub { font-size: 0.85rem; color: #64748b; margin-top: 6px; }
 
-        /* Achievement Cards med GUL NEON-glöd */
         .ach-card { 
-            background: rgba(0, 0, 0, 0.3); 
+            background: #f8fafc; 
             padding: 20px; 
-            margin-bottom: 15px; 
-            border-radius: 16px;
-            border: 2px solid var(--sweden-yellow);
-            box-shadow: var(--neon-yellow-glow);
+            margin-bottom: 18px; 
+            border-radius: 20px;
+            border-left: 6px solid var(--sd-light-blue);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
         }
 
         .progress-container { 
-            background: #000; height: 14px; width: 100%; 
+            background: #e2e8f0; height: 10px; width: 100%; 
             border-radius: 10px; margin-top: 12px; overflow: hidden;
-            border: 1px solid var(--sweden-blue);
-            box-shadow: inset 0 0 5px rgba(0, 119, 255, 0.5);
         }
         
         .progress-bar { 
-            background: linear-gradient(90deg, var(--sweden-blue), var(--sweden-yellow));
-            height: 100%; width: 0%; transition: width 0.5s ease; 
-            box-shadow: 0 0 10px var(--sweden-yellow);
+            background: linear-gradient(90deg, var(--swe-blue), var(--sd-light-blue));
+            height: 100%; width: 0%; transition: width 0.6s ease; 
         }
 
         .claim-btn { 
             width: 100%; margin-top: 15px; padding: 12px; 
-            background: #222; border: 1px solid #444; 
-            color: #666; font-weight: bold; border-radius: 10px; 
+            background: #cbd5e1; border: none; 
+            color: white; font-weight: bold; border-radius: 12px; 
             transition: 0.3s; text-transform: uppercase;
         }
         .claim-btn.ready { 
-            background: linear-gradient(45deg, #00ff88, #00cc66); 
+            background: var(--swe-yellow);
+            color: var(--swe-blue);
             cursor: pointer; 
-            color: #fff;
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
-            border: none;
+            box-shadow: 0 4px 12px rgba(254, 204, 0, 0.4);
         }
-
-        .claim-btn.ready:hover { box-shadow: 0 0 30px rgba(0, 255, 136, 0.8); }
 
         .plus-one { 
-            position: absolute; color: var(--sweden-yellow); font-weight: 900; 
-            font-size: 2.8rem; pointer-events: none; animation: fly 0.8s forwards; 
-            text-shadow: var(--neon-yellow-glow), 0 0 20px #fff; z-index: 1000; 
+            position: absolute; color: var(--swe-blue); font-weight: 900; 
+            font-size: 2.5rem; pointer-events: none; animation: fly 0.8s forwards; 
+            text-shadow: 2px 2px 0 #fff; z-index: 1000; 
         }
 
-        @keyframes fly { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-150px); } }
+        @keyframes fly { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-130px); } }
 
         .back-btn {
-            background: transparent; color: #7090c0; padding: 10px 20px; 
-            text-decoration: none; border: 1px solid rgba(112, 144, 192, 0.5); 
-            border-radius: 10px; font-size: 0.9rem; margin-top: 30px;
-            transition: 0.3s; font-family: sans-serif;
+            background: white; color: var(--swe-blue); padding: 12px 25px; 
+            text-decoration: none; border: 2px solid var(--sd-light-blue); 
+            border-radius: 12px; font-size: 0.9rem; margin-top: 40px;
+            font-weight: bold; transition: 0.2s;
         }
-        .back-btn:hover { color: white; border-color: white; box-shadow: 0 0 10px rgba(255,255,255,0.3); }
+        .back-btn:hover { background: var(--sd-light-blue); color: white; }
 
-        /* Scrollbar */
-        .panel::-webkit-scrollbar { width: 6px; }
-        .panel::-webkit-scrollbar-thumb { background: var(--sweden-blue); border-radius: 10px; box-shadow: var(--neon-blue-glow); }
+        .panel::-webkit-scrollbar { width: 8px; }
+        .panel::-webkit-scrollbar-thumb { background: var(--sd-light-blue); border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -246,27 +227,27 @@
         <div class="stats-container">
             <div class="money-box">💰 Välfärd: <b id="money">0</b> kr</div>
         </div>
-        <div class="stats-container" style="margin-top: 5px;">
-            <div class="stat-box">📈 PPS: <b id="pps">0</b></div>
-            <div class="stat-box">🖱️ MPC: <b id="mpc">1</b></div>
-            <div class="stat-box">🏆 Bonus: <b id="bonus-val">0</b>%</div>
+        <div class="stats-container">
+            <div class="stat-box">Produktion: <span id="pps">0</span>/sek</div>
+            <div class="stat-box">Klickkraft: <span id="mpc">1</span></div>
+            <div class="stat-box" style="background: var(--swe-yellow); border-color: var(--swe-yellow);">Bonus: <span id="bonus-val">0</span>%</div>
         </div>
     </div>
 
     <div class="main-layout">
-        <div class="panel glass-panel">
+        <div class="panel">
             <h3>MARKNAD</h3>
             <div id="essentials">
                 <button class="buy-button" id="hammer-btn" onclick="buyHammer()">
                     <div class="btn-header"><b>🔨 Super-Hammare</b> <span id="hammer-cost">15</span></div>
-                    <div class="btn-sub">Ökar klickstyrka baserat på din totala PPS.</div>
+                    <div class="btn-sub">Ger starkare klick baserat på din PPS.</div>
                 </button>
                 <button class="buy-button" id="auto-btn" onclick="buyAuto()">
-                    <div class="btn-header"><b>🤖 Auto-Bot</b> <span id="auto-cost">100</span></div>
-                    <div class="btn-sub">Genererar klick automatiskt varje sekund.</div>
+                    <div class="btn-header"><b>🤖 Auto-Handläggare</b> <span id="auto-cost">100</span></div>
+                    <div class="btn-sub">Sköter klickandet åt dig automatiskt.</div>
                 </button>
             </div>
-            <div style="height: 2px; background: rgba(0, 119, 255, 0.2); margin: 20px 0; box-shadow: var(--neon-blue-glow);"></div>
+            <div style="height: 1px; background: #eee; margin: 20px 0;"></div>
             <div id="building-list"></div>
         </div>
 
@@ -277,12 +258,12 @@
             <a href="games.html" class="back-btn">← TILLBAKA TILL MENYN</a>
         </div>
 
-        <div class="panel glass-panel">
-            <h3>UPPDRAG</h3>
+        <div class="panel">
+            <h3>SVERIGE-UPPDRAG</h3>
             <div id="ach-license-area">
-                <div class="ach-card" style="text-align: center; border-color: var(--sweden-yellow);">
-                    <p style="margin-top:0; font-size: 0.95rem; color: #a0c0ff; font-family: sans-serif;">Lås upp <b>Speciella Uppdrag</b> för att få tillgång till unika bonusar.</p>
-                    <button class="claim-btn ready" onclick="buyLicense()" style="background: var(--sweden-yellow); color: #000; text-shadow: none;">LÅS UPP JIMMIE (1 500 kr)</button>
+                <div class="ach-card" style="text-align: center; border-left: none; border: 2px dashed var(--sd-light-blue);">
+                    <p style="margin-top:0; font-weight: bold; color: var(--swe-blue);">Lås upp exklusiva uppdrag!</p>
+                    <button class="claim-btn ready" onclick="buyLicense()">LÅS UPP JIMMIE (1 500 kr)</button>
                 </div>
             </div>
             <div id="ach-container"></div>
@@ -290,7 +271,7 @@
     </div>
 
     <script>
-        // Logiken behålls exakt som din version 9, bara UI-uppdateringar
+        // Logikversion 9.1 - Uppdaterad för ljus design
         let data = {
             money: 0, clicks: 0, mpc: 1, autoClicks: 0,
             hammerPrice: 15, autoPrice: 100,
@@ -434,8 +415,7 @@
                 const btn = document.getElementById("build-"+i);
                 if(btn) btn.classList.toggle("disabled", data.money < data.bCosts[i]);
             });
-            // Sparar med design-suffix för att inte krocka med gamla saves om man testar
-            localStorage.setItem('folkhem_hardcore_v9_neon', JSON.stringify(data));
+            localStorage.setItem('folkhem_hardcore_v10_light', JSON.stringify(data));
         }
 
         function renderBuildings() {
@@ -465,12 +445,12 @@
                         const isReady = val >= ach.target;
                         const progress = (val / ach.target) * 100;
                         const html = `
-                            <div class="ach-card">
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                                    <b style="color:white; text-shadow: ${isReady ? 'var(--neon-yellow-glow)' : 'none'};">${type === 'secret' ? '🌟 ' + ach.t : ach.t}</b>
-                                    <span style="color:#00ff88; font-weight:bold; text-shadow: 0 0 10px rgba(0,255,136,0.5);">+${ach.reward.toLocaleString()} kr</span>
+                            <div class="ach-card" style="border-left-color: ${isReady ? '#28a745' : 'var(--sd-light-blue)'}">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                                    <b style="color:var(--swe-blue);">${type === 'secret' ? '🌟 ' + ach.t : ach.t}</b>
+                                    <span style="color:#28a745; font-weight:bold;">+${ach.reward.toLocaleString()} kr</span>
                                 </div>
-                                <div class="btn-sub" style="margin-bottom:10px;">${ach.req}</div>
+                                <div class="btn-sub">${ach.req}</div>
                                 <div class="progress-container">
                                     <div class="progress-bar" style="width: ${Math.min(100, progress)}%"></div>
                                 </div>
@@ -496,7 +476,7 @@
         }, 100);
 
         window.onload = () => {
-            let s = localStorage.getItem('folkhem_hardcore_v9_neon');
+            let s = localStorage.getItem('folkhem_hardcore_v10_light');
             if (s) Object.assign(data, JSON.parse(s));
             renderEverything();
         };
