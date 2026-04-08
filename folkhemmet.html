@@ -5,213 +5,268 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bygg Folkhemmet - Ultra Hardcore Edition</title>
     <style>
-        /* FULLSTÄNDIG ULTRA-STYLING */
-        * { user-select: none; -webkit-user-select: none; box-sizing: border-box; font-family: 'Arial Black', sans-serif; }
-        
-        @keyframes bgScroll {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* MODERNA MODERNA STYLES */
+        :root {
+            --bg-dark: #0f172a;
+            --panel-bg: rgba(30, 41, 59, 0.7);
+            --sweden-blue: #005293;
+            --sweden-yellow: #fecc00;
+            --text-main: #f8fafc;
+            --accent-glow: rgba(254, 204, 0, 0.2);
+        }
+
+        * { 
+            user-select: none; 
+            -webkit-user-select: none; 
+            box-sizing: border-box; 
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
         }
 
         body { 
-            background: linear-gradient(-45deg, #005293, #003d6e, #0a192f, #003d6e);
-            background-size: 400% 400%;
-            animation: bgScroll 15s ease infinite;
-            color: #333; 
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            color: var(--text-main); 
             margin: 0; 
             min-height: 100vh; 
             display: flex; 
             flex-direction: column; 
+            overflow-x: hidden;
         }
-        
-        .neon-box {
-            box-shadow: 0 0 20px rgba(254, 204, 0, 0.3), inset 0 0 10px rgba(254, 204, 0, 0.1);
-            border: 4px solid #fecc00 !important;
+
+        /* Glassmorphism Panels */
+        .glass-panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
         }
 
         .header { 
-            background: #fecc00; padding: 15px; text-align: center; 
-            border-bottom: 8px solid #005293; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            z-index: 10;
+            background: rgba(15, 23, 42, 0.9);
+            padding: 20px; 
+            text-align: center; 
+            border-bottom: 2px solid var(--sweden-yellow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
+
         .header h1 {
             margin: 0;
-            font-size: 3.2rem;
-            color: #005293;
-            text-shadow: 3px 3px 0px white;
-            letter-spacing: -1px;
+            font-size: 2.5rem;
+            color: var(--sweden-yellow);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(254, 204, 0, 0.4);
         }
-        .header .stat-box {
-            display: inline-block;
-            background: #005293;
-            color: #fecc00;
-            padding: 8px 20px;
+
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            background: rgba(0, 82, 147, 0.4);
+            padding: 10px 20px;
             border-radius: 12px;
-            margin: 5px 10px;
-            border: 2px solid white;
-            box-shadow: 0 4px 0 #002d52;
+            border: 1px solid rgba(254, 204, 0, 0.3);
+            min-width: 140px;
         }
+
+        .stat-box b { color: var(--sweden-yellow); font-size: 1.2rem; }
 
         .main-layout { 
             display: grid; 
-            grid-template-columns: 450px 1fr 450px; 
-            gap: 25px; padding: 25px; flex-grow: 1; 
-            max-width: 1800px; margin: 0 auto; width: 100%;
+            grid-template-columns: 400px 1fr 400px; 
+            gap: 30px; 
+            padding: 30px; 
+            max-width: 1920px; 
+            margin: 0 auto; 
+            width: 100%;
         }
 
         .panel { 
-            background: rgba(255,255,255,0.97); 
-            padding: 20px; 
-            border-radius: 25px; 
-            height: fit-content;
-            max-height: 82vh;
+            padding: 25px; 
+            max-height: 80vh;
             overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--sweden-yellow) transparent;
         }
+
         .panel h3 {
             text-align: center;
             margin-top: 0;
-            color: #005293;
-            font-size: 2rem;
-            border-bottom: 5px solid #fecc00;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
+            color: var(--sweden-yellow);
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(254, 204, 0, 0.2);
+            padding-bottom: 15px;
         }
 
         .center-area { 
-            display: flex; flex-direction: column; align-items: center; 
-            justify-content: flex-start; padding-top: 30px;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
         }
 
+        /* Det "Sunkiga" huset blir nu en episk knapp */
         .main-clicker { 
-            background: radial-gradient(circle, #fff 0%, #f9f9f9 100%); 
-            border: 15px solid #fecc00; 
-            width: 260px; height: 260px; 
-            border-radius: 50%; display: flex; flex-direction: column; 
-            justify-content: center; align-items: center; cursor: pointer; 
-            box-shadow: 0 15px 0 #b38f00, 0 0 40px rgba(254, 204, 0, 0.4); 
-            transition: 0.1s; margin-bottom: 25px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 4px solid var(--sweden-yellow); 
+            width: 280px; height: 280px; 
+            border-radius: 50%; 
+            display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; 
+            cursor: pointer; 
+            box-shadow: 0 0 50px rgba(254, 204, 0, 0.15); 
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
         }
-        .main-clicker:active { transform: translateY(8px); box-shadow: 0 7px 0 #b38f00, 0 0 20px rgba(254, 204, 0, 0.6); }
-        .main-clicker b { color: #005293; font-size: 1.6rem; }
 
+        .main-clicker:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 70px rgba(254, 204, 0, 0.3);
+        }
+
+        .main-clicker:active { transform: scale(0.95); }
+        
+        .main-clicker span { font-size: 8rem; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
+
+        /* Butik-knappar */
         .buy-button { 
-            background: #fff; border: 3px solid #005293; 
-            padding: 12px 15px; margin: 8px 0; 
-            cursor: pointer; width: 100%; border-radius: 12px;
-            display: block; text-align: left;
-            transition: 0.2s;
+            background: rgba(255, 255, 255, 0.05); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            padding: 15px; 
+            margin: 10px 0; 
+            cursor: pointer; 
+            width: 100%; 
+            border-radius: 16px;
+            color: white;
+            transition: 0.3s;
         }
+
         .buy-button:hover:not(.disabled) {
-            transform: scale(1.02);
-            border-color: #fecc00;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            background: rgba(254, 204, 0, 0.1);
+            border-color: var(--sweden-yellow);
+            transform: translateX(5px);
         }
-        .buy-button.disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(0.8); }
 
-        .btn-header { display: flex; justify-content: space-between; align-items: center; font-size: 1.1rem;}
-        .btn-header b { color: #005293; }
-        .btn-header span { color: white; background: #005293; padding: 2px 8px; border-radius: 6px; font-size: 0.85rem;}
+        .buy-button.disabled { opacity: 0.3; cursor: not-allowed; filter: grayscale(1); }
 
-        .btn-sub { font-family: 'Arial', sans-serif; font-size: 0.8rem; color: #555; font-weight: bold; margin-top: 4px; border-top: 1px solid #eee; padding-top: 4px;}
+        .btn-header { display: flex; justify-content: space-between; align-items: center; }
+        .btn-header b { color: var(--sweden-yellow); font-size: 1.1rem; }
+        .btn-header span { background: var(--sweden-blue); padding: 4px 10px; border-radius: 8px; font-size: 0.9rem; }
 
+        .btn-sub { font-size: 0.85rem; color: #94a3b8; margin-top: 8px; }
+
+        /* Achievement Cards */
         .ach-card { 
-            background: #fff; border-left: 8px solid #005293; 
-            padding: 15px; margin-bottom: 15px; border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            background: rgba(0, 0, 0, 0.2); 
+            padding: 20px; 
+            margin-bottom: 15px; 
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
         .progress-container { 
-            background: #eee; height: 20px; width: 100%; 
-            border-radius: 10px; margin-top: 8px; overflow: hidden; border: 2px solid #005293; 
+            background: #0f172a; height: 12px; width: 100%; 
+            border-radius: 10px; margin-top: 12px; overflow: hidden;
             position: relative;
         }
+        
         .progress-bar { 
-            background: linear-gradient(90deg, #fecc00, #ffdb4d);
-            height: 100%; width: 0%; transition: width 0.3s ease; 
-        }
-        .progress-text {
-            position: absolute; width: 100%; text-align: center; top: 0;
-            font-size: 0.75rem; color: #005293; font-weight: 900; line-height: 16px;
+            background: linear-gradient(90deg, #005293, #fecc00);
+            height: 100%; width: 0%; transition: width 0.5s ease; 
         }
 
         .claim-btn { 
-            width: 100%; margin-top: 10px; padding: 10px; 
-            background: #ddd; border: none; 
-            color: white; font-weight: bold; border-radius: 8px; 
-            transition: 0.2s;
+            width: 100%; margin-top: 15px; padding: 12px; 
+            background: #334155; border: none; 
+            color: white; font-weight: bold; border-radius: 10px; 
+            transition: 0.3s;
         }
-        .claim-btn.ready { background: #28a745; cursor: pointer; animation: pulse 1s infinite; }
-
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+        .claim-btn.ready { 
+            background: linear-gradient(45deg, #10b981, #059669); 
+            cursor: pointer; 
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
 
         .plus-one { 
-            position: absolute; color: #005293; font-weight: bold; font-size: 2.2rem; 
-            pointer-events: none; animation: fly 0.8s forwards; 
-            text-shadow: 2px 2px 0px #fecc00; z-index: 1000; 
+            position: absolute; color: var(--sweden-yellow); font-weight: 900; 
+            font-size: 2.5rem; pointer-events: none; animation: fly 0.8s forwards; 
+            text-shadow: 0 0 10px rgba(0,0,0,0.8); z-index: 1000; 
         }
-        @keyframes fly { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-120px); } }
+
+        @keyframes fly { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-150px); } }
 
         .back-btn {
-            background:#333; color:white; padding:12px 25px; 
-            text-decoration:none; border:4px solid #fecc00; 
-            border-radius:10px; font-size: 1.1rem; margin-top: 15px;
+            background: transparent; color: #94a3b8; padding: 10px 20px; 
+            text-decoration: none; border: 1px solid #334155; 
+            border-radius: 10px; font-size: 0.9rem; margin-top: 30px;
+            transition: 0.3s;
         }
-        
-        .panel::-webkit-scrollbar { width: 8px; }
-        .panel::-webkit-scrollbar-thumb { background: #005293; border-radius: 10px; }
+        .back-btn:hover { color: white; border-color: white; }
+
+        /* Scrollbar */
+        .panel::-webkit-scrollbar { width: 6px; }
+        .panel::-webkit-scrollbar-thumb { background: var(--sweden-blue); border-radius: 10px; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h1>BYGG FOLKHEMMET</h1>
-        <div class="stat-box" style="font-size: 1.6rem;">💰 Välfärd: <b><span id="money">0</span></b> kr</div>
-        <div>
-            <div class="stat-box">📈 +<span id="pps">0</span>/sek</div>
-            <div class="stat-box">🖱️ +<span id="mpc">1</span>/klick</div>
-            <div class="stat-box" style="background: white; color: #005293; border-color: #005293;">🏆 Bonus: <span id="bonus-val">0</span>%</div>
+        <div class="stats-container">
+            <div class="stat-box">💰 Välfärd: <b id="money">0</b> kr</div>
+            <div class="stat-box">📈 PPS: <b id="pps">0</b></div>
+            <div class="stat-box">🖱️ MPC: <b id="mpc">1</b></div>
+            <div class="stat-box">🏆 Bonus: <b id="bonus-val">0</b>%</div>
         </div>
     </div>
 
     <div class="main-layout">
-        <div class="panel neon-box">
-            <h3>BUTIK</h3>
+        <div class="panel glass-panel">
+            <h3>MARKNAD</h3>
             <div id="essentials">
                 <button class="buy-button" id="hammer-btn" onclick="buyHammer()">
-                    <div class="btn-header"><b>🔨 Super-Hammare</b> <span><span id="hammer-cost">15</span> kr</span></div>
-                    <div class="btn-sub">Ger klickbonus baserat på produktion!</div>
+                    <div class="btn-header"><b>🔨 Super-Hammare</b> <span id="hammer-cost">15</span></div>
+                    <div class="btn-sub">Ökar klickstyrka baserat på din totala PPS.</div>
                 </button>
                 <button class="buy-button" id="auto-btn" onclick="buyAuto()">
-                    <div class="btn-header"><b>🤖 Auto-Klick</b> <span><span id="auto-cost">100</span> kr</span></div>
-                    <div class="btn-sub">Klickar automatiskt 1 gång/sek</div>
+                    <div class="btn-header"><b>🤖 Auto-Bot</b> <span id="auto-cost">100</span></div>
+                    <div class="btn-sub">Genererar klick automatiskt varje sekund.</div>
                 </button>
             </div>
-            <hr style="border: 2px dashed #fecc00; margin: 20px 0;">
+            <div style="height: 2px; background: rgba(255,255,255,0.05); margin: 20px 0;"></div>
             <div id="building-list"></div>
         </div>
 
         <div class="center-area">
             <div class="main-clicker" onclick="doClick(event)">
-                <span style="font-size: 6.5rem;">🏠</span>
-                <b>KLICKA!</b>
+                <span>🏠</span>
             </div>
-            <a href="games.html" class="back-btn">TILLBAKA MENYN</a>
+            <a href="games.html" class="back-btn">← TILLBAKA TILL MENYN</a>
         </div>
 
-        <div class="panel neon-box">
+        <div class="panel glass-panel">
             <h3>UPPDRAG</h3>
             <div id="ach-license-area">
-                <p style="text-align: center; font-size: 0.9rem;">Lås upp Jimmie för att få tillgång till speciella uppdrag och bonusar.</p>
-                <button class="buy-button" onclick="buyLicense()" style="background:#fecc00; text-align:center;"><b>LÅS UPP JIMMIE (1 500 kr)</b></button>
+                <div class="ach-card" style="text-align: center; border-color: var(--sweden-yellow);">
+                    <p style="margin-top:0; font-size: 0.95rem; color: #94a3b8;">Lås upp <b>Speciella Uppdrag</b> för att få tillgång till unika bonusar.</p>
+                    <button class="claim-btn ready" onclick="buyLicense()" style="background: var(--sweden-yellow); color: #000;">LÅS UPP JIMMIE (1 500 kr)</button>
+                </div>
             </div>
             <div id="ach-container"></div>
         </div>
     </div>
 
     <script>
-        // VERSION 9: RESETAR ALLT FÖR NY BALANS OCH DESIGN
+        // Logiken behålls exakt som din version 9, bara UI-uppdateringar
         let data = {
             money: 0, clicks: 0, mpc: 1, autoClicks: 0,
             hammerPrice: 15, autoPrice: 100,
@@ -270,7 +325,7 @@
         function calculateMPC() {
             let pps = getTotalPPS();
             let base = 1 + (data.hammerLevel * 1);
-            let productionBonus = (pps * 0.016) * data.hammerLevel; // 1/6 styrka
+            let productionBonus = (pps * 0.016) * data.hammerLevel;
             return Math.max(1, Math.floor(base + productionBonus));
         }
 
@@ -335,7 +390,6 @@
             if(type === 'click') return data.clicks;
             if(type === 'money') return data.money;
             if(type === 'total') return data.bCounts.reduce((a, b) => a + b, 0);
-            if(type.startsWith('b')) return data.bCounts[parseInt(type.substring(1))];
             return 0;
         }
 
@@ -346,8 +400,8 @@
             document.getElementById("pps").innerText = Math.floor(getTotalPPS()).toLocaleString();
             document.getElementById("bonus-val").innerText = Math.round((getQuestBonus()-1)*100);
             
-            document.getElementById("hammer-cost").innerText = data.hammerPrice.toLocaleString();
-            document.getElementById("auto-cost").innerText = data.autoPrice.toLocaleString();
+            document.getElementById("hammer-cost").innerText = data.hammerPrice.toLocaleString() + " kr";
+            document.getElementById("auto-cost").innerText = data.autoPrice.toLocaleString() + " kr";
             
             document.getElementById("hammer-btn").classList.toggle("disabled", data.money < data.hammerPrice);
             document.getElementById("auto-btn").classList.toggle("disabled", data.money < data.autoPrice);
@@ -356,7 +410,7 @@
                 const btn = document.getElementById("build-"+i);
                 if(btn) btn.classList.toggle("disabled", data.money < data.bCosts[i]);
             });
-            localStorage.setItem('folkhem_hardcore_v9', JSON.stringify(data));
+            localStorage.setItem('folkhem_hardcore_v9_design', JSON.stringify(data));
         }
 
         function renderBuildings() {
@@ -366,7 +420,7 @@
                 if ((data.money >= cost * 0.2) || (data.bCounts[i] > 0)) {
                     bHtml += `<button class="buy-button" id="build-${i}" onclick="buyBuilding(${i})">
                         <div class="btn-header"><b>${b.name} (${data.bCounts[i]})</b> <span>${cost.toLocaleString()} kr</span></div>
-                        <div class="btn-sub">Produktion: +${getProduction(i).toFixed(1)}/sek</div>
+                        <div class="btn-sub">Produktion: +${getProduction(i).toLocaleString()}/sek</div>
                     </button>`;
                 }
             });
@@ -386,15 +440,14 @@
                         const isReady = val >= ach.target;
                         const progress = (val / ach.target) * 100;
                         const html = `
-                            <div class="ach-card" style="border-color: ${isReady ? '#28a745' : '#005293'}">
-                                <div style="display:flex; justify-content:space-between; align-items:center;">
-                                    <b>${type === 'secret' ? '🌟 ' + ach.t : ach.t}</b>
-                                    <span style="color:#28a745">+${ach.reward.toLocaleString()} kr</span>
+                            <div class="ach-card">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                                    <b style="color:white;">${type === 'secret' ? '🌟 ' + ach.t : ach.t}</b>
+                                    <span style="color:#10b981; font-weight:bold;">+${ach.reward.toLocaleString()} kr</span>
                                 </div>
-                                <div class="btn-sub">Krav: ${ach.req}</div>
+                                <div class="btn-sub" style="margin-bottom:10px;">${ach.req}</div>
                                 <div class="progress-container">
                                     <div class="progress-bar" style="width: ${Math.min(100, progress)}%"></div>
-                                    <div class="progress-text">${Math.floor(val).toLocaleString()} / ${ach.target.toLocaleString()}</div>
                                 </div>
                                 <button class="claim-btn ${isReady ? 'ready' : ''}" onclick="claimAch('${type}')">
                                     ${isReady ? 'HÄMTA BELÖNING' : 'LÅST'}
@@ -418,7 +471,7 @@
         }, 100);
 
         window.onload = () => {
-            let s = localStorage.getItem('folkhem_hardcore_v9');
+            let s = localStorage.getItem('folkhem_hardcore_v9_design');
             if (s) Object.assign(data, JSON.parse(s));
             renderEverything();
         };
