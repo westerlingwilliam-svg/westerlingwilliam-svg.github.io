@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bygg Folkhemmet - Full Save</title>
+    <title>Bygg Folkhemmet - Fixad Version</title>
     <style>
         body {
             font-family: 'Arial Black', sans-serif;
@@ -40,7 +40,6 @@
 
         .panel h3 { color: #005293; text-align: center; border-bottom: 3px solid #005293; }
 
-        /* Mitten - Clicker Area */
         .center-area {
             display: flex;
             flex-direction: column;
@@ -65,7 +64,6 @@
 
         .main-clicker:active { transform: translateY(10px); box-shadow: 0 0px 0 #b38f00; }
 
-        /* Uppgraderingar */
         .upgrade-btn {
             background: #f0f0f0;
             border: 2px solid #005293;
@@ -76,9 +74,13 @@
             justify-content: space-between;
             font-size: 0.85rem;
         }
-        .upgrade-btn.disabled { opacity: 0.4; cursor: not-allowed; }
+        .upgrade-btn.disabled { 
+            background: #ccc !important;
+            color: #777 !important;
+            cursor: not-allowed;
+            border-color: #999;
+        }
 
-        /* Achievements */
         .ach-card {
             padding: 10px;
             margin: 5px 0;
@@ -88,12 +90,7 @@
         }
         .ach-card.unlocked { background: #fecc00; border-color: #005293; }
 
-        /* Footer kontroller */
-        .bottom-controls {
-            text-align: center;
-            padding: 20px;
-            margin-top: auto;
-        }
+        .bottom-controls { text-align: center; padding: 20px; margin-top: auto; }
 
         .btn-reset { 
             background: rgba(255, 68, 68, 0.4); 
@@ -105,7 +102,6 @@
             margin-top: 50px;
             border-radius: 3px;
         }
-        .btn-reset:hover { background: rgba(255, 68, 68, 1); }
 
         .plus-one {
             position: absolute;
@@ -133,7 +129,7 @@
             <div id="click-upgrades">
                 <div class="upgrade-btn" id="click-btn" onclick="buyClickUpgrade()">
                     <div><b>Bättre Hammare</b><br><small>+1 kr per klick</small></div>
-                    <div id="click-cost">50 kr</div>
+                    <div id="click-cost">20 kr</div>
                 </div>
             </div>
             <hr>
@@ -167,12 +163,11 @@
     </div>
 
     <script>
-        // Startvärden
         let state = {
             money: 0,
             totalClicks: 0,
             mpc: 1,
-            clickCost: 50,
+            clickCost: 20, // Billigare startpris!
             pps: 0,
             hasLicense: false,
             unlockedAch: [],
@@ -211,7 +206,7 @@
             if (state.money >= state.clickCost) {
                 state.money -= state.clickCost;
                 state.mpc += 1;
-                state.clickCost = Math.round(state.clickCost * 2.5);
+                state.clickCost = Math.round(state.clickCost * 2.2);
                 updateUI();
             }
         }
@@ -241,33 +236,32 @@
 
         function updateUI() {
             document.getElementById("money").innerText = Math.floor(state.money);
-            document.getElementById("pps").innerText = state.pps;
+            document.getElementById("pps").innerText = state.pps.toFixed(0);
             document.getElementById("mpc").innerText = state.mpc;
             document.getElementById("click-cost").innerText = state.clickCost + " kr";
 
-            // Click upgrade button state
+            // Fixad hammare knapp
             const cBtn = document.getElementById("click-btn");
             if(state.money < state.clickCost) cBtn.classList.add("disabled");
             else cBtn.classList.remove("disabled");
 
-            // Building list
+            // Fixad bygglista
             let bList = document.getElementById("building-list");
             bList.innerHTML = "";
             state.buildings.forEach((b, i) => {
+                let canAfford = state.money >= b.cost;
                 bList.innerHTML += `
-                    <div class="upgrade-btn ${state.money < b.cost ? 'disabled' : ''}" onclick="buyBuilding(${i})">
+                    <div class="upgrade-btn ${canAfford ? '' : 'disabled'}" onclick="buyBuilding(${i})">
                         <div><b>${b.name}</b> (${b.count})<br><small>+${b.income} kr/s</small></div>
                         <div>${b.cost} kr</div>
                     </div>`;
             });
 
-            // License UI
             document.getElementById("ach-license").style.display = state.hasLicense ? "none" : "block";
             const lBtn = document.getElementById("license-btn");
             if(state.money < 1000) lBtn.classList.add("disabled");
             else lBtn.classList.remove("disabled");
 
-            // Achievement check
             if (state.hasLicense) {
                 achievements.forEach(a => {
                     if (!state.unlockedAch.includes(a.id) && a.check()) {
@@ -276,7 +270,6 @@
                 });
             }
 
-            // Achievement list
             let aList = document.getElementById("ach-list");
             aList.innerHTML = "";
             achievements.forEach(a => {
@@ -288,28 +281,29 @@
                     </div>`;
             });
 
-            // SAVE PROGRESS
             localStorage.setItem('folkhem_save_final', JSON.stringify(state));
         }
 
-        function resetGame() {
-            if(confirm("ÄR DU HELT SÄKER? Alla pengar, byggnader och achievements kommer raderas för alltid!")) {
-                localStorage.removeItem('folkhem_save_final');
-                location.reload();
-            }
-        }
-
-        // LOAD PROGRESS
         function loadGame() {
             let saved = localStorage.getItem('folkhem_save_final');
             if (saved) {
                 state = JSON.parse(saved);
+                // Säkerställ att startpriset korrigeras om man startar om
+                if(state.totalClicks === 0 && state.money === 0 && state.mpc === 1) {
+                    state.clickCost = 20;
+                }
                 calculatePPS();
             }
             updateUI();
         }
 
-        // Gameloop för inkomst per sekund
+        function resetGame() {
+            if(confirm("RENSA ALLT?")) {
+                localStorage.removeItem('folkhem_save_final');
+                location.reload();
+            }
+        }
+
         setInterval(() => {
             state.money += state.pps / 10;
             updateUI();
