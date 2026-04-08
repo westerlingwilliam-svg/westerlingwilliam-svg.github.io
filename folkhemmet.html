@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bygg Folkhemmet - Jimmie Edition</title>
+    <title>Bygg Folkhemmet - Jimmie Edition FIX</title>
     <style>
         * {
             user-select: none;
@@ -78,6 +78,7 @@
             align-items: center;
             width: 100%;
             border-radius: 5px;
+            font-family: inherit;
         }
         .buy-button.disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
 
@@ -88,7 +89,6 @@
             padding: 10px;
             margin-bottom: 10px;
             border-radius: 8px;
-            position: relative;
         }
         .progress-container {
             background: #ddd;
@@ -103,29 +103,35 @@
             background: linear-gradient(90deg, #005293, #fecc00);
             height: 100%;
             width: 0%;
-            transition: width 0.3s;
+            transition: width 0.2s;
         }
+        
+        /* Fixad Claim-knapp */
         .claim-btn {
             width: 100%;
             margin-top: 8px;
-            padding: 5px;
-            background: #ccc;
-            border: none;
+            padding: 10px;
+            background: #666;
+            border: 2px solid #444;
             color: white;
             font-weight: bold;
             cursor: not-allowed;
             border-radius: 4px;
+            font-family: inherit;
         }
         .claim-btn.ready {
             background: #28a745;
+            border-color: #1e7e34;
             cursor: pointer;
-            animation: pulse 1.5s infinite;
+            animation: pulse 1s infinite;
         }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
-        .claimed { background: #555 !important; cursor: default; }
+        .claim-btn.ready:active { transform: scale(0.95); }
+        .claimed { background: #005293 !important; border-color: #003d6e !important; cursor: default; }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
 
         .bottom-controls { text-align: center; padding: 20px; }
-        .btn-reset { background: #ff4444; color: white; border: none; padding: 8px; cursor: pointer; opacity: 0.6; font-size: 0.7rem; }
+        .btn-reset { background: #ff4444; color: white; border: none; padding: 8px; cursor: pointer; opacity: 0.5; }
 
         .plus-one {
             position: absolute;
@@ -156,24 +162,22 @@
                 <span><span id="hammer-cost">15</span> kr</span>
             </button>
             <hr>
-            <div id="shop-container">
-                <button class="buy-button" id="build-0" onclick="buyBuilding(0)">
-                    <b>Röd Stuga (<span id="count-0">0</span>)</b>
-                    <span><span id="cost-0">15</span> kr</span>
-                </button>
-                <button class="buy-button" id="build-1" onclick="buyBuilding(1)">
-                    <b>Hyreshus (<span id="count-1">0</span>)</b>
-                    <span><span id="cost-1">100</span> kr</span>
-                </button>
-                <button class="buy-button" id="build-2" onclick="buyBuilding(2)">
-                    <b>Sjukhus (<span id="count-2">0</span>)</b>
-                    <span><span id="cost-2">500</span> kr</span>
-                </button>
-                <button class="buy-button" id="build-3" onclick="buyBuilding(3)">
-                    <b>Industri (<span id="count-3">0</span>)</b>
-                    <span><span id="cost-3">2000</span> kr</span>
-                </button>
-            </div>
+            <button class="buy-button" id="build-0" onclick="buyBuilding(0)">
+                <b>Röd Stuga (<span id="count-0">0</span>)</b>
+                <span><span id="cost-0">15</span> kr</span>
+            </button>
+            <button class="buy-button" id="build-1" onclick="buyBuilding(1)">
+                <b>Hyreshus (<span id="count-1">0</span>)</b>
+                <span><span id="cost-1">100</span> kr</span>
+            </button>
+            <button class="buy-button" id="build-2" onclick="buyBuilding(2)">
+                <b>Sjukhus (<span id="count-2">0</span>)</b>
+                <span><span id="cost-2">500</span> kr</span>
+            </button>
+            <button class="buy-button" id="build-3" onclick="buyBuilding(3)">
+                <b>Industri (<span id="count-3">0</span>)</b>
+                <span><span id="cost-3">2000</span> kr</span>
+            </button>
         </div>
 
         <div class="center-area">
@@ -195,7 +199,7 @@
     </div>
 
     <div class="bottom-controls">
-        <button class="btn-reset" onclick="hardReset()">Återställ spelet</button>
+        <button class="btn-reset" onclick="hardReset()">Nollställ</button>
     </div>
 
     <script>
@@ -214,10 +218,11 @@
         
         const achs = [
             { id: 0, t: "Jimmies Debut", d: "Klicka 50 gånger", target: 50, reward: 500, check: () => data.clicks },
-            { id: 1, t: "Jimmies Stugby", d: "Bygg 10 Röda Stugor", target: 10, reward: 1000, check: () => data.bCounts[0] },
-            { id: 2, t: "Jimmies Miljonprogram", d: "Bygg 5 Hyreshus", target: 5, reward: 2500, check: () => data.bCounts[1] },
-            { id: 3, t: "Jimmies Välfärd", d: "Ha 10 000 kr samtidigt", target: 10000, reward: 5000, check: () => data.money },
-            { id: 4, t: "Jimmies Stormakt", d: "Bygg 5 Industrier", target: 5, reward: 15000, check: () => data.bCounts[3] }
+            { id: 1, t: "Jimmies Stugby", d: "Bygg 10 Röda Stugor", target: 10, reward: 1200, check: () => data.bCounts[0] },
+            { id: 2, t: "Jimmies Miljonprogram", d: "Bygg 5 Hyreshus", target: 5, reward: 3000, check: () => data.bCounts[1] },
+            { id: 3, t: "Jimmies Välfärd", d: "Ha 10 000 kr på kontot", target: 10000, reward: 5000, check: () => data.money },
+            { id: 4, t: "Jimmies Industriimperium", d: "Bygg 5 Industrier", target: 5, reward: 20000, check: () => data.bCounts[3] },
+            { id: 5, t: "Jimmies Storbygge", d: "Bygg 50 byggnader totalt", target: 50, reward: 50000, check: () => data.bCounts.reduce((a,b)=>a+b, 0) }
         ];
 
         function doClick(e) {
@@ -229,15 +234,15 @@
             t.style.left = e.pageX + "px"; t.style.top = e.pageY + "px";
             document.body.appendChild(t);
             setTimeout(() => t.remove(), 800);
-            update();
+            updateUI();
         }
 
         function buyHammer() {
             if (data.money >= data.hammerPrice) {
                 data.money -= data.hammerPrice;
                 data.mpc += 1;
-                data.hammerPrice = Math.round(data.hammerPrice * 2.2);
-                update();
+                data.hammerPrice = Math.round(data.hammerPrice * 2.1);
+                updateUI();
             }
         }
 
@@ -246,7 +251,7 @@
                 data.money -= data.bCosts[id];
                 data.bCounts[id]++;
                 data.bCosts[id] = Math.round(data.bCosts[id] * 1.15);
-                update();
+                updateUI();
             }
         }
 
@@ -254,24 +259,30 @@
             if (data.money >= 1000) {
                 data.money -= 1000;
                 data.hasLicense = true;
-                update();
+                updateUI();
             }
         }
 
-        function claimAch(id, reward) {
-            const currentVal = achs[id].check();
-            if (currentVal >= achs[id].target && !data.claimedAchs.includes(id)) {
-                data.money += reward;
+        // Fixad Claim-funktion: Denna kallas nu via onclick direkt
+        function claimReward(id) {
+            const a = achs.find(x => x.id === id);
+            const val = a.check();
+            if (val >= a.target && !data.claimedAchs.includes(id)) {
+                data.money += a.reward;
                 data.claimedAchs.push(id);
-                update();
+                updateUI();
             }
         }
 
-        function update() {
+        function updateUI() {
+            // Header
             document.getElementById("money").innerText = Math.floor(data.money);
             document.getElementById("mpc").innerText = data.mpc;
-            document.getElementById("hammer-cost").innerText = data.hammerPrice;
             
+            // Butik
+            document.getElementById("hammer-cost").innerText = data.hammerPrice;
+            document.getElementById("hammer-btn").className = "buy-button" + (data.money < data.hammerPrice ? " disabled" : "");
+
             let pps = 0;
             for(let i=0; i<4; i++) {
                 pps += data.bCounts[i] * bIncomes[i];
@@ -280,21 +291,21 @@
                 document.getElementById("build-" + i).className = "buy-button" + (data.money < data.bCosts[i] ? " disabled" : "");
             }
             document.getElementById("pps").innerText = pps;
-            document.getElementById("hammer-btn").className = "buy-button" + (data.money < data.hammerPrice ? " disabled" : "");
 
             // Achievements
             document.getElementById("ach-license-area").style.display = data.hasLicense ? "none" : "block";
             const achCont = document.getElementById("ach-container");
-            achCont.innerHTML = "";
-
+            
             if (data.hasLicense) {
+                let html = "";
                 achs.forEach(a => {
                     const val = a.check();
                     const percent = Math.min(100, Math.floor((val / a.target) * 100));
                     const isDone = val >= a.target;
                     const isClaimed = data.claimedAchs.includes(a.id);
 
-                    achCont.innerHTML += `
+                    // Skapa knappens HTML dynamiskt men med en ren onclick
+                    html += `
                         <div class="ach-card">
                             <div style="font-size:0.9rem;"><b>${a.t}</b></div>
                             <div style="font-size:0.7rem;">${a.d} (${Math.floor(val)}/${a.target})</div>
@@ -302,35 +313,38 @@
                                 <div class="progress-bar" style="width: ${percent}%"></div>
                             </div>
                             <button class="claim-btn ${isDone && !isClaimed ? 'ready' : ''} ${isClaimed ? 'claimed' : ''}" 
-                                onclick="claimAch(${a.id}, ${a.reward})">
-                                ${isClaimed ? 'HÄMTAD ✓' : (isDone ? 'CLAIM ' + a.reward + ' kr' : 'LÅST')}
+                                    onclick="claimReward(${a.id})">
+                                ${isClaimed ? 'HÄMTAT ✓' : (isDone ? 'CLAIM ' + a.reward + ' kr' : 'LÅST')}
                             </button>
                         </div>
                     `;
                 });
+                // Uppdatera bara om innehållet faktiskt ändrats för att spara prestanda
+                if(achCont.innerHTML !== html) achCont.innerHTML = html;
             }
 
-            localStorage.setItem('folkhem_save_jimmie', JSON.stringify(data));
+            localStorage.setItem('folkhem_save_jimmie_v2', JSON.stringify(data));
         }
 
         function hardReset() {
-            if (confirm("Vill du verkligen nollställa Jimmies framgångar?")) {
-                localStorage.removeItem('folkhem_save_jimmie');
+            if(confirm("Nollställa?")) {
+                localStorage.clear();
                 location.reload();
             }
         }
 
+        // Loop 10ggr i sekunden
         setInterval(() => {
             let pps = 0;
             for(let i=0; i<4; i++) pps += data.bCounts[i] * bIncomes[i];
             data.money += pps / 10;
-            update();
+            updateUI();
         }, 100);
 
         window.onload = () => {
-            let s = localStorage.getItem('folkhem_save_jimmie');
+            let s = localStorage.getItem('folkhem_save_jimmie_v2');
             if (s) Object.assign(data, JSON.parse(s));
-            update();
+            updateUI();
         };
     </script>
 </body>
