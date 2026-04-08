@@ -136,11 +136,6 @@
             font-weight: bold;
         }
 
-        @keyframes barStripes {
-            from { background-position: 40px 0; }
-            to { background-position: 0 0; }
-        }
-
         .progress-container { 
             background: #ddd; height: 18px; width: 100%; 
             border-radius: 10px; margin-top: 8px; overflow: hidden; border: 2px solid #005293; 
@@ -152,7 +147,8 @@
             animation: barStripes 2s linear infinite;
             height: 100%; width: 0%; transition: width 0.3s ease-out; 
         }
-        
+        @keyframes barStripes { from { background-position: 40px 0; } to { background-position: 0 0; } }
+
         .claim-btn { 
             width: 100%; margin-top: 10px; padding: 12px; 
             background: #666; border: 3px solid #444; 
@@ -164,9 +160,7 @@
             background: #28a745; border-color: #1e7e34; 
             cursor: pointer; 
             animation: pulse 1s infinite; 
-            box-shadow: 0 0 10px rgba(40, 167, 69, 0.6);
         }
-        .claim-btn.ready:hover { transform: scale(1.03); background: #34ce57; }
 
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.6); } 70% { box-shadow: 0 0 0 15px rgba(40, 167, 69, 0); } 100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); } }
 
@@ -182,7 +176,6 @@
             text-decoration:none; border:4px solid #fecc00; 
             border-radius:10px; font-size: 1.1rem;
             transition: 0.2s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
         .back-btn:hover { background: #fecc00; color: #005293; }
 
@@ -238,14 +231,14 @@
     </div>
 
     <script>
+        // Start-data
         let data = {
             money: 0, clicks: 0, mpc: 1, autoClicks: 0,
             hammerPrice: 15, autoPrice: 100,
             hasLicense: false,
-            // Utökade achLevels för nya uppdrag
-            achLevels: { click: 0, money: 0, b0: 0, b1: 0, b3: 0, auto: 0, pps: 0, b7: 0 },
-            bCounts: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Plats för 10 byggnader
-            bCosts: [15, 100, 500, 2500, 15000, 100000, 1000000, 7500000, 50000000, 500000000]
+            achLevels: { click: 0, money: 0, b0: 0, b1: 0, b3: 0, auto: 0, pps: 0, b7: 0, sd: 0 },
+            bCounts: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            bCosts: [15, 100, 500, 2500, 15000, 100000, 1000000, 7500000, 50000000, 500000000, 5000000000]
         };
 
         const buildings = [
@@ -256,10 +249,11 @@
             { name: "Universitet", inc: 750 }, 
             { name: "Kärnkraft", inc: 3500 },
             { name: "Välfärdsstat", inc: 15000 },
-            // NYA BYGGNADER
             { name: "Rymdprogram", inc: 65000 },
             { name: "AI-Myndighet", inc: 250000 },
-            { name: "Sverige 2.0", inc: 1200000 }
+            { name: "Sverige 2.0", inc: 1200000 },
+            // DEN NYA ELIT-BYGGNADEN
+            { name: "SD-Högkvarteret 🌸", inc: 8000000 }
         ];
 
         const achChains = {
@@ -285,17 +279,16 @@
                 { t: "Industri-ägare", target: 5, reward: 10000, req: "Bygg 5 Industrier" },
                 { t: "Produktions-chef", target: 20, reward: 100000, req: "Bygg 20 Industrier" }
             ],
-            // NYA UPPDRAGSKATEGORIER
             auto: [
                 { t: "Automatisering", target: 10, reward: 5000, req: "Köp 10 Auto-Klick" },
                 { t: "Robotisering", target: 50, reward: 75000, req: "Köp 50 Auto-Klick" }
             ],
             pps: [
-                { t: "Ekonomisk tillväxt", target: 1000, reward: 15000, req: "Nå 1 000 kr/sek" },
-                { t: "Välfärds-boom", target: 100000, reward: 500000, req: "Nå 100 000 kr/sek" }
+                { t: "Tillväxt", target: 1000, reward: 15000, req: "Nå 1 000 kr/sek" },
+                { t: "Boom", target: 100000, reward: 500000, req: "Nå 100 000 kr/sek" }
             ],
-            b7: [
-                { t: "Galaktisk Välfärd", target: 1, reward: 1000000, req: "Bygg ditt första Rymdprogram" }
+            sd: [
+                { t: "Partiledarens Val", target: 1, reward: 10000000, req: "Bygg ett SD-Högkvarter" }
             ]
         };
 
@@ -363,6 +356,7 @@
             if(type === 'money') return data.money;
             if(type === 'auto') return data.autoClicks;
             if(type === 'pps') return getTotalPPS();
+            if(type === 'sd') return data.bCounts[10]; // SD-byggnaden
             if(type.startsWith('b')) return data.bCounts[parseInt(type.substring(1))];
             return 0;
         }
@@ -390,7 +384,6 @@
             buildings.forEach((b, i) => {
                 const cost = data.bCosts[i];
                 const canSee = (data.money >= cost * 0.7) || (data.bCounts[i] > 0);
-                
                 if (canSee) {
                     bHtml += `
                         <button class="buy-button" id="build-${i}" onclick="buyBuilding(${i})">
@@ -405,7 +398,7 @@
             if (data.hasLicense) {
                 let html = "";
                 Object.keys(achChains).forEach(type => {
-                    const level = data.achLevels[type] || 0;
+                    const level = data.achLevels[type];
                     if (level < achChains[type].length) {
                         const ach = achChains[type][level];
                         const val = getValByType(type);
@@ -417,19 +410,19 @@
                                 <div class="ach-card neon-box">
                                     <div style="display:flex; justify-content:space-between; align-items:center;">
                                         <b>${ach.t}</b>
-                                        <span style="font-family:Arial; font-weight:bold; color:#28a745; background:rgba(40,167,69,0.1); padding:2px 6px; border-radius:5px;">+${ach.reward.toLocaleString()} kr</span>
+                                        <span style="font-family:Arial; font-weight:bold; color:#28a745;">+${ach.reward.toLocaleString()} kr</span>
                                     </div>
                                     <div class="ach-req-box">Krav: ${ach.req}</div>
-                                    <div class="progress-container"><div id="bar-${type}" class="progress-bar" style="width: ${Math.min(100, (val/ach.target)*100)}%"></div></div>
-                                    <div id="text-${type}" style="font-family:Arial; font-size:0.8rem; font-weight:bold; text-align:right; margin-top:2px;">${Math.floor(val).toLocaleString()} / ${ach.target.toLocaleString()}</div>
-                                    <button id="btn-${type}" class="claim-btn ${isReady ? 'ready' : ''}" onclick="claimAch('${type}')">
+                                    <div class="progress-container"><div class="progress-bar" style="width: ${Math.min(100, (val/ach.target)*100)}%"></div></div>
+                                    <div style="font-family:Arial; font-size:0.8rem; font-weight:bold; text-align:right;">${Math.floor(val).toLocaleString()} / ${ach.target.toLocaleString()}</div>
+                                    <button class="claim-btn ${isReady ? 'ready' : ''}" onclick="claimAch('${type}')">
                                         ${isReady ? 'HÄMTA BELÖNING' : 'LÅST'}
                                     </button>
                                 </div>`;
                         }
                     }
                 });
-                document.getElementById("ach-container").innerHTML = html || "<p style='text-align:center; font-weight:bold; color:#005293;'>Alla uppdrag slutförda! Bra jobbat!</p>";
+                document.getElementById("ach-container").innerHTML = html || "<p style='text-align:center; font-weight:bold; color:#005293;'>Alla uppdrag slutförda!</p>";
             }
             updateNumbersOnly();
         }
@@ -444,11 +437,17 @@
         window.onload = () => {
             let s = localStorage.getItem('folkhem_save_final_ultra');
             if (s) {
-                let savedData = JSON.parse(s);
-                // Merge data för att undvika problem med nya fält
-                Object.assign(data, savedData);
-                // Fixa bCounts om de är för korta från gammal save
+                let saved = JSON.parse(s);
+                Object.assign(data, saved);
+                
+                // FIX: Se till att alla nya uppdragstyper finns i den gamla sparfilen
+                Object.keys(achChains).forEach(key => {
+                    if (data.achLevels[key] === undefined) data.achLevels[key] = 0;
+                });
+                
+                // FIX: Se till att listan med byggnader är tillräckligt lång
                 while(data.bCounts.length < buildings.length) data.bCounts.push(0);
+                while(data.bCosts.length < buildings.length) data.bCosts.push(data.bCosts[data.bCosts.length-1] * 10);
             }
             renderEverything();
         };
