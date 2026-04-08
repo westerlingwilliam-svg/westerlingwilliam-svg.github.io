@@ -189,7 +189,6 @@
         .panel::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 10px; }
         .panel::-webkit-scrollbar-thumb { background: #005293; border-radius: 10px; border: 2px solid #fecc00; }
         
-        /* Tillagt för att hantera sortering visuellt */
         #ach-container { display: flex; flex-direction: column; }
     </style>
 </head>
@@ -210,8 +209,8 @@
             <h3>BUTIK</h3>
             <div id="essentials">
                 <button class="buy-button" id="hammer-btn" onclick="buyHammer()">
-                    <div class="btn-header"><b>Super-Hammare</b> <span><span id="hammer-cost">15</span> kr</span></div>
-                    <div class="btn-sub">Ökar klickstyrkan enormt baserat på produktion!</div>
+                    <div class="btn-header"><b>Uppgraderad Hammare</b> <span><span id="hammer-cost">15</span> kr</span></div>
+                    <div class="btn-sub">Ger en klickbonus baserad på din totala välfärd!</div>
                 </button>
                 <button class="buy-button" id="auto-btn" onclick="buyAuto()">
                     <div class="btn-header"><b>Auto-Klick</b> <span><span id="auto-cost">100</span> kr</span></div>
@@ -246,10 +245,10 @@
             hammerPrice: 15, autoPrice: 100,
             hasLicense: false,
             questsDone: 0,
-            achLevels: { click: 0, money: 0, b0: 0, total: 0 },
+            achLevels: { click: 0, money: 0, b0: 0, total: 0, secret: 0 },
             bCounts: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             bCosts: [50, 400, 2000, 10000, 60000, 400000, 2500000, 15000000, 100000000, 1000000000, 10000000000],
-            hammerLevel: 0 // Ny variabel för att hålla koll på uppgraderingar
+            hammerLevel: 0
         };
 
         const buildings = [
@@ -264,33 +263,26 @@
         const achChains = {
             click: [
                 { t: "Kom igång!", target: 10, reward: 10, req: "10 klick" },
-                { t: "Finger-gympa", target: 25, reward: 25, req: "25 klick" },
-                { t: "Start-klicker", target: 100, reward: 100, req: "100 klick" },
-                { t: "Uthållighet", target: 500, reward: 500, req: "500 klick" },
-                { t: "Mid-game Grinder", target: 2000, reward: 5000, req: "2 000 klick" },
-                { t: "Klick-Proffs", target: 5000, reward: 20000, req: "5 000 klick" },
-                { t: "Klick-Gud", target: 15000, reward: 100000, req: "15 000 klick" }
+                { t: "Finger-gympa", target: 50, reward: 100, req: "50 klick" },
+                { t: "Klick-Proffs", target: 5000, reward: 20000, req: "5 000 klick" }
             ],
             money: [
-                { t: "Första hundralappen", target: 100, reward: 10, req: "Ha 100 kr" },
                 { t: "Småsparare", target: 1000, reward: 100, req: "Ha 1 000 kr" },
-                { t: "Investerare", target: 10000, reward: 1000, req: "Ha 10 000 kr" },
-                { t: "Mid-game Kapitalist", target: 100000, reward: 15000, req: "Ha 100 000 kr" },
-                { t: "Folkhems-miljonär", target: 1000000, reward: 150000, req: "Ha 1 milj kr" }
+                { t: "Kapitalist", target: 100000, reward: 15000, req: "Ha 100 000 kr" }
             ],
             b0: [
                 { t: "En röd vägg", target: 1, reward: 20, req: "1 Röd Stuga" },
-                { t: "Liten gata", target: 5, reward: 100, req: "5 Röda Stugor" },
-                { t: "Stugby", target: 15, reward: 500, req: "15 Röda Stugor" },
-                { t: "Mid-game Förort", target: 50, reward: 10000, req: "50 Röda Stugor" },
-                { t: "Röda Havet", target: 100, reward: 50000, req: "100 Röda Stugor" }
+                { t: "Stugby", target: 20, reward: 1000, req: "20 Röda Stugor" }
             ],
             total: [
                 { t: "Byggstart", target: 1, reward: 10, req: "1 byggnad" },
-                { t: "Litet kvarter", target: 10, reward: 100, req: "10 byggnader" },
-                { t: "Småstad", target: 25, reward: 1000, req: "25 byggnader" },
-                { t: "Mid-game Expansion", target: 100, reward: 25000, req: "100 byggnader" },
-                { t: "Metropol", target: 300, reward: 250000, req: "300 byggnader" }
+                { t: "Metropol", target: 100, reward: 50000, req: "100 byggnader" }
+            ],
+            secret: [
+                { t: "Falukorvs-fest", target: 5, targetType: "b1", reward: 2000, req: "Bygg 5 Hyreshus" },
+                { t: "Fika-paus", target: 1000, targetType: "clicks", reward: 5000, req: "Klicka 1000 gånger" },
+                { t: "Sverigevän", target: 1, targetType: "b10", reward: 500000, req: "Bygg 1 SD-Högkvarter" },
+                { t: "Kärnkraft i trädgården", target: 10, targetType: "b5", reward: 100000, req: "Bygg 10 Kärnkraftverk" }
             ]
         };
 
@@ -303,12 +295,11 @@
             return pps;
         }
 
-        // UPPDATERAD MPC-LOGIK FÖR ATT GÖRA HAMMAREN BÄTTRE
+        // JUSTERAD HAMMARE - CA 1/6 AV TIDIGARE STYRKA
         function calculateMPC() {
             let pps = getTotalPPS();
-            // Basstyrka + (nivå * 2) + en bonus baserad på 10% av din produktion per hammarnivå
-            let base = 1 + (data.hammerLevel * 2);
-            let productionBonus = (pps * 0.10) * data.hammerLevel; 
+            let base = 1 + (data.hammerLevel * 1);
+            let productionBonus = (pps * 0.016) * data.hammerLevel; // Sänkt från 0.10 till 0.016 (ca 1/6)
             return Math.max(1, Math.floor(base + productionBonus));
         }
 
@@ -328,7 +319,7 @@
             if (data.money >= data.hammerPrice) {
                 data.money -= data.hammerPrice; 
                 data.hammerLevel++;
-                data.hammerPrice = Math.round(data.hammerPrice * 2.5); // Dyrare men mycket bättre
+                data.hammerPrice = Math.round(data.hammerPrice * 2.1);
                 renderEverything();
             }
         }
@@ -353,7 +344,7 @@
 
         function claimAch(type) {
             const level = data.achLevels[type];
-            if (getValByType(type) >= achChains[type][level].target) {
+            if (getValByType(type, level, achChains[type]) >= achChains[type][level].target) {
                 data.money += achChains[type][level].reward;
                 data.achLevels[type]++;
                 data.questsDone++;
@@ -361,7 +352,13 @@
             }
         }
 
-        function getValByType(type) {
+        function getValByType(type, level, chain) {
+            if (type === 'secret') {
+                let targetType = chain[level].targetType;
+                if (targetType === 'clicks') return data.clicks;
+                if (targetType.startsWith('b')) return data.bCounts[parseInt(targetType.substring(1))];
+                return 0;
+            }
             if(type === 'click') return data.clicks;
             if(type === 'money') return data.money;
             if(type === 'total') return data.bCounts.reduce((a, b) => a + b, 0);
@@ -409,14 +406,14 @@
                     const level = data.achLevels[type];
                     if (level < achChains[type].length) {
                         const ach = achChains[type][level];
-                        const val = getValByType(type);
+                        const val = getValByType(type, level, achChains[type]);
                         const isReady = val >= ach.target;
                         const progressPercent = (val / ach.target) * 100;
                         
                         const html = `
                             <div class="ach-card neon-box" style="order: ${isReady ? -1 : 1}">
                                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                                    <b>${ach.t}</b>
+                                    <b>${type === 'secret' ? '🌟 ' + ach.t : ach.t}</b>
                                     <span style="color:#28a745; font-size:1rem;">+${ach.reward.toLocaleString()} kr</span>
                                 </div>
                                 <div class="ach-req-box">Krav: ${ach.req}</div>
@@ -450,8 +447,8 @@
             let s = localStorage.getItem('folkhem_hardcore_v7');
             if (s) {
                 let savedData = JSON.parse(s);
-                // Säkerställ att hammerLevel följer med om den saknas i gamla saves
                 if (savedData.hammerLevel === undefined) savedData.hammerLevel = 0;
+                if (savedData.achLevels.secret === undefined) savedData.achLevels.secret = 0;
                 Object.assign(data, savedData);
             }
             renderEverything();
