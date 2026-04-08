@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bygg Folkhemmet - Ultra Hardcore</title>
+    <title>Bygg Folkhemmet - Ultra Hardcore Edition</title>
     <style>
-        /* All din original-styling behålls exakt som den var */
+        /* FULLSTÄNDIG ULTRA-STYLING - INGET BORTTAGET */
         * { user-select: none; -webkit-user-select: none; box-sizing: border-box; font-family: 'Arial Black', sans-serif; }
         
         @keyframes bgScroll {
@@ -140,6 +140,7 @@
         .progress-container { 
             background: #ddd; height: 18px; width: 100%; 
             border-radius: 10px; margin-top: 8px; overflow: hidden; border: 2px solid #005293; 
+            position: relative;
         }
         .progress-bar { 
             background-color: #fecc00;
@@ -147,6 +148,10 @@
             background-size: 40px 40px;
             animation: barStripes 2s linear infinite;
             height: 100%; width: 0%; transition: width 0.3s ease-out; 
+        }
+        .progress-text {
+            position: absolute; width: 100%; text-align: center; top: 0; left: 0;
+            font-size: 0.75rem; color: #005293; font-weight: 900; line-height: 18px;
         }
         @keyframes barStripes { from { background-position: 40px 0; } to { background-position: 0 0; } }
 
@@ -193,7 +198,7 @@
         <div>
             <div class="stat-box">+<span id="pps">0</span>/sek</div>
             <div class="stat-box">+<span id="mpc">1</span>/klick</div>
-            <div class="stat-box" style="background: #fecc00; color: #005293;">🏆 Uppdragsbonus: <span id="bonus-val">0</span>%</div>
+            <div class="stat-box" style="background: #fecc00; color: #005293;">🏆 Bonus: <span id="bonus-val">0</span>%</div>
         </div>
     </div>
 
@@ -226,82 +231,68 @@
             <h3>UPPDRAG</h3>
             <div id="ach-license-area">
                 <p style="font-family: Arial, sans-serif; font-weight: bold; text-align: center;">Lås upp Jimmie för att få tillgång till speciella uppdrag och bonusar.</p>
-                <button class="buy-button" onclick="buyLicense()" style="background:#fecc00; text-align:center; box-shadow: 0 0 10px rgba(0,0,0,0.3);"><b>LÅS UPP JIMMIE (2 500 kr)</b></button>
+                <button class="buy-button" onclick="buyLicense()" style="background:#fecc00; text-align:center; box-shadow: 0 0 10px rgba(0,0,0,0.3);"><b>LÅS UPP JIMMIE (1 500 kr)</b></button>
             </div>
             <div id="ach-container"></div>
         </div>
     </div>
 
     <script>
-        // Start-data med Hardcore-progress
         let data = {
             money: 0, clicks: 0, mpc: 1, autoClicks: 0,
             hammerPrice: 15, autoPrice: 100,
             hasLicense: false,
-            questsDone: 0, // Ny tracker för hus-buffs
-            achLevels: { click: 0, money: 0, b0: 0, b1: 0, auto: 0, pps: 0, sd: 0, total: 0 },
+            questsDone: 0,
+            achLevels: { click: 0, money: 0, b0: 0, b1: 0, auto: 0, pps: 0, total: 0 },
             bCounts: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            // Dyrare startkostnader enligt önskemål
             bCosts: [50, 400, 2000, 10000, 60000, 400000, 2500000, 15000000, 100000000, 1000000000, 10000000000]
         };
 
         const buildings = [
-            { name: "Röd Stuga", inc: 1 }, 
-            { name: "Hyreshus", inc: 8 },
-            { name: "Sjukhus", inc: 45 }, 
-            { name: "Industri", inc: 180 },
-            { name: "Universitet", inc: 750 }, 
-            { name: "Kärnkraft", inc: 3500 },
-            { name: "Välfärdsstat", inc: 15000 },
-            { name: "Rymdprogram", inc: 65000 },
-            { name: "AI-Myndighet", inc: 250000 },
-            { name: "Sverige 2.0", inc: 1200000 },
+            { name: "Röd Stuga", inc: 1 }, { name: "Hyreshus", inc: 8 },
+            { name: "Sjukhus", inc: 45 }, { name: "Industri", inc: 180 },
+            { name: "Universitet", inc: 750 }, { name: "Kärnkraft", inc: 3500 },
+            { name: "Välfärdsstat", inc: 15000 }, { name: "Rymdprogram", inc: 65000 },
+            { name: "AI-Myndighet", inc: 250000 }, { name: "Sverige 2.0", inc: 1200000 },
             { name: "SD-Högkvarteret 🌸", inc: 10000000 }
         ];
 
-        // Massor av fler uppdrag!
+        // MASSOR AV ENKLA UPPDRAG + DOLD PROGRESSION LOGIK
         const achChains = {
             click: [
-                { t: "Klick-start", target: 50, reward: 500, req: "Klicka 50 gånger" },
-                { t: "Klick-maskin", target: 500, reward: 5000, req: "Klicka 500 gånger" },
-                { t: "Klick-legend", target: 5000, reward: 50000, req: "Klicka 5000 gånger" },
-                { t: "Finger av stål", target: 20000, reward: 500000, req: "Klicka 20 000 gånger" }
+                { t: "Kom igång!", target: 10, reward: 50, req: "10 klick" },
+                { t: "Finger-gympa", target: 25, reward: 100, req: "25 klick" },
+                { t: "Start-klicker", target: 50, reward: 250, req: "50 klick" },
+                { t: "Kämpa på", target: 75, reward: 500, req: "75 klick" },
+                { t: "Hundra-klubben", target: 100, reward: 1000, req: "100 klick" },
+                { t: "Klick-maskin", target: 500, reward: 5000, req: "500 klick" },
+                { t: "Klick-pro", target: 1000, reward: 15000, req: "1 000 klick" }
             ],
             money: [
-                { t: "Småsparare", target: 5000, reward: 1000, req: "Ha 5 000 kr" },
-                { t: "Riksbankschef", target: 100000, reward: 20000, req: "Ha 100 000 kr" },
-                { t: "Miljonär", target: 1000000, reward: 200000, req: "Ha 1 000 000 kr" },
-                { t: "Välfärds-kung", target: 100000000, reward: 25000000, req: "Ha 100 miljoner" }
+                { t: "Första hundralappen", target: 100, reward: 50, req: "Ha 100 kr" },
+                { t: "Kassan fylls", target: 500, reward: 250, req: "Ha 500 kr" },
+                { t: "Tusenlappen!", target: 1000, reward: 1000, req: "Ha 1 000 kr" },
+                { t: "Förmögen", target: 10000, reward: 5000, req: "Ha 10 000 kr" }
             ],
             b0: [
-                { t: "Stugby", target: 10, reward: 500, req: "Bygg 10 Röda Stugor" },
-                { t: "Sommar-idyll", target: 50, reward: 50000, req: "Bygg 50 Röda Stugor" }
-            ],
-            pps: [
-                { t: "Tillväxt", target: 1000, reward: 15000, req: "Nå 1 000 kr/sek" },
-                { t: "Ekonomiskt Mirakel", target: 100000, reward: 500000, req: "Nå 100 000 kr/sek" },
-                { t: "Galaktisk PPS", target: 10000000, reward: 100000000, req: "Nå 10 miljoner/sek" }
+                { t: "En röd vägg", target: 1, reward: 100, req: "Bygg 1 Röd Stuga" },
+                { t: "Två röda stugor", target: 2, reward: 200, req: "Bygg 2 Röda Stugor" },
+                { t: "Liten gata", target: 5, reward: 1000, req: "Bygg 5 Röda Stugor" },
+                { t: "Stugby", target: 10, reward: 5000, req: "Bygg 10 Röda Stugor" }
             ],
             total: [
-                { t: "Byggmästare", target: 20, reward: 10000, req: "Bygg 20 hus totalt" },
-                { t: "Folkhems-arkitekt", target: 100, reward: 250000, req: "Bygg 100 hus totalt" }
+                { t: "Byggstart", target: 1, reward: 50, req: "Bygg din första sak" },
+                { t: "Tre små hus", target: 3, reward: 300, req: "Bygg 3 saker totalt" },
+                { t: "Litet kvarter", target: 5, reward: 1000, req: "Bygg 5 saker totalt" },
+                { t: "Växande land", target: 10, reward: 5000, req: "Bygg 10 saker totalt" }
             ]
         };
 
-        // Husen blir bättre för varje klart uppdrag (10% buff per uppdrag)
-        function getQuestBonus() {
-            return 1 + (data.questsDone * 0.10);
-        }
-
-        function getProduction(id) {
-            return buildings[id].inc * getQuestBonus();
-        }
-
+        function getQuestBonus() { return 1 + (data.questsDone * 0.10); }
+        function getProduction(id) { return buildings[id].inc * getQuestBonus(); }
         function getTotalPPS() {
             let pps = 0;
-            for(let i=0; i<buildings.length; i++) {
-                if(data.bCounts[i]) pps += data.bCounts[i] * getProduction(i);
-            }
+            for(let i=0; i<buildings.length; i++) if(data.bCounts[i]) pps += data.bCounts[i] * getProduction(i);
             return pps;
         }
 
@@ -312,8 +303,7 @@
                 t.style.left = e.pageX + "px"; t.style.top = e.pageY + "px";
                 document.body.appendChild(t); setTimeout(() => t.remove(), 800);
             }
-            updateNumbersOnly();
-            renderEverything();
+            updateNumbersOnly(); renderEverything();
         }
 
         function buyHammer() {
@@ -335,20 +325,19 @@
         function buyBuilding(id) {
             if (data.money >= data.bCosts[id]) {
                 data.money -= data.bCosts[id]; data.bCounts[id]++;
-                // Kostnaden ökar med 30% varje gång (Samma increase för alla)
                 data.bCosts[id] = Math.round(data.bCosts[id] * 1.30);
                 renderEverything();
             }
         }
 
-        function buyLicense() { if (data.money >= 2500) { data.money -= 2500; data.hasLicense = true; renderEverything(); } }
+        function buyLicense() { if (data.money >= 1500) { data.money -= 1500; data.hasLicense = true; renderEverything(); } }
 
         function claimAch(type) {
             const level = data.achLevels[type];
             if (getValByType(type) >= achChains[type][level].target) {
                 data.money += achChains[type][level].reward;
                 data.achLevels[type]++;
-                data.questsDone++; // Uppdraget gör nu husen bättre!
+                data.questsDone++;
                 renderEverything();
             }
         }
@@ -356,10 +345,7 @@
         function getValByType(type) {
             if(type === 'click') return data.clicks;
             if(type === 'money') return data.money;
-            if(type === 'auto') return data.autoClicks;
-            if(type === 'pps') return getTotalPPS();
             if(type === 'total') return data.bCounts.reduce((a, b) => a + b, 0);
-            if(type === 'sd') return data.bCounts[10] || 0;
             if(type.startsWith('b')) return data.bCounts[parseInt(type.substring(1))];
             return 0;
         }
@@ -377,7 +363,7 @@
                 const btn = document.getElementById("build-"+i);
                 if(btn) btn.classList.toggle("disabled", data.money < data.bCosts[i]);
             });
-            localStorage.setItem('folkhem_ultra_hardcore_save', JSON.stringify(data));
+            localStorage.setItem('folkhem_ultimate_v4', JSON.stringify(data));
         }
 
         function renderEverything() {
@@ -387,13 +373,11 @@
             let bHtml = "";
             buildings.forEach((b, i) => {
                 const cost = data.bCosts[i];
-                const canSee = (data.money >= cost * 0.3) || (data.bCounts[i] > 0);
-                if (canSee) {
-                    bHtml += `
-                        <button class="buy-button" id="build-${i}" onclick="buyBuilding(${i})">
-                            <div class="btn-header"><b>${b.name} (${data.bCounts[i] || 0})</b> <span>${cost.toLocaleString()} kr</span></div>
-                            <div class="btn-sub">Ger just nu: ${getProduction(i).toFixed(1)}/sek styck</div>
-                        </button>`;
+                if ((data.money >= cost * 0.3) || (data.bCounts[i] > 0)) {
+                    bHtml += `<button class="buy-button" id="build-${i}" onclick="buyBuilding(${i})">
+                        <div class="btn-header"><b>${b.name} (${data.bCounts[i] || 0})</b> <span>${cost.toLocaleString()} kr</span></div>
+                        <div class="btn-sub">Ger: ${getProduction(i).toFixed(1)}/sek styck</div>
+                    </button>`;
                 }
             });
             document.getElementById("building-list").innerHTML = bHtml;
@@ -407,21 +391,29 @@
                         const ach = achChains[type][level];
                         const val = getValByType(type);
                         const isReady = val >= ach.target;
-                        html += `
-                            <div class="ach-card neon-box">
-                                <div style="display:flex; justify-content:space-between; align-items:center;">
-                                    <b>${ach.t}</b>
-                                    <span style="font-family:Arial; font-weight:bold; color:#28a745;">+${ach.reward.toLocaleString()} kr</span>
-                                </div>
-                                <div class="ach-req-box">Krav: ${ach.req}</div>
-                                <div class="progress-container"><div class="progress-bar" style="width: ${Math.min(100, (val/ach.target)*100)}%"></div></div>
-                                <button class="claim-btn ${isReady ? 'ready' : ''}" onclick="claimAch('${type}')">
-                                    ${isReady ? 'HÄMTA BELÖNING' : 'LÅST'}
-                                </button>
-                            </div>`;
+                        
+                        // DOLD PROGRESSION: Visa bara om du har nått 50% av målet (eller om det är ett litet startmål)
+                        const progressPercent = (val / ach.target) * 100;
+                        if (progressPercent >= 50 || ach.target <= 10) {
+                            html += `
+                                <div class="ach-card neon-box">
+                                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                                        <b>${ach.t}</b>
+                                        <span style="color:#28a745; font-size:1rem;">+${ach.reward.toLocaleString()} kr</span>
+                                    </div>
+                                    <div class="ach-req-box">Krav: ${ach.req}</div>
+                                    <div class="progress-container">
+                                        <div class="progress-bar" style="width: ${Math.min(100, progressPercent)}%"></div>
+                                        <div class="progress-text">${Math.floor(val).toLocaleString()} / ${ach.target.toLocaleString()}</div>
+                                    </div>
+                                    <button class="claim-btn ${isReady ? 'ready' : ''}" onclick="claimAch('${type}')">
+                                        ${isReady ? 'HÄMTA BELÖNING' : 'LÅST'}
+                                    </button>
+                                </div>`;
+                        }
                     }
                 });
-                document.getElementById("ach-container").innerHTML = html || "<p style='text-align:center; font-weight:bold;'>Alla uppdrag slutförda!</p>";
+                document.getElementById("ach-container").innerHTML = html || "<p style='text-align:center;'>Fler uppdrag dyker upp när du närmar dig nästa milstolpe!</p>";
             }
             updateNumbersOnly();
         }
@@ -434,13 +426,8 @@
         }, 100);
 
         window.onload = () => {
-            let s = localStorage.getItem('folkhem_ultra_hardcore_save');
-            if (s) {
-                let saved = JSON.parse(s);
-                Object.assign(data, saved);
-                while(data.bCounts.length < buildings.length) data.bCounts.push(0);
-                while(data.bCosts.length < buildings.length) data.bCosts.push(10000000);
-            }
+            let s = localStorage.getItem('folkhem_ultimate_v4');
+            if (s) Object.assign(data, JSON.parse(s));
             renderEverything();
         };
     </script>
