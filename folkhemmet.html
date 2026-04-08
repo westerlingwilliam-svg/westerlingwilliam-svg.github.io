@@ -242,16 +242,24 @@
             money: 0, clicks: 0, mpc: 1, autoClicks: 0,
             hammerPrice: 15, autoPrice: 100,
             hasLicense: false,
-            achLevels: { click: 0, money: 0, b0: 0, b1: 0, b2: 0, b3: 0 },
-            bCounts: [0, 0, 0, 0, 0, 0, 0],
-            bCosts: [15, 100, 500, 2500, 15000, 100000, 1000000]
+            // Utökade achLevels för nya uppdrag
+            achLevels: { click: 0, money: 0, b0: 0, b1: 0, b3: 0, auto: 0, pps: 0, b7: 0 },
+            bCounts: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Plats för 10 byggnader
+            bCosts: [15, 100, 500, 2500, 15000, 100000, 1000000, 7500000, 50000000, 500000000]
         };
 
         const buildings = [
-            { name: "Röd Stuga", inc: 1 }, { name: "Hyreshus", inc: 8 },
-            { name: "Sjukhus", inc: 45 }, { name: "Industri", inc: 180 },
-            { name: "Universitet", inc: 750 }, { name: "Kärnkraft", inc: 3500 },
-            { name: "Välfärdsstat", inc: 15000 }
+            { name: "Röd Stuga", inc: 1 }, 
+            { name: "Hyreshus", inc: 8 },
+            { name: "Sjukhus", inc: 45 }, 
+            { name: "Industri", inc: 180 },
+            { name: "Universitet", inc: 750 }, 
+            { name: "Kärnkraft", inc: 3500 },
+            { name: "Välfärdsstat", inc: 15000 },
+            // NYA BYGGNADER
+            { name: "Rymdprogram", inc: 65000 },
+            { name: "AI-Myndighet", inc: 250000 },
+            { name: "Sverige 2.0", inc: 1200000 }
         ];
 
         const achChains = {
@@ -276,6 +284,18 @@
             b3: [
                 { t: "Industri-ägare", target: 5, reward: 10000, req: "Bygg 5 Industrier" },
                 { t: "Produktions-chef", target: 20, reward: 100000, req: "Bygg 20 Industrier" }
+            ],
+            // NYA UPPDRAGSKATEGORIER
+            auto: [
+                { t: "Automatisering", target: 10, reward: 5000, req: "Köp 10 Auto-Klick" },
+                { t: "Robotisering", target: 50, reward: 75000, req: "Köp 50 Auto-Klick" }
+            ],
+            pps: [
+                { t: "Ekonomisk tillväxt", target: 1000, reward: 15000, req: "Nå 1 000 kr/sek" },
+                { t: "Välfärds-boom", target: 100000, reward: 500000, req: "Nå 100 000 kr/sek" }
+            ],
+            b7: [
+                { t: "Galaktisk Välfärd", target: 1, reward: 1000000, req: "Bygg ditt första Rymdprogram" }
             ]
         };
 
@@ -286,7 +306,9 @@
 
         function getTotalPPS() {
             let pps = 0;
-            for(let i=0; i<buildings.length; i++) pps += data.bCounts[i] * getProduction(i);
+            for(let i=0; i<buildings.length; i++) {
+                if(data.bCounts[i]) pps += data.bCounts[i] * getProduction(i);
+            }
             return pps;
         }
 
@@ -298,7 +320,7 @@
                 document.body.appendChild(t); setTimeout(() => t.remove(), 800);
             }
             updateNumbersOnly();
-            renderEverything(); // Uppdatera visibility vid varje klick
+            renderEverything();
         }
 
         function buyHammer() {
@@ -339,6 +361,8 @@
         function getValByType(type) {
             if(type === 'click') return data.clicks;
             if(type === 'money') return data.money;
+            if(type === 'auto') return data.autoClicks;
+            if(type === 'pps') return getTotalPPS();
             if(type.startsWith('b')) return data.bCounts[parseInt(type.substring(1))];
             return 0;
         }
@@ -362,7 +386,6 @@
             document.getElementById("hammer-cost").innerText = data.hammerPrice.toLocaleString();
             document.getElementById("auto-cost").innerText = data.autoPrice.toLocaleString();
             
-            // Render Butik med "Visibility Logic" (Visa om man har 70% av pengarna eller redan äger en)
             let bHtml = "";
             buildings.forEach((b, i) => {
                 const cost = data.bCosts[i];
@@ -371,19 +394,18 @@
                 if (canSee) {
                     bHtml += `
                         <button class="buy-button" id="build-${i}" onclick="buyBuilding(${i})">
-                            <div class="btn-header"><b>${b.name} (${data.bCounts[i]})</b> <span>${cost.toLocaleString()} kr</span></div>
+                            <div class="btn-header"><b>${b.name} (${data.bCounts[i] || 0})</b> <span>${cost.toLocaleString()} kr</span></div>
                             <div class="btn-sub">Ger just nu: ${getProduction(i).toFixed(1)}/sek styck</div>
                         </button>`;
                 }
             });
             document.getElementById("building-list").innerHTML = bHtml;
 
-            // Render Uppdrag med "Visibility Logic" (Visa om man har nått 50% av målet)
             document.getElementById("ach-license-area").style.display = data.hasLicense ? "none" : "block";
             if (data.hasLicense) {
                 let html = "";
                 Object.keys(achChains).forEach(type => {
-                    const level = data.achLevels[type];
+                    const level = data.achLevels[type] || 0;
                     if (level < achChains[type].length) {
                         const ach = achChains[type][level];
                         const val = getValByType(type);
@@ -407,7 +429,7 @@
                         }
                     }
                 });
-                document.getElementById("ach-container").innerHTML = html || "<p style='text-align:center; font-weight:bold; color:#005293;'>Inga nya uppdrag tillgängliga just nu...</p>";
+                document.getElementById("ach-container").innerHTML = html || "<p style='text-align:center; font-weight:bold; color:#005293;'>Alla uppdrag slutförda! Bra jobbat!</p>";
             }
             updateNumbersOnly();
         }
@@ -417,13 +439,17 @@
             data.money += pps / 10;
             if(data.autoClicks > 0) data.money += (data.autoClicks * data.mpc) / 10;
             updateNumbersOnly();
-            // Vi kör inte renderEverything i loopen för prestanda, 
-            // men visibility uppdateras vid klick eller köp.
         }, 100);
 
         window.onload = () => {
             let s = localStorage.getItem('folkhem_save_final_ultra');
-            if (s) Object.assign(data, JSON.parse(s));
+            if (s) {
+                let savedData = JSON.parse(s);
+                // Merge data för att undvika problem med nya fält
+                Object.assign(data, savedData);
+                // Fixa bCounts om de är för korta från gammal save
+                while(data.bCounts.length < buildings.length) data.bCounts.push(0);
+            }
             renderEverything();
         };
     </script>
