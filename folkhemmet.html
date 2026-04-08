@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bygg Folkhemmet - Ultra Hardcore Edition</title>
     <style>
+        /* GRUNDINSTÄLLNINGAR */
         * { 
             user-select: none; 
             -webkit-user-select: none; 
@@ -24,175 +25,178 @@
             animation: bgScroll 15s ease infinite;
             color: #333; 
             margin: 0; 
-            height: 100vh; /* Låser höjden till skärmen */
+            height: 100vh; 
             display: flex; 
             flex-direction: column; 
-            overflow: hidden; /* Förhindrar scroll på hela sidan */
-        }
-        
-        .neon-box {
-            box-shadow: 
-                0 0 10px rgba(254, 204, 0, 0.5),
-                0 0 20px rgba(254, 204, 0, 0.3),
-                inset 0 0 15px rgba(254, 204, 0, 0.2);
+            overflow: hidden; /* Sidan i sig scrollar aldrig */
         }
 
+        /* HEADER - NU STÖRRE IGEN */
         .header { 
             background: #fecc00; 
-            padding: 10px; 
+            padding: 20px 10px; 
             text-align: center; 
             border-bottom: 8px solid #005293; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5), 0 0 20px rgba(254, 204, 0, 0.6);
             z-index: 100;
-            flex-shrink: 0; /* Hindrar headern från att tryckas ihop */
+            flex-shrink: 0;
         }
-
         .header h1 {
-            margin: 0;
-            font-size: 2.5rem;
+            margin: 0 0 10px 0;
+            font-size: 3.5rem;
             color: #005293;
-            text-shadow: 2px 2px 0px rgba(255,255,255,0.7);
+            text-shadow: 3px 3px 0px rgba(255,255,255,0.7), 0 0 15px rgba(0,82,147,0.4);
         }
-
         .header .stat-box {
             display: inline-block;
             background: #005293;
             color: #fecc00;
-            padding: 5px 15px;
-            border-radius: 10px;
-            margin: 5px;
-            border: 2px solid white;
-            font-size: 1.1rem;
+            padding: 8px 25px;
+            border-radius: 12px;
+            margin: 5px 10px;
+            border: 3px solid white;
+            font-size: 1.4rem;
         }
 
+        /* LAYOUT */
         .main-layout { 
             display: grid; 
-            grid-template-columns: 400px 1fr 400px; 
-            gap: 20px; 
-            padding: 20px; 
+            grid-template-columns: 450px 1fr 450px; 
+            gap: 25px; 
+            padding: 25px; 
             flex-grow: 1; 
-            height: calc(100vh - 140px); /* Fyller resten av skärmen */
+            height: calc(100vh - 180px); /* Justerad för den större headern */
             max-width: 1900px; 
             margin: 0 auto; 
             width: 100%;
-            overflow: hidden; /* Viktigt för att panelerna ska scrolla internt */
+            overflow: hidden;
         }
 
+        /* PANELER - NEON ÄR TILLBAKA */
         .panel { 
             background: rgba(255,255,255,0.95); 
             padding: 20px; 
             border: 6px solid #fecc00; 
-            border-radius: 20px; 
+            border-radius: 25px; 
             display: flex;
             flex-direction: column;
-            height: 100%; /* Tar upp hela kolumnens höjd */
-            overflow: hidden;
+            height: 100%;
+            box-shadow: 
+                0 0 15px rgba(254, 204, 0, 0.5),
+                0 0 30px rgba(254, 204, 0, 0.3),
+                inset 0 0 15px rgba(254, 204, 0, 0.2);
         }
-
-        .scroll-content {
-            overflow-y: auto;
-            flex-grow: 1;
-            padding-right: 5px;
-        }
-
         .panel h3 {
             text-align: center;
             margin-top: 0;
             color: #005293;
-            font-size: 1.8rem;
-            border-bottom: 4px solid #fecc00;
+            font-size: 2.2rem;
+            border-bottom: 5px solid #fecc00;
             padding-bottom: 10px;
+            text-shadow: 2px 2px 0 white;
             flex-shrink: 0;
         }
 
-        .center-area { 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; /* Centrerar klickaren vertikalt */
+        /* SCROLL-OMRÅDET */
+        .scroll-content {
+            overflow-y: auto;
+            flex-grow: 1;
+            padding-right: 10px;
+            margin-top: 10px;
         }
 
-        .main-clicker { 
-            background: #fff; 
-            border: 15px solid #fecc00; 
-            width: 280px; 
-            height: 280px; 
-            border-radius: 50%; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-            cursor: pointer; 
-            box-shadow: 0 15px 0 #b38f00, 0 0 40px rgba(254, 204, 0, 0.6); 
-            transition: transform 0.05s; 
-            margin-bottom: 30px;
-        }
-        .main-clicker:active { transform: scale(0.95) translateY(8px); }
-        .main-clicker b { color: #005293; font-size: 1.8rem; }
-
+        /* BUTIK-KNAPPAR */
         .buy-button { 
-            background: #f0f0f0; 
+            background: #f9f9f9; 
             border: 4px solid #005293; 
-            padding: 12px; 
-            margin: 8px 0; 
+            padding: 15px; 
+            margin: 10px 0; 
             cursor: pointer; 
             width: 100%; 
-            border-radius: 12px; 
+            border-radius: 15px; 
+            display: block;
+            text-align: left;
             transition: 0.1s;
         }
         .buy-button:hover:not(.disabled) {
             background: white;
             border-color: #fecc00;
-            transform: translateX(5px);
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(254, 204, 0, 0.6);
         }
-        .buy-button.disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
+        .buy-button.disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(0.8); }
 
-        .btn-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-        .btn-header b { color: #005293; font-size: 1.1rem; }
-        .btn-header span { color: #005293; background: #fecc00; padding: 2px 6px; border-radius: 4px; font-size: 0.9rem; }
-        .btn-sub { font-family: 'Arial', sans-serif; font-size: 0.8rem; color: #555; font-weight: bold; }
+        .btn-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; font-size: 1.2rem;}
+        .btn-header b { color: #005293; text-shadow: 1px 1px 0 white; }
+        .btn-header span { color: #005293; background: #fecc00; padding: 3px 10px; border-radius: 6px; border: 2px solid #005293;}
+        .btn-sub { font-family: 'Arial', sans-serif; font-size: 0.85rem; color: #444; font-weight: bold; background: rgba(0,0,0,0.05); padding: 5px; border-radius: 5px;}
 
+        /* CENTER-KLICKARE */
+        .center-area { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .main-clicker { 
+            background: #fff; border: 15px solid #fecc00; 
+            width: 300px; height: 300px; 
+            border-radius: 50%; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; cursor: pointer; 
+            box-shadow: 0 15px 0 #b38f00, 0 0 40px rgba(254, 204, 0, 0.8); 
+            transition: 0.1s; margin-bottom: 25px;
+        }
+        .main-clicker:active { transform: translateY(8px); box-shadow: 0 7px 0 #b38f00; }
+
+        /* UPPDRAG & PROGRESS BAR - COOLA STRIPES TILLBAKA */
         .ach-card { 
-            background: #fff; border: 3px solid #005293; 
-            padding: 12px; margin-bottom: 15px; border-radius: 12px;
+            background: #fdfdfd; border: 4px solid #005293; 
+            padding: 15px; margin-bottom: 20px; border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-
         .progress-container { 
-            background: #eee; height: 20px; width: 100%; 
-            border-radius: 10px; margin-top: 8px; overflow: hidden; border: 2px solid #005293; position: relative;
+            background: #ddd; height: 25px; width: 100%; 
+            border-radius: 12px; margin: 10px 0; overflow: hidden; border: 3px solid #005293; 
+            position: relative;
         }
         .progress-bar { 
-            background: #fecc00; height: 100%; width: 0%; transition: width 0.3s;
-            background-image: linear-gradient(45deg, rgba(0,82,147, 0.2) 25%, transparent 25%);
-            background-size: 20px 20px;
+            background-color: #fecc00;
+            background-image: linear-gradient(45deg, rgba(0,82,147, 0.3) 25%, transparent 25%, transparent 50%, rgba(0,82,147, 0.3) 50%, rgba(0,82,147, 0.3) 75%, transparent 75%, transparent);
+            background-size: 40px 40px;
+            animation: barStripes 2s linear infinite;
+            height: 100%; width: 0%; transition: width 0.4s ease-out; 
         }
-        .progress-text { position: absolute; width: 100%; text-align: center; font-size: 0.7rem; color: #005293; line-height: 18px; font-weight: bold; }
+        @keyframes barStripes { from { background-position: 40px 0; } to { background-position: 0 0; } }
+        .progress-text {
+            position: absolute; width: 100%; text-align: center; top: 0; left: 0;
+            font-size: 0.9rem; color: #005293; font-weight: 900; line-height: 20px;
+        }
 
         .claim-btn { 
-            width: 100%; margin-top: 8px; padding: 10px; 
-            background: #888; border: none; color: white; border-radius: 8px; font-weight: bold;
+            width: 100%; padding: 12px; background: #666; border: none; 
+            color: white; font-weight: bold; font-size: 1.1rem;
+            cursor: not-allowed; border-radius: 10px; transition: 0.2s;
         }
-        .claim-btn.ready { background: #28a745; cursor: pointer; animation: pulse 1.5s infinite; }
+        .claim-btn.ready { 
+            background: #28a745; cursor: pointer; 
+            animation: pulse 1s infinite; border: 3px solid #1e7e34;
+        }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.6); } 70% { box-shadow: 0 0 0 15px rgba(40, 167, 69, 0); } 100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); } }
 
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
-
+        /* EFFEKTER */
         .plus-one { 
             position: absolute; color: #fecc00; font-weight: bold; font-size: 2.5rem; 
             pointer-events: none; animation: fly 0.8s forwards; 
-            text-shadow: 2px 2px 0px #005293; z-index: 1000; 
+            text-shadow: 3px 3px 0px #005293, 0 0 10px white; z-index: 1000; 
         }
-        @keyframes fly { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-150px); } }
+        @keyframes fly { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-130px); } }
 
         .back-btn {
-            background:#333; color:white; padding:12px 30px; 
+            background:#333; color:white; padding:15px 35px; 
             text-decoration:none; border:4px solid #fecc00; 
-            border-radius:10px; transition: 0.2s;
+            border-radius:15px; font-size: 1.2rem; transition: 0.2s;
         }
+        .back-btn:hover { background: #fecc00; color: #005293; }
 
-        /* Snygg scrollbar för panelerna */
-        .scroll-content::-webkit-scrollbar { width: 8px; }
-        .scroll-content::-webkit-scrollbar-track { background: transparent; }
-        .scroll-content::-webkit-scrollbar-thumb { background: #fecc00; border-radius: 10px; }
+        /* SCROLLBAR STYLE */
+        .scroll-content::-webkit-scrollbar { width: 12px; }
+        .scroll-content::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 10px; }
+        .scroll-content::-webkit-scrollbar-thumb { background: #005293; border-radius: 10px; border: 3px solid #fecc00; }
     </style>
 </head>
 <body>
@@ -202,41 +206,41 @@
         <div class="stat-box">💰 Välfärd: <b><span id="money">0</span></b> kr</div>
         <div class="stat-box">+<span id="pps">0</span>/sek</div>
         <div class="stat-box">+<span id="mpc">1</span>/klick</div>
-        <div class="stat-box" style="background: #005293; color: #fecc00;">🏆 Bonus: <span id="bonus-val">0</span>%</div>
+        <div class="stat-box" style="background: #fecc00; color: #005293;">🏆 Bonus: <span id="bonus-val">0</span>%</div>
     </div>
 
     <div class="main-layout">
-        <div class="panel neon-box">
+        <div class="panel">
             <h3>BUTIK</h3>
             <div class="scroll-content">
                 <div id="essentials">
                     <button class="buy-button" id="hammer-btn" onclick="buyHammer()">
                         <div class="btn-header"><b>Uppgraderad Hammare</b> <span><span id="hammer-cost">15</span> kr</span></div>
-                        <div class="btn-sub">Ger klickbonus baserat på total välfärd!</div>
+                        <div class="btn-sub">Ger en klickbonus baserad på din totala välfärd!</div>
                     </button>
                     <button class="buy-button" id="auto-btn" onclick="buyAuto()">
                         <div class="btn-header"><b>Auto-Klick</b> <span><span id="auto-cost">100</span> kr</span></div>
                         <div class="btn-sub">Klickar automatiskt 1 gång/sek</div>
                     </button>
                 </div>
-                <hr style="border: 2px solid #fecc00; margin: 15px 0;">
+                <hr style="border: 3px solid #fecc00; margin: 20px 0; border-radius: 5px;">
                 <div id="building-list"></div>
             </div>
         </div>
 
         <div class="center-area">
             <div class="main-clicker" onclick="doClick(event)">
-                <span style="font-size: 7rem;">🏠</span>
-                <b>KLICKA!</b>
+                <span style="font-size: 8rem;">🏠</span>
+                <b style="font-size: 2rem;">KLICKA!</b>
             </div>
             <a href="games.html" class="back-btn">TILLBAKA MENYN</a>
         </div>
 
-        <div class="panel neon-box">
+        <div class="panel">
             <h3>UPPDRAG</h3>
             <div class="scroll-content">
                 <div id="ach-license-area">
-                    <p style="font-size: 0.9rem; text-align: center; margin-bottom: 10px;">Lås upp Jimmie för speciella uppdrag.</p>
+                    <p style="text-align: center; font-weight: bold;">Lås upp Jimmie för speciella uppdrag.</p>
                     <button class="buy-button" onclick="buyLicense()" style="background:#fecc00; text-align:center;"><b>LÅS UPP JIMMIE (1 500 kr)</b></button>
                 </div>
                 <div id="ach-container"></div>
@@ -245,7 +249,7 @@
     </div>
 
     <script>
-        // Samma logik som tidigare men behållen för att spelet ska fungera
+        // Logik för spelet
         let data = {
             money: 0, clicks: 0, mpc: 1, autoClicks: 0,
             hammerPrice: 15, autoPrice: 100,
@@ -286,33 +290,28 @@
             ],
             secret: [
                 { t: "Falukorvs-fest", target: 5, targetType: "b1", reward: 2000, req: "Bygg 5 Hyreshus" },
-                { t: "Fika-paus", target: 1000, targetType: "clicks", reward: 5000, req: "Klicka 1000 gånger" },
                 { t: "Sverigevän", target: 1, targetType: "b10", reward: 500000, req: "Bygg 1 SD-Högkvarter" }
             ]
         };
 
         function getQuestBonus() { return 1 + (data.questsDone * 0.10); }
-        function getProduction(id) { return buildings[id].inc * getQuestBonus(); }
-        
         function getTotalPPS() {
             let pps = 0;
-            for(let i=0; i<buildings.length; i++) if(data.bCounts[i]) pps += data.bCounts[i] * getProduction(i);
+            for(let i=0; i<buildings.length; i++) if(data.bCounts[i]) pps += data.bCounts[i] * buildings[i].inc * getQuestBonus();
             return pps;
         }
-
         function calculateMPC() {
             let pps = getTotalPPS();
             let base = 1 + (data.hammerLevel * 1);
-            let productionBonus = (pps * 0.016) * data.hammerLevel;
-            return Math.max(1, Math.floor(base + productionBonus));
+            let bonus = (pps * 0.016) * data.hammerLevel;
+            return Math.max(1, Math.floor(base + bonus));
         }
 
         function doClick(e) {
-            let currentMPC = calculateMPC();
-            data.money += currentMPC; 
-            data.clicks++;
+            let mpc = calculateMPC();
+            data.money += mpc; data.clicks++;
             if(e) {
-                const t = document.createElement("div"); t.className = "plus-one"; t.innerText = "+" + currentMPC.toLocaleString();
+                const t = document.createElement("div"); t.className = "plus-one"; t.innerText = "+" + mpc.toLocaleString();
                 t.style.left = e.pageX + "px"; t.style.top = e.pageY + "px";
                 document.body.appendChild(t); setTimeout(() => t.remove(), 800);
             }
@@ -321,8 +320,7 @@
 
         function buyHammer() {
             if (data.money >= data.hammerPrice) {
-                data.money -= data.hammerPrice; 
-                data.hammerLevel++;
+                data.money -= data.hammerPrice; data.hammerLevel++;
                 data.hammerPrice = Math.round(data.hammerPrice * 2.1);
                 renderEverything();
             }
@@ -348,32 +346,28 @@
 
         function claimAch(type) {
             const level = data.achLevels[type];
-            if (getValByType(type, level, achChains[type]) >= achChains[type][level].target) {
+            if (getValByType(type, level) >= achChains[type][level].target) {
                 data.money += achChains[type][level].reward;
-                data.achLevels[type]++;
-                data.questsDone++;
+                data.achLevels[type]++; data.questsDone++;
                 renderEverything();
             }
         }
 
-        function getValByType(type, level, chain) {
+        function getValByType(type, level) {
+            const ach = achChains[type][level];
             if (type === 'secret') {
-                let targetType = chain[level].targetType;
-                if (targetType === 'clicks') return data.clicks;
-                if (targetType.startsWith('b')) return data.bCounts[parseInt(targetType.substring(1))];
-                return 0;
+                if (ach.targetType === 'clicks') return data.clicks;
+                if (ach.targetType.startsWith('b')) return data.bCounts[parseInt(ach.targetType.substring(1))];
             }
             if(type === 'click') return data.clicks;
             if(type === 'money') return data.money;
             if(type === 'total') return data.bCounts.reduce((a, b) => a + b, 0);
-            if(type.startsWith('b')) return data.bCounts[parseInt(type.substring(1))];
             return 0;
         }
 
         function updateNumbersOnly() {
-            let currentMPC = calculateMPC();
             document.getElementById("money").innerText = Math.floor(data.money).toLocaleString();
-            document.getElementById("mpc").innerText = currentMPC.toLocaleString();
+            document.getElementById("mpc").innerText = calculateMPC().toLocaleString();
             document.getElementById("pps").innerText = Math.floor(getTotalPPS()).toLocaleString();
             document.getElementById("bonus-val").innerText = Math.round((getQuestBonus()-1)*100);
             
@@ -394,10 +388,10 @@
             let bHtml = "";
             buildings.forEach((b, i) => {
                 const cost = data.bCosts[i];
-                if ((data.money >= cost * 0.3) || (data.bCounts[i] > 0)) {
+                if (data.money >= cost * 0.3 || data.bCounts[i] > 0) {
                     bHtml += `<button class="buy-button" id="build-${i}" onclick="buyBuilding(${i})">
-                        <div class="btn-header"><b>${b.name} (${data.bCounts[i] || 0})</b> <span>${cost.toLocaleString()} kr</span></div>
-                        <div class="btn-sub">Ger: ${getProduction(i).toFixed(1)}/sek styck</div>
+                        <div class="btn-header"><b>${b.name} (${data.bCounts[i]})</b> <span>${cost.toLocaleString()} kr</span></div>
+                        <div class="btn-sub">Ger: ${(b.inc * getQuestBonus()).toFixed(1)}/sek styck</div>
                     </button>`;
                 }
             });
@@ -405,41 +399,32 @@
 
             document.getElementById("ach-license-area").style.display = data.hasLicense ? "none" : "block";
             if (data.hasLicense) {
-                let questItems = [];
+                let achHtml = "";
                 Object.keys(achChains).forEach(type => {
                     const level = data.achLevels[type];
                     if (level < achChains[type].length) {
                         const ach = achChains[type][level];
-                        const val = getValByType(type, level, achChains[type]);
+                        const val = getValByType(type, level);
                         const isReady = val >= ach.target;
-                        const progressPercent = (val / ach.target) * 100;
-                        
-                        const html = `
+                        achHtml += `
                             <div class="ach-card" style="order: ${isReady ? -1 : 1}">
-                                <div style="display:flex; justify-content:space-between; align-items:center;">
-                                    <b>${type === 'secret' ? '🌟 ' + ach.t : ach.t}</b>
-                                    <span style="color:#28a745; font-size:0.9rem;">+${ach.reward.toLocaleString()} kr</span>
-                                </div>
+                                <div style="display:flex; justify-content:space-between;"><b>${ach.t}</b> <span style="color:#28a745;">+${ach.reward} kr</span></div>
+                                <div style="font-size:0.8rem; margin:5px 0;">Krav: ${ach.req}</div>
                                 <div class="progress-container">
-                                    <div class="progress-bar" style="width: ${Math.min(100, progressPercent)}%"></div>
+                                    <div class="progress-bar" style="width: ${Math.min(100, (val/ach.target)*100)}%"></div>
                                     <div class="progress-text">${Math.floor(val).toLocaleString()} / ${ach.target.toLocaleString()}</div>
                                 </div>
-                                <button class="claim-btn ${isReady ? 'ready' : ''}" onclick="claimAch('${type}')">
-                                    ${isReady ? 'HÄMTA' : 'LÅST'}
-                                </button>
+                                <button class="claim-btn ${isReady ? 'ready' : ''}" onclick="claimAch('${type}')">${isReady ? 'HÄMTA BELÖNING' : 'LÅST'}</button>
                             </div>`;
-                        questItems.push({html: html, ready: isReady});
                     }
                 });
-                questItems.sort((a, b) => b.ready - a.ready);
-                document.getElementById("ach-container").innerHTML = questItems.map(i => i.html).join("");
+                document.getElementById("ach-container").innerHTML = achHtml;
             }
             updateNumbersOnly();
         }
 
         setInterval(() => {
-            let pps = getTotalPPS();
-            data.money += pps / 10;
+            data.money += getTotalPPS() / 10;
             if(data.autoClicks > 0) data.money += (data.autoClicks * calculateMPC()) / 10;
             updateNumbersOnly();
         }, 100);
