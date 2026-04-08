@@ -224,9 +224,6 @@
             { id: 5, t: "Jimmies Storbygge", d: "Bygg 50 byggnader totalt", target: 50, reward: 50000, check: () => data.bCounts.reduce((a,b)=>a+b, 0) }
         ];
 
-        // Håller koll på senast ritade HTML för att undvika onödiga omskrivningar
-        let lastAchHTML = "";
-
         function doClick(e) {
             data.money += data.mpc;
             data.clicks++;
@@ -271,13 +268,12 @@
             if (val >= a.target && !data.claimedAchs.includes(id)) {
                 data.money += a.reward;
                 data.claimedAchs.push(id);
-                // Tvinga omskrivning direkt vid claim
-                lastAchHTML = ""; 
-                updateUI();
+                updateUI(true); // Tvinga omskrivning vid claim
             }
         }
 
-        function updateUI() {
+        // Fixad Update-funktion som sparar prestanda och gör knappar klickbara
+        function updateUI(forceAchUpdate = false) {
             document.getElementById("money").innerText = Math.floor(data.money);
             document.getElementById("mpc").innerText = data.mpc;
             document.getElementById("hammer-cost").innerText = data.hammerPrice;
@@ -292,7 +288,6 @@
             }
             document.getElementById("pps").innerText = pps;
 
-            // Achievements logik
             document.getElementById("ach-license-area").style.display = data.hasLicense ? "none" : "block";
             const achCont = document.getElementById("ach-container");
             
@@ -319,9 +314,9 @@
                     `;
                 });
 
-                // VIKTIG FIX: Skriv bara till DOM om något faktiskt ändrats.
-                // Detta gör att knapparna förblir klickbara.
-                if(achCont.innerHTML !== html) {
+                // FIXEN: Uppdatera bara HTML om innehållet faktiskt har ändrats 
+                // (t.ex. vid klick eller ny byggnad), inte vid varje kr-uppdatering.
+                if(achCont.innerHTML !== html || forceAchUpdate) {
                     achCont.innerHTML = html;
                 }
             }
