@@ -210,8 +210,8 @@
             <h3>BUTIK</h3>
             <div id="essentials">
                 <button class="buy-button" id="hammer-btn" onclick="buyHammer()">
-                    <div class="btn-header"><b>Hammare</b> <span><span id="hammer-cost">15</span> kr</span></div>
-                    <div class="btn-sub">Mera makt i varje klick</div>
+                    <div class="btn-header"><b>Super-Hammare</b> <span><span id="hammer-cost">15</span> kr</span></div>
+                    <div class="btn-sub">Ökar klickstyrkan enormt baserat på produktion!</div>
                 </button>
                 <button class="buy-button" id="auto-btn" onclick="buyAuto()">
                     <div class="btn-header"><b>Auto-Klick</b> <span><span id="auto-cost">100</span> kr</span></div>
@@ -248,7 +248,8 @@
             questsDone: 0,
             achLevels: { click: 0, money: 0, b0: 0, total: 0 },
             bCounts: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            bCosts: [50, 400, 2000, 10000, 60000, 400000, 2500000, 15000000, 100000000, 1000000000, 10000000000]
+            bCosts: [50, 400, 2000, 10000, 60000, 400000, 2500000, 15000000, 100000000, 1000000000, 10000000000],
+            hammerLevel: 0 // Ny variabel för att hålla koll på uppgraderingar
         };
 
         const buildings = [
@@ -260,7 +261,6 @@
             { name: "SD-Högkvarteret 🌸", inc: 10000000 }
         ];
 
-        // JUSTERADE BELÖNINGAR + MID GAME UPPDRAG
         const achChains = {
             click: [
                 { t: "Kom igång!", target: 10, reward: 10, req: "10 klick" },
@@ -296,16 +296,28 @@
 
         function getQuestBonus() { return 1 + (data.questsDone * 0.10); }
         function getProduction(id) { return buildings[id].inc * getQuestBonus(); }
+        
         function getTotalPPS() {
             let pps = 0;
             for(let i=0; i<buildings.length; i++) if(data.bCounts[i]) pps += data.bCounts[i] * getProduction(i);
             return pps;
         }
 
+        // UPPDATERAD MPC-LOGIK FÖR ATT GÖRA HAMMAREN BÄTTRE
+        function calculateMPC() {
+            let pps = getTotalPPS();
+            // Basstyrka + (nivå * 2) + en bonus baserad på 10% av din produktion per hammarnivå
+            let base = 1 + (data.hammerLevel * 2);
+            let productionBonus = (pps * 0.10) * data.hammerLevel; 
+            return Math.max(1, Math.floor(base + productionBonus));
+        }
+
         function doClick(e) {
-            data.money += data.mpc; data.clicks++;
+            let currentMPC = calculateMPC();
+            data.money += currentMPC; 
+            data.clicks++;
             if(e) {
-                const t = document.createElement("div"); t.className = "plus-one"; t.innerText = "+" + data.mpc;
+                const t = document.createElement("div"); t.className = "plus-one"; t.innerText = "+" + currentMPC.toLocaleString();
                 t.style.left = e.pageX + "px"; t.style.top = e.pageY + "px";
                 document.body.appendChild(t); setTimeout(() => t.remove(), 800);
             }
@@ -314,8 +326,9 @@
 
         function buyHammer() {
             if (data.money >= data.hammerPrice) {
-                data.money -= data.hammerPrice; data.mpc++;
-                data.hammerPrice = Math.round(data.hammerPrice * 2.2);
+                data.money -= data.hammerPrice; 
+                data.hammerLevel++;
+                data.hammerPrice = Math.round(data.hammerPrice * 2.5); // Dyrare men mycket bättre
                 renderEverything();
             }
         }
@@ -357,8 +370,9 @@
         }
 
         function updateNumbersOnly() {
+            let currentMPC = calculateMPC();
             document.getElementById("money").innerText = Math.floor(data.money).toLocaleString();
-            document.getElementById("mpc").innerText = data.mpc;
+            document.getElementById("mpc").innerText = currentMPC.toLocaleString();
             document.getElementById("pps").innerText = Math.floor(getTotalPPS()).toLocaleString();
             document.getElementById("bonus-val").innerText = Math.round((getQuestBonus()-1)*100);
             
@@ -418,7 +432,6 @@
                     }
                 });
                 
-                // Sortera: Ready högst upp, annars behåll ordning
                 questItems.sort((a, b) => b.ready - a.ready);
                 document.getElementById("ach-container").innerHTML = questItems.map(i => i.html).join("") || "<p style='text-align:center;'>Fler uppdrag kommer snart!</p>";
             }
@@ -427,14 +440,20 @@
 
         setInterval(() => {
             let pps = getTotalPPS();
+            let currentMPC = calculateMPC();
             data.money += pps / 10;
-            if(data.autoClicks > 0) data.money += (data.autoClicks * data.mpc) / 10;
+            if(data.autoClicks > 0) data.money += (data.autoClicks * currentMPC) / 10;
             updateNumbersOnly();
         }, 100);
 
         window.onload = () => {
             let s = localStorage.getItem('folkhem_hardcore_v7');
-            if (s) Object.assign(data, JSON.parse(s));
+            if (s) {
+                let savedData = JSON.parse(s);
+                // Säkerställ att hammerLevel följer med om den saknas i gamla saves
+                if (savedData.hammerLevel === undefined) savedData.hammerLevel = 0;
+                Object.assign(data, savedData);
+            }
             renderEverything();
         };
     </script>
