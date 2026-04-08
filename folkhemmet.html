@@ -3,88 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bygg Folkhemmet - Sverige Edition</title>
+    <title>Bygg Folkhemmet - Premium Edition</title>
     <style>
         :root {
-            --swe-blue: #005293;
-            --swe-yellow: #fecc00;
+            --primary-blue: #005293;
+            --secondary-blue: #1e3a5f;
+            --accent-yellow: #fecc00;
             --sd-light-blue: #a3d4f7;
-            --bg-light: #f4f7fa;
-            --panel-bg: #ffffff;
-            --text-dark: #1a2b3c;
-            --shadow: 0 8px 30px rgba(0, 82, 147, 0.1);
+            --panel-bg: rgba(255, 255, 255, 0.95);
+            --text-main: #1a2b3c;
         }
 
         * { 
             user-select: none; 
             -webkit-user-select: none; 
             box-sizing: border-box; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
         body { 
-            background: linear-gradient(135deg, var(--bg-light) 0%, #e1e9f0 100%);
-            color: var(--text-dark); 
+            background: linear-gradient(-45deg, #003a6b, #005293, #1e3a5f, #0a192f);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: var(--text-main); 
             margin: 0; 
             min-height: 100vh; 
             display: flex; 
             flex-direction: column; 
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .header { 
-            background: var(--panel-bg);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
             padding: 20px; 
             text-align: center; 
-            border-bottom: 5px solid var(--swe-yellow);
-            box-shadow: var(--shadow);
+            border-bottom: 4px solid var(--accent-yellow);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
             z-index: 100;
         }
 
         .header h1 {
             margin: 0;
             font-size: 2.5rem;
-            color: var(--swe-blue);
-            font-weight: 900;
-            letter-spacing: -1px;
+            color: white;
             text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
         }
 
-        .stats-container {
+        .money-display {
+            display: inline-block;
+            background: white;
+            padding: 10px 45px;
+            border-radius: 50px;
+            margin-top: 15px;
+            border: 3px solid var(--accent-yellow);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .money-display b { 
+            font-size: 2.2rem; 
+            color: var(--primary-blue);
+        }
+
+        .stats-bar {
             display: flex;
             justify-content: center;
             gap: 15px;
-            margin-top: 15px;
+            margin-top: 10px;
             flex-wrap: wrap;
         }
 
-        .money-box {
-            background: var(--swe-blue);
+        .stat-capsule {
+            background: rgba(0,0,0,0.2);
             color: white;
-            padding: 15px 45px;
-            border-radius: 50px;
-            border: 3px solid var(--swe-yellow);
-            font-size: 2rem;
-            box-shadow: 0 4px 15px rgba(0, 82, 147, 0.3);
-            margin-bottom: 5px;
-        }
-
-        .money-box b { color: var(--swe-yellow); }
-
-        .stat-box {
-            background: white;
-            padding: 8px 20px;
-            border-radius: 12px;
-            border: 1px solid var(--sd-light-blue);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
             font-weight: bold;
-            color: var(--swe-blue);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
         .main-layout { 
             display: grid; 
             grid-template-columns: 420px 1fr 420px; 
-            gap: 30px; 
-            padding: 30px; 
+            gap: 25px; 
+            padding: 25px; 
             max-width: 1800px; 
             margin: 0 auto; 
             width: 100%;
@@ -92,19 +104,18 @@
 
         .panel { 
             background: var(--panel-bg);
-            border-radius: 25px;
+            border-radius: 30px;
             padding: 25px; 
-            max-height: 78vh;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.3);
+            max-height: 80vh;
             overflow-y: auto;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(0, 82, 147, 0.05);
         }
 
         .panel h3 {
             text-align: center;
-            margin-top: 0;
-            color: var(--swe-blue);
-            font-size: 1.5rem;
+            color: var(--primary-blue);
+            text-transform: uppercase;
             border-bottom: 3px solid var(--sd-light-blue);
             padding-bottom: 12px;
             margin-bottom: 20px;
@@ -114,64 +125,52 @@
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            justify-content: flex-start;
-            padding-top: 40px;
+            justify-content: center;
         }
 
-        .main-clicker { 
-            background: white;
-            border: 8px solid var(--swe-yellow); 
-            width: 300px; height: 300px; 
-            border-radius: 50%; 
-            display: flex; 
-            justify-content: center; align-items: center; 
-            cursor: pointer; 
-            box-shadow: 0 15px 35px rgba(0, 82, 147, 0.15);
-            transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
+        .clicker-circle { 
+            width: 280px; height: 280px; 
+            background: white; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 8rem; cursor: pointer; 
+            border: 10px solid var(--accent-yellow); 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2); 
+            transition: transform 0.1s;
         }
 
-        .main-clicker:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 20px 45px rgba(0, 82, 147, 0.2);
-            border-color: var(--swe-blue);
-        }
-
-        .main-clicker:active { transform: scale(0.95); }
-        
-        .main-clicker span { font-size: 9rem; filter: drop-shadow(0 4px 5px rgba(0,0,0,0.1)); }
+        .clicker-circle:active { transform: scale(0.95); }
 
         .buy-button { 
             background: #fdfdfd; 
-            border: 2px solid #edf2f7; 
+            border: 1px solid #e2e8f0; 
             padding: 16px; 
-            margin: 12px 0; 
+            margin-bottom: 12px; 
             cursor: pointer; 
             width: 100%; 
             border-radius: 18px;
             transition: 0.2s;
-            text-align: left;
+            display: block;
         }
 
         .buy-button:hover:not(.disabled) {
-            background: white;
-            border-color: var(--sd-light-blue);
-            box-shadow: 0 5px 15px rgba(163, 212, 247, 0.4);
             transform: translateX(5px);
+            border-color: var(--primary-blue);
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
 
-        .buy-button.disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); background: #f0f0f0; }
+        .buy-button.disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
 
         .btn-header { display: flex; justify-content: space-between; align-items: center; }
-        .btn-header b { color: var(--swe-blue); font-size: 1.1rem; }
-        .btn-header span { color: white; background: var(--swe-blue); padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; }
+        .btn-header b { color: var(--primary-blue); font-size: 1.1rem; }
+        .btn-header span { color: white; background: var(--primary-blue); padding: 3px 10px; border-radius: 12px; font-size: 0.8rem; }
 
-        .btn-sub { font-size: 0.85rem; color: #64748b; margin-top: 6px; }
+        .btn-sub { font-size: 0.85rem; color: #64748b; margin-top: 5px; }
 
         .ach-card { 
             background: #f8fafc; 
             padding: 20px; 
-            margin-bottom: 18px; 
+            margin-bottom: 15px; 
             border-radius: 20px;
             border-left: 6px solid var(--sd-light-blue);
             box-shadow: 0 2px 10px rgba(0,0,0,0.03);
@@ -179,91 +178,80 @@
 
         .progress-container { 
             background: #e2e8f0; height: 10px; width: 100%; 
-            border-radius: 10px; margin-top: 12px; overflow: hidden;
+            border-radius: 10px; margin: 12px 0; overflow: hidden;
         }
         
         .progress-bar { 
-            background: linear-gradient(90deg, var(--swe-blue), var(--sd-light-blue));
-            height: 100%; width: 0%; transition: width 0.6s ease; 
+            background: linear-gradient(90deg, var(--primary-blue), var(--sd-light-blue));
+            height: 100%; width: 0%; transition: width 0.3s; 
         }
 
         .claim-btn { 
-            width: 100%; margin-top: 15px; padding: 12px; 
+            width: 100%; padding: 10px; 
             background: #cbd5e1; border: none; 
-            color: white; font-weight: bold; border-radius: 12px; 
-            transition: 0.3s; text-transform: uppercase;
+            color: white; font-weight: bold; border-radius: 10px; 
+            transition: 0.3s;
         }
         .claim-btn.ready { 
-            background: var(--swe-yellow);
-            color: var(--swe-blue);
+            background: var(--accent-yellow); 
+            color: var(--primary-blue); 
             cursor: pointer; 
-            box-shadow: 0 4px 12px rgba(254, 204, 0, 0.4);
         }
 
         .plus-one { 
-            position: absolute; color: var(--swe-blue); font-weight: 900; 
+            position: absolute; color: white; font-weight: 900; 
             font-size: 2.5rem; pointer-events: none; animation: fly 0.8s forwards; 
-            text-shadow: 2px 2px 0 #fff; z-index: 1000; 
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5); z-index: 1000; 
         }
 
-        @keyframes fly { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-130px); } }
+        @keyframes fly { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-120px); } }
 
         .back-btn {
-            background: white; color: var(--swe-blue); padding: 12px 25px; 
-            text-decoration: none; border: 2px solid var(--sd-light-blue); 
-            border-radius: 12px; font-size: 0.9rem; margin-top: 40px;
-            font-weight: bold; transition: 0.2s;
+            margin-top: 30px; color: rgba(255,255,255,0.7); text-decoration: none; font-weight: bold;
         }
-        .back-btn:hover { background: var(--sd-light-blue); color: white; }
-
-        .panel::-webkit-scrollbar { width: 8px; }
-        .panel::-webkit-scrollbar-thumb { background: var(--sd-light-blue); border-radius: 10px; }
+        .back-btn:hover { color: white; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>BYGG FOLKHEMMET</h1>
-        <div class="stats-container">
-            <div class="money-box">💰 Välfärd: <b id="money">0</b> kr</div>
-        </div>
-        <div class="stats-container">
-            <div class="stat-box">Produktion: <span id="pps">0</span>/sek</div>
-            <div class="stat-box">Klickkraft: <span id="mpc">1</span></div>
-            <div class="stat-box" style="background: var(--swe-yellow); border-color: var(--swe-yellow);">Bonus: <span id="bonus-val">0</span>%</div>
+        <h1>Bygg Folkhemmet</h1>
+        <div class="money-display">💰 <b id="money">0</b> kr</div>
+        <div class="stats-bar">
+            <div class="stat-capsule">PPS: <span id="pps">0</span></div>
+            <div class="stat-capsule">Klick: <span id="mpc">1</span></div>
+            <div class="stat-capsule" style="color: var(--accent-yellow)">Bonus: <span id="bonus-val">0</span>%</div>
         </div>
     </div>
 
     <div class="main-layout">
         <div class="panel">
-            <h3>MARKNAD</h3>
+            <h3>Marknad</h3>
             <div id="essentials">
                 <button class="buy-button" id="hammer-btn" onclick="buyHammer()">
                     <div class="btn-header"><b>🔨 Super-Hammare</b> <span id="hammer-cost">15</span></div>
-                    <div class="btn-sub">Ger starkare klick baserat på din PPS.</div>
+                    <div class="btn-sub">Ökar klickstyrka baserat på din PPS.</div>
                 </button>
                 <button class="buy-button" id="auto-btn" onclick="buyAuto()">
-                    <div class="btn-header"><b>🤖 Auto-Handläggare</b> <span id="auto-cost">100</span></div>
-                    <div class="btn-sub">Sköter klickandet åt dig automatiskt.</div>
+                    <div class="btn-header"><b>🤖 Auto-Bot</b> <span id="auto-cost">100</span></div>
+                    <div class="btn-sub">Klickar automatiskt varje sekund.</div>
                 </button>
             </div>
-            <div style="height: 1px; background: #eee; margin: 20px 0;"></div>
+            <hr style="opacity: 0.1; margin: 20px 0;">
             <div id="building-list"></div>
         </div>
 
         <div class="center-area">
-            <div class="main-clicker" onclick="doClick(event)">
-                <span>🏠</span>
-            </div>
+            <div class="clicker-circle" onclick="doClick(event)">🏠</div>
             <a href="games.html" class="back-btn">← TILLBAKA TILL MENYN</a>
         </div>
 
         <div class="panel">
-            <h3>SVERIGE-UPPDRAG</h3>
+            <h3>Sverige-Uppdrag</h3>
             <div id="ach-license-area">
                 <div class="ach-card" style="text-align: center; border-left: none; border: 2px dashed var(--sd-light-blue);">
-                    <p style="margin-top:0; font-weight: bold; color: var(--swe-blue);">Lås upp exklusiva uppdrag!</p>
-                    <button class="claim-btn ready" onclick="buyLicense()">LÅS UPP JIMMIE (1 500 kr)</button>
+                    <p>Lås upp speciella uppdrag!</p>
+                    <button class="claim-btn ready" onclick="buyLicense()">JIMMIE-LICENS (1 500 kr)</button>
                 </div>
             </div>
             <div id="ach-container"></div>
@@ -271,12 +259,11 @@
     </div>
 
     <script>
-        // Logikversion 9.1 - Uppdaterad för ljus design
+        // FULLSTÄNDIG LOGIK FRÅN VERSION 9
         let data = {
             money: 0, clicks: 0, mpc: 1, autoClicks: 0,
             hammerPrice: 15, autoPrice: 100,
-            hasLicense: false,
-            questsDone: 0,
+            hasLicense: false, questsDone: 0,
             achLevels: { click: 0, money: 0, b0: 0, total: 0, secret: 0 },
             bCounts: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             bCosts: [50, 400, 2000, 10000, 60000, 400000, 2500000, 15000000, 100000000, 1000000000, 10000000000],
@@ -329,58 +316,30 @@
 
         function calculateMPC() {
             let pps = getTotalPPS();
-            let base = 1 + (data.hammerLevel * 1);
-            let productionBonus = (pps * 0.016) * data.hammerLevel;
-            return Math.max(1, Math.floor(base + productionBonus));
+            return Math.max(1, Math.floor((1 + data.hammerLevel) + (pps * 0.016 * data.hammerLevel)));
         }
 
         function doClick(e) {
             let currentMPC = calculateMPC();
-            data.money += currentMPC; 
-            data.clicks++;
+            data.money += currentMPC; data.clicks++;
             if(e) {
                 const t = document.createElement("div"); t.className = "plus-one"; t.innerText = "+" + currentMPC.toLocaleString();
-                t.style.left = e.pageX + "px"; t.style.top = (e.pageY - 40) + "px";
+                t.style.left = e.pageX + "px"; t.style.top = e.pageY + "px";
                 document.body.appendChild(t); setTimeout(() => t.remove(), 800);
             }
             updateNumbersOnly();
         }
 
-        function buyHammer() {
-            if (data.money >= data.hammerPrice) {
-                data.money -= data.hammerPrice; 
-                data.hammerLevel++;
-                data.hammerPrice = Math.round(data.hammerPrice * 2.1);
-                renderBuildings();
-                updateNumbersOnly();
-            }
-        }
-
-        function buyAuto() {
-            if (data.money >= data.autoPrice) {
-                data.money -= data.autoPrice; data.autoClicks++;
-                data.autoPrice = Math.round(data.autoPrice * 2.5);
-                updateNumbersOnly();
-            }
-        }
-
-        function buyBuilding(id) {
-            if (data.money >= data.bCosts[id]) {
-                data.money -= data.bCosts[id]; data.bCounts[id]++;
-                data.bCosts[id] = Math.round(data.bCosts[id] * 1.30);
-                renderBuildings();
-                updateNumbersOnly();
-            }
-        }
-
+        function buyHammer() { if (data.money >= data.hammerPrice) { data.money -= data.hammerPrice; data.hammerLevel++; data.hammerPrice = Math.round(data.hammerPrice * 2.1); renderBuildings(); updateNumbersOnly(); } }
+        function buyAuto() { if (data.money >= data.autoPrice) { data.money -= data.autoPrice; data.autoClicks++; data.autoPrice = Math.round(data.autoPrice * 2.5); updateNumbersOnly(); } }
+        function buyBuilding(id) { if (data.money >= data.bCosts[id]) { data.money -= data.bCosts[id]; data.bCounts[id]++; data.bCosts[id] = Math.round(data.bCosts[id] * 1.30); renderBuildings(); updateNumbersOnly(); } }
         function buyLicense() { if (data.money >= 1500) { data.money -= 1500; data.hasLicense = true; renderEverything(); } }
 
         function claimAch(type) {
             const level = data.achLevels[type];
             if (getValByType(type, level, achChains[type]) >= achChains[type][level].target) {
                 data.money += achChains[type][level].reward;
-                data.achLevels[type]++;
-                data.questsDone++;
+                data.achLevels[type]++; data.questsDone++;
                 renderEverything();
             }
         }
@@ -404,9 +363,8 @@
             document.getElementById("mpc").innerText = currentMPC.toLocaleString();
             document.getElementById("pps").innerText = Math.floor(getTotalPPS()).toLocaleString();
             document.getElementById("bonus-val").innerText = Math.round((getQuestBonus()-1)*100);
-            
-            document.getElementById("hammer-cost").innerText = data.hammerPrice.toLocaleString() + " kr";
-            document.getElementById("auto-cost").innerText = data.autoPrice.toLocaleString() + " kr";
+            document.getElementById("hammer-cost").innerText = data.hammerPrice.toLocaleString();
+            document.getElementById("auto-cost").innerText = data.autoPrice.toLocaleString();
             
             document.getElementById("hammer-btn").classList.toggle("disabled", data.money < data.hammerPrice);
             document.getElementById("auto-btn").classList.toggle("disabled", data.money < data.autoPrice);
@@ -415,7 +373,7 @@
                 const btn = document.getElementById("build-"+i);
                 if(btn) btn.classList.toggle("disabled", data.money < data.bCosts[i]);
             });
-            localStorage.setItem('folkhem_hardcore_v10_light', JSON.stringify(data));
+            localStorage.setItem('folkhem_v12_premium', JSON.stringify(data));
         }
 
         function renderBuildings() {
@@ -442,26 +400,18 @@
                     if (level < achChains[type].length) {
                         const ach = achChains[type][level];
                         const val = getValByType(type, level, achChains[type]);
-                        const isReady = val >= ach.target;
                         const progress = (val / ach.target) * 100;
+                        const isReady = progress >= 100;
                         const html = `
-                            <div class="ach-card" style="border-left-color: ${isReady ? '#28a745' : 'var(--sd-light-blue)'}">
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
-                                    <b style="color:var(--swe-blue);">${type === 'secret' ? '🌟 ' + ach.t : ach.t}</b>
-                                    <span style="color:#28a745; font-weight:bold;">+${ach.reward.toLocaleString()} kr</span>
-                                </div>
+                            <div class="ach-card">
+                                <div style="display:flex; justify-content:space-between;"><b>${ach.t}</b> <span style="color:#28a745">+${ach.reward.toLocaleString()}</span></div>
                                 <div class="btn-sub">${ach.req}</div>
-                                <div class="progress-container">
-                                    <div class="progress-bar" style="width: ${Math.min(100, progress)}%"></div>
-                                </div>
-                                <button class="claim-btn ${isReady ? 'ready' : ''}" onclick="claimAch('${type}')">
-                                    ${isReady ? 'HÄMTA BELÖNING' : 'LÅST'}
-                                </button>
+                                <div class="progress-container"><div class="progress-bar" style="width: ${Math.min(100, progress)}%"></div></div>
+                                <button class="claim-btn ${isReady ? 'ready' : ''}" onclick="if(${isReady}) claimAch('${type}')">${isReady ? 'HÄMTA' : 'LÅST'}</button>
                             </div>`;
                         questItems.push({html: html, ready: isReady});
                     }
                 });
-                questItems.sort((a, b) => b.ready - a.ready);
                 document.getElementById("ach-container").innerHTML = questItems.map(i => i.html).join("");
             }
             updateNumbersOnly();
@@ -470,13 +420,12 @@
         setInterval(() => {
             let pps = getTotalPPS();
             let currentMPC = calculateMPC();
-            data.money += pps / 10;
-            if(data.autoClicks > 0) data.money += (data.autoClicks * currentMPC) / 10;
+            data.money += (pps + (data.autoClicks * currentMPC)) / 10;
             updateNumbersOnly();
         }, 100);
 
         window.onload = () => {
-            let s = localStorage.getItem('folkhem_hardcore_v10_light');
+            let s = localStorage.getItem('folkhem_v12_premium');
             if (s) Object.assign(data, JSON.parse(s));
             renderEverything();
         };
