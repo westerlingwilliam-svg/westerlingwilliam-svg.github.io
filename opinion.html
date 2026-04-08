@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opinion Tycoon - Jimmie.Fun</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #001f3f;
+            color: white;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .stats-bar {
+            background: rgba(0, 82, 147, 0.9);
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            justify-content: space-around;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 4px solid #fecc00;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .stat-box { text-align: center; }
+        .stat-value { font-size: 1.5rem; font-weight: bold; color: #fecc00; }
+
+        .opinion-container {
+            width: 80%;
+            max-width: 800px;
+            background: #eee;
+            height: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            overflow: hidden;
+            border: 3px solid #fff;
+        }
+
+        #opinion-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #fecc00, #ffdb4d);
+            width: 20%;
+            transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .game-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 90%;
+            max-width: 1000px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #fecc00;
+        }
+
+        button {
+            background: #fecc00;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+            transition: 0.2s;
+        }
+
+        button:hover:not(:disabled) { background: #fff; transform: scale(1.05); }
+        button:disabled { background: #666; cursor: not-allowed; }
+
+        .event-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            color: #333;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 100px rgba(0,0,0,0.8);
+            z-index: 1000;
+            display: none;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .back-btn { color: white; text-decoration: none; margin-bottom: 20px; opacity: 0.7; }
+    </style>
+</head>
+<body>
+
+    <div class="stats-bar">
+        <div class="stat-box">
+            <div>Budget</div>
+            <div class="stat-value" id="money">0 kr</div>
+        </div>
+        <div class="stat-box">
+            <div>Opinion</div>
+            <div class="stat-value" id="opinion-text">20.0%</div>
+        </div>
+        <div class="stat-box">
+            <div>Tillväxt/sek</div>
+            <div class="stat-value" id="growth">+0.01%</div>
+        </div>
+    </div>
+
+    <div class="opinion-container">
+        <div id="opinion-bar"></div>
+    </div>
+
+    <div class="game-area">
+        <div class="card">
+            <h3>Digital Kampanj</h3>
+            <p>Satsa på YouTube-reklam och memes.</p>
+            <p>Pris: <span id="cost1">500</span> kr</p>
+            <button onclick="buyUpgrade(1)">Investera</button>
+        </div>
+        <div class="card">
+            <h3>Torgmöten</h3>
+            <p>Skicka ut Jimmie på turné i landet.</p>
+            <p>Pris: <span id="cost2">2500</span> kr</p>
+            <button onclick="buyUpgrade(2)">Boka turné</button>
+        </div>
+        <div class="card">
+            <h3>Eget Mediehus</h3>
+            <p>Starta en egen nyhetskanal för sanningen.</p>
+            <p>Pris: <span id="cost3">10000</span> kr</p>
+            <button onclick="buyUpgrade(3)">Starta sändning</button>
+        </div>
+        <div class="card">
+            <h3>Folkhems-fonden</h3>
+            <p>Öka medlemsavgifterna för mer budget.</p>
+            <p>Pris: <span id="cost4">1000</span> kr</p>
+            <button onclick="buyUpgrade(4)">Uppgradera</button>
+        </div>
+    </div>
+
+    <div id="event-box" class="event-popup">
+        <h2 id="event-title">Debattdags!</h2>
+        <p id="event-desc">SVT frågar om energipriserna. Vad svarar du?</p>
+        <button onclick="handleEvent(true)" id="opt1">Mer kärnkraft!</button>
+        <button onclick="handleEvent(false)" id="opt2">Vet ej...</button>
+    </div>
+
+    <a href="games.html" class="back-btn">TILLBAKA TILL MENYN</a>
+
+    <script>
+        let money = 500;
+        let opinion = 20.0;
+        let moneyRate = 10;
+        let opinionRate = 0.01;
+
+        let costs = [500, 2500, 10000, 1000];
+
+        function updateUI() {
+            document.getElementById('money').innerText = Math.floor(money) + " kr";
+            document.getElementById('opinion-text').innerText = opinion.toFixed(2) + "%";
+            document.getElementById('growth').innerText = "+" + opinionRate.toFixed(2) + "%";
+            document.getElementById('opinion-bar').style.width = opinion + "%";
+            
+            for(let i=1; i<=4; i++) {
+                document.getElementById('cost'+i).innerText = costs[i-1];
+            }
+        }
+
+        function buyUpgrade(id) {
+            if (money >= costs[id-1]) {
+                money -= costs[id-1];
+                if(id === 1) { opinionRate += 0.02; costs[0] = Math.floor(costs[0] * 1.5); }
+                if(id === 2) { opinionRate += 0.10; costs[1] = Math.floor(costs[1] * 1.6); }
+                if(id === 3) { opinionRate += 0.50; costs[2] = Math.floor(costs[2] * 1.8); }
+                if(id === 4) { moneyRate += 20; costs[3] = Math.floor(costs[3] * 2); }
+                updateUI();
+            }
+        }
+
+        // Gameloop
+        setInterval(() => {
+            money += moneyRate / 10;
+            if (opinion < 100) {
+                opinion += opinionRate / 10;
+            }
+            updateUI();
+        }, 100);
+
+        // Slumpmässiga händelser
+        const events = [
+            { t: "TV-DEBATT", d: "Motståndaren anklagar dig för att gilla falukorv för mycket. Svar?", o1: "Det är gott!", o2: "Ingen kommentar", p: 2 },
+            { t: "VALSTUGESTUGA", d: "En väljare vill prata om bensinpriset.", o1: "Sänk skatten!", o2: "Köp elcykel", p: 3 },
+            { t: "REKLAMFILM", d: "Ska vi ha en gullig hund i videon?", o1: "Självklart!", o2: "Nej, tråkigt", p: 1 }
+        ];
+
+        function showRandomEvent() {
+            const ev = events[Math.floor(Math.random() * events.length)];
+            document.getElementById('event-title').innerText = ev.t;
+            document.getElementById('event-desc').innerText = ev.d;
+            document.getElementById('opt1').innerText = ev.o1;
+            document.getElementById('opt2').innerText = ev.o2;
+            document.getElementById('event-box').style.display = 'block';
+        }
+
+        function handleEvent(isGood) {
+            if(isGood) {
+                opinion += 1.5;
+                money += 200;
+            } else {
+                opinion -= 1.0;
+            }
+            document.getElementById('event-box').style.display = 'none';
+            updateUI();
+        }
+
+        // Trigga event var 30:e sekund
+        setInterval(showRandomEvent, 30000);
+
+        updateUI();
+    </script>
+</body>
+</html>
