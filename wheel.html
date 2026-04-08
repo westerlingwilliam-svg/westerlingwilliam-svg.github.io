@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valhjulet - Jimmie.Fun</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: radial-gradient(circle, #005293, #001f3f);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        h1 {
+            text-shadow: 0 0 20px rgba(254, 204, 0, 0.8);
+            color: #fecc00;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            border: 15px solid #fecc00;
+            border-radius: 50%;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        /* Pekaren i mitten */
+        .pointer {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: #fff;
+            clip-path: polygon(50% 100%, 0 0, 100% 0);
+            z-index: 10;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5));
+        }
+
+        #wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            transition: transform 5s cubic-bezier(0.15, 0, 0.15, 1);
+            overflow: hidden;
+        }
+
+        .spin-btn {
+            margin-top: 40px;
+            background: #fecc00;
+            color: #005293;
+            border: none;
+            padding: 20px 60px;
+            font-size: 1.5rem;
+            font-weight: 900;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 0 #b38f00;
+            transition: 0.1s;
+            text-transform: uppercase;
+        }
+
+        .spin-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 4px 0 #b38f00;
+        }
+
+        .spin-btn:disabled {
+            background: #666;
+            box-shadow: 0 4px 0 #333;
+            cursor: not-allowed;
+        }
+
+        #result-text {
+            margin-top: 20px;
+            font-size: 2rem;
+            font-weight: bold;
+            height: 50px;
+            color: #fecc00;
+        }
+
+        .back-btn {
+            margin-top: 30px;
+            color: white;
+            text-decoration: none;
+            opacity: 0.6;
+        }
+        .back-btn:hover { opacity: 1; }
+    </style>
+</head>
+<body>
+
+    <h1>VILKET PARTI SKA DU RÖSTA PÅ?</h1>
+
+    <div class="wheel-container">
+        <div class="pointer"></div>
+        <canvas id="wheel" width="500" height="500"></canvas>
+    </div>
+
+    <div id="result-text"></div>
+
+    <button class="spin-btn" id="spinBtn" onclick="spinWheel()">SNURRA VALHJULET!</button>
+
+    <a href="games.html" class="back-btn">TILLBAKA TILL MENYN</a>
+
+    <script>
+        const canvas = document.getElementById("wheel");
+        const ctx = canvas.getContext("2d");
+        const parties = [
+            "SD", "S", "M", "V", "MP", "C", "L", "KD", "AFS"
+        ];
+        
+        // Färger för tårtbitarna
+        const colors = [
+            "#fecc00", "#e3000f", "#019cdb", "#af0000", 
+            "#83cf39", "#006d3e", "#0069b4", "#005ea1", "#1a1a1a"
+        ];
+
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = canvas.width / 2;
+        const sliceAngle = (2 * Math.PI) / parties.length;
+
+        // Rita hjulet
+        function drawWheel() {
+            parties.forEach((name, i) => {
+                const angle = i * sliceAngle;
+                
+                // Rita tårtbit
+                ctx.beginPath();
+                ctx.fillStyle = colors[i];
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, angle, angle + sliceAngle);
+                ctx.fill();
+                ctx.stroke();
+
+                // Rita text
+                ctx.save();
+                ctx.translate(centerX, centerY);
+                ctx.rotate(angle + sliceAngle / 2);
+                ctx.textAlign = "right";
+                ctx.fillStyle = (i === 0) ? "#005293" : "white"; // SD har blå text på gul bakgrund
+                ctx.font = "bold 24px Arial";
+                ctx.fillText(name, radius - 20, 10);
+                ctx.restore();
+            });
+        }
+
+        let currentRotation = 0;
+
+        function spinWheel() {
+            const btn = document.getElementById("spinBtn");
+            const result = document.getElementById("result-text");
+            btn.disabled = true;
+            result.innerText = "";
+
+            // LOGIKEN: 
+            // Varje tårtbit är 40 grader (360/9).
+            // Vi vill att hjulet ska stanna på SD (index 0).
+            // Pekaren är högst upp (270 grader i canvas-koordinater).
+            
+            const extraSpins = 5 + Math.floor(Math.random() * 5); // 5-10 extra varv
+            
+            // Vi räknar ut målvinkeln så att index 0 (SD) hamnar vid pekaren (klockan 12)
+            // SD börjar på 0 till sliceAngle. För att den ska vara uppe måste vi rotera 
+            // så att mitten på tårtbiten (-sliceAngle/2) är på -90 grader.
+            const targetRotation = (extraSpins * 360) - (sliceAngle * (180/Math.PI) / 2) - 90;
+            
+            currentRotation += targetRotation;
+            canvas.style.transform = `rotate(-${currentRotation}deg)`;
+
+            setTimeout(() => {
+                result.innerText = "DET BLIR SD! 🌸";
+                btn.disabled = false;
+                
+                // Lite konfetti-känsla
+                result.style.animation = "pulse 0.5s infinite";
+            }, 5000);
+        }
+
+        drawWheel();
+    </script>
+</body>
+</html>
