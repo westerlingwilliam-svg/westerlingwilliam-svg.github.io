@@ -5,82 +5,141 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jimmie.Fun - Spel och Saker</title>
     <style>
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #f0f0f0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(-45deg, #001f3f, #005293, #003d6e, #001a33);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             margin: 0;
-            padding: 20px;
-            border-top: 15px solid #fecc00;
+            padding: 40px 20px;
+            color: white;
+            min-height: 100vh;
         }
 
         header {
-            background-color: #005293;
-            padding: 30px;
-            color: white;
-            margin-bottom: 40px;
-            border-bottom: 5px solid #fecc00;
             text-align: center;
+            margin-bottom: 60px;
         }
 
-        /* Flaggan i headern byggd med rektanglar */
+        h1 {
+            font-size: 4rem;
+            letter-spacing: 8px;
+            margin: 0;
+            color: #fecc00;
+            text-shadow: 0 0 20px rgba(254, 204, 0, 0.6), 4px 4px 0px #005293;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        /* Glödande flagga i headern */
         .header-flag {
-            width: 45px; height: 30px;
+            width: 60px; height: 40px;
             background: #005293; position: relative;
             display: inline-block; vertical-align: middle;
-            margin: 0 15px; border: 1px solid #fff;
+            margin: 0 25px; 
+            border: 2px solid rgba(255,255,255,0.3);
+            box-shadow: 0 0 15px rgba(254, 204, 0, 0.4);
+            border-radius: 4px;
         }
-        .f-y-v { position: absolute; width: 8px; height: 100%; background: #fecc00; left: 15px; }
-        .f-y-h { position: absolute; width: 100%; height: 8px; background: #fecc00; top: 11px; }
+        .f-y-v { position: absolute; width: 10px; height: 100%; background: #fecc00; left: 20px; box-shadow: 0 0 10px #fecc00; }
+        .f-y-h { position: absolute; width: 100%; height: 10px; background: #fecc00; top: 15px; box-shadow: 0 0 10px #fecc00; }
 
         .game-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            max-width: 1100px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
         .game-card {
-            background: white;
-            border: 3px solid #005293;
-            padding: 30px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 4px solid #fecc00;
+            padding: 40px 25px;
             text-decoration: none;
-            color: #005293;
-            font-weight: bold;
+            color: white;
             text-align: center;
-            transition: 0.3s;
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: 0.5s;
         }
 
         .game-card:hover {
-            background-color: #fecc00;
-            transform: translateY(-10px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transform: translateY(-15px) scale(1.02);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(254, 204, 0, 0.2);
+            border-color: #fff;
         }
 
-        /* Liten flagga på varje kort */
-        .card-flag {
-            width: 30px; height: 20px; background: #005293;
-            position: relative; margin: 0 auto 15px;
-            border: 1px solid #ddd;
+        .game-card:hover::before {
+            left: 100%;
         }
-        .cf-v { position: absolute; width: 6px; height: 100%; background: #fecc00; left: 10px; }
-        .cf-h { position: absolute; width: 100%; height: 6px; background: #fecc00; top: 7px; }
+
+        .game-card h3 {
+            font-size: 1.8rem;
+            margin: 10px 0 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Neon-flagga på korten */
+        .card-flag {
+            width: 40px; height: 26px; background: #005293;
+            position: relative; margin: 0 auto 20px;
+            border-radius: 2px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .cf-v { position: absolute; width: 8px; height: 100%; background: #fecc00; left: 13px; }
+        .cf-h { position: absolute; width: 100%; height: 8px; background: #fecc00; top: 9px; }
 
         .back-btn {
             display: inline-block;
-            margin-top: 40px;
-            color: white;
+            margin-top: 60px;
+            color: #005293;
             text-decoration: none;
-            background: #005293;
-            padding: 15px 30px;
-            font-weight: bold;
-            border: 2px solid #fecc00;
+            background: #fecc00;
+            padding: 18px 45px;
+            font-weight: 900;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            box-shadow: 0 10px 0 #b38f00, 0 15px 30px rgba(0,0,0,0.3);
             transition: 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .back-btn:hover {
-            background: #fecc00;
-            color: #005293;
+            transform: translateY(3px);
+            box-shadow: 0 7px 0 #b38f00, 0 10px 20px rgba(0,0,0,0.3);
+            background: #fff;
+        }
+
+        .back-btn:active {
+            transform: translateY(10px);
+            box-shadow: 0 0 0 #b38f00;
+        }
+
+        center {
+            padding-bottom: 50px;
         }
     </style>
 </head>
@@ -88,7 +147,7 @@
 
     <header>
         <div class="header-flag"><div class="f-y-h"></div><div class="f-y-v"></div></div>
-        <h1 style="display:inline-block; vertical-align:middle;">JIMMIE.FUN</h1>
+        <h1>JIMMIE.FUN</h1>
         <div class="header-flag"><div class="f-y-h"></div><div class="f-y-v"></div></div>
     </header>
 
@@ -96,21 +155,24 @@
         <a href="quotes.html" class="game-card">
             <div class="card-flag"><div class="cf-h"></div><div class="cf-v"></div></div>
             <h3>Jimmie Quotes</h3>
+            <p style="opacity: 0.7; font-weight: normal;">Legendariska citat från Jimmie</p>
         </a>
 
         <a href="folkhemmet.html" class="game-card">
             <div class="card-flag"><div class="cf-h"></div><div class="cf-v"></div></div>
             <h3>Bygg Folkhemmet</h3>
+            <p style="opacity: 0.7; font-weight: normal;">Det ultimata clicker-spelet</p>
         </a>
 
         <a href="#" class="game-card">
             <div class="card-flag"><div class="cf-h"></div><div class="cf-v"></div></div>
             <h3>SD-Clicker</h3>
+            <p style="opacity: 0.7; font-weight: normal;">Kommer snart...</p>
         </a>
     </div>
 
     <center>
-        <a href="index.html" class="back-btn">TILLBAKA TILL START</a>
+        <a href="index.html" class="back-btn">Tillbaka till start</a>
     </center>
 
 </body>
