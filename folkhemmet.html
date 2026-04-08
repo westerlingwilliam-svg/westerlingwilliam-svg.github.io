@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bygg Folkhemmet - Slutgiltig Fix</title>
+    <title>Bygg Folkhemmet - Stabil Version</title>
     <style>
         * {
             user-select: none;
             -webkit-user-select: none;
             box-sizing: border-box;
+            font-family: 'Arial Black', sans-serif;
         }
 
         body {
-            font-family: 'Arial Black', sans-serif;
             background-color: #005293;
             color: #333;
             margin: 0;
@@ -26,6 +26,7 @@
             padding: 20px;
             text-align: center;
             border-bottom: 5px solid #005293;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
         .main-layout {
@@ -40,6 +41,7 @@
             background: white;
             padding: 15px;
             border: 5px solid #fecc00;
+            min-height: 550px;
         }
 
         .center-area {
@@ -49,6 +51,7 @@
             justify-content: center;
         }
 
+        /* Huvudknappen */
         .main-clicker {
             background: #fff;
             border: 10px solid #fecc00;
@@ -61,11 +64,12 @@
             align-items: center;
             cursor: pointer;
             box-shadow: 0 10px 0 #b38f00;
+            transition: transform 0.05s;
         }
 
         .main-clicker:active { transform: translateY(5px); box-shadow: 0 5px 0 #b38f00; }
 
-        /* ALLA KNAPPAR ANVÄNDER DENNA KLASS */
+        /* ALLA KÖPKNAPPAR ÄR IDENTISKA */
         .buy-button {
             background: #f0f0f0;
             border: 3px solid #005293;
@@ -76,8 +80,8 @@
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            font-family: inherit;
             font-size: 1rem;
+            transition: 0.1s;
         }
 
         .buy-button.disabled {
@@ -87,7 +91,7 @@
             border-color: #999;
         }
 
-        .buy-button:hover:not(.disabled) { background: #ddd; }
+        .buy-button:hover:not(.disabled) { background: #ddd; transform: scale(1.02); }
 
         .ach-card { padding: 10px; margin: 5px 0; border: 2px solid #ddd; background: #eee; font-size: 0.8rem; }
         .ach-card.unlocked { background: #fecc00; border-color: #005293; }
@@ -120,10 +124,25 @@
             <h3>BUTIK</h3>
             <button class="buy-button" id="hammer-btn" onclick="buyHammer()">
                 <b>Bättre Hammare</b>
-                <span id="hammer-cost">15</span> kr
+                <span><span id="hammer-cost">15</span> kr</span>
             </button>
             <hr>
-            <div id="building-container"></div>
+            <button class="buy-button" id="build-0" onclick="buyBuilding(0)">
+                <b>Röd Stuga (<span id="count-0">0</span>)</b>
+                <span><span id="cost-0">15</span> kr</span>
+            </button>
+            <button class="buy-button" id="build-1" onclick="buyBuilding(1)">
+                <b>Hyreshus (<span id="count-1">0</span>)</b>
+                <span><span id="cost-1">100</span> kr</span>
+            </button>
+            <button class="buy-button" id="build-2" onclick="buyBuilding(2)">
+                <b>Sjukhus (<span id="count-2">0</span>)</b>
+                <span><span id="cost-2">500</span> kr</span>
+            </button>
+            <button class="buy-button" id="build-3" onclick="buyBuilding(3)">
+                <b>Svensk Industri (<span id="count-3">0</span>)</b>
+                <span><span id="cost-3">2000</span> kr</span>
+            </button>
         </div>
 
         <div class="center-area">
@@ -145,10 +164,11 @@
     </div>
 
     <div class="bottom-controls">
-        <button class="btn-reset" onclick="hardReset()">NOLLSTÄLL ALLT</button>
+        <button class="btn-reset" onclick="hardReset()">NOLLSTÄLL SPELET</button>
     </div>
 
     <script>
+        // SPEL-DATA
         let data = {
             money: 0,
             clicks: 0,
@@ -156,17 +176,14 @@
             hammerPrice: 15,
             hasLicense: false,
             unlockedAch: [],
-            buildings: [
-                { id: 0, name: "Röd Stuga", cost: 15, income: 1, count: 0 },
-                { id: 1, name: "Hyreshus", cost: 100, income: 5, count: 0 },
-                { id: 2, name: "Sjukhus", cost: 500, income: 20, count: 0 },
-                { id: 3, name: "Svensk Industri", cost: 2000, income: 100, count: 0 }
-            ]
+            bCounts: [0, 0, 0, 0],
+            bCosts: [15, 100, 500, 2000]
         };
 
+        const bIncomes = [1, 5, 20, 100];
         const achs = [
             { id: 0, t: "Flitig", d: "100 klick", c: () => data.clicks >= 100 },
-            { id: 1, t: "Stugägare", d: "10 stugor", c: () => data.buildings[0].count >= 10 },
+            { id: 1, t: "Stugägare", d: "10 stugor", c: () => data.bCounts[0] >= 10 },
             { id: 2, t: "Rik", d: "5000 kr", c: () => data.money >= 5000 }
         ];
 
@@ -186,17 +203,16 @@
             if (data.money >= data.hammerPrice) {
                 data.money -= data.hammerPrice;
                 data.mpc += 1;
-                data.hammerPrice = Math.round(data.hammerPrice * 2);
+                data.hammerPrice = Math.round(data.hammerPrice * 2.2);
                 update();
             }
         }
 
-        function buyB(id) {
-            let b = data.buildings[id];
-            if (data.money >= b.cost) {
-                data.money -= b.cost;
-                b.count++;
-                b.cost = Math.round(b.cost * 1.15);
+        function buyBuilding(id) {
+            if (data.money >= data.bCosts[id]) {
+                data.money -= data.bCosts[id];
+                data.bCounts[id]++;
+                data.bCosts[id] = Math.round(data.bCosts[id] * 1.15);
                 update();
             }
         }
@@ -210,27 +226,26 @@
         }
 
         function update() {
+            // Siffror i header
             document.getElementById("money").innerText = Math.floor(data.money);
             document.getElementById("mpc").innerText = data.mpc;
-            document.getElementById("hammer-cost").innerText = data.hammerPrice;
             
-            let pps = data.buildings.reduce((s, b) => s + (b.count * b.income), 0);
+            let pps = 0;
+            for(let i=0; i<4; i++) pps += data.bCounts[i] * bIncomes[i];
             document.getElementById("pps").innerText = pps;
 
-            // Hammer knapp
+            // Uppdatera Hammare
+            document.getElementById("hammer-cost").innerText = data.hammerPrice;
             document.getElementById("hammer-btn").className = "buy-button" + (data.money < data.hammerPrice ? " disabled" : "");
 
-            // Byggnader
-            let container = document.getElementById("building-container");
-            container.innerHTML = "";
-            data.buildings.forEach(b => {
-                let dis = data.money < b.cost ? " disabled" : "";
-                container.innerHTML += `<button class="buy-button${dis}" onclick="buyB(${b.id})">
-                    <b>${b.name} (${b.count})</b> ${b.cost} kr
-                </button>`;
-            });
+            // Uppdatera Byggnader (Priser och Antal)
+            for(let i=0; i<4; i++) {
+                document.getElementById("count-" + i).innerText = data.bCounts[i];
+                document.getElementById("cost-" + i).innerText = data.bCosts[i];
+                document.getElementById("build-" + i).className = "buy-button" + (data.money < data.bCosts[i] ? " disabled" : "");
+            }
 
-            // Licens & Ach
+            // Licens & Achievements
             document.getElementById("lic-btn").style.display = data.hasLicense ? "none" : "block";
             document.getElementById("lic-btn").className = "buy-button" + (data.money < 1000 ? " disabled" : "");
 
@@ -246,35 +261,32 @@
                 });
             }
 
-            localStorage.setItem('folkhem_save_v4', JSON.stringify(data));
+            localStorage.setItem('folkhem_save_v5', JSON.stringify(data));
         }
 
         function hardReset() {
-            if (confirm("RENSA ALLT?")) {
+            if (confirm("Är du helt säker? Allt raderas!")) {
                 localStorage.clear();
-                data = {
-                    money: 0, clicks: 0, mpc: 1, hammerPrice: 15, hasLicense: false, unlockedAch: [],
-                    buildings: [
-                        { id: 0, name: "Röd Stuga", cost: 15, income: 1, count: 0 },
-                        { id: 1, name: "Hyreshus", cost: 100, income: 5, count: 0 },
-                        { id: 2, name: "Sjukhus", cost: 500, income: 20, count: 0 },
-                        { id: 3, name: "Svensk Industri", cost: 2000, income: 100, count: 0 }
-                    ]
-                };
-                update();
                 location.reload();
             }
         }
 
+        // Loop för inkomst per sekund
         setInterval(() => {
-            let pps = data.buildings.reduce((s, b) => s + (b.count * b.income), 0);
+            let pps = 0;
+            for(let i=0; i<4; i++) pps += data.bCounts[i] * bIncomes[i];
             data.money += pps / 10;
             update();
         }, 100);
 
+        // Ladda vid start
         window.onload = () => {
-            let s = localStorage.getItem('folkhem_save_v4');
-            if (s) data = JSON.parse(s);
+            let s = localStorage.getItem('folkhem_save_v5');
+            if (s) {
+                let loaded = JSON.parse(s);
+                // Koppla ihop sparad data med spelet
+                Object.assign(data, loaded);
+            }
             update();
         };
     </script>
