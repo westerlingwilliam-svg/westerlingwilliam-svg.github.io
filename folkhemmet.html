@@ -3,29 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bygg Folkhemmet - Ultra Neon Hardcore Edition</title>
+    <title>Bygg Folkhemmet - Ultra Hardcore Edition</title>
     <style>
-        /* FULLSTÄNDIG NEON-MAXAD STYLING */
+        /* MODERNA MODERNA STYLES */
         :root {
-            --bg-dark: #070b14; /* Ännu mörkare bakgrund för att få neonet att poppa */
-            --panel-bg: rgba(20, 30, 50, 0.8);
-            --sweden-blue: #0077ff; /* Starkare, lysande blå */
+            --bg-dark: #0f172a;
+            --panel-bg: rgba(30, 41, 59, 0.7);
+            --sweden-blue: #005293;
             --sweden-yellow: #fecc00;
-            --text-main: #ffffff;
-            --neon-yellow-glow: 0 0 15px rgba(254, 204, 0, 0.7);
-            --neon-blue-glow: 0 0 15px rgba(0, 119, 255, 0.7);
+            --text-main: #f8fafc;
+            --accent-glow: rgba(254, 204, 0, 0.2);
         }
 
         * { 
             user-select: none; 
             -webkit-user-select: none; 
             box-sizing: border-box; 
-            font-family: 'Arial Black', sans-serif; /* Tjockare font för neon */
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
         }
 
         body { 
-            background: var(--bg-dark);
-            background-image: radial-gradient(circle at center, #101a30 0%, #070b14 100%);
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
             color: var(--text-main); 
             margin: 0; 
             min-height: 100vh; 
@@ -34,21 +32,21 @@
             overflow-x: hidden;
         }
 
-        /* Paneler med BLÅ NEON-glöd */
+        /* Glassmorphism Panels */
         .glass-panel {
             background: var(--panel-bg);
-            border: 2px solid var(--sweden-blue);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 24px;
-            box-shadow: 0 0 25px rgba(0, 119, 255, 0.4), inset 0 0 15px rgba(0, 119, 255, 0.2);
-            backdrop-filter: blur(5px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
         }
 
         .header { 
-            background: rgba(7, 11, 20, 0.9);
+            background: rgba(15, 23, 42, 0.9);
             padding: 20px; 
             text-align: center; 
-            border-bottom: 3px solid var(--sweden-yellow);
-            box-shadow: 0 0 20px rgba(254, 204, 0, 0.5);
+            border-bottom: 2px solid var(--sweden-yellow);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -56,11 +54,11 @@
 
         .header h1 {
             margin: 0;
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             color: var(--sweden-yellow);
             text-transform: uppercase;
             letter-spacing: 2px;
-            text-shadow: var(--neon-yellow-glow);
+            text-shadow: 0 0 15px rgba(254, 204, 0, 0.4);
         }
 
         .stats-container {
@@ -71,29 +69,15 @@
             flex-wrap: wrap;
         }
 
-        /* JÄTTESTOR OCH TYDLIG PENGABOX */
-        .money-box {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 15px 40px;
-            border-radius: 15px;
-            border: 3px solid var(--sweden-yellow);
-            box-shadow: var(--neon-yellow-glow), inset 0 0 10px rgba(254, 204, 0, 0.3);
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-        }
-
-        .money-box b { color: var(--sweden-yellow); text-shadow: var(--neon-yellow-glow); }
-
         .stat-box {
-            background: rgba(0, 50, 100, 0.3);
-            padding: 8px 18px;
-            border-radius: 10px;
-            border: 1px solid rgba(0, 119, 255, 0.5);
-            font-size: 0.9rem;
-            color: #b0d5ff;
+            background: rgba(0, 82, 147, 0.4);
+            padding: 10px 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(254, 204, 0, 0.3);
+            min-width: 140px;
         }
 
-        .stat-box b { color: var(--sweden-blue); text-shadow: var(--neon-blue-glow); }
+        .stat-box b { color: var(--sweden-yellow); font-size: 1.2rem; }
 
         .main-layout { 
             display: grid; 
@@ -109,16 +93,17 @@
             padding: 25px; 
             max-height: 80vh;
             overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--sweden-yellow) transparent;
         }
 
         .panel h3 {
             text-align: center;
             margin-top: 0;
             color: var(--sweden-yellow);
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             text-transform: uppercase;
-            text-shadow: var(--neon-yellow-glow);
-            border-bottom: 2px solid rgba(254, 204, 0, 0.3);
+            border-bottom: 1px solid rgba(254, 204, 0, 0.2);
             padding-bottom: 15px;
         }
 
@@ -129,32 +114,33 @@
             justify-content: center;
         }
 
-        /* Huset/Clickern med GUL NEON-glöd */
+        /* Det "Sunkiga" huset blir nu en episk knapp */
         .main-clicker { 
-            background: radial-gradient(circle, #101a30 0%, #000 100%);
-            border: 6px solid var(--sweden-yellow); 
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 4px solid var(--sweden-yellow); 
             width: 280px; height: 280px; 
             border-radius: 50%; 
             display: flex; flex-direction: column; 
             justify-content: center; align-items: center; 
             cursor: pointer; 
-            box-shadow: 0 0 40px rgba(254, 204, 0, 0.3); 
-            transition: 0.2s;
+            box-shadow: 0 0 50px rgba(254, 204, 0, 0.15); 
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
         }
 
         .main-clicker:hover {
-            box-shadow: 0 0 60px rgba(254, 204, 0, 0.6), inset 0 0 20px rgba(254, 204, 0, 0.2);
-            transform: scale(1.03);
+            transform: scale(1.05);
+            box-shadow: 0 0 70px rgba(254, 204, 0, 0.3);
         }
 
-        .main-clicker:active { transform: scale(0.97); }
+        .main-clicker:active { transform: scale(0.95); }
         
-        .main-clicker span { font-size: 8rem; filter: drop-shadow(var(--neon-yellow-glow)); }
+        .main-clicker span { font-size: 8rem; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
 
-        /* Butik-knappar med BLÅ NEON-hover */
+        /* Butik-knappar */
         .buy-button { 
-            background: rgba(255, 255, 255, 0.03); 
-            border: 1px solid rgba(0, 119, 255, 0.3); 
+            background: rgba(255, 255, 255, 0.05); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
             padding: 15px; 
             margin: 10px 0; 
             cursor: pointer; 
@@ -165,78 +151,70 @@
         }
 
         .buy-button:hover:not(.disabled) {
-            background: rgba(0, 119, 255, 0.1);
-            border-color: var(--sweden-blue);
-            box-shadow: var(--neon-blue-glow);
-            transform: translateY(-3px);
+            background: rgba(254, 204, 0, 0.1);
+            border-color: var(--sweden-yellow);
+            transform: translateX(5px);
         }
 
-        .buy-button.disabled { opacity: 0.2; cursor: not-allowed; filter: grayscale(1); }
+        .buy-button.disabled { opacity: 0.3; cursor: not-allowed; filter: grayscale(1); }
 
         .btn-header { display: flex; justify-content: space-between; align-items: center; }
-        .btn-header b { color: var(--sweden-yellow); text-shadow: var(--neon-yellow-glow); font-size: 1.1rem; }
-        .btn-header span { color: #fff; background: var(--sweden-blue); padding: 4px 10px; border-radius: 8px; font-size: 0.85rem; font-family: sans-serif; box-shadow: var(--neon-blue-glow); }
+        .btn-header b { color: var(--sweden-yellow); font-size: 1.1rem; }
+        .btn-header span { background: var(--sweden-blue); padding: 4px 10px; border-radius: 8px; font-size: 0.9rem; }
 
-        .btn-sub { font-size: 0.8rem; color: #a0c0ff; margin-top: 8px; font-family: sans-serif; }
+        .btn-sub { font-size: 0.85rem; color: #94a3b8; margin-top: 8px; }
 
-        /* Achievement Cards med GUL NEON-glöd */
+        /* Achievement Cards */
         .ach-card { 
-            background: rgba(0, 0, 0, 0.3); 
+            background: rgba(0, 0, 0, 0.2); 
             padding: 20px; 
             margin-bottom: 15px; 
             border-radius: 16px;
-            border: 2px solid var(--sweden-yellow);
-            box-shadow: var(--neon-yellow-glow);
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
         .progress-container { 
-            background: #000; height: 14px; width: 100%; 
+            background: #0f172a; height: 12px; width: 100%; 
             border-radius: 10px; margin-top: 12px; overflow: hidden;
-            border: 1px solid var(--sweden-blue);
-            box-shadow: inset 0 0 5px rgba(0, 119, 255, 0.5);
+            position: relative;
         }
         
         .progress-bar { 
-            background: linear-gradient(90deg, var(--sweden-blue), var(--sweden-yellow));
+            background: linear-gradient(90deg, #005293, #fecc00);
             height: 100%; width: 0%; transition: width 0.5s ease; 
-            box-shadow: 0 0 10px var(--sweden-yellow);
         }
 
         .claim-btn { 
             width: 100%; margin-top: 15px; padding: 12px; 
-            background: #222; border: 1px solid #444; 
-            color: #666; font-weight: bold; border-radius: 10px; 
-            transition: 0.3s; text-transform: uppercase;
+            background: #334155; border: none; 
+            color: white; font-weight: bold; border-radius: 10px; 
+            transition: 0.3s;
         }
         .claim-btn.ready { 
-            background: linear-gradient(45deg, #00ff88, #00cc66); 
+            background: linear-gradient(45deg, #10b981, #059669); 
             cursor: pointer; 
-            color: #fff;
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
-            border: none;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
         }
-
-        .claim-btn.ready:hover { box-shadow: 0 0 30px rgba(0, 255, 136, 0.8); }
 
         .plus-one { 
             position: absolute; color: var(--sweden-yellow); font-weight: 900; 
-            font-size: 2.8rem; pointer-events: none; animation: fly 0.8s forwards; 
-            text-shadow: var(--neon-yellow-glow), 0 0 20px #fff; z-index: 1000; 
+            font-size: 2.5rem; pointer-events: none; animation: fly 0.8s forwards; 
+            text-shadow: 0 0 10px rgba(0,0,0,0.8); z-index: 1000; 
         }
 
         @keyframes fly { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-150px); } }
 
         .back-btn {
-            background: transparent; color: #7090c0; padding: 10px 20px; 
-            text-decoration: none; border: 1px solid rgba(112, 144, 192, 0.5); 
+            background: transparent; color: #94a3b8; padding: 10px 20px; 
+            text-decoration: none; border: 1px solid #334155; 
             border-radius: 10px; font-size: 0.9rem; margin-top: 30px;
-            transition: 0.3s; font-family: sans-serif;
+            transition: 0.3s;
         }
-        .back-btn:hover { color: white; border-color: white; box-shadow: 0 0 10px rgba(255,255,255,0.3); }
+        .back-btn:hover { color: white; border-color: white; }
 
         /* Scrollbar */
         .panel::-webkit-scrollbar { width: 6px; }
-        .panel::-webkit-scrollbar-thumb { background: var(--sweden-blue); border-radius: 10px; box-shadow: var(--neon-blue-glow); }
+        .panel::-webkit-scrollbar-thumb { background: var(--sweden-blue); border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -244,9 +222,7 @@
     <div class="header">
         <h1>BYGG FOLKHEMMET</h1>
         <div class="stats-container">
-            <div class="money-box">💰 Välfärd: <b id="money">0</b> kr</div>
-        </div>
-        <div class="stats-container" style="margin-top: 5px;">
+            <div class="stat-box">💰 Välfärd: <b id="money">0</b> kr</div>
             <div class="stat-box">📈 PPS: <b id="pps">0</b></div>
             <div class="stat-box">🖱️ MPC: <b id="mpc">1</b></div>
             <div class="stat-box">🏆 Bonus: <b id="bonus-val">0</b>%</div>
@@ -266,7 +242,7 @@
                     <div class="btn-sub">Genererar klick automatiskt varje sekund.</div>
                 </button>
             </div>
-            <div style="height: 2px; background: rgba(0, 119, 255, 0.2); margin: 20px 0; box-shadow: var(--neon-blue-glow);"></div>
+            <div style="height: 2px; background: rgba(255,255,255,0.05); margin: 20px 0;"></div>
             <div id="building-list"></div>
         </div>
 
@@ -281,8 +257,8 @@
             <h3>UPPDRAG</h3>
             <div id="ach-license-area">
                 <div class="ach-card" style="text-align: center; border-color: var(--sweden-yellow);">
-                    <p style="margin-top:0; font-size: 0.95rem; color: #a0c0ff; font-family: sans-serif;">Lås upp <b>Speciella Uppdrag</b> för att få tillgång till unika bonusar.</p>
-                    <button class="claim-btn ready" onclick="buyLicense()" style="background: var(--sweden-yellow); color: #000; text-shadow: none;">LÅS UPP JIMMIE (1 500 kr)</button>
+                    <p style="margin-top:0; font-size: 0.95rem; color: #94a3b8;">Lås upp <b>Speciella Uppdrag</b> för att få tillgång till unika bonusar.</p>
+                    <button class="claim-btn ready" onclick="buyLicense()" style="background: var(--sweden-yellow); color: #000;">LÅS UPP JIMMIE (1 500 kr)</button>
                 </div>
             </div>
             <div id="ach-container"></div>
@@ -434,8 +410,7 @@
                 const btn = document.getElementById("build-"+i);
                 if(btn) btn.classList.toggle("disabled", data.money < data.bCosts[i]);
             });
-            // Sparar med design-suffix för att inte krocka med gamla saves om man testar
-            localStorage.setItem('folkhem_hardcore_v9_neon', JSON.stringify(data));
+            localStorage.setItem('folkhem_hardcore_v9_design', JSON.stringify(data));
         }
 
         function renderBuildings() {
@@ -467,8 +442,8 @@
                         const html = `
                             <div class="ach-card">
                                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                                    <b style="color:white; text-shadow: ${isReady ? 'var(--neon-yellow-glow)' : 'none'};">${type === 'secret' ? '🌟 ' + ach.t : ach.t}</b>
-                                    <span style="color:#00ff88; font-weight:bold; text-shadow: 0 0 10px rgba(0,255,136,0.5);">+${ach.reward.toLocaleString()} kr</span>
+                                    <b style="color:white;">${type === 'secret' ? '🌟 ' + ach.t : ach.t}</b>
+                                    <span style="color:#10b981; font-weight:bold;">+${ach.reward.toLocaleString()} kr</span>
                                 </div>
                                 <div class="btn-sub" style="margin-bottom:10px;">${ach.req}</div>
                                 <div class="progress-container">
@@ -496,7 +471,7 @@
         }, 100);
 
         window.onload = () => {
-            let s = localStorage.getItem('folkhem_hardcore_v9_neon');
+            let s = localStorage.getItem('folkhem_hardcore_v9_design');
             if (s) Object.assign(data, JSON.parse(s));
             renderEverything();
         };
