@@ -3,99 +3,239 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bygg Folkhemmet - Klassisk Stil</title>
+    <title>Bygg Folkhemmet - Ultra Edition</title>
     <style>
         * { user-select: none; -webkit-user-select: none; box-sizing: border-box; font-family: 'Arial Black', sans-serif; }
-        body { background-color: #005293; color: #333; margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
         
+        @keyframes bgScroll {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body { 
+            background: linear-gradient(-45deg, #005293, #003d6e, #001f3f, #003d6e);
+            background-size: 400% 400%;
+            animation: bgScroll 15s ease infinite;
+            color: #333; 
+            margin: 0; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        
+        /* Neonram och skugga för paneler */
+        .neon-box {
+            box-shadow: 
+                0 0 10px rgba(254, 204, 0, 0.5),
+                0 0 20px rgba(254, 204, 0, 0.3),
+                0 0 30px rgba(254, 204, 0, 0.1),
+                inset 0 0 15px rgba(254, 204, 0, 0.2);
+        }
+
         .header { 
-            background: #fecc00; padding: 15px; text-align: center; 
-            border-bottom: 5px solid #005293; box-shadow: 0 5px 15px rgba(0,0,0,0.3); 
+            background: #fecc00; padding: 10px; text-align: center; 
+            border-bottom: 8px solid #005293; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5), 0 0 20px rgba(254, 204, 0, 0.6);
+            z-index: 10;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 3rem;
+            color: #005293;
+            text-shadow: 3px 3px 0px rgba(255,255,255,0.7), 0 0 10px rgba(0,82,147,0.4);
+        }
+        .header .stat-box {
+            display: inline-block;
+            background: #005293;
+            color: #fecc00;
+            padding: 5px 20px;
+            border-radius: 10px;
+            margin: 5px 10px;
+            border: 2px solid white;
         }
 
         .main-layout { 
-            display: grid; grid-template-columns: 320px 1fr 350px; 
-            gap: 20px; padding: 20px; flex-grow: 1; 
+            display: grid; 
+            grid-template-columns: 450px 1fr 450px; /* BREDADE BUTIK OCH UPPDRAG */
+            gap: 25px; padding: 25px; flex-grow: 1; 
+            max-width: 1800px; margin: 0 auto; width: 100%;
         }
 
         .panel { 
-            background: white; padding: 15px; border: 5px solid #fecc00; 
-            border-radius: 10px; height: fit-content;
+            background: rgba(255,255,255,0.95); 
+            padding: 20px; 
+            border: 6px solid #fecc00; 
+            border-radius: 20px; 
+            height: fit-content;
+            overflow: hidden;
+        }
+        .panel h3 {
+            text-align: center;
+            margin-top: 0;
+            color: #005293;
+            font-size: 2rem;
+            border-bottom: 4px solid #fecc00;
+            padding-bottom: 10px;
+            text-shadow: 2px 2px 0 white;
         }
 
         .center-area { 
             display: flex; flex-direction: column; align-items: center; 
-            justify-content: flex-start; padding-top: 30px;
+            justify-content: flex-start; padding-top: 40px;
         }
 
         .main-clicker { 
-            background: #fff; border: 10px solid #fecc00; width: 220px; height: 220px; 
+            background: #fff; border: 15px solid #fecc00; 
+            width: 250px; height: 250px; 
             border-radius: 50%; display: flex; flex-direction: column; 
             justify-content: center; align-items: center; cursor: pointer; 
-            box-shadow: 0 10px 0 #b38f00; transition: 0.05s; margin-bottom: 20px;
+            box-shadow: 0 15px 0 #b38f00, 0 0 30px rgba(254, 204, 0, 0.8); 
+            transition: 0.1s; margin-bottom: 25px;
         }
-        .main-clicker:active { transform: translateY(5px); box-shadow: 0 5px 0 #b38f00; }
+        .main-clicker:active { transform: translateY(8px); box-shadow: 0 7px 0 #b38f00, 0 0 15px rgba(254, 204, 0, 0.8); }
+        .main-clicker b { color: #005293; font-size: 1.5rem; text-shadow: 1px 1px 0 white; }
 
-        /* FIXADE KNAPPAR */
+        /* KNAPPAR */
         .buy-button { 
-            background: #f0f0f0; border: 3px solid #005293; padding: 8px 12px; margin: 6px 0; 
-            cursor: pointer; width: 100%; border-radius: 5px; font-family: inherit;
+            background: #f0f0f0; border: 4px solid #005293; 
+            padding: 10px 15px; margin: 8px 0; 
+            cursor: pointer; width: 100%; border-radius: 10px; font-family: inherit;
             display: block; text-align: left;
+            transition: 0.1s;
+            position: relative;
+            overflow: hidden;
         }
-        .buy-button.disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
-        .btn-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
-        .btn-sub { font-family: 'Arial', sans-serif; font-size: 0.75rem; color: #444; font-weight: bold; }
+        .buy-button:hover:not(.disabled) {
+            background: white;
+            border-color: #fecc00;
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(254, 204, 0, 0.6);
+        }
+        .buy-button.disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(0.8); }
+        .buy-button.disabled:hover { transform: none; box-shadow: none; border-color: #005293; }
 
-        .ach-card { background: #f9f9f9; border: 2px solid #005293; padding: 10px; margin-bottom: 10px; border-radius: 8px; }
-        .progress-container { background: #ddd; height: 12px; width: 100%; border-radius: 10px; margin-top: 5px; overflow: hidden; border: 1px solid #005293; }
-        .progress-bar { background: linear-gradient(90deg, #005293, #fecc00); height: 100%; width: 0%; transition: width 0.2s; }
+        .btn-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; font-size: 1.2rem;}
+        .btn-header b { color: #005293; text-shadow: 1px 1px 0 white; }
+        .btn-header span { color: #005293; background: #fecc00; padding: 2px 8px; border-radius: 5px; border: 1px solid #005293;}
+
+        .btn-sub { font-family: 'Arial', sans-serif; font-size: 0.85rem; color: #444; font-weight: bold; background: rgba(0,0,0,0.05); padding: 4px; border-radius: 4px;}
+
+        /* ACHIEVEMENTS */
+        .ach-card { 
+            background: #f9f9f9; border: 3px solid #005293; 
+            padding: 12px; margin-bottom: 15px; border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .ach-card b { font-size: 1.2rem; color: #005293; text-shadow: 1px 1px 0 white; }
+        
+        .ach-req-box {
+            font-family: 'Arial', sans-serif;
+            font-size: 0.9rem;
+            background: #e0e0e0;
+            padding: 5px;
+            border-radius: 5px;
+            margin-top: 5px;
+            border: 1px solid #999;
+            font-weight: bold;
+        }
+
+        @keyframes barStripes {
+            from { background-position: 40px 0; }
+            to { background-position: 0 0; }
+        }
+
+        .progress-container { 
+            background: #ddd; height: 18px; width: 100%; 
+            border-radius: 10px; margin-top: 8px; overflow: hidden; border: 2px solid #005293; 
+        }
+        .progress-bar { 
+            background-color: #fecc00;
+            background-image: linear-gradient(45deg, rgba(0,82,147, 0.3) 25%, transparent 25%, transparent 50%, rgba(0,82,147, 0.3) 50%, rgba(0,82,147, 0.3) 75%, transparent 75%, transparent);
+            background-size: 40px 40px;
+            animation: barStripes 2s linear infinite;
+            height: 100%; width: 0%; transition: width 0.3s ease-out; 
+        }
         
         .claim-btn { 
-            width: 100%; margin-top: 8px; padding: 8px; background: #666; 
-            border: 2px solid #444; color: white; font-weight: bold; cursor: not-allowed; border-radius: 4px; 
+            width: 100%; margin-top: 10px; padding: 12px; 
+            background: #666; border: 3px solid #444; 
+            color: white; font-weight: bold; font-size: 1.1rem;
+            cursor: not-allowed; border-radius: 8px; 
+            transition: 0.1s;
         }
-        .claim-btn.ready { background: #28a745; border-color: #1e7e34; cursor: pointer; animation: pulse 1s infinite; }
+        .claim-btn.ready { 
+            background: #28a745; border-color: #1e7e34; 
+            cursor: pointer; 
+            animation: pulse 1s infinite; 
+            box-shadow: 0 0 10px rgba(40, 167, 69, 0.6);
+        }
+        .claim-btn.ready:hover { transform: scale(1.03); background: #34ce57; }
+        .claim-btn.claimed { background: #005293 !important; border-color: #003d6e !important; cursor: default; box-shadow: none;}
 
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
-        .plus-one { position: absolute; color: #fecc00; font-weight: bold; font-size: 1.5rem; pointer-events: none; animation: fly 0.8s forwards; text-shadow: 2px 2px 0px #005293; z-index: 1000; }
-        @keyframes fly { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-100px); } }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.6); } 70% { box-shadow: 0 0 0 15px rgba(40, 167, 69, 0); } 100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); } }
+
+        .plus-one { 
+            position: absolute; color: #fecc00; font-weight: bold; font-size: 2rem; 
+            pointer-events: none; animation: fly 0.8s forwards; 
+            text-shadow: 3px 3px 0px #005293, 0 0 10px white; z-index: 1000; 
+        }
+        @keyframes fly { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-130px) scale(1.4); } }
+
+        .back-btn {
+            background:#333; color:white; padding:12px 25px; 
+            text-decoration:none; border:4px solid #fecc00; 
+            border-radius:10px; font-size: 1.1rem;
+            transition: 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .back-btn:hover { background: #fecc00; color: #005293; box-shadow: 0 0 15px rgba(254, 204, 0, 0.6); }
+
+        /* Scrollbar styling för panelerna */
+        .panel::-webkit-scrollbar { width: 10px; }
+        .panel::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 10px; }
+        .panel::-webkit-scrollbar-thumb { background: #005293; border-radius: 10px; border: 2px solid #fecc00; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>BYGG FOLKHEMMET 🇸🇪</h1>
-        <div style="font-size: 1.8rem;">Välfärd: <span id="money">0</span> kr</div>
-        <div style="font-size: 0.9rem;">+<span id="pps">0</span>/sek | +<span id="mpc">1</span>/klick</div>
+        <h1>BYGG FOLKHEMMET</h1>
+        <div class="stat-box" style="font-size: 1.5rem;">💰 Välfärd: <b><span id="money">0</span></b> kr</div>
+        <div>
+            <div class="stat-box">+<span id="pps">0</span>/sek</div>
+            <div class="stat-box">+<span id="mpc">1</span>/klick</div>
+        </div>
     </div>
 
     <div class="main-layout">
-        <div class="panel">
-            <h3 style="margin-top:0;">BUTIK</h3>
+        <div class="panel neon-box" style="max-height: 80vh; overflow-y: auto;">
+            <h3>BUTIK</h3>
             <button class="buy-button" id="hammer-btn" onclick="buyHammer()">
                 <div class="btn-header"><b>Hammare</b> <span><span id="hammer-cost">15</span> kr</span></div>
-                <div class="btn-sub">Mer kraft i varje klick</div>
+                <div class="btn-sub">Mera makt i varje klick</div>
             </button>
             <button class="buy-button" id="auto-btn" onclick="buyAuto()">
                 <div class="btn-header"><b>Auto-Klick</b> <span><span id="auto-cost">100</span> kr</span></div>
                 <div class="btn-sub">Klickar själv 1 gång/sek</div>
             </button>
-            <hr style="border: 1px solid #fecc00; margin: 15px 0;">
+            <hr style="border: 3px solid #fecc00; margin: 15px 0; border-radius: 3px;">
             <div id="building-list"></div>
         </div>
 
         <div class="center-area">
             <div class="main-clicker" onclick="doClick(event)">
-                <span style="font-size: 5rem;">🏠</span>
+                <span style="font-size: 6rem;">🏠</span>
                 <b>KLICKA!</b>
             </div>
-            <a href="games.html" style="background:#333; color:white; padding:10px; text-decoration:none; border:2px solid #fecc00; border-radius:5px;">TILLBAKA</a>
+            <a href="games.html" class="back-btn">TILLBAKA MENYN</a>
         </div>
 
-        <div class="panel">
-            <h3 style="margin-top:0;">UPPDRAG</h3>
+        <div class="panel neon-box" style="max-height: 80vh; overflow-y: auto;">
+            <h3>UPPDRAG</h3>
             <div id="ach-license-area">
-                <button class="buy-button" onclick="buyLicense()" style="background:#fecc00; text-align:center;"><b>LÅS UPP JIMMIE (1000 kr)</b></button>
+                <p style="font-family: Arial, sans-serif; font-weight: bold; text-align: center;">Lås upp Jimmie för att få tillgång till speciella uppdrag och bonusar.</p>
+                <button class="buy-button" onclick="buyLicense()" style="background:#fecc00; text-align:center; box-shadow: 0 0 10px rgba(0,0,0,0.3);"><b>LÅS UPP JIMMIE (1000 kr)</b></button>
             </div>
             <div id="ach-container"></div>
         </div>
@@ -106,7 +246,7 @@
             money: 0, clicks: 0, mpc: 1, autoClicks: 0,
             hammerPrice: 15, autoPrice: 100,
             hasLicense: false,
-            achLevels: { click: 0, money: 0, b0: 0 },
+            achLevels: { click: 0, money: 0, b0: 0, b1: 0, b2: 0, b3: 0 },
             bCounts: [0, 0, 0, 0, 0, 0, 0],
             bCosts: [15, 100, 500, 2500, 15000, 100000, 1000000]
         };
@@ -118,10 +258,30 @@
             { name: "Välfärdsstat", inc: 15000 }
         ];
 
+        // Achievement-kedjor med tydliga krav och belöningar
         const achChains = {
-            click: [{ t: "Klick-start", target: 50, reward: 500 }, { t: "Klick-maskin", target: 500, reward: 5000 }],
-            money: [{ t: "Småsparare", target: 5000, reward: 1000 }, { t: "Miljonär", target: 1000000, reward: 200000 }],
-            b0: [{ t: "Stugby", target: 10, reward: 500 }, { t: "Småland", target: 50, reward: 10000 }]
+            click: [
+                { t: "Klick-start", target: 50, reward: 500, req: "Klicka 50 gånger" },
+                { t: "Klick-maskin", target: 500, reward: 5000, req: "Klicka 500 gånger" },
+                { t: "Klick-legend", target: 5000, reward: 50000, req: "Klicka 5000 gånger" }
+            ],
+            money: [
+                { t: "Småsparare", target: 5000, reward: 1000, req: "Ha 5 000 kr på kontot" },
+                { t: "Riksbankschef", target: 100000, reward: 20000, req: "Ha 100 000 kr på kontot" },
+                { t: "Miljonär", target: 1000000, reward: 200000, req: "Ha 1 000 000 kr på kontot" }
+            ],
+            b0: [
+                { t: "Stugby", target: 10, reward: 500, req: "Bygg 10 Röda Stugor" },
+                { t: "Smålands-kung", target: 50, reward: 10000, req: "Bygg 50 Röda Stugor" }
+            ],
+            b1: [
+                { t: "Bostads-fixare", target: 10, reward: 2500, req: "Bygg 10 Hyreshus" },
+                { t: "Miljonprogrammet", target: 50, reward: 50000, req: "Bygg 50 Hyreshus" }
+            ],
+            b3: [
+                { t: "Industri-ägare", target: 5, reward: 10000, req: "Bygg 5 Industrier" },
+                { t: "Produktions-chef", target: 20, reward: 100000, req: "Bygg 20 Industrier" }
+            ]
         };
 
         function getProduction(id) {
@@ -191,13 +351,15 @@
             document.getElementById("money").innerText = Math.floor(data.money).toLocaleString();
             document.getElementById("mpc").innerText = data.mpc;
             document.getElementById("pps").innerText = Math.floor(getTotalPPS()).toLocaleString();
+            
             document.getElementById("hammer-btn").classList.toggle("disabled", data.money < data.hammerPrice);
             document.getElementById("auto-btn").classList.toggle("disabled", data.money < data.autoPrice);
+            
             for(let i=0; i<buildings.length; i++) {
                 const btn = document.getElementById("build-"+i);
                 if(btn) btn.classList.toggle("disabled", data.money < data.bCosts[i]);
             }
-            localStorage.setItem('folkhem_save_final', JSON.stringify(data));
+            localStorage.setItem('folkhem_save_final_ultra', JSON.stringify(data));
         }
 
         function renderEverything() {
@@ -208,10 +370,11 @@
                 bHtml += `
                     <button class="buy-button" id="build-${i}" onclick="buyBuilding(${i})">
                         <div class="btn-header"><b>${b.name} (${data.bCounts[i]})</b> <span>${data.bCosts[i].toLocaleString()} kr</span></div>
-                        <div class="btn-sub">Ger just nu: ${getProduction(i).toFixed(1)}/sek</div>
+                        <div class="btn-sub">Ger just nu: ${getProduction(i).toFixed(1)}/sek styck</div>
                     </button>`;
             });
             document.getElementById("building-list").innerHTML = bHtml;
+
             document.getElementById("ach-license-area").style.display = data.hasLicense ? "none" : "block";
             if (data.hasLicense) {
                 let html = "";
@@ -220,27 +383,37 @@
                     if (level < achChains[type].length) {
                         const ach = achChains[type][level];
                         const val = getValByType(type);
+                        const isReady = val >= ach.target;
+                        
                         html += `
-                            <div class="ach-card">
-                                <div style="font-size:0.9rem;"><b>${ach.t}</b></div>
-                                <div class="progress-container"><div class="progress-bar" style="width: ${Math.min(100, (val/ach.target)*100)}%"></div></div>
-                                <button class="claim-btn ${val >= ach.target ? 'ready' : ''}" onclick="claimAch('${type}')">${val >= ach.target ? 'HÄMTA ' + ach.reward + ' kr' : 'LÅST'}</button>
+                            <div class="ach-card neon-box">
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <b>${ach.t}</b>
+                                    <span style="font-family:Arial; font-weight:bold; color:#28a745; background:rgba(40,167,69,0.1); padding:2px 6px; border-radius:5px;">+${ach.reward.toLocaleString()} kr</span>
+                                </div>
+                                <div class="ach-req-box">Krav: ${ach.req}</div>
+                                <div class="progress-container"><div id="bar-${type}" class="progress-bar" style="width: ${Math.min(100, (val/ach.target)*100)}%"></div></div>
+                                <div id="text-${type}" style="font-family:Arial; font-size:0.8rem; font-weight:bold; text-align:right; margin-top:2px;">${Math.floor(val).toLocaleString()} / ${ach.target.toLocaleString()}</div>
+                                <button id="btn-${type}" class="claim-btn ${isReady ? 'ready' : ''}" onclick="claimAch('${type}')">
+                                    ${isReady ? 'HÄMTA BELÖNING' : 'LÅST'}
+                                </button>
                             </div>`;
                     }
                 });
-                document.getElementById("ach-container").innerHTML = html;
+                document.getElementById("ach-container").innerHTML = html || "<p style='text-align:center; font-weight:bold; color:#005293;'>Alla uppdrag slutförda! Bra jobbat för Folkhemmet!</p>";
             }
             updateNumbersOnly();
         }
 
         setInterval(() => {
-            data.money += getTotalPPS() / 10;
+            let pps = getTotalPPS();
+            data.money += pps / 10;
             if(data.autoClicks > 0) data.money += (data.autoClicks * data.mpc) / 10;
             updateNumbersOnly();
         }, 100);
 
         window.onload = () => {
-            let s = localStorage.getItem('folkhem_save_final');
+            let s = localStorage.getItem('folkhem_save_final_ultra');
             if (s) Object.assign(data, JSON.parse(s));
             renderEverything();
         };
