@@ -48,7 +48,6 @@
             text-shadow: 3px 3px 0px rgba(255,255,255,0.7), 0 0 15px rgba(0,82,147,0.4);
         }
 
-        /* Pengar - Centrerad och snygg */
         .money-display {
             background: #005293;
             color: #fecc00;
@@ -62,7 +61,6 @@
             text-shadow: 2px 2px 0px rgba(0,0,0,0.2);
         }
         
-        /* Centrerad stat-container */
         .stat-container {
             display: flex;
             justify-content: center;
@@ -80,7 +78,6 @@
             font-size: 1.1rem;
         }
 
-        /* LAYOUT */
         .main-layout { 
             display: grid; 
             grid-template-columns: 450px 1fr 450px; 
@@ -328,39 +325,58 @@
         const achChains = {
             click: [
                 { t: "Kom igång!", target: 10, reward: 50, req: "10 klick" },
-                { t: "Finger-gympa", target: 100, reward: 500, req: "100 klick" },
-                { t: "Klick-Proffs", target: 1000, reward: 10000, req: "1 000 klick" },
-                { t: "Maraton-klickaren", target: 5000, reward: 75000, req: "5 000 klick" },
-                { t: "Legendarisk Klickare", target: 25000, reward: 1000000, req: "25 000 klick" },
+                { t: "Klick-lärling", target: 50, reward: 250, req: "50 klick" },
+                { t: "Finger-gympa", target: 150, reward: 1000, req: "150 klick" },
+                { t: "Snabb i fingrarna", target: 400, reward: 3500, req: "400 klick" },
+                { t: "Klick-Proffs", target: 1000, reward: 12000, req: "1 000 klick" },
+                { t: "Klick-maraton", target: 2500, reward: 40000, req: "2 500 klick" },
+                { t: "Maraton-klickaren", target: 5000, reward: 100000, req: "5 000 klick" },
+                { t: "Klick-elit", target: 12000, reward: 500000, req: "12 000 klick" },
+                { t: "Legendarisk Klickare", target: 35000, reward: 2000000, req: "35 000 klick" },
                 { t: "Klick-Gud", target: 100000, reward: 50000000, req: "100 000 klick" }
             ],
             money: [
-                { t: "Småsparare", target: 1000, reward: 200, req: "Ha 1 000 kr" },
-                { t: "Kapitalist", target: 100000, reward: 25000, req: "Ha 100 000 kr" },
-                { t: "Välfärds-magnat", target: 1000000, reward: 250000, req: "Ha 1 000 000 kr" },
-                { t: "Miljardär", target: 1000000000, reward: 250000000, req: "Ha 1 miljard" },
-                { t: "Statsskassan", target: 100000000000, reward: 10000000000, req: "Ha 100 miljarder" }
+                { t: "En hundring", target: 100, reward: 50, req: "Ha 100 kr" },
+                { t: "Veckopeng", target: 1000, reward: 300, req: "Ha 1 000 kr" },
+                { t: "Spara i ladorna", target: 5000, reward: 1500, req: "Ha 5 000 kr" },
+                { t: "Första lönen", target: 20000, reward: 6000, req: "Ha 20 000 kr" },
+                { t: "Kapitalist", target: 100000, reward: 35000, req: "Ha 100 000 kr" },
+                { t: "Förmögen", target: 400000, reward: 120000, req: "Ha 400 000 kr" },
+                { t: "Välfärds-magnat", target: 1500000, reward: 400000, req: "Ha 1.5 milj kr" },
+                { t: "Miljonär-klubben", target: 10000000, reward: 2500000, req: "Ha 10 milj kr" },
+                { t: "Miljardär", target: 1000000000, reward: 300000000, req: "Ha 1 miljard" },
+                { t: "Statsskassan", target: 100000000000, reward: 20000000000, req: "Ha 100 miljarder" }
             ],
             b0: [
                 { t: "En röd vägg", target: 1, reward: 100, req: "1 Röd Stuga" },
-                { t: "Stugby", target: 25, reward: 5000, req: "25 Röda Stugor" },
-                { t: "Folkhems-entusiast", target: 100, reward: 150000, req: "100 Röda Stugor" },
-                { t: "Småstads-kung", target: 250, reward: 2000000, req: "250 Röda Stugor" }
+                { t: "Litet kvarter", target: 10, reward: 1500, req: "10 Röda Stugor" },
+                { t: "Stugby", target: 30, reward: 7500, req: "30 Röda Stugor" },
+                { t: "Folkhems-entusiast", target: 75, reward: 50000, req: "75 Röda Stugor" },
+                { t: "Småstads-kung", target: 150, reward: 250000, req: "150 Röda Stugor" },
+                { t: "Stug-imperiet", target: 300, reward: 2000000, req: "300 Röda Stugor" },
+                { t: "Röda havet", target: 1000, reward: 100000000, req: "1 000 Röda Stugor" }
             ],
             total: [
                 { t: "Byggstart", target: 1, reward: 50, req: "1 byggnad" },
-                { t: "Samhällsbyggare", target: 50, reward: 20000, req: "50 byggnader" },
-                { t: "Metropol", target: 250, reward: 500000, req: "250 byggnader" },
-                { t: "Urbaniserad", target: 1000, reward: 10000000, req: "1 000 byggnader" },
-                { t: "Betong-imperiet", target: 5000, reward: 500000000, req: "5 000 byggnader" }
+                { t: "Första gatan", target: 15, reward: 2000, req: "15 byggnader" },
+                { t: "Samhällsbyggare", target: 50, reward: 25000, req: "50 byggnader" },
+                { t: "Bygg-boss", target: 125, reward: 80000, req: "125 byggnader" },
+                { t: "Metropol", target: 300, reward: 600000, req: "300 byggnader" },
+                { t: "Urbaniserad", target: 800, reward: 4000000, req: "800 byggnader" },
+                { t: "Sverige-byggaren", target: 2000, reward: 50000000, req: "2 000 byggnader" },
+                { t: "Betong-imperiet", target: 6000, reward: 800000000, req: "6 000 byggnader" }
             ],
             secret: [
-                { t: "Falukorvs-fest", target: 10, targetType: "b1", reward: 10000, req: "10 Hyreshus" },
+                { t: "Flyttlasset", target: 5, targetType: "b1", reward: 2500, req: "5 Hyreshus" },
+                { t: "Falukorvs-fest", target: 15, targetType: "b1", reward: 15000, req: "15 Hyreshus" },
+                { t: "Vårdköer borta", target: 8, targetType: "b2", reward: 60000, req: "8 Sjukhus" },
                 { t: "Stordrift", target: 20, targetType: "b3", reward: 500000, req: "20 Industrier" },
-                { t: "Atomvinter?", target: 10, targetType: "b5", reward: 15000000, req: "10 Kärnkraftverk" },
-                { t: "Galaktisk Välfärd", target: 5, targetType: "b7", reward: 500000000, req: "5 Rymdprogram" },
-                { t: "Sverigevän", target: 1, targetType: "b10", reward: 2000000000, req: "1 SD-Högkvarter" },
-                { t: "Ultimat Samhälle", target: 10, targetType: "b10", reward: 50000000000, req: "10 SD-Högkvarter" }
+                { t: "Professor", target: 12, targetType: "b4", reward: 3000000, req: "12 Universitet" },
+                { t: "Atomvinter?", target: 10, targetType: "b5", reward: 20000000, req: "10 Kärnkraftverk" },
+                { t: "Svensk välfärd", target: 10, targetType: "b6", reward: 150000000, req: "10 Välfärdsstater" },
+                { t: "Galaktisk Välfärd", target: 5, targetType: "b7", reward: 600000000, req: "5 Rymdprogram" },
+                { t: "Sverigevän", target: 1, targetType: "b10", reward: 2500000000, req: "1 SD-Högkvarter" },
+                { t: "Ultimat Samhälle", target: 10, targetType: "b10", reward: 60000000000, req: "10 SD-Högkvarter" }
             ]
         };
 
