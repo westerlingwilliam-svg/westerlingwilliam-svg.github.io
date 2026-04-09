@@ -30,7 +30,7 @@
         .header {
             background: rgba(0, 82, 147, 0.8);
             backdrop-filter: blur(10px);
-            padding: 20px 40px;
+            padding: 15px 40px;
             display: grid;
             grid-template-columns: 1fr auto 1fr;
             align-items: center;
@@ -39,137 +39,90 @@
             z-index: 100;
         }
 
-        .stats-left div { margin-bottom: 5px; }
         .stats-left b { color: var(--sd-gold); font-size: 1.4rem; }
 
-        /* DET STORA LUCKY BLOCKET */
-        .block-container {
-            position: relative;
-            perspective: 1000px;
-        }
-
+        /* LUCKY BLOCK */
+        .block-container { text-align: center; }
         #lucky-block {
-            width: 140px; height: 140px; /* Mycket större */
+            width: 130px; height: 130px;
             background: var(--sd-gold);
             border-radius: 20px;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 5rem;
-            color: var(--sd-blue);
+            justify-content: center; align-items: center;
+            font-size: 5rem; color: var(--sd-blue);
             cursor: pointer;
-            box-shadow: 0 10px 0 #b38f00, 0 0 40px rgba(254, 204, 0, 0.4);
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 0 #b38f00, 0 0 30px rgba(254, 204, 0, 0.3);
+            transition: 0.1s;
             animation: pulse 2s infinite;
             user-select: none;
+            margin: 0 auto;
         }
-
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 10px 0 #b38f00, 0 0 20px rgba(254, 204, 0, 0.3); }
-            50% { transform: scale(1.05); box-shadow: 0 10px 0 #b38f00, 0 0 50px rgba(254, 204, 0, 0.6); }
-            100% { transform: scale(1); box-shadow: 0 10px 0 #b38f00, 0 0 20px rgba(254, 204, 0, 0.3); }
-        }
-
         #lucky-block:active { transform: translateY(8px) scale(0.95); box-shadow: 0 2px 0 #b38f00; }
-        .block-price { font-weight: 900; margin-top: 10px; font-size: 1.1rem; color: var(--sd-gold); text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-
-        /* SPELYTA */
-        .game-area { display: flex; flex: 1; overflow: hidden; }
-
-        /* STADEN - EN RAD MINDRE (5 rader istället för 6) */
-        #city-grid {
-            flex: 3;
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            grid-template-rows: repeat(5, 1fr); /* En rad mindre på höjden */
-            gap: 15px;
-            padding: 30px;
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
         }
 
+        /* UPGRADES SECTION */
+        .upgrade-block-btn {
+            background: #00ff99;
+            color: #001a33;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 900;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            box-shadow: 0 4px 0 #009966;
+        }
+        .upgrade-block-btn:disabled { background: #555; box-shadow: none; cursor: not-allowed; }
+
+        /* GAME AREA */
+        .game-area { display: flex; flex: 1; overflow: hidden; }
+        #city-grid {
+            flex: 3; display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 12px; padding: 25px;
+        }
         .slot {
             background: rgba(0,0,0,0.2);
             border: 2px solid rgba(255,255,255,0.05);
             border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            transition: 0.3s;
-        }
-
-        .slot:hover { background: rgba(255,255,255,0.05); border-color: var(--sd-gold); }
-        
-        /* INKOMST-TEXT I RUTAN */
-        .income-tag {
-            font-size: 0.75rem;
-            background: rgba(0, 255, 153, 0.2);
-            color: #00ff99;
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-top: 5px;
-            font-weight: bold;
-        }
-
-        .slot-icon { font-size: 3rem; }
-
-        /* SIDEBAR INVENTORY */
-        .sidebar {
-            flex: 1;
-            background: rgba(0, 20, 40, 0.8);
-            border-left: 1px solid rgba(254, 204, 0, 0.2);
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .inv-item {
-            background: var(--glass);
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            border: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
             transition: 0.2s;
         }
+        .income-tag { font-size: 0.75rem; color: #00ff99; font-weight: bold; margin-top: 5px; }
 
-        .inv-item:hover { border-color: var(--sd-gold); background: rgba(255,255,255,0.1); }
-
+        /* SIDEBAR */
+        .sidebar {
+            flex: 1; background: rgba(0, 20, 40, 0.8);
+            border-left: 1px solid rgba(254, 204, 0, 0.2);
+            padding: 20px; display: flex; flex-direction: column;
+        }
+        .inv-item {
+            background: var(--glass); padding: 12px;
+            border-radius: 10px; margin-bottom: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex; justify-content: space-between; align-items: center;
+        }
         .place-btn {
-            background: var(--sd-gold);
-            color: var(--sd-blue);
-            border: none;
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-weight: 900;
-            cursor: pointer;
-            box-shadow: 0 4px 0 #b38f00;
+            background: var(--sd-gold); color: var(--sd-blue);
+            border: none; padding: 8px 12px; border-radius: 5px;
+            font-weight: 900; cursor: pointer;
         }
 
-        .place-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #b38f00; }
-
-        /* NOTIFICATIONS */
+        /* MSG */
         #game-msg {
-            position: fixed;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--sd-blue);
-            color: white;
-            padding: 15px 40px;
-            border-radius: 15px;
-            border: 2px solid var(--sd-gold);
-            font-weight: bold;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            opacity: 0;
-            transition: 0.3s;
-            pointer-events: none;
+            position: fixed; bottom: 30px; left: 50%;
+            transform: translateX(-50%); background: var(--sd-blue);
+            padding: 12px 30px; border-radius: 10px; border: 2px solid var(--sd-gold);
+            opacity: 0; transition: 0.3s; z-index: 1000;
         }
-        .show-msg { opacity: 1 !important; bottom: 60px !important; }
-
-        .highlight { border-color: #00ff99 !important; box-shadow: 0 0 20px rgba(0,255,153,0.2); }
+        .show-msg { opacity: 1 !important; }
+        .highlight { border-color: #00ff99 !important; box-shadow: 0 0 15px rgba(0,255,153,0.3); }
     </style>
 </head>
 <body>
@@ -177,24 +130,25 @@
 <div class="header">
     <div class="stats-left">
         <div>KONTO: <b id="money">500</b> KR</div>
-        <div>PRODUKTION: <b id="pps">0</b> KR/S</div>
+        <div>INKOMST: <b id="pps">0</b> KR/S</div>
     </div>
 
     <div class="block-container">
         <div id="lucky-block">?</div>
-        <div class="block-center block-price">PRIS: <span id="block-cost">250</span> KR</div>
+        <div style="font-size: 0.8rem; margin-top:5px;">ÖPPNA: <span id="block-cost">250</span> KR</div>
+        <button id="upg-luck-btn" class="upgrade-block-btn" onclick="upgradeLuck()">UPPGRADERA TUR (Lv <span id="luck-lv">1</span>): <span id="upg-cost">1000</span> KR</button>
     </div>
 
     <div style="text-align: right;">
-        <a href="games.html" style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.9rem;">[ Tillbaka ]</a>
+        <button onclick="resetGame()" style="background:none; border:none; color:rgba(255,255,255,0.3); cursor:pointer;">[ Reset ]</button>
+        <a href="games.html" style="color: white; text-decoration: none; margin-left:10px;">[ Avsluta ]</a>
     </div>
 </div>
 
 <div class="game-area">
     <div id="city-grid"></div>
-
     <div class="sidebar">
-        <h2 style="margin-top:0; border-bottom: 2px solid var(--sd-gold); padding-bottom: 10px;">INVENTORY</h2>
+        <h2 style="margin:0 0 15px 0; font-size: 1.2rem; color: var(--sd-gold);">DITT INVENTORY</h2>
         <div id="inventory" style="overflow-y: auto;"></div>
     </div>
 </div>
@@ -202,21 +156,51 @@
 <div id="game-msg">Meddelande</div>
 
 <script>
+    // --- DATA & STATE ---
     let money = 500;
     let blockCost = 250;
-    let selectedInvIndex = null;
-    let incomePerSecond = 0;
+    let luckLevel = 1;
+    let upgCost = 1000;
     let inventory = [];
-    let cityData = Array(30).fill(null); // 6x5 istället för 6x6
+    let cityData = Array(30).fill(null);
+    let selectedInvIndex = null;
 
     const buildings = [
-        { name: "Röd Stuga", icon: "🏠", rarity: "Common", income: 10, chance: 0.6, color: "#b5b5b5" },
-        { name: "Hyreshus", icon: "🏢", rarity: "Rare", income: 50, chance: 0.3, color: "#4facfe" },
-        { name: "Kärnkraftverk", icon: "⚛️", rarity: "Epic", income: 250, chance: 0.08, color: "#a335ee" },
-        { name: "Guld-Slott", icon: "🏰", rarity: "Legendary", income: 1500, chance: 0.02, color: "#ff8000" }
+        { name: "Röd Stuga", icon: "🏠", rarity: "Common", income: 10, color: "#b5b5b5", baseChance: 0.65 },
+        { name: "Hyreshus", icon: "🏢", rarity: "Rare", income: 50, color: "#4facfe", baseChance: 0.25 },
+        { name: "Kärnkraftverk", icon: "⚛️", rarity: "Epic", income: 250, color: "#a335ee", baseChance: 0.08 },
+        { name: "Guld-Slott", icon: "🏰", rarity: "Legendary", income: 1500, color: "#ff8000", baseChance: 0.02 }
     ];
 
-    // Skapa stadens yta (6 kolumner x 5 rader = 30 rutor)
+    // --- SAVE / LOAD SYSTEM ---
+    function saveGame() {
+        const gameData = {
+            money, blockCost, luckLevel, upgCost, inventory, cityData
+        };
+        localStorage.setItem('valfard_save', JSON.stringify(gameData));
+    }
+
+    function loadGame() {
+        const saved = localStorage.getItem('valfard_save');
+        if (saved) {
+            const data = JSON.parse(saved);
+            money = data.money;
+            blockCost = data.blockCost;
+            luckLevel = data.luckLevel;
+            upgCost = data.upgCost;
+            inventory = data.inventory;
+            cityData = data.cityData;
+        }
+    }
+
+    function resetGame() {
+        if(confirm("Vill du verkligen nollställa allt?")) {
+            localStorage.removeItem('valfard_save');
+            location.reload();
+        }
+    }
+
+    // --- GAME LOGIC ---
     const grid = document.getElementById('city-grid');
     for (let i = 0; i < 30; i++) {
         const slot = document.createElement('div');
@@ -230,26 +214,43 @@
             money -= blockCost;
             blockCost = Math.ceil(blockCost * 1.12);
             
-            const rand = Math.random();
-            let cumulative = 0;
-            let wonItem = buildings[0];
+            // Beräkna chanser baserat på Luck Level
+            // För varje level minskar vi Common-chansen och ökar de andra
+            let commonChance = Math.max(0, 0.65 - (luckLevel - 1) * 0.15);
+            let rareChance = 0.25 + (luckLevel - 1) * 0.05;
+            let epicChance = 0.08 + (luckLevel - 1) * 0.07;
+            let legendaryChance = 0.02 + (luckLevel - 1) * 0.03;
 
-            for (const b of buildings) {
-                cumulative += b.chance;
-                if (rand < cumulative) {
-                    wonItem = { ...b, id: Date.now() };
-                    break;
-                }
-            }
+            const rand = Math.random();
+            let wonItem;
             
-            inventory.push(wonItem);
-            showMessage(`LUCKY! Du fick: ${wonItem.name} (${wonItem.icon})`);
+            if (rand < legendaryChance) wonItem = buildings[3];
+            else if (rand < legendaryChance + epicChance) wonItem = buildings[2];
+            else if (rand < legendaryChance + epicChance + rareChance) wonItem = buildings[1];
+            else wonItem = buildings[0];
+
+            inventory.push({ ...wonItem, id: Date.now() });
+            showMessage(`LUCKY! Du fick: ${wonItem.name}`);
             renderInventory();
             updateUI();
+            saveGame();
         } else {
-            showMessage("⚠️ Du behöver mer pengar för att köpa ett block!");
+            showMessage("⚠️ Inte tillräckligt med pengar!");
         }
     };
+
+    function upgradeLuck() {
+        if (money >= upgCost) {
+            money -= upgCost;
+            luckLevel++;
+            upgCost = Math.ceil(upgCost * 2.5);
+            showMessage(`TUR UPPGRADERAD! Nivå ${luckLevel}`);
+            updateUI();
+            saveGame();
+        } else {
+            showMessage("⚠️ Du har inte råd med uppgraderingen!");
+        }
+    }
 
     function showMessage(text) {
         const msg = document.getElementById('game-msg');
@@ -264,12 +265,9 @@
         inventory.forEach((item, index) => {
             const div = document.createElement('div');
             div.className = 'inv-item';
-            div.style.borderLeft = `5px solid ${item.color}`;
+            div.style.borderLeft = `4px solid ${item.color}`;
             div.innerHTML = `
-                <div>
-                    <span style="font-size: 1.2rem;">${item.icon}</span> <b>${item.name}</b><br>
-                    <small style="color:${item.color}">${item.rarity} (+${item.income}/s)</small>
-                </div>
+                <div><b>${item.icon} ${item.name}</b><br><small>+${item.income}/s</small></div>
                 <button class="place-btn" onclick="preparePlacement(${index})">BYGG</button>
             `;
             invEl.appendChild(div);
@@ -278,7 +276,7 @@
 
     function preparePlacement(index) {
         selectedInvIndex = index;
-        showMessage("Klicka på en ledig yta i staden för att bygga!");
+        showMessage("Välj en ruta i staden!");
         const slots = document.getElementsByClassName('slot');
         for (let s of slots) { if (!s.dataset.occupied) s.classList.add('highlight'); }
     }
@@ -288,13 +286,12 @@
             cityData[slotIndex] = inventory[selectedInvIndex];
             inventory.splice(selectedInvIndex, 1);
             selectedInvIndex = null;
-            
             const slots = document.getElementsByClassName('slot');
             for (let s of slots) s.classList.remove('highlight');
-            
             renderCity();
             renderInventory();
-            calculateIncome();
+            updateUI();
+            saveGame();
         }
     }
 
@@ -302,10 +299,7 @@
         const slots = document.getElementsByClassName('slot');
         cityData.forEach((data, i) => {
             if (data) {
-                slots[i].innerHTML = `
-                    <div class="slot-icon">${data.icon}</div>
-                    <div class="income-tag">+${data.income}/s</div>
-                `;
+                slots[i].innerHTML = `<div style="font-size:2.5rem">${data.icon}</div><div class="income-tag">+${data.income}/s</div>`;
                 slots[i].dataset.occupied = "true";
                 slots[i].style.background = "rgba(255,255,255,0.08)";
             } else {
@@ -316,21 +310,27 @@
         });
     }
 
-    function calculateIncome() {
-        incomePerSecond = cityData.reduce((total, b) => total + (b ? b.income : 0), 0);
-        document.getElementById('pps').innerText = incomePerSecond;
-    }
-
     function updateUI() {
         document.getElementById('money').innerText = Math.floor(money).toLocaleString();
+        document.getElementById('pps').innerText = cityData.reduce((t, b) => t + (b ? b.income : 0), 0).toLocaleString();
         document.getElementById('block-cost').innerText = blockCost.toLocaleString();
+        document.getElementById('luck-lv').innerText = luckLevel;
+        document.getElementById('upg-cost').innerText = upgCost.toLocaleString();
+        document.getElementById('upg-luck-btn').disabled = (money < upgCost);
     }
 
+    // Gameloop
     setInterval(() => {
-        money += incomePerSecond;
+        const income = cityData.reduce((t, b) => t + (b ? b.income : 0), 0);
+        money += income;
         updateUI();
+        if (income > 0) saveGame(); // Spara automatiskt när man tjänar pengar
     }, 1000);
 
+    // Start
+    loadGame();
+    renderCity();
+    renderInventory();
     updateUI();
 </script>
 
