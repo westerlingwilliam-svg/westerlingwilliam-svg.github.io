@@ -275,9 +275,10 @@
         }
         .close-modal {
             float: right;
-            font-size: 2rem;
+            font-size: 2.5rem;
             cursor: pointer;
             color: #005293;
+            line-height: 1;
         }
     </style>
 </head>
@@ -302,7 +303,7 @@
         <div class="modal-content">
             <span class="close-modal" onclick="toggleModal(false)">&times;</span>
             <h2 style="color: #005293; text-align: center; font-size: 2rem;">TEKNISKA FRAMSTEG</h2>
-            <p style="text-align: center; color: #666;">Investera i nationens framtid.</p>
+            <p style="text-align: center; color: #666;">Investera i nationens framtida välstånd.</p>
             <hr>
             <div id="tech-list"></div>
         </div>
@@ -312,15 +313,15 @@
         <div class="panel">
             <h3>BUTIK</h3>
             <div class="scroll-content">
-                <div class="shop-section-title">Uppgraderingar</div>
+                <div class="shop-section-title">Grundläggande</div>
                 <div id="essentials">
                     <button class="buy-button" id="hammer-btn" onclick="buyHammer()">
                         <div class="btn-header"><b>Hammare</b> <div class="price-tag"><span id="hammer-cost">15</span> kr</div></div>
-                        <div class="btn-sub">Ökar klickstyrkan baserat på produktion.</div>
+                        <div class="btn-sub">Ökar klickstyrkan baserat på din totala produktion.</div>
                     </button>
                     <button class="buy-button" id="auto-btn" onclick="buyAuto()">
                         <div class="btn-header"><b>Auto-Klick</b> <div class="price-tag"><span id="auto-cost">100</span> kr</div></div>
-                        <div class="btn-sub">Automatiska klick varje sekund.</div>
+                        <div class="btn-sub">Dina klick utförs automatiskt varje sekund.</div>
                     </button>
                 </div>
                 
@@ -355,7 +356,7 @@
     </div>
 
     <script>
-        const STORAGE_KEY = 'folkhem_hardcore_v10';
+        const STORAGE_KEY = 'folkhem_hardcore_v11';
 
         let data = {
             money: 0, clicks: 0, mpc: 1, autoClicks: 0,
@@ -369,7 +370,7 @@
             hasHeld5s: false,
             shopDiscount: 0,
             buildingEfficiency: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            buttonType: "default"
+            ownedTech: []
         };
 
         const buildings = [
@@ -381,17 +382,19 @@
             { name: "SD-Högkvarteret 🌸", inc: 10000000 }
         ];
 
+        // --- HÄR ÄR DINA UPPGRADERINGAR ---
         const techUpgrades = [
             { id: "disc1", name: "Bygglovs-rabatt", desc: "Sänker alla priser i butiken med 10%", cost: 10000, type: "discount", val: 0.1 },
-            { id: "disc2", name: "Massproduktion", desc: "Sänker alla priser ytterligare 15%", cost: 500000, type: "discount", val: 0.15 },
+            { id: "disc2", name: "Statlig Subvention", desc: "Sänker alla priser ytterligare 15%", cost: 500000, type: "discount", val: 0.15 },
             { id: "eff0", name: "Isolering", desc: "Röda stugor ger 50% mer vinst", cost: 5000, type: "eff", target: 0, val: 1.5 },
             { id: "eff1", name: "Fler våningar", desc: "Hyreshus ger 50% mer vinst", cost: 25000, type: "eff", target: 1, val: 1.5 },
             { id: "eff2", name: "Robotkirurgi", desc: "Sjukhus ger 50% mer vinst", cost: 100000, type: "eff", target: 2, val: 1.5 },
+            { id: "eff3", name: "Löpande Band", desc: "Industrier ger 50% mer vinst", cost: 500000, type: "eff", target: 3, val: 1.5 },
+            { id: "eff5", name: "Fjärde Reaktor", desc: "Kärnkraft ger 100% mer vinst", cost: 10000000, type: "eff", target: 5, val: 2.0 },
             { id: "btn_gold", name: "Gyllene Knappen", desc: "Byt utseende på knappen", cost: 50000, type: "skin", icon: "🪙", text: "GULD", color: "#FFD700" },
-            { id: "btn_neon", name: "Cyber-Knappen", desc: "Sverige 2.0 utseende", cost: 1000000, type: "skin", icon: "⚡", text: "CYBER", color: "#00f2ff" }
+            { id: "btn_neon", name: "Cyber-Knappen", desc: "Framtids-look för Sverige 2.0", cost: 1000000, type: "skin", icon: "⚡", text: "CYBER", color: "#00f2ff" },
+            { id: "btn_sd", name: "Sverigevän-Knappen", desc: "Knappen för det sanna folkhemmet", cost: 50000000, type: "skin", icon: "🌸", text: "SVERIGE", color: "#005293" }
         ];
-        
-        let ownedTech = [];
 
         function toggleModal(show) {
             document.getElementById("upgradeModal").style.display = show ? "block" : "none";
@@ -400,9 +403,11 @@
 
         function buyTech(techId) {
             const tech = techUpgrades.find(t => t.id === techId);
-            if(data.money >= tech.cost && !ownedTech.includes(techId)) {
+            if(data.money >= tech.cost && !data.ownedTech.includes(techId)) {
                 data.money -= tech.cost;
-                ownedTech.push(techId);
+                data.ownedTech.push(techId);
+                
+                // Applicera effekter
                 if(tech.type === "discount") data.shopDiscount += tech.val;
                 if(tech.type === "eff") data.buildingEfficiency[tech.target] *= tech.val;
                 if(tech.type === "skin") {
@@ -410,6 +415,7 @@
                     document.getElementById("clicker-text").innerText = tech.text;
                     document.getElementById("clicker-visual").style.borderColor = tech.color;
                 }
+                
                 renderEverything();
                 renderTech();
             }
@@ -418,7 +424,7 @@
         function renderTech() {
             let html = "";
             techUpgrades.forEach(t => {
-                const owned = ownedTech.includes(t.id);
+                const owned = data.ownedTech.includes(t.id);
                 html += `
                 <div class="buy-button ${owned ? 'disabled' : ''}" onclick="buyTech('${t.id}')" style="margin-bottom:10px; border: 2px solid #005293">
                     <div class="btn-header"><b>${t.name}</b> ${owned ? '<span style="color:green">KÖPT</span>' : `<div class="price-tag">${t.cost.toLocaleString()} kr</div>`}</div>
@@ -528,7 +534,6 @@
             document.getElementById("pps").innerText = Math.floor(getTotalPPS()).toLocaleString();
             document.getElementById("bonus-val").innerText = Math.round((getQuestBonus()-1)*100);
             
-            // Uppdatera knappar (enabled/disabled)
             document.getElementById("hammer-btn").classList.toggle("disabled", data.money < getDiscountedPrice(data.hammerPrice));
             document.getElementById("auto-btn").classList.toggle("disabled", data.money < getDiscountedPrice(data.autoPrice));
             
@@ -537,18 +542,16 @@
                 if (btn) btn.classList.toggle("disabled", data.money < getDiscountedPrice(data.bCosts[i]));
             });
 
-            localStorage.setItem(STORAGE_KEY, JSON.stringify({data, ownedTech}));
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
         }
 
         function renderEverything() {
             document.getElementById("hammer-cost").innerText = getDiscountedPrice(data.hammerPrice).toLocaleString();
             document.getElementById("auto-cost").innerText = getDiscountedPrice(data.autoPrice).toLocaleString();
             
-            // RENDERA BYGGNADS-LISTAN
             let bHtml = "";
             buildings.forEach((b, i) => {
                 const cost = getDiscountedPrice(data.bCosts[i]);
-                // Visa om man har råd (eller nästan har råd) eller redan äger
                 if (data.money >= cost * 0.3 || data.bCounts[i] > 0) {
                     bHtml += `<button class="buy-button" id="build-${i}" onclick="buyBuilding(${i})">
                         <div class="btn-header"><b>${b.name} (${data.bCounts[i]})</b> <div class="price-tag">${cost.toLocaleString()} kr</div></div>
@@ -597,9 +600,11 @@
             let s = localStorage.getItem(STORAGE_KEY);
             if (s) {
                 let loaded = JSON.parse(s);
-                data = loaded.data;
-                ownedTech = loaded.ownedTech || [];
-                const lastSkin = techUpgrades.filter(t => t.type === "skin" && ownedTech.includes(t.id)).pop();
+                // Merge loaded data with default data structure to avoid missing keys
+                data = {...data, ...loaded};
+                
+                // Återställ skin om man har ett
+                const lastSkin = techUpgrades.filter(t => t.type === "skin" && data.ownedTech.includes(t.id)).pop();
                 if(lastSkin) {
                     document.getElementById("clicker-icon").innerText = lastSkin.icon;
                     document.getElementById("clicker-text").innerText = lastSkin.text;
