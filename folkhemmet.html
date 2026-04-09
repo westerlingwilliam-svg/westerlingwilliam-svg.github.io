@@ -480,7 +480,8 @@
 { id:"btn_gold2", name:"Imperieknappen", desc:"Kejsar-nivå (+100% klick)", cost:80000000000, type:"skin", icon:"👑", text:"IMPERIUM", color:"#ffd700", mpc_mult:2.0, category:"cosmetic"},
 { id:"btn_void", name:"Void-Knappen", desc:"Oändligheten stirrar tillbaka (+150% klick)", cost:200000000000, type:"skin", icon:"🌀", text:"VOID", color:"#551a8b", mpc_mult:2.5, category:"cosmetic"},
 { id:"btn_cosmic", name:"Kosmisk Knapp", desc:"Universums makt (+200% klick)", cost:700000000000, type:"skin", icon:"🌌", text:"COSMIC", color:"#00ffff", mpc_mult:3.0, category:"cosmetic"},
-{ id:"btn_omega", name:"Omega-Knappen", desc:"Den sista uppgraderingen (+300% klick)", cost:2000000000000, type:"skin", icon:"Ω", text:"OMEGA", color:"#ffffff", mpc_mult:4.0, category:"cosmetic"}
+{ id:"btn_omega", name:"Omega-Knappen", desc:"Den sista uppgraderingen (+300% klick)", cost:2000000000000, type:"skin", icon:"Ω", text:"OMEGA", color:"#ffffff", mpc_mult:4.0, category:"cosmetic"},
+{ id:"btn_jimmie", name:"Jimmies Knapp 🌸", desc:"Sverigedemokraternas ultimata knapp (+500% klick)", cost:10000000000000, type:"skin", icon:"🌸", text:"JIMMIE", color:"#0047AB", mpc_mult:6.7, category:"cosmetic"}
 
 ];
 
@@ -519,9 +520,7 @@
                 // CHANGE 4: Set activeSkin when a skin is purchased
                 if (tech.type === "skin") {
                     data.activeSkin = tech;
-                    document.getElementById("clicker-icon").innerText = tech.icon;
-                    document.getElementById("clicker-text").innerText = tech.text;
-                    document.getElementById("clicker-visual").style.borderColor = tech.color;
+                    applyActiveSkinVisuals(tech);
                 }
                 
                 renderEverything();
@@ -529,13 +528,33 @@
             }
         }
 
+        function applyActiveSkinVisuals(tech) {
+            const icon = document.getElementById("clicker-icon");
+            const text = document.getElementById("clicker-text");
+            const visual = document.getElementById("clicker-visual");
+
+            icon.innerText = tech.icon;
+            text.innerText = tech.text;
+            visual.style.borderColor = tech.color;
+            visual.style.background = "";
+            text.style.color = "";
+            text.style.textShadow = "";
+            icon.style.filter = "";
+
+            if (tech.id === "btn_jimmie") {
+                visual.style.background = "radial-gradient(circle at 40% 40%, #ffffff 20%, #0047AB 80%)";
+                visual.style.borderColor = "#FFD700";
+                text.style.color = "#FFD700";
+                text.style.textShadow = "1px 1px 0 #0047AB, -1px -1px 0 #0047AB";
+                icon.style.filter = "drop-shadow(0 0 6px #FFD700)";
+            }
+        }
+
         function activateSkin(techId) {
             const tech = techUpgrades.find(t => t.id === techId);
             if (!tech || tech.type !== "skin") return;
             data.activeSkin = tech;
-            document.getElementById("clicker-icon").innerText = tech.icon;
-            document.getElementById("clicker-text").innerText = tech.text;
-            document.getElementById("clicker-visual").style.borderColor = tech.color;
+            applyActiveSkinVisuals(tech);
             renderEverything();
             renderTech();
         }
@@ -758,17 +777,11 @@
                 
                 // Restore active skin visuals on load
                 if (data.activeSkin) {
-                    document.getElementById("clicker-icon").innerText = data.activeSkin.icon;
-                    document.getElementById("clicker-text").innerText = data.activeSkin.text;
-                    document.getElementById("clicker-visual").style.borderColor = data.activeSkin.color;
+                    applyActiveSkinVisuals(data.activeSkin);
                 } else {
                     // Fallback: find last owned skin (backwards compat)
                     const lastSkin = techUpgrades.filter(t => t.type === "skin" && data.ownedTech.includes(t.id)).pop();
-                    if(lastSkin) {
-                        document.getElementById("clicker-icon").innerText = lastSkin.icon;
-                        document.getElementById("clicker-text").innerText = lastSkin.text;
-                        document.getElementById("clicker-visual").style.borderColor = lastSkin.color;
-                    }
+                    if(lastSkin) applyActiveSkinVisuals(lastSkin);
                 }
             }
             renderEverything();
