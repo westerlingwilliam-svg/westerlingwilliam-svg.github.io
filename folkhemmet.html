@@ -364,6 +364,7 @@
             <div class="stat-box">🖱️ <span id="mpc">1</span> /klick</div>
             <div class="stat-box" style="background: #fecc00; color: #005293;">🏆 Bonus: <span id="bonus-val">0</span>%</div>
             <div class="stat-box" id="skin-mult-box" style="display:none; background: #28a745; color: white;">✨ Skin: <span id="skin-mult-val">1.0</span>x</div>
+            <div class="stat-box" id="win-mult-box" style="display:none; background: #cc0000; color: #fecc00;">🏛️ Folkhem: 2x</div>
         </div>
     </div>
 
@@ -678,17 +679,18 @@
         };
 
         function getQuestBonus() { return 1 + (data.questsDone * 0.10); }
+        function getWinMultiplier() { return data.hasWon ? 2 : 1; }
         function getTotalPPS() {
             let pps = 0;
             for(let i=0; i<buildings.length; i++) if(data.bCounts[i]) pps += data.bCounts[i] * (buildings[i].inc * data.buildingEfficiency[i]) * getQuestBonus();
-            return pps;
+            return pps * getWinMultiplier();
         }
 
         function calculateMPC() {
             let pps = getTotalPPS();
             let base = 1 + (data.hammerLevel * 1);
             let bonus = (pps * 0.0016) * data.hammerLevel; 
-            return Math.max(1, Math.floor(base + bonus));
+            return Math.max(1, Math.floor((base + bonus) * getWinMultiplier()));
         }
 
         // =============================================
@@ -774,7 +776,7 @@
                 skinBox.style.display = "none";
             }
             
-            document.getElementById("hammer-btn").classList.toggle("disabled", data.money < getDiscountedPrice(data.hammerPrice));
+            document.getElementById("win-mult-box").style.display = data.hasWon ? "inline-block" : "none";
             document.getElementById("auto-btn").classList.toggle("disabled", data.money < getDiscountedPrice(data.autoPrice));
             
             buildings.forEach((_, i) => {
