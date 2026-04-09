@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lucky City: Mythic Update</title>
+    <title>Lucky City: Builder Update</title>
     <style>
         :root {
             --common: #b5b5b5;
@@ -42,15 +42,15 @@
 
         .stats-left b { color: var(--sd-gold); font-size: 1.4rem; }
 
-        /* LUCKY BLOCK */
-        .block-container { text-align: center; }
+        /* LUCKY BLOCK & INFO */
+        .block-container { text-align: center; width: 350px; }
         #lucky-block {
-            width: 130px; height: 130px;
+            width: 120px; height: 120px;
             background: var(--sd-gold);
             border-radius: 20px;
             display: flex;
             justify-content: center; align-items: center;
-            font-size: 5rem; color: var(--sd-blue);
+            font-size: 4.5rem; color: var(--sd-blue);
             cursor: pointer;
             box-shadow: 0 10px 0 #b38f00, 0 0 30px rgba(254, 204, 0, 0.3);
             transition: 0.1s;
@@ -59,6 +59,20 @@
             margin: 0 auto;
         }
         #lucky-block:active { transform: translateY(8px) scale(0.95); box-shadow: 0 2px 0 #b38f00; }
+        
+        .drop-info {
+            background: rgba(0,0,0,0.4);
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            border: 1px solid rgba(254, 204, 0, 0.2);
+            min-height: 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.03); }
@@ -76,7 +90,6 @@
             font-size: 0.8rem;
             box-shadow: 0 4px 0 #009966;
         }
-        .upgrade-block-btn:disabled { background: #555; box-shadow: none; cursor: not-allowed; }
 
         /* GAME AREA */
         .game-area { display: flex; flex: 1; overflow: hidden; }
@@ -93,8 +106,9 @@
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
             transition: 0.2s;
-            position: relative;
+            cursor: pointer;
         }
+        .slot:hover { border-color: rgba(254, 204, 0, 0.5); }
         .income-tag { font-size: 0.75rem; color: #00ff99; font-weight: bold; margin-top: 5px; }
 
         /* SIDEBAR */
@@ -121,11 +135,10 @@
             transform: translateX(-50%); background: var(--sd-blue);
             padding: 12px 30px; border-radius: 10px; border: 2px solid var(--sd-gold);
             opacity: 0; transition: 0.3s; z-index: 1000;
-            font-weight: bold; text-align: center;
+            font-weight: bold; text-align: center; pointer-events: none;
         }
         .show-msg { opacity: 1 !important; }
         .highlight { border-color: #00ff99 !important; box-shadow: 0 0 15px rgba(0,255,153,0.3); }
-
         .mythic-glow { box-shadow: inset 0 0 15px #ff003c; border-color: #ff003c !important; }
     </style>
 </head>
@@ -139,7 +152,9 @@
 
     <div class="block-container">
         <div id="lucky-block">?</div>
-        <div style="font-size: 1rem; margin-top:5px; font-weight: bold;">PRIS: 250 KR (FAST)</div>
+        <div id="drop-display" class="drop-info">
+            Öppna ett block för att se vad du får!
+        </div>
         <button id="upg-luck-btn" class="upgrade-block-btn" onclick="upgradeLuck()">UPPGRADERA TUR (Lv <span id="luck-lv">1</span>): <span id="upg-cost">1000</span> KR</button>
     </div>
 
@@ -161,7 +176,7 @@
 
 <script>
     let money = 500;
-    const blockCost = 250; // Fast pris
+    const blockCost = 250;
     let luckLevel = 1;
     let upgCost = 1000;
     let inventory = [];
@@ -179,24 +194,21 @@
 
     function saveGame() {
         const gameData = { money, luckLevel, upgCost, inventory, cityData };
-        localStorage.setItem('valfard_mythic_save', JSON.stringify(gameData));
+        localStorage.setItem('valfard_builder_save', JSON.stringify(gameData));
     }
 
     function loadGame() {
-        const saved = localStorage.getItem('valfard_mythic_save');
+        const saved = localStorage.getItem('valfard_builder_save');
         if (saved) {
             const data = JSON.parse(saved);
-            money = data.money;
-            luckLevel = data.luckLevel;
-            upgCost = data.upgCost;
-            inventory = data.inventory;
-            cityData = data.cityData;
+            money = data.money; luckLevel = data.luckLevel; upgCost = data.upgCost;
+            inventory = data.inventory; cityData = data.cityData;
         }
     }
 
     function resetGame() {
         if(confirm("Vill du nollställa din stad?")) {
-            localStorage.removeItem('valfard_mythic_save');
+            localStorage.removeItem('valfard_builder_save');
             location.reload();
         }
     }
@@ -205,7 +217,7 @@
     for (let i = 0; i < 30; i++) {
         const slot = document.createElement('div');
         slot.className = 'slot';
-        slot.onclick = () => placeBuilding(i);
+        slot.onclick = () => handleSlotClick(i);
         grid.appendChild(slot);
     }
 
@@ -216,23 +228,38 @@
             const rand = Math.random() * 100;
             let wonItem;
 
-            // Chans-system som skalas med Luck Level
-            // Mythic kan bara fås om Luck Level >= 3
-            let mythicChance = (luckLevel >= 3) ? (0.5 + luckLevel) : 0;
-            let legChance = 2 + (luckLevel * 2);
-            let epicChance = 8 + (luckLevel * 3);
-            let rareChance = 15 + (luckLevel * 4);
-            let uncChance = 25;
+            let mythicC = (luckLevel >= 3) ? (0.5 + luckLevel) : 0;
+            let legC = 2 + (luckLevel * 2);
+            let epicC = 8 + (luckLevel * 3);
+            let rareC = 15 + (luckLevel * 4);
+            let uncC = 25;
+            let comC = Math.max(0, 100 - (mythicC + legC + epicC + rareC + uncC));
 
-            if (rand < mythicChance) wonItem = buildings[5];
-            else if (rand < mythicChance + legChance) wonItem = buildings[4];
-            else if (rand < mythicChance + legChance + epicChance) wonItem = buildings[3];
-            else if (rand < mythicChance + legChance + epicChance + rareChance) wonItem = buildings[2];
-            else if (rand < mythicChance + legChance + epicChance + rareChance + uncChance) wonItem = buildings[1];
+            if (rand < mythicC) wonItem = buildings[5];
+            else if (rand < mythicC + legC) wonItem = buildings[4];
+            else if (rand < mythicC + legC + epicC) wonItem = buildings[3];
+            else if (rand < mythicC + legC + epicC + rareC) wonItem = buildings[2];
+            else if (rand < mythicC + legC + epicC + rareC + uncC) wonItem = buildings[1];
             else wonItem = buildings[0];
 
+            // Beräkna procent för den vinsten
+            let winChance = 0;
+            if(wonItem.rarity === "Mythic") winChance = mythicC;
+            else if(wonItem.rarity === "Legendary") winChance = legC;
+            else if(wonItem.rarity === "Epic") winChance = epicC;
+            else if(wonItem.rarity === "Rare") winChance = rareC;
+            else if(wonItem.rarity === "Uncommon") winChance = uncC;
+            else winChance = comC;
+
             inventory.push({ ...wonItem, id: Date.now() });
-            showMessage(`<span style="color:${wonItem.color}">${wonItem.rarity.toUpperCase()}!</span><br>Du fick ${wonItem.icon} ${wonItem.name}`);
+            
+            // Uppdatera displayen under blocket
+            const display = document.getElementById('drop-display');
+            display.innerHTML = `
+                <span style="font-weight:bold; color:${wonItem.color}">${wonItem.name.toUpperCase()}</span>
+                <span style="opacity:0.8">${wonItem.rarity} | Chans: ${winChance.toFixed(1)}%</span>
+            `;
+
             renderInventory();
             updateUI();
             saveGame();
@@ -241,54 +268,26 @@
         }
     };
 
-    function upgradeLuck() {
-        if (money >= upgCost) {
-            money -= upgCost;
-            luckLevel++;
-            upgCost = Math.ceil(upgCost * 3);
-            if(luckLevel === 3) {
-                showMessage("⭐ MYTHIC ITEMS UPPLÅSTA!");
-            } else {
-                showMessage(`TUR UPPGRADERAD! Nivå ${luckLevel}`);
-            }
-            updateUI();
-            saveGame();
-        } else {
-            showMessage("⚠️ Du har inte råd!");
+    function handleSlotClick(i) {
+        if (selectedInvIndex !== null) {
+            placeBuilding(i);
+        } else if (cityData[i] !== null) {
+            pickUpBuilding(i);
         }
     }
 
-    function showMessage(html) {
-        const msg = document.getElementById('game-msg');
-        msg.innerHTML = html;
-        msg.classList.add('show-msg');
-        setTimeout(() => msg.classList.remove('show-msg'), 2500);
-    }
-
-    function renderInventory() {
-        const invEl = document.getElementById('inventory');
-        invEl.innerHTML = '';
-        inventory.forEach((item, index) => {
-            const div = document.createElement('div');
-            div.className = 'inv-item';
-            div.style.borderLeft = `5px solid ${item.color}`;
-            div.innerHTML = `
-                <div><b style="color:${item.color}">${item.icon}</b> ${item.name}<br><small>+${item.income}/s</small></div>
-                <button class="place-btn" onclick="preparePlacement(${index})">BYGG</button>
-            `;
-            invEl.appendChild(div);
-        });
-    }
-
-    function preparePlacement(index) {
-        selectedInvIndex = index;
-        showMessage("Klicka på en ruta i staden!");
-        const slots = document.getElementsByClassName('slot');
-        for (let s of slots) { if (!s.dataset.occupied) s.classList.add('highlight'); }
+    function pickUpBuilding(i) {
+        inventory.push(cityData[i]);
+        cityData[i] = null;
+        showMessage("📦 Plockade upp byggnaden!");
+        renderCity();
+        renderInventory();
+        updateUI();
+        saveGame();
     }
 
     function placeBuilding(slotIndex) {
-        if (selectedInvIndex !== null && !cityData[slotIndex]) {
+        if (!cityData[slotIndex]) {
             cityData[slotIndex] = inventory[selectedInvIndex];
             inventory.splice(selectedInvIndex, 1);
             selectedInvIndex = null;
@@ -299,6 +298,48 @@
             updateUI();
             saveGame();
         }
+    }
+
+    function upgradeLuck() {
+        if (money >= upgCost) {
+            money -= upgCost;
+            luckLevel++;
+            upgCost = Math.ceil(upgCost * 3);
+            updateUI();
+            saveGame();
+            showMessage(`TUR UPPGRADERAD! Nivå ${luckLevel}`);
+        } else {
+            showMessage("⚠️ Du har inte råd!");
+        }
+    }
+
+    function showMessage(html) {
+        const msg = document.getElementById('game-msg');
+        msg.innerHTML = html;
+        msg.classList.add('show-msg');
+        setTimeout(() => msg.classList.remove('show-msg'), 2000);
+    }
+
+    function renderInventory() {
+        const invEl = document.getElementById('inventory');
+        invEl.innerHTML = '';
+        inventory.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'inv-item';
+            div.style.borderLeft = `5px solid ${item.color}`;
+            div.innerHTML = `
+                <div><b style="color:${item.color}">${item.icon}</b> ${item.name}<br><small>${item.rarity}</small></div>
+                <button class="place-btn" onclick="event.stopPropagation(); preparePlacement(${index})">BYGG</button>
+            `;
+            invEl.appendChild(div);
+        });
+    }
+
+    function preparePlacement(index) {
+        selectedInvIndex = index;
+        showMessage("Klicka på en tom ruta för att bygga!");
+        const slots = document.getElementsByClassName('slot');
+        for (let s of slots) { if (!s.dataset.occupied) s.classList.add('highlight'); }
     }
 
     function renderCity() {
@@ -334,7 +375,6 @@
         const income = cityData.reduce((t, b) => t + (b ? b.income : 0), 0);
         money += income;
         updateUI();
-        if(income > 0) saveGame();
     }, 1000);
 
     loadGame();
