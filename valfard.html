@@ -282,43 +282,50 @@
         money -= price;
         startCooldown(tier);
         
-        const rand = Math.random() * 1000; // Mer precision för sällsynta drops
+        const rand = Math.random() * 100; 
         let wonItem;
 
-        if (tier === 1) {
-            if (rand < 0.1) wonItem = buildings[24]; // Godly 0.01%
-            else if (rand < 1) wonItem = buildings[23]; // Celestial 0.1%
-            else if (rand < 10) wonItem = buildings[20 + Math.floor(Math.random()*3)];
-            else if (rand < 50) wonItem = buildings[8 + Math.floor(Math.random()*4)];
-            else if (rand < 200) wonItem = buildings[4 + Math.floor(Math.random()*4)];
-            else wonItem = buildings[Math.floor(Math.random()*4)];
-        } else if (tier === 2) {
-            if (rand < 1) wonItem = buildings[24];
-            else if (rand < 10) wonItem = buildings[20];
-            else if (rand < 100) wonItem = buildings[12 + Math.floor(Math.random()*4)];
-            else if (rand < 400) wonItem = buildings[4 + Math.floor(Math.random()*4)];
-            else wonItem = buildings[Math.floor(Math.random()*4)];
-        } else if (tier === 3) {
-            if (rand < 5) wonItem = buildings[24];
-            else if (rand < 20) wonItem = buildings[23];
-            else if (rand < 150) wonItem = buildings[16 + Math.floor(Math.random()*4)];
-            else if (rand < 500) wonItem = buildings[12 + Math.floor(Math.random()*4)];
-            else wonItem = buildings[Math.floor(Math.random()*8)];
-        } else if (tier === 4) {
-            if (rand < 10) wonItem = buildings[24];
-            else if (rand < 50) wonItem = buildings[23];
-            let pool = buildings.filter(b => b.rarity !== "Common" && b.rarity !== "Uncommon");
-            wonItem = pool[Math.floor(Math.random() * pool.length)];
-        } else {
-            if (rand < 30) wonItem = buildings[24]; // 3% Godly på sista blocket
-            else if (rand < 150) wonItem = buildings[23]; // 12% Celestial
-            let pool = buildings.filter(b => b.rarity === "Legendary" || b.rarity === "Mythic");
-            wonItem = pool[Math.floor(Math.random() * pool.length)];
+        // JUSTERAD LOGIK: "Risk" för sämre saker finns kvar i alla block
+        if (tier === 1) { // Bas-block
+            if (rand < 0.05) wonItem = buildings[24]; // Godly
+            else if (rand < 0.2) wonItem = buildings[23]; // Celestial
+            else if (rand < 1) wonItem = buildings[20 + Math.floor(Math.random()*3)]; // Mythic
+            else if (rand < 15) wonItem = buildings[4 + Math.floor(Math.random()*4)]; // Uncommon
+            else wonItem = buildings[Math.floor(Math.random()*4)]; // Common
+        } 
+        else if (tier === 2) { // Uncommon Block
+            if (rand < 1) wonItem = buildings[20];
+            else if (rand < 10) wonItem = buildings[8 + Math.floor(Math.random()*4)]; // Rare
+            else if (rand < 40) wonItem = buildings[4 + Math.floor(Math.random()*4)]; // Unc
+            else wonItem = buildings[Math.floor(Math.random()*4)]; // Common (Risk!)
+        } 
+        else if (tier === 3) { // Rare Block
+            if (rand < 2) wonItem = buildings[23]; // Celestial
+            else if (rand < 15) wonItem = buildings[12 + Math.floor(Math.random()*4)]; // Epic
+            else if (rand < 45) wonItem = buildings[8 + Math.floor(Math.random()*4)]; // Rare
+            else if (rand < 75) wonItem = buildings[4 + Math.floor(Math.random()*4)]; // Unc
+            else wonItem = buildings[Math.floor(Math.random()*4)]; // Common (Större risk!)
+        } 
+        else if (tier === 4) { // Epic Block
+            if (rand < 1) wonItem = buildings[24]; // Godly
+            else if (rand < 10) wonItem = buildings[16 + Math.floor(Math.random()*4)]; // Legend
+            else if (rand < 40) wonItem = buildings[12 + Math.floor(Math.random()*4)]; // Epic
+            else if (rand < 60) wonItem = buildings[8 + Math.floor(Math.random()*4)]; // Rare
+            else wonItem = buildings[Math.floor(Math.random()*8)]; // Common/Uncommon
+        } 
+        else { // Legend Block
+            if (rand < 3) wonItem = buildings[24]; // Godly
+            else if (rand < 12) wonItem = buildings[23]; // Celestial
+            else if (rand < 40) wonItem = buildings[20 + Math.floor(Math.random()*3)]; // Mythic
+            else if (rand < 70) wonItem = buildings[16 + Math.floor(Math.random()*4)]; // Legend
+            else wonItem = buildings[Math.floor(Math.random()*12)]; // Allt under Epic
         }
 
         inventory.push({ ...wonItem, id: Date.now() });
         renderInventory(); updateUI(); saveGame();
     }
+
+    // --- RESTERANDE FUNKTIONER (PÅ ANVÄNDARENS BEGÄRAN: TA INTE BORT NÅGOT) ---
 
     function sellItem(index) {
         let item = inventory[index];
@@ -370,7 +377,6 @@
         if (selectedInvIndex !== null) {
             placeBuilding(i);
         } else if (cityData[i]) {
-            // PLOCKA UPP TILL INVENTORY
             pickUpBuilding(i);
         }
     }
