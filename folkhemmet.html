@@ -327,30 +327,40 @@
 
         const achChains = {
             click: [
-                { t: "Kom igång!", target: 10, reward: 10, req: "10 klick" },
-                { t: "Finger-gympa", target: 100, reward: 200, req: "100 klick" },
-                { t: "Klick-Proffs", target: 1000, reward: 5000, req: "1 000 klick" },
-                { t: "Legendarisk Klickare", target: 10000, reward: 50000, req: "10 000 klick" }
+                { t: "Kom igång!", target: 10, reward: 50, req: "10 klick" },
+                { t: "Finger-gympa", target: 100, reward: 500, req: "100 klick" },
+                { t: "Klick-Proffs", target: 1000, reward: 10000, req: "1 000 klick" },
+                { t: "Maraton-klickaren", target: 5000, reward: 75000, req: "5 000 klick" },
+                { t: "Legendarisk Klickare", target: 25000, reward: 1000000, req: "25 000 klick" },
+                { t: "Klick-Gud", target: 100000, reward: 50000000, req: "100 000 klick" }
             ],
             money: [
-                { t: "Småsparare", target: 1000, reward: 100, req: "Ha 1 000 kr" },
-                { t: "Kapitalist", target: 100000, reward: 15000, req: "Ha 100 000 kr" },
-                { t: "Välfärds-magnat", target: 1000000, reward: 150000, req: "Ha 1 000 000 kr" }
+                { t: "Småsparare", target: 1000, reward: 200, req: "Ha 1 000 kr" },
+                { t: "Kapitalist", target: 100000, reward: 25000, req: "Ha 100 000 kr" },
+                { t: "Välfärds-magnat", target: 1000000, reward: 250000, req: "Ha 1 000 000 kr" },
+                { t: "Miljardär", target: 1000000000, reward: 250000000, req: "Ha 1 miljard" },
+                { t: "Statsskassan", target: 100000000000, reward: 10000000000, req: "Ha 100 miljarder" }
             ],
             b0: [
-                { t: "En röd vägg", target: 1, reward: 20, req: "1 Röd Stuga" },
-                { t: "Stugby", target: 10, reward: 1000, req: "10 Röda Stugor" },
-                { t: "Folkhems-entusiast", target: 50, reward: 25000, req: "50 Röda Stugor" }
+                { t: "En röd vägg", target: 1, reward: 100, req: "1 Röd Stuga" },
+                { t: "Stugby", target: 25, reward: 5000, req: "25 Röda Stugor" },
+                { t: "Folkhems-entusiast", target: 100, reward: 150000, req: "100 Röda Stugor" },
+                { t: "Småstads-kung", target: 250, reward: 2000000, req: "250 Röda Stugor" }
             ],
             total: [
-                { t: "Byggstart", target: 1, reward: 10, req: "1 byggnad" },
-                { t: "Samhällsbyggare", target: 50, reward: 10000, req: "50 byggnader" },
-                { t: "Metropol", target: 200, reward: 100000, req: "200 byggnader" }
+                { t: "Byggstart", target: 1, reward: 50, req: "1 byggnad" },
+                { t: "Samhällsbyggare", target: 50, reward: 20000, req: "50 byggnader" },
+                { t: "Metropol", target: 250, reward: 500000, req: "250 byggnader" },
+                { t: "Urbaniserad", target: 1000, reward: 10000000, req: "1 000 byggnader" },
+                { t: "Betong-imperiet", target: 5000, reward: 500000000, req: "5 000 byggnader" }
             ],
             secret: [
-                { t: "Falukorvs-fest", target: 5, targetType: "b1", reward: 2000, req: "5 Hyreshus" },
-                { t: "Sverigevän", target: 1, targetType: "b10", reward: 500000, req: "1 SD-Högkvarter" },
-                { t: "Atomvinter?", target: 5, targetType: "b5", reward: 100000, req: "5 Kärnkraftverk" }
+                { t: "Falukorvs-fest", target: 10, targetType: "b1", reward: 10000, req: "10 Hyreshus" },
+                { t: "Stordrift", target: 20, targetType: "b3", reward: 500000, req: "20 Industrier" },
+                { t: "Atomvinter?", target: 10, targetType: "b5", reward: 15000000, req: "10 Kärnkraftverk" },
+                { t: "Galaktisk Välfärd", target: 5, targetType: "b7", reward: 500000000, req: "5 Rymdprogram" },
+                { t: "Sverigevän", target: 1, targetType: "b10", reward: 2000000000, req: "1 SD-Högkvarter" },
+                { t: "Ultimat Samhälle", target: 10, targetType: "b10", reward: 50000000000, req: "10 SD-Högkvarter" }
             ]
         };
 
@@ -479,7 +489,7 @@
                     const { type, ach, val, isReady } = item;
                     achHtml += `
                         <div class="ach-card">
-                            <div style="display:flex; justify-content:space-between;"><b>${ach.t}</b> <span style="color:#28a745;">+${ach.reward} kr</span></div>
+                            <div style="display:flex; justify-content:space-between;"><b>${ach.t}</b> <span style="color:#28a745;">+${ach.reward.toLocaleString()} kr</span></div>
                             <div style="font-size:0.75rem; margin:5px 0; color:#555;">Krav: ${ach.req}</div>
                             <div class="progress-container">
                                 <div class="progress-bar" style="width: ${Math.min(100, (val/ach.target)*100)}%"></div>
