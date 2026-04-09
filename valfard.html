@@ -107,7 +107,7 @@
         #city-grid {
             flex: 3; display: grid;
             grid-template-columns: repeat(6, 1fr);
-            grid-template-rows: repeat(4, 1fr); /* Ändrat till 4 på höjden */
+            grid-template-rows: repeat(4, 1fr);
             gap: 12px; padding: 20px;
         }
         
@@ -133,30 +133,42 @@
         }
 
         .sidebar {
-            flex: 1; background: rgba(0, 15, 30, 0.9);
+            flex: 1.2; background: rgba(0, 15, 30, 0.9);
             border-left: 2px solid var(--sd-blue);
             padding: 20px; display: flex; flex-direction: column;
         }
         
-        .inv-item {
-            background: rgba(255,255,255,0.05); padding: 10px;
-            border-radius: 8px; margin-bottom: 8px;
-            border: 1px solid rgba(255,255,255,0.1);
-            display: flex; flex-direction: column; gap: 5px;
+        /* SNYGGARE INVENTORY GRID */
+        #inventory {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            overflow-y: auto;
         }
 
-        .inv-buttons { display: flex; gap: 5px; }
+        .inv-item {
+            background: rgba(255,255,255,0.05); padding: 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex; flex-direction: column; 
+            align-items: center; text-align: center;
+        }
+
+        .inv-item b { font-size: 2.2rem; display: block; margin-bottom: 5px; }
+        .inv-item span { font-size: 0.65rem; font-weight: bold; text-transform: uppercase; margin-bottom: 8px; display: block; }
+
+        .inv-buttons { display: flex; flex-direction: column; gap: 5px; width: 100%; }
 
         .sell-btn {
             background: #ff4444; color: white; border: none;
-            padding: 5px 10px; border-radius: 5px; cursor: pointer;
-            font-weight: bold; font-size: 0.7rem; flex: 1;
+            padding: 5px; border-radius: 5px; cursor: pointer;
+            font-weight: bold; font-size: 0.65rem;
         }
 
         .place-btn {
             background: var(--sd-gold); color: var(--sd-blue); border: none;
-            padding: 5px 10px; border-radius: 5px; cursor: pointer;
-            font-weight: bold; font-size: 0.7rem; flex: 1;
+            padding: 5px; border-radius: 5px; cursor: pointer;
+            font-weight: bold; font-size: 0.65rem;
         }
 
         #game-msg {
@@ -202,7 +214,7 @@
     <div id="city-grid"></div>
     <div class="sidebar">
         <h2 style="margin:0 0 15px 0; font-size: 1.2rem; color: var(--sd-gold); text-align: center;">INVENTORY</h2>
-        <div id="inventory" style="overflow-y: auto;"></div>
+        <div id="inventory"></div>
     </div>
 </div>
 
@@ -212,7 +224,7 @@
     let money = 500;
     let currentMaxBlock = 1; 
     let inventory = [];
-    let cityData = Array(24).fill(null); // 6x4 = 24 rutor
+    let cityData = Array(24).fill(null); 
     let selectedInvIndex = null;
     let cooldowns = [0, 0, 0, 0, 0];
 
@@ -220,10 +232,10 @@
     const blockPrices = [250, 1500, 7500, 35000, 150000];
 
     const buildings = [
-        { name: "Stuga", icon: "🏠", rarity: "Common", income: 10, color: "#b5b5b5", sellPrice: 100 },
-        { name: "Bod", icon: "🛖", rarity: "Common", income: 8, color: "#b5b5b5", sellPrice: 80 },
-        { name: "Garage", icon: "🚗", rarity: "Common", income: 12, color: "#b5b5b5", sellPrice: 120 },
-        { name: "Kiosk", icon: "🏪", rarity: "Common", income: 15, color: "#b5b5b5", sellPrice: 150 },
+        { name: "Stuga", icon: "🏠", rarity: "Common", income: 10, color: "#b5b5b5", sellPrice: 50 },
+        { name: "Bod", icon: "🛖", rarity: "Common", income: 8, color: "#b5b5b5", sellPrice: 40 },
+        { name: "Garage", icon: "🚗", rarity: "Common", income: 12, color: "#b5b5b5", sellPrice: 60 },
+        { name: "Kiosk", icon: "🏪", rarity: "Common", income: 15, color: "#b5b5b5", sellPrice: 75 },
         
         { name: "Länga", icon: "🏡", rarity: "Uncommon", income: 35, color: "#1eff00", sellPrice: 600 },
         { name: "Pizzeria", icon: "🍕", rarity: "Uncommon", income: 45, color: "#1eff00", sellPrice: 750 },
@@ -257,20 +269,32 @@
         money -= price;
         startCooldown(tier);
         
-        let pool = [];
-        if (tier === 1) pool = buildings.filter(b => b.rarity !== "Mythic");
-        if (tier === 2) pool = buildings.filter(b => b.rarity !== "Common");
-        if (tier === 3) pool = buildings.filter(b => b.rarity !== "Common" && b.rarity !== "Uncommon");
-        if (tier === 4) pool = buildings.filter(b => b.rarity !== "Common" && b.rarity !== "Uncommon" && b.rarity !== "Rare");
-        if (tier === 5) pool = buildings.filter(b => b.rarity === "Legendary" || b.rarity === "Mythic");
-
         const rand = Math.random() * 100;
         let wonItem;
-        
-        // Svårare odds: Mythic 1%, Legendary 7%, resten fördelat
-        if (rand < 1) wonItem = pool.filter(b => b.rarity === "Mythic")[0] || pool[pool.length-1];
-        else if (rand < 8) wonItem = pool.filter(b => b.rarity === "Legendary")[0] || pool[pool.length-1];
-        else wonItem = pool[Math.floor(Math.random() * pool.length)];
+
+        // NY SVÅRARE LOGIK: Common/Uncommon dominerar
+        if (tier === 1) { // 80% Common, 15% Unc, 4.9% Rare, 0.1% Mythic
+            if (rand < 0.1) wonItem = buildings[19 + Math.floor(Math.random()*3)];
+            else if (rand < 5) wonItem = buildings[8 + Math.floor(Math.random()*4)];
+            else if (rand < 20) wonItem = buildings[4 + Math.floor(Math.random()*4)];
+            else wonItem = buildings[Math.floor(Math.random()*4)];
+        } else if (tier === 2) { // 50% Common, 30% Unc, 15% Rare, 5% Epic
+            if (rand < 5) wonItem = buildings[12 + Math.floor(Math.random()*4)];
+            else if (rand < 20) wonItem = buildings[8 + Math.floor(Math.random()*4)];
+            else if (rand < 50) wonItem = buildings[4 + Math.floor(Math.random()*4)];
+            else wonItem = buildings[Math.floor(Math.random()*4)];
+        } else if (tier === 3) { // 20% Common, 40% Rare, 30% Epic, 10% Legend
+            if (rand < 10) wonItem = buildings[16 + Math.floor(Math.random()*3)];
+            else if (rand < 40) wonItem = buildings[12 + Math.floor(Math.random()*4)];
+            else if (rand < 80) wonItem = buildings[8 + Math.floor(Math.random()*4)];
+            else wonItem = buildings[Math.floor(Math.random()*4)];
+        } else if (tier === 4) { // Garanterad Rare+, ingen Common
+            let pool = buildings.filter(b => b.rarity !== "Common" && b.rarity !== "Uncommon");
+            wonItem = pool[Math.floor(Math.random() * pool.length)];
+        } else { // Garanterad Legend/Mythic
+            let pool = buildings.filter(b => b.rarity === "Legendary" || b.rarity === "Mythic");
+            wonItem = pool[Math.floor(Math.random() * pool.length)];
+        }
 
         inventory.push({ ...wonItem, id: Date.now() });
         renderInventory(); updateUI(); saveGame();
@@ -290,12 +314,13 @@
         inventory.forEach((item, index) => {
             const div = document.createElement('div');
             div.className = 'inv-item';
-            div.style.borderLeft = `5px solid ${item.color}`;
+            div.style.borderTop = `4px solid ${item.color}`;
             div.innerHTML = `
-                <div><b>${item.icon}</b> ${item.name} (${item.rarity})</div>
+                <b>${item.icon}</b>
+                <span style="color:${item.color}">${item.name}</span>
                 <div class="inv-buttons">
                     <button class="place-btn" onclick="preparePlacement(${index})">BYGG</button>
-                    <button class="sell-btn" onclick="sellItem(${index})">SÄLJ (${item.sellPrice})</button>
+                    <button class="sell-btn" onclick="sellItem(${index})">SÄLJ ${item.sellPrice}</button>
                 </div>`;
             invEl.appendChild(div);
         });
@@ -308,7 +333,6 @@
             const slot = document.createElement('div');
             slot.className = 'slot';
             if (data) {
-                // Sätt ramens färg baserat på sällsynthet
                 slot.style.borderColor = data.color;
                 slot.style.boxShadow = `inset 0 0 10px ${data.color}44`;
                 slot.innerHTML = `<div class="building-icon">${data.icon}</div><div class="income-tag">+${data.income}/s</div>`;
