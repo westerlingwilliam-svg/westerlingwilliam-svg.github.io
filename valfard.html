@@ -3,157 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Välfärdsbyggaren - Jimmie.Fun</title>
+    <title>Sverige-Byggaren: Lucky Blocks</title>
     <style>
+        :root {
+            --common: #b5b5b5;
+            --rare: #4facfe;
+            --epic: #a335ee;
+            --legendary: #ff8000;
+        }
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background: #001f3f;
             color: white;
             margin: 0;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
+            height: 100vh;
+            overflow: hidden;
         }
-        .header {
+        /* TOP BAR */
+        .top-bar {
             background: #005293;
-            width: 100%;
-            padding: 30px 0;
-            text-align: center;
-            border-bottom: 5px solid #fecc00;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid #fecc00;
         }
-        .stats {
-            font-size: 2.5rem;
-            margin: 20px 0;
-            color: #fecc00;
-            text-shadow: 2px 2px #000;
+        .balance { font-size: 1.5rem; font-weight: bold; color: #fecc00; }
+
+        /* MAIN LAYOUT */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
         }
-        #main-btn {
-            width: 280px;
-            height: 280px;
-            border-radius: 50%;
-            background: radial-gradient(#005293, #001f3f);
-            color: #fecc00;
-            font-size: 2.5rem;
-            font-weight: 900;
-            border: 12px solid #fecc00;
-            cursor: pointer;
-            box-shadow: 0 0 50px rgba(254, 204, 0, 0.3);
-            transition: 0.1s;
-            outline: none;
-        }
-        #main-btn:active { transform: scale(0.92); }
-        
-        .shop {
+
+        /* STADEN (Vänster sida) */
+        #city-grid {
+            flex: 2;
+            background: #003366;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            width: 90%;
-            max-width: 1200px;
-            margin: 40px 0;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            gap: 5px;
+            padding: 10px;
+            background-image: radial-gradient(#004080 1px, transparent 1px);
+            background-size: 40px 40px;
         }
-        .upg-card {
-            background: rgba(255,255,255,0.1);
-            padding: 20px;
-            border-radius: 15px;
-            border-left: 5px solid #fecc00;
+        .slot {
+            background: rgba(255,255,255,0.05);
+            border: 1px dashed rgba(255,255,255,0.2);
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+        .slot:hover { background: rgba(254, 204, 0, 0.1); }
+
+        /* SIDEBAR (Höger sida) */
+        .sidebar {
+            flex: 1;
+            background: #002b55;
+            border-left: 2px solid #fecc00;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            padding: 15px;
         }
-        .upg-card h3 { margin: 0; color: #fecc00; }
-        .buy-btn {
+
+        .lucky-block-section {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #005293;
+        }
+        #lucky-block {
+            width: 120px; height: 120px;
             background: #fecc00;
-            border: none;
-            padding: 12px;
-            font-weight: bold;
-            border-radius: 5px;
+            margin: 10px auto;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 4rem;
+            color: #005293;
             cursor: pointer;
+            box-shadow: 0 10px 0 #b38f00;
+            transition: 0.1s;
         }
-        .buy-btn:disabled { background: #555; cursor: not-allowed; }
+        #lucky-block:active { transform: translateY(5px); box-shadow: 0 5px 0 #b38f00; }
+
+        .inventory {
+            flex: 1;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        .inv-item {
+            background: rgba(255,255,255,0.1);
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+        }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h1>VÄLFÄRDSBYGGAREN</h1>
-    <p>Bygg Sverige med kraftfulla uppgraderingar</p>
-    <a href="games.html" style="color: #fecc00; text-decoration: none;">← Tillbaka till Spel</a>
+<div class="top-bar">
+    <div class="balance">💰 <span id="money">500</span> kr</div>
+    <div>STADS-INKOMST: <span id="pps">0</span> kr/sek</div>
+    <a href="games.html" style="color: white; text-decoration: none;">[ Avsluta ]</a>
 </div>
 
-<div class="stats" id="money-display">0 kr</div>
-<div style="margin-bottom: 20px;">Nuvarande Multiplier: <span id="mult-display" style="color:#00ff99">1.0</span>x</div>
+<div class="main-container">
+    <div id="city-grid">
+        </div>
 
-<button id="main-btn">BYGG</button>
+    <div class="sidebar">
+        <div class="lucky-block-section">
+            <h3>KÖP LUCKY BLOCK</h3>
+            <div id="lucky-block">?</div>
+            <p>Kostnad: <span id="block-cost">250</span> kr</p>
+        </div>
 
-<div class="shop" id="shop-container"></div>
+        <h3>Ditt Inventory</h3>
+        <div class="inventory" id="inventory">
+            </div>
+    </div>
+</div>
 
 <script>
-    let money = 0;
-    let multiplier = 1.0;
+    let money = 500;
+    let blockCost = 250;
+    let selectedBuilding = null;
+    let incomePerSecond = 0;
 
-    const upgrades = [
-        { id:"btn_fire", name:"Eld-Knappen", desc:"Brinnande folkhem", cost:750000000, icon:"🔥", text:"ELD", color:"#ff4500", mult: 1.5 },
-        { id:"btn_ice", name:"Is-Knappen", desc:"Kallt men effektivt", cost:900000000, icon:"❄️", text:"IS", color:"#66ccff", mult: 1.8 },
-        { id:"btn_space", name:"Galaktisk Knapp", desc:"Sverige i rymden", cost:2000000000, icon:"🚀", text:"SPACE", color:"#9b59ff", mult: 2.5 },
-        { id:"btn_ai", name:"AI-Knappen", desc:"Framtidens styre", cost:5000000000, icon:"🤖", text:"AI", color:"#00ff99", mult: 4.0 },
-        { id:"btn_god", name:"Gudomlig Knapp", desc:"Den ultimata kraften", cost:20000000000, icon:"⚡", text:"GUD", color:"#ffffff", mult: 10.0 },
-        { id:"btn_dark", name:"Mörka Staten", desc:"Dark mode-knapp", cost:40000000000, icon:"🌑", text:"DARK", color:"#111", mult: 25.0 },
-        { id:"btn_gold2", name:"Imperieknappen", desc:"Kejsar-nivå", cost:80000000000, icon:"👑", text:"IMPERIUM", color:"#ffd700", mult: 60.0 },
-        { id:"btn_void", name:"Void-Knappen", desc:"Oändligheten stirrar tillbaka", cost:200000000000, icon:"🌀", text:"VOID", color:"#551a8b", mult: 150.0 },
-        { id:"btn_cosmic", name:"Kosmisk Knapp", desc:"Universums makt", cost:700000000000, icon:"🌌", text:"COSMIC", color:"#00ffff", mult: 500.0 },
-        { id:"btn_omega", name:"Omega-Knappen", desc:"Den sista uppgraderingen", cost:2000000000000, icon:"Ω", text:"OMEGA", color:"#ffffff", mult: 1000.0 }
+    // Byggnads-data (Rarity påverkar inkomst)
+    const buildings = [
+        { name: "Röd Stuga", icon: "🏠", rarity: "common", income: 5, chance: 0.6 },
+        { name: "Hyreshus", icon: "🏢", rarity: "rare", income: 25, chance: 0.3 },
+        { name: "Kärnkraftverk", icon: "⚛️", rarity: "epic", income: 150, chance: 0.08 },
+        { name: "Guld-Slott", icon: "🏰", rarity: "legendary", income: 1000, chance: 0.02 }
     ];
 
-    const mainBtn = document.getElementById('main-btn');
-    const moneyDisp = document.getElementById('money-display');
-    const multDisp = document.getElementById('mult-display');
-    const shop = document.getElementById('shop-container');
+    let inventory = [];
+    let cityData = Array(36).fill(null);
 
-    mainBtn.onclick = () => {
-        money += (100 * multiplier); // Basinkomst 100 kr per klick
-        updateUI();
+    // Initiera staden
+    const grid = document.getElementById('city-grid');
+    for (let i = 0; i < 36; i++) {
+        const slot = document.createElement('div');
+        slot.className = 'slot';
+        slot.onclick = () => placeBuilding(i);
+        grid.appendChild(slot);
+    }
+
+    // Öppna Lucky Block
+    document.getElementById('lucky-block').onclick = () => {
+        if (money >= blockCost) {
+            money -= blockCost;
+            blockCost = Math.ceil(blockCost * 1.1); // Priset ökar
+            openBlock();
+            updateUI();
+        } else {
+            alert("Du behöver mer pengar!");
+        }
     };
 
-    function buy(id) {
-        const u = upgrades.find(x => x.id === id);
-        if (money >= u.cost) {
-            money -= u.cost;
-            multiplier += u.mult;
-            mainBtn.style.background = u.color;
-            mainBtn.style.color = (u.color === "#ffffff") ? "#000" : "#fecc00";
-            mainBtn.innerText = u.text;
-            updateUI();
-            alert("Uppgraderat till " + u.name + "!");
+    function openBlock() {
+        const rand = Math.random();
+        let cumulative = 0;
+        let wonItem = buildings[0];
+
+        for (const b of buildings) {
+            cumulative += b.chance;
+            if (rand < cumulative) {
+                wonItem = { ...b, id: Date.now() };
+                break;
+            }
+        }
+        inventory.push(wonItem);
+        renderInventory();
+    }
+
+    function renderInventory() {
+        const invEl = document.getElementById('inventory');
+        invEl.innerHTML = '';
+        inventory.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'inv-item';
+            div.style.borderLeft = `5px solid var(--${item.rarity})`;
+            div.innerHTML = `
+                <span>${item.icon} ${item.name}</span>
+                <button onclick="selectForPlacement(${index})">SÄTT UT</button>
+            `;
+            invEl.appendChild(div);
+        });
+    }
+
+    function selectForPlacement(index) {
+        selectedBuilding = index;
+        alert("Klicka nu på en ledig yta i staden!");
+    }
+
+    function placeBuilding(slotIndex) {
+        if (selectedBuilding !== null && cityData[slotIndex] === null) {
+            const item = inventory[selectedBuilding];
+            cityData[slotIndex] = item;
+            inventory.splice(selectedBuilding, 1);
+            selectedBuilding = null;
+            
+            renderCity();
+            renderInventory();
+            calculateIncome();
         }
     }
 
+    function renderCity() {
+        const slots = document.getElementsByClassName('slot');
+        cityData.forEach((data, i) => {
+            slots[i].innerText = data ? data.icon : "";
+            slots[i].style.background = data ? "rgba(255,255,255,0.15)" : "";
+        });
+    }
+
+    function calculateIncome() {
+        incomePerSecond = cityData.reduce((total, b) => total + (b ? b.income : 0), 0);
+        document.getElementById('pps').innerText = incomePerSecond;
+    }
+
     function updateUI() {
-        moneyDisp.innerText = Math.floor(money).toLocaleString() + " kr";
-        multDisp.innerText = multiplier.toFixed(1);
-        
-        upgrades.forEach(u => {
-            const b = document.getElementById('buy-' + u.id);
-            if(b) b.disabled = (money < u.cost);
-        });
+        document.getElementById('money').innerText = Math.floor(money).toLocaleString();
+        document.getElementById('block-cost').innerText = blockCost;
     }
 
-    function initShop() {
-        upgrades.forEach(u => {
-            const card = document.createElement('div');
-            card.className = 'upg-card';
-            card.innerHTML = `
-                <h3>${u.icon} ${u.name}</h3>
-                <p>${u.desc}</p>
-                <small>Ger +${u.mult}x multiplier</small>
-                <strong>Kostnad: ${u.cost.toLocaleString()} kr</strong>
-                <button class="buy-btn" id="buy-${u.id}" onclick="buy('${u.id}')">KÖP UPPGRADERING</button>
-            `;
-            shop.appendChild(card);
-        });
-    }
+    // Gameloop - Pengar rullar in varje sekund
+    setInterval(() => {
+        money += incomePerSecond;
+        updateUI();
+    }, 1000);
 
-    initShop();
     updateUI();
 </script>
 
