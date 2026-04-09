@@ -529,19 +529,44 @@
             }
         }
 
+        function activateSkin(techId) {
+            const tech = techUpgrades.find(t => t.id === techId);
+            if (!tech || tech.type !== "skin") return;
+            data.activeSkin = tech;
+            document.getElementById("clicker-icon").innerText = tech.icon;
+            document.getElementById("clicker-text").innerText = tech.text;
+            document.getElementById("clicker-visual").style.borderColor = tech.color;
+            renderEverything();
+            renderTech();
+        }
+
         function renderTech() {
             let html = "";
             const filtered = techUpgrades.filter(t => t.category === currentTechTab);
             
             filtered.forEach(t => {
                 const owned = data.ownedTech.includes(t.id);
-                // Show boost badge if skin has mpc_mult
+                const isActive = data.activeSkin && data.activeSkin.id === t.id;
                 const boostBadge = (t.type === "skin" && t.mpc_mult)
                     ? `<span class="skin-boost-badge">+${Math.round((t.mpc_mult - 1) * 100)}% klick</span>`
                     : '';
+
+                let rightSide;
+                if (!owned) {
+                    rightSide = `<div class="price-tag">${t.cost.toLocaleString()} kr</div>`;
+                } else if (t.type === "skin") {
+                    if (isActive) {
+                        rightSide = `<span style="color:#28a745; font-weight:bold;">&#10003; AKTIV</span>`;
+                    } else {
+                        rightSide = `<button onclick="event.stopPropagation(); activateSkin('${t.id}')" style="background:#005293; color:#fecc00; border:none; padding:6px 16px; border-radius:10px; cursor:pointer; font-weight:bold; font-size:0.85rem;">ANVÄND</button>`;
+                    }
+                } else {
+                    rightSide = `<span style="color:green">KÖPT &#10003;</span>`;
+                }
+
                 html += `
-                <div class="buy-button ${owned ? 'disabled' : ''}" onclick="buyTech('${t.id}')" style="margin-bottom:10px; border: 2px solid #005293">
-                    <div class="btn-header"><b>${t.name}${boostBadge}</b> ${owned ? '<span style="color:green">KÖPT ✓</span>' : `<div class="price-tag">${t.cost.toLocaleString()} kr</div>`}</div>
+                <div class="buy-button ${owned && t.type !== 'skin' ? 'disabled' : ''}" onclick="${!owned ? `buyTech('${t.id}')` : ''}" style="margin-bottom:10px; border: 2px solid ${isActive ? '#28a745' : '#005293'}; ${isActive ? 'background:#f0fff4;' : ''}">
+                    <div class="btn-header"><b>${t.name}${boostBadge}</b> ${rightSide}</div>
                     <div class="btn-sub">${t.desc}</div>
                 </div>`;
             });
