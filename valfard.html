@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lucky City: Mega Blocks Update</title>
+    <title>Lucky City: Pro Architect</title>
     <style>
         :root {
             --common: #b5b5b5;
@@ -27,13 +27,12 @@
             overflow: hidden;
         }
 
-        /* HEADER */
         .header {
             background: rgba(0, 30, 60, 0.95);
             backdrop-filter: blur(10px);
             padding: 15px 40px;
             display: grid;
-            grid-template-columns: 220px 1fr 220px;
+            grid-template-columns: 250px 1fr 220px;
             align-items: center;
             border-bottom: 3px solid var(--sd-gold);
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
@@ -42,51 +41,42 @@
 
         .stats-left b { color: var(--sd-gold); font-size: 1.4rem; }
 
-        /* MULTI-BLOCKS SYSTEM */
         .blocks-container { 
             display: flex; 
-            flex-direction: column; 
+            justify-content: center;
             align-items: center;
-            width: 100%;
         }
         
         .blocks-row {
             display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            padding: 10px;
-            width: 100%;
+            gap: 15px;
         }
 
-        .block-wrapper { text-align: center; min-width: 150px; position: relative; }
+        .block-wrapper { text-align: center; width: 130px; }
 
         .lucky-block {
-            width: 130px; height: 130px; /* Större blocks */
+            width: 115px; height: 115px;
             background: var(--sd-gold);
-            border-radius: 25px;
+            border-radius: 22px;
             display: flex;
             justify-content: center; align-items: center;
-            font-size: 5rem; color: var(--sd-blue);
+            font-size: 4.5rem; color: var(--sd-blue);
             cursor: pointer;
-            box-shadow: 0 10px 0 #b38f00, 0 0 30px rgba(254, 204, 0, 0.2);
+            box-shadow: 0 10px 0 #b38f00;
             transition: 0.1s;
             user-select: none;
             margin: 0 auto;
             position: relative;
         }
         
-        /* Färger för olika blocks */
-        .block-com { background: var(--common); color: #333; box-shadow: 0 10px 0 #888; }
-        .block-unc { background: var(--uncommon); color: #000; box-shadow: 0 10px 0 #158000; }
-        .block-rar { background: var(--rare); color: #fff; box-shadow: 0 10px 0 #004a94; }
-        .block-epi { background: var(--epic); color: #fff; box-shadow: 0 10px 0 #6d20a1; }
-        .block-leg { background: var(--legendary); color: #fff; box-shadow: 0 10px 0 #b35900; }
+        .block-1 { background: var(--common); color: #333; box-shadow: 0 10px 0 #888; }
+        .block-2 { background: var(--uncommon); color: #000; box-shadow: 0 10px 0 #158000; }
+        .block-3 { background: var(--rare); color: #fff; box-shadow: 0 10px 0 #004a94; }
+        .block-4 { background: var(--epic); color: #fff; box-shadow: 0 10px 0 #6d20a1; }
+        .block-5 { background: var(--legendary); color: #fff; box-shadow: 0 10px 0 #b35900; }
 
         .lucky-block.disabled { 
             opacity: 0.3; 
-            cursor: not-allowed; 
             filter: grayscale(1); 
             transform: translateY(6px);
             box-shadow: none !important;
@@ -98,8 +88,6 @@
             font-weight: 900;
             color: white;
             text-shadow: 0 0 15px black;
-            pointer-events: none;
-            display: none;
         }
 
         .drop-info {
@@ -107,43 +95,41 @@
             margin-top: 8px;
             padding: 5px;
             border-radius: 8px;
-            font-size: 0.75rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            min-height: 40px;
+            font-size: 0.7rem;
+            min-height: 45px;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
 
-        /* GAME AREA */
         .game-area { display: flex; flex: 1; overflow: hidden; }
+        
         #city-grid {
             flex: 3; display: grid;
             grid-template-columns: repeat(6, 1fr);
-            grid-template-rows: repeat(4, 1fr); /* Borttagen en rad */
-            gap: 15px; padding: 25px;
+            grid-template-rows: repeat(4, 1fr); /* Ändrat till 4 på höjden */
+            gap: 12px; padding: 20px;
         }
         
         .slot {
             background: rgba(255,255,255,0.03);
             border: 2px solid rgba(255,255,255,0.05);
-            border-radius: 15px;
+            border-radius: 12px;
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
             transition: 0.3s;
             cursor: pointer;
         }
-        .slot:hover { background: rgba(255,255,255,0.08); border-color: var(--sd-gold); }
 
         .building-icon { 
-            font-size: 3.5rem; 
+            font-size: 2.8rem; 
             filter: drop-shadow(0 0 8px rgba(0,0,0,0.5));
             animation: float 3s ease-in-out infinite;
         }
 
         @keyframes float {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+            50% { transform: translateY(-6px); }
         }
 
         .sidebar {
@@ -151,11 +137,26 @@
             border-left: 2px solid var(--sd-blue);
             padding: 20px; display: flex; flex-direction: column;
         }
+        
         .inv-item {
-            background: rgba(255,255,255,0.05); padding: 12px;
-            border-radius: 10px; margin-bottom: 10px;
+            background: rgba(255,255,255,0.05); padding: 10px;
+            border-radius: 8px; margin-bottom: 8px;
             border: 1px solid rgba(255,255,255,0.1);
-            display: flex; justify-content: space-between; align-items: center;
+            display: flex; flex-direction: column; gap: 5px;
+        }
+
+        .inv-buttons { display: flex; gap: 5px; }
+
+        .sell-btn {
+            background: #ff4444; color: white; border: none;
+            padding: 5px 10px; border-radius: 5px; cursor: pointer;
+            font-weight: bold; font-size: 0.7rem; flex: 1;
+        }
+
+        .place-btn {
+            background: var(--sd-gold); color: var(--sd-blue); border: none;
+            padding: 5px 10px; border-radius: 5px; cursor: pointer;
+            font-weight: bold; font-size: 0.7rem; flex: 1;
         }
 
         #game-msg {
@@ -167,12 +168,12 @@
         }
         .show-msg { opacity: 1 !important; }
         .highlight { border-color: #00ff99 !important; box-shadow: 0 0 20px rgba(0,255,153,0.3); }
-        .mythic-glow { box-shadow: inset 0 0 25px #ff003c, 0 0 15px #ff003c; border-color: #ff003c !important; }
+        .mythic-glow { box-shadow: inset 0 0 25px #ff003c, 0 0 15px #ff003c; }
         
         .income-tag { 
             background: rgba(0,0,0,0.6);
-            padding: 2px 8px; border-radius: 10px;
-            font-size: 0.75rem; color: #00ff99; font-weight: bold; margin-top: 5px; 
+            padding: 2px 6px; border-radius: 10px;
+            font-size: 0.7rem; color: #00ff99; font-weight: bold; margin-top: 4px; 
         }
     </style>
 </head>
@@ -188,8 +189,7 @@
     </div>
 
     <div class="blocks-container">
-        <div class="blocks-row" id="blocks-row">
-            </div>
+        <div class="blocks-row" id="blocks-row"></div>
     </div>
 
     <div style="text-align: right;">
@@ -210,57 +210,44 @@
 
 <script>
     let money = 500;
-    let currentMaxBlock = 1; // 1 = Common, 2 = Uncommon, etc.
+    let currentMaxBlock = 1; 
     let inventory = [];
-    let cityData = Array(24).fill(null); // Ändrat till 24 rutor (6x4)
+    let cityData = Array(24).fill(null); // 6x4 = 24 rutor
     let selectedInvIndex = null;
     let cooldowns = [0, 0, 0, 0, 0];
 
-    const upgCosts = [0, 2500, 10000, 50000, 250000];
-    const blockPrices = [250, 1250, 5000, 25000, 100000];
+    const upgCosts = [0, 2500, 15000, 75000, 300000];
+    const blockPrices = [250, 1500, 7500, 35000, 150000];
 
-    // Väldigt många fler saker
     const buildings = [
-        { name: "Röd Stuga", icon: "🏠", rarity: "Common", income: 10, color: "#b5b5b5" },
-        { name: "Liten Bod", icon: "🛖", rarity: "Common", income: 8, color: "#b5b5b5" },
-        { name: "Garage", icon: "🚗", rarity: "Common", income: 12, color: "#b5b5b5" },
-        { name: "Växthus", icon: "🌿", rarity: "Common", income: 15, color: "#b5b5b5" },
+        { name: "Stuga", icon: "🏠", rarity: "Common", income: 10, color: "#b5b5b5", sellPrice: 100 },
+        { name: "Bod", icon: "🛖", rarity: "Common", income: 8, color: "#b5b5b5", sellPrice: 80 },
+        { name: "Garage", icon: "🚗", rarity: "Common", income: 12, color: "#b5b5b5", sellPrice: 120 },
+        { name: "Kiosk", icon: "🏪", rarity: "Common", income: 15, color: "#b5b5b5", sellPrice: 150 },
         
-        { name: "Skånelänga", icon: "🏡", rarity: "Uncommon", income: 35, color: "#1eff00" },
-        { name: "Pizzeria", icon: "🍕", rarity: "Uncommon", income: 45, color: "#1eff00" },
-        { name: "Bensinstation", icon: "⛽", rarity: "Uncommon", income: 50, color: "#1eff00" },
-        { name: "Lager", icon: "📦", rarity: "Uncommon", income: 40, color: "#1eff00" },
+        { name: "Länga", icon: "🏡", rarity: "Uncommon", income: 35, color: "#1eff00", sellPrice: 600 },
+        { name: "Pizzeria", icon: "🍕", rarity: "Uncommon", income: 45, color: "#1eff00", sellPrice: 750 },
+        { name: "Macken", icon: "⛽", rarity: "Uncommon", income: 50, color: "#1eff00", sellPrice: 800 },
+        { name: "Skola", icon: "🏫", rarity: "Uncommon", income: 40, color: "#1eff00", sellPrice: 700 },
 
-        { name: "Hyreshus", icon: "🏢", rarity: "Rare", income: 120, color: "#0070dd" },
-        { name: "Köpcentrum", icon: "🛍️", rarity: "Rare", income: 150, color: "#0070dd" },
-        { name: "Sjukhus", icon: "🏥", rarity: "Rare", income: 180, color: "#0070dd" },
-        { name: "Bank", icon: "🏦", rarity: "Rare", income: 200, color: "#0070dd" },
+        { name: "Hyreshus", icon: "🏢", rarity: "Rare", income: 120, color: "#0070dd", sellPrice: 3000 },
+        { name: "Gallerian", icon: "🛍️", rarity: "Rare", income: 150, color: "#0070dd", sellPrice: 4000 },
+        { name: "Sjukhus", icon: "🏥", rarity: "Rare", income: 180, color: "#0070dd", sellPrice: 4500 },
+        { name: "Banken", icon: "🏦", rarity: "Rare", income: 200, color: "#0070dd", sellPrice: 5000 },
 
-        { name: "Fabrik", icon: "🏭", rarity: "Epic", income: 500, color: "#a335ee" },
-        { name: "Kärnkraft", icon: "⚛️", rarity: "Epic", income: 650, color: "#a335ee" },
-        { name: "Skyskrapa", icon: "🏙️", rarity: "Epic", income: 800, color: "#a335ee" },
-        { name: "Raketbas", icon: "🚀", rarity: "Epic", income: 1000, color: "#a335ee" },
+        { name: "Fabrik", icon: "🏭", rarity: "Epic", income: 550, color: "#a335ee", sellPrice: 15000 },
+        { name: "Kraftverk", icon: "⚛️", rarity: "Epic", income: 700, color: "#a335ee", sellPrice: 20000 },
+        { name: "Skyskrapa", icon: "🏙️", rarity: "Epic", income: 900, color: "#a335ee", sellPrice: 25000 },
+        { name: "Arena", icon: "🏟️", rarity: "Epic", income: 1100, color: "#a335ee", sellPrice: 30000 },
 
-        { name: "Guldslott", icon: "🏰", rarity: "Legendary", income: 3000, color: "#ff8000" },
-        { name: "Oljeplattform", icon: "🛢️", rarity: "Legendary", income: 4500, color: "#ff8000" },
-        { name: "Casino", icon: "🎰", rarity: "Legendary", income: 6000, color: "#ff8000" },
+        { name: "Slott", icon: "🏰", rarity: "Legendary", income: 3500, color: "#ff8000", sellPrice: 60000 },
+        { name: "Oljerigg", icon: "🛢️", rarity: "Legendary", income: 5000, color: "#ff8000", sellPrice: 85000 },
+        { name: "Casino", icon: "🎰", rarity: "Legendary", income: 7000, color: "#ff8000", sellPrice: 110000 },
 
-        { name: "Jimmies Slott", icon: "💎", rarity: "Mythic", income: 15000, color: "#ff003c" },
-        { name: "Framtidsstad", icon: "🛸", rarity: "Mythic", income: 25000, color: "#ff003c" },
-        { name: "Gudatempel", icon: "⛩️", rarity: "Mythic", income: 50000, color: "#ff003c" }
+        { name: "Imperium", icon: "💎", rarity: "Mythic", income: 18000, color: "#ff003c", sellPrice: 500000 },
+        { name: "Future City", icon: "🛸", rarity: "Mythic", income: 30000, color: "#ff003c", sellPrice: 800000 },
+        { name: "Mega-Bank", icon: "💰", rarity: "Mythic", income: 60000, color: "#ff003c", sellPrice: 1500000 }
     ];
-
-    function upgradeBlocks() {
-        let cost = upgCosts[currentMaxBlock];
-        if (money >= cost) {
-            money -= cost;
-            currentMaxBlock++;
-            renderBlocks();
-            updateUI();
-            saveGame();
-            showMessage("NYTT BLOCK UPPLÅST!");
-        } else { showMessage("⚠️ För lite pengar!"); }
-    }
 
     function buyBlock(tier) {
         if (cooldowns[tier-1] > 0) return;
@@ -274,19 +261,65 @@
         if (tier === 1) pool = buildings.filter(b => b.rarity !== "Mythic");
         if (tier === 2) pool = buildings.filter(b => b.rarity !== "Common");
         if (tier === 3) pool = buildings.filter(b => b.rarity !== "Common" && b.rarity !== "Uncommon");
-        if (tier === 4) pool = buildings.filter(b => b.rarity === "Epic" || b.rarity === "Legendary" || b.rarity === "Mythic");
+        if (tier === 4) pool = buildings.filter(b => b.rarity !== "Common" && b.rarity !== "Uncommon" && b.rarity !== "Rare");
         if (tier === 5) pool = buildings.filter(b => b.rarity === "Legendary" || b.rarity === "Mythic");
 
         const rand = Math.random() * 100;
         let wonItem;
-        // Enkel viktning baserat på poolen
-        if (rand < 2) wonItem = pool.filter(b => b.rarity === "Mythic")[0] || pool[pool.length-1];
-        else if (rand < 10) wonItem = pool.filter(b => b.rarity === "Legendary")[0] || pool[pool.length-1];
+        
+        // Svårare odds: Mythic 1%, Legendary 7%, resten fördelat
+        if (rand < 1) wonItem = pool.filter(b => b.rarity === "Mythic")[0] || pool[pool.length-1];
+        else if (rand < 8) wonItem = pool.filter(b => b.rarity === "Legendary")[0] || pool[pool.length-1];
         else wonItem = pool[Math.floor(Math.random() * pool.length)];
 
         inventory.push({ ...wonItem, id: Date.now() });
-        document.getElementById(`info-${tier}`).innerHTML = `<b style="color:${wonItem.color}">${wonItem.name}</b><br>${wonItem.rarity}`;
         renderInventory(); updateUI(); saveGame();
+    }
+
+    function sellItem(index) {
+        let item = inventory[index];
+        money += item.sellPrice;
+        inventory.splice(index, 1);
+        showMessage(`💰 Sålde ${item.name} för ${item.sellPrice} kr`);
+        renderInventory(); updateUI(); saveGame();
+    }
+
+    function renderInventory() {
+        const invEl = document.getElementById('inventory');
+        invEl.innerHTML = '';
+        inventory.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'inv-item';
+            div.style.borderLeft = `5px solid ${item.color}`;
+            div.innerHTML = `
+                <div><b>${item.icon}</b> ${item.name} (${item.rarity})</div>
+                <div class="inv-buttons">
+                    <button class="place-btn" onclick="preparePlacement(${index})">BYGG</button>
+                    <button class="sell-btn" onclick="sellItem(${index})">SÄLJ (${item.sellPrice})</button>
+                </div>`;
+            invEl.appendChild(div);
+        });
+    }
+
+    function renderCity() {
+        const grid = document.getElementById('city-grid');
+        grid.innerHTML = '';
+        cityData.forEach((data, i) => {
+            const slot = document.createElement('div');
+            slot.className = 'slot';
+            if (data) {
+                // Sätt ramens färg baserat på sällsynthet
+                slot.style.borderColor = data.color;
+                slot.style.boxShadow = `inset 0 0 10px ${data.color}44`;
+                slot.innerHTML = `<div class="building-icon">${data.icon}</div><div class="income-tag">+${data.income}/s</div>`;
+                if(data.rarity === "Mythic") slot.classList.add('mythic-glow');
+            } else {
+                slot.style.borderColor = "rgba(255,255,255,0.05)";
+                slot.style.boxShadow = "none";
+            }
+            slot.onclick = () => handleSlotClick(i);
+            grid.appendChild(slot);
+        });
     }
 
     function startCooldown(tier) {
@@ -294,28 +327,37 @@
         renderBlocks();
         let t = setInterval(() => {
             cooldowns[tier-1]--;
-            if(document.getElementById(`cd-${tier}`)) document.getElementById(`cd-${tier}`).innerText = cooldowns[tier-1];
+            const cdDisplay = document.getElementById(`cd-${tier}`);
+            if(cdDisplay) cdDisplay.innerText = cooldowns[tier-1];
             if (cooldowns[tier-1] <= 0) { clearInterval(t); renderBlocks(); }
         }, 1000);
+    }
+
+    function upgradeBlocks() {
+        let cost = upgCosts[currentMaxBlock];
+        if (money >= cost) {
+            money -= cost;
+            currentMaxBlock++;
+            renderBlocks(); updateUI(); saveGame();
+            showMessage("NYTT BLOCK UPPLÅST!");
+        } else { showMessage("⚠️ För lite pengar!"); }
     }
 
     function renderBlocks() {
         const row = document.getElementById('blocks-row');
         row.innerHTML = '';
-        const names = ["COM", "UNC", "RAR", "EPI", "LEG"];
-        const classes = ["block-com", "block-unc", "block-rar", "block-epi", "block-leg"];
-
+        const names = ["COMMON", "UNCOMMON", "RARE", "EPIC", "LEGEND"];
+        const icons = ["?", "★", "◆", "✦", "👑"];
         for (let i = 1; i <= currentMaxBlock; i++) {
             const wrap = document.createElement('div');
             wrap.className = 'block-wrapper';
             const isCd = cooldowns[i-1] > 0;
             wrap.innerHTML = `
-                <div id="block-${i}" class="lucky-block ${classes[i-1]} ${isCd ? 'disabled' : ''}" onclick="buyBlock(${i})">
-                    ${isCd ? '' : '?'}
+                <div id="block-${i}" class="lucky-block block-${i} ${isCd ? 'disabled' : ''}" onclick="buyBlock(${i})">
+                    ${isCd ? '' : icons[i-1]}
                     <div id="cd-${i}" class="cooldown-text" style="display:${isCd?'block':'none'}">${cooldowns[i-1]}</div>
                 </div>
-                <div id="info-${i}" class="drop-info">${names[i-1]} (${blockPrices[i-1]} KR)</div>
-            `;
+                <div id="info-${i}" class="drop-info">${names[i-1]}<br>(${blockPrices[i-1]} KR)</div>`;
             row.appendChild(wrap);
         }
     }
@@ -340,34 +382,6 @@
         }
     }
 
-    function renderCity() {
-        const grid = document.getElementById('city-grid');
-        grid.innerHTML = '';
-        cityData.forEach((data, i) => {
-            const slot = document.createElement('div');
-            slot.className = 'slot';
-            if (data) {
-                slot.innerHTML = `<div class="building-icon">${data.icon}</div><div class="income-tag">+${data.income}/s</div>`;
-                if(data.rarity === "Mythic") slot.classList.add('mythic-glow');
-            }
-            slot.onclick = () => handleSlotClick(i);
-            grid.appendChild(slot);
-        });
-    }
-
-    function renderInventory() {
-        const invEl = document.getElementById('inventory');
-        invEl.innerHTML = '';
-        inventory.forEach((item, index) => {
-            const div = document.createElement('div');
-            div.className = 'inv-item';
-            div.style.borderLeft = `5px solid ${item.color}`;
-            div.innerHTML = `<div><b>${item.icon}</b> ${item.name}<br><small>${item.rarity}</small></div>
-            <button class="place-btn" onclick="event.stopPropagation(); preparePlacement(${index})">BYGG</button>`;
-            invEl.appendChild(div);
-        });
-    }
-
     function preparePlacement(index) {
         selectedInvIndex = index;
         const slots = document.getElementsByClassName('slot');
@@ -389,16 +403,20 @@
     }
 
     function saveGame() {
-        localStorage.setItem('valfard_mega_save', JSON.stringify({money, currentMaxBlock, inventory, cityData}));
+        localStorage.setItem('valfard_pro_v3', JSON.stringify({money, currentMaxBlock, inventory, cityData}));
     }
 
     function loadGame() {
-        const s = localStorage.getItem('valfard_mega_save');
+        const s = localStorage.getItem('valfard_pro_v3');
         if (s) {
             const d = JSON.parse(s);
             money = d.money; currentMaxBlock = d.currentMaxBlock;
             inventory = d.inventory; cityData = d.cityData;
         }
+    }
+
+    function resetGame() {
+        if(confirm("Nollställa staden?")) { localStorage.removeItem('valfard_pro_v3'); location.reload(); }
     }
 
     setInterval(() => {
