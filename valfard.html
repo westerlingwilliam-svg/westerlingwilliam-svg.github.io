@@ -6,8 +6,9 @@
     <title>Välfärdsbyggaren - Jimmie.Fun</title>
     <style>
         body {
-            font-family: 'Arial Black', sans-serif;
-            background: #f4f4f4;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #001f3f;
+            color: white;
             margin: 0;
             display: flex;
             flex-direction: column;
@@ -16,153 +17,143 @@
         }
         .header {
             background: #005293;
-            color: white;
             width: 100%;
+            padding: 30px 0;
             text-align: center;
-            padding: 20px 0;
-            border-bottom: 10px solid #fecc00;
+            border-bottom: 5px solid #fecc00;
         }
-        .stat-panel {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            text-align: center;
-            min-width: 300px;
-        }
-        .main-btn {
-            width: 250px;
-            height: 250px;
-            border-radius: 50%;
-            background: #005293;
+        .stats {
+            font-size: 2.5rem;
+            margin: 20px 0;
             color: #fecc00;
-            font-size: 2rem;
-            border: 10px solid #fecc00;
+            text-shadow: 2px 2px #000;
+        }
+        #main-btn {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(#005293, #001f3f);
+            color: #fecc00;
+            font-size: 2.5rem;
+            font-weight: 900;
+            border: 12px solid #fecc00;
             cursor: pointer;
-            box-shadow: 0 10px 0 #003a69;
+            box-shadow: 0 0 50px rgba(254, 204, 0, 0.3);
             transition: 0.1s;
-            margin-bottom: 40px;
+            outline: none;
         }
-        .main-btn:active {
-            transform: translateY(5px);
-            box-shadow: 0 5px 0 #003a69;
-        }
-        .upgrade-container {
+        #main-btn:active { transform: scale(0.92); }
+        
+        .shop {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
             width: 90%;
-            max-width: 1000px;
-            padding-bottom: 50px;
+            max-width: 1200px;
+            margin: 40px 0;
         }
         .upg-card {
-            background: white;
-            border: 3px solid #005293;
-            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid #fecc00;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: 8px;
+            flex-direction: column;
+            gap: 10px;
         }
-        .upg-card:hover { background: #eef7ff; }
-        .upg-info h3 { margin: 0; font-size: 1rem; }
+        .upg-card h3 { margin: 0; color: #fecc00; }
         .buy-btn {
             background: #fecc00;
             border: none;
-            padding: 10px;
+            padding: 12px;
             font-weight: bold;
-            cursor: pointer;
             border-radius: 5px;
+            cursor: pointer;
         }
-        .buy-btn:disabled { background: #ccc; cursor: not-allowed; }
+        .buy-btn:disabled { background: #555; cursor: not-allowed; }
     </style>
 </head>
 <body>
 
 <div class="header">
     <h1>VÄLFÄRDSBYGGAREN</h1>
-    <a href="index.html" style="color: white; text-decoration: none;">[ Tillbaka ]</a>
+    <p>Bygg Sverige med kraftfulla uppgraderingar</p>
+    <a href="games.html" style="color: #fecc00; text-decoration: none;">← Tillbaka till Spel</a>
 </div>
 
-<div class="stat-panel">
-    <h2 id="money-display">0 kr</h2>
-    <p>Inkomst per klick: <span id="mult-display">1</span> kr</p>
-</div>
+<div class="stats" id="money-display">0 kr</div>
+<div style="margin-bottom: 20px;">Nuvarande Multiplier: <span id="mult-display" style="color:#00ff99">1.0</span>x</div>
 
-<button class="main-btn" id="clicker">BYGG</button>
+<button id="main-btn">BYGG</button>
 
-<div class="upgrade-container" id="upgrades">
-    </div>
+<div class="shop" id="shop-container"></div>
 
 <script>
     let money = 0;
-    let currentMultiplier = 1;
+    let multiplier = 1.0;
 
-    const buttons = [
-        { id:"btn_fire", name:"Eld-Knappen", desc:"Brinnande folkhem", cost:750000000, icon:"🔥", text:"ELD", color:"#ff4500", multiplier: 1.5 },
-        { id:"btn_ice", name:"Is-Knappen", desc:"Kallt men effektivt", cost:900000000, icon:"❄️", text:"IS", color:"#66ccff", multiplier: 1.8 },
-        { id:"btn_space", name:"Galaktisk Knapp", desc:"Sverige i rymden", cost:2000000000, icon:"🚀", text:"SPACE", color:"#9b59ff", multiplier: 2.5 },
-        { id:"btn_ai", name:"AI-Knappen", desc:"Framtidens styre", cost:5000000000, icon:"🤖", text:"AI", color:"#00ff99", multiplier: 4.0 },
-        { id:"btn_god", name:"Gudomlig Knapp", desc:"Den ultimata kraften", cost:20000000000, icon:"⚡", text:"GUD", color:"#ffffff", multiplier: 10.0 },
-        { id:"btn_dark", name:"Mörka Staten", desc:"Dark mode-knapp", cost:40000000000, icon:"🌑", text:"DARK", color:"#111", multiplier: 25.0 },
-        { id:"btn_gold2", name:"Imperieknappen", desc:"Kejsar-nivå", cost:80000000000, icon:"👑", text:"IMPERIUM", color:"#ffd700", multiplier: 60.0 },
-        { id:"btn_void", name:"Void-Knappen", desc:"Oändligheten stirrar tillbaka", cost:200000000000, icon:"🌀", text:"VOID", color:"#551a8b", multiplier: 150.0 },
-        { id:"btn_cosmic", name:"Kosmisk Knapp", desc:"Universums makt", cost:700000000000, icon:"🌌", text:"COSMIC", color:"#00ffff", multiplier: 500.0 },
-        { id:"btn_omega", name:"Omega-Knappen", desc:"Den sista uppgraderingen", cost:2000000000000, icon:"Ω", text:"OMEGA", color:"#ffffff", multiplier: 1000.0 }
+    const upgrades = [
+        { id:"btn_fire", name:"Eld-Knappen", desc:"Brinnande folkhem", cost:750000000, icon:"🔥", text:"ELD", color:"#ff4500", mult: 1.5 },
+        { id:"btn_ice", name:"Is-Knappen", desc:"Kallt men effektivt", cost:900000000, icon:"❄️", text:"IS", color:"#66ccff", mult: 1.8 },
+        { id:"btn_space", name:"Galaktisk Knapp", desc:"Sverige i rymden", cost:2000000000, icon:"🚀", text:"SPACE", color:"#9b59ff", mult: 2.5 },
+        { id:"btn_ai", name:"AI-Knappen", desc:"Framtidens styre", cost:5000000000, icon:"🤖", text:"AI", color:"#00ff99", mult: 4.0 },
+        { id:"btn_god", name:"Gudomlig Knapp", desc:"Den ultimata kraften", cost:20000000000, icon:"⚡", text:"GUD", color:"#ffffff", mult: 10.0 },
+        { id:"btn_dark", name:"Mörka Staten", desc:"Dark mode-knapp", cost:40000000000, icon:"🌑", text:"DARK", color:"#111", mult: 25.0 },
+        { id:"btn_gold2", name:"Imperieknappen", desc:"Kejsar-nivå", cost:80000000000, icon:"👑", text:"IMPERIUM", color:"#ffd700", mult: 60.0 },
+        { id:"btn_void", name:"Void-Knappen", desc:"Oändligheten stirrar tillbaka", cost:200000000000, icon:"🌀", text:"VOID", color:"#551a8b", mult: 150.0 },
+        { id:"btn_cosmic", name:"Kosmisk Knapp", desc:"Universums makt", cost:700000000000, icon:"🌌", text:"COSMIC", color:"#00ffff", mult: 500.0 },
+        { id:"btn_omega", name:"Omega-Knappen", desc:"Den sista uppgraderingen", cost:2000000000000, icon:"Ω", text:"OMEGA", color:"#ffffff", mult: 1000.0 }
     ];
 
-    const clicker = document.getElementById('clicker');
-    const moneyTxt = document.getElementById('money-display');
-    const multTxt = document.getElementById('mult-display');
-    const upgList = document.getElementById('upgrades');
+    const mainBtn = document.getElementById('main-btn');
+    const moneyDisp = document.getElementById('money-display');
+    const multDisp = document.getElementById('mult-display');
+    const shop = document.getElementById('shop-container');
 
-    clicker.onclick = () => {
-        money += (1 * currentMultiplier);
+    mainBtn.onclick = () => {
+        money += (100 * multiplier); // Basinkomst 100 kr per klick
         updateUI();
     };
 
+    function buy(id) {
+        const u = upgrades.find(x => x.id === id);
+        if (money >= u.cost) {
+            money -= u.cost;
+            multiplier += u.mult;
+            mainBtn.style.background = u.color;
+            mainBtn.style.color = (u.color === "#ffffff") ? "#000" : "#fecc00";
+            mainBtn.innerText = u.text;
+            updateUI();
+            alert("Uppgraderat till " + u.name + "!");
+        }
+    }
+
     function updateUI() {
-        moneyTxt.innerText = Math.floor(money).toLocaleString() + " kr";
-        multTxt.innerText = currentMultiplier.toLocaleString();
+        moneyDisp.innerText = Math.floor(money).toLocaleString() + " kr";
+        multDisp.innerText = multiplier.toFixed(1);
         
-        // Uppdatera om knappar kan köpas
-        buttons.forEach(b => {
-            const btnEl = document.getElementById('buy-' + b.id);
-            if(btnEl) btnEl.disabled = (money < b.cost);
+        upgrades.forEach(u => {
+            const b = document.getElementById('buy-' + u.id);
+            if(b) b.disabled = (money < u.cost);
         });
     }
 
-    function renderButtons() {
-        upgList.innerHTML = '';
-        buttons.forEach(b => {
+    function initShop() {
+        upgrades.forEach(u => {
             const card = document.createElement('div');
             card.className = 'upg-card';
             card.innerHTML = `
-                <div class="upg-info">
-                    <h3>${b.icon} ${b.name}</h3>
-                    <small>${b.desc} (x${b.multiplier} mult)</small><br>
-                    <strong>${b.cost.toLocaleString()} kr</strong>
-                </div>
-                <button class="buy-btn" id="buy-${b.id}" onclick="buy('${b.id}')">KÖP</button>
+                <h3>${u.icon} ${u.name}</h3>
+                <p>${u.desc}</p>
+                <small>Ger +${u.mult}x multiplier</small>
+                <strong>Kostnad: ${u.cost.toLocaleString()} kr</strong>
+                <button class="buy-btn" id="buy-${u.id}" onclick="buy('${u.id}')">KÖP UPPGRADERING</button>
             `;
-            upgList.appendChild(card);
+            shop.appendChild(card);
         });
     }
 
-    window.buy = (id) => {
-        const upg = buttons.find(b => b.id === id);
-        if (money >= upg.cost) {
-            money -= upg.cost;
-            currentMultiplier += upg.multiplier; // Lägger på multipliern
-            clicker.style.backgroundColor = upg.color;
-            clicker.innerText = upg.text;
-            updateUI();
-            alert("Sverige uppgraderat till " + upg.name + "!");
-        }
-    };
-
-    renderButtons();
+    initShop();
     updateUI();
 </script>
 
