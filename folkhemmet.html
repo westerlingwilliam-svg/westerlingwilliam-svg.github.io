@@ -301,6 +301,40 @@
             transform: scale(1.1);
         }
 
+        /* WIN MODAL */
+        .win-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            justify-content: center;
+            align-items: center;
+        }
+        .win-modal.show { display: flex; }
+        .win-box {
+            background: linear-gradient(135deg, #fecc00, #fff 60%, #fecc00);
+            border: 10px solid #005293;
+            border-radius: 30px;
+            padding: 50px 60px;
+            text-align: center;
+            max-width: 600px;
+            box-shadow: 0 0 60px rgba(254,204,0,0.8), 0 20px 60px rgba(0,0,0,0.5);
+            animation: winPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes winPop {
+            from { transform: scale(0.5); opacity: 0; }
+            to   { transform: scale(1);   opacity: 1; }
+        }
+        .win-box h2 { font-size: 3rem; color: #005293; margin: 0 0 10px; text-shadow: 3px 3px 0 rgba(255,255,255,0.6); }
+        .win-box p { font-size: 1.2rem; color: #333; margin-bottom: 30px; }
+        .win-btn-row { display: flex; gap: 20px; justify-content: center; }
+        .win-btn { padding: 18px 40px; font-size: 1.3rem; font-weight: 900; border: none; border-radius: 15px; cursor: pointer; transition: 0.1s; }
+        .win-btn:active { transform: translateY(3px); }
+        .win-btn-continue { background: #005293; color: #fecc00; box-shadow: 0 6px 0 #002b4d; }
+        .win-btn-restart { background: #cc0000; color: white; box-shadow: 0 6px 0 #880000; }
+
         /* Skin boost badge */
         .skin-boost-badge {
             display: inline-block;
@@ -348,6 +382,19 @@
             </div>
 
             <div id="tech-list" class="scroll-content"></div>
+        </div>
+    </div>
+
+    <!-- WIN MODAL -->
+    <div id="winModal" class="win-modal">
+        <div class="win-box">
+            <div style="font-size:5rem; margin-bottom:10px;">🏆🇸🇪🏆</div>
+            <h2>FOLKHEMMET ÄR BYGGT!</h2>
+            <p>Grattis! Du har klarat spelet och byggt ett fullständigt folkhem.<br>Men vill du fortsätta?</p>
+            <div class="win-btn-row">
+                <button class="win-btn win-btn-continue" onclick="continueGame()">✅ FORTSÄTT SPELA</button>
+                <button class="win-btn win-btn-restart" onclick="restartGame()">🔄 BÖRJA OM</button>
+            </div>
         </div>
     </div>
 
@@ -413,7 +460,8 @@
             shopDiscount: 0,
             buildingEfficiency: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             ownedTech: [],
-            activeSkin: null   // NEW: tracks currently active skin
+            activeSkin: null,   // NEW: tracks currently active skin
+            hasWon: false
         };
 
         const buildings = [
@@ -481,7 +529,7 @@
 { id:"btn_void", name:"Void-Knappen", desc:"Oändligheten stirrar tillbaka (+150% klick)", cost:200000000000, type:"skin", icon:"🌀", text:"VOID", color:"#551a8b", mpc_mult:2.5, category:"cosmetic"},
 { id:"btn_cosmic", name:"Kosmisk Knapp", desc:"Universums makt (+200% klick)", cost:700000000000, type:"skin", icon:"🌌", text:"COSMIC", color:"#00ffff", mpc_mult:3.0, category:"cosmetic"},
 { id:"btn_omega", name:"Omega-Knappen", desc:"Den sista uppgraderingen (+300% klick)", cost:2000000000000, type:"skin", icon:"Ω", text:"OMEGA", color:"#ffffff", mpc_mult:4.0, category:"cosmetic"},
-{ id:"btn_jimmie", name:"Jimmies Knapp 🌸", desc:"Sverigedemokraternas ultimata knapp (+500% klick)", cost:10000000000000, type:"skin", icon:"🌸", text:"JIMMIE", color:"#0047AB", mpc_mult:6.7, category:"cosmetic"}
+{ id:"btn_jimmie", name:"Jimmies Knapp 🌸", desc:"Sverigedemokraternas ultimata knapp (+500% klick)", cost:10000000000000, type:"skin", icon:"🌸", text:"JIMMIE", color:"#0047AB", mpc_mult:6.0, category:"cosmetic"}
 
 ];
 
@@ -526,6 +574,25 @@
                 renderEverything();
                 renderTech();
             }
+        }
+
+        function buyFolkhemmet() {
+            const winCost = 50000000000000;
+            if (data.money >= winCost && !data.hasWon) {
+                data.money -= winCost;
+                data.hasWon = true;
+                document.getElementById("winModal").classList.add("show");
+                renderEverything();
+            }
+        }
+
+        function continueGame() {
+            document.getElementById("winModal").classList.remove("show");
+        }
+
+        function restartGame() {
+            localStorage.removeItem(STORAGE_KEY);
+            location.reload();
         }
 
         function applyActiveSkinVisuals(tech) {
@@ -732,6 +799,31 @@
                     </button>`;
                 }
             });
+
+            // Bygg Folkhemmet - win condition item
+            const winCost = 50000000000000;
+            if (!data.hasWon) {
+                const canAfford = data.money >= winCost;
+                const visible = data.money >= winCost * 0.3 || data.bCounts.reduce((a,b)=>a+b,0) >= 50;
+                if (visible) {
+                    bHtml += `
+                    <div style="margin-top:15px; border-top: 4px solid #fecc00; padding-top: 15px;">
+                        <button class="buy-button ${canAfford ? '' : 'disabled'}" id="build-win" onclick="buyFolkhemmet()" style="background: linear-gradient(135deg, #fecc00, #fff 60%, #fecc00); border: 3px solid #005293;">
+                            <div class="btn-header"><b>🏛️ Bygg Folkhemmet</b> <div class="price-tag" style="background:#005293; color:#fecc00;">50 Biljoner kr</div></div>
+                            <div class="btn-sub" style="color:#005293; font-weight:bold;">Det ultimata målet. Slutför folkhemmet en gång för alla.</div>
+                        </button>
+                    </div>`;
+                }
+            } else {
+                bHtml += `
+                <div style="margin-top:15px; border-top: 4px solid #fecc00; padding-top: 15px;">
+                    <div class="buy-button disabled" style="background: linear-gradient(135deg, #fecc00, #fff 60%, #fecc00); border: 3px solid #28a745; text-align:center;">
+                        <div class="btn-header" style="justify-content:center;"><b>🏛️ Folkhemmet är byggt! ✅</b></div>
+                        <div class="btn-sub" style="text-align:center; color:#28a745; font-weight:bold;">Du har klarat spelet!</div>
+                    </div>
+                </div>`;
+            }
+
             document.getElementById("building-list").innerHTML = bHtml;
             
             document.getElementById("ach-license-area").style.display = data.hasLicense ? "none" : "block";
