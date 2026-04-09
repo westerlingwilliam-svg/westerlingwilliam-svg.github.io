@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Välfärdsbyggaren - Jimmie.Fun</title>
+    <style>
+        body {
+            font-family: 'Arial Black', sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .header {
+            background: #005293;
+            color: white;
+            width: 100%;
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 10px solid #fecc00;
+        }
+        .stat-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            min-width: 300px;
+        }
+        .main-btn {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: #005293;
+            color: #fecc00;
+            font-size: 2rem;
+            border: 10px solid #fecc00;
+            cursor: pointer;
+            box-shadow: 0 10px 0 #003a69;
+            transition: 0.1s;
+            margin-bottom: 40px;
+        }
+        .main-btn:active {
+            transform: translateY(5px);
+            box-shadow: 0 5px 0 #003a69;
+        }
+        .upgrade-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            width: 90%;
+            max-width: 1000px;
+            padding-bottom: 50px;
+        }
+        .upg-card {
+            background: white;
+            border: 3px solid #005293;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 8px;
+        }
+        .upg-card:hover { background: #eef7ff; }
+        .upg-info h3 { margin: 0; font-size: 1rem; }
+        .buy-btn {
+            background: #fecc00;
+            border: none;
+            padding: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .buy-btn:disabled { background: #ccc; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>VÄLFÄRDSBYGGAREN</h1>
+    <a href="index.html" style="color: white; text-decoration: none;">[ Tillbaka ]</a>
+</div>
+
+<div class="stat-panel">
+    <h2 id="money-display">0 kr</h2>
+    <p>Inkomst per klick: <span id="mult-display">1</span> kr</p>
+</div>
+
+<button class="main-btn" id="clicker">BYGG</button>
+
+<div class="upgrade-container" id="upgrades">
+    </div>
+
+<script>
+    let money = 0;
+    let currentMultiplier = 1;
+
+    const buttons = [
+        { id:"btn_fire", name:"Eld-Knappen", desc:"Brinnande folkhem", cost:750000000, icon:"🔥", text:"ELD", color:"#ff4500", multiplier: 1.5 },
+        { id:"btn_ice", name:"Is-Knappen", desc:"Kallt men effektivt", cost:900000000, icon:"❄️", text:"IS", color:"#66ccff", multiplier: 1.8 },
+        { id:"btn_space", name:"Galaktisk Knapp", desc:"Sverige i rymden", cost:2000000000, icon:"🚀", text:"SPACE", color:"#9b59ff", multiplier: 2.5 },
+        { id:"btn_ai", name:"AI-Knappen", desc:"Framtidens styre", cost:5000000000, icon:"🤖", text:"AI", color:"#00ff99", multiplier: 4.0 },
+        { id:"btn_god", name:"Gudomlig Knapp", desc:"Den ultimata kraften", cost:20000000000, icon:"⚡", text:"GUD", color:"#ffffff", multiplier: 10.0 },
+        { id:"btn_dark", name:"Mörka Staten", desc:"Dark mode-knapp", cost:40000000000, icon:"🌑", text:"DARK", color:"#111", multiplier: 25.0 },
+        { id:"btn_gold2", name:"Imperieknappen", desc:"Kejsar-nivå", cost:80000000000, icon:"👑", text:"IMPERIUM", color:"#ffd700", multiplier: 60.0 },
+        { id:"btn_void", name:"Void-Knappen", desc:"Oändligheten stirrar tillbaka", cost:200000000000, icon:"🌀", text:"VOID", color:"#551a8b", multiplier: 150.0 },
+        { id:"btn_cosmic", name:"Kosmisk Knapp", desc:"Universums makt", cost:700000000000, icon:"🌌", text:"COSMIC", color:"#00ffff", multiplier: 500.0 },
+        { id:"btn_omega", name:"Omega-Knappen", desc:"Den sista uppgraderingen", cost:2000000000000, icon:"Ω", text:"OMEGA", color:"#ffffff", multiplier: 1000.0 }
+    ];
+
+    const clicker = document.getElementById('clicker');
+    const moneyTxt = document.getElementById('money-display');
+    const multTxt = document.getElementById('mult-display');
+    const upgList = document.getElementById('upgrades');
+
+    clicker.onclick = () => {
+        money += (1 * currentMultiplier);
+        updateUI();
+    };
+
+    function updateUI() {
+        moneyTxt.innerText = Math.floor(money).toLocaleString() + " kr";
+        multTxt.innerText = currentMultiplier.toLocaleString();
+        
+        // Uppdatera om knappar kan köpas
+        buttons.forEach(b => {
+            const btnEl = document.getElementById('buy-' + b.id);
+            if(btnEl) btnEl.disabled = (money < b.cost);
+        });
+    }
+
+    function renderButtons() {
+        upgList.innerHTML = '';
+        buttons.forEach(b => {
+            const card = document.createElement('div');
+            card.className = 'upg-card';
+            card.innerHTML = `
+                <div class="upg-info">
+                    <h3>${b.icon} ${b.name}</h3>
+                    <small>${b.desc} (x${b.multiplier} mult)</small><br>
+                    <strong>${b.cost.toLocaleString()} kr</strong>
+                </div>
+                <button class="buy-btn" id="buy-${b.id}" onclick="buy('${b.id}')">KÖP</button>
+            `;
+            upgList.appendChild(card);
+        });
+    }
+
+    window.buy = (id) => {
+        const upg = buttons.find(b => b.id === id);
+        if (money >= upg.cost) {
+            money -= upg.cost;
+            currentMultiplier += upg.multiplier; // Lägger på multipliern
+            clicker.style.backgroundColor = upg.color;
+            clicker.innerText = upg.text;
+            updateUI();
+            alert("Sverige uppgraderat till " + upg.name + "!");
+        }
+    };
+
+    renderButtons();
+    updateUI();
+</script>
+
+</body>
+</html>
