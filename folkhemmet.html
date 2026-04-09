@@ -43,7 +43,7 @@
             position: relative;
         }
 
-        /* NY UPGRADES KNAPP */
+        /* UPGRADES KNAPP */
         .upgrade-shop-btn {
             position: absolute;
             top: 20px;
@@ -304,8 +304,7 @@
             <h2 style="color: #005293; text-align: center; font-size: 2rem;">TEKNISKA FRAMSTEG</h2>
             <p style="text-align: center; color: #666;">Investera i nationens framtid.</p>
             <hr>
-            <div id="tech-list">
-                </div>
+            <div id="tech-list"></div>
         </div>
     </div>
 
@@ -337,8 +336,8 @@
                  onmouseup="endHold()" 
                  onmouseleave="endHold()"
                  onclick="doClick(event)">
-                <span id="clicker-icon" style="font-size: 8rem;">🏠</span>
-                <b id="clicker-text" style="font-size: 2rem;">KLICKA!</b>
+                <span id="clicker-icon" style="font-size: 8rem; pointer-events: none;">🏠</span>
+                <b id="clicker-text" style="font-size: 2rem; pointer-events: none;">KLICKA!</b>
             </div>
             <a href="games.html" class="back-btn">TILLBAKA MENYN</a>
         </div>
@@ -356,7 +355,7 @@
     </div>
 
     <script>
-        const STORAGE_KEY = 'folkhem_hardcore_v9';
+        const STORAGE_KEY = 'folkhem_hardcore_v10';
 
         let data = {
             money: 0, clicks: 0, mpc: 1, autoClicks: 0,
@@ -368,9 +367,8 @@
             bCosts: [50, 400, 2000, 10000, 60000, 400000, 2500000, 15000000, 100000000, 1000000000, 10000000000],
             hammerLevel: 0,
             hasHeld5s: false,
-            // NYA DATA-PUNKTER FÖR UPPGRADERINGAR
-            shopDiscount: 0, // i procent (max 25%)
-            buildingEfficiency: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // Multiplikator per byggnad
+            shopDiscount: 0,
+            buildingEfficiency: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             buttonType: "default"
         };
 
@@ -383,7 +381,6 @@
             { name: "SD-Högkvarteret 🌸", inc: 10000000 }
         ];
 
-        // Definiton av de nya special-uppgraderingarna
         const techUpgrades = [
             { id: "disc1", name: "Bygglovs-rabatt", desc: "Sänker alla priser i butiken med 10%", cost: 10000, type: "discount", val: 0.1 },
             { id: "disc2", name: "Massproduktion", desc: "Sänker alla priser ytterligare 15%", cost: 500000, type: "discount", val: 0.15 },
@@ -406,7 +403,6 @@
             if(data.money >= tech.cost && !ownedTech.includes(techId)) {
                 data.money -= tech.cost;
                 ownedTech.push(techId);
-                
                 if(tech.type === "discount") data.shopDiscount += tech.val;
                 if(tech.type === "eff") data.buildingEfficiency[tech.target] *= tech.val;
                 if(tech.type === "skin") {
@@ -414,7 +410,6 @@
                     document.getElementById("clicker-text").innerText = tech.text;
                     document.getElementById("clicker-visual").style.borderColor = tech.color;
                 }
-                
                 renderEverything();
                 renderTech();
             }
@@ -433,8 +428,6 @@
             document.getElementById("tech-list").innerHTML = html;
         }
 
-        /* BEFINTLIG LOGIK NEDAN - ORÖRD UTÖVER KOSTNADS-RABATT */
-
         let holdTimer;
         function startHold() {
             holdTimer = setTimeout(() => {
@@ -445,88 +438,18 @@
         function endHold() { clearTimeout(holdTimer); }
 
         const achChains = {
-            click: [
-                { t: "Kom igång!", target: 10, reward: 50, req: "10 klick" },
-                { t: "Klick-lärling", target: 50, reward: 250, req: "50 klick" },
-                { t: "Finger-gympa", target: 150, reward: 1000, req: "150 klick" },
-                { t: "Snabb i fingrarna", target: 400, reward: 3500, req: "400 klick" },
-                { t: "Klick-Proffs", target: 1000, reward: 12000, req: "1 000 klick" },
-                { t: "Byggarbetare", target: 2000, reward: 30000, req: "2 000 klick" },
-                { t: "Klick-maraton", target: 5000, reward: 100000, req: "5 000 klick" },
-                { t: "Slitvarg", target: 10000, reward: 400000, req: "10 000 klick" },
-                { t: "Klick-elit", target: 25000, reward: 1500000, req: "25 000 klick" },
-                { t: "Legendarisk Klickare", target: 50000, reward: 5000000, req: "50 000 klick" },
-                { t: "Klick-Gud", target: 100000, reward: 50000000, req: "100 000 klick" },
-                { t: "Oändlig energi", target: 250000, reward: 250000000, req: "250 000 klick" }
-            ],
-            money: [
-                { t: "En hundring", target: 100, reward: 50, req: "Ha 100 kr" },
-                { t: "Veckopeng", target: 1000, reward: 300, req: "Ha 1 000 kr" },
-                { t: "Spara i ladorna", target: 5000, reward: 1500, req: "Ha 5 000 kr" },
-                { t: "Första lönen", target: 20000, reward: 6000, req: "Ha 20 000 kr" },
-                { t: "Kapitalist", target: 100000, reward: 35000, req: "Ha 100 000 kr" },
-                { t: "Förmögen", target: 400000, reward: 120000, req: "Ha 400 000 kr" },
-                { t: "Välfärds-magnat", target: 1500000, reward: 400000, req: "Ha 1.5 milj kr" },
-                { t: "Rikeman", target: 5000000, reward: 1200000, req: "Ha 5 milj kr" },
-                { t: "Miljonär-klubben", target: 10000000, reward: 2500000, req: "Ha 10 milj kr" },
-                { t: "Mångmiljonär", target: 50000000, reward: 15000000, req: "Ha 50 milj kr" },
-                { t: "Miljardär", target: 1000000000, reward: 300000000, req: "Ha 1 miljard" },
-                { t: "Joakim von Anka", target: 10000000000, reward: 2500000000, req: "Ha 10 miljarder" },
-                { t: "Statsskassan", target: 100000000000, reward: 20000000000, req: "Ha 100 miljarder" }
-            ],
-            b0: [
-                { t: "En röd vägg", target: 1, reward: 100, req: "1 Röd Stuga" },
-                { t: "Litet kvarter", target: 10, reward: 1500, req: "10 Röda Stugor" },
-                { t: "Grannsamverkan", target: 20, reward: 4000, req: "20 Röda Stugor" },
-                { t: "Stugby", target: 40, reward: 12000, req: "40 Röda Stugor" },
-                { t: "Folkhems-entusiast", target: 75, reward: 50000, req: "75 Röda Stugor" },
-                { t: "Villaförort", target: 120, reward: 150000, req: "120 Röda Stugor" },
-                { t: "Småstads-kung", target: 200, reward: 500000, req: "200 Röda Stugor" },
-                { t: "Stug-imperiet", target: 400, reward: 3000000, req: "400 Röda Stugor" },
-                { t: "Röda havet", target: 1000, reward: 100000000, req: "1 000 Röda Stugor" }
-            ],
-            total: [
-                { t: "Byggstart", target: 1, reward: 50, req: "1 byggnad" },
-                { t: "Första gatan", target: 15, reward: 2000, req: "15 byggnader" },
-                { t: "Litet samhälle", target: 30, reward: 8000, req: "30 byggnader" },
-                { t: "Samhällsbyggare", target: 75, reward: 40000, req: "75 byggnader" },
-                { t: "Bygg-boss", target: 150, reward: 120000, req: "150 byggnader" },
-                { t: "Småstad", target: 250, reward: 350000, req: "250 byggnader" },
-                { t: "Metropol", target: 500, reward: 1500000, req: "500 byggnader" },
-                { t: "Storstad", target: 800, reward: 5000000, req: "800 byggnader" },
-                { t: "Urbaniserad", target: 1200, reward: 15000000, req: "1 200 byggnader" },
-                { t: "Sverige-byggaren", target: 2500, reward: 80000000, req: "2 500 byggnader" },
-                { t: "Betong-imperiet", target: 10000, reward: 2000000000, req: "10 000 byggnader" }
-            ],
-            secret: [
-                { t: "Flyttlasset", target: 5, targetType: "b1", reward: 2500, req: "5 Hyreshus" },
-                { t: "Miljonprogrammet", target: 25, targetType: "b1", reward: 40000, req: "25 Hyreshus" },
-                { t: "Vårdköer borta", target: 10, targetType: "b2", reward: 100000, req: "10 Sjukhus" },
-                { t: "Regionfullmäktige", target: 50, targetType: "b2", reward: 2000000, req: "50 Sjukhus" },
-                { t: "Stordrift", target: 20, targetType: "b3", reward: 600000, req: "20 Industrier" },
-                { t: "Exportsuccé", target: 100, targetType: "b3", reward: 25000000, req: "100 Industrier" },
-                { t: "Professor", target: 15, targetType: "b4", reward: 5000000, req: "15 Universitet" },
-                { t: "Akademiker", target: 60, targetType: "b4", reward: 200000000, req: "60 Universitet" },
-                { t: "Atomvinter?", target: 12, targetType: "b5", reward: 35000000, req: "12 Kärnkraftverk" },
-                { t: "Svensk välfärd", target: 15, targetType: "b6", reward: 250000000, req: "15 Välfärdsstater" },
-                { t: "Galaktisk Välfärd", target: 10, targetType: "b7", reward: 2000000000, req: "10 Rymdprogram" },
-                { t: "Sverigevän", target: 1, targetType: "b10", reward: 2500000000, req: "1 SD-Högkvarter" },
-                { t: "Ultimat Samhälle", target: 10, targetType: "b10", reward: 60000000000, req: "10 SD-Högkvarter" }
-            ],
-            challenges: [
-                { t: "Tålamodstest", target: 1, targetType: "hold5", reward: 5000, req: "Håll inne huset i 5 sekunder" }
-            ]
+            click: [{ t: "Kom igång!", target: 10, reward: 50, req: "10 klick" }, { t: "Klick-lärling", target: 50, reward: 250, req: "50 klick" }, { t: "Finger-gympa", target: 150, reward: 1000, req: "150 klick" }, { t: "Snabb i fingrarna", target: 400, reward: 3500, req: "400 klick" }, { t: "Klick-Proffs", target: 1000, reward: 12000, req: "1 000 klick" }, { t: "Byggarbetare", target: 2000, reward: 30000, req: "2 000 klick" }, { t: "Klick-maraton", target: 5000, reward: 100000, req: "5 000 klick" }, { t: "Slitvarg", target: 10000, reward: 400000, req: "10 000 klick" }, { t: "Klick-elit", target: 25000, reward: 1500000, req: "25 000 klick" }, { t: "Legendarisk Klickare", target: 50000, reward: 5000000, req: "50 000 klick" }, { t: "Klick-Gud", target: 100000, reward: 50000000, req: "100 000 klick" }, { t: "Oändlig energi", target: 250000, reward: 250000000, req: "250 000 klick" }],
+            money: [{ t: "En hundring", target: 100, reward: 50, req: "Ha 100 kr" }, { t: "Veckopeng", target: 1000, reward: 300, req: "Ha 1 000 kr" }, { t: "Spara i ladorna", target: 5000, reward: 1500, req: "Ha 5 000 kr" }, { t: "Första lönen", target: 20000, reward: 6000, req: "Ha 20 000 kr" }, { t: "Kapitalist", target: 100000, reward: 35000, req: "Ha 100 000 kr" }, { t: "Förmögen", target: 400000, reward: 120000, req: "Ha 400 000 kr" }, { t: "Välfärds-magnat", target: 1500000, reward: 400000, req: "Ha 1.5 milj kr" }, { t: "Rikeman", target: 5000000, reward: 1200000, req: "Ha 5 milj kr" }, { t: "Miljonär-klubben", target: 10000000, reward: 2500000, req: "Ha 10 milj kr" }, { t: "Mångmiljonär", target: 50000000, reward: 15000000, req: "Ha 50 milj kr" }, { t: "Miljardär", target: 1000000000, reward: 300000000, req: "Ha 1 miljard" }, { t: "Joakim von Anka", target: 10000000000, reward: 2500000000, req: "Ha 10 miljarder" }, { t: "Statsskassan", target: 100000000000, reward: 20000000000, req: "Ha 100 miljarder" }],
+            b0: [{ t: "En röd vägg", target: 1, reward: 100, req: "1 Röd Stuga" }, { t: "Litet kvarter", target: 10, reward: 1500, req: "10 Röda Stugor" }, { t: "Grannsamverkan", target: 20, reward: 4000, req: "20 Röda Stugor" }, { t: "Stugby", target: 40, reward: 12000, req: "40 Röda Stugor" }, { t: "Folkhems-entusiast", target: 75, reward: 50000, req: "75 Röda Stugor" }, { t: "Villaförort", target: 120, reward: 150000, req: "120 Röda Stugor" }, { t: "Småstads-kung", target: 200, reward: 500000, req: "200 Röda Stugor" }, { t: "Stug-imperiet", target: 400, reward: 3000000, req: "400 Röda Stugor" }, { t: "Röda havet", target: 1000, reward: 100000000, req: "1 000 Röda Stugor" }],
+            total: [{ t: "Byggstart", target: 1, reward: 50, req: "1 byggnad" }, { t: "Första gatan", target: 15, reward: 2000, req: "15 byggnader" }, { t: "Litet samhälle", target: 30, reward: 8000, req: "30 byggnader" }, { t: "Samhällsbyggare", target: 75, reward: 40000, req: "75 byggnader" }, { t: "Bygg-boss", target: 150, reward: 120000, req: "150 byggnader" }, { t: "Småstad", target: 250, reward: 350000, req: "250 byggnader" }, { t: "Metropol", target: 500, reward: 1500000, req: "500 byggnader" }, { t: "Storstad", target: 800, reward: 5000000, req: "800 byggnader" }, { t: "Urbaniserad", target: 1200, reward: 15000000, req: "1 200 byggnader" }, { t: "Sverige-byggaren", target: 2500, reward: 80000000, req: "2 500 byggnader" }, { t: "Betong-imperiet", target: 10000, reward: 2000000000, req: "10 000 byggnader" }],
+            secret: [{ t: "Flyttlasset", target: 5, targetType: "b1", reward: 2500, req: "5 Hyreshus" }, { t: "Miljonprogrammet", target: 25, targetType: "b1", reward: 40000, req: "25 Hyreshus" }, { t: "Vårdköer borta", target: 10, targetType: "b2", reward: 100000, req: "10 Sjukhus" }, { t: "Regionfullmäktige", target: 50, targetType: "b2", reward: 2000000, req: "50 Sjukhus" }, { t: "Stordrift", target: 20, targetType: "b3", reward: 600000, req: "20 Industrier" }, { t: "Exportsuccé", target: 100, targetType: "b3", reward: 25000000, req: "100 Industrier" }, { t: "Professor", target: 15, targetType: "b4", reward: 5000000, req: "15 Universitet" }, { t: "Akademiker", target: 60, targetType: "b4", reward: 200000000, req: "60 Universitet" }, { t: "Atomvinter?", target: 12, targetType: "b5", reward: 35000000, req: "12 Kärnkraftverk" }, { t: "Svensk välfärd", target: 15, targetType: "b6", reward: 250000000, req: "15 Välfärdsstater" }, { t: "Galaktisk Välfärd", target: 10, targetType: "b7", reward: 2000000000, req: "10 Rymdprogram" }, { t: "Sverigevän", target: 1, targetType: "b10", reward: 2500000000, req: "1 SD-Högkvarter" }, { t: "Ultimat Samhälle", target: 10, targetType: "b10", reward: 60000000000, req: "10 SD-Högkvarter" }],
+            challenges: [{ t: "Tålamodstest", target: 1, targetType: "hold5", reward: 5000, req: "Håll inne huset i 5 sekunder" }]
         };
 
         function getQuestBonus() { return 1 + (data.questsDone * 0.10); }
         function getTotalPPS() {
             let pps = 0;
-            for(let i=0; i<buildings.length; i++) {
-                if(data.bCounts[i]) {
-                    // Applicera individuell byggnadseffektivitet här
-                    pps += data.bCounts[i] * (buildings[i].inc * data.buildingEfficiency[i]) * getQuestBonus();
-                }
-            }
+            for(let i=0; i<buildings.length; i++) if(data.bCounts[i]) pps += data.bCounts[i] * (buildings[i].inc * data.buildingEfficiency[i]) * getQuestBonus();
             return pps;
         }
 
@@ -548,10 +471,7 @@
             renderEverything();
         }
 
-        // Hjälpfunktion för rabatt
-        function getDiscountedPrice(basePrice) {
-            return Math.round(basePrice * (1 - data.shopDiscount));
-        }
+        function getDiscountedPrice(basePrice) { return Math.round(basePrice * (1 - data.shopDiscount)); }
 
         function buyHammer() {
             let price = getDiscountedPrice(data.hammerPrice);
@@ -593,12 +513,8 @@
 
         function getValByType(type, level) {
             const ach = achChains[type][level];
-            if (type === 'secret') {
-                if (ach.targetType.startsWith('b')) return data.bCounts[parseInt(ach.targetType.substring(1))];
-            }
-            if (type === 'challenges') {
-                if (ach.targetType === 'hold5') return data.hasHeld5s ? 1 : 0;
-            }
+            if (type === 'secret') if (ach.targetType.startsWith('b')) return data.bCounts[parseInt(ach.targetType.substring(1))];
+            if (type === 'challenges') if (ach.targetType === 'hold5') return data.hasHeld5s ? 1 : 0;
             if(type === 'click') return data.clicks;
             if(type === 'money') return data.money;
             if(type === 'b0') return data.bCounts[0]; 
@@ -611,10 +527,8 @@
             document.getElementById("mpc").innerText = calculateMPC().toLocaleString();
             document.getElementById("pps").innerText = Math.floor(getTotalPPS()).toLocaleString();
             document.getElementById("bonus-val").innerText = Math.round((getQuestBonus()-1)*100);
-            
             document.getElementById("hammer-btn").classList.toggle("disabled", data.money < getDiscountedPrice(data.hammerPrice));
             document.getElementById("auto-btn").classList.toggle("disabled", data.money < getDiscountedPrice(data.autoPrice));
-            
             buildings.forEach((_, i) => {
                 const btn = document.getElementById("build-"+i);
                 if(btn) btn.classList.toggle("disabled", data.money < getDiscountedPrice(data.bCosts[i]));
@@ -625,7 +539,6 @@
         function renderEverything() {
             document.getElementById("hammer-cost").innerText = getDiscountedPrice(data.hammerPrice).toLocaleString();
             document.getElementById("auto-cost").innerText = getDiscountedPrice(data.autoPrice).toLocaleString();
-            
             let bHtml = "";
             buildings.forEach((b, i) => {
                 const cost = getDiscountedPrice(data.bCosts[i]);
@@ -637,7 +550,6 @@
                 }
             });
             document.getElementById("building-list").innerHTML = bHtml;
-
             document.getElementById("ach-license-area").style.display = data.hasLicense ? "none" : "block";
             if (data.hasLicense) {
                 let achList = [];
@@ -650,22 +562,16 @@
                         achList.push({ type, level, ach, val, isReady });
                     }
                 });
-
                 achList.sort((a, b) => b.isReady - a.isReady);
-
                 let achHtml = "";
                 achList.forEach(item => {
                     const { type, ach, val, isReady } = item;
-                    achHtml += `
-                        <div class="ach-card">
-                            <div style="display:flex; justify-content:space-between;"><b>${ach.t}</b> <span style="color:#28a745;">+${ach.reward.toLocaleString()} kr</span></div>
-                            <div style="font-size:0.75rem; margin:5px 0; color:#555;">Krav: ${ach.req}</div>
-                            <div class="progress-container">
-                                <div class="progress-bar" style="width: ${Math.min(100, (val/ach.target)*100)}%"></div>
-                                <div class="progress-text">${Math.floor(val).toLocaleString()} / ${ach.target.toLocaleString()}</div>
-                            </div>
-                            <button class="claim-btn ${isReady ? 'ready' : ''}" onclick="claimAch('${type}')">${isReady ? 'HÄMTA BELÖNING' : 'LÅST'}</button>
-                        </div>`;
+                    achHtml += `<div class="ach-card">
+                        <div style="display:flex; justify-content:space-between;"><b>${ach.t}</b> <span style="color:#28a745;">+${ach.reward.toLocaleString()} kr</span></div>
+                        <div style="font-size:0.75rem; margin:5px 0; color:#555;">Krav: ${ach.req}</div>
+                        <div class="progress-container"><div class="progress-bar" style="width: ${Math.min(100, (val/ach.target)*100)}%"></div><div class="progress-text">${Math.floor(val).toLocaleString()} / ${ach.target.toLocaleString()}</div></div>
+                        <button class="claim-btn ${isReady ? 'ready' : ''}" onclick="claimAch('${type}')">${isReady ? 'HÄMTA BELÖNING' : 'LÅST'}</button>
+                    </div>`;
                 });
                 document.getElementById("ach-container").innerHTML = achHtml;
             }
@@ -684,8 +590,6 @@
                 let loaded = JSON.parse(s);
                 data = loaded.data;
                 ownedTech = loaded.ownedTech || [];
-                
-                // Återställ knapp-utseende om man har köpt det
                 const lastSkin = techUpgrades.filter(t => t.type === "skin" && ownedTech.includes(t.id)).pop();
                 if(lastSkin) {
                     document.getElementById("clicker-icon").innerText = lastSkin.icon;
