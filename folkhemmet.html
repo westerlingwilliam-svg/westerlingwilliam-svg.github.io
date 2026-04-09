@@ -418,53 +418,66 @@
         let currentTechTab = 'economy';
 
         // --- HÄR ÄR DINA NYA TAB-INDEXERADE UPPGRADERINGAR ---
-       const techUpgrades = [
+const techUpgrades = [
 
-    // EKONOMI
-    { id: "disc1", name: "Bygglovs-rabatt", desc: "Sänker alla priser i butiken med 10%", cost: 10000, type: "discount", val: 0.1, category: "economy" },
-    { id: "disc2", name: "Statlig Subvention", desc: "Sänker alla priser ytterligare 15%", cost: 500000, type: "discount", val: 0.15, category: "economy" },
-    { id: "disc3", name: "EU-Bidrag", desc: "Sänker alla priser med 20%", cost: 10000000, type: "discount", val: 0.2, category: "economy" },
-    { id: "tax_free", name: "Skatteparadis", desc: "Varje klick ger 2x mer pengar", cost: 100000, type: "mpc_mult", val: 2, category: "economy" },
-    { id: "interest", name: "Räntesnurra", desc: "Öka total produktion med 5%", cost: 250000, type: "global_mult", val: 1.05, category: "economy" },
-    { id: "crypto_swe", name: "Krona-Coin", desc: "Öka total produktion med 15%", cost: 50000000, type: "global_mult", val: 1.15, category: "economy" },
+/* =========================
+   EKONOMI
+========================= */
 
-    // EXTRA EKONOMI
-    { id: "tax_cut", name: "Skattesänkning", desc: "Öka klickinkomst med 25%", cost: 2000000, type: "mpc_mult", val: 1.25, category: "economy" },
-    { id: "mega_bank", name: "Storbank", desc: "Total produktion +10%", cost: 15000000, type: "global_mult", val: 1.10, category: "economy" },
-    { id: "hyper_tax", name: "Automatisk Skatteindrivning", desc: "Klick ger 3x pengar", cost: 500000000, type: "mpc_mult", val: 3, category: "economy" },
-    { id: "eu_grant2", name: "EU Mega-Bidrag", desc: "Alla priser -25%", cost: 2000000000, type: "discount", val: 0.25, category: "economy" },
+{ id:"tax_cut", name:"Skattesänkning", desc:"Öka klickinkomst med 25%", cost:2000000, type:"mpc_mult", val:1.25, category:"economy"},
+{ id:"mega_bank", name:"Storbank", desc:"Total produktion +10%", cost:15000000, type:"global_mult", val:1.10, category:"economy"},
+{ id:"hyper_tax", name:"Automatisk Skatteindrivning", desc:"Klick ger 3x pengar", cost:500000000, type:"mpc_mult", val:3, category:"economy"},
+{ id:"eu_grant2", name:"EU Mega-Bidrag", desc:"Alla priser -25%", cost:2000000000, type:"discount", val:0.25, category:"economy"},
 
-    // EFFEKTIVITET
-    { id: "eff0", name: "Isolering", desc: "Röda stugor ger 50% mer vinst", cost: 5000, type: "eff", target: 0, val: 1.5, category: "efficiency" },
-    { id: "eff1", name: "Fler våningar", desc: "Hyreshus ger 50% mer vinst", cost: 25000, type: "eff", target: 1, val: 1.5, category: "efficiency" },
-    { id: "eff2", name: "Robotkirurgi", desc: "Sjukhus ger 50% mer vinst", cost: 100000, type: "eff", target: 2, val: 1.5, category: "efficiency" },
-    { id: "eff3", name: "Löpande Band", desc: "Industrier ger 50% mer vinst", cost: 500000, type: "eff", target: 3, val: 1.5, category: "efficiency" },
-    { id: "eff4", name: "Digitalisering", desc: "Universitet ger 100% mer vinst", cost: 2000000, type: "eff", target: 4, val: 2.0, category: "efficiency" },
-    { id: "eff5", name: "Fjärde Reaktor", desc: "Kärnkraft ger 100% mer vinst", cost: 10000000, type: "eff", target: 5, val: 2.0, category: "efficiency" },
-    { id: "eff6", name: "Super-Välfärd", desc: "Välfärdsstater ger 2x mer", cost: 100000000, type: "eff", target: 6, val: 2.0, category: "efficiency" },
-    { id: "eff10", name: "Svensk Kraft", desc: "SD-Högkvarter ger 2x mer", cost: 5000000000, type: "eff", target: 10, val: 2.0, category: "efficiency" },
-    { id: "auto_speed", name: "Turbo-Klick", desc: "Auto-klickare blir 2x snabbare", cost: 750000, type: "auto_mult", val: 2, category: "efficiency" },
+{ id:"econ1", name:"Skatteoptimering", desc:"Total produktion +5%", cost:5000000, type:"global_mult", val:1.05, category:"economy"},
+{ id:"econ2", name:"Statlig Investeringsfond", desc:"Total produktion +7%", cost:20000000, type:"global_mult", val:1.07, category:"economy"},
+{ id:"econ3", name:"Nationella Obligationer", desc:"Total produktion +10%", cost:50000000, type:"global_mult", val:1.10, category:"economy"},
+{ id:"econ4", name:"Finansdepartementet+", desc:"Klick +50%", cost:120000000, type:"mpc_mult", val:1.5, category:"economy"},
+{ id:"econ5", name:"Nordisk Bankunion", desc:"Produktion +20%", cost:350000000, type:"global_mult", val:1.20, category:"economy"},
+{ id:"econ6", name:"Global Exportboom", desc:"Produktion +25%", cost:900000000, type:"global_mult", val:1.25, category:"economy"},
+{ id:"econ7", name:"Mega Export", desc:"Produktion +40%", cost:2000000000, type:"global_mult", val:1.40, category:"economy"},
+{ id:"econ8", name:"Hyperkapitalism", desc:"Produktion +60%", cost:6000000000, type:"global_mult", val:1.60, category:"economy"},
+{ id:"econ9", name:"Gigabank", desc:"Produktion +100%", cost:20000000000, type:"global_mult", val:2.0, category:"economy"},
+{ id:"econ10", name:"Svenskt Finansimperium", desc:"Produktion +150%", cost:80000000000, type:"global_mult", val:2.5, category:"economy"},
 
-    // EXTRA EFFEKTIVITET
-    { id: "eff7", name: "Marskoloni", desc: "Rymdprogram ger 2x mer", cost: 300000000, type: "eff", target: 7, val: 2.0, category: "efficiency" },
-    { id: "eff8", name: "AI-Regering", desc: "AI-Myndighet ger 2x mer", cost: 900000000, type: "eff", target: 8, val: 2.0, category: "efficiency" },
-    { id: "eff9", name: "Nationell Expansion", desc: "Sverige 2.0 ger 2x mer", cost: 2000000000, type: "eff", target: 9, val: 2.0, category: "efficiency" },
-    { id: "super_auto", name: "Hyper-Autoklick", desc: "Auto-klickare blir 3x snabbare", cost: 4000000000, type: "auto_mult", val: 3, category: "efficiency" },
-    { id: "nano_industry", name: "Nanoteknik", desc: "Industrier ger 3x mer", cost: 12000000000, type: "eff", target: 3, val: 3.0, category: "efficiency" },
 
-    // UTSEENDE
-    { id: "btn_gold", name: "Gyllene Knappen", desc: "Byt utseende på knappen", cost: 50000, type: "skin", icon: "🪙", text: "GULD", color: "#FFD700", category: "cosmetic" },
-    { id: "btn_neon", name: "Cyber-Knappen", desc: "Framtids-look för Sverige 2.0", cost: 1000000, type: "skin", icon: "⚡", text: "CYBER", color: "#00f2ff", category: "cosmetic" },
-    { id: "btn_sd", name: "Sverigevän-Knappen", desc: "Knappen för det sanna folkhemmet", cost: 50000000, type: "skin", icon: "🌸", text: "SVERIGE", color: "#005293", category: "cosmetic" },
-    { id: "btn_king", name: "Kunglig Knapp", desc: "För monarkins bevarande", cost: 500000000, type: "skin", icon: "👑", text: "KUNGEN", color: "#6a0dad", category: "cosmetic" },
-    { id: "btn_ghost", name: "Osynlig Staten", desc: "Vart tog skatten vägen?", cost: 1000000000, type: "skin", icon: "👻", text: "SPOOKY", color: "#ccc", category: "cosmetic" },
+/* =========================
+   EFFEKTIVITET
+========================= */
 
-    // EXTRA UTSEENDE
-    { id: "btn_fire", name: "Eld-Knappen", desc: "Brinnande folkhem", cost: 750000000, type: "skin", icon: "🔥", text: "ELD", color: "#ff4500", category: "cosmetic" },
-    { id: "btn_ice", name: "Is-Knappen", desc: "Kallt men effektivt", cost: 900000000, type: "skin", icon: "❄️", text: "IS", color: "#66ccff", category: "cosmetic" },
-    { id: "btn_space", name: "Galaktisk Knapp", desc: "Sverige i rymden", cost: 2000000000, type: "skin", icon: "🚀", text: "SPACE", color: "#9b59ff", category: "cosmetic" },
-    { id: "btn_ai", name: "AI-Knappen", desc: "Framtidens styre", cost: 5000000000, type: "skin", icon: "🤖", text: "AI", color: "#00ff99", category: "cosmetic" },
-    { id: "btn_god", name: "Gudomlig Knapp", desc: "Den ultimata kraften", cost: 20000000000, type: "skin", icon: "⚡", text: "GUD", color: "#ffffff", category: "cosmetic" }
+{ id:"eff7", name:"Marskoloni", desc:"Rymdprogram ger 2x mer", cost:300000000, type:"eff", target:7, val:2, category:"efficiency"},
+{ id:"eff8", name:"AI-Regering", desc:"AI-Myndighet ger 2x mer", cost:900000000, type:"eff", target:8, val:2, category:"efficiency"},
+{ id:"eff9", name:"Nationell Expansion", desc:"Sverige 2.0 ger 2x mer", cost:2000000000, type:"eff", target:9, val:2, category:"efficiency"},
+{ id:"super_auto", name:"Hyper-Autoklick", desc:"Auto-klickare blir 3x snabbare", cost:4000000000, type:"auto_mult", val:3, category:"efficiency"},
+{ id:"nano_industry", name:"Nanoteknik", desc:"Industrier ger 3x mer", cost:12000000000, type:"eff", target:3, val:3, category:"efficiency"},
+
+{ id:"eff11", name:"Quantum-Industri", desc:"Industrier ger 5x mer", cost:35000000000, type:"eff", target:3, val:5, category:"efficiency"},
+{ id:"eff12", name:"Mega Universitet", desc:"Universitet ger 4x mer", cost:60000000000, type:"eff", target:4, val:4, category:"efficiency"},
+{ id:"eff13", name:"Fusionkraft", desc:"Kärnkraft ger 5x mer", cost:120000000000, type:"eff", target:5, val:5, category:"efficiency"},
+{ id:"eff14", name:"Hyper-Välfärd", desc:"Välfärdsstat ger 4x mer", cost:300000000000, type:"eff", target:6, val:4, category:"efficiency"},
+{ id:"eff15", name:"Dyson-Sverige", desc:"Rymdprogram ger 6x mer", cost:700000000000, type:"eff", target:7, val:6, category:"efficiency"},
+{ id:"eff16", name:"AI-Superstat", desc:"AI-myndigheter ger 5x mer", cost:1500000000000, type:"eff", target:8, val:5, category:"efficiency"},
+{ id:"eff17", name:"Mega-Nation", desc:"Sverige 2.0 ger 5x mer", cost:3500000000000, type:"eff", target:9, val:5, category:"efficiency"},
+{ id:"eff18", name:"Autoklick-Singularitet", desc:"Auto klick 10x", cost:9000000000000, type:"auto_mult", val:10, category:"efficiency"},
+{ id:"eff19", name:"Planetär Industri", desc:"Industrier 10x", cost:20000000000000, type:"eff", target:3, val:10, category:"efficiency"},
+{ id:"eff20", name:"Galaktisk Expansion", desc:"Alla byggnader 2x", cost:50000000000000, type:"global_mult", val:2, category:"efficiency"},
+
+
+/* =========================
+   UTSEENDE
+========================= */
+
+{ id:"btn_fire", name:"Eld-Knappen", desc:"Brinnande folkhem", cost:750000000, type:"skin", icon:"🔥", text:"ELD", color:"#ff4500", category:"cosmetic"},
+{ id:"btn_ice", name:"Is-Knappen", desc:"Kallt men effektivt", cost:900000000, type:"skin", icon:"❄️", text:"IS", color:"#66ccff", category:"cosmetic"},
+{ id:"btn_space", name:"Galaktisk Knapp", desc:"Sverige i rymden", cost:2000000000, type:"skin", icon:"🚀", text:"SPACE", color:"#9b59ff", category:"cosmetic"},
+{ id:"btn_ai", name:"AI-Knappen", desc:"Framtidens styre", cost:5000000000, type:"skin", icon:"🤖", text:"AI", color:"#00ff99", category:"cosmetic"},
+{ id:"btn_god", name:"Gudomlig Knapp", desc:"Den ultimata kraften", cost:20000000000, type:"skin", icon:"⚡", text:"GUD", color:"#ffffff", category:"cosmetic"},
+
+{ id:"btn_dark", name:"Mörka Staten", desc:"Dark mode-knapp", cost:40000000000, type:"skin", icon:"🌑", text:"DARK", color:"#111", category:"cosmetic"},
+{ id:"btn_gold2", name:"Imperieknappen", desc:"Kejsar-nivå", cost:80000000000, type:"skin", icon:"👑", text:"IMPERIUM", color:"#ffd700", category:"cosmetic"},
+{ id:"btn_void", name:"Void-Knappen", desc:"Oändligheten stirrar tillbaka", cost:200000000000, type:"skin", icon:"🌀", text:"VOID", color:"#551a8b", category:"cosmetic"},
+{ id:"btn_cosmic", name:"Kosmisk Knapp", desc:"Universums makt", cost:700000000000, type:"skin", icon:"🌌", text:"COSMIC", color:"#00ffff", category:"cosmetic"},
+{ id:"btn_omega", name:"Omega-Knappen", desc:"Den sista uppgraderingen", cost:2000000000000, type:"skin", icon:"Ω", text:"OMEGA", color:"#ffffff", category:"cosmetic"}
 
 ];
 
