@@ -43,7 +43,6 @@
             position: relative;
         }
 
-        /* UPGRADES KNAPP */
         .upgrade-shop-btn {
             position: absolute;
             top: 20px;
@@ -254,7 +253,7 @@
             border-radius:15px; font-size: 1.2rem;
         }
 
-        /* MODAL FÖR UPGRADES */
+        /* MODAL */
         .modal {
             display: none;
             position: fixed;
@@ -312,7 +311,7 @@
         <div class="panel">
             <h3>BUTIK</h3>
             <div class="scroll-content">
-                <div class="shop-section-title">Uppgraderingar</div>
+                <div class="shop-section-title">Basutrustning</div>
                 <div id="essentials">
                     <button class="buy-button" id="hammer-btn" onclick="buyHammer()">
                         <div class="btn-header"><b>Hammare</b> <div class="price-tag"><span id="hammer-cost">15</span> kr</div></div>
@@ -369,7 +368,7 @@
             hasHeld5s: false,
             shopDiscount: 0,
             buildingEfficiency: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            buttonType: "default"
+            ownedTech: []
         };
 
         const buildings = [
@@ -390,8 +389,6 @@
             { id: "btn_gold", name: "Gyllene Knappen", desc: "Byt utseende på knappen", cost: 50000, type: "skin", icon: "🪙", text: "GULD", color: "#FFD700" },
             { id: "btn_neon", name: "Cyber-Knappen", desc: "Sverige 2.0 utseende", cost: 1000000, type: "skin", icon: "⚡", text: "CYBER", color: "#00f2ff" }
         ];
-        
-        let ownedTech = [];
 
         function toggleModal(show) {
             document.getElementById("upgradeModal").style.display = show ? "block" : "none";
@@ -400,25 +397,27 @@
 
         function buyTech(techId) {
             const tech = techUpgrades.find(t => t.id === techId);
-            if(data.money >= tech.cost && !ownedTech.includes(techId)) {
+            if(data.money >= tech.cost && !data.ownedTech.includes(techId)) {
                 data.money -= tech.cost;
-                ownedTech.push(techId);
+                data.ownedTech.push(techId);
                 if(tech.type === "discount") data.shopDiscount += tech.val;
                 if(tech.type === "eff") data.buildingEfficiency[tech.target] *= tech.val;
-                if(tech.type === "skin") {
-                    document.getElementById("clicker-icon").innerText = tech.icon;
-                    document.getElementById("clicker-text").innerText = tech.text;
-                    document.getElementById("clicker-visual").style.borderColor = tech.color;
-                }
+                if(tech.type === "skin") applySkin(tech);
                 renderEverything();
                 renderTech();
             }
         }
 
+        function applySkin(skin) {
+            document.getElementById("clicker-icon").innerText = skin.icon;
+            document.getElementById("clicker-text").innerText = skin.text;
+            document.getElementById("clicker-visual").style.borderColor = skin.color;
+        }
+
         function renderTech() {
             let html = "";
             techUpgrades.forEach(t => {
-                const owned = ownedTech.includes(t.id);
+                const owned = data.ownedTech.includes(t.id);
                 html += `
                 <div class="buy-button ${owned ? 'disabled' : ''}" onclick="buyTech('${t.id}')" style="margin-bottom:10px; border: 2px solid #005293">
                     <div class="btn-header"><b>${t.name}</b> ${owned ? '<span style="color:green">KÖPT</span>' : `<div class="price-tag">${t.cost.toLocaleString()} kr</div>`}</div>
@@ -438,37 +437,45 @@
         function endHold() { clearTimeout(holdTimer); }
 
         const achChains = {
-            click: [{ t: "Kom igång!", target: 10, reward: 50, req: "10 klick" }, { t: "Klick-lärling", target: 50, reward: 250, req: "50 klick" }, { t: "Finger-gympa", target: 150, reward: 1000, req: "150 klick" }, { t: "Snabb i fingrarna", target: 400, reward: 3500, req: "400 klick" }, { t: "Klick-Proffs", target: 1000, reward: 12000, req: "1 000 klick" }, { t: "Byggarbetare", target: 2000, reward: 30000, req: "2 000 klick" }, { t: "Klick-maraton", target: 5000, reward: 100000, req: "5 000 klick" }, { t: "Slitvarg", target: 10000, reward: 400000, req: "10 000 klick" }, { t: "Klick-elit", target: 25000, reward: 1500000, req: "25 000 klick" }, { t: "Legendarisk Klickare", target: 50000, reward: 5000000, req: "50 000 klick" }, { t: "Klick-Gud", target: 100000, reward: 50000000, req: "100 000 klick" }, { t: "Oändlig energi", target: 250000, reward: 250000000, req: "250 000 klick" }],
-            money: [{ t: "En hundring", target: 100, reward: 50, req: "Ha 100 kr" }, { t: "Veckopeng", target: 1000, reward: 300, req: "Ha 1 000 kr" }, { t: "Spara i ladorna", target: 5000, reward: 1500, req: "Ha 5 000 kr" }, { t: "Första lönen", target: 20000, reward: 6000, req: "Ha 20 000 kr" }, { t: "Kapitalist", target: 100000, reward: 35000, req: "Ha 100 000 kr" }, { t: "Förmögen", target: 400000, reward: 120000, req: "Ha 400 000 kr" }, { t: "Välfärds-magnat", target: 1500000, reward: 400000, req: "Ha 1.5 milj kr" }, { t: "Rikeman", target: 5000000, reward: 1200000, req: "Ha 5 milj kr" }, { t: "Miljonär-klubben", target: 10000000, reward: 2500000, req: "Ha 10 milj kr" }, { t: "Mångmiljonär", target: 50000000, reward: 15000000, req: "Ha 50 milj kr" }, { t: "Miljardär", target: 1000000000, reward: 300000000, req: "Ha 1 miljard" }, { t: "Joakim von Anka", target: 10000000000, reward: 2500000000, req: "Ha 10 miljarder" }, { t: "Statsskassan", target: 100000000000, reward: 20000000000, req: "Ha 100 miljarder" }],
-            b0: [{ t: "En röd vägg", target: 1, reward: 100, req: "1 Röd Stuga" }, { t: "Litet kvarter", target: 10, reward: 1500, req: "10 Röda Stugor" }, { t: "Grannsamverkan", target: 20, reward: 4000, req: "20 Röda Stugor" }, { t: "Stugby", target: 40, reward: 12000, req: "40 Röda Stugor" }, { t: "Folkhems-entusiast", target: 75, reward: 50000, req: "75 Röda Stugor" }, { t: "Villaförort", target: 120, reward: 150000, req: "120 Röda Stugor" }, { t: "Småstads-kung", target: 200, reward: 500000, req: "200 Röda Stugor" }, { t: "Stug-imperiet", target: 400, reward: 3000000, req: "400 Röda Stugor" }, { t: "Röda havet", target: 1000, reward: 100000000, req: "1 000 Röda Stugor" }],
-            total: [{ t: "Byggstart", target: 1, reward: 50, req: "1 byggnad" }, { t: "Första gatan", target: 15, reward: 2000, req: "15 byggnader" }, { t: "Litet samhälle", target: 30, reward: 8000, req: "30 byggnader" }, { t: "Samhällsbyggare", target: 75, reward: 40000, req: "75 byggnader" }, { t: "Bygg-boss", target: 150, reward: 120000, req: "150 byggnader" }, { t: "Småstad", target: 250, reward: 350000, req: "250 byggnader" }, { t: "Metropol", target: 500, reward: 1500000, req: "500 byggnader" }, { t: "Storstad", target: 800, reward: 5000000, req: "800 byggnader" }, { t: "Urbaniserad", target: 1200, reward: 15000000, req: "1 200 byggnader" }, { t: "Sverige-byggaren", target: 2500, reward: 80000000, req: "2 500 byggnader" }, { t: "Betong-imperiet", target: 10000, reward: 2000000000, req: "10 000 byggnader" }],
-            secret: [{ t: "Flyttlasset", target: 5, targetType: "b1", reward: 2500, req: "5 Hyreshus" }, { t: "Miljonprogrammet", target: 25, targetType: "b1", reward: 40000, req: "25 Hyreshus" }, { t: "Vårdköer borta", target: 10, targetType: "b2", reward: 100000, req: "10 Sjukhus" }, { t: "Regionfullmäktige", target: 50, targetType: "b2", reward: 2000000, req: "50 Sjukhus" }, { t: "Stordrift", target: 20, targetType: "b3", reward: 600000, req: "20 Industrier" }, { t: "Exportsuccé", target: 100, targetType: "b3", reward: 25000000, req: "100 Industrier" }, { t: "Professor", target: 15, targetType: "b4", reward: 5000000, req: "15 Universitet" }, { t: "Akademiker", target: 60, targetType: "b4", reward: 200000000, req: "60 Universitet" }, { t: "Atomvinter?", target: 12, targetType: "b5", reward: 35000000, req: "12 Kärnkraftverk" }, { t: "Svensk välfärd", target: 15, targetType: "b6", reward: 250000000, req: "15 Välfärdsstater" }, { t: "Galaktisk Välfärd", target: 10, targetType: "b7", reward: 2000000000, req: "10 Rymdprogram" }, { t: "Sverigevän", target: 1, targetType: "b10", reward: 2500000000, req: "1 SD-Högkvarter" }, { t: "Ultimat Samhälle", target: 10, targetType: "b10", reward: 60000000000, req: "10 SD-Högkvarter" }],
+            click: [{ t: "Kom igång!", target: 10, reward: 50, req: "10 klick" }, { t: "Klick-lärling", target: 100, reward: 500, req: "100 klick" }, { t: "Klick-Proffs", target: 1000, reward: 10000, req: "1 000 klick" }],
+            money: [{ t: "En hundring", target: 100, reward: 50, req: "Ha 100 kr" }, { t: "Kapitalist", target: 100000, reward: 25000, req: "Ha 100 000 kr" }],
+            b0: [{ t: "En röd vägg", target: 1, reward: 100, req: "1 Röd Stuga" }, { t: "Stugby", target: 25, reward: 5000, req: "25 Röda Stugor" }],
+            total: [{ t: "Byggstart", target: 1, reward: 50, req: "1 byggnad" }, { t: "Samhällsbyggare", target: 50, reward: 15000, req: "50 byggnader" }],
+            secret: [{ t: "Sverigevän", target: 1, targetType: "b10", reward: 1000000, req: "1 SD-Högkvarter" }],
             challenges: [{ t: "Tålamodstest", target: 1, targetType: "hold5", reward: 5000, req: "Håll inne huset i 5 sekunder" }]
         };
 
         function getQuestBonus() { return 1 + (data.questsDone * 0.10); }
+        
         function getTotalPPS() {
             let pps = 0;
-            for(let i=0; i<buildings.length; i++) if(data.bCounts[i]) pps += data.bCounts[i] * (buildings[i].inc * data.buildingEfficiency[i]) * getQuestBonus();
-            return pps;
+            for(let i=0; i<buildings.length; i++) {
+                pps += data.bCounts[i] * (buildings[i].inc * data.buildingEfficiency[i]);
+            }
+            return pps * getQuestBonus();
         }
 
         function calculateMPC() {
             let pps = getTotalPPS();
-            let base = 1 + (data.hammerLevel * 1);
-            let bonus = (pps * 0.0016) * data.hammerLevel; 
+            let base = 1 + data.hammerLevel;
+            let bonus = (pps * 0.002) * data.hammerLevel; 
             return Math.max(1, Math.floor(base + bonus));
         }
 
         function doClick(e) {
             let mpc = calculateMPC();
-            data.money += mpc; data.clicks++;
+            data.money += mpc; 
+            data.clicks++;
             if(e) {
-                const t = document.createElement("div"); t.className = "plus-one"; t.innerText = "+" + mpc.toLocaleString();
-                t.style.left = e.pageX + "px"; t.style.top = e.pageY + "px";
-                document.body.appendChild(t); setTimeout(() => t.remove(), 800);
+                const t = document.createElement("div"); 
+                t.className = "plus-one"; 
+                t.innerText = "+" + mpc.toLocaleString();
+                t.style.left = e.pageX + "px"; 
+                t.style.top = e.pageY + "px";
+                document.body.appendChild(t); 
+                setTimeout(() => t.remove(), 800);
             }
-            renderEverything();
+            updateNumbersOnly();
         }
 
         function getDiscountedPrice(basePrice) { return Math.round(basePrice * (1 - data.shopDiscount)); }
@@ -477,7 +484,7 @@
             let price = getDiscountedPrice(data.hammerPrice);
             if (data.money >= price) {
                 data.money -= price; data.hammerLevel++;
-                data.hammerPrice = Math.round(data.hammerPrice * 2.1);
+                data.hammerPrice = Math.round(data.hammerPrice * 2.5);
                 renderEverything();
             }
         }
@@ -486,7 +493,7 @@
             let price = getDiscountedPrice(data.autoPrice);
             if (data.money >= price) {
                 data.money -= price; data.autoClicks++;
-                data.autoPrice = Math.round(data.autoPrice * 2.5);
+                data.autoPrice = Math.round(data.autoPrice * 3);
                 renderEverything();
             }
         }
@@ -495,7 +502,7 @@
             let price = getDiscountedPrice(data.bCosts[id]);
             if (data.money >= price) {
                 data.money -= price; data.bCounts[id]++;
-                data.bCosts[id] = Math.round(data.bCosts[id] * 1.30);
+                data.bCosts[id] = Math.round(data.bCosts[id] * 1.35);
                 renderEverything();
             }
         }
@@ -506,19 +513,20 @@
             const level = data.achLevels[type];
             if (getValByType(type, level) >= achChains[type][level].target) {
                 data.money += achChains[type][level].reward;
-                data.achLevels[type]++; data.questsDone++;
+                data.achLevels[type]++; 
+                data.questsDone++;
                 renderEverything();
             }
         }
 
         function getValByType(type, level) {
             const ach = achChains[type][level];
-            if (type === 'secret') if (ach.targetType.startsWith('b')) return data.bCounts[parseInt(ach.targetType.substring(1))];
-            if (type === 'challenges') if (ach.targetType === 'hold5') return data.hasHeld5s ? 1 : 0;
-            if(type === 'click') return data.clicks;
-            if(type === 'money') return data.money;
-            if(type === 'b0') return data.bCounts[0]; 
-            if(type === 'total') return data.bCounts.reduce((a, b) => a + b, 0);
+            if (type === 'secret') return data.bCounts[parseInt(ach.targetType.substring(1))];
+            if (type === 'challenges') return data.hasHeld5s ? 1 : 0;
+            if (type === 'click') return data.clicks;
+            if (type === 'money') return data.money;
+            if (type === 'b0') return data.bCounts[0];
+            if (type === 'total') return data.bCounts.reduce((a, b) => a + b, 0);
             return 0;
         }
 
@@ -527,22 +535,25 @@
             document.getElementById("mpc").innerText = calculateMPC().toLocaleString();
             document.getElementById("pps").innerText = Math.floor(getTotalPPS()).toLocaleString();
             document.getElementById("bonus-val").innerText = Math.round((getQuestBonus()-1)*100);
+            
             document.getElementById("hammer-btn").classList.toggle("disabled", data.money < getDiscountedPrice(data.hammerPrice));
             document.getElementById("auto-btn").classList.toggle("disabled", data.money < getDiscountedPrice(data.autoPrice));
+            
             buildings.forEach((_, i) => {
                 const btn = document.getElementById("build-"+i);
                 if(btn) btn.classList.toggle("disabled", data.money < getDiscountedPrice(data.bCosts[i]));
             });
-            localStorage.setItem(STORAGE_KEY, JSON.stringify({data, ownedTech}));
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
         }
 
         function renderEverything() {
             document.getElementById("hammer-cost").innerText = getDiscountedPrice(data.hammerPrice).toLocaleString();
             document.getElementById("auto-cost").innerText = getDiscountedPrice(data.autoPrice).toLocaleString();
+            
             let bHtml = "";
             buildings.forEach((b, i) => {
                 const cost = getDiscountedPrice(data.bCosts[i]);
-                if (data.money >= cost * 0.3 || data.bCounts[i] > 0) {
+                if (data.money >= cost * 0.5 || data.bCounts[i] > 0) {
                     bHtml += `<button class="buy-button" id="build-${i}" onclick="buyBuilding(${i})">
                         <div class="btn-header"><b>${b.name} (${data.bCounts[i]})</b> <div class="price-tag">${cost.toLocaleString()} kr</div></div>
                         <div class="btn-sub">Ger: ${(b.inc * data.buildingEfficiency[i] * getQuestBonus()).toFixed(1)}/sek styck</div>
@@ -551,27 +562,22 @@
             });
             document.getElementById("building-list").innerHTML = bHtml;
             document.getElementById("ach-license-area").style.display = data.hasLicense ? "none" : "block";
+
             if (data.hasLicense) {
-                let achList = [];
+                let achHtml = "";
                 Object.keys(achChains).forEach(type => {
                     const level = data.achLevels[type];
                     if (level < achChains[type].length) {
                         const ach = achChains[type][level];
                         const val = getValByType(type, level);
                         const isReady = val >= ach.target;
-                        achList.push({ type, level, ach, val, isReady });
+                        achHtml += `<div class="ach-card">
+                            <div style="display:flex; justify-content:space-between;"><b>${ach.t}</b> <span style="color:#28a745;">+${ach.reward.toLocaleString()} kr</span></div>
+                            <div style="font-size:0.75rem; margin:5px 0; color:#555;">Krav: ${ach.req}</div>
+                            <div class="progress-container"><div class="progress-bar" style="width: ${Math.min(100, (val/ach.target)*100)}%"></div><div class="progress-text">${Math.floor(val).toLocaleString()} / ${ach.target.toLocaleString()}</div></div>
+                            <button class="claim-btn ${isReady ? 'ready' : ''}" onclick="claimAch('${type}')">${isReady ? 'HÄMTA BELÖNING' : 'LÅST'}</button>
+                        </div>`;
                     }
-                });
-                achList.sort((a, b) => b.isReady - a.isReady);
-                let achHtml = "";
-                achList.forEach(item => {
-                    const { type, ach, val, isReady } = item;
-                    achHtml += `<div class="ach-card">
-                        <div style="display:flex; justify-content:space-between;"><b>${ach.t}</b> <span style="color:#28a745;">+${ach.reward.toLocaleString()} kr</span></div>
-                        <div style="font-size:0.75rem; margin:5px 0; color:#555;">Krav: ${ach.req}</div>
-                        <div class="progress-container"><div class="progress-bar" style="width: ${Math.min(100, (val/ach.target)*100)}%"></div><div class="progress-text">${Math.floor(val).toLocaleString()} / ${ach.target.toLocaleString()}</div></div>
-                        <button class="claim-btn ${isReady ? 'ready' : ''}" onclick="claimAch('${type}')">${isReady ? 'HÄMTA BELÖNING' : 'LÅST'}</button>
-                    </div>`;
                 });
                 document.getElementById("ach-container").innerHTML = achHtml;
             }
@@ -587,15 +593,10 @@
         window.onload = () => {
             let s = localStorage.getItem(STORAGE_KEY);
             if (s) {
-                let loaded = JSON.parse(s);
-                data = loaded.data;
-                ownedTech = loaded.ownedTech || [];
-                const lastSkin = techUpgrades.filter(t => t.type === "skin" && ownedTech.includes(t.id)).pop();
-                if(lastSkin) {
-                    document.getElementById("clicker-icon").innerText = lastSkin.icon;
-                    document.getElementById("clicker-text").innerText = lastSkin.text;
-                    document.getElementById("clicker-visual").style.borderColor = lastSkin.color;
-                }
+                const loaded = JSON.parse(s);
+                Object.assign(data, loaded);
+                const lastSkin = techUpgrades.filter(t => t.type === "skin" && data.ownedTech.includes(t.id)).pop();
+                if(lastSkin) applySkin(lastSkin);
             }
             renderEverything();
         };
