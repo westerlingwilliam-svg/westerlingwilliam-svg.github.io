@@ -10,10 +10,13 @@
             --rare: #4facfe;
             --epic: #a335ee;
             --legendary: #ff8000;
+            --sd-blue: #005293;
+            --sd-gold: #fecc00;
         }
+
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background: #001f3f;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #001a33;
             color: white;
             margin: 0;
             display: flex;
@@ -21,139 +24,190 @@
             height: 100vh;
             overflow: hidden;
         }
-        /* TOP BAR */
-        .top-bar {
-            background: #005293;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 4px solid #fecc00;
-        }
-        .balance { font-size: 1.5rem; font-weight: bold; color: #fecc00; }
 
-        /* MAIN LAYOUT */
-        .main-container {
+        /* TOP BAR MED LUCKY BLOCK I MITTEN */
+        .header {
+            background: linear-gradient(to bottom, var(--sd-blue), #003d6e);
+            padding: 10px 30px;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            border-bottom: 4px solid var(--sd-gold);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            z-index: 100;
+        }
+
+        .stats-left { font-size: 1.2rem; }
+        .stats-left span { color: var(--sd-gold); font-weight: bold; }
+
+        /* LUCKY BLOCK CENTER */
+        .block-center {
+            text-align: center;
+            position: relative;
+        }
+
+        #lucky-block {
+            width: 80px; height: 80px;
+            background: var(--sd-gold);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            color: var(--sd-blue);
+            cursor: pointer;
+            margin: 0 auto;
+            box-shadow: 0 6px 0 #b38f00, 0 0 20px rgba(254, 204, 0, 0.4);
+            transition: 0.1s;
+            user-select: none;
+        }
+
+        #lucky-block:active { transform: translateY(4px); box-shadow: 0 2px 0 #b38f00; }
+        .block-price { font-size: 0.9rem; margin-top: 5px; font-weight: bold; }
+
+        /* MAIN CONTENT */
+        .game-area {
             display: flex;
             flex: 1;
             overflow: hidden;
+            background: #00264d;
         }
 
-        /* STADEN (Vänster sida) */
+        /* CITY GRID */
         #city-grid {
-            flex: 2;
-            background: #003366;
+            flex: 3;
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            grid-template-rows: repeat(6, 1fr);
-            gap: 5px;
-            padding: 10px;
-            background-image: radial-gradient(#004080 1px, transparent 1px);
-            background-size: 40px 40px;
+            gap: 10px;
+            padding: 20px;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
         }
+
         .slot {
-            background: rgba(255,255,255,0.05);
-            border: 1px dashed rgba(255,255,255,0.2);
-            border-radius: 5px;
+            background: rgba(0,0,0,0.3);
+            border: 2px solid rgba(254, 204, 0, 0.1);
+            border-radius: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 2rem;
+            font-size: 2.5rem;
             cursor: pointer;
+            transition: 0.3s;
         }
-        .slot:hover { background: rgba(254, 204, 0, 0.1); }
 
-        /* SIDEBAR (Höger sida) */
+        .slot:hover { border-color: var(--sd-gold); background: rgba(254, 204, 0, 0.05); }
+        .slot.highlight { border-color: #00ff99; box-shadow: 0 0 15px #00ff99; }
+
+        /* INVENTORY SIDEBAR */
         .sidebar {
             flex: 1;
-            background: #002b55;
-            border-left: 2px solid #fecc00;
+            background: #001f3f;
+            border-left: 2px solid rgba(254, 204, 0, 0.3);
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            padding: 15px;
         }
 
-        .lucky-block-section {
-            text-align: center;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #005293;
-        }
-        #lucky-block {
-            width: 120px; height: 120px;
-            background: #fecc00;
-            margin: 10px auto;
-            border-radius: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 4rem;
-            color: #005293;
-            cursor: pointer;
-            box-shadow: 0 10px 0 #b38f00;
-            transition: 0.1s;
-        }
-        #lucky-block:active { transform: translateY(5px); box-shadow: 0 5px 0 #b38f00; }
-
-        .inventory {
+        .inventory-list {
             flex: 1;
             overflow-y: auto;
-            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
+
         .inv-item {
-            background: rgba(255,255,255,0.1);
-            margin: 5px 0;
-            padding: 10px;
-            border-radius: 5px;
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            cursor: move;
+            border-left: 4px solid var(--common);
+            transition: 0.2s;
         }
+
+        .inv-item:hover { transform: translateX(5px); background: rgba(255,255,255,0.1); }
+
+        .place-btn {
+            background: var(--sd-gold);
+            color: var(--sd-blue);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* NOTIFICATIONS & OVERLAYS */
+        #game-msg {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            padding: 15px 30px;
+            border-radius: 50px;
+            border: 2px solid var(--sd-gold);
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .show-msg { opacity: 1 !important; }
+
+        .rarity-tag { font-size: 0.7rem; text-transform: uppercase; padding: 2px 6px; border-radius: 3px; }
     </style>
 </head>
 <body>
 
-<div class="top-bar">
-    <div class="balance">💰 <span id="money">500</span> kr</div>
-    <div>STADS-INKOMST: <span id="pps">0</span> kr/sek</div>
-    <a href="games.html" style="color: white; text-decoration: none;">[ Avsluta ]</a>
-</div>
+<div class="header">
+    <div class="stats-left">
+        <div>KONTO: <span id="money">500</span> KR</div>
+        <div style="font-size: 0.9rem;">INKOMST: <span id="pps">0</span> KR/S</div>
+    </div>
 
-<div class="main-container">
-    <div id="city-grid">
-        </div>
+    <div class="block-center">
+        <div id="lucky-block">?</div>
+        <div class="block-price">KOSTNAD: <span id="block-cost">250</span> KR</div>
+    </div>
 
-    <div class="sidebar">
-        <div class="lucky-block-section">
-            <h3>KÖP LUCKY BLOCK</h3>
-            <div id="lucky-block">?</div>
-            <p>Kostnad: <span id="block-cost">250</span> kr</p>
-        </div>
-
-        <h3>Ditt Inventory</h3>
-        <div class="inventory" id="inventory">
-            </div>
+    <div style="text-align: right;">
+        <a href="games.html" style="color: white; text-decoration: none; font-weight: bold;">[ AVSLUTA ]</a>
     </div>
 </div>
+
+<div class="game-area">
+    <div id="city-grid"></div>
+
+    <div class="sidebar">
+        <h2 style="margin-top: 0; color: var(--sd-gold);">DITT INVENTORY</h2>
+        <div class="inventory-list" id="inventory"></div>
+    </div>
+</div>
+
+<div id="game-msg">Meddelande här</div>
 
 <script>
     let money = 500;
     let blockCost = 250;
-    let selectedBuilding = null;
+    let selectedInvIndex = null;
     let incomePerSecond = 0;
-
-    // Byggnads-data (Rarity påverkar inkomst)
-    const buildings = [
-        { name: "Röd Stuga", icon: "🏠", rarity: "common", income: 5, chance: 0.6 },
-        { name: "Hyreshus", icon: "🏢", rarity: "rare", income: 25, chance: 0.3 },
-        { name: "Kärnkraftverk", icon: "⚛️", rarity: "epic", income: 150, chance: 0.08 },
-        { name: "Guld-Slott", icon: "🏰", rarity: "legendary", income: 1000, chance: 0.02 }
-    ];
-
     let inventory = [];
     let cityData = Array(36).fill(null);
 
-    // Initiera staden
+    const buildings = [
+        { name: "Röd Stuga", icon: "🏠", rarity: "common", income: 5, chance: 0.6, color: "#b5b5b5" },
+        { name: "Hyreshus", icon: "🏢", rarity: "rare", income: 25, chance: 0.3, color: "#4facfe" },
+        { name: "Kärnkraftverk", icon: "⚛️", rarity: "epic", income: 150, chance: 0.08, color: "#a335ee" },
+        { name: "Guld-Slott", icon: "🏰", rarity: "legendary", income: 1000, chance: 0.02, color: "#ff8000" }
+    ];
+
+    // Skapa stadens yta
     const grid = document.getElementById('city-grid');
     for (let i = 0; i < 36; i++) {
         const slot = document.createElement('div');
@@ -162,32 +216,39 @@
         grid.appendChild(slot);
     }
 
-    // Öppna Lucky Block
-    document.getElementById('lucky-block').onclick = () => {
+    // Lucky Block Klick
+    document.getElementById('lucky-block').onclick = function() {
         if (money >= blockCost) {
             money -= blockCost;
-            blockCost = Math.ceil(blockCost * 1.1); // Priset ökar
-            openBlock();
+            blockCost = Math.ceil(blockCost * 1.15);
+            
+            // Slumpa byggnad
+            const rand = Math.random();
+            let cumulative = 0;
+            let wonItem = buildings[0];
+
+            for (const b of buildings) {
+                cumulative += b.chance;
+                if (rand < cumulative) {
+                    wonItem = { ...b, id: Date.now() };
+                    break;
+                }
+            }
+            
+            inventory.push(wonItem);
+            showMessage(`LUCKY! Du fick: ${wonItem.icon} ${wonItem.name}`);
+            renderInventory();
             updateUI();
         } else {
-            alert("Du behöver mer pengar!");
+            showMessage("⚠️ Du har inte råd med ett Lucky Block!");
         }
     };
 
-    function openBlock() {
-        const rand = Math.random();
-        let cumulative = 0;
-        let wonItem = buildings[0];
-
-        for (const b of buildings) {
-            cumulative += b.chance;
-            if (rand < cumulative) {
-                wonItem = { ...b, id: Date.now() };
-                break;
-            }
-        }
-        inventory.push(wonItem);
-        renderInventory();
+    function showMessage(text) {
+        const msg = document.getElementById('game-msg');
+        msg.innerText = text;
+        msg.classList.add('show-msg');
+        setTimeout(() => msg.classList.remove('show-msg'), 2500);
     }
 
     function renderInventory() {
@@ -196,38 +257,56 @@
         inventory.forEach((item, index) => {
             const div = document.createElement('div');
             div.className = 'inv-item';
-            div.style.borderLeft = `5px solid var(--${item.rarity})`;
+            div.style.borderLeftColor = item.color;
             div.innerHTML = `
-                <span>${item.icon} ${item.name}</span>
-                <button onclick="selectForPlacement(${index})">SÄTT UT</button>
+                <div>
+                    <strong>${item.icon} ${item.name}</strong><br>
+                    <span class="rarity-tag" style="background:${item.color}">${item.rarity}</span>
+                </div>
+                <button class="place-btn" onclick="preparePlacement(${index})">SÄTT UT</button>
             `;
             invEl.appendChild(div);
         });
     }
 
-    function selectForPlacement(index) {
-        selectedBuilding = index;
-        alert("Klicka nu på en ledig yta i staden!");
+    function preparePlacement(index) {
+        selectedInvIndex = index;
+        showMessage("📍 Klicka på en ledig ruta i staden!");
+        
+        // Highlighta lediga rutor
+        const slots = document.getElementsByClassName('slot');
+        for (let s of slots) {
+            if (!s.innerHTML) s.classList.add('highlight');
+        }
     }
 
     function placeBuilding(slotIndex) {
-        if (selectedBuilding !== null && cityData[slotIndex] === null) {
-            const item = inventory[selectedBuilding];
-            cityData[slotIndex] = item;
-            inventory.splice(selectedBuilding, 1);
-            selectedBuilding = null;
-            
-            renderCity();
-            renderInventory();
-            calculateIncome();
+        const slots = document.getElementsByClassName('slot');
+        
+        if (selectedInvIndex !== null) {
+            if (cityData[slotIndex] === null) {
+                cityData[slotIndex] = inventory[selectedInvIndex];
+                inventory.splice(selectedInvIndex, 1);
+                selectedInvIndex = null;
+                
+                // Ta bort highlights
+                for (let s of slots) s.classList.remove('highlight');
+                
+                renderCity();
+                renderInventory();
+                calculateIncome();
+                showMessage("✅ Byggnad placerad!");
+            } else {
+                showMessage("❌ Där är det redan upptaget!");
+            }
         }
     }
 
     function renderCity() {
         const slots = document.getElementsByClassName('slot');
         cityData.forEach((data, i) => {
-            slots[i].innerText = data ? data.icon : "";
-            slots[i].style.background = data ? "rgba(255,255,255,0.15)" : "";
+            slots[i].innerHTML = data ? data.icon : "";
+            if (data) slots[i].style.background = "rgba(255,255,255,0.1)";
         });
     }
 
@@ -241,7 +320,7 @@
         document.getElementById('block-cost').innerText = blockCost;
     }
 
-    // Gameloop - Pengar rullar in varje sekund
+    // Gameloop för pengar
     setInterval(() => {
         money += incomePerSecond;
         updateUI();
