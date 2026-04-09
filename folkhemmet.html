@@ -40,7 +40,26 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.5), 0 0 20px rgba(254, 204, 0, 0.6);
             z-index: 100;
             flex-shrink: 0;
+            position: relative;
         }
+
+        /* NY UPGRADES KNAPP */
+        .upgrade-shop-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #005293;
+            color: white;
+            border: 3px solid white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            box-shadow: 0 4px 0 #002b4d;
+            transition: 0.1s;
+        }
+        .upgrade-shop-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #002b4d; }
+
         .header h1 {
             margin: 0 0 15px 0;
             font-size: 3.5rem;
@@ -235,9 +254,30 @@
             border-radius:15px; font-size: 1.2rem;
         }
 
-        #ach-container {
-            display: flex;
-            flex-direction: column;
+        /* MODAL FÖR UPGRADES */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: white;
+            width: 600px;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 30px;
+            border: 10px solid #fecc00;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .close-modal {
+            float: right;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #005293;
         }
     </style>
 </head>
@@ -245,6 +285,7 @@
 
     <div class="header">
         <h1>BYGG FOLKHEMMET</h1>
+        <button class="upgrade-shop-btn" onclick="toggleModal(true)">💎 UPPGRADERINGAR</button>
         
         <div class="money-display">
             💰 <span id="money">0</span> kr
@@ -254,6 +295,17 @@
             <div class="stat-box">📈 <span id="pps">0</span> /sek</div>
             <div class="stat-box">🖱️ <span id="mpc">1</span> /klick</div>
             <div class="stat-box" style="background: #fecc00; color: #005293;">🏆 Bonus: <span id="bonus-val">0</span>%</div>
+        </div>
+    </div>
+
+    <div id="upgradeModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="toggleModal(false)">&times;</span>
+            <h2 style="color: #005293; text-align: center; font-size: 2rem;">TEKNISKA FRAMSTEG</h2>
+            <p style="text-align: center; color: #666;">Investera i nationens framtid.</p>
+            <hr>
+            <div id="tech-list">
+                </div>
         </div>
     </div>
 
@@ -280,13 +332,13 @@
         </div>
 
         <div class="center-area">
-            <div class="main-clicker" 
+            <div id="clicker-visual" class="main-clicker" 
                  onmousedown="startHold()" 
                  onmouseup="endHold()" 
                  onmouseleave="endHold()"
                  onclick="doClick(event)">
-                <span style="font-size: 8rem;">🏠</span>
-                <b style="font-size: 2rem;">KLICKA!</b>
+                <span id="clicker-icon" style="font-size: 8rem;">🏠</span>
+                <b id="clicker-text" style="font-size: 2rem;">KLICKA!</b>
             </div>
             <a href="games.html" class="back-btn">TILLBAKA MENYN</a>
         </div>
@@ -304,7 +356,7 @@
     </div>
 
     <script>
-        const STORAGE_KEY = 'folkhem_hardcore_v8_final';
+        const STORAGE_KEY = 'folkhem_hardcore_v9';
 
         let data = {
             money: 0, clicks: 0, mpc: 1, autoClicks: 0,
@@ -315,17 +367,12 @@
             bCounts: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             bCosts: [50, 400, 2000, 10000, 60000, 400000, 2500000, 15000000, 100000000, 1000000000, 10000000000],
             hammerLevel: 0,
-            hasHeld5s: false
+            hasHeld5s: false,
+            // NYA DATA-PUNKTER FÖR UPPGRADERINGAR
+            shopDiscount: 0, // i procent (max 25%)
+            buildingEfficiency: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // Multiplikator per byggnad
+            buttonType: "default"
         };
-
-        let holdTimer;
-        function startHold() {
-            holdTimer = setTimeout(() => {
-                data.hasHeld5s = true;
-                renderEverything();
-            }, 5000);
-        }
-        function endHold() { clearTimeout(holdTimer); }
 
         const buildings = [
             { name: "Röd Stuga", inc: 1 }, { name: "Hyreshus", inc: 8 },
@@ -335,6 +382,67 @@
             { name: "AI-Myndighet", inc: 250000 }, { name: "Sverige 2.0", inc: 1200000 },
             { name: "SD-Högkvarteret 🌸", inc: 10000000 }
         ];
+
+        // Definiton av de nya special-uppgraderingarna
+        const techUpgrades = [
+            { id: "disc1", name: "Bygglovs-rabatt", desc: "Sänker alla priser i butiken med 10%", cost: 10000, type: "discount", val: 0.1 },
+            { id: "disc2", name: "Massproduktion", desc: "Sänker alla priser ytterligare 15%", cost: 500000, type: "discount", val: 0.15 },
+            { id: "eff0", name: "Isolering", desc: "Röda stugor ger 50% mer vinst", cost: 5000, type: "eff", target: 0, val: 1.5 },
+            { id: "eff1", name: "Fler våningar", desc: "Hyreshus ger 50% mer vinst", cost: 25000, type: "eff", target: 1, val: 1.5 },
+            { id: "eff2", name: "Robotkirurgi", desc: "Sjukhus ger 50% mer vinst", cost: 100000, type: "eff", target: 2, val: 1.5 },
+            { id: "btn_gold", name: "Gyllene Knappen", desc: "Byt utseende på knappen", cost: 50000, type: "skin", icon: "🪙", text: "GULD", color: "#FFD700" },
+            { id: "btn_neon", name: "Cyber-Knappen", desc: "Sverige 2.0 utseende", cost: 1000000, type: "skin", icon: "⚡", text: "CYBER", color: "#00f2ff" }
+        ];
+        
+        let ownedTech = [];
+
+        function toggleModal(show) {
+            document.getElementById("upgradeModal").style.display = show ? "block" : "none";
+            if(show) renderTech();
+        }
+
+        function buyTech(techId) {
+            const tech = techUpgrades.find(t => t.id === techId);
+            if(data.money >= tech.cost && !ownedTech.includes(techId)) {
+                data.money -= tech.cost;
+                ownedTech.push(techId);
+                
+                if(tech.type === "discount") data.shopDiscount += tech.val;
+                if(tech.type === "eff") data.buildingEfficiency[tech.target] *= tech.val;
+                if(tech.type === "skin") {
+                    document.getElementById("clicker-icon").innerText = tech.icon;
+                    document.getElementById("clicker-text").innerText = tech.text;
+                    document.getElementById("clicker-visual").style.borderColor = tech.color;
+                }
+                
+                renderEverything();
+                renderTech();
+            }
+        }
+
+        function renderTech() {
+            let html = "";
+            techUpgrades.forEach(t => {
+                const owned = ownedTech.includes(t.id);
+                html += `
+                <div class="buy-button ${owned ? 'disabled' : ''}" onclick="buyTech('${t.id}')" style="margin-bottom:10px; border: 2px solid #005293">
+                    <div class="btn-header"><b>${t.name}</b> ${owned ? '<span style="color:green">KÖPT</span>' : `<div class="price-tag">${t.cost.toLocaleString()} kr</div>`}</div>
+                    <div class="btn-sub">${t.desc}</div>
+                </div>`;
+            });
+            document.getElementById("tech-list").innerHTML = html;
+        }
+
+        /* BEFINTLIG LOGIK NEDAN - ORÖRD UTÖVER KOSTNADS-RABATT */
+
+        let holdTimer;
+        function startHold() {
+            holdTimer = setTimeout(() => {
+                data.hasHeld5s = true;
+                renderEverything();
+            }, 5000);
+        }
+        function endHold() { clearTimeout(holdTimer); }
 
         const achChains = {
             click: [
@@ -413,7 +521,12 @@
         function getQuestBonus() { return 1 + (data.questsDone * 0.10); }
         function getTotalPPS() {
             let pps = 0;
-            for(let i=0; i<buildings.length; i++) if(data.bCounts[i]) pps += data.bCounts[i] * buildings[i].inc * getQuestBonus();
+            for(let i=0; i<buildings.length; i++) {
+                if(data.bCounts[i]) {
+                    // Applicera individuell byggnadseffektivitet här
+                    pps += data.bCounts[i] * (buildings[i].inc * data.buildingEfficiency[i]) * getQuestBonus();
+                }
+            }
             return pps;
         }
 
@@ -435,25 +548,33 @@
             renderEverything();
         }
 
+        // Hjälpfunktion för rabatt
+        function getDiscountedPrice(basePrice) {
+            return Math.round(basePrice * (1 - data.shopDiscount));
+        }
+
         function buyHammer() {
-            if (data.money >= data.hammerPrice) {
-                data.money -= data.hammerPrice; data.hammerLevel++;
+            let price = getDiscountedPrice(data.hammerPrice);
+            if (data.money >= price) {
+                data.money -= price; data.hammerLevel++;
                 data.hammerPrice = Math.round(data.hammerPrice * 2.1);
                 renderEverything();
             }
         }
 
         function buyAuto() {
-            if (data.money >= data.autoPrice) {
-                data.money -= data.autoPrice; data.autoClicks++;
+            let price = getDiscountedPrice(data.autoPrice);
+            if (data.money >= price) {
+                data.money -= price; data.autoClicks++;
                 data.autoPrice = Math.round(data.autoPrice * 2.5);
                 renderEverything();
             }
         }
 
         function buyBuilding(id) {
-            if (data.money >= data.bCosts[id]) {
-                data.money -= data.bCosts[id]; data.bCounts[id]++;
+            let price = getDiscountedPrice(data.bCosts[id]);
+            if (data.money >= price) {
+                data.money -= price; data.bCounts[id]++;
                 data.bCosts[id] = Math.round(data.bCosts[id] * 1.30);
                 renderEverything();
             }
@@ -491,27 +612,27 @@
             document.getElementById("pps").innerText = Math.floor(getTotalPPS()).toLocaleString();
             document.getElementById("bonus-val").innerText = Math.round((getQuestBonus()-1)*100);
             
-            document.getElementById("hammer-btn").classList.toggle("disabled", data.money < data.hammerPrice);
-            document.getElementById("auto-btn").classList.toggle("disabled", data.money < data.autoPrice);
+            document.getElementById("hammer-btn").classList.toggle("disabled", data.money < getDiscountedPrice(data.hammerPrice));
+            document.getElementById("auto-btn").classList.toggle("disabled", data.money < getDiscountedPrice(data.autoPrice));
             
             buildings.forEach((_, i) => {
                 const btn = document.getElementById("build-"+i);
-                if(btn) btn.classList.toggle("disabled", data.money < data.bCosts[i]);
+                if(btn) btn.classList.toggle("disabled", data.money < getDiscountedPrice(data.bCosts[i]));
             });
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({data, ownedTech}));
         }
 
         function renderEverything() {
-            document.getElementById("hammer-cost").innerText = data.hammerPrice.toLocaleString();
-            document.getElementById("auto-cost").innerText = data.autoPrice.toLocaleString();
+            document.getElementById("hammer-cost").innerText = getDiscountedPrice(data.hammerPrice).toLocaleString();
+            document.getElementById("auto-cost").innerText = getDiscountedPrice(data.autoPrice).toLocaleString();
             
             let bHtml = "";
             buildings.forEach((b, i) => {
-                const cost = data.bCosts[i];
+                const cost = getDiscountedPrice(data.bCosts[i]);
                 if (data.money >= cost * 0.3 || data.bCounts[i] > 0) {
                     bHtml += `<button class="buy-button" id="build-${i}" onclick="buyBuilding(${i})">
                         <div class="btn-header"><b>${b.name} (${data.bCounts[i]})</b> <div class="price-tag">${cost.toLocaleString()} kr</div></div>
-                        <div class="btn-sub">Ger: ${(b.inc * getQuestBonus()).toFixed(1)}/sek styck</div>
+                        <div class="btn-sub">Ger: ${(b.inc * data.buildingEfficiency[i] * getQuestBonus()).toFixed(1)}/sek styck</div>
                     </button>`;
                 }
             });
@@ -561,9 +682,16 @@
             let s = localStorage.getItem(STORAGE_KEY);
             if (s) {
                 let loaded = JSON.parse(s);
-                Object.assign(data, loaded);
-                // Fix if loading old save without the new category
-                if(!data.achLevels.challenges) data.achLevels.challenges = 0;
+                data = loaded.data;
+                ownedTech = loaded.ownedTech || [];
+                
+                // Återställ knapp-utseende om man har köpt det
+                const lastSkin = techUpgrades.filter(t => t.type === "skin" && ownedTech.includes(t.id)).pop();
+                if(lastSkin) {
+                    document.getElementById("clicker-icon").innerText = lastSkin.icon;
+                    document.getElementById("clicker-text").innerText = lastSkin.text;
+                    document.getElementById("clicker-visual").style.borderColor = lastSkin.color;
+                }
             }
             renderEverything();
         };
