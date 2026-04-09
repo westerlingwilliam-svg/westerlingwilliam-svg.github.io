@@ -733,7 +733,7 @@
             let price = getDiscountedPrice(data.bCosts[id]);
             if (data.money >= price) {
                 data.money -= price; data.bCounts[id]++;
-                data.bCosts[id] = Math.round(data.bCosts[id] * 1.30);
+                data.bCosts[id] = Math.round(data.bCosts[id] * 1.15);
                 renderEverything();
             }
         }
