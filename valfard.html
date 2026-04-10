@@ -22,7 +22,6 @@ html,body{
     font-family:'Segoe UI',system-ui,sans-serif;
     display:flex;
     flex-direction:column;
-    /* ZOOM TILLAGD HÄR */
     zoom: 1.25;
     -moz-transform: scale(1.25);
     -moz-transform-origin: 0 0;
@@ -62,15 +61,37 @@ html,body{
 .block-price{font-size:0.9rem;color:var(--gold);font-weight:800;margin:2px 0}
 .upg-bl-btn{width:100%;padding:6px 0;border-radius:8px;cursor:pointer;font-size:0.75rem;font-weight:800;border:1px solid var(--border2);background:rgba(255,255,255,0.06);color:var(--text)}
 
-/* CITY GRID */
+/* CITY GRID - Nu skrollbar */
 #game-area{display:flex;flex:1;height:calc(100vh - 220px);overflow:hidden}
-#city-grid{flex:1;display:grid;grid-template-columns:repeat(6, 160px);grid-template-rows:repeat(4, 160px);gap:15px;padding:40px;justify-content:center;align-content:center;background:radial-gradient(circle at center, var(--bg2), var(--bg))}
+#city-grid{
+    flex:1;
+    display:grid;
+    grid-template-columns:repeat(6, 160px);
+    grid-auto-rows: 160px;
+    gap:15px;
+    padding:40px;
+    justify-content:center;
+    background:radial-gradient(circle at center, var(--bg2), var(--bg));
+    overflow-y: auto;
+}
 
 .slot{border-radius:var(--r20);border:2px solid var(--border);background:var(--bg3);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:all 0.25s;width:160px;height:160px}
 .slot-icon{font-size:3.5rem;margin-bottom:5px;animation:flt 3s ease-in-out infinite}
 .slot-lvl{position:absolute;top:10px;left:10px;background:#000;padding:4px 8px;border-radius:6px;font-size:0.75rem;font-weight:800;color:var(--gold);border:1px solid var(--border2)}
 .slot-income{font-size:0.9rem;font-weight:800;color:#4ade80;background:rgba(0,0,0,0.3);padding:4px 10px;border-radius:10px}
 .upg-btn{margin-top:8px;width:85%;padding:6px 0;border-radius:10px;background:var(--gold);color:#000;font-size:0.8rem;font-weight:900;border:none;cursor:pointer}
+
+/* HIGHLIGHT FÖR TOMMA RUTOR */
+.highlight-empty{
+    border-color: #4ade80 !important;
+    box-shadow: 0 0 15px rgba(74, 222, 128, 0.3);
+    animation: pulse-green 1.5s infinite;
+}
+@keyframes pulse-green {
+    0% { background: var(--bg3); }
+    50% { background: rgba(74, 222, 128, 0.15); }
+    100% { background: var(--bg3); }
+}
 
 /* SIDEBAR */
 #sidebar{width:420px;flex-shrink:0;background:var(--bg2);border-left:2px solid var(--border2);display:flex;flex-direction:column}
@@ -84,7 +105,6 @@ html,body{
 .inv-icon{font-size:3rem}
 .inv-name{font-size:0.9rem;font-weight:800}
 
-/* ÅTERSTÄLLDA KNAPPAR */
 .inv-btns{display:flex;flex-direction:column;gap:6px;width:90%}
 .inv-btns button{width:100%;padding:8px;border-radius:10px;font-size:0.8rem;font-weight:800;cursor:pointer;border:none}
 .bld-btn{background:#4ade80;color:#000}
@@ -295,7 +315,10 @@ function renderCity(){
   const grid=document.getElementById('city-grid');grid.innerHTML='';
   cityData.forEach((data,i)=>{
     const slot=document.createElement('div');
-    slot.className='slot'+(data?'':' empty');
+    // Highlight om vi ska bygga
+    const highlight = (selectedInvIndex !== null && !data) ? ' highlight-empty' : '';
+    slot.className='slot'+(data?'':' empty') + highlight;
+    
     if(data){
       const c=data.color;
       slot.style.borderColor=c;
@@ -316,7 +339,10 @@ function renderInv(){
   inventory.forEach((item,idx)=>{
     const d=document.createElement('div');d.className='inv-card';
     d.style.borderColor=item.color;
-    d.innerHTML='<div class="inv-icon">'+item.icon+'</div><div class="inv-name" style="color:'+item.color+'">'+item.name+'</div><div class="inv-btns"><button class="bld-btn" data-idx="'+idx+'">BYGG</button><button class="sll-btn" data-idx="'+idx+'">SÄLJ</button></div>';
+    // Visuell markering om valt för bygge
+    if(selectedInvIndex === idx) d.style.background = 'rgba(74, 222, 128, 0.1)';
+    
+    d.innerHTML='<div class="inv-icon">'+item.icon+'</div><div class="inv-name" style="color:'+item.color+'">'+item.name+'</div><div class="inv-btns"><button class="bld-btn" data-idx="'+idx+'">'+(selectedInvIndex === idx ? 'AVBRYT' : 'BYGG')+'</button><button class="sll-btn" data-idx="'+idx+'">SÄLJ</button></div>';
     el.appendChild(d);
   });
   el.querySelectorAll('.bld-btn').forEach(b=>b.addEventListener('click',()=>prepPlace(parseInt(b.dataset.idx))));
@@ -342,8 +368,11 @@ function placeBuilding(si){
 }
 
 function prepPlace(idx){
-  selectedInvIndex=idx;
-  showToast('Klicka på en plats i staden!');
+  if(selectedInvIndex === idx) selectedInvIndex = null;
+  else selectedInvIndex=idx;
+  renderInv();
+  renderCity(); // Uppdatera rutorna för att visa ljuset
+  if(selectedInvIndex !== null) showToast('Klicka på en lysande plats i staden!');
 }
 
 function sellItem(idx){
@@ -351,7 +380,7 @@ function sellItem(idx){
   const price=Math.floor(item.sellPrice*sellBonus);
   money+=price;inventory.splice(idx,1);selectedInvIndex=null;
   showToast('💰 Sålde '+item.name+' för '+fmt(price)+' KR');
-  renderInv();updateUI();save();
+  renderInv();renderCity();updateUI();save();
 }
 
 function startCooldown(tier){
