@@ -120,7 +120,7 @@ html,body{
 .slot-income{font-size:0.9rem;font-weight:800;color:#4ade80;background:rgba(0,0,0,0.3);padding:4px 10px;border-radius:10px}
 
 /* Dynamisk knappfärg */
-.upg-btn{margin-top:8px;width:85%;padding:6px 0;border-radius:10px;background:var(--gold);color:#000;font-size:0.8rem;font-weight:900;border:none;cursor:pointer;transition: background 0.2s;}
+.upg-btn{margin-top:8px;width:85%;padding:6px 0;border-radius:10px;background:var(--gold);color:#000;font-size:0.8rem;font-weight:900;border:none;cursor:pointer;transition: background 0.2s, color 0.2s;}
 .upg-btn.no-funds { background: var(--gold-dark); color: rgba(0,0,0,0.6); }
 
 .highlight-empty{
@@ -269,8 +269,8 @@ function pick(a,f,t){return a[Math.min(f+Math.floor(Math.random()*(t-f)),a.lengt
 
 function getDrop(tier,bl){
   const r=Math.random()*100 / luckBoost;
-  const cb=bl*0.05,mb=bl*0.08,lb=bl*0.15,eb=bl*0.5;
   if(tier===5 && Math.random() < 0.0001 * luckBoost) return buildings[31]; 
+  const mb=bl*0.08,eb=bl*0.5;
   if(tier===1){
     if(r<0.001) return pick(buildings,27,31);
     if(r<0.05) return pick(buildings,24,27);
@@ -349,7 +349,7 @@ function renderShop(){
       </div>
       <div class="shop-r">
         <button class="buy-btn2" ${mx?'disabled':''} onclick="buyShopUpg(${i})">
-          ${mx?'MAX':fmt(cost)+' KR'}
+          ${mx?'MAX':fmtS(cost)+' KR'}
         </button>
       </div>`;
     el.appendChild(d);
@@ -384,7 +384,7 @@ function upgradeBuilding(i){
     b.income = Math.floor(b.income * mult); 
     showToast(b.icon+' '+b.name+' → Level '+b.level+'!');
     renderCity();updateUI();save();
-  } else showToast('Behöver '+fmt(cost)+' KR!');
+  } else showToast('Behöver '+fmtS(cost)+' KR!');
 }
 
 function renderCity(){
@@ -400,7 +400,7 @@ function renderCity(){
       let base = Math.max(data.sellPrice, 200);
       const uc=Math.floor(base * 1.25 * Math.pow(1.85, data.level-1));
       const hasMoney = money >= uc;
-      slot.innerHTML='<div class="slot-lvl">LVL '+data.level+'</div><div class="slot-icon">'+data.icon+'</div><div class="slot-income">+'+fmt(Math.floor(data.income*globalMultiplier))+'/s</div><button class="upg-btn '+(hasMoney?'':'no-funds')+'" data-s="'+i+'">'+(data.level>=50?'MAX':'UPG ('+fmtS(uc)+')')+'</button>';
+      slot.innerHTML='<div class="slot-lvl">LVL '+data.level+'</div><div class="slot-icon">'+data.icon+'</div><div class="slot-income">+'+fmtS(Math.floor(data.income*globalMultiplier))+'/s</div><button class="upg-btn '+(hasMoney?'':'no-funds')+'" data-s="'+i+'">'+(data.level>=50?'MAX':'UPG ('+fmtS(uc)+')')+'</button>';
     }
     slot.addEventListener('click',e=>{
       if(e.target.dataset.s!==undefined){e.stopPropagation();upgradeBuilding(parseInt(e.target.dataset.s));}
@@ -450,13 +450,11 @@ function prepPlace(idx){
 
 function sellItem(idx){
   const item=inventory[idx];
-  // Fix för att förhindra NaN i Turism/Sälj-beräkningar
   const bonus = isNaN(sellBonus) ? 1 : sellBonus;
   const price=Math.floor(item.sellPrice * bonus);
-  
   if(!isNaN(price)){
     money+=price;inventory.splice(idx,1);selectedInvIndex=null;
-    showToast('💰 Sålde '+item.name+' för '+fmt(price)+' KR');
+    showToast('💰 Sålde '+item.name+' för '+fmtS(price)+' KR');
     renderInv();renderCity();updateUI();save();
   }
 }
@@ -484,21 +482,38 @@ function renderBlocks(){
     const nc=bl<4?bUpgCost(i,bl):null;
     const stars=Array.from({length:4},(_,s)=>'<span class="bstar '+(s<bl?'on':'off')+'">★</span>').join('');
     const w=document.createElement('div');w.className='block-wrapper';
-    w.innerHTML='<div id="block-'+i+'" class="lucky-block bt'+i+' '+(isCd?'disabled':'')+'" onclick="buyBlock('+i+')">'+(isCd?'<div class="cd-over"><span class="cd-n" id="cd-'+i+'">'+cooldowns[i-1]+'</span></div>':'<div class="block-icon">'+blockIcons[i-1]+'</div><div class="block-stars">'+stars+'</div>')+'</div><div class="block-meta"><div class="block-name">'+blockNames[i-1]+'</div><div class="block-price">'+fmt(blockPrices[i-1])+' KR</div>'+(nc?'<button class="upg-bl-btn" onclick="event.stopPropagation();upgBlockLevel('+i+')">⬆ BÄTTRE</button>':'<div class="upg-bl-btn mx">MAX</div>')+'</div>';
+    w.innerHTML='<div id="block-'+i+'" class="lucky-block bt'+i+' '+(isCd?'disabled':'')+'" onclick="buyBlock('+i+')">'+(isCd?'<div class="cd-over"><span class="cd-n" id="cd-'+i+'">'+cooldowns[i-1]+'</span></div>':'<div class="block-icon">'+blockIcons[i-1]+'</div><div class="block-stars">'+stars+'</div>')+'</div><div class="block-meta"><div class="block-name">'+blockNames[i-1]+'</div><div class="block-price">'+fmtS(blockPrices[i-1])+' KR</div>'+(nc?'<button class="upg-bl-btn" onclick="event.stopPropagation();upgBlockLevel('+i+')">⬆ BÄTTRE</button>':'<div class="upg-bl-btn mx">MAX</div>')+'</div>';
     row.appendChild(w);
   }
 }
 
+// OPTIMERAD UPDATEUI: Rör INTE city-grid eller block om det inte behövs
 function updateUI(){
-  document.getElementById('money').innerText=fmt(Math.floor(money));
+  document.getElementById('money').innerText=fmtS(Math.floor(money));
   const inc = cityData.reduce((t, b) => t + (b && b.income ? b.income : 0), 0) * globalMultiplier;
-  document.getElementById('pps').innerText=fmt(Math.floor(inc));
-  if(currentMaxBlock<5) document.getElementById('upg-cost').innerText=fmt(upgCosts[currentMaxBlock]);
-  else document.getElementById('upg-luck-btn').style.display='none';
+  document.getElementById('pps').innerText=fmtS(Math.floor(inc));
   
-  // Uppdatera stadens knappar i realtid baserat på pengar
-  const slots = document.querySelectorAll('.slot');
-  if(slots.length > 0) renderCity();
+  const upgLuckBtn = document.getElementById('upg-luck-btn');
+  if(currentMaxBlock<5) {
+      const costSpan = document.getElementById('upg-cost');
+      if(costSpan) costSpan.innerText = fmtS(upgCosts[currentMaxBlock]);
+  } else if(upgLuckBtn) upgLuckBtn.style.display='none';
+
+  // Uppdatera ENDAST knapparnas färg/text, inte hela slotten (för att slippa lagga animationer)
+  cityData.forEach((data, i) => {
+      if(data) {
+          const btn = document.querySelector(`.upg-btn[data-s="${i}"]`);
+          if(btn) {
+              let base = Math.max(data.sellPrice, 200);
+              const uc = Math.floor(base * 1.25 * Math.pow(1.85, data.level-1));
+              const hasMoney = money >= uc;
+              
+              btn.classList.toggle('no-funds', !hasMoney);
+              if(data.level >= 50) btn.innerText = 'MAX';
+              else btn.innerText = 'UPG ('+fmtS(uc)+')';
+          }
+      }
+  });
 }
 
 let _tt;
@@ -508,11 +523,15 @@ function showToast(msg){
 }
 
 function fmt(n){return Math.round(n).toLocaleString('sv-SE')}
+
+// Uppdaterad fmtS med Trillion (T) och Quadrillion (Q)
 function fmtS(n){
-  if(n>=1000000000)return(n/1000000000).toFixed(1)+'B';
-  if(n>=1000000)return(n/1000000).toFixed(1)+'M';
-  if(n>=1000)return Math.round(n/1000)+'k';
-  return String(n);
+  if(n>=1000000000000000) return (n/1000000000000000).toFixed(2)+'Q';
+  if(n>=1000000000000) return (n/1000000000000).toFixed(2)+'T';
+  if(n>=1000000000) return (n/1000000000).toFixed(1)+'B';
+  if(n>=1000000) return (n/1000000).toFixed(1)+'M';
+  if(n>=1000) return Math.round(n/1000)+'k';
+  return Math.round(n).toLocaleString('sv-SE');
 }
 
 function save(){
