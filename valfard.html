@@ -39,7 +39,6 @@ html,body{
 
 #upg-luck-btn{margin-top:12px;display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#1a2a1a,#0d1f0d);border:2px solid #4ade8055;color:#4ade80;padding:10px 20px;border-radius:30px;cursor:pointer;font-size:0.85rem;font-weight:800;transition:all 0.2s;text-transform:uppercase}
 
-/* NY MENY-KNAPP OCH RESET POSITIONERING */
 .header-right{display:flex;flex-direction:column;align-items:flex-end;gap:15px;justify-content:center;height:100%}
 
 .menu-link-btn {
@@ -120,7 +119,6 @@ html,body{
 .slot-income{font-size:0.9rem;font-weight:800;color:#4ade80;background:rgba(0,0,0,0.3);padding:4px 10px;border-radius:10px}
 .upg-btn{margin-top:8px;width:85%;padding:6px 0;border-radius:10px;background:var(--gold);color:#000;font-size:0.8rem;font-weight:900;border:none;cursor:pointer}
 
-/* HIGHLIGHT FÖR TOMMA RUTOR */
 .highlight-empty{
     border-color: #4ade80 !important;
     box-shadow: 0 0 15px rgba(74, 222, 128, 0.3);
@@ -197,8 +195,8 @@ html,body{
 <script>
 let money=500,currentMaxBlock=1,inventory=[],cityData=Array(24).fill(null);
 let selectedInvIndex=null,cooldowns=[0,0,0,0,0];
-let globalMultiplier=1,sellBonus=1,cdReduction=0;
-let blockLevels=[0,0,0,0,0],shopLevels=[0,0,0];
+let globalMultiplier=1,sellBonus=1,cdReduction=0,luckBoost=1;
+let blockLevels=[0,0,0,0,0],shopLevels=[0,0,0,0,0];
 
 const upgCosts=[0,2500,15000,75000,300000];
 const blockPrices=[250,1500,7500,35000,150000];
@@ -208,7 +206,9 @@ const blockNames=['Common','Uncommon','Rare','Epic','Legend'];
 const shopUpgrades=[
   {name:'Snabbare Leverans',desc:'-1s cooldown',icon:'⚡',costs:[10000,50000,200000,750000,2500000],maxLevel:5,apply:()=>{cdReduction++}},
   {name:'Skattesänkning',desc:'+25% säljpris',icon:'💸',costs:[25000,125000,500000,2000000,8000000],maxLevel:5,apply:()=>{sellBonus+=0.25}},
-  {name:'Arbetsmoral',desc:'+15% produktion',icon:'📈',costs:[50000,250000,1000000,4000000,15000000],maxLevel:5,apply:()=>{globalMultiplier+=0.15}}
+  {name:'Arbetsmoral',desc:'+15% produktion',icon:'📈',costs:[50000,250000,1000000,4000000,15000000],maxLevel:5,apply:()=>{globalMultiplier+=0.15}},
+  {name:'Valkampanj',desc:'+10% bättre tur',icon:'🗳️',costs:[100000,500000,2500000,10000000,50000000],maxLevel:5,apply:()=>{luckBoost+=0.10}},
+  {name:'Guldreserv',desc:'Startbonus +5% PPS',icon:'🏦',costs:[250000,1000000,5000000,20000000,100000000],maxLevel:5,apply:()=>{globalMultiplier+=0.05}}
 ];
 
 function bUpgCost(t,l){return Math.floor([5000,25000,100000,400000,1500000][t-1]*Math.pow(4,l))}
@@ -230,63 +230,63 @@ const buildings=[
   {name:'Kraftverk',icon:'⚛️',rarity:'Epic',income:700,color:'#9c27b0',sellPrice:20000,level:1},
   {name:'Skyskrapa',icon:'🏙️',rarity:'Epic',income:900,color:'#9c27b0',sellPrice:25000,level:1},
   {name:'Arena',icon:'🏟️',rarity:'Epic',income:1100,color:'#9c27b0',sellPrice:30000,level:1},
-  {name:'Slott',icon:'🏰',rarity:'Legendary',income:3500,color:'#ff9800',sellPrice:60000,level:1},
-  {name:'Oljerigg',icon:'🛢️',rarity:'Legendary',income:5000,color:'#ff9800',sellPrice:85000,level:1},
-  {name:'Guldgruva',icon:'⛏️',rarity:'Legendary',income:6500,color:'#ff9800',sellPrice:100000,level:1},
-  {name:'Guldpalats',icon:'🏛️',rarity:'Legendary',income:8500,color:'#ff9800',sellPrice:130000,level:1},
-  {name:'Imperium',icon:'💎',rarity:'Mythic',income:25000,color:'#f44336',sellPrice:500000,level:1},
-  {name:'Future City',icon:'🛸',rarity:'Mythic',income:45000,color:'#f44336',sellPrice:800000,level:1},
-  {name:'Mega-Bank',icon:'💰',rarity:'Mythic',income:80000,color:'#f44336',sellPrice:1500000,level:1},
-  {name:'Atlantis',icon:'🔱',rarity:'Mythic',income:110000,color:'#f44336',sellPrice:2000000,level:1},
-  {name:'Galaktisk Bas',icon:'🚀',rarity:'Celestial',income:450000,color:'#00bcd4',sellPrice:10000000,level:1},
-  {name:'Månbas',icon:'🌕',rarity:'Celestial',income:650000,color:'#00bcd4',sellPrice:15000000,level:1},
-  {name:'Tidsmaskin',icon:'⌛',rarity:'Celestial',income:950000,color:'#00bcd4',sellPrice:25000000,level:1},
-  {name:'The Matrix',icon:'🕶️',rarity:'Godly',income:2500000,color:'#fff',sellPrice:50000000,level:1},
-  {name:'Gudaportal',icon:'⛩️',rarity:'Godly',income:5000000,color:'#fff',sellPrice:100000000,level:1},
-  {name:'Stjärnkrossare',icon:'💥',rarity:'Godly',income:15000000,color:'#fff',sellPrice:250000000,level:1},
-  {name:'Galaxkärna',icon:'🌀',rarity:'Godly',income:50000000,color:'#fff',sellPrice:750000000,level:1},
-  {name:'Jimmies Mästerverk',icon:'✨',rarity:'Ultimate',income:250000000,color:'#ffeb3b',sellPrice:999999999,level:1}
+  {name:'Blåsippan',icon:'🌸',rarity:'Legendary',income:4500,color:'#ff9800',sellPrice:80000,level:1},
+  {name:'Folkhemmet',icon:'🏘️',rarity:'Legendary',income:5500,color:'#ff9800',sellPrice:110000,level:1},
+  {name:'Sverigehuset',icon:'🇸🇪',rarity:'Legendary',income:7500,color:'#ff9800',sellPrice:150000,level:1},
+  {name:'Gränsvakten',icon:'🛡️',rarity:'Legendary',income:9000,color:'#ff9800',sellPrice:180000,level:1},
+  {name:'Slottet',icon:'🏰',rarity:'Mythic',income:35000,color:'#f44336',sellPrice:600000,level:1},
+  {name:'Riksdagen',icon:'🏛️',rarity:'Mythic',income:65000,color:'#f44336',sellPrice:1200000,level:1},
+  {name:'Sjöstedt-Stopparen',icon:'🚫',rarity:'Mythic',income:95000,color:'#f44336',sellPrice:2000000,level:1},
+  {name:'Trygghetsfästet',icon:'🚔',rarity:'Mythic',income:150000,color:'#f44336',sellPrice:3500000,level:1},
+  {name:'Kärnkraftverket',icon:'☢️',rarity:'Celestial',income:850000,color:'#00bcd4',sellPrice:15000000,level:1},
+  {name:'Traditionsporten',icon:'⛩️',rarity:'Celestial',income:1200000,color:'#00bcd4',sellPrice:25000000,level:1},
+  {name:'Sverigekuben',icon:'🟦',rarity:'Celestial',income:2500000,color:'#00bcd4',sellPrice:50000000,level:1},
+  {name:'Oscar Sjöstedt',icon:'🤵',rarity:'Godly',income:8000000,color:'#fff',sellPrice:150000000,level:1},
+  {name:'Richard Jomshof',icon:'⚔️',rarity:'Godly',income:15000000,color:'#fff',sellPrice:300000000,level:1},
+  {name:'Jimmie Åkesson',icon:'👑',rarity:'Godly',income:50000000,color:'#fff',sellPrice:1000000000,level:1},
+  {name:'Sverigevännernas Tempel',icon:'✨',rarity:'Godly',income:120000000,color:'#fff',sellPrice:2500000000,level:1},
+  {name:'Jimmies Mästerverk',icon:'🌟',rarity:'Ultimate',income:999999999,color:'#ffeb3b',sellPrice:10000000000,level:1}
 ];
 
 function pick(a,f,t){return a[Math.min(f+Math.floor(Math.random()*(t-f)),a.length-1)]}
 
 function getDrop(tier,bl){
-  const r=Math.random()*100,cb=bl*0.05,mb=bl*0.08,lb=bl*0.15,eb=bl*0.5;
+  const r=Math.random()*100 / luckBoost;
+  const cb=bl*0.05,mb=bl*0.08,lb=bl*0.15,eb=bl*0.5;
+  
+  // Mästerverket är nu 0.0001% till 0.01% beroende på block
+  if(tier===5 && Math.random() < 0.0001 * luckBoost) return buildings[31]; 
+
   if(tier===1){
-    if(r<0.0001)return buildings[31]; // Ultra rare Jimmie drop
-    if(r<0.01+cb*0.5)return pick(buildings,24,31);
-    if(r<0.1+mb)return pick(buildings,20,24);
-    if(r<1+eb)return pick(buildings,16,20);
-    if(r<10+lb*2)return pick(buildings,4,8);
-    return pick(buildings,0,4);
-  }else if(tier===2){
-    if(r<0.001)return buildings[31];
-    if(r<0.05+cb)return pick(buildings,24,31);
-    if(r<0.5+mb*2)return pick(buildings,20,24);
-    if(r<5+eb)return pick(buildings,8,12);
-    if(r<35+lb)return pick(buildings,4,8);
-    return pick(buildings,0,4);
-  }else if(tier===3){
-    if(r<0.01)return buildings[31];
-    if(r<0.2+cb*1.5)return pick(buildings,24,31);
-    if(r<2+mb*2)return pick(buildings,12,16);
-    if(r<15+eb)return pick(buildings,8,12);
-    if(r<60+lb)return pick(buildings,4,8);
-    return pick(buildings,0,4);
-  }else if(tier===4){
-    if(r<0.1)return buildings[31];
-    if(r<1+cb*2)return pick(buildings,24,31);
-    if(r<5+mb*3)return pick(buildings,16,20);
-    if(r<20+eb)return pick(buildings,12,16);
-    if(r<50+lb)return pick(buildings,8,12);
+    if(r<0.001) return pick(buildings,27,31);
+    if(r<0.05) return pick(buildings,24,27);
+    if(r<0.5+mb) return pick(buildings,20,24);
+    if(r<5+eb) return pick(buildings,16,20);
     return pick(buildings,0,8);
-  }else{
-    if(r<1)return buildings[31];
-    if(r<5+cb*3)return pick(buildings,24,31);
-    if(r<15+mb*4)return pick(buildings,20,24);
-    if(r<45+eb*1.5)return pick(buildings,16,20);
-    if(r<75+lb)return pick(buildings,12,16);
+  }else if(tier===2){
+    if(r<0.005) return pick(buildings,27,31);
+    if(r<0.1) return pick(buildings,24,27);
+    if(r<1+mb) return pick(buildings,20,24);
+    if(r<10+eb) return pick(buildings,12,16);
     return pick(buildings,0,12);
+  }else if(tier===3){
+    if(r<0.01) return pick(buildings,27,31);
+    if(r<0.5) return pick(buildings,24,27);
+    if(r<3+mb) return pick(buildings,16,20);
+    if(r<20+eb) return pick(buildings,8,12);
+    return pick(buildings,0,8);
+  }else if(tier===4){
+    if(r<0.05) return pick(buildings,27,31);
+    if(r<2) return pick(buildings,24,27);
+    if(r<10) return pick(buildings,20,24);
+    if(r<40) return pick(buildings,16,20);
+    return pick(buildings,8,16);
+  }else{
+    if(r<0.2) return pick(buildings,27,31);
+    if(r<5) return pick(buildings,24,27);
+    if(r<20) return pick(buildings,20,24);
+    if(r<60) return pick(buildings,16,20);
+    return pick(buildings,12,16);
   }
 }
 
@@ -297,8 +297,10 @@ function buyBlock(tier){
   money-=price;startCooldown(tier);
   const won=getDrop(tier,blockLevels[tier-1]);
   inventory.push({...won,level:1,id:Date.now()});
-  if(won.name === 'Jimmies Mästerverk') showToast('🏆 DU HITTADE JIMMIES MÄSTERVERK!!!');
-  else showToast(won.icon+' '+won.name+' — '+won.rarity+'!');
+  if(won.name === 'Jimmies Mästerverk') {
+      showToast('🏆 HELIGT! DU HITTADE JIMMIES MÄSTERVERK!!!');
+      confetti(); // Om vi hade confetti-lib
+  } else showToast(won.icon+' '+won.name+' — '+won.rarity+'!');
   renderInv();updateUI();save();
 }
 
@@ -345,7 +347,6 @@ function upgradeBuilding(i){
   const b=cityData[i];if(!b)return;
   if(b.level>=50){showToast('Maxnivå 50 uppnådd!');return}
   let base = Math.max(b.sellPrice, 200);
-  // SÄNKT MED 50% (från 2.5 till 1.25)
   const cost=Math.floor(base * 1.25 * Math.pow(1.85, b.level-1));
   if(money>=cost){
     money-=cost;
@@ -353,7 +354,8 @@ function upgradeBuilding(i){
     let mult = 1.05; 
     if(b.rarity === 'Uncommon') mult = 1.15;
     else if(b.rarity === 'Rare') mult = 1.25;
-    else mult = 1.35;
+    else if(b.rarity === 'Legendary') mult = 1.40;
+    else mult = 1.55;
     b.income = Math.floor(b.income * mult); 
     showToast(b.icon+' '+b.name+' → Level '+b.level+'!');
     renderCity();updateUI();save();
@@ -480,12 +482,12 @@ function fmtS(n){
 }
 
 function save(){
-  localStorage.setItem('lc_v6',JSON.stringify({money,currentMaxBlock,inventory,cityData,globalMultiplier,sellBonus,cdReduction,blockLevels,shopLevels}));
+  localStorage.setItem('lc_v6',JSON.stringify({money,currentMaxBlock,inventory,cityData,globalMultiplier,sellBonus,cdReduction,blockLevels,shopLevels,luckBoost}));
 }
 
 function loadGame(){
   const s=localStorage.getItem('lc_v6');
-  if(s){const d=JSON.parse(s);money=d.money||500;currentMaxBlock=d.currentMaxBlock||1;inventory=d.inventory||[];cityData=d.cityData||Array(24).fill(null);globalMultiplier=d.globalMultiplier||1;sellBonus=d.sellBonus||1;cdReduction=d.cdReduction||0;blockLevels=d.blockLevels||[0,0,0,0,0];shopLevels=d.shopLevels||[0,0,0];}
+  if(s){const d=JSON.parse(s);money=d.money||500;currentMaxBlock=d.currentMaxBlock||1;inventory=d.inventory||[];cityData=d.cityData||Array(24).fill(null);globalMultiplier=d.globalMultiplier||1;sellBonus=d.sellBonus||1;cdReduction=d.cdReduction||0;blockLevels=d.blockLevels||[0,0,0,0,0];shopLevels=d.shopLevels||[0,0,0,0,0];luckBoost=d.luckBoost||1;}
 }
 
 function resetGame(){if(confirm('Nollställa hela staden?')){localStorage.removeItem('lc_v6');location.reload();}}
