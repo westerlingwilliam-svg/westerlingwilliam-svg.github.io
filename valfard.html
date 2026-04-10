@@ -27,8 +27,8 @@ html,body{
     -moz-transform-origin: 0 0;
 }
 
-/* HEADER */
-#header{display:grid;grid-template-columns:350px 1fr 200px;align-items:center;padding:0 30px;height:220px;background:var(--bg2);border-bottom:2px solid var(--border2);position:relative;z-index:10;box-shadow:0 4px 50px rgba(0,0,0,0.8)}
+/* HEADER - Minskat höjden för att flytta upp staden */
+#header{display:grid;grid-template-columns:350px 1fr 200px;align-items:center;padding:0 30px;height:180px;background:var(--bg2);border-bottom:2px solid var(--border2);position:relative;z-index:10;box-shadow:0 4px 50px rgba(0,0,0,0.8)}
 #header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
 
 .stat-label{font-size:0.9rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:5px}
@@ -61,15 +61,15 @@ html,body{
 .block-price{font-size:0.9rem;color:var(--gold);font-weight:800;margin:2px 0}
 .upg-bl-btn{width:100%;padding:6px 0;border-radius:8px;cursor:pointer;font-size:0.75rem;font-weight:800;border:1px solid var(--border2);background:rgba(255,255,255,0.06);color:var(--text)}
 
-/* CITY GRID - Nu skrollbar */
-#game-area{display:flex;flex:1;height:calc(100vh - 220px);overflow:hidden}
+/* CITY GRID - Minskat padding och flyttat upp */
+#game-area{display:flex;flex:1;height:calc(100vh - 180px);overflow:hidden}
 #city-grid{
     flex:1;
     display:grid;
     grid-template-columns:repeat(6, 160px);
     grid-auto-rows: 160px;
     gap:15px;
-    padding:40px;
+    padding:20px 40px 40px 40px;
     justify-content:center;
     background:radial-gradient(circle at center, var(--bg2), var(--bg));
     overflow-y: auto;
@@ -315,7 +315,6 @@ function renderCity(){
   const grid=document.getElementById('city-grid');grid.innerHTML='';
   cityData.forEach((data,i)=>{
     const slot=document.createElement('div');
-    // Highlight om vi ska bygga
     const highlight = (selectedInvIndex !== null && !data) ? ' highlight-empty' : '';
     slot.className='slot'+(data?'':' empty') + highlight;
     
@@ -339,7 +338,6 @@ function renderInv(){
   inventory.forEach((item,idx)=>{
     const d=document.createElement('div');d.className='inv-card';
     d.style.borderColor=item.color;
-    // Visuell markering om valt för bygge
     if(selectedInvIndex === idx) d.style.background = 'rgba(74, 222, 128, 0.1)';
     
     d.innerHTML='<div class="inv-icon">'+item.icon+'</div><div class="inv-name" style="color:'+item.color+'">'+item.name+'</div><div class="inv-btns"><button class="bld-btn" data-idx="'+idx+'">'+(selectedInvIndex === idx ? 'AVBRYT' : 'BYGG')+'</button><button class="sll-btn" data-idx="'+idx+'">SÄLJ</button></div>';
@@ -371,7 +369,7 @@ function prepPlace(idx){
   if(selectedInvIndex === idx) selectedInvIndex = null;
   else selectedInvIndex=idx;
   renderInv();
-  renderCity(); // Uppdatera rutorna för att visa ljuset
+  renderCity(); 
   if(selectedInvIndex !== null) showToast('Klicka på en lysande plats i staden!');
 }
 
