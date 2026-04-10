@@ -138,8 +138,8 @@ html,body{
 
 .sidebar-content{flex:1;overflow-y:auto;padding:20px}
 /* SCROLLABLE INVENTORY & SHOP */
-#inventory{display:grid;grid-template-columns:1fr 1fr;gap:15px;max-height: 100%; overflow-y: auto; padding-right: 5px;}
-#shop-ui{display:flex;flex-direction:column;gap:15px;max-height: 100%; overflow-y: auto; padding-right: 5px;}
+#inventory{display:grid;grid-template-columns:1fr 1fr;gap:15px;max-height: 100%; overflow-y: auto; padding-right: 5px; padding-bottom: 40px;}
+#shop-ui{display:flex;flex-direction:column;gap:15px;max-height: 100%; overflow-y: auto; padding-right: 5px; padding-bottom: 60px;}
 
 .inv-card{border-radius:var(--r20);padding:15px 10px;background:var(--bg4);border:2px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:10px}
 .inv-icon{font-size:3rem}
@@ -202,7 +202,7 @@ html,body{
 let money=500,currentMaxBlock=1,inventory=[],cityData=Array(24).fill(null);
 let selectedInvIndex=null,cooldowns=[0,0,0,0,0];
 let globalMultiplier=1,sellBonus=1,cdReduction=0,luckBoost=1;
-let blockLevels=[0,0,0,0,0],shopLevels=[0,0,0,0,0,0,0,0]; // Extended levels array
+let blockLevels=[0,0,0,0,0],shopLevels=[0,0,0,0,0,0,0,0];
 
 const upgCosts=[0,2500,15000,75000,300000];
 const blockPrices=[250,1500,7500,35000,150000];
@@ -266,9 +266,7 @@ function pick(a,f,t){return a[Math.min(f+Math.floor(Math.random()*(t-f)),a.lengt
 function getDrop(tier,bl){
   const r=Math.random()*100 / luckBoost;
   const cb=bl*0.05,mb=bl*0.08,lb=bl*0.15,eb=bl*0.5;
-  
   if(tier===5 && Math.random() < 0.0001 * luckBoost) return buildings[31]; 
-
   if(tier===1){
     if(r<0.001) return pick(buildings,27,31);
     if(r<0.05) return pick(buildings,24,27);
@@ -311,9 +309,8 @@ function buyBlock(tier){
   money-=price;startCooldown(tier);
   const won=getDrop(tier,blockLevels[tier-1]);
   inventory.push({...won,level:1,id:Date.now()});
-  if(won.name === 'Jimmies Mästerverk') {
-      showToast('🏆 HELIGT! DU HITTADE JIMMIES MÄSTERVERK!!!');
-  } else showToast(won.icon+' '+won.name+' — '+won.rarity+'!');
+  if(won.name === 'Jimmies Mästerverk') showToast('🏆 HELIGT! DU HITTADE JIMMIES MÄSTERVERK!!!');
+  else showToast(won.icon+' '+won.name+' — '+won.rarity+'!');
   renderInv();updateUI();save();
 }
 
@@ -442,8 +439,7 @@ function placeBuilding(si){
 function prepPlace(idx){
   if(selectedInvIndex === idx) selectedInvIndex = null;
   else selectedInvIndex=idx;
-  renderInv();
-  renderCity(); 
+  renderInv();renderCity(); 
   if(selectedInvIndex !== null) showToast('Klicka på en lysande plats i staden!');
 }
 
@@ -485,7 +481,7 @@ function renderBlocks(){
 
 function updateUI(){
   document.getElementById('money').innerText=fmt(Math.floor(money));
-  const inc=cityData.reduce((t,b)=>t+(b?b.income:0),0)*globalMultiplier;
+  const inc = cityData.reduce((t, b) => t + (b && b.income ? b.income : 0), 0) * globalMultiplier;
   document.getElementById('pps').innerText=fmt(Math.floor(inc));
   if(currentMaxBlock<5) document.getElementById('upg-cost').innerText=fmt(upgCosts[currentMaxBlock]);
   else document.getElementById('upg-luck-btn').style.display='none';
@@ -517,8 +513,8 @@ function loadGame(){
 function resetGame(){if(confirm('Nollställa hela staden?')){localStorage.removeItem('lc_v6');location.reload();}}
 
 setInterval(()=>{
-  const inc=cityData.reduce((t,b)=>t+(b?b.income:0),0)*globalMultiplier;
-  money+=inc;updateUI();
+  const inc = cityData.reduce((t, b) => t + (b && b.income ? b.income : 0), 0) * globalMultiplier;
+  if(!isNaN(inc)){ money+=inc; updateUI(); }
 },1000);
 
 loadGame();renderCity();renderInv();renderBlocks();updateUI();
