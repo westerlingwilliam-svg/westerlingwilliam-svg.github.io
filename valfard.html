@@ -222,6 +222,7 @@ let selectedInvIndex=null,cooldowns=[0,0,0,0,0,0];
 let globalMultiplier=1,sellBonus=1,cdReduction=0,luckBoost=1;
 let blockLevels=[0,0,0,0,0,0],shopLevels=[0,0,0,0,0,0,0,0]; 
 
+// INDEX 1=2500, 2=15000, 3=75000, 4=300000, 5=1000000
 const upgCosts=[0,2500,15000,75000,300000,1000000]; 
 const blockPrices=[250,1500,7500,35000,150000,1000000]; 
 const blockIcons=['❓','⭐','💠','💜','👑','🔥'];
@@ -496,10 +497,15 @@ function startCooldown(tier){
 }
 
 function upgradeBlocks(){
-  if(currentMaxBlock >= 6) { showToast('Alla block upplåsta!'); return; }
-  const cost=upgCosts[currentMaxBlock];
-  if(money>=cost){
-    money-=cost;
+  if(currentMaxBlock >= 6) { 
+    showToast('Alla block upplåsta!'); 
+    return; 
+  }
+  // currentMaxBlock börjar på 1. upgCosts[1] är priset för att få block 2.
+  // upgCosts[5] är priset för att få block 6.
+  const cost = upgCosts[currentMaxBlock]; 
+  if(money >= cost){
+    money -= cost;
     currentMaxBlock++;
     renderBlocks();
     updateUI();
@@ -532,6 +538,7 @@ function updateUI(){
   if(currentMaxBlock < 6) {
       if(upgLuckBtn) {
           upgLuckBtn.style.display='inline-flex';
+          // Visar kostnaden för NÄSTA block (indexet är samma som currentMaxBlock)
           const costSpan = document.getElementById('upg-cost');
           if(costSpan) costSpan.innerText = fmtS(upgCosts[currentMaxBlock]);
       }
