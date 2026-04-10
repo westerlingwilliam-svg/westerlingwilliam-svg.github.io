@@ -8,6 +8,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
     --gold:#f5c842;--gold2:#e8a800;--gold-glow:rgba(245,200,66,0.35);
+    --gold-dark:#8a6d10; /* Mörkare gul för när man inte har råd */
     --bg:#07080f;--bg2:#0d1020;--bg3:#131629;--bg4:#1a1f35;
     --border:#ffffff12;--border2:#ffffff22;--border3:#ffffff35;
     --text:#e8eaf6;--muted:#6b7099;--muted2:#9196bb;
@@ -117,7 +118,10 @@ html,body{
 .slot-icon{font-size:3.5rem;margin-bottom:5px;animation:flt 3s ease-in-out infinite}
 .slot-lvl{position:absolute;top:10px;left:10px;background:#000;padding:4px 8px;border-radius:6px;font-size:0.75rem;font-weight:800;color:var(--gold);border:1px solid var(--border2)}
 .slot-income{font-size:0.9rem;font-weight:800;color:#4ade80;background:rgba(0,0,0,0.3);padding:4px 10px;border-radius:10px}
-.upg-btn{margin-top:8px;width:85%;padding:6px 0;border-radius:10px;background:var(--gold);color:#000;font-size:0.8rem;font-weight:900;border:none;cursor:pointer}
+
+/* Dynamisk knappfärg */
+.upg-btn{margin-top:8px;width:85%;padding:6px 0;border-radius:10px;background:var(--gold);color:#000;font-size:0.8rem;font-weight:900;border:none;cursor:pointer;transition: background 0.2s;}
+.upg-btn.no-funds { background: var(--gold-dark); color: rgba(0,0,0,0.6); }
 
 .highlight-empty{
     border-color: #4ade80 !important;
@@ -395,7 +399,8 @@ function renderCity(){
       slot.style.background='linear-gradient(135deg,'+c+'15,'+c+'05)';
       let base = Math.max(data.sellPrice, 200);
       const uc=Math.floor(base * 1.25 * Math.pow(1.85, data.level-1));
-      slot.innerHTML='<div class="slot-lvl">LVL '+data.level+'</div><div class="slot-icon">'+data.icon+'</div><div class="slot-income">+'+fmt(Math.floor(data.income*globalMultiplier))+'/s</div><button class="upg-btn" data-s="'+i+'">'+(data.level>=50?'MAX':'UPG ('+fmtS(uc)+')')+'</button>';
+      const hasMoney = money >= uc;
+      slot.innerHTML='<div class="slot-lvl">LVL '+data.level+'</div><div class="slot-icon">'+data.icon+'</div><div class="slot-income">+'+fmt(Math.floor(data.income*globalMultiplier))+'/s</div><button class="upg-btn '+(hasMoney?'':'no-funds')+'" data-s="'+i+'">'+(data.level>=50?'MAX':'UPG ('+fmtS(uc)+')')+'</button>';
     }
     slot.addEventListener('click',e=>{
       if(e.target.dataset.s!==undefined){e.stopPropagation();upgradeBuilding(parseInt(e.target.dataset.s));}
@@ -445,10 +450,15 @@ function prepPlace(idx){
 
 function sellItem(idx){
   const item=inventory[idx];
-  const price=Math.floor(item.sellPrice*sellBonus);
-  money+=price;inventory.splice(idx,1);selectedInvIndex=null;
-  showToast('💰 Sålde '+item.name+' för '+fmt(price)+' KR');
-  renderInv();renderCity();updateUI();save();
+  // Fix för att förhindra NaN i Turism/Sälj-beräkningar
+  const bonus = isNaN(sellBonus) ? 1 : sellBonus;
+  const price=Math.floor(item.sellPrice * bonus);
+  
+  if(!isNaN(price)){
+    money+=price;inventory.splice(idx,1);selectedInvIndex=null;
+    showToast('💰 Sålde '+item.name+' för '+fmt(price)+' KR');
+    renderInv();renderCity();updateUI();save();
+  }
 }
 
 function startCooldown(tier){
@@ -485,6 +495,10 @@ function updateUI(){
   document.getElementById('pps').innerText=fmt(Math.floor(inc));
   if(currentMaxBlock<5) document.getElementById('upg-cost').innerText=fmt(upgCosts[currentMaxBlock]);
   else document.getElementById('upg-luck-btn').style.display='none';
+  
+  // Uppdatera stadens knappar i realtid baserat på pengar
+  const slots = document.querySelectorAll('.slot');
+  if(slots.length > 0) renderCity();
 }
 
 let _tt;
