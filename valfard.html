@@ -221,6 +221,23 @@ html,body{width:100%;height:100vh;overflow:hidden;background:var(--bg);color:var
 .inv-card.rarity-Cosmic{border-color:#b3e5fc !important;box-shadow:0 0 15px #b3e5fc33}
 .inv-card.rarity-Ultimate{border-color:#ffeb3b !important;box-shadow:0 0 18px #ffeb3b44;border-width:2px !important}
 .inv-card.rarity-Exalted{border-color:#fdd835 !important;box-shadow:0 0 20px #fdd83555;border-width:2px !important}
+
+/* ── CODE MODAL ── */
+#code-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:2000;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+#code-overlay.open{display:flex}
+#code-modal{background:var(--bg2);border:2px solid var(--border3);border-radius:20px;padding:28px 32px;width:320px;display:flex;flex-direction:column;align-items:center;gap:16px;box-shadow:0 20px 60px rgba(0,0,0,0.8)}
+#code-display{width:100%;background:var(--bg);border:2px solid var(--border2);border-radius:12px;padding:14px 18px;font-size:1.8rem;font-weight:900;color:var(--gold);letter-spacing:10px;text-align:center;min-height:56px;font-family:monospace}
+#code-display.shake{animation:shake 0.3s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.code-numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%}
+.code-numpad button{padding:14px;border-radius:10px;border:2px solid var(--border2);background:var(--bg3);color:var(--text);font-size:1.1rem;font-weight:800;cursor:pointer;transition:all 0.12s}
+.code-numpad button:hover{background:var(--bg4);border-color:var(--border3)}
+.code-numpad button:active{transform:scale(0.93)}
+.code-btn-del{background:rgba(255,100,100,0.1) !important;color:#f87171 !important;border-color:#f8717144 !important}
+.code-btn-ok{background:var(--gold) !important;color:#000 !important;border-color:var(--gold) !important;font-size:0.85rem !important}
+.code-btn-ok:hover{background:#ffe060 !important}
+.code-open-btn{background:transparent;border:1px solid var(--border2);color:var(--muted);padding:4px 10px;border-radius:8px;cursor:pointer;font-size:var(--fxs);font-weight:800;opacity:0.5;transition:all 0.2s}
+.code-open-btn:hover{opacity:1;border-color:var(--border3);color:var(--text)}
 </style>
 </head>
 <body>
@@ -236,6 +253,7 @@ html,body{width:100%;height:100vh;overflow:hidden;background:var(--bg);color:var
   <div class="header-right">
     <a href="games.html" class="menu-link-btn">⬅ TILL MENYN</a>
     <button class="reset-btn" onclick="resetGame()">↺ ÅTERSTÄLL STADEN</button>
+    <button class="code-open-btn" onclick="openCodeModal()">🔑 KOD</button>
   </div>
 </div>
 
@@ -736,7 +754,64 @@ setInterval(()=>{
   }
 },1000);
 
+
+// ── Hemlig kod ──────────────────────────────────────────────────────────────
+let _codeInput = '';
+function openCodeModal(){ _codeInput=''; updateCodeDisplay(); document.getElementById('code-overlay').classList.add('open'); }
+function closeCodeModal(){ document.getElementById('code-overlay').classList.remove('open'); }
+function updateCodeDisplay(){
+  const el = document.getElementById('code-display');
+  el.textContent = _codeInput.length ? '*'.repeat(_codeInput.length) : '▮';
+}
+function codePress(d){
+  if(_codeInput.length >= 6) return;
+  _codeInput += d;
+  updateCodeDisplay();
+}
+function codeDel(){
+  _codeInput = _codeInput.slice(0,-1);
+  updateCodeDisplay();
+}
+function codeSubmit(){
+  const codes = {
+    '90000': () => { inventory.push({...buildings[31], level:1, id:Date.now()}); renderInv(); updateUI(); save(); showToast('🌟 ??? ETT MIRAKEL INTRÄFFADE ???'); }
+  };
+  const fn = codes[_codeInput];
+  if(fn){
+    fn();
+    closeCodeModal();
+  } else {
+    const el = document.getElementById('code-display');
+    el.classList.remove('shake');
+    void el.offsetWidth;
+    el.classList.add('shake');
+    _codeInput = '';
+    setTimeout(()=>updateCodeDisplay(), 300);
+  }
+}
+
 loadGame();renderCity();renderInv();renderBlocks();updateUI();
 </script>
+
+<!-- Code modal -->
+<div id="code-overlay" onclick="if(event.target===this)closeCodeModal()">
+  <div id="code-modal">
+    <div id="code-display">▮</div>
+    <div class="code-numpad">
+      <button onclick="codePress('1')">1</button>
+      <button onclick="codePress('2')">2</button>
+      <button onclick="codePress('3')">3</button>
+      <button onclick="codePress('4')">4</button>
+      <button onclick="codePress('5')">5</button>
+      <button onclick="codePress('6')">6</button>
+      <button onclick="codePress('7')">7</button>
+      <button onclick="codePress('8')">8</button>
+      <button onclick="codePress('9')">9</button>
+      <button class="code-btn-del" onclick="codeDel()">⌫</button>
+      <button onclick="codePress('0')">0</button>
+      <button class="code-btn-ok" onclick="codeSubmit()">LOSA IN</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
