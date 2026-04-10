@@ -374,53 +374,76 @@ function pick(a,f,t){return a[Math.min(f+Math.floor(Math.random()*(t-f)),a.lengt
 
 function getDrop(tier,bl){
   const r=Math.random()*100/luckBoost;
-  if((tier===5||tier===6)&&Math.random()<0.0001*luckBoost) return buildings[31];
-  const mb=bl*0.08,eb=bl*0.5;
+  // Jimmies Mästerverk: extremt sällsynt, bara block 5-6
+  if((tier===5||tier===6)&&Math.random()<0.000005*luckBoost) return buildings[31];
+  const mb=bl*0.04, eb=bl*0.2; // upgrade-bonus nedskalad
+
   if(tier===1){
-    if(r<0.0001) return pick(buildings,36,40);
-    if(r<0.001)  return pick(buildings,27,31);
-    if(r<0.05)   return pick(buildings,24,27);
-    if(r<0.5+mb) return pick(buildings,20,24);
-    if(r<5+eb)   return pick(buildings,16,20);
-    return pick(buildings,0,8);
+    // Block 1 (Common): Legendary nästan omöjligt, Mythic+ existerar knappt
+    if(r<0.000001)  return pick(buildings,36,40); // Exalted: 1 på 100 miljoner
+    if(r<0.00001)   return pick(buildings,27,31); // Godly:   1 på 10 miljoner
+    if(r<0.0001)    return pick(buildings,24,27); // Celestial:1 på 1 miljon
+    if(r<0.002)     return pick(buildings,20,24); // Mythic:   1 på 50 000
+    if(r<0.05+mb)   return pick(buildings,16,20); // Legendary: 1 på 2 000
+    if(r<3+eb)      return pick(buildings,8,12);  // Rare: ~3%
+    if(r<25)        return pick(buildings,4,8);   // Uncommon: ~22%
+    return pick(buildings,0,4);                   // Common: ~75%
+
   }else if(tier===2){
-    if(r<0.0005) return pick(buildings,36,40);
-    if(r<0.005)  return pick(buildings,27,31);
-    if(r<0.1)    return pick(buildings,24,27);
-    if(r<1+mb)   return pick(buildings,20,24);
-    if(r<10+eb)  return pick(buildings,12,16);
-    return pick(buildings,0,12);
+    // Block 2 (Uncommon): fortfarande väldigt svårt
+    if(r<0.00001)   return pick(buildings,36,40); // Exalted:  1 på 10 miljoner
+    if(r<0.0001)    return pick(buildings,27,31); // Godly:    1 på 1 miljon
+    if(r<0.001)     return pick(buildings,24,27); // Celestial:1 på 100 000
+    if(r<0.01)      return pick(buildings,20,24); // Mythic:   1 på 10 000
+    if(r<0.2+mb)    return pick(buildings,16,20); // Legendary: 1 på 500
+    if(r<8+eb)      return pick(buildings,12,16); // Epic: ~8%
+    if(r<35)        return pick(buildings,4,8);   // Uncommon: ~27%
+    return pick(buildings,0,8);                   // Common+: ~65%
+
   }else if(tier===3){
-    if(r<0.001)  return pick(buildings,36,40);
-    if(r<0.01)   return pick(buildings,27,31);
-    if(r<0.5)    return pick(buildings,24,27);
-    if(r<3+mb)   return pick(buildings,16,20);
-    if(r<20+eb)  return pick(buildings,8,12);
-    return pick(buildings,0,8);
+    // Block 3 (Rare): Legendary ~1%, Mythic ~0.05%
+    if(r<0.0001)    return pick(buildings,36,40); // Exalted:  1 på 1 miljon
+    if(r<0.001)     return pick(buildings,27,31); // Godly:    1 på 100 000
+    if(r<0.01)      return pick(buildings,24,27); // Celestial:1 på 10 000
+    if(r<0.05)      return pick(buildings,20,24); // Mythic:   1 på 2 000
+    if(r<1+mb)      return pick(buildings,16,20); // Legendary: ~1%
+    if(r<15+eb)     return pick(buildings,8,12);  // Rare: ~14%
+    if(r<50)        return pick(buildings,4,8);   // Uncommon: ~35%
+    return pick(buildings,0,8);                   // Common: ~50%
+
   }else if(tier===4){
-    if(r<0.005)  return pick(buildings,36,40);
-    if(r<0.05)   return pick(buildings,27,31);
-    if(r<2)      return pick(buildings,24,27);
-    if(r<10)     return pick(buildings,20,24);
-    if(r<40)     return pick(buildings,16,20);
-    return pick(buildings,8,16);
+    // Block 4 (Epic): Legendary ~3%, Mythic ~0.2%
+    if(r<0.001)     return pick(buildings,36,40); // Exalted:  1 på 100 000
+    if(r<0.01)      return pick(buildings,27,31); // Godly:    1 på 10 000
+    if(r<0.1)       return pick(buildings,24,27); // Celestial:1 på 1 000
+    if(r<0.2)       return pick(buildings,20,24); // Mythic:   1 på 500
+    if(r<3+mb)      return pick(buildings,16,20); // Legendary: ~3%
+    if(r<20+eb)     return pick(buildings,12,16); // Epic: ~17%
+    if(r<55)        return pick(buildings,8,12);  // Rare: ~35%
+    return pick(buildings,4,12);                  // Common-Uncommon: ~45%
+
   }else if(tier===5){
-    if(r<0.01)   return pick(buildings,36,40);
-    if(r<0.1)    return pick(buildings,34,36);
-    if(r<0.5)    return pick(buildings,32,34);
-    if(r<1)      return pick(buildings,27,31);
-    if(r<5)      return pick(buildings,24,27);
-    if(r<20)     return pick(buildings,20,24);
-    if(r<60)     return pick(buildings,16,20);
-    return pick(buildings,12,16);
+    // Block 5 (Legendary): Mythic ~1%, Celestial ~0.5%
+    if(r<0.01)      return pick(buildings,36,40); // Exalted:  1 på 10 000
+    if(r<0.05)      return pick(buildings,34,36); // Divine:   1 på 2 000
+    if(r<0.2)       return pick(buildings,32,34); // Ultimate: 1 på 500
+    if(r<0.5)       return pick(buildings,27,31); // Godly:    1 på 200
+    if(r<2)         return pick(buildings,24,27); // Celestial: ~1.5%
+    if(r<5+mb)      return pick(buildings,20,24); // Mythic:   ~3%
+    if(r<25+eb)     return pick(buildings,16,20); // Legendary: ~20%
+    if(r<65)        return pick(buildings,12,16); // Epic: ~40%
+    return pick(buildings,8,16);                  // Rare+: ~35%
+
   }else{
-    if(r<0.05)   return pick(buildings,36,40);
-    if(r<0.2)    return pick(buildings,34,36);
-    if(r<1)      return pick(buildings,32,34);
-    if(r<5)      return pick(buildings,27,31);
-    if(r<15)     return pick(buildings,24,27);
-    if(r<45)     return pick(buildings,20,24);
-    return pick(buildings,16,20);
+    // Block 6 (Mythic): det bästa blocket
+    if(r<0.05)      return pick(buildings,36,40); // Exalted:  1 på 2 000
+    if(r<0.2)       return pick(buildings,34,36); // Divine:   1 på 500
+    if(r<0.8)       return pick(buildings,32,34); // Ultimate: 1 på 125
+    if(r<3)         return pick(buildings,27,31); // Godly:    ~2.2%
+    if(r<10)        return pick(buildings,24,27); // Celestial: ~7%
+    if(r<25+mb)     return pick(buildings,20,24); // Mythic:   ~15%
+    if(r<55+eb)     return pick(buildings,16,20); // Legendary: ~30%
+    return pick(buildings,12,16);                 // Epic: ~45%
   }
 }
 
