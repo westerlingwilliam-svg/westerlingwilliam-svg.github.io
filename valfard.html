@@ -79,7 +79,7 @@ html,body{
 
 /* LUCKY BLOCKS */
 .blocks-row{display:flex;gap:15px;justify-content:center;align-items:flex-start}
-.block-wrapper{display:flex;flex-direction:column;align-items:center;gap:8px;width:120px} /* Något smalare för att få plats med 6 */
+.block-wrapper{display:flex;flex-direction:column;align-items:center;gap:8px;width:120px}
 .lucky-block{width:100px;height:100px;border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;user-select:none;position:relative;transition:all 0.15s;border:2px solid rgba(255,255,255,0.15)}
 
 .bt1{background:linear-gradient(145deg,#3a3a3e,#1f1f23);box-shadow:0 8px 0 #0e0e10}
@@ -87,7 +87,7 @@ html,body{
 .bt3{background:linear-gradient(145deg,#1d2e4a,#0d1a2d);box-shadow:0 8px 0 #090f18}
 .bt4{background:linear-gradient(145deg,#2e1d4a,#180d2d);box-shadow:0 8px 0 #0e0818}
 .bt5{background:linear-gradient(145deg,#4a321d,#2d1a0d);box-shadow:0 8px 0 #140a02}
-.bt6{background:linear-gradient(145deg,#4a1d1d,#2d0d0d);box-shadow:0 8px 0 #140202; border-color: #f44336aa !important;} /* Mythic Block */
+.bt6{background:linear-gradient(145deg,#4a1d1d,#2d0d0d);box-shadow:0 8px 0 #140202; border-color: #f44336aa !important;}
 
 .block-icon{font-size:2.8rem;line-height:1}
 .block-stars{display:flex;gap:2px;margin-top:5px}
@@ -218,12 +218,12 @@ html,body{
 
 <script>
 let money=500,currentMaxBlock=1,inventory=[],cityData=Array(24).fill(null);
-let selectedInvIndex=null,cooldowns=[0,0,0,0,0,0]; // Tillagd cooldown för 6:e blocket
+let selectedInvIndex=null,cooldowns=[0,0,0,0,0,0]; 
 let globalMultiplier=1,sellBonus=1,cdReduction=0,luckBoost=1;
-let blockLevels=[0,0,0,0,0,0],shopLevels=[0,0,0,0,0,0,0,0]; // Tillagd nivå för 6:e blocket
+let blockLevels=[0,0,0,0,0,0],shopLevels=[0,0,0,0,0,0,0,0]; 
 
-const upgCosts=[0,2500,15000,75000,300000,1500000]; // Uppgraderingskostnad för att låsa upp block 6
-const blockPrices=[250,1500,7500,35000,150000,1000000]; // Block 6 kostar 1M
+const upgCosts=[0,2500,15000,75000,300000,1000000]; // Uppdaterad: Index 5 är nu 1M för sista blocket
+const blockPrices=[250,1500,7500,35000,150000,1000000]; 
 const blockIcons=['❓','⭐','💠','💜','👑','🔥'];
 const blockNames=['Common','Uncommon','Rare','Epic','Legend','Mythic'];
 
@@ -239,7 +239,6 @@ const shopUpgrades=[
 ];
 
 function bUpgCost(t,l){
-    // Block 6 har lite dyrare uppgraderingar
     let factor = (t === 6) ? 5 : 4;
     return Math.floor([5000,25000,100000,400000,1500000,5000000][t-1]*Math.pow(factor,l));
 }
@@ -287,9 +286,7 @@ function pick(a,f,t){return a[Math.min(f+Math.floor(Math.random()*(t-f)),a.lengt
 
 function getDrop(tier,bl){
   const r=Math.random()*100 / luckBoost;
-  // Specialchans för Ultimate-byggnaden i högsta blocken
   if((tier===5 || tier===6) && Math.random() < 0.0001 * luckBoost) return buildings[31]; 
-
   const mb=bl*0.08,eb=bl*0.5;
   if(tier===1){
     if(r<0.001) return pick(buildings,27,31);
@@ -324,13 +321,12 @@ function getDrop(tier,bl){
     if(r<60) return pick(buildings,16,20);
     return pick(buildings,12,16);
   }else{
-    // Mythic Block (Tier 6) - Lite bättre än Legendary
-    if(r<0.05) return pick(buildings,34,36); // Cosmic
-    if(r<0.5) return pick(buildings,32,34);  // Divine
-    if(r<2) return pick(buildings,27,31);    // Godly
-    if(r<10) return pick(buildings,24,27);   // Celestial
-    if(r<40) return pick(buildings,20,24);   // Mythic
-    return pick(buildings,16,20);            // Legendary
+    if(r<0.05) return pick(buildings,34,36); 
+    if(r<0.5) return pick(buildings,32,34);  
+    if(r<2) return pick(buildings,27,31);    
+    if(r<10) return pick(buildings,24,27);   
+    if(r<40) return pick(buildings,20,24);   
+    return pick(buildings,16,20);            
   }
 }
 
@@ -348,7 +344,6 @@ function buyBlock(tier){
 
 function upgBlockLevel(tier){
   const l=blockLevels[tier-1];
-  // Mythic block (6) har 5 levlar (max nivå 5), övriga 4
   const maxL = (tier === 6) ? 5 : 4;
   if(l>=maxL){showToast('Max odds uppnådda!');return}
   const cost=bUpgCost(tier,l);
@@ -501,6 +496,7 @@ function startCooldown(tier){
 }
 
 function upgradeBlocks(){
+  if(currentMaxBlock >= 6) { showToast('Alla block upplåsta!'); return; }
   const cost=upgCosts[currentMaxBlock];
   if(money>=cost){money-=cost;currentMaxBlock++;renderBlocks();updateUI();save();showToast('🎉 Nytt block upplåst!');}
   else showToast('⚠️ För lite pengar!');
@@ -519,19 +515,20 @@ function renderBlocks(){
   }
 }
 
-// OPTIMERAD UPDATEUI: Rör INTE city-grid eller block om det inte behövs
 function updateUI(){
   document.getElementById('money').innerText=fmtS(Math.floor(money));
   const inc = cityData.reduce((t, b) => t + (b && b.income ? b.income : 0), 0) * globalMultiplier;
   document.getElementById('pps').innerText=fmtS(Math.floor(inc));
   
   const upgLuckBtn = document.getElementById('upg-luck-btn');
-  if(currentMaxBlock<6) {
+  if(currentMaxBlock < 6) {
+      if(upgLuckBtn) upgLuckBtn.style.display='inline-flex';
       const costSpan = document.getElementById('upg-cost');
       if(costSpan) costSpan.innerText = fmtS(upgCosts[currentMaxBlock]);
-  } else if(upgLuckBtn) upgLuckBtn.style.display='none';
+  } else {
+      if(upgLuckBtn) upgLuckBtn.style.display='none';
+  }
 
-  // Uppdatera ENDAST knapparnas färg/text, inte hela slotten (för att slippa lagga animationer)
   cityData.forEach((data, i) => {
       if(data) {
           const btn = document.querySelector(`.upg-btn[data-s="${i}"]`);
@@ -539,7 +536,6 @@ function updateUI(){
               let base = Math.max(data.sellPrice, 200);
               const uc = Math.floor(base * 1.25 * Math.pow(1.85, data.level-1));
               const hasMoney = money >= uc;
-              
               btn.classList.toggle('no-funds', !hasMoney);
               if(data.level >= 50) btn.innerText = 'MAX';
               else btn.innerText = 'UPG ('+fmtS(uc)+')';
@@ -556,7 +552,6 @@ function showToast(msg){
 
 function fmt(n){return Math.round(n).toLocaleString('sv-SE')}
 
-// Uppdaterad fmtS med Trillion (T) och Quadrillion (Q)
 function fmtS(n){
   if(n>=1000000000000000) return (n/1000000000000000).toFixed(2)+'Q';
   if(n>=1000000000000) return (n/1000000000000).toFixed(2)+'T';
