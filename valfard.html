@@ -100,6 +100,11 @@ html,body{
 .block-price{font-size:0.85rem;color:var(--gold);font-weight:800;margin:2px 0}
 .upg-bl-btn{width:100%;padding:6px 0;border-radius:8px;cursor:pointer;font-size:0.7rem;font-weight:800;border:1px solid var(--border2);background:rgba(255,255,255,0.06);color:var(--text)}
 
+/* AUTO BUY STYLING */
+#autobuy-container{margin-left:15px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.autobuy-btn{background:#131629;border:2px solid var(--border3);color:var(--muted);padding:10px;border-radius:15px;cursor:pointer;font-size:0.7rem;font-weight:800;transition:all 0.2s;text-transform:uppercase;width:80px;text-align:center}
+.autobuy-btn.active{border-color:#4ade80;color:#4ade80;box-shadow:0 0 10px #4ade8033}
+
 /* CITY GRID */
 #game-area{display:flex;flex:1;height:calc(100vh - 220px);overflow:hidden}
 #city-grid{
@@ -223,7 +228,8 @@ html,body{
 let money=500,currentMaxBlock=1,inventory=[],cityData=Array(24).fill(null);
 let selectedInvIndex=null,cooldowns=[0,0,0,0,0,0]; 
 let globalMultiplier=1,sellBonus=1,cdReduction=0,luckBoost=1;
-let blockLevels=[0,0,0,0,0,0],shopLevels=[0,0,0,0,0,0,0,0]; 
+let blockLevels=[0,0,0,0,0,0],shopLevels=[0,0,0,0,0,0,0,0,0]; 
+let autoBuyActive = false, hasAutoBuy = false;
 
 const upgCosts=[0,2500,15000,75000,300000,1000000]; 
 const blockPrices=[250,1500,7500,35000,150000,1000000]; 
@@ -238,7 +244,8 @@ const shopUpgrades=[
   {name:'Guldreserv',desc:'Startbonus +5% PPS',icon:'🏦',costs:[250000,1000000,5000000,20000000,100000000,300000000,700000000,1500000000,4000000000,10000000000],maxLevel:10,apply:()=>{globalMultiplier+=0.05}},
   {name:'Bygglov',desc:'+10% PPS per hus',icon:'🏗️',costs:[500000,2000000,10000000,50000000,250000000,750000000,2000000000,5000000000,15000000000,50000000000],maxLevel:10,apply:()=>{globalMultiplier+=0.10}},
   {name:'Turism',desc:'+50% säljbonus',icon:'📸',costs:[1000000,5000000,25000000,100000000,500000000,1500000000,4000000000,10000000000,25000000000,100000000000],maxLevel:10,apply:()=>{sellBonus+=0.50}},
-  {name:'Nationell Stolthet',desc:'+20% PPS & Tur',icon:'🇸🇪',costs:[5000000,25000000,100000000,500000000,2500000000,10000000000,30000000000,100000000000,300000000000,1000000000000],maxLevel:10,apply:()=>{globalMultiplier+=0.20; luckBoost+=0.20}}
+  {name:'Nationell Stolthet',desc:'+20% PPS & Tur',icon:'🇸🇪',costs:[5000000,25000000,100000000,500000000,2500000000,10000000000,30000000000,100000000000,300000000000,1000000000000],maxLevel:10,apply:()=>{globalMultiplier+=0.20; luckBoost+=0.20}},
+  {name:'Automatiskt Inköp',desc:'Låser upp Auto-Mythic',icon:'🤖',costs:[100000000],maxLevel:1,apply:()=>{hasAutoBuy=true; renderBlocks();}}
 ];
 
 function bUpgCost(t,l){
@@ -296,35 +303,35 @@ function getDrop(tier,bl){
   if((tier===5 || tier===6) && Math.random() < 0.0001 * luckBoost) return buildings[31]; 
   const mb=bl*0.08,eb=bl*0.5;
   if(tier===1){
-    if(r<0.0001) return pick(buildings,36,40); // Exalted
+    if(r<0.0001) return pick(buildings,36,40);
     if(r<0.001) return pick(buildings,27,31);
     if(r<0.05) return pick(buildings,24,27);
     if(r<0.5+mb) return pick(buildings,20,24);
     if(r<5+eb) return pick(buildings,16,20);
     return pick(buildings,0,8);
   }else if(tier===2){
-    if(r<0.0005) return pick(buildings,36,40); // Exalted
+    if(r<0.0005) return pick(buildings,36,40);
     if(r<0.005) return pick(buildings,27,31);
     if(r<0.1) return pick(buildings,24,27);
     if(r<1+mb) return pick(buildings,20,24);
     if(r<10+eb) return pick(buildings,12,16);
     return pick(buildings,0,12);
   }else if(tier===3){
-    if(r<0.001) return pick(buildings,36,40); // Exalted
+    if(r<0.001) return pick(buildings,36,40);
     if(r<0.01) return pick(buildings,27,31);
     if(r<0.5) return pick(buildings,24,27);
     if(r<3+mb) return pick(buildings,16,20);
     if(r<20+eb) return pick(buildings,8,12);
     return pick(buildings,0,8);
   }else if(tier===4){
-    if(r<0.005) return pick(buildings,36,40); // Exalted
+    if(r<0.005) return pick(buildings,36,40);
     if(r<0.05) return pick(buildings,27,31);
     if(r<2) return pick(buildings,24,27);
     if(r<10) return pick(buildings,20,24);
     if(r<40) return pick(buildings,16,20);
     return pick(buildings,8,16);
   }else if(tier===5){
-    if(r<0.01) return pick(buildings,36,40); // Exalted
+    if(r<0.01) return pick(buildings,36,40);
     if(r<0.1) return pick(buildings,34,36); 
     if(r<0.5) return pick(buildings,32,34); 
     if(r<1) return pick(buildings,27,31);
@@ -333,7 +340,7 @@ function getDrop(tier,bl){
     if(r<60) return pick(buildings,16,20);
     return pick(buildings,12,16);
   }else{
-    if(r<0.05) return pick(buildings,36,40); // Exalted
+    if(r<0.05) return pick(buildings,36,40);
     if(r<0.2) return pick(buildings,34,36); 
     if(r<1) return pick(buildings,32,34);  
     if(r<5) return pick(buildings,27,31);    
@@ -343,16 +350,24 @@ function getDrop(tier,bl){
   }
 }
 
-function buyBlock(tier){
+function buyBlock(tier, silent=false){
   if(cooldowns[tier-1]>0)return;
   const price=blockPrices[tier-1];
-  if(money<price){showToast('⚠️ För lite pengar!');return}
+  if(money<price){if(!silent)showToast('⚠️ För lite pengar!');return}
   money-=price;startCooldown(tier);
   const won=getDrop(tier,blockLevels[tier-1]);
   inventory.push({...won,level:1,id:Date.now()});
-  if(won.name === 'Jimmies Mästerverk') showToast('🏆 HELIGT! DU HITTADE JIMMIES MÄSTERVERK!!!');
-  else showToast(won.icon+' '+won.name+' — '+won.rarity+'!');
+  if(!silent){
+    if(won.name === 'Jimmies Mästerverk') showToast('🏆 HELIGT! DU HITTADE JIMMIES MÄSTERVERK!!!');
+    else showToast(won.icon+' '+won.name+' — '+won.rarity+'!');
+  }
   renderInv();updateUI();save();
+}
+
+function toggleAutoBuy(){
+  autoBuyActive = !autoBuyActive;
+  renderBlocks();
+  save();
 }
 
 function upgBlockLevel(tier){
@@ -549,6 +564,17 @@ function renderBlocks(){
     w.innerHTML='<div id="block-'+i+'" class="lucky-block bt'+i+' '+(isCd?'disabled':'')+'" onclick="buyBlock('+i+')">'+(isCd?'<div class="cd-over"><span class="cd-n" id="cd-'+i+'">'+cooldowns[i-1]+'</span></div>':'<div class="block-icon">'+blockIcons[i-1]+'</div><div class="block-stars">'+stars+'</div>')+'</div><div class="block-meta"><div class="block-name">'+blockNames[i-1]+'</div><div class="block-price">'+fmtS(blockPrices[i-1])+' KR</div>'+(nc?'<button class="upg-bl-btn" onclick="event.stopPropagation();upgBlockLevel('+i+')">⬆ BÄTTRE</button>':'<div class="upg-bl-btn mx">MAX</div>')+'</div>';
     row.appendChild(w);
   }
+  
+  // Lägg till AutoBuy bredvid block 6 om man har uppgraderingen
+  if(hasAutoBuy && currentMaxBlock >= 6) {
+    const ab = document.createElement('div');
+    ab.id = 'autobuy-container';
+    ab.innerHTML = `
+      <div class="stat-label">AUTO</div>
+      <button class="autobuy-btn ${autoBuyActive?'active':''}" onclick="toggleAutoBuy()">${autoBuyActive?'PÅ':'AV'}</button>
+    `;
+    row.appendChild(ab);
+  }
 }
 
 function updateUI(){
@@ -600,19 +626,30 @@ function fmtS(n){
 }
 
 function save(){
-  localStorage.setItem('lc_v6',JSON.stringify({money,currentMaxBlock,inventory,cityData,globalMultiplier,sellBonus,cdReduction,blockLevels,shopLevels,luckBoost}));
+  localStorage.setItem('lc_v6',JSON.stringify({money,currentMaxBlock,inventory,cityData,globalMultiplier,sellBonus,cdReduction,blockLevels,shopLevels,luckBoost,autoBuyActive,hasAutoBuy}));
 }
 
 function loadGame(){
   const s=localStorage.getItem('lc_v6');
-  if(s){const d=JSON.parse(s);money=d.money||500;currentMaxBlock=d.currentMaxBlock||1;inventory=d.inventory||[];cityData=d.cityData||Array(24).fill(null);globalMultiplier=d.globalMultiplier||1;sellBonus=d.sellBonus||1;cdReduction=d.cdReduction||0;blockLevels=d.blockLevels||[0,0,0,0,0,0];shopLevels=d.shopLevels||[0,0,0,0,0,0,0,0];luckBoost=d.luckBoost||1;}
+  if(s){
+    const d=parseSafe(s);
+    money=d.money||500;currentMaxBlock=d.currentMaxBlock||1;inventory=d.inventory||[];cityData=d.cityData||Array(24).fill(null);globalMultiplier=d.globalMultiplier||1;sellBonus=d.sellBonus||1;cdReduction=d.cdReduction||0;blockLevels=d.blockLevels||[0,0,0,0,0,0];shopLevels=d.shopLevels||[0,0,0,0,0,0,0,0,0];luckBoost=d.luckBoost||1;
+    autoBuyActive=d.autoBuyActive||false;hasAutoBuy=d.hasAutoBuy||false;
+  }
 }
+
+function parseSafe(s){try{return JSON.parse(s)}catch(e){return {}}}
 
 function resetGame(){if(confirm('Nollställa hela staden?')){localStorage.removeItem('lc_v6');location.reload();}}
 
 setInterval(()=>{
   const inc = cityData.reduce((t, b) => t + (b && b.income ? b.income : 0), 0) * globalMultiplier;
   if(!isNaN(inc)){ money+=inc; updateUI(); }
+  
+  // Hantera AutoBuy för Mythic (Tier 6)
+  if(autoBuyActive && hasAutoBuy && currentMaxBlock >= 6 && cooldowns[5] <= 0 && money >= blockPrices[5]){
+    buyBlock(6, true);
+  }
 },1000);
 
 loadGame();renderCity();renderInv();renderBlocks();updateUI();
