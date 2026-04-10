@@ -242,7 +242,10 @@ const buildings=[
   {name:'Månbas',icon:'🌕',rarity:'Celestial',income:650000,color:'#00bcd4',sellPrice:15000000,level:1},
   {name:'Tidsmaskin',icon:'⌛',rarity:'Celestial',income:950000,color:'#00bcd4',sellPrice:25000000,level:1},
   {name:'The Matrix',icon:'🕶️',rarity:'Godly',income:2500000,color:'#fff',sellPrice:50000000,level:1},
-  {name:'Gudaportal',icon:'⛩️',rarity:'Godly',income:5000000,color:'#fff',sellPrice:100000000,level:1}
+  {name:'Gudaportal',icon:'⛩️',rarity:'Godly',income:5000000,color:'#fff',sellPrice:100000000,level:1},
+  {name:'Stjärnkrossare',icon:'💥',rarity:'Godly',income:15000000,color:'#fff',sellPrice:250000000,level:1},
+  {name:'Galaxkärna',icon:'🌀',rarity:'Godly',income:50000000,color:'#fff',sellPrice:750000000,level:1},
+  {name:'Jimmies Mästerverk',icon:'✨',rarity:'Ultimate',income:250000000,color:'#ffeb3b',sellPrice:999999999,level:1}
 ];
 
 function pick(a,f,t){return a[Math.min(f+Math.floor(Math.random()*(t-f)),a.length-1)]}
@@ -250,39 +253,39 @@ function pick(a,f,t){return a[Math.min(f+Math.floor(Math.random()*(t-f)),a.lengt
 function getDrop(tier,bl){
   const r=Math.random()*100,cb=bl*0.05,mb=bl*0.08,lb=bl*0.15,eb=bl*0.5;
   if(tier===1){
-    if(r<0.001+cb*0.2)return pick(buildings,27,29);
-    if(r<0.01+cb*0.5)return pick(buildings,24,27);
+    if(r<0.0001)return buildings[31]; // Ultra rare Jimmie drop
+    if(r<0.01+cb*0.5)return pick(buildings,24,31);
     if(r<0.1+mb)return pick(buildings,20,24);
     if(r<1+eb)return pick(buildings,16,20);
     if(r<10+lb*2)return pick(buildings,4,8);
     return pick(buildings,0,4);
   }else if(tier===2){
-    if(r<0.005+cb*0.3)return pick(buildings,27,29);
-    if(r<0.05+cb)return pick(buildings,24,27);
+    if(r<0.001)return buildings[31];
+    if(r<0.05+cb)return pick(buildings,24,31);
     if(r<0.5+mb*2)return pick(buildings,20,24);
     if(r<5+eb)return pick(buildings,8,12);
     if(r<35+lb)return pick(buildings,4,8);
     return pick(buildings,0,4);
   }else if(tier===3){
-    if(r<0.01+cb*0.5)return pick(buildings,27,29);
-    if(r<0.2+cb*1.5)return pick(buildings,24,27);
+    if(r<0.01)return buildings[31];
+    if(r<0.2+cb*1.5)return pick(buildings,24,31);
     if(r<2+mb*2)return pick(buildings,12,16);
     if(r<15+eb)return pick(buildings,8,12);
     if(r<60+lb)return pick(buildings,4,8);
     return pick(buildings,0,4);
   }else if(tier===4){
-    if(r<0.05+cb)return pick(buildings,27,29);
-    if(r<1+cb*2)return pick(buildings,24,27);
+    if(r<0.1)return buildings[31];
+    if(r<1+cb*2)return pick(buildings,24,31);
     if(r<5+mb*3)return pick(buildings,16,20);
     if(r<20+eb)return pick(buildings,12,16);
     if(r<50+lb)return pick(buildings,8,12);
     return pick(buildings,0,8);
   }else{
-    if(r<0.5+cb*2)return pick(buildings,27,29);
-    if(r<3+cb*3)return pick(buildings,24,27);
-    if(r<10+mb*4)return pick(buildings,20,24);
-    if(r<40+eb*1.5)return pick(buildings,16,20);
-    if(r<70+lb)return pick(buildings,12,16);
+    if(r<1)return buildings[31];
+    if(r<5+cb*3)return pick(buildings,24,31);
+    if(r<15+mb*4)return pick(buildings,20,24);
+    if(r<45+eb*1.5)return pick(buildings,16,20);
+    if(r<75+lb)return pick(buildings,12,16);
     return pick(buildings,0,12);
   }
 }
@@ -294,7 +297,8 @@ function buyBlock(tier){
   money-=price;startCooldown(tier);
   const won=getDrop(tier,blockLevels[tier-1]);
   inventory.push({...won,level:1,id:Date.now()});
-  showToast(won.icon+' '+won.name+' — '+won.rarity+'!');
+  if(won.name === 'Jimmies Mästerverk') showToast('🏆 DU HITTADE JIMMIES MÄSTERVERK!!!');
+  else showToast(won.icon+' '+won.name+' — '+won.rarity+'!');
   renderInv();updateUI();save();
 }
 
@@ -341,13 +345,15 @@ function upgradeBuilding(i){
   const b=cityData[i];if(!b)return;
   if(b.level>=50){showToast('Maxnivå 50 uppnådd!');return}
   let base = Math.max(b.sellPrice, 200);
-  const cost=Math.floor(base * 2.5 * Math.pow(1.85, b.level-1));
+  // SÄNKT MED 50% (från 2.5 till 1.25)
+  const cost=Math.floor(base * 1.25 * Math.pow(1.85, b.level-1));
   if(money>=cost){
     money-=cost;
     b.level++;
     let mult = 1.05; 
     if(b.rarity === 'Uncommon') mult = 1.15;
-    else mult = 1.30;
+    else if(b.rarity === 'Rare') mult = 1.25;
+    else mult = 1.35;
     b.income = Math.floor(b.income * mult); 
     showToast(b.icon+' '+b.name+' → Level '+b.level+'!');
     renderCity();updateUI();save();
@@ -365,7 +371,7 @@ function renderCity(){
       slot.style.borderColor=c;
       slot.style.background='linear-gradient(135deg,'+c+'15,'+c+'05)';
       let base = Math.max(data.sellPrice, 200);
-      const uc=Math.floor(base * 2.5 * Math.pow(1.85, data.level-1));
+      const uc=Math.floor(base * 1.25 * Math.pow(1.85, data.level-1));
       slot.innerHTML='<div class="slot-lvl">LVL '+data.level+'</div><div class="slot-icon">'+data.icon+'</div><div class="slot-income">+'+fmt(Math.floor(data.income*globalMultiplier))+'/s</div><button class="upg-btn" data-s="'+i+'">'+(data.level>=50?'MAX':'UPG ('+fmtS(uc)+')')+'</button>';
     }
     slot.addEventListener('click',e=>{
@@ -467,6 +473,7 @@ function showToast(msg){
 
 function fmt(n){return Math.round(n).toLocaleString('sv-SE')}
 function fmtS(n){
+  if(n>=1000000000)return(n/1000000000).toFixed(1)+'B';
   if(n>=1000000)return(n/1000000).toFixed(1)+'M';
   if(n>=1000)return Math.round(n/1000)+'k';
   return String(n);
