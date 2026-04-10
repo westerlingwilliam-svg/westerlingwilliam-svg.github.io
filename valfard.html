@@ -61,7 +61,7 @@ html,body{
 .block-price{font-size:0.9rem;color:var(--gold);font-weight:800;margin:2px 0}
 .upg-bl-btn{width:100%;padding:6px 0;border-radius:8px;cursor:pointer;font-size:0.75rem;font-weight:800;border:1px solid var(--border2);background:rgba(255,255,255,0.06);color:var(--text)}
 
-/* CITY GRID - Flyttat upp innehållet utan att ändra headern */
+/* CITY GRID */
 #game-area{display:flex;flex:1;height:calc(100vh - 220px);overflow:hidden}
 #city-grid{
     flex:1;
@@ -302,12 +302,20 @@ function buyShopUpg(i){
 function upgradeBuilding(i){
   const b=cityData[i];if(!b)return;
   if(b.level>=50){showToast('Maxnivå 50 uppnådd!');return}
+  
   let base = Math.max(b.sellPrice, 200);
   const cost=Math.floor(base * 2.5 * Math.pow(1.85, b.level-1));
+  
   if(money>=cost){
     money-=cost;
     b.level++;
-    b.income = Math.floor(b.income * 2.2); 
+    
+    // JUSTERADE MULTIPLIERS
+    let mult = 1.05; // Common (+5%)
+    if(b.rarity === 'Uncommon') mult = 1.15; // (+15%)
+    else mult = 1.30; // Rare, Epic, Legendary, Mythic, etc. (+30%)
+    
+    b.income = Math.floor(b.income * mult); 
     showToast(b.icon+' '+b.name+' → Level '+b.level+'!');
     renderCity();updateUI();save();
   } else showToast('Behöver '+fmt(cost)+' KR!');
@@ -386,10 +394,8 @@ function startCooldown(tier){
   cooldowns[tier-1]=Math.max(1,5-cdReduction);renderBlocks();
   let t=setInterval(()=>{
     cooldowns[tier-1]--;
-    // FIX: Uppdatera texten i rutan varje sekund
     const cdEl = document.getElementById('cd-'+tier);
     if(cdEl) cdEl.innerText = cooldowns[tier-1];
-    
     if(cooldowns[tier-1]<=0){clearInterval(t);renderBlocks();}
   },1000);
 }
