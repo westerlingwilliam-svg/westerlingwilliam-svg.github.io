@@ -245,7 +245,11 @@ const buildings=[
   {name:'Richard Jomshof',icon:'⚔️',rarity:'Godly',income:15000000,color:'#fff',sellPrice:300000000,level:1},
   {name:'Jimmie Åkesson',icon:'👑',rarity:'Godly',income:50000000,color:'#fff',sellPrice:1000000000,level:1},
   {name:'Sverigevännernas Tempel',icon:'✨',rarity:'Godly',income:120000000,color:'#fff',sellPrice:2500000000,level:1},
-  {name:'Jimmies Mästerverk',icon:'🌟',rarity:'Ultimate',income:999999999,color:'#ffeb3b',sellPrice:10000000000,level:1}
+  {name:'Jimmies Mästerverk',icon:'🌟',rarity:'Ultimate',income:999999999,color:'#ffeb3b',sellPrice:10000000000,level:1},
+  {name:'Den Gyllene Älgen',icon:'🫎',rarity:'Divine',income:2500000000,color:'#fff59d',sellPrice:50000000000,level:1},
+  {name:'Midnattssolen',icon:'☀️',rarity:'Divine',income:7500000000,color:'#fff59d',sellPrice:150000000000,level:1},
+  {name:'Nordljuset',icon:'🌌',rarity:'Cosmic',income:25000000000,color:'#b3e5fc',sellPrice:500000000000,level:1},
+  {name:'Sveriges Hjärta',icon:'💙',rarity:'Cosmic',income:100000000000,color:'#b3e5fc',sellPrice:2000000000000,level:1}
 ];
 
 function pick(a,f,t){return a[Math.min(f+Math.floor(Math.random()*(t-f)),a.length-1)]}
@@ -281,6 +285,9 @@ function getDrop(tier,bl){
     if(r<40) return pick(buildings,16,20);
     return pick(buildings,8,16);
   }else{
+    // Tier 5 Drops - Inkluderar de nya Divine/Cosmic vid extrem tur
+    if(r<0.01) return pick(buildings,34,36); // Cosmic
+    if(r<0.05) return pick(buildings,32,34); // Divine
     if(r<0.2) return pick(buildings,27,31);
     if(r<5) return pick(buildings,24,27);
     if(r<20) return pick(buildings,20,24);
