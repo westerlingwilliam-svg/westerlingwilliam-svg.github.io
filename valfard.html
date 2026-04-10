@@ -8,7 +8,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --gold:#f5c842;--gold-glow:rgba(245,200,66,0.4);--gold-dark:#8a6d10;
-  --bg:#07080f;--bg2:#0d1020;--bg3:#131629;--bg4:#1a1f35;
+  --bg:#060810;--bg2:#0c1022;--bg3:#111528;--bg4:#181d32;
   --border:#ffffff12;--border2:#ffffff22;--border3:#ffffff35;
   --text:#e8eaf6;--muted:#6b7099;--muted2:#9196bb;
   --hdr: 210px;
@@ -28,29 +28,29 @@ html,body{width:100%;height:100vh;overflow:hidden;background:var(--bg);color:var
 /* ── HEADER ── */
 #header{
   display:grid;
-  grid-template-columns:clamp(190px,21vw,310px) 1fr clamp(140px,14vw,200px);
+  grid-template-columns:clamp(220px,24vw,340px) 1fr clamp(140px,14vw,200px);
   align-items:center;
   padding:12px var(--pad);
   height:var(--hdr);
   min-height:var(--hdr);
   max-height:var(--hdr);
-  background:var(--bg2);
+  background:linear-gradient(180deg, #0f1428 0%, #0c1022 100%);
   border-bottom:2px solid var(--border2);
   position:relative;z-index:10;
   box-shadow:0 4px 40px rgba(0,0,0,0.8);
   gap:var(--gap);
 }
-#header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
-.header-left{display:flex;flex-direction:column;justify-content:center;gap:0}
+#header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#f5c842cc,var(--gold),#f5c842cc,transparent);filter:blur(0.5px)}
+.header-left{display:flex;flex-direction:column;justify-content:center;gap:0;padding-left:4px}
 .stat-label{font-size:var(--fxs);text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:2px}
-.stat-money{font-size:var(--fxl);font-weight:800;color:var(--gold);letter-spacing:-1px;line-height:1.1}
+.stat-money{font-size:var(--fxl);font-weight:800;background:linear-gradient(135deg,#ffd84d,#f5a623);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-1px;line-height:1.1}
 .stat-money .unit{font-size:var(--fsm);color:var(--muted2);font-weight:400}
 .stat-pps{font-size:var(--fsm);color:var(--muted2);margin-top:4px}
-.stat-pps span{color:#4ade80;font-weight:700}
-#upg-luck-btn{margin-top:7px;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#1a2a1a,#0d1f0d);border:2px solid #4ade8055;color:#4ade80;padding:7px 14px;border-radius:30px;cursor:pointer;font-size:var(--fxs);font-weight:800;transition:all 0.2s;text-transform:uppercase;white-space:nowrap}
+.stat-pps span{color:#5affa0;font-weight:700;text-shadow:0 0 8px #4ade8066}
+#upg-luck-btn{margin-top:7px;display:inline-flex;align-items:center;gap:4px;background:linear-gradient(135deg,#1a2a1a,#0d1f0d);border:2px solid #4ade8055;color:#4ade80;padding:10px 22px;border-radius:30px;cursor:pointer;font-size:var(--fsm);font-weight:800;transition:all 0.2s;text-transform:uppercase;white-space:nowrap}
 #upg-luck-btn:hover{border-color:#4ade80;background:linear-gradient(135deg,#223a22,#122612)}
 .header-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;justify-content:center;height:100%}
-.menu-link-btn{background:rgba(255,255,255,0.05);border:1px solid var(--border3);color:var(--text);text-decoration:none;padding:8px 16px;border-radius:var(--r);font-weight:800;font-size:var(--fxs);text-transform:uppercase;letter-spacing:1px;transition:all 0.2s;white-space:nowrap}
+.menu-link-btn{background:rgba(255,255,255,0.06);border:1px solid #ffffff28;color:var(--text);text-decoration:none;padding:8px 16px;border-radius:var(--r);font-weight:800;font-size:var(--fxs);text-transform:uppercase;letter-spacing:1px;transition:all 0.2s;white-space:nowrap;box-shadow:inset 0 1px 0 rgba(255,255,255,0.08)}
 .menu-link-btn:hover{background:var(--text);color:#000}
 .reset-btn{background:transparent;color:#ff4444;border:1px solid #ff444444;padding:4px 10px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:var(--fxs);transition:all 0.2s;opacity:0.6}
 .reset-btn:hover{opacity:1;background:#ff444411}
@@ -90,18 +90,18 @@ html,body{width:100%;height:100vh;overflow:hidden;background:var(--bg);color:var
   padding:var(--gap);
   justify-content:center;
   align-content:start;
-  background:radial-gradient(ellipse at 50% 0%, #0d1525 0%, var(--bg) 70%);
+  background:radial-gradient(ellipse at 50% 0%, #0e1830 0%, #080b18 60%, var(--bg) 100%);
   overflow-y:auto;
 }
 
 /* ── CITY SLOTS ── */
-.slot{border-radius:var(--r);border:2px solid var(--border);background:var(--bg3);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:all 0.2s;width:var(--slot);height:var(--slot);overflow:hidden}
-.slot:hover{border-color:var(--border3);transform:translateY(-2px)}
+.slot{border-radius:var(--r);border:2px solid var(--border);background:linear-gradient(145deg,#141829,#0f1322);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:all 0.2s;width:var(--slot);height:var(--slot);overflow:hidden}
+.slot:hover{border-color:#ffffff30;transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.5)}
 .slot-icon{font-size:clamp(1.6rem,2.8vw,3.2rem);margin-bottom:2px;animation:flt 3s ease-in-out infinite;position:relative;z-index:1}
 .slot-lvl{position:absolute;top:5px;left:5px;background:rgba(0,0,0,0.8);padding:2px 5px;border-radius:5px;font-size:var(--fxs);font-weight:800;color:var(--gold);border:1px solid var(--border2);z-index:2}
 .slot-rarity-text{position:absolute;top:5px;right:5px;background:rgba(0,0,0,0.7);padding:1px 5px;border-radius:4px;font-size:clamp(0.42rem,0.55vw,0.52rem);font-weight:900;text-transform:uppercase;letter-spacing:0.5px;z-index:2}
-.slot-income{font-size:var(--fxs);font-weight:800;color:#4ade80;background:rgba(0,0,0,0.4);padding:2px 6px;border-radius:8px;position:relative;z-index:1}
-.upg-btn{margin-top:4px;width:88%;padding:4px 0;border-radius:7px;background:var(--gold);color:#000;font-size:clamp(0.55rem,0.75vw,0.75rem);font-weight:900;border:none;cursor:pointer;transition:all 0.15s;position:relative;z-index:1}
+.slot-income{font-size:var(--fxs);font-weight:800;color:#5affa0;background:rgba(0,20,10,0.6);padding:2px 6px;border-radius:8px;position:relative;z-index:1;border:1px solid #4ade8030}
+.upg-btn{margin-top:4px;width:88%;padding:4px 0;border-radius:7px;background:linear-gradient(135deg,#f7d050,#e8a000);color:#000;font-size:clamp(0.55rem,0.75vw,0.75rem);font-weight:900;border:none;cursor:pointer;transition:all 0.15s;position:relative;z-index:1;box-shadow:0 2px 6px rgba(0,0,0,0.35)}
 .upg-btn:hover{background:#ffe060}
 .upg-btn.no-funds{background:var(--gold-dark);color:rgba(0,0,0,0.45)}
 .highlight-empty{border-color:#4ade80 !important;box-shadow:0 0 12px rgba(74,222,128,0.3) !important;animation:pulse-green 1.5s infinite}
@@ -111,25 +111,25 @@ html,body{width:100%;height:100vh;overflow:hidden;background:var(--bg);color:var
 .slot-sheen{position:absolute;inset:0;opacity:0.06;pointer-events:none;border-radius:inherit}
 
 /* ── SIDEBAR ── */
-#sidebar{width:var(--sbar);flex-shrink:0;background:var(--bg2);border-left:2px solid var(--border2);display:flex;flex-direction:column}
+#sidebar{width:var(--sbar);flex-shrink:0;background:linear-gradient(180deg,#0d1124 0%,#0b0f1e 100%);border-left:2px solid #ffffff1a;display:flex;flex-direction:column}
 .sidebar-tabs{display:flex;padding:var(--pad);gap:var(--gap)}
 .tab-btn{flex:1;padding:clamp(7px,1.1vh,13px);border-radius:var(--r);border:2px solid var(--border2);background:var(--bg3);color:var(--muted);font-size:var(--fsm);font-weight:800;text-transform:uppercase;cursor:pointer;transition:all 0.2s}
-.tab-btn.active{background:var(--gold);color:#000;border-color:var(--gold);box-shadow:0 0 20px var(--gold-glow)}
+.tab-btn.active{background:linear-gradient(135deg,#f7d050,#e8a800);color:#000;border-color:var(--gold);box-shadow:0 0 22px var(--gold-glow),0 2px 8px rgba(0,0,0,0.4)}
 .sidebar-content{flex:1;overflow-y:auto;padding:var(--pad)}
 #inventory{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap);overflow-y:auto;padding-bottom:30px}
 #shop-ui{display:flex;flex-direction:column;gap:var(--gap);overflow-y:auto;padding-bottom:40px}
-.inv-card{border-radius:var(--r);padding:clamp(8px,1vh,14px) 8px;background:var(--bg4);border:2px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:5px;position:relative;overflow:hidden;transition:transform 0.15s,box-shadow 0.15s}
+.inv-card{border-radius:var(--r);padding:clamp(8px,1vh,14px) 8px;background:linear-gradient(160deg,#1c2240,#131829);border:2px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:5px;position:relative;overflow:hidden;transition:transform 0.15s,box-shadow 0.15s}
 .inv-card:hover{transform:translateY(-2px)}
 .inv-card-sheen{position:absolute;inset:0;opacity:0.07;pointer-events:none}
 .inv-icon{font-size:clamp(1.8rem,2.4vw,2.8rem);position:relative;z-index:1}
 .inv-name{font-size:var(--fxs);font-weight:800;text-align:center;position:relative;z-index:1}
 .inv-btns{display:flex;flex-direction:column;gap:4px;width:92%;position:relative;z-index:1}
 .inv-btns button{width:100%;padding:5px;border-radius:7px;font-size:var(--fxs);font-weight:800;cursor:pointer;border:none;transition:all 0.15s}
-.bld-btn{background:#4ade80;color:#000}
+.bld-btn{background:linear-gradient(135deg,#4ade80,#22c55e);color:#000;box-shadow:0 2px 6px rgba(0,0,0,0.3)}
 .bld-btn:hover{background:#6aee9a}
 .sll-btn{background:rgba(239,68,68,0.15);color:#f87171;border:1px solid #f8717155 !important}
 .sll-btn:hover{background:rgba(239,68,68,0.3)}
-.shop-card{border-radius:var(--r);padding:clamp(10px,1.2vh,14px);background:var(--bg4);border:2px solid var(--border2);display:flex;align-items:center;gap:10px;flex-shrink:0;transition:border-color 0.2s}
+.shop-card{border-radius:var(--r);padding:clamp(10px,1.2vh,14px);background:linear-gradient(135deg,#191f38,#111528);border:2px solid var(--border2);display:flex;align-items:center;gap:10px;flex-shrink:0;transition:all 0.2s}
 .shop-card:hover{border-color:var(--border3)}
 .shop-ico{font-size:clamp(1.5rem,1.9vw,2.2rem)}
 .shop-info{flex:1;min-width:0}
@@ -140,7 +140,7 @@ html,body{width:100%;height:100vh;overflow:hidden;background:var(--bg);color:var
 .buy-btn2:disabled{background:#1e2e1e;color:#3a5a3a;cursor:not-allowed}
 
 /* ── TOAST ── */
-#toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:var(--gold);color:#000;padding:12px 28px;border-radius:40px;font-size:var(--fmd);font-weight:800;z-index:1000;opacity:0;pointer-events:none;transition:all 0.3s;white-space:nowrap}
+#toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f7d050,#e8a000);color:#000;padding:12px 28px;border-radius:40px;font-size:var(--fmd);font-weight:800;z-index:1000;opacity:0;pointer-events:none;transition:all 0.3s;white-space:nowrap;box-shadow:0 8px 30px rgba(232,160,0,0.4)}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(-12px)}
 
 @keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
@@ -165,12 +165,12 @@ html,body{width:100%;height:100vh;overflow:hidden;background:var(--bg);color:var
 }
 .rarity-Celestial{border-color:#00bcd4 !important;animation:celestial-glow 2.5s infinite ease-in-out}
 
-/* Godly — pure white holy glow */
+/* Godly — pure white holy fade */
 @keyframes godly-glow{
-  0%,100%{box-shadow:0 0 12px #ffffffbb, 0 0 30px #ffffff44, inset 0 0 8px #ffffff22}
-  50%{box-shadow:0 0 28px #fff, 0 0 60px #ffffffaa, 0 0 90px #ffffff55, inset 0 0 18px #ffffff33}
+  0%,100%{box-shadow:0 0 8px #ffffffaa, 0 0 20px #ffffff33, inset 0 0 5px #ffffff18}
+  50%{box-shadow:0 0 22px #ffffffdd, 0 0 50px #ffffff66, 0 0 75px #ffffff33, inset 0 0 14px #ffffff28}
 }
-.rarity-Godly{border-color:#ffffff !important;animation:godly-glow 2s infinite ease-in-out}
+.rarity-Godly{border-color:#ddddff !important;animation:godly-glow 3s infinite ease-in-out}
 
 /* Divine — warm golden-cream */
 @keyframes divine-glow{
@@ -214,7 +214,12 @@ html,body{width:100%;height:100vh;overflow:hidden;background:var(--bg);color:var
 }
 
 /* Inventory card rarity borders */
-.inv-card.rarity-Mythic{border-color:#f44336 !important}
+.inv-card.rarity-Common{border-color:#555566 !important}
+.inv-card.rarity-Uncommon{border-color:#4caf5088 !important}
+.inv-card.rarity-Rare{border-color:#2196f388 !important}
+.inv-card.rarity-Epic{border-color:#9c27b088 !important}
+.inv-card.rarity-Legendary{border-color:#ff980088 !important}
+.inv-card.rarity-Mythic{border-color:#f4433688 !important}
 .inv-card.rarity-Celestial{border-color:#00bcd4 !important}
 .inv-card.rarity-Godly{border-color:#fff !important;box-shadow:0 0 15px #ffffff33}
 .inv-card.rarity-Divine{border-color:#fff59d !important;box-shadow:0 0 12px #fff59d33}
@@ -247,7 +252,7 @@ html,body{width:100%;height:100vh;overflow:hidden;background:var(--bg);color:var
     <div class="stat-label">Stadsbudget</div>
     <div class="stat-money">💰 <span id="money">500</span> <span class="unit">KR</span></div>
     <div class="stat-pps">Produktion: <span id="pps">0</span>/s</div>
-    <button id="upg-luck-btn" onclick="upgradeBlocks()">⚡ Lås upp nästa block — <span id="upg-cost">2 500</span> KR</button>
+    <button id="upg-luck-btn" onclick="upgradeBlocks()"><span id="upg-name">Uncommon</span> Luckyblock <span id="upg-cost">2500</span>kr</button>
   </div>
   <div class="blocks-row" id="blocks-row"></div>
   <div class="header-right">
@@ -274,6 +279,11 @@ html,body{width:100%;height:100vh;overflow:hidden;background:var(--bg);color:var
 <div id="toast"></div>
 
 <script>
+// ── Knapp-formatering (inga mellanslag)
+function fmtBtn(n){
+  return String(Math.round(Number(n)));
+}
+
 // ── Talformatering ─────────────────────────────────────────────────────────
 // Suffix-tabell: inga k, börjar direkt på M
 const SUFFIXES = [
@@ -689,7 +699,7 @@ function updateUI(){
   document.getElementById('pps').innerText=fmtS(Math.floor(inc));
   const btn=document.getElementById('upg-luck-btn');
   if(currentMaxBlock<6){
-    if(btn){btn.style.display='inline-flex';const cs=document.getElementById('upg-cost');if(cs)cs.innerText=fmtS(upgCosts[currentMaxBlock]);}
+    if(btn){btn.style.display='inline-flex';const cs=document.getElementById('upg-cost');if(cs)cs.innerText=fmtS(upgCosts[currentMaxBlock]);const cn=document.getElementById('upg-name');if(cn)cn.innerText=blockNames[currentMaxBlock];if(cs)cs.innerText=fmtBtn(upgCosts[currentMaxBlock]);}
   }else{if(btn)btn.style.display='none';}
   cityData.forEach((data,i)=>{
     if(data){
