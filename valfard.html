@@ -69,8 +69,8 @@ html,body{
     grid-template-columns:repeat(6, 160px);
     grid-auto-rows: 160px;
     gap:15px;
-    padding:15px; /* Minskat padding för att tvinga upp raderna */
-    margin-top: -10px; /* Subtil uppflyttning av rutnätet */
+    padding:15px; 
+    margin-top: -10px; 
     justify-content:center;
     background:radial-gradient(circle at center, var(--bg2), var(--bg));
     overflow-y: auto;
@@ -299,15 +299,11 @@ function buyShopUpg(i){
   renderShop();updateUI();save();
 }
 
-/* NERFAD UPPGRADERING: Max nivå 50, snabbare prisökning */
 function upgradeBuilding(i){
   const b=cityData[i];if(!b)return;
   if(b.level>=50){showToast('Maxnivå 50 uppnådd!');return}
-  
-  // Bas-pris på minst 200 KR för att förhindra gratisbil-loopen
   let base = Math.max(b.sellPrice, 200);
   const cost=Math.floor(base * 2.5 * Math.pow(1.85, b.level-1));
-  
   if(money>=cost){
     money-=cost;
     b.level++;
@@ -323,15 +319,12 @@ function renderCity(){
     const slot=document.createElement('div');
     const highlight = (selectedInvIndex !== null && !data) ? ' highlight-empty' : '';
     slot.className='slot'+(data?'':' empty') + highlight;
-    
     if(data){
       const c=data.color;
       slot.style.borderColor=c;
       slot.style.background='linear-gradient(135deg,'+c+'15,'+c+'05)';
-      
       let base = Math.max(data.sellPrice, 200);
       const uc=Math.floor(base * 2.5 * Math.pow(1.85, data.level-1));
-      
       slot.innerHTML='<div class="slot-lvl">LVL '+data.level+'</div><div class="slot-icon">'+data.icon+'</div><div class="slot-income">+'+fmt(Math.floor(data.income*globalMultiplier))+'/s</div><button class="upg-btn" data-s="'+i+'">'+(data.level>=50?'MAX':'UPG ('+fmtS(uc)+')')+'</button>';
     }
     slot.addEventListener('click',e=>{
@@ -348,7 +341,6 @@ function renderInv(){
     const d=document.createElement('div');d.className='inv-card';
     d.style.borderColor=item.color;
     if(selectedInvIndex === idx) d.style.background = 'rgba(74, 222, 128, 0.1)';
-    
     d.innerHTML='<div class="inv-icon">'+item.icon+'</div><div class="inv-name" style="color:'+item.color+'">'+item.name+'</div><div class="inv-btns"><button class="bld-btn" data-idx="'+idx+'">'+(selectedInvIndex === idx ? 'AVBRYT' : 'BYGG')+'</button><button class="sll-btn" data-idx="'+idx+'">SÄLJ</button></div>';
     el.appendChild(d);
   });
@@ -394,6 +386,10 @@ function startCooldown(tier){
   cooldowns[tier-1]=Math.max(1,5-cdReduction);renderBlocks();
   let t=setInterval(()=>{
     cooldowns[tier-1]--;
+    // FIX: Uppdatera texten i rutan varje sekund
+    const cdEl = document.getElementById('cd-'+tier);
+    if(cdEl) cdEl.innerText = cooldowns[tier-1];
+    
     if(cooldowns[tier-1]<=0){clearInterval(t);renderBlocks();}
   },1000);
 }
