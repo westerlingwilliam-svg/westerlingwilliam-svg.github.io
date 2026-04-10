@@ -7,81 +7,80 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --gold:#f5c842;--gold-glow:rgba(245,200,66,0.35);--gold-dark:#8a6d10;
+  --gold:#f5c842;--gold-glow:rgba(245,200,66,0.4);--gold-dark:#8a6d10;
   --bg:#07080f;--bg2:#0d1020;--bg3:#131629;--bg4:#1a1f35;
   --border:#ffffff12;--border2:#ffffff22;--border3:#ffffff35;
   --text:#e8eaf6;--muted:#6b7099;--muted2:#9196bb;
-
-  /* ── Responsiva storleksvariabler ── */
-  --hdr:   270px;
-  --slot:  clamp(100px, 10.5vw, 155px);
-  --sbar:  clamp(260px, 22vw, 380px);
-  --fxs:   clamp(0.6rem,  0.9vw, 0.85rem);
-  --fsm:   clamp(0.65rem, 1.0vw, 0.9rem);
-  --fmd:   clamp(0.75rem, 1.1vw, 1rem);
-  --flg:   clamp(1.2rem,  2.0vw, 2.2rem);
-  --fxl:   clamp(1.6rem,  2.8vw, 3rem);
-  --gap:   clamp(6px, 0.8vw, 14px);
-  --pad:   clamp(8px, 1.2vw, 20px);
-  --r:     clamp(8px, 1vw, 16px);
-  --blk:   clamp(70px, 7vw, 100px);
+  --hdr: 210px;
+  --slot: clamp(100px, 10.5vw, 155px);
+  --sbar: clamp(260px, 22vw, 380px);
+  --fxs:  clamp(0.6rem,  0.85vw, 0.82rem);
+  --fsm:  clamp(0.65rem, 1.0vw,  0.9rem);
+  --fmd:  clamp(0.75rem, 1.1vw,  1rem);
+  --fxl:  clamp(1.5rem,  2.5vw,  2.6rem);
+  --gap:  clamp(6px, 0.8vw, 14px);
+  --pad:  clamp(8px, 1.2vw, 20px);
+  --r:    clamp(8px, 1vw, 16px);
+  --blk:  clamp(68px, 6.5vw, 92px);
 }
 html,body{width:100%;height:100vh;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;display:flex;flex-direction:column}
 
 /* ── HEADER ── */
 #header{
   display:grid;
-  grid-template-columns:clamp(200px,22vw,320px) 1fr clamp(140px,14vw,200px);
+  grid-template-columns:clamp(190px,21vw,310px) 1fr clamp(140px,14vw,200px);
   align-items:center;
-  padding:16px var(--pad);
+  padding:12px var(--pad);
   height:var(--hdr);
   min-height:var(--hdr);
+  max-height:var(--hdr);
   background:var(--bg2);
   border-bottom:2px solid var(--border2);
   position:relative;z-index:10;
   box-shadow:0 4px 40px rgba(0,0,0,0.8);
   gap:var(--gap);
-  overflow:hidden;
 }
 #header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
-.header-left{display:flex;flex-direction:column;justify-content:center;min-width:0;overflow:hidden}
-.stat-label{font-size:var(--fxs);text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:3px}
-.stat-money{font-size:var(--fxl);font-weight:800;color:var(--gold);letter-spacing:-1px;line-height:1}
-.stat-money .unit{font-size:var(--fmd);color:var(--muted2);font-weight:400}
-.stat-pps{font-size:var(--fsm);color:var(--muted2);margin-top:5px}
+.header-left{display:flex;flex-direction:column;justify-content:center;gap:0}
+.stat-label{font-size:var(--fxs);text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:2px}
+.stat-money{font-size:var(--fxl);font-weight:800;color:var(--gold);letter-spacing:-1px;line-height:1.1}
+.stat-money .unit{font-size:var(--fsm);color:var(--muted2);font-weight:400}
+.stat-pps{font-size:var(--fsm);color:var(--muted2);margin-top:4px}
 .stat-pps span{color:#4ade80;font-weight:700}
-#upg-luck-btn{margin-top:8px;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#1a2a1a,#0d1f0d);border:2px solid #4ade8055;color:#4ade80;padding:clamp(5px,0.6vw,10px) clamp(10px,1.2vw,20px);border-radius:30px;cursor:pointer;font-size:var(--fxs);font-weight:800;transition:all 0.2s;text-transform:uppercase;white-space:nowrap}
+#upg-luck-btn{margin-top:7px;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#1a2a1a,#0d1f0d);border:2px solid #4ade8055;color:#4ade80;padding:7px 14px;border-radius:30px;cursor:pointer;font-size:var(--fxs);font-weight:800;transition:all 0.2s;text-transform:uppercase;white-space:nowrap}
+#upg-luck-btn:hover{border-color:#4ade80;background:linear-gradient(135deg,#223a22,#122612)}
 .header-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;justify-content:center;height:100%}
-.menu-link-btn{background:rgba(255,255,255,0.05);border:1px solid var(--border3);color:var(--text);text-decoration:none;padding:clamp(5px,0.6vw,10px) clamp(8px,1vw,18px);border-radius:var(--r);font-weight:800;font-size:var(--fxs);text-transform:uppercase;letter-spacing:1px;transition:all 0.2s;white-space:nowrap}
+.menu-link-btn{background:rgba(255,255,255,0.05);border:1px solid var(--border3);color:var(--text);text-decoration:none;padding:8px 16px;border-radius:var(--r);font-weight:800;font-size:var(--fxs);text-transform:uppercase;letter-spacing:1px;transition:all 0.2s;white-space:nowrap}
 .menu-link-btn:hover{background:var(--text);color:#000}
 .reset-btn{background:transparent;color:#ff4444;border:1px solid #ff444444;padding:4px 10px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:var(--fxs);transition:all 0.2s;opacity:0.6}
 .reset-btn:hover{opacity:1;background:#ff444411}
 
-/* ── BLOCKS ── */
+/* ── LUCKY BLOCKS ── */
 .blocks-row{display:flex;gap:var(--gap);justify-content:center;align-items:center;flex-wrap:nowrap;height:100%}
-.block-wrapper{display:flex;flex-direction:column;align-items:center;gap:4px;width:calc(var(--blk) + 10px)}
-.lucky-block{width:var(--blk);height:var(--blk);border-radius:clamp(14px,2vw,24px);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;user-select:none;position:relative;transition:all 0.15s;border:2px solid rgba(255,255,255,0.15);flex-shrink:0}
-.lucky-block:active{transform:scale(0.94) translateY(4px)}
-.bt1{background:linear-gradient(145deg,#3a3a3e,#1f1f23);box-shadow:0 6px 0 #0e0e10}
-.bt2{background:linear-gradient(145deg,#2a5a2e,#0d3b10);box-shadow:0 6px 0 #081a0a}
-.bt3{background:linear-gradient(145deg,#1d2e4a,#0d1a2d);box-shadow:0 6px 0 #090f18}
-.bt4{background:linear-gradient(145deg,#2e1d4a,#180d2d);box-shadow:0 6px 0 #0e0818}
-.bt5{background:linear-gradient(145deg,#4a321d,#2d1a0d);box-shadow:0 6px 0 #140a02}
-.bt6{background:linear-gradient(145deg,#4a1d1d,#2d0d0d);box-shadow:0 6px 0 #140202;border-color:#f44336aa !important}
-.block-icon{font-size:clamp(1.5rem,2.5vw,2.8rem);line-height:1}
-.block-stars{display:flex;gap:2px;margin-top:3px}
-.bstar{font-size:clamp(7px,0.7vw,11px)}
+.block-wrapper{display:flex;flex-direction:column;align-items:center;gap:4px;width:calc(var(--blk) + 12px)}
+.lucky-block{width:var(--blk);height:var(--blk);border-radius:clamp(12px,1.8vw,20px);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;user-select:none;position:relative;transition:transform 0.12s,box-shadow 0.12s;border:2px solid rgba(255,255,255,0.15);flex-shrink:0}
+.lucky-block:hover{transform:translateY(-2px)}
+.lucky-block:active{transform:scale(0.93) translateY(4px)}
+.bt1{background:linear-gradient(145deg,#3a3a3e,#1f1f23);box-shadow:0 5px 0 #0e0e10}
+.bt2{background:linear-gradient(145deg,#2a5a2e,#0d3b10);box-shadow:0 5px 0 #081a0a}
+.bt3{background:linear-gradient(145deg,#1d2e4a,#0d1a2d);box-shadow:0 5px 0 #090f18}
+.bt4{background:linear-gradient(145deg,#2e1d4a,#180d2d);box-shadow:0 5px 0 #0e0818}
+.bt5{background:linear-gradient(145deg,#4a321d,#2d1a0d);box-shadow:0 5px 0 #140a02}
+.bt6{background:linear-gradient(145deg,#4a1d1d,#2d0d0d);box-shadow:0 5px 0 #140202;border-color:#f44336aa !important}
+.block-icon{font-size:clamp(1.4rem,2.2vw,2.5rem);line-height:1}
+.block-stars{display:flex;gap:2px;margin-top:2px}
+.bstar{font-size:clamp(7px,0.65vw,10px)}
 .bstar.on{color:var(--gold)}.bstar.off{color:#2a2a3a}
 .block-meta{text-align:center;width:100%;margin-top:3px}
-.block-name{font-size:var(--fxs);font-weight:800;color:var(--muted2);text-transform:uppercase}
-.block-price{font-size:var(--fxs);color:var(--gold);font-weight:800;margin:1px 0}
-.upg-bl-btn{width:100%;padding:4px 0;border-radius:6px;cursor:pointer;font-size:clamp(0.55rem,0.75vw,0.7rem);font-weight:800;border:1px solid var(--border2);background:rgba(255,255,255,0.06);color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#autobuy-container{margin-left:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
-.autobuy-btn{background:#131629;border:2px solid var(--border3);color:var(--muted);padding:8px;border-radius:12px;cursor:pointer;font-size:var(--fxs);font-weight:800;transition:all 0.2s;text-transform:uppercase;width:60px;text-align:center}
+.block-name{font-size:clamp(0.5rem,0.7vw,0.68rem);font-weight:800;color:var(--muted2);text-transform:uppercase}
+.block-price{font-size:clamp(0.55rem,0.72vw,0.7rem);color:var(--gold);font-weight:800;margin:1px 0}
+.upg-bl-btn{width:100%;padding:3px 0;border-radius:5px;cursor:pointer;font-size:clamp(0.5rem,0.65vw,0.62rem);font-weight:800;border:1px solid var(--border2);background:rgba(255,255,255,0.06);color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#autobuy-container{margin-left:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.autobuy-btn{background:#131629;border:2px solid var(--border3);color:var(--muted);padding:7px;border-radius:10px;cursor:pointer;font-size:var(--fxs);font-weight:800;transition:all 0.2s;text-transform:uppercase;width:55px;text-align:center}
 .autobuy-btn.active{border-color:#4ade80;color:#4ade80;box-shadow:0 0 10px #4ade8033}
 
 /* ── GAME AREA ── */
-#game-area{display:flex;flex:1;height:calc(100vh - var(--hdr));overflow:hidden}
+#game-area{display:flex;flex:1;overflow:hidden}
 #city-grid{
   flex:1;
   display:grid;
@@ -91,63 +90,137 @@ html,body{width:100%;height:100vh;overflow:hidden;background:var(--bg);color:var
   padding:var(--gap);
   justify-content:center;
   align-content:start;
-  background:radial-gradient(circle at center,var(--bg2),var(--bg));
+  background:radial-gradient(ellipse at 50% 0%, #0d1525 0%, var(--bg) 70%);
   overflow-y:auto;
 }
-.slot{border-radius:var(--r);border:2px solid var(--border);background:var(--bg3);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:all 0.2s;width:var(--slot);height:var(--slot)}
-.slot-icon{font-size:clamp(1.6rem,3vw,3.5rem);margin-bottom:3px;animation:flt 3s ease-in-out infinite}
-.slot-lvl{position:absolute;top:6px;left:6px;background:#000;padding:2px 6px;border-radius:5px;font-size:var(--fxs);font-weight:800;color:var(--gold);border:1px solid var(--border2)}
-.slot-rarity-text{position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.6);padding:1px 5px;border-radius:4px;font-size:clamp(0.45rem,0.6vw,0.55rem);font-weight:900;text-transform:uppercase;letter-spacing:1px}
-.slot-income{font-size:var(--fxs);font-weight:800;color:#4ade80;background:rgba(0,0,0,0.3);padding:2px 7px;border-radius:8px}
-.upg-btn{margin-top:5px;width:88%;padding:4px 0;border-radius:8px;background:var(--gold);color:#000;font-size:clamp(0.6rem,0.8vw,0.8rem);font-weight:900;border:none;cursor:pointer;transition:background 0.2s,color 0.2s}
-.upg-btn.no-funds{background:var(--gold-dark);color:rgba(0,0,0,0.5)}
-.highlight-empty{border-color:#4ade80 !important;box-shadow:0 0 12px rgba(74,222,128,0.3);animation:pulse-green 1.5s infinite}
-@keyframes pulse-green{0%{background:var(--bg3)}50%{background:rgba(74,222,128,0.15)}100%{background:var(--bg3)}}
+
+/* ── CITY SLOTS ── */
+.slot{border-radius:var(--r);border:2px solid var(--border);background:var(--bg3);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:all 0.2s;width:var(--slot);height:var(--slot);overflow:hidden}
+.slot:hover{border-color:var(--border3);transform:translateY(-2px)}
+.slot-icon{font-size:clamp(1.6rem,2.8vw,3.2rem);margin-bottom:2px;animation:flt 3s ease-in-out infinite;position:relative;z-index:1}
+.slot-lvl{position:absolute;top:5px;left:5px;background:rgba(0,0,0,0.8);padding:2px 5px;border-radius:5px;font-size:var(--fxs);font-weight:800;color:var(--gold);border:1px solid var(--border2);z-index:2}
+.slot-rarity-text{position:absolute;top:5px;right:5px;background:rgba(0,0,0,0.7);padding:1px 5px;border-radius:4px;font-size:clamp(0.42rem,0.55vw,0.52rem);font-weight:900;text-transform:uppercase;letter-spacing:0.5px;z-index:2}
+.slot-income{font-size:var(--fxs);font-weight:800;color:#4ade80;background:rgba(0,0,0,0.4);padding:2px 6px;border-radius:8px;position:relative;z-index:1}
+.upg-btn{margin-top:4px;width:88%;padding:4px 0;border-radius:7px;background:var(--gold);color:#000;font-size:clamp(0.55rem,0.75vw,0.75rem);font-weight:900;border:none;cursor:pointer;transition:all 0.15s;position:relative;z-index:1}
+.upg-btn:hover{background:#ffe060}
+.upg-btn.no-funds{background:var(--gold-dark);color:rgba(0,0,0,0.45)}
+.highlight-empty{border-color:#4ade80 !important;box-shadow:0 0 12px rgba(74,222,128,0.3) !important;animation:pulse-green 1.5s infinite}
+@keyframes pulse-green{0%{background:var(--bg3)}50%{background:rgba(74,222,128,0.12)}100%{background:var(--bg3)}}
+
+/* Rarity background sheen inside slot */
+.slot-sheen{position:absolute;inset:0;opacity:0.06;pointer-events:none;border-radius:inherit}
 
 /* ── SIDEBAR ── */
 #sidebar{width:var(--sbar);flex-shrink:0;background:var(--bg2);border-left:2px solid var(--border2);display:flex;flex-direction:column}
 .sidebar-tabs{display:flex;padding:var(--pad);gap:var(--gap)}
-.tab-btn{flex:1;padding:clamp(8px,1.2vh,14px);border-radius:var(--r);border:2px solid var(--border2);background:var(--bg3);color:var(--muted);font-size:var(--fsm);font-weight:800;text-transform:uppercase;cursor:pointer}
+.tab-btn{flex:1;padding:clamp(7px,1.1vh,13px);border-radius:var(--r);border:2px solid var(--border2);background:var(--bg3);color:var(--muted);font-size:var(--fsm);font-weight:800;text-transform:uppercase;cursor:pointer;transition:all 0.2s}
 .tab-btn.active{background:var(--gold);color:#000;border-color:var(--gold);box-shadow:0 0 20px var(--gold-glow)}
 .sidebar-content{flex:1;overflow-y:auto;padding:var(--pad)}
 #inventory{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap);overflow-y:auto;padding-bottom:30px}
 #shop-ui{display:flex;flex-direction:column;gap:var(--gap);overflow-y:auto;padding-bottom:40px}
-.inv-card{border-radius:var(--r);padding:clamp(8px,1vh,15px) 8px;background:var(--bg4);border:2px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:6px;position:relative}
-.inv-icon{font-size:clamp(1.8rem,2.5vw,3rem)}
-.inv-name{font-size:var(--fxs);font-weight:800;text-align:center}
-.inv-btns{display:flex;flex-direction:column;gap:5px;width:92%}
-.inv-btns button{width:100%;padding:6px;border-radius:8px;font-size:var(--fxs);font-weight:800;cursor:pointer;border:none}
+.inv-card{border-radius:var(--r);padding:clamp(8px,1vh,14px) 8px;background:var(--bg4);border:2px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:5px;position:relative;overflow:hidden;transition:transform 0.15s,box-shadow 0.15s}
+.inv-card:hover{transform:translateY(-2px)}
+.inv-card-sheen{position:absolute;inset:0;opacity:0.07;pointer-events:none}
+.inv-icon{font-size:clamp(1.8rem,2.4vw,2.8rem);position:relative;z-index:1}
+.inv-name{font-size:var(--fxs);font-weight:800;text-align:center;position:relative;z-index:1}
+.inv-btns{display:flex;flex-direction:column;gap:4px;width:92%;position:relative;z-index:1}
+.inv-btns button{width:100%;padding:5px;border-radius:7px;font-size:var(--fxs);font-weight:800;cursor:pointer;border:none;transition:all 0.15s}
 .bld-btn{background:#4ade80;color:#000}
-.sll-btn{background:rgba(239,68,68,0.2);color:#f87171;border:1px solid #f87171!important}
-.shop-card{border-radius:var(--r);padding:clamp(10px,1.2vh,15px);background:var(--bg4);border:2px solid var(--border2);display:flex;align-items:center;gap:10px;flex-shrink:0}
-.shop-ico{font-size:clamp(1.6rem,2vw,2.4rem)}
+.bld-btn:hover{background:#6aee9a}
+.sll-btn{background:rgba(239,68,68,0.15);color:#f87171;border:1px solid #f8717155 !important}
+.sll-btn:hover{background:rgba(239,68,68,0.3)}
+.shop-card{border-radius:var(--r);padding:clamp(10px,1.2vh,14px);background:var(--bg4);border:2px solid var(--border2);display:flex;align-items:center;gap:10px;flex-shrink:0;transition:border-color 0.2s}
+.shop-card:hover{border-color:var(--border3)}
+.shop-ico{font-size:clamp(1.5rem,1.9vw,2.2rem)}
 .shop-info{flex:1;min-width:0}
 .shop-n{font-size:var(--fsm);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .shop-d{font-size:var(--fxs);color:var(--muted2)}
-.buy-btn2{padding:8px 10px;border-radius:8px;font-weight:800;font-size:var(--fxs);background:#4ade80;color:#000;border:none;cursor:pointer;white-space:nowrap;min-width:80px;text-align:center}
-.buy-btn2:disabled{background:#2a3a2a;color:#4a6a4a;cursor:not-allowed}
+.buy-btn2{padding:7px 10px;border-radius:8px;font-weight:800;font-size:var(--fxs);background:#4ade80;color:#000;border:none;cursor:pointer;white-space:nowrap;min-width:78px;text-align:center;transition:all 0.15s}
+.buy-btn2:hover{background:#6aee9a}
+.buy-btn2:disabled{background:#1e2e1e;color:#3a5a3a;cursor:not-allowed}
 
 /* ── TOAST ── */
-#toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:var(--gold);color:#000;padding:14px 32px;border-radius:40px;font-size:var(--fmd);font-weight:800;z-index:1000;opacity:0;pointer-events:none;transition:all 0.3s}
-#toast.show{opacity:1;transform:translateX(-50%) translateY(-15px)}
+#toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:var(--gold);color:#000;padding:12px 28px;border-radius:40px;font-size:var(--fmd);font-weight:800;z-index:1000;opacity:0;pointer-events:none;transition:all 0.3s;white-space:nowrap}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(-12px)}
 
-@keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.sidebar-content::-webkit-scrollbar,#inventory::-webkit-scrollbar,#shop-ui::-webkit-scrollbar,#city-grid::-webkit-scrollbar{width:5px}
+@keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.sidebar-content::-webkit-scrollbar,#inventory::-webkit-scrollbar,#shop-ui::-webkit-scrollbar,#city-grid::-webkit-scrollbar{width:4px}
 .sidebar-content::-webkit-scrollbar-thumb,#inventory::-webkit-scrollbar-thumb,#shop-ui::-webkit-scrollbar-thumb,#city-grid::-webkit-scrollbar-thumb{background:var(--border3);border-radius:10px}
 
-/* ── RARITY GLOWS ── */
-@keyframes celestial-glow{0%,100%{box-shadow:0 0 8px #00bcd4,0 0 16px #00bcd4}50%{box-shadow:0 0 20px #00bcd4,0 0 40px #00bcd4}}
-@keyframes godly-glow{0%,100%{box-shadow:0 0 12px #fff,0 0 24px #fff,inset 0 0 8px #fff}50%{box-shadow:0 0 32px #fff,0 0 64px #fff,inset 0 0 16px #fff}}
-@keyframes divine-glow{0%,100%{box-shadow:0 0 8px #fff59d,0 0 20px #fff59d}50%{box-shadow:0 0 28px #fff59d,0 0 56px #fff59d}}
-@keyframes cosmic-glow{0%,100%{box-shadow:0 0 8px #b3e5fc,0 0 16px #b3e5fc,0 0 32px #81d4fa}50%{box-shadow:0 0 24px #b3e5fc,0 0 48px #b3e5fc,0 0 96px #81d4fa}}
-@keyframes ultimate-glow{0%,100%{box-shadow:0 0 12px #ffeb3b,0 0 24px #f44336;filter:hue-rotate(0deg)}50%{box-shadow:0 0 32px #ffeb3b,0 0 64px #f44336;filter:hue-rotate(15deg)}}
-@keyframes exalted-glow{0%,100%{box-shadow:0 0 16px #fdd835,0 0 32px #fdd835}50%{box-shadow:0 0 40px #fdd835,0 0 80px #ffeb3b}}
-.rarity-Celestial{border-color:#00bcd4 !important;animation:celestial-glow 2s infinite ease-in-out}
-.rarity-Godly{border-color:#fff !important;animation:godly-glow 2.5s infinite ease-in-out}
-.rarity-Divine{border-color:#fff59d !important;animation:divine-glow 2s infinite ease-in-out}
+/* ══════════════════════════════════════════════
+   RARITY VISUAL EFFECTS — upgraded & beautiful
+   ══════════════════════════════════════════════ */
+
+/* Mythic — fiery red pulse */
+@keyframes mythic-glow{
+  0%,100%{box-shadow:0 0 8px #f44336, 0 0 20px #f4433650}
+  50%{box-shadow:0 0 18px #f44336, 0 0 40px #f4433680, 0 0 60px #ff7043aa}
+}
+.rarity-Mythic{border-color:#f44336 !important;animation:mythic-glow 2s infinite ease-in-out}
+
+/* Celestial — cyan shimmer */
+@keyframes celestial-glow{
+  0%,100%{box-shadow:0 0 10px #00bcd4aa, 0 0 22px #00bcd455}
+  50%{box-shadow:0 0 22px #00bcd4, 0 0 44px #00bcd4aa, 0 0 70px #00e5ff44}
+}
+.rarity-Celestial{border-color:#00bcd4 !important;animation:celestial-glow 2.5s infinite ease-in-out}
+
+/* Godly — pure white holy glow */
+@keyframes godly-glow{
+  0%,100%{box-shadow:0 0 12px #ffffffbb, 0 0 30px #ffffff44, inset 0 0 8px #ffffff22}
+  50%{box-shadow:0 0 28px #fff, 0 0 60px #ffffffaa, 0 0 90px #ffffff55, inset 0 0 18px #ffffff33}
+}
+.rarity-Godly{border-color:#ffffff !important;animation:godly-glow 2s infinite ease-in-out}
+
+/* Divine — warm golden-cream */
+@keyframes divine-glow{
+  0%,100%{box-shadow:0 0 10px #fff59dcc, 0 0 25px #fff59d66}
+  50%{box-shadow:0 0 24px #fff59d, 0 0 55px #fff59daa, 0 0 80px #ffe08244}
+}
+.rarity-Divine{border-color:#fff59d !important;animation:divine-glow 2.2s infinite ease-in-out}
+
+/* Cosmic — deep ice blue, big corona */
+@keyframes cosmic-glow{
+  0%,100%{box-shadow:0 0 12px #b3e5fccc, 0 0 28px #b3e5fc66, 0 0 50px #81d4fa33}
+  50%{box-shadow:0 0 28px #b3e5fc, 0 0 60px #b3e5fcaa, 0 0 100px #4fc3f766}
+}
 .rarity-Cosmic{border-color:#b3e5fc !important;animation:cosmic-glow 3s infinite ease-in-out}
-.rarity-Ultimate{border-color:#ffeb3b !important;animation:ultimate-glow 1.5s infinite ease-in-out;border-style:double !important;border-width:4px !important}
-.rarity-Exalted{border-color:#fdd835 !important;animation:exalted-glow 1.5s infinite ease-in-out;border-width:3px !important;color:#fdd835 !important}
+
+/* Ultimate — rainbow shifting legendary */
+@keyframes ultimate-glow{
+  0%  {box-shadow:0 0 15px #ffeb3b, 0 0 35px #f44336aa; border-color:#ffeb3b !important; filter:hue-rotate(0deg)}
+  33% {box-shadow:0 0 20px #ff4081, 0 0 50px #aa00ffaa; border-color:#ff4081 !important; filter:hue-rotate(40deg)}
+  66% {box-shadow:0 0 20px #00e5ff, 0 0 50px #00bcd4aa; border-color:#00e5ff !important; filter:hue-rotate(80deg)}
+  100%{box-shadow:0 0 15px #ffeb3b, 0 0 35px #f44336aa; border-color:#ffeb3b !important; filter:hue-rotate(0deg)}
+}
+.rarity-Ultimate{border-width:3px !important;animation:ultimate-glow 3s infinite linear}
+
+/* Exalted — blazing gold sovereign */
+@keyframes exalted-glow{
+  0%,100%{box-shadow:0 0 14px #fdd835dd, 0 0 32px #fdd83577, 0 0 55px #ff6f0033}
+  50%{box-shadow:0 0 30px #fdd835, 0 0 65px #fdd835bb, 0 0 100px #ffca2877, inset 0 0 15px #fdd83522}
+}
+.rarity-Exalted{border-color:#fdd835 !important;border-width:3px !important;animation:exalted-glow 2s infinite ease-in-out}
+
+/* Particle shimmer overlay for Godly+ */
+.rarity-Godly .slot-sheen,.rarity-Divine .slot-sheen,.rarity-Cosmic .slot-sheen,
+.rarity-Ultimate .slot-sheen,.rarity-Exalted .slot-sheen{
+  background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15), transparent 60%);
+  animation:sheen-shift 4s ease-in-out infinite;
+}
+@keyframes sheen-shift{
+  0%,100%{background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15), transparent 60%)}
+  50%{background:radial-gradient(circle at 70% 70%, rgba(255,255,255,0.12), transparent 60%)}
+}
+
+/* Inventory card rarity borders */
+.inv-card.rarity-Mythic{border-color:#f44336 !important}
+.inv-card.rarity-Celestial{border-color:#00bcd4 !important}
+.inv-card.rarity-Godly{border-color:#fff !important;box-shadow:0 0 15px #ffffff33}
+.inv-card.rarity-Divine{border-color:#fff59d !important;box-shadow:0 0 12px #fff59d33}
+.inv-card.rarity-Cosmic{border-color:#b3e5fc !important;box-shadow:0 0 15px #b3e5fc33}
+.inv-card.rarity-Ultimate{border-color:#ffeb3b !important;box-shadow:0 0 18px #ffeb3b44;border-width:2px !important}
+.inv-card.rarity-Exalted{border-color:#fdd835 !important;box-shadow:0 0 20px #fdd83555;border-width:2px !important}
 </style>
 </head>
 <body>
@@ -454,6 +527,7 @@ function renderCity(){
       const base=Math.max(data.sellPrice,200);
       const uc=Math.floor(base*1.25*Math.pow(1.85,data.level-1));
       slot.innerHTML=`
+        <div class="slot-sheen"></div>
         <div class="slot-lvl">LVL ${data.level}</div>
         <div class="slot-rarity-text" style="color:${c}">${data.rarity}</div>
         <div class="slot-icon">${data.icon}</div>
@@ -471,10 +545,11 @@ function renderCity(){
 function renderInv(){
   const el=document.getElementById('inventory');el.innerHTML='';
   inventory.forEach((item,idx)=>{
-    const d=document.createElement('div');d.className='inv-card';
+    const d=document.createElement('div');d.className='inv-card rarity-'+item.rarity;
     d.style.borderColor=item.color;
     if(selectedInvIndex===idx) d.style.background='rgba(74,222,128,0.1)';
     d.innerHTML=`
+      <div class="inv-card-sheen"></div>
       <div class="slot-rarity-text" style="color:${item.color}">${item.rarity}</div>
       <div class="inv-icon">${item.icon}</div>
       <div class="inv-name" style="color:${item.color}">${item.name}</div>
