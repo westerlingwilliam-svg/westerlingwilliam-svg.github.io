@@ -3,193 +3,149 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lucky City - Fullscreen Edition</title>
+<title>Lucky City</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-    --gold:#f5c842;--gold2:#e8a800;--gold-glow:rgba(245,200,66,0.35);
-    --gold-dark:#8a6d10; 
-    --bg:#07080f;--bg2:#0d1020;--bg3:#131629;--bg4:#1a1f35;
-    --border:#ffffff12;--border2:#ffffff22;--border3:#ffffff35;
-    --text:#e8eaf6;--muted:#6b7099;--muted2:#9196bb;
-    --r12:12px;--r16:16px;--r20:20px;
-}
-html,body{
-    width:100%;
-    height:100vh;
-    overflow:hidden;
-    background:var(--bg);
-    color:var(--text);
-    font-family:'Segoe UI',system-ui,sans-serif;
-    display:flex;
-    flex-direction:column;
-    zoom: 1.25;
-    -moz-transform: scale(1.25);
-    -moz-transform-origin: 0 0;
-}
+  --gold:#f5c842;--gold-glow:rgba(245,200,66,0.35);--gold-dark:#8a6d10;
+  --bg:#07080f;--bg2:#0d1020;--bg3:#131629;--bg4:#1a1f35;
+  --border:#ffffff12;--border2:#ffffff22;--border3:#ffffff35;
+  --text:#e8eaf6;--muted:#6b7099;--muted2:#9196bb;
 
-/* HEADER */
-#header{display:grid;grid-template-columns:350px 1fr 200px;align-items:center;padding:0 30px;height:220px;background:var(--bg2);border-bottom:2px solid var(--border2);position:relative;z-index:10;box-shadow:0 4px 50px rgba(0,0,0,0.8)}
+  /* ── Responsiva storleksvariabler ── */
+  --scale: clamp(0.55, 1.1vw, 1px); /* används som referens */
+  --hdr:   clamp(120px, 14vh, 200px);
+  --slot:  clamp(100px, 10.5vw, 155px);
+  --sbar:  clamp(260px, 22vw, 380px);
+  --fxs:   clamp(0.6rem,  0.9vw, 0.85rem);
+  --fsm:   clamp(0.65rem, 1.0vw, 0.9rem);
+  --fmd:   clamp(0.75rem, 1.1vw, 1rem);
+  --flg:   clamp(1.2rem,  2.0vw, 2.2rem);
+  --fxl:   clamp(1.6rem,  2.8vw, 3rem);
+  --gap:   clamp(6px, 0.8vw, 14px);
+  --pad:   clamp(8px, 1.2vw, 20px);
+  --r:     clamp(8px, 1vw, 16px);
+  --blk:   clamp(70px, 7vw, 100px);
+}
+html,body{width:100%;height:100vh;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;display:flex;flex-direction:column}
+
+/* ── HEADER ── */
+#header{
+  display:grid;
+  grid-template-columns:clamp(200px,22vw,320px) 1fr clamp(120px,13vw,190px);
+  align-items:center;
+  padding:0 var(--pad);
+  height:var(--hdr);
+  background:var(--bg2);
+  border-bottom:2px solid var(--border2);
+  position:relative;z-index:10;
+  box-shadow:0 4px 40px rgba(0,0,0,0.8);
+  gap:var(--gap);
+}
 #header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
-
-.stat-label{font-size:0.9rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:5px}
-.stat-money{font-size:2.5rem;font-weight:800;color:var(--gold);letter-spacing:-1px;line-height:1}
-.stat-money .unit{font-size:1.2rem;color:var(--muted2);font-weight:400}
-.stat-pps{font-size:1.2rem;color:var(--muted2);margin-top:8px}
+.stat-label{font-size:var(--fxs);text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:3px}
+.stat-money{font-size:var(--fxl);font-weight:800;color:var(--gold);letter-spacing:-1px;line-height:1}
+.stat-money .unit{font-size:var(--fmd);color:var(--muted2);font-weight:400}
+.stat-pps{font-size:var(--fsm);color:var(--muted2);margin-top:5px}
 .stat-pps span{color:#4ade80;font-weight:700}
+#upg-luck-btn{margin-top:8px;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#1a2a1a,#0d1f0d);border:2px solid #4ade8055;color:#4ade80;padding:clamp(5px,0.6vw,10px) clamp(10px,1.2vw,20px);border-radius:30px;cursor:pointer;font-size:var(--fxs);font-weight:800;transition:all 0.2s;text-transform:uppercase;white-space:nowrap}
+.header-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;justify-content:center;height:100%}
+.menu-link-btn{background:rgba(255,255,255,0.05);border:1px solid var(--border3);color:var(--text);text-decoration:none;padding:clamp(5px,0.6vw,10px) clamp(8px,1vw,18px);border-radius:var(--r);font-weight:800;font-size:var(--fxs);text-transform:uppercase;letter-spacing:1px;transition:all 0.2s;white-space:nowrap}
+.menu-link-btn:hover{background:var(--text);color:#000}
+.reset-btn{background:transparent;color:#ff4444;border:1px solid #ff444444;padding:4px 10px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:var(--fxs);transition:all 0.2s;opacity:0.6}
+.reset-btn:hover{opacity:1;background:#ff444411}
 
-#upg-luck-btn{margin-top:12px;display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#1a2a1a,#0d1f0d);border:2px solid #4ade8055;color:#4ade80;padding:10px 20px;border-radius:30px;cursor:pointer;font-size:0.85rem;font-weight:800;transition:all 0.2s;text-transform:uppercase}
-
-.header-right{display:flex;flex-direction:column;align-items:flex-end;gap:15px;justify-content:center;height:100%}
-
-.menu-link-btn {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--border3);
-    color: var(--text);
-    text-decoration: none;
-    padding: 10px 20px;
-    border-radius: 12px;
-    font-weight: 800;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: all 0.2s;
-}
-.menu-link-btn:hover {
-    background: var(--text);
-    color: #000;
-}
-
-.reset-btn {
-    background: transparent;
-    color: #ff4444;
-    border: 1px solid #ff444444;
-    padding: 6px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 0.7rem;
-    transition: all 0.2s;
-    opacity: 0.6;
-}
-.reset-btn:hover {
-    opacity: 1;
-    background: #ff444411;
-}
-
-/* LUCKY BLOCKS */
-.blocks-row{display:flex;gap:15px;justify-content:center;align-items:flex-start}
-.block-wrapper{display:flex;flex-direction:column;align-items:center;gap:8px;width:120px}
-.lucky-block{width:100px;height:100px;border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;user-select:none;position:relative;transition:all 0.15s;border:2px solid rgba(255,255,255,0.15)}
-
-.bt1{background:linear-gradient(145deg,#3a3a3e,#1f1f23);box-shadow:0 8px 0 #0e0e10}
-.bt2{background:linear-gradient(145deg,#2a5a2e,#0d3b10);box-shadow:0 8px 0 #081a0a}
-.bt3{background:linear-gradient(145deg,#1d2e4a,#0d1a2d);box-shadow:0 8px 0 #090f18}
-.bt4{background:linear-gradient(145deg,#2e1d4a,#180d2d);box-shadow:0 8px 0 #0e0818}
-.bt5{background:linear-gradient(145deg,#4a321d,#2d1a0d);box-shadow:0 8px 0 #140a02}
-.bt6{background:linear-gradient(145deg,#4a1d1d,#2d0d0d);box-shadow:0 8px 0 #140202; border-color: #f44336aa !important;}
-
-.block-icon{font-size:2.8rem;line-height:1}
-.block-stars{display:flex;gap:2px;margin-top:5px}
-.bstar{font-size:10px}
-.bstar.on{color:var(--gold)}
-.bstar.off{color:#2a2a3a}
-
-.block-meta{text-align:center;width:100%;margin-top:5px}
-.block-name{font-size:0.75rem;font-weight:800;color:var(--muted2);text-transform:uppercase}
-.block-price{font-size:0.85rem;color:var(--gold);font-weight:800;margin:2px 0}
-.upg-bl-btn{width:100%;padding:6px 0;border-radius:8px;cursor:pointer;font-size:0.7rem;font-weight:800;border:1px solid var(--border2);background:rgba(255,255,255,0.06);color:var(--text)}
-
-/* AUTO BUY STYLING */
-#autobuy-container{margin-left:15px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
-.autobuy-btn{background:#131629;border:2px solid var(--border3);color:var(--muted);padding:10px;border-radius:15px;cursor:pointer;font-size:0.7rem;font-weight:800;transition:all 0.2s;text-transform:uppercase;width:80px;text-align:center}
+/* ── BLOCKS ── */
+.blocks-row{display:flex;gap:var(--gap);justify-content:center;align-items:flex-start;flex-wrap:nowrap}
+.block-wrapper{display:flex;flex-direction:column;align-items:center;gap:5px;width:calc(var(--blk) + 10px)}
+.lucky-block{width:var(--blk);height:var(--blk);border-radius:clamp(14px,2vw,24px);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;user-select:none;position:relative;transition:all 0.15s;border:2px solid rgba(255,255,255,0.15)}
+.lucky-block:active{transform:scale(0.94) translateY(4px)}
+.bt1{background:linear-gradient(145deg,#3a3a3e,#1f1f23);box-shadow:0 6px 0 #0e0e10}
+.bt2{background:linear-gradient(145deg,#2a5a2e,#0d3b10);box-shadow:0 6px 0 #081a0a}
+.bt3{background:linear-gradient(145deg,#1d2e4a,#0d1a2d);box-shadow:0 6px 0 #090f18}
+.bt4{background:linear-gradient(145deg,#2e1d4a,#180d2d);box-shadow:0 6px 0 #0e0818}
+.bt5{background:linear-gradient(145deg,#4a321d,#2d1a0d);box-shadow:0 6px 0 #140a02}
+.bt6{background:linear-gradient(145deg,#4a1d1d,#2d0d0d);box-shadow:0 6px 0 #140202;border-color:#f44336aa !important}
+.block-icon{font-size:clamp(1.5rem,2.5vw,2.8rem);line-height:1}
+.block-stars{display:flex;gap:2px;margin-top:3px}
+.bstar{font-size:clamp(7px,0.7vw,11px)}
+.bstar.on{color:var(--gold)}.bstar.off{color:#2a2a3a}
+.block-meta{text-align:center;width:100%;margin-top:3px}
+.block-name{font-size:var(--fxs);font-weight:800;color:var(--muted2);text-transform:uppercase}
+.block-price{font-size:var(--fxs);color:var(--gold);font-weight:800;margin:1px 0}
+.upg-bl-btn{width:100%;padding:4px 0;border-radius:6px;cursor:pointer;font-size:clamp(0.55rem,0.75vw,0.7rem);font-weight:800;border:1px solid var(--border2);background:rgba(255,255,255,0.06);color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#autobuy-container{margin-left:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.autobuy-btn{background:#131629;border:2px solid var(--border3);color:var(--muted);padding:8px;border-radius:12px;cursor:pointer;font-size:var(--fxs);font-weight:800;transition:all 0.2s;text-transform:uppercase;width:60px;text-align:center}
 .autobuy-btn.active{border-color:#4ade80;color:#4ade80;box-shadow:0 0 10px #4ade8033}
 
-/* CITY GRID */
-#game-area{display:flex;flex:1;height:calc(100vh - 220px);overflow:hidden}
+/* ── GAME AREA ── */
+#game-area{display:flex;flex:1;height:calc(100vh - var(--hdr));overflow:hidden}
 #city-grid{
-    flex:1;
-    display:grid;
-    grid-template-columns:repeat(6, 160px);
-    grid-auto-rows: 160px;
-    gap:15px;
-    padding:15px; 
-    margin-top: -10px; 
-    justify-content:center;
-    background:radial-gradient(circle at center, var(--bg2), var(--bg));
-    overflow-y: auto;
+  flex:1;
+  display:grid;
+  grid-template-columns:repeat(6,var(--slot));
+  grid-auto-rows:var(--slot);
+  gap:var(--gap);
+  padding:var(--gap);
+  justify-content:center;
+  align-content:start;
+  background:radial-gradient(circle at center,var(--bg2),var(--bg));
+  overflow-y:auto;
 }
+.slot{border-radius:var(--r);border:2px solid var(--border);background:var(--bg3);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:all 0.2s;width:var(--slot);height:var(--slot)}
+.slot-icon{font-size:clamp(1.6rem,3vw,3.5rem);margin-bottom:3px;animation:flt 3s ease-in-out infinite}
+.slot-lvl{position:absolute;top:6px;left:6px;background:#000;padding:2px 6px;border-radius:5px;font-size:var(--fxs);font-weight:800;color:var(--gold);border:1px solid var(--border2)}
+.slot-rarity-text{position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.6);padding:1px 5px;border-radius:4px;font-size:clamp(0.45rem,0.6vw,0.55rem);font-weight:900;text-transform:uppercase;letter-spacing:1px}
+.slot-income{font-size:var(--fxs);font-weight:800;color:#4ade80;background:rgba(0,0,0,0.3);padding:2px 7px;border-radius:8px}
+.upg-btn{margin-top:5px;width:88%;padding:4px 0;border-radius:8px;background:var(--gold);color:#000;font-size:clamp(0.6rem,0.8vw,0.8rem);font-weight:900;border:none;cursor:pointer;transition:background 0.2s,color 0.2s}
+.upg-btn.no-funds{background:var(--gold-dark);color:rgba(0,0,0,0.5)}
+.highlight-empty{border-color:#4ade80 !important;box-shadow:0 0 12px rgba(74,222,128,0.3);animation:pulse-green 1.5s infinite}
+@keyframes pulse-green{0%{background:var(--bg3)}50%{background:rgba(74,222,128,0.15)}100%{background:var(--bg3)}}
 
-.slot{border-radius:var(--r20);border:2px solid var(--border);background:var(--bg3);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:all 0.25s;width:160px;height:160px}
-.slot-icon{font-size:3.5rem;margin-bottom:5px;animation:flt 3s ease-in-out infinite}
-.slot-lvl{position:absolute;top:10px;left:10px;background:#000;padding:4px 8px;border-radius:6px;font-size:0.75rem;font-weight:800;color:var(--gold);border:1px solid var(--border2)}
-.slot-rarity-text{position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.6);padding:2px 6px;border-radius:4px;font-size:0.55rem;font-weight:900;text-transform:uppercase;letter-spacing:1px}
-.slot-income{font-size:0.9rem;font-weight:800;color:#4ade80;background:rgba(0,0,0,0.3);padding:4px 10px;border-radius:10px}
-
-/* Dynamisk knappfärg */
-.upg-btn{margin-top:8px;width:85%;padding:6px 0;border-radius:10px;background:var(--gold);color:#000;font-size:0.8rem;font-weight:900;border:none;cursor:pointer;transition: background 0.2s, color 0.2s;}
-.upg-btn.no-funds { background: var(--gold-dark); color: rgba(0,0,0,0.6); }
-
-.highlight-empty{
-    border-color: #4ade80 !important;
-    box-shadow: 0 0 15px rgba(74, 222, 128, 0.3);
-    animation: pulse-green 1.5s infinite;
-}
-@keyframes pulse-green {
-    0% { background: var(--bg3); }
-    50% { background: rgba(74, 222, 128, 0.15); }
-    100% { background: var(--bg3); }
-}
-
-/* SIDEBAR */
-#sidebar{width:420px;flex-shrink:0;background:var(--bg2);border-left:2px solid var(--border2);display:flex;flex-direction:column}
-.sidebar-tabs{display:flex;padding:20px;gap:12px}
-.tab-btn{flex:1;padding:14px;border-radius:15px;border:2px solid var(--border2);background:var(--bg3);color:var(--muted);font-size:0.9rem;font-weight:800;text-transform:uppercase;cursor:pointer}
+/* ── SIDEBAR ── */
+#sidebar{width:var(--sbar);flex-shrink:0;background:var(--bg2);border-left:2px solid var(--border2);display:flex;flex-direction:column}
+.sidebar-tabs{display:flex;padding:var(--pad);gap:var(--gap)}
+.tab-btn{flex:1;padding:clamp(8px,1.2vh,14px);border-radius:var(--r);border:2px solid var(--border2);background:var(--bg3);color:var(--muted);font-size:var(--fsm);font-weight:800;text-transform:uppercase;cursor:pointer}
 .tab-btn.active{background:var(--gold);color:#000;border-color:var(--gold);box-shadow:0 0 20px var(--gold-glow)}
-
-.sidebar-content{flex:1;overflow-y:auto;padding:20px}
-/* SCROLLABLE INVENTORY & SHOP */
-#inventory{display:grid;grid-template-columns:1fr 1fr;gap:15px;max-height: 100%; overflow-y: auto; padding-right: 5px; padding-bottom: 40px;}
-#shop-ui{display:flex;flex-direction:column;gap:15px;max-height: 100%; overflow-y: auto; padding-right: 5px; padding-bottom: 60px;}
-
-.inv-card{border-radius:var(--r20);padding:15px 10px;background:var(--bg4);border:2px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:10px; position:relative}
-.inv-icon{font-size:3rem}
-.inv-name{font-size:0.9rem;font-weight:800}
-
-.inv-btns{display:flex;flex-direction:column;gap:6px;width:90%}
-.inv-btns button{width:100%;padding:8px;border-radius:10px;font-size:0.8rem;font-weight:800;cursor:pointer;border:none}
+.sidebar-content{flex:1;overflow-y:auto;padding:var(--pad)}
+#inventory{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap);overflow-y:auto;padding-bottom:30px}
+#shop-ui{display:flex;flex-direction:column;gap:var(--gap);overflow-y:auto;padding-bottom:40px}
+.inv-card{border-radius:var(--r);padding:clamp(8px,1vh,15px) 8px;background:var(--bg4);border:2px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:6px;position:relative}
+.inv-icon{font-size:clamp(1.8rem,2.5vw,3rem)}
+.inv-name{font-size:var(--fxs);font-weight:800;text-align:center}
+.inv-btns{display:flex;flex-direction:column;gap:5px;width:92%}
+.inv-btns button{width:100%;padding:6px;border-radius:8px;font-size:var(--fxs);font-weight:800;cursor:pointer;border:none}
 .bld-btn{background:#4ade80;color:#000}
 .sll-btn{background:rgba(239,68,68,0.2);color:#f87171;border:1px solid #f87171!important}
+.shop-card{border-radius:var(--r);padding:clamp(10px,1.2vh,15px);background:var(--bg4);border:2px solid var(--border2);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.shop-ico{font-size:clamp(1.6rem,2vw,2.4rem)}
+.shop-info{flex:1;min-width:0}
+.shop-n{font-size:var(--fsm);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.shop-d{font-size:var(--fxs);color:var(--muted2)}
+.buy-btn2{padding:8px 10px;border-radius:8px;font-weight:800;font-size:var(--fxs);background:#4ade80;color:#000;border:none;cursor:pointer;white-space:nowrap;min-width:80px;text-align:center}
+.buy-btn2:disabled{background:#2a3a2a;color:#4a6a4a;cursor:not-allowed}
 
-/* SHOP */
-.shop-card{border-radius:var(--r20);padding:15px;background:var(--bg4);border:2px solid var(--border2);display:flex;align-items:center;gap:15px; flex-shrink: 0;}
-.shop-ico{font-size:2.5rem}
-.buy-btn2{padding:10px 15px;border-radius:10px;font-weight:800;font-size:0.85rem;background:#4ade80;color:#000;border:none;cursor:pointer}
+/* ── TOAST ── */
+#toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:var(--gold);color:#000;padding:14px 32px;border-radius:40px;font-size:var(--fmd);font-weight:800;z-index:1000;opacity:0;pointer-events:none;transition:all 0.3s}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(-15px)}
 
-/* TOAST */
-#toast{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);background:var(--gold);color:#000;padding:18px 40px;border-radius:40px;font-size:1.2rem;font-weight:800;z-index:1000;opacity:0;pointer-events:none;transition:all 0.3s}
-#toast.show{opacity:1;transform:translateX(-50%) translateY(-20px)}
+@keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.sidebar-content::-webkit-scrollbar,#inventory::-webkit-scrollbar,#shop-ui::-webkit-scrollbar,#city-grid::-webkit-scrollbar{width:5px}
+.sidebar-content::-webkit-scrollbar-thumb,#inventory::-webkit-scrollbar-thumb,#shop-ui::-webkit-scrollbar-thumb,#city-grid::-webkit-scrollbar-thumb{background:var(--border3);border-radius:10px}
 
-@keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-
-/* Scrollbar styling */
-.sidebar-content::-webkit-scrollbar, #inventory::-webkit-scrollbar, #shop-ui::-webkit-scrollbar {width: 6px;}
-.sidebar-content::-webkit-scrollbar-thumb, #inventory::-webkit-scrollbar-thumb, #shop-ui::-webkit-scrollbar-thumb {background: var(--border3); border-radius: 10px;}
-
-/* RARITY GLOW EFFECTS */
-@keyframes celestial-glow { 0%, 100% { box-shadow: 0 0 10px #00bcd4, 0 0 20px #00bcd4; } 50% { box-shadow: 0 0 25px #00bcd4, 0 0 50px #00bcd4; } }
-@keyframes godly-glow { 0%, 100% { box-shadow: 0 0 15px #fff, 0 0 30px #fff, inset 0 0 10px #fff; } 50% { box-shadow: 0 0 40px #fff, 0 0 80px #fff, inset 0 0 20px #fff; } }
-@keyframes divine-glow { 0%, 100% { box-shadow: 0 0 10px #fff59d, 0 0 25px #fff59d; } 50% { box-shadow: 0 0 35px #fff59d, 0 0 70px #fff59d; } }
-@keyframes cosmic-glow { 0%, 100% { box-shadow: 0 0 10px #b3e5fc, 0 0 20px #b3e5fc, 0 0 40px #81d4fa; } 50% { box-shadow: 0 0 30px #b3e5fc, 0 0 60px #b3e5fc, 0 0 120px #81d4fa; } }
-@keyframes ultimate-glow { 0%, 100% { box-shadow: 0 0 15px #ffeb3b, 0 0 30px #f44336; filter: hue-rotate(0deg); } 50% { box-shadow: 0 0 40px #ffeb3b, 0 0 80px #f44336; filter: hue-rotate(15deg); } }
-@keyframes exalted-glow { 0%, 100% { box-shadow: 0 0 20px #fdd835, 0 0 40px #fdd835; } 50% { box-shadow: 0 0 50px #fdd835, 0 0 100px #ffeb3b; } }
-
-.rarity-Celestial { border-color: #00bcd4 !important; animation: celestial-glow 2s infinite ease-in-out; }
-.rarity-Godly { border-color: #fff !important; animation: godly-glow 2.5s infinite ease-in-out; }
-.rarity-Divine { border-color: #fff59d !important; animation: divine-glow 2s infinite ease-in-out; }
-.rarity-Cosmic { border-color: #b3e5fc !important; animation: cosmic-glow 3s infinite ease-in-out; }
-.rarity-Ultimate { border-color: #ffeb3b !important; animation: ultimate-glow 1.5s infinite ease-in-out; border-style: double !important; border-width: 4px !important;}
-.rarity-Exalted { border-color: #fdd835 !important; animation: exalted-glow 1.5s infinite ease-in-out; border-style: solid !important; border-width: 3px !important; color: #fdd835 !important;}
+/* ── RARITY GLOWS ── */
+@keyframes celestial-glow{0%,100%{box-shadow:0 0 8px #00bcd4,0 0 16px #00bcd4}50%{box-shadow:0 0 20px #00bcd4,0 0 40px #00bcd4}}
+@keyframes godly-glow{0%,100%{box-shadow:0 0 12px #fff,0 0 24px #fff,inset 0 0 8px #fff}50%{box-shadow:0 0 32px #fff,0 0 64px #fff,inset 0 0 16px #fff}}
+@keyframes divine-glow{0%,100%{box-shadow:0 0 8px #fff59d,0 0 20px #fff59d}50%{box-shadow:0 0 28px #fff59d,0 0 56px #fff59d}}
+@keyframes cosmic-glow{0%,100%{box-shadow:0 0 8px #b3e5fc,0 0 16px #b3e5fc,0 0 32px #81d4fa}50%{box-shadow:0 0 24px #b3e5fc,0 0 48px #b3e5fc,0 0 96px #81d4fa}}
+@keyframes ultimate-glow{0%,100%{box-shadow:0 0 12px #ffeb3b,0 0 24px #f44336;filter:hue-rotate(0deg)}50%{box-shadow:0 0 32px #ffeb3b,0 0 64px #f44336;filter:hue-rotate(15deg)}}
+@keyframes exalted-glow{0%,100%{box-shadow:0 0 16px #fdd835,0 0 32px #fdd835}50%{box-shadow:0 0 40px #fdd835,0 0 80px #ffeb3b}}
+.rarity-Celestial{border-color:#00bcd4 !important;animation:celestial-glow 2s infinite ease-in-out}
+.rarity-Godly{border-color:#fff !important;animation:godly-glow 2.5s infinite ease-in-out}
+.rarity-Divine{border-color:#fff59d !important;animation:divine-glow 2s infinite ease-in-out}
+.rarity-Cosmic{border-color:#b3e5fc !important;animation:cosmic-glow 3s infinite ease-in-out}
+.rarity-Ultimate{border-color:#ffeb3b !important;animation:ultimate-glow 1.5s infinite ease-in-out;border-style:double !important;border-width:4px !important}
+.rarity-Exalted{border-color:#fdd835 !important;animation:exalted-glow 1.5s infinite ease-in-out;border-width:3px !important;color:#fdd835 !important}
 </style>
 </head>
 <body>
@@ -225,32 +181,75 @@ html,body{
 <div id="toast"></div>
 
 <script>
-let money=500,currentMaxBlock=1,inventory=[],cityData=Array(24).fill(null);
-let selectedInvIndex=null,cooldowns=[0,0,0,0,0,0]; 
-let globalMultiplier=1,sellBonus=1,cdReduction=0,luckBoost=1;
-let blockLevels=[0,0,0,0,0,0],shopLevels=[0,0,0,0,0,0,0,0,0]; 
-let autoBuyActive = false, hasAutoBuy = false;
+// ── Talformatering ─────────────────────────────────────────────────────────
+// Suffix-tabell: inga k, börjar direkt på M
+const SUFFIXES = [
+  [1e63, 'Vi'], [1e60, 'No'], [1e57, 'Oc'], [1e54, 'Sp'],
+  [1e51, 'Sx'], [1e48, 'Qi'], [1e45, 'Qa'], [1e42, 'Tr'],
+  [1e39, 'Du'], [1e36, 'Un'], [1e33, 'Dc'], [1e30, 'No'],
+  [1e27, 'Oc'], [1e24, 'Sp'], [1e21, 'Sx'], [1e18, 'Qi'],
+  [1e15, 'Qa'], [1e12, 'T'],  [1e9,  'B'],  [1e6,  'M'],
+];
 
-const upgCosts=[0,2500,15000,75000,300000,1000000]; 
-const blockPrices=[250,1500,7500,35000,150000,1000000]; 
+function fmtS(n){
+  if(n===null||n===undefined||isNaN(n)) return '?';
+  n = Number(n);
+  if(n < 0) return '0';
+  for(const [val, sfx] of SUFFIXES){
+    if(n >= val){
+      const x = n / val;
+      return (x >= 100 ? Math.round(x) : x >= 10 ? x.toFixed(1) : x.toFixed(2)) + ' ' + sfx;
+    }
+  }
+  // Under 1 miljon: visa med tusentals-mellanrum men inga suffix
+  return Math.round(n).toLocaleString('sv-SE');
+}
+
+// ── State ──────────────────────────────────────────────────────────────────
+let money=500, currentMaxBlock=1, inventory=[], cityData=Array(24).fill(null);
+let selectedInvIndex=null, cooldowns=[0,0,0,0,0,0];
+let globalMultiplier=1, sellBonus=1, cdReduction=0, luckBoost=1;
+let blockLevels=[0,0,0,0,0,0], shopLevels=[0,0,0,0,0,0,0,0,0];
+let autoBuyActive=false, hasAutoBuy=false;
+
+const upgCosts=[0,2500,15000,75000,300000,1000000];
+const blockPrices=[250,1500,7500,35000,150000,1000000];
 const blockIcons=['❓','⭐','💠','💜','👑','🔥'];
 const blockNames=['Common','Uncommon','Rare','Epic','Legend','Mythic'];
 
 const shopUpgrades=[
-  {name:'Snabbare Leverans',desc:'-1s cooldown',icon:'⚡',costs:[10000,50000,200000,750000,2500000],maxLevel:5,apply:()=>{cdReduction++}},
-  {name:'Skattesänkning',desc:'+25% säljpris',icon:'💸',costs:[25000,125000,500000,2000000,8000000,25000000,75000000,200000000,500000000,1000000000],maxLevel:10,apply:()=>{sellBonus+=0.25}},
-  {name:'Arbetsmoral',desc:'+15% produktion',icon:'📈',costs:[50000,250000,1000000,4000000,15000000,40000000,100000000,300000000,800000000,2000000000],maxLevel:10,apply:()=>{globalMultiplier+=0.15}},
-  {name:'Valkampanj',desc:'+10% bättre tur',icon:'🗳️',costs:[100000,500000,2500000,10000000,50000000,150000000,400000000,1000000000,3000000000,10000000000],maxLevel:10,apply:()=>{luckBoost+=0.10}},
-  {name:'Guldreserv',desc:'Startbonus +5% PPS',icon:'🏦',costs:[250000,1000000,5000000,20000000,100000000,300000000,700000000,1500000000,4000000000,10000000000],maxLevel:10,apply:()=>{globalMultiplier+=0.05}},
-  {name:'Bygglov',desc:'+10% PPS per hus',icon:'🏗️',costs:[500000,2000000,10000000,50000000,250000000,750000000,2000000000,5000000000,15000000000,50000000000],maxLevel:10,apply:()=>{globalMultiplier+=0.10}},
-  {name:'Turism',desc:'+50% säljbonus',icon:'📸',costs:[1000000,5000000,25000000,100000000,500000000,1500000000,4000000000,10000000000,25000000000,100000000000],maxLevel:10,apply:()=>{sellBonus+=0.50}},
-  {name:'Nationell Stolthet',desc:'+20% PPS & Tur',icon:'🇸🇪',costs:[5000000,25000000,100000000,500000000,2500000000,10000000000,30000000000,100000000000,300000000000,1000000000000],maxLevel:10,apply:()=>{globalMultiplier+=0.20; luckBoost+=0.20}},
-  {name:'Automatiskt Inköp',desc:'Låser upp Auto-Mythic',icon:'🤖',costs:[100000000],maxLevel:1,apply:()=>{hasAutoBuy=true; renderBlocks();}}
+  {name:'Snabbare Leverans',  desc:'-1s cooldown på block',    icon:'⚡',
+   costs:[10000,50000,200000,750000,2500000],
+   maxLevel:5,  apply:()=>{cdReduction++}},
+  {name:'Skattesänkning',     desc:'+25% säljpris per nivå',   icon:'💸',
+   costs:[25000,125000,500000,2000000,8000000,25000000,75000000,200000000,500000000,1000000000],
+   maxLevel:10, apply:()=>{sellBonus+=0.25}},
+  {name:'Arbetsmoral',        desc:'+15% produktion per nivå', icon:'📈',
+   costs:[50000,250000,1000000,4000000,15000000,40000000,100000000,300000000,800000000,2000000000],
+   maxLevel:10, apply:()=>{globalMultiplier+=0.15}},
+  {name:'Valkampanj',         desc:'+10% bättre tur per nivå', icon:'🗳️',
+   costs:[100000,500000,2500000,10000000,50000000,150000000,400000000,1000000000,3000000000,10000000000],
+   maxLevel:10, apply:()=>{luckBoost+=0.10}},
+  {name:'Guldreserv',         desc:'+5% PPS per nivå',         icon:'🏦',
+   costs:[250000,1000000,5000000,20000000,100000000,300000000,700000000,1500000000,4000000000,10000000000],
+   maxLevel:10, apply:()=>{globalMultiplier+=0.05}},
+  {name:'Bygglov',            desc:'+10% PPS per nivå',        icon:'🏗️',
+   costs:[500000,2000000,10000000,50000000,250000000,750000000,2000000000,5000000000,15000000000,50000000000],
+   maxLevel:10, apply:()=>{globalMultiplier+=0.10}},
+  {name:'Turism',             desc:'+50% säljbonus per nivå',  icon:'📸',
+   costs:[1000000,5000000,25000000,100000000,500000000,1500000000,4000000000,10000000000,25000000000,100000000000],
+   maxLevel:10, apply:()=>{sellBonus+=0.50}},
+  {name:'Nationell Stolthet', desc:'+20% PPS & Tur per nivå',  icon:'🇸🇪',
+   costs:[5000000,25000000,100000000,500000000,2500000000,10000000000,30000000000,100000000000,300000000000,1000000000000],
+   maxLevel:10, apply:()=>{globalMultiplier+=0.20; luckBoost+=0.20}},
+  {name:'Automatiskt Inköp',  desc:'Låser upp Auto-Mythic',    icon:'🤖',
+   costs:[100000000],
+   maxLevel:1,  apply:()=>{hasAutoBuy=true; renderBlocks();}}
 ];
 
 function bUpgCost(t,l){
-    let factor = (t === 6) ? 5 : 4;
-    return Math.floor([5000,25000,100000,400000,1500000,5000000][t-1]*Math.pow(factor,l));
+  const factor=(t===6)?5:4;
+  return Math.floor([5000,25000,100000,400000,1500000,5000000][t-1]*Math.pow(factor,l));
 }
 
 const buildings=[
@@ -299,83 +298,78 @@ const buildings=[
 function pick(a,f,t){return a[Math.min(f+Math.floor(Math.random()*(t-f)),a.length-1)]}
 
 function getDrop(tier,bl){
-  const r=Math.random()*100 / luckBoost;
-  if((tier===5 || tier===6) && Math.random() < 0.0001 * luckBoost) return buildings[31]; 
+  const r=Math.random()*100/luckBoost;
+  if((tier===5||tier===6)&&Math.random()<0.0001*luckBoost) return buildings[31];
   const mb=bl*0.08,eb=bl*0.5;
   if(tier===1){
     if(r<0.0001) return pick(buildings,36,40);
-    if(r<0.001) return pick(buildings,27,31);
-    if(r<0.05) return pick(buildings,24,27);
+    if(r<0.001)  return pick(buildings,27,31);
+    if(r<0.05)   return pick(buildings,24,27);
     if(r<0.5+mb) return pick(buildings,20,24);
-    if(r<5+eb) return pick(buildings,16,20);
+    if(r<5+eb)   return pick(buildings,16,20);
     return pick(buildings,0,8);
   }else if(tier===2){
     if(r<0.0005) return pick(buildings,36,40);
-    if(r<0.005) return pick(buildings,27,31);
-    if(r<0.1) return pick(buildings,24,27);
-    if(r<1+mb) return pick(buildings,20,24);
-    if(r<10+eb) return pick(buildings,12,16);
+    if(r<0.005)  return pick(buildings,27,31);
+    if(r<0.1)    return pick(buildings,24,27);
+    if(r<1+mb)   return pick(buildings,20,24);
+    if(r<10+eb)  return pick(buildings,12,16);
     return pick(buildings,0,12);
   }else if(tier===3){
-    if(r<0.001) return pick(buildings,36,40);
-    if(r<0.01) return pick(buildings,27,31);
-    if(r<0.5) return pick(buildings,24,27);
-    if(r<3+mb) return pick(buildings,16,20);
-    if(r<20+eb) return pick(buildings,8,12);
+    if(r<0.001)  return pick(buildings,36,40);
+    if(r<0.01)   return pick(buildings,27,31);
+    if(r<0.5)    return pick(buildings,24,27);
+    if(r<3+mb)   return pick(buildings,16,20);
+    if(r<20+eb)  return pick(buildings,8,12);
     return pick(buildings,0,8);
   }else if(tier===4){
-    if(r<0.005) return pick(buildings,36,40);
-    if(r<0.05) return pick(buildings,27,31);
-    if(r<2) return pick(buildings,24,27);
-    if(r<10) return pick(buildings,20,24);
-    if(r<40) return pick(buildings,16,20);
+    if(r<0.005)  return pick(buildings,36,40);
+    if(r<0.05)   return pick(buildings,27,31);
+    if(r<2)      return pick(buildings,24,27);
+    if(r<10)     return pick(buildings,20,24);
+    if(r<40)     return pick(buildings,16,20);
     return pick(buildings,8,16);
   }else if(tier===5){
-    if(r<0.01) return pick(buildings,36,40);
-    if(r<0.1) return pick(buildings,34,36); 
-    if(r<0.5) return pick(buildings,32,34); 
-    if(r<1) return pick(buildings,27,31);
-    if(r<5) return pick(buildings,24,27);
-    if(r<20) return pick(buildings,20,24);
-    if(r<60) return pick(buildings,16,20);
+    if(r<0.01)   return pick(buildings,36,40);
+    if(r<0.1)    return pick(buildings,34,36);
+    if(r<0.5)    return pick(buildings,32,34);
+    if(r<1)      return pick(buildings,27,31);
+    if(r<5)      return pick(buildings,24,27);
+    if(r<20)     return pick(buildings,20,24);
+    if(r<60)     return pick(buildings,16,20);
     return pick(buildings,12,16);
   }else{
-    if(r<0.05) return pick(buildings,36,40);
-    if(r<0.2) return pick(buildings,34,36); 
-    if(r<1) return pick(buildings,32,34);  
-    if(r<5) return pick(buildings,27,31);    
-    if(r<15) return pick(buildings,24,27);   
-    if(r<45) return pick(buildings,20,24);   
-    return pick(buildings,16,20);            
+    if(r<0.05)   return pick(buildings,36,40);
+    if(r<0.2)    return pick(buildings,34,36);
+    if(r<1)      return pick(buildings,32,34);
+    if(r<5)      return pick(buildings,27,31);
+    if(r<15)     return pick(buildings,24,27);
+    if(r<45)     return pick(buildings,20,24);
+    return pick(buildings,16,20);
   }
 }
 
-function buyBlock(tier, silent=false){
-  if(cooldowns[tier-1]>0)return;
+function buyBlock(tier,silent=false){
+  if(cooldowns[tier-1]>0) return;
   const price=blockPrices[tier-1];
   if(money<price){if(!silent)showToast('⚠️ För lite pengar!');return}
-  money-=price;startCooldown(tier);
+  money-=price; startCooldown(tier);
   const won=getDrop(tier,blockLevels[tier-1]);
   inventory.push({...won,level:1,id:Date.now()});
   if(!silent){
-    if(won.name === 'Jimmies Mästerverk') showToast('🏆 HELIGT! DU HITTADE JIMMIES MÄSTERVERK!!!');
+    if(won.name==='Jimmies Mästerverk') showToast('🏆 HELIGT! DU HITTADE JIMMIES MÄSTERVERK!!!');
     else showToast(won.icon+' '+won.name+' — '+won.rarity+'!');
   }
   renderInv();updateUI();save();
 }
 
-function toggleAutoBuy(){
-  autoBuyActive = !autoBuyActive;
-  renderBlocks();
-  save();
-}
+function toggleAutoBuy(){autoBuyActive=!autoBuyActive;renderBlocks();save();}
 
 function upgBlockLevel(tier){
-  const l=blockLevels[tier-1];
-  const maxL = (tier === 6) ? 5 : 4;
+  const l=blockLevels[tier-1],maxL=(tier===6)?5:4;
   if(l>=maxL){showToast('Max odds uppnådda!');return}
   const cost=bUpgCost(tier,l);
-  if(money<cost){showToast('Behöver '+fmt(cost)+' KR');return}
+  if(money<cost){showToast('Behöver '+fmtS(cost)+' KR');return}
   money-=cost;blockLevels[tier-1]++;
   showToast('✨ Block '+tier+' är nu ⭐'+blockLevels[tier-1]);
   renderBlocks();updateUI();save();
@@ -386,23 +380,27 @@ function switchTab(tab){
   document.getElementById('shop-ui').style.display=tab==='shop'?'flex':'none';
   document.getElementById('inv-tab').classList.toggle('active',tab==='inv');
   document.getElementById('shop-tab').classList.toggle('active',tab==='shop');
-  if(tab==='shop')renderShop();
+  if(tab==='shop') renderShop();
 }
 
 function renderShop(){
-  const el=document.getElementById('shop-ui');el.innerHTML='';
+  const el=document.getElementById('shop-ui');
+  el.innerHTML='';
   shopUpgrades.forEach((upg,i)=>{
-    const l=shopLevels[i],mx=l>=upg.maxLevel,cost=mx?0:upg.costs[l];
+    const l=Number(shopLevels[i])||0;
+    const isMax=l>=upg.maxLevel;
+    const rawCost=(!isMax&&l<upg.costs.length)?upg.costs[l]:undefined;
+    const cost=(rawCost!==undefined&&!isNaN(rawCost))?Number(rawCost):null;
     const d=document.createElement('div');d.className='shop-card';
     d.innerHTML=`
       <div class="shop-ico">${upg.icon}</div>
       <div class="shop-info">
-        <div class="shop-n"><strong>${upg.name}</strong> (Nivå ${l})</div>
+        <div class="shop-n"><strong>${upg.name}</strong> <span style="color:var(--muted2)">(${l}/${upg.maxLevel})</span></div>
         <div class="shop-d">${upg.desc}</div>
       </div>
-      <div class="shop-r">
-        <button class="buy-btn2" ${mx?'disabled':''} onclick="buyShopUpg(${i})">
-          ${mx?'MAX':fmtS(cost)+' KR'}
+      <div>
+        <button class="buy-btn2" ${(isMax||cost===null)?'disabled':''} onclick="buyShopUpg(${i})">
+          ${isMax?'MAX':(cost!==null?fmtS(cost)+' KR':'?')}
         </button>
       </div>`;
     el.appendChild(d);
@@ -410,56 +408,55 @@ function renderShop(){
 }
 
 function buyShopUpg(i){
-  const upg=shopUpgrades[i],l=shopLevels[i];
+  const upg=shopUpgrades[i];
+  const l=Number(shopLevels[i])||0;
   if(l>=upg.maxLevel){showToast('Max uppgraderad!');return}
-  const cost=upg.costs[l];
-  if(money<cost){showToast('⚠️ För lite pengar!');return}
-  money-=cost;
-  shopLevels[i]++;
-  upg.apply();
-  showToast('✅ Köpte '+upg.name+'!');
+  if(l>=upg.costs.length){showToast('Fel: kostnad saknas!');return}
+  const cost=Number(upg.costs[l]);
+  if(isNaN(cost)){showToast('⚠️ Ogiltig kostnad!');return}
+  if(money<cost){showToast('⚠️ Behöver '+fmtS(cost)+' KR!');return}
+  money-=cost;shopLevels[i]=l+1;upg.apply();
+  showToast('✅ '+upg.name+' uppgraderad till nivå '+shopLevels[i]+'!');
   renderShop();updateUI();save();
 }
 
 function upgradeBuilding(i){
   const b=cityData[i];if(!b)return;
   if(b.level>=50){showToast('Maxnivå 50 uppnådd!');return}
-  let base = Math.max(b.sellPrice, 200);
-  const cost=Math.floor(base * 1.25 * Math.pow(1.85, b.level-1));
+  const base=Math.max(b.sellPrice,200);
+  const cost=Math.floor(base*1.25*Math.pow(1.85,b.level-1));
   if(money>=cost){
-    money-=cost;
-    b.level++;
-    let mult = 1.05; 
-    if(b.rarity === 'Uncommon') mult = 1.15;
-    else if(b.rarity === 'Rare') mult = 1.25;
-    else if(b.rarity === 'Legendary') mult = 1.40;
-    else mult = 1.55;
-    b.income = Math.floor(b.income * mult); 
+    money-=cost;b.level++;
+    let mult=1.05;
+    if(b.rarity==='Uncommon') mult=1.15;
+    else if(b.rarity==='Rare') mult=1.25;
+    else if(b.rarity==='Legendary') mult=1.40;
+    else mult=1.55;
+    b.income=Math.floor(b.income*mult);
     showToast(b.icon+' '+b.name+' → Level '+b.level+'!');
     renderCity();updateUI();save();
-  } else showToast('Behöver '+fmtS(cost)+' KR!');
+  }else showToast('Behöver '+fmtS(cost)+' KR!');
 }
 
 function renderCity(){
   const grid=document.getElementById('city-grid');grid.innerHTML='';
   cityData.forEach((data,i)=>{
     const slot=document.createElement('div');
-    const highlight = (selectedInvIndex !== null && !data) ? ' highlight-empty' : '';
-    let rarityClass = data ? 'rarity-' + data.rarity : '';
-    slot.className='slot'+(data?'':' empty') + highlight + ' ' + rarityClass;
+    const highlight=(selectedInvIndex!==null&&!data)?' highlight-empty':'';
+    const rarityClass=data?'rarity-'+data.rarity:'';
+    slot.className='slot'+(data?'':' empty')+highlight+' '+rarityClass;
     if(data){
       const c=data.color;
       slot.style.borderColor=c;
       slot.style.background='linear-gradient(135deg,'+c+'15,'+c+'05)';
-      let base = Math.max(data.sellPrice, 200);
-      const uc=Math.floor(base * 1.25 * Math.pow(1.85, data.level-1));
-      const hasMoney = money >= uc;
+      const base=Math.max(data.sellPrice,200);
+      const uc=Math.floor(base*1.25*Math.pow(1.85,data.level-1));
       slot.innerHTML=`
         <div class="slot-lvl">LVL ${data.level}</div>
         <div class="slot-rarity-text" style="color:${c}">${data.rarity}</div>
         <div class="slot-icon">${data.icon}</div>
         <div class="slot-income">+${fmtS(Math.floor(data.income*globalMultiplier))}/s</div>
-        <button class="upg-btn ${hasMoney?'':'no-funds'}" data-s="${i}">${data.level>=50?'MAX':'UPG ('+fmtS(uc)+')'}</button>`;
+        <button class="upg-btn ${money>=uc?'':'no-funds'}" data-s="${i}">${data.level>=50?'MAX':'UPG ('+fmtS(uc)+')'}</button>`;
     }
     slot.addEventListener('click',e=>{
       if(e.target.dataset.s!==undefined){e.stopPropagation();upgradeBuilding(parseInt(e.target.dataset.s));}
@@ -474,13 +471,13 @@ function renderInv(){
   inventory.forEach((item,idx)=>{
     const d=document.createElement('div');d.className='inv-card';
     d.style.borderColor=item.color;
-    if(selectedInvIndex === idx) d.style.background = 'rgba(74, 222, 128, 0.1)';
+    if(selectedInvIndex===idx) d.style.background='rgba(74,222,128,0.1)';
     d.innerHTML=`
       <div class="slot-rarity-text" style="color:${item.color}">${item.rarity}</div>
       <div class="inv-icon">${item.icon}</div>
       <div class="inv-name" style="color:${item.color}">${item.name}</div>
       <div class="inv-btns">
-        <button class="bld-btn" data-idx="${idx}">${selectedInvIndex === idx ? 'AVBRYT' : 'BYGG'}</button>
+        <button class="bld-btn" data-idx="${idx}">${selectedInvIndex===idx?'AVBRYT':'BYGG'}</button>
         <button class="sll-btn" data-idx="${idx}">SÄLJ</button>
       </div>`;
     el.appendChild(d);
@@ -490,8 +487,8 @@ function renderInv(){
 }
 
 function handleSlotClick(i){
-  if(selectedInvIndex!==null)placeBuilding(i);
-  else if(cityData[i])pickUp(i);
+  if(selectedInvIndex!==null) placeBuilding(i);
+  else if(cityData[i]) pickUp(i);
 }
 
 function pickUp(i){
@@ -508,16 +505,15 @@ function placeBuilding(si){
 }
 
 function prepPlace(idx){
-  if(selectedInvIndex === idx) selectedInvIndex = null;
-  else selectedInvIndex=idx;
-  renderInv();renderCity(); 
-  if(selectedInvIndex !== null) showToast('Klicka på en lysande plats i staden!');
+  selectedInvIndex=(selectedInvIndex===idx)?null:idx;
+  renderInv();renderCity();
+  if(selectedInvIndex!==null) showToast('Klicka på en lysande plats i staden!');
 }
 
 function sellItem(idx){
   const item=inventory[idx];
-  const bonus = isNaN(sellBonus) ? 1 : sellBonus;
-  const price=Math.floor(item.sellPrice * bonus);
+  const bonus=isNaN(sellBonus)?1:sellBonus;
+  const price=Math.floor(item.sellPrice*bonus);
   if(!isNaN(price)){
     money+=price;inventory.splice(idx,1);selectedInvIndex=null;
     showToast('💰 Sålde '+item.name+' för '+fmtS(price)+' KR');
@@ -529,82 +525,64 @@ function startCooldown(tier){
   cooldowns[tier-1]=Math.max(1,5-cdReduction);renderBlocks();
   let t=setInterval(()=>{
     cooldowns[tier-1]--;
-    const cdEl = document.getElementById('cd-'+tier);
-    if(cdEl) cdEl.innerText = cooldowns[tier-1];
+    const cdEl=document.getElementById('cd-'+tier);
+    if(cdEl) cdEl.innerText=cooldowns[tier-1];
     if(cooldowns[tier-1]<=0){clearInterval(t);renderBlocks();}
   },1000);
 }
 
 function upgradeBlocks(){
-  if(currentMaxBlock >= 6) { 
-    showToast('Alla block upplåsta!'); 
-    return; 
-  }
-  const cost = upgCosts[currentMaxBlock]; 
-  if(money >= cost){
-    money -= cost;
-    currentMaxBlock++;
-    renderBlocks();
-    updateUI();
-    save();
+  if(currentMaxBlock>=6){showToast('Alla block upplåsta!');return}
+  const cost=upgCosts[currentMaxBlock];
+  if(money>=cost){
+    money-=cost;currentMaxBlock++;renderBlocks();updateUI();save();
     showToast('🎉 Nytt block upplåst!');
-  } else {
-    showToast('⚠️ Behöver ' + fmtS(cost) + ' KR!');
-  }
+  }else showToast('⚠️ Behöver '+fmtS(cost)+' KR!');
 }
 
 function renderBlocks(){
   const row=document.getElementById('blocks-row');row.innerHTML='';
   for(let i=1;i<=currentMaxBlock;i++){
     const isCd=cooldowns[i-1]>0,bl=blockLevels[i-1];
-    const maxStars = (i === 6) ? 5 : 4;
+    const maxStars=(i===6)?5:4;
     const nc=bl<maxStars?bUpgCost(i,bl):null;
     const stars=Array.from({length:maxStars},(_,s)=>'<span class="bstar '+(s<bl?'on':'off')+'">★</span>').join('');
     const w=document.createElement('div');w.className='block-wrapper';
-    w.innerHTML='<div id="block-'+i+'" class="lucky-block bt'+i+' '+(isCd?'disabled':'')+'" onclick="buyBlock('+i+')">'+(isCd?'<div class="cd-over"><span class="cd-n" id="cd-'+i+'">'+cooldowns[i-1]+'</span></div>':'<div class="block-icon">'+blockIcons[i-1]+'</div><div class="block-stars">'+stars+'</div>')+'</div><div class="block-meta"><div class="block-name">'+blockNames[i-1]+'</div><div class="block-price">'+fmtS(blockPrices[i-1])+' KR</div>'+(nc?'<button class="upg-bl-btn" onclick="event.stopPropagation();upgBlockLevel('+i+')">⬆ BÄTTRE</button>':'<div class="upg-bl-btn mx">MAX</div>')+'</div>';
+    w.innerHTML='<div id="block-'+i+'" class="lucky-block bt'+i+'" onclick="buyBlock('+i+')">'
+      +(isCd?'<div style="font-size:clamp(1.2rem,2vw,1.8rem);font-weight:900;color:var(--gold)"><span id="cd-'+i+'">'+cooldowns[i-1]+'</span></div>'
+             :'<div class="block-icon">'+blockIcons[i-1]+'</div><div class="block-stars">'+stars+'</div>')
+      +'</div><div class="block-meta"><div class="block-name">'+blockNames[i-1]+'</div>'
+      +'<div class="block-price">'+fmtS(blockPrices[i-1])+' KR</div>'
+      +(nc?'<button class="upg-bl-btn" onclick="event.stopPropagation();upgBlockLevel('+i+')">⬆ '+fmtS(nc)+'</button>'
+          :'<div class="upg-bl-btn" style="opacity:0.4;cursor:default">MAX ★</div>')
+      +'</div>';
     row.appendChild(w);
   }
-  
-  // Lägg till AutoBuy bredvid block 6 om man har uppgraderingen
-  if(hasAutoBuy && currentMaxBlock >= 6) {
-    const ab = document.createElement('div');
-    ab.id = 'autobuy-container';
-    ab.innerHTML = `
-      <div class="stat-label">AUTO</div>
-      <button class="autobuy-btn ${autoBuyActive?'active':''}" onclick="toggleAutoBuy()">${autoBuyActive?'PÅ':'AV'}</button>
-    `;
+  if(hasAutoBuy&&currentMaxBlock>=6){
+    const ab=document.createElement('div');ab.id='autobuy-container';
+    ab.innerHTML=`<div class="stat-label">AUTO</div><button class="autobuy-btn ${autoBuyActive?'active':''}" onclick="toggleAutoBuy()">${autoBuyActive?'PÅ':'AV'}</button>`;
     row.appendChild(ab);
   }
 }
 
 function updateUI(){
   document.getElementById('money').innerText=fmtS(Math.floor(money));
-  const inc = cityData.reduce((t, b) => t + (b && b.income ? b.income : 0), 0) * globalMultiplier;
+  const inc=cityData.reduce((t,b)=>t+(b&&b.income?b.income:0),0)*globalMultiplier;
   document.getElementById('pps').innerText=fmtS(Math.floor(inc));
-  
-  const upgLuckBtn = document.getElementById('upg-luck-btn');
-  if(currentMaxBlock < 6) {
-      if(upgLuckBtn) {
-          upgLuckBtn.style.display='inline-flex';
-          const costSpan = document.getElementById('upg-cost');
-          if(costSpan) costSpan.innerText = fmtS(upgCosts[currentMaxBlock]);
+  const btn=document.getElementById('upg-luck-btn');
+  if(currentMaxBlock<6){
+    if(btn){btn.style.display='inline-flex';const cs=document.getElementById('upg-cost');if(cs)cs.innerText=fmtS(upgCosts[currentMaxBlock]);}
+  }else{if(btn)btn.style.display='none';}
+  cityData.forEach((data,i)=>{
+    if(data){
+      const b=document.querySelector('.upg-btn[data-s="'+i+'"]');
+      if(b){
+        const base=Math.max(data.sellPrice,200);
+        const uc=Math.floor(base*1.25*Math.pow(1.85,data.level-1));
+        b.classList.toggle('no-funds',money<uc);
+        b.innerText=data.level>=50?'MAX':'UPG ('+fmtS(uc)+')';
       }
-  } else {
-      if(upgLuckBtn) upgLuckBtn.style.display='none';
-  }
-
-  cityData.forEach((data, i) => {
-      if(data) {
-          const btn = document.querySelector(`.upg-btn[data-s="${i}"]`);
-          if(btn) {
-              let base = Math.max(data.sellPrice, 200);
-              const uc = Math.floor(base * 1.25 * Math.pow(1.85, data.level-1));
-              const hasMoney = money >= uc;
-              btn.classList.toggle('no-funds', !hasMoney);
-              if(data.level >= 50) btn.innerText = 'MAX';
-              else btn.innerText = 'UPG ('+fmtS(uc)+')';
-          }
-      }
+    }
   });
 }
 
@@ -614,41 +592,47 @@ function showToast(msg){
   clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),2500);
 }
 
-function fmt(n){return Math.round(n).toLocaleString('sv-SE')}
-
-function fmtS(n){
-  if(n>=1000000000000000) return (n/1000000000000000).toFixed(2)+'Q';
-  if(n>=1000000000000) return (n/1000000000000).toFixed(2)+'T';
-  if(n>=1000000000) return (n/1000000000).toFixed(1)+'B';
-  if(n>=1000000) return (n/1000000).toFixed(1)+'M';
-  if(n>=1000) return Math.round(n/1000)+'k';
-  return Math.round(n).toLocaleString('sv-SE');
-}
-
 function save(){
-  localStorage.setItem('lc_v6',JSON.stringify({money,currentMaxBlock,inventory,cityData,globalMultiplier,sellBonus,cdReduction,blockLevels,shopLevels,luckBoost,autoBuyActive,hasAutoBuy}));
+  try{
+    localStorage.setItem('lc_v6',JSON.stringify({
+      money,currentMaxBlock,inventory,cityData,
+      globalMultiplier,sellBonus,cdReduction,luckBoost,
+      blockLevels,shopLevels,autoBuyActive,hasAutoBuy
+    }));
+  }catch(e){}
 }
 
 function loadGame(){
-  const s=localStorage.getItem('lc_v6');
-  if(s){
-    const d=parseSafe(s);
-    money=d.money||500;currentMaxBlock=d.currentMaxBlock||1;inventory=d.inventory||[];cityData=d.cityData||Array(24).fill(null);globalMultiplier=d.globalMultiplier||1;sellBonus=d.sellBonus||1;cdReduction=d.cdReduction||0;blockLevels=d.blockLevels||[0,0,0,0,0,0];shopLevels=d.shopLevels||[0,0,0,0,0,0,0,0,0];luckBoost=d.luckBoost||1;
-    autoBuyActive=d.autoBuyActive||false;hasAutoBuy=d.hasAutoBuy||false;
-  }
+  try{
+    const s=localStorage.getItem('lc_v6');
+    if(!s) return;
+    const d=JSON.parse(s);
+    money=Number(d.money)||500;
+    currentMaxBlock=Number(d.currentMaxBlock)||1;
+    inventory=d.inventory||[];
+    cityData=d.cityData||Array(24).fill(null);
+    globalMultiplier=Number(d.globalMultiplier)||1;
+    sellBonus=Number(d.sellBonus)||1;
+    cdReduction=Number(d.cdReduction)||0;
+    luckBoost=Number(d.luckBoost)||1;
+    autoBuyActive=!!d.autoBuyActive;
+    hasAutoBuy=!!d.hasAutoBuy;
+    const bl=Array.isArray(d.blockLevels)?d.blockLevels:[];
+    blockLevels=[0,1,2,3,4,5].map(i=>Number(bl[i])||0);
+    const sl=Array.isArray(d.shopLevels)?d.shopLevels:[];
+    shopLevels=shopUpgrades.map((upg,i)=>Math.min(Number(sl[i])||0,upg.maxLevel));
+  }catch(e){console.warn('Spardata korrupt:',e);}
 }
 
-function parseSafe(s){try{return JSON.parse(s)}catch(e){return {}}}
-
-function resetGame(){if(confirm('Nollställa hela staden?')){localStorage.removeItem('lc_v6');location.reload();}}
+function resetGame(){
+  if(confirm('Nollställa hela staden?')){localStorage.removeItem('lc_v6');location.reload();}
+}
 
 setInterval(()=>{
-  const inc = cityData.reduce((t, b) => t + (b && b.income ? b.income : 0), 0) * globalMultiplier;
-  if(!isNaN(inc)){ money+=inc; updateUI(); }
-  
-  // Hantera AutoBuy för Mythic (Tier 6)
-  if(autoBuyActive && hasAutoBuy && currentMaxBlock >= 6 && cooldowns[5] <= 0 && money >= blockPrices[5]){
-    buyBlock(6, true);
+  const inc=cityData.reduce((t,b)=>t+(b&&b.income?b.income:0),0)*globalMultiplier;
+  if(!isNaN(inc)){money+=inc;updateUI();}
+  if(autoBuyActive&&hasAutoBuy&&currentMaxBlock>=6&&cooldowns[5]<=0&&money>=blockPrices[5]){
+    buyBlock(6,true);
   }
 },1000);
 
