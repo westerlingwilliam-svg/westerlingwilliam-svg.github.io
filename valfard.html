@@ -254,7 +254,6 @@ function getDrop(tier,bl){
   const r=Math.random()*100 / luckBoost;
   const cb=bl*0.05,mb=bl*0.08,lb=bl*0.15,eb=bl*0.5;
   
-  // Mästerverket är nu 0.0001% till 0.01% beroende på block
   if(tier===5 && Math.random() < 0.0001 * luckBoost) return buildings[31]; 
 
   if(tier===1){
@@ -299,7 +298,6 @@ function buyBlock(tier){
   inventory.push({...won,level:1,id:Date.now()});
   if(won.name === 'Jimmies Mästerverk') {
       showToast('🏆 HELIGT! DU HITTADE JIMMIES MÄSTERVERK!!!');
-      confetti(); // Om vi hade confetti-lib
   } else showToast(won.icon+' '+won.name+' — '+won.rarity+'!');
   renderInv();updateUI();save();
 }
@@ -327,10 +325,19 @@ function renderShop(){
   shopUpgrades.forEach((upg,i)=>{
     const l=shopLevels[i],mx=l>=upg.maxLevel,cost=mx?0:upg.costs[l];
     const d=document.createElement('div');d.className='shop-card';
-    d.innerHTML='<div class="shop-ico">'+upg.icon+'</div><div class="shop-info"><div class="shop-n">'+upg.name+'</div><div class="shop-d">'+upg.desc+'</div></div><div class="shop-r"><button class="buy-btn2" '+(mx?'disabled':'')+' data-i="'+i+'">'+(mx?'MAX':fmt(cost)+' KR')+'</button></div>';
+    d.innerHTML=`
+      <div class="shop-ico">${upg.icon}</div>
+      <div class="shop-info">
+        <div class="shop-n"><strong>${upg.name}</strong> (Nivå ${l})</div>
+        <div class="shop-d">${upg.desc}</div>
+      </div>
+      <div class="shop-r">
+        <button class="buy-btn2" ${mx?'disabled':''} onclick="buyShopUpg(${i})">
+          ${mx?'MAX':fmt(cost)+' KR'}
+        </button>
+      </div>`;
     el.appendChild(d);
   });
-  el.querySelectorAll('.buy-btn2').forEach(b=>b.addEventListener('click',()=>buyShopUpg(parseInt(b.dataset.i))));
 }
 
 function buyShopUpg(i){
@@ -338,8 +345,10 @@ function buyShopUpg(i){
   if(l>=upg.maxLevel){showToast('Max uppgraderad!');return}
   const cost=upg.costs[l];
   if(money<cost){showToast('⚠️ För lite pengar!');return}
-  money-=cost;upg.apply();shopLevels[i]++;
-  showToast('✅ '+upg.name+' → nivå '+shopLevels[i]);
+  money-=cost;
+  shopLevels[i]++;
+  upg.apply();
+  showToast('✅ Köpte '+upg.name+'!');
   renderShop();updateUI();save();
 }
 
