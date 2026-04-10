@@ -79,25 +79,26 @@ html,body{
 
 /* LUCKY BLOCKS */
 .blocks-row{display:flex;gap:15px;justify-content:center;align-items:flex-start}
-.block-wrapper{display:flex;flex-direction:column;align-items:center;gap:8px;width:140px}
-.lucky-block{width:110px;height:110px;border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;user-select:none;position:relative;transition:all 0.15s;border:2px solid rgba(255,255,255,0.15)}
+.block-wrapper{display:flex;flex-direction:column;align-items:center;gap:8px;width:120px} /* Något smalare för att få plats med 6 */
+.lucky-block{width:100px;height:100px;border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;user-select:none;position:relative;transition:all 0.15s;border:2px solid rgba(255,255,255,0.15)}
 
 .bt1{background:linear-gradient(145deg,#3a3a3e,#1f1f23);box-shadow:0 8px 0 #0e0e10}
 .bt2{background:linear-gradient(145deg,#2a5a2e,#0d3b10);box-shadow:0 8px 0 #081a0a}
 .bt3{background:linear-gradient(145deg,#1d2e4a,#0d1a2d);box-shadow:0 8px 0 #090f18}
 .bt4{background:linear-gradient(145deg,#2e1d4a,#180d2d);box-shadow:0 8px 0 #0e0818}
 .bt5{background:linear-gradient(145deg,#4a321d,#2d1a0d);box-shadow:0 8px 0 #140a02}
+.bt6{background:linear-gradient(145deg,#4a1d1d,#2d0d0d);box-shadow:0 8px 0 #140202; border-color: #f44336aa !important;} /* Mythic Block */
 
-.block-icon{font-size:3rem;line-height:1}
-.block-stars{display:flex;gap:3px;margin-top:5px}
-.bstar{font-size:12px}
+.block-icon{font-size:2.8rem;line-height:1}
+.block-stars{display:flex;gap:2px;margin-top:5px}
+.bstar{font-size:10px}
 .bstar.on{color:var(--gold)}
 .bstar.off{color:#2a2a3a}
 
 .block-meta{text-align:center;width:100%;margin-top:5px}
-.block-name{font-size:0.8rem;font-weight:800;color:var(--muted2);text-transform:uppercase}
-.block-price{font-size:0.9rem;color:var(--gold);font-weight:800;margin:2px 0}
-.upg-bl-btn{width:100%;padding:6px 0;border-radius:8px;cursor:pointer;font-size:0.75rem;font-weight:800;border:1px solid var(--border2);background:rgba(255,255,255,0.06);color:var(--text)}
+.block-name{font-size:0.75rem;font-weight:800;color:var(--muted2);text-transform:uppercase}
+.block-price{font-size:0.85rem;color:var(--gold);font-weight:800;margin:2px 0}
+.upg-bl-btn{width:100%;padding:6px 0;border-radius:8px;cursor:pointer;font-size:0.7rem;font-weight:800;border:1px solid var(--border2);background:rgba(255,255,255,0.06);color:var(--text)}
 
 /* CITY GRID */
 #game-area{display:flex;flex:1;height:calc(100vh - 220px);overflow:hidden}
@@ -217,14 +218,14 @@ html,body{
 
 <script>
 let money=500,currentMaxBlock=1,inventory=[],cityData=Array(24).fill(null);
-let selectedInvIndex=null,cooldowns=[0,0,0,0,0];
+let selectedInvIndex=null,cooldowns=[0,0,0,0,0,0]; // Tillagd cooldown för 6:e blocket
 let globalMultiplier=1,sellBonus=1,cdReduction=0,luckBoost=1;
-let blockLevels=[0,0,0,0,0],shopLevels=[0,0,0,0,0,0,0,0];
+let blockLevels=[0,0,0,0,0,0],shopLevels=[0,0,0,0,0,0,0,0]; // Tillagd nivå för 6:e blocket
 
-const upgCosts=[0,2500,15000,75000,300000];
-const blockPrices=[250,1500,7500,35000,150000];
-const blockIcons=['❓','⭐','💠','💜','👑'];
-const blockNames=['Common','Uncommon','Rare','Epic','Legend'];
+const upgCosts=[0,2500,15000,75000,300000,1500000]; // Uppgraderingskostnad för att låsa upp block 6
+const blockPrices=[250,1500,7500,35000,150000,1000000]; // Block 6 kostar 1M
+const blockIcons=['❓','⭐','💠','💜','👑','🔥'];
+const blockNames=['Common','Uncommon','Rare','Epic','Legend','Mythic'];
 
 const shopUpgrades=[
   {name:'Snabbare Leverans',desc:'-1s cooldown',icon:'⚡',costs:[10000,50000,200000,750000,2500000],maxLevel:5,apply:()=>{cdReduction++}},
@@ -237,7 +238,11 @@ const shopUpgrades=[
   {name:'Nationell Stolthet',desc:'+20% PPS & Tur',icon:'🇸🇪',costs:[5000000,25000000,100000000,500000000,2500000000,10000000000,30000000000,100000000000,300000000000,1000000000000],maxLevel:10,apply:()=>{globalMultiplier+=0.20; luckBoost+=0.20}}
 ];
 
-function bUpgCost(t,l){return Math.floor([5000,25000,100000,400000,1500000][t-1]*Math.pow(4,l))}
+function bUpgCost(t,l){
+    // Block 6 har lite dyrare uppgraderingar
+    let factor = (t === 6) ? 5 : 4;
+    return Math.floor([5000,25000,100000,400000,1500000,5000000][t-1]*Math.pow(factor,l));
+}
 
 const buildings=[
   {name:'Stuga',icon:'🏠',rarity:'Common',income:10,color:'#9e9e9e',sellPrice:50,level:1},
@@ -282,7 +287,9 @@ function pick(a,f,t){return a[Math.min(f+Math.floor(Math.random()*(t-f)),a.lengt
 
 function getDrop(tier,bl){
   const r=Math.random()*100 / luckBoost;
-  if(tier===5 && Math.random() < 0.0001 * luckBoost) return buildings[31]; 
+  // Specialchans för Ultimate-byggnaden i högsta blocken
+  if((tier===5 || tier===6) && Math.random() < 0.0001 * luckBoost) return buildings[31]; 
+
   const mb=bl*0.08,eb=bl*0.5;
   if(tier===1){
     if(r<0.001) return pick(buildings,27,31);
@@ -308,7 +315,7 @@ function getDrop(tier,bl){
     if(r<10) return pick(buildings,20,24);
     if(r<40) return pick(buildings,16,20);
     return pick(buildings,8,16);
-  }else{
+  }else if(tier===5){
     if(r<0.01) return pick(buildings,34,36); 
     if(r<0.05) return pick(buildings,32,34); 
     if(r<0.2) return pick(buildings,27,31);
@@ -316,6 +323,14 @@ function getDrop(tier,bl){
     if(r<20) return pick(buildings,20,24);
     if(r<60) return pick(buildings,16,20);
     return pick(buildings,12,16);
+  }else{
+    // Mythic Block (Tier 6) - Lite bättre än Legendary
+    if(r<0.05) return pick(buildings,34,36); // Cosmic
+    if(r<0.5) return pick(buildings,32,34);  // Divine
+    if(r<2) return pick(buildings,27,31);    // Godly
+    if(r<10) return pick(buildings,24,27);   // Celestial
+    if(r<40) return pick(buildings,20,24);   // Mythic
+    return pick(buildings,16,20);            // Legendary
   }
 }
 
@@ -333,7 +348,9 @@ function buyBlock(tier){
 
 function upgBlockLevel(tier){
   const l=blockLevels[tier-1];
-  if(l>=4){showToast('Max odds uppnådda!');return}
+  // Mythic block (6) har 5 levlar (max nivå 5), övriga 4
+  const maxL = (tier === 6) ? 5 : 4;
+  if(l>=maxL){showToast('Max odds uppnådda!');return}
   const cost=bUpgCost(tier,l);
   if(money<cost){showToast('Behöver '+fmt(cost)+' KR');return}
   money-=cost;blockLevels[tier-1]++;
@@ -493,8 +510,9 @@ function renderBlocks(){
   const row=document.getElementById('blocks-row');row.innerHTML='';
   for(let i=1;i<=currentMaxBlock;i++){
     const isCd=cooldowns[i-1]>0,bl=blockLevels[i-1];
-    const nc=bl<4?bUpgCost(i,bl):null;
-    const stars=Array.from({length:4},(_,s)=>'<span class="bstar '+(s<bl?'on':'off')+'">★</span>').join('');
+    const maxStars = (i === 6) ? 5 : 4;
+    const nc=bl<maxStars?bUpgCost(i,bl):null;
+    const stars=Array.from({length:maxStars},(_,s)=>'<span class="bstar '+(s<bl?'on':'off')+'">★</span>').join('');
     const w=document.createElement('div');w.className='block-wrapper';
     w.innerHTML='<div id="block-'+i+'" class="lucky-block bt'+i+' '+(isCd?'disabled':'')+'" onclick="buyBlock('+i+')">'+(isCd?'<div class="cd-over"><span class="cd-n" id="cd-'+i+'">'+cooldowns[i-1]+'</span></div>':'<div class="block-icon">'+blockIcons[i-1]+'</div><div class="block-stars">'+stars+'</div>')+'</div><div class="block-meta"><div class="block-name">'+blockNames[i-1]+'</div><div class="block-price">'+fmtS(blockPrices[i-1])+' KR</div>'+(nc?'<button class="upg-bl-btn" onclick="event.stopPropagation();upgBlockLevel('+i+')">⬆ BÄTTRE</button>':'<div class="upg-bl-btn mx">MAX</div>')+'</div>';
     row.appendChild(w);
@@ -508,7 +526,7 @@ function updateUI(){
   document.getElementById('pps').innerText=fmtS(Math.floor(inc));
   
   const upgLuckBtn = document.getElementById('upg-luck-btn');
-  if(currentMaxBlock<5) {
+  if(currentMaxBlock<6) {
       const costSpan = document.getElementById('upg-cost');
       if(costSpan) costSpan.innerText = fmtS(upgCosts[currentMaxBlock]);
   } else if(upgLuckBtn) upgLuckBtn.style.display='none';
@@ -554,7 +572,7 @@ function save(){
 
 function loadGame(){
   const s=localStorage.getItem('lc_v6');
-  if(s){const d=JSON.parse(s);money=d.money||500;currentMaxBlock=d.currentMaxBlock||1;inventory=d.inventory||[];cityData=d.cityData||Array(24).fill(null);globalMultiplier=d.globalMultiplier||1;sellBonus=d.sellBonus||1;cdReduction=d.cdReduction||0;blockLevels=d.blockLevels||[0,0,0,0,0];shopLevels=d.shopLevels||[0,0,0,0,0,0,0,0];luckBoost=d.luckBoost||1;}
+  if(s){const d=JSON.parse(s);money=d.money||500;currentMaxBlock=d.currentMaxBlock||1;inventory=d.inventory||[];cityData=d.cityData||Array(24).fill(null);globalMultiplier=d.globalMultiplier||1;sellBonus=d.sellBonus||1;cdReduction=d.cdReduction||0;blockLevels=d.blockLevels||[0,0,0,0,0,0];shopLevels=d.shopLevels||[0,0,0,0,0,0,0,0];luckBoost=d.luckBoost||1;}
 }
 
 function resetGame(){if(confirm('Nollställa hela staden?')){localStorage.removeItem('lc_v6');location.reload();}}
