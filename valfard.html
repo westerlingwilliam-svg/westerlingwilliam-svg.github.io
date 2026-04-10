@@ -168,6 +168,19 @@ html,body{
 /* Scrollbar styling */
 .sidebar-content::-webkit-scrollbar, #inventory::-webkit-scrollbar, #shop-ui::-webkit-scrollbar {width: 6px;}
 .sidebar-content::-webkit-scrollbar-thumb, #inventory::-webkit-scrollbar-thumb, #shop-ui::-webkit-scrollbar-thumb {background: var(--border3); border-radius: 10px;}
+
+/* RARITY GLOW EFFECTS */
+@keyframes celestial-glow { 0%, 100% { box-shadow: 0 0 10px #00bcd4, 0 0 20px #00bcd4; } 50% { box-shadow: 0 0 25px #00bcd4, 0 0 50px #00bcd4; } }
+@keyframes godly-glow { 0%, 100% { box-shadow: 0 0 15px #fff, 0 0 30px #fff, inset 0 0 10px #fff; } 50% { box-shadow: 0 0 40px #fff, 0 0 80px #fff, inset 0 0 20px #fff; } }
+@keyframes divine-glow { 0%, 100% { box-shadow: 0 0 10px #fff59d, 0 0 25px #fff59d; } 50% { box-shadow: 0 0 35px #fff59d, 0 0 70px #fff59d; } }
+@keyframes cosmic-glow { 0%, 100% { box-shadow: 0 0 10px #b3e5fc, 0 0 20px #b3e5fc, 0 0 40px #81d4fa; } 50% { box-shadow: 0 0 30px #b3e5fc, 0 0 60px #b3e5fc, 0 0 120px #81d4fa; } }
+@keyframes ultimate-glow { 0%, 100% { box-shadow: 0 0 15px #ffeb3b, 0 0 30px #f44336; filter: hue-rotate(0deg); } 50% { box-shadow: 0 0 40px #ffeb3b, 0 0 80px #f44336; filter: hue-rotate(15deg); } }
+
+.rarity-Celestial { border-color: #00bcd4 !important; animation: celestial-glow 2s infinite ease-in-out; }
+.rarity-Godly { border-color: #fff !important; animation: godly-glow 2.5s infinite ease-in-out; }
+.rarity-Divine { border-color: #fff59d !important; animation: divine-glow 2s infinite ease-in-out; }
+.rarity-Cosmic { border-color: #b3e5fc !important; animation: cosmic-glow 3s infinite ease-in-out; }
+.rarity-Ultimate { border-color: #ffeb3b !important; animation: ultimate-glow 1.5s infinite ease-in-out; border-style: double !important; border-width: 4px !important;}
 </style>
 </head>
 <body>
@@ -392,7 +405,8 @@ function renderCity(){
   cityData.forEach((data,i)=>{
     const slot=document.createElement('div');
     const highlight = (selectedInvIndex !== null && !data) ? ' highlight-empty' : '';
-    slot.className='slot'+(data?'':' empty') + highlight;
+    let rarityClass = data ? 'rarity-' + data.rarity : '';
+    slot.className='slot'+(data?'':' empty') + highlight + ' ' + rarityClass;
     if(data){
       const c=data.color;
       slot.style.borderColor=c;
