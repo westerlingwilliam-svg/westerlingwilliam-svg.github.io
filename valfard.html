@@ -3,528 +3,426 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lucky City: Pro Architect</title>
+<title>Lucky City</title>
 <style>
-:root {
-    --common: #b5b5b5; --uncommon: #1eff00; --rare: #0070dd;
-    --epic: #a335ee; --legendary: #ff8000; --mythic: #ff003c;
-    --celestial: #00f2ff; --godly: #ffffff;
-    --sd-blue: #005293; --sd-gold: #fecc00;
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+--gold:#f5c842;--gold2:#e8a800;--gold-glow:rgba(245,200,66,0.35);
+--bg:#07080f;--bg2:#0d1020;--bg3:#131629;--bg4:#1a1f35;
+--border:#ffffff12;--border2:#ffffff22;--border3:#ffffff35;
+--text:#e8eaf6;--muted:#6b7099;--muted2:#9196bb;
+--r8:8px;--r12:12px;--r16:16px;--r20:20px;
 }
-body { font-family: 'Segoe UI', system-ui, sans-serif; background: radial-gradient(circle at center, #001a33 0%, #000b18 100%); color: white; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-.header { background: rgba(0,30,60,0.95); backdrop-filter: blur(10px); padding: 12px 30px; display: grid; grid-template-columns: 260px 1fr 180px; align-items: center; border-bottom: 3px solid var(--sd-gold); box-shadow: 0 10px 30px rgba(0,0,0,0.8); z-index: 100; }
-.stats-left b { color: var(--sd-gold); font-size: 1.4rem; }
-.blocks-container { display: flex; justify-content: center; align-items: center; }
-.blocks-row { display: flex; gap: 10px; }
-.block-wrapper { text-align: center; width: 120px; }
-.lucky-block { width: 105px; height: 105px; background: var(--sd-gold); border-radius: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 4rem; color: var(--sd-blue); cursor: pointer; box-shadow: 0 10px 0 #b38f00; transition: 0.1s; user-select: none; margin: 0 auto; position: relative; }
-.block-1 { background: var(--common); color: #333; box-shadow: 0 10px 0 #888; }
-.block-2 { background: var(--uncommon); color: #000; box-shadow: 0 10px 0 #158000; }
-.block-3 { background: var(--rare); color: #fff; box-shadow: 0 10px 0 #004a94; }
-.block-4 { background: var(--epic); color: #fff; box-shadow: 0 10px 0 #6d20a1; }
-.block-5 { background: var(--legendary); color: #fff; box-shadow: 0 10px 0 #b35900; }
-.lucky-block.disabled { opacity: 0.3; filter: grayscale(1); transform: translateY(6px); box-shadow: none !important; }
-.cooldown-text { position: absolute; font-size: 2rem; font-weight: 900; color: white; text-shadow: 0 0 15px black; }
-.block-upg-row { display: flex; gap: 3px; margin-top: 3px; justify-content: center; }
-.block-star { font-size: 10px; color: var(--sd-gold); }
-.block-star.empty { opacity: 0.3; }
-.drop-info { background: rgba(0,0,0,0.5); margin-top: 6px; padding: 4px; border-radius: 8px; font-size: 0.65rem; min-height: 42px; display: flex; flex-direction: column; justify-content: center; }
-.upg-block-btn { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 2px 6px; border-radius: 5px; cursor: pointer; font-size: 0.6rem; margin-top: 3px; }
-.upg-block-btn:hover { background: rgba(255,255,255,0.25); }
-.game-area { display: flex; flex: 1; overflow: hidden; }
-#city-grid { flex: 3; display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(4, 1fr); gap: 10px; padding: 15px; }
-.slot { background: rgba(255,255,255,0.03); border: 2px solid rgba(255,255,255,0.05); border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: 0.3s; cursor: pointer; position: relative; }
-.level-badge { position: absolute; top: 4px; right: 4px; background: var(--sd-gold); color: black; font-size: 0.55rem; font-weight: bold; padding: 2px 4px; border-radius: 4px; }
-.building-icon { font-size: 2.5rem; filter: drop-shadow(0 0 8px rgba(0,0,0,0.5)); animation: float 3s ease-in-out infinite; }
-@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-.sidebar { flex: 1.2; background: rgba(0,15,30,0.9); border-left: 2px solid var(--sd-blue); padding: 15px; display: flex; flex-direction: column; gap: 15px; }
-.sidebar-tabs { display: flex; gap: 5px; }
-.tab-btn { flex: 1; padding: 7px; background: rgba(255,255,255,0.1); border: none; color: white; cursor: pointer; border-radius: 5px; font-weight: bold; font-size: 0.75rem; }
-.tab-btn.active { background: var(--sd-gold); color: var(--sd-blue); }
-#inventory, #shop-ui { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; overflow-y: auto; }
-.inv-item { background: rgba(255,255,255,0.05); padding: 8px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; align-items: center; text-align: center; }
-.shop-item { grid-column: span 2; background: rgba(255,255,255,0.05); padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-.shop-item-info { flex: 1; }
-.shop-item-info b { font-size: 0.85rem; display: block; }
-.shop-item-info small { font-size: 0.65rem; opacity: 0.7; }
-.shop-item-right { text-align: right; flex-shrink: 0; }
-.level-dots { display: flex; gap: 3px; justify-content: flex-end; margin-bottom: 4px; }
-.level-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.15); }
-.level-dot.filled { background: var(--sd-gold); }
-.inv-item b { font-size: 2rem; display: block; margin-bottom: 4px; }
-.inv-item span { font-size: 0.6rem; font-weight: bold; text-transform: uppercase; margin-bottom: 6px; display: block; }
-.inv-buttons { display: flex; flex-direction: column; gap: 4px; width: 100%; }
-.sell-btn, .buy-btn { background: #ff4444; color: white; border: none; padding: 4px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.6rem; }
-.place-btn, .upgrade-btn { background: var(--sd-gold); color: var(--sd-blue); border: none; padding: 4px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.6rem; }
-.buy-btn { background: #00aa55; }
-.buy-btn:disabled { background: #555; cursor: not-allowed; opacity: 0.5; }
-#game-msg { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); background: var(--sd-gold); color: #001a33; padding: 10px 25px; border-radius: 50px; opacity: 0; transition: 0.3s; z-index: 1000; font-weight: bold; text-align: center; pointer-events: none; }
-.show-msg { opacity: 1 !important; }
-.highlight { border-color: #00ff99 !important; box-shadow: 0 0 20px rgba(0,255,153,0.3); }
-.mythic-glow { box-shadow: inset 0 0 25px #ff003c, 0 0 15px #ff003c; animation: mythic-pulse 2s infinite; }
-.celestial-glow { box-shadow: inset 0 0 30px #00f2ff, 0 0 20px #00f2ff; animation: celestial-float 4s infinite; border-color: #00f2ff !important; }
-.godly-glow { box-shadow: inset 0 0 40px #ffffff, 0 0 30px #ffffff; animation: godly-shine 1.5s infinite; border-color: #ffffff !important; }
-@keyframes mythic-pulse { 0% { opacity: 0.8; } 50% { opacity: 1; } 100% { opacity: 0.8; } }
-@keyframes celestial-float { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-@keyframes godly-shine { 0% { filter: brightness(1); } 50% { filter: brightness(1.5); } 100% { filter: brightness(1); } }
-.income-tag { background: rgba(0,0,0,0.6); padding: 2px 6px; border-radius: 10px; font-size: 0.65rem; color: #00ff99; font-weight: bold; margin-top: 3px; }
-.upg-cost-tag { font-size: 0.55rem; color: #aaa; margin-top: 1px; }
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif}
+#header{display:grid;grid-template-columns:280px 1fr 160px;align-items:center;padding:0 24px;height:128px;background:var(--bg2);border-bottom:1px solid var(--border2);position:relative;z-index:10;box-shadow:0 4px 40px rgba(0,0,0,0.6)}
+#header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.stat-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:2px}
+.stat-money{font-size:1.55rem;font-weight:700;color:var(--gold);letter-spacing:-0.5px;line-height:1.1}
+.stat-money .unit{font-size:0.9rem;color:var(--muted2);font-weight:400}
+.stat-pps{font-size:0.82rem;color:var(--muted2);margin-top:4px}
+.stat-pps span{color:#4ade80;font-weight:700}
+#upg-luck-btn{margin-top:10px;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#1a2a1a,#0d1f0d);border:1px solid #4ade8055;color:#4ade80;padding:6px 12px;border-radius:20px;cursor:pointer;font-size:0.68rem;font-weight:700;letter-spacing:0.5px;transition:all 0.2s;text-transform:uppercase}
+#upg-luck-btn:hover{background:linear-gradient(135deg,#254025,#162b16);border-color:#4ade80;box-shadow:0 0 14px rgba(74,222,128,0.2)}
+.blocks-row{display:flex;gap:10px;justify-content:center;align-items:flex-start}
+.block-wrapper{display:flex;flex-direction:column;align-items:center;gap:5px;width:108px}
+.lucky-block{width:86px;height:86px;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;user-select:none;position:relative;transition:transform 0.12s,box-shadow 0.2s;border:1px solid rgba(255,255,255,0.14)}
+.lucky-block:hover:not(.disabled){transform:translateY(-3px) scale(1.05)}
+.lucky-block:active:not(.disabled){transform:translateY(2px) scale(0.96)}
+.lucky-block.disabled{opacity:0.4;cursor:not-allowed;transform:none!important;filter:grayscale(0.5)}
+.bt1{background:linear-gradient(145deg,#2a2a2e,#18181c);box-shadow:0 6px 0 #0e0e10,0 10px 25px rgba(0,0,0,0.5)}
+.bt2{background:linear-gradient(145deg,#1a3a1e,#0d2b10);box-shadow:0 6px 0 #081a0a,0 10px 25px rgba(76,175,80,0.18)}
+.bt3{background:linear-gradient(145deg,#162236,#0d1828);box-shadow:0 6px 0 #090f18,0 10px 25px rgba(33,150,243,0.2)}
+.bt4{background:linear-gradient(145deg,#221636,#180e28);box-shadow:0 6px 0 #0e0818,0 10px 25px rgba(156,39,176,0.25)}
+.bt5{background:linear-gradient(145deg,#2e1e0c,#201408);box-shadow:0 6px 0 #140a02,0 10px 25px rgba(255,152,0,0.25)}
+.block-icon{font-size:2.2rem;line-height:1;margin-bottom:1px}
+.block-stars{display:flex;gap:2px}
+.bstar{font-size:8px;transition:color 0.2s}
+.bstar.on{color:var(--gold)}
+.bstar.off{color:#2a2a3a}
+.cd-over{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border-radius:inherit}
+.cd-n{font-size:2rem;font-weight:900;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,0.9)}
+.block-meta{text-align:center;width:100%}
+.block-name{font-size:0.58rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted2);font-weight:600}
+.block-price{font-size:0.63rem;color:var(--gold);font-weight:700;margin:1px 0 4px}
+.upg-bl-btn{width:100%;padding:3px 0;border-radius:6px;cursor:pointer;font-size:0.56rem;font-weight:700;letter-spacing:0.3px;border:1px solid var(--border2);background:rgba(255,255,255,0.04);color:var(--muted2);transition:all 0.15s;text-transform:uppercase}
+.upg-bl-btn:hover{background:rgba(255,255,255,0.09);color:var(--gold);border-color:rgba(245,200,66,0.4)}
+.upg-bl-btn.mx{color:#333;cursor:default;border-color:transparent;background:none}
+.header-right{display:flex;flex-direction:column;align-items:flex-end;gap:7px}
+.hdr-btn{background:none;border:1px solid var(--border2);color:var(--muted);padding:5px 10px;border-radius:8px;cursor:pointer;font-size:0.7rem;transition:all 0.2s}
+.hdr-btn:hover{border-color:var(--border3);color:var(--text)}
+.hdr-link{color:var(--muted2);text-decoration:none;font-size:0.7rem;padding:5px 10px;border:1px solid var(--border2);border-radius:8px;transition:all 0.2s}
+.hdr-link:hover{color:var(--gold);border-color:rgba(245,200,66,0.4)}
+#game-area{display:flex;flex:1;height:calc(100vh - 128px);overflow:hidden}
+#city-grid{flex:3;display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(4,1fr);gap:9px;padding:14px}
+.slot{border-radius:var(--r16);border:1px solid var(--border);background:var(--bg3);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:all 0.22s;overflow:hidden}
+.slot::before{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(255,255,255,0.025) 0%,transparent 55%);pointer-events:none}
+.slot.empty:hover{border-color:var(--border3);background:var(--bg4)}
+.slot.highlight{border-color:#4ade8077!important;background:rgba(74,222,128,0.05)!important;box-shadow:0 0 0 1px #4ade8022,inset 0 0 20px rgba(74,222,128,0.04)!important}
+.slot-lvl{position:absolute;top:6px;left:7px;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.1);font-size:0.56rem;font-weight:700;color:var(--gold);padding:2px 5px;border-radius:5px;letter-spacing:0.5px}
+.slot-icon{font-size:2.5rem;line-height:1;animation:flt 3.5s ease-in-out infinite}
+@keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.slot-income{font-size:0.63rem;font-weight:700;color:#4ade80;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.18);padding:2px 7px;border-radius:10px;margin-top:4px}
+.upg-btn{margin-top:4px;padding:3px 9px;border-radius:8px;background:rgba(245,200,66,0.1);border:1px solid rgba(245,200,66,0.25);color:var(--gold);font-size:0.56rem;font-weight:700;cursor:pointer;transition:all 0.15s;letter-spacing:0.3px}
+.upg-btn:hover{background:rgba(245,200,66,0.2);border-color:var(--gold);box-shadow:0 0 8px var(--gold-glow)}
+.slot.mg{border-color:#f4433644;box-shadow:0 0 18px rgba(244,67,54,0.18),inset 0 0 25px rgba(244,67,54,0.05)}
+.slot.cg{border-color:#00bcd444;box-shadow:0 0 22px rgba(0,188,212,0.2),inset 0 0 25px rgba(0,188,212,0.05);animation:cga 4s ease-in-out infinite}
+.slot.gg{border-color:#ffffff44;box-shadow:0 0 28px rgba(255,255,255,0.18),inset 0 0 35px rgba(255,255,255,0.04);animation:gga 2s ease-in-out infinite}
+@keyframes cga{0%,100%{box-shadow:0 0 22px rgba(0,188,212,0.2),inset 0 0 25px rgba(0,188,212,0.05)}50%{box-shadow:0 0 38px rgba(0,188,212,0.35),inset 0 0 38px rgba(0,188,212,0.09)}}
+@keyframes gga{0%,100%{box-shadow:0 0 28px rgba(255,255,255,0.18),inset 0 0 35px rgba(255,255,255,0.04)}50%{box-shadow:0 0 45px rgba(255,255,255,0.35),inset 0 0 55px rgba(255,255,255,0.1)}}
+#sidebar{width:275px;flex-shrink:0;background:var(--bg2);border-left:1px solid var(--border2);display:flex;flex-direction:column;overflow:hidden}
+.sidebar-tabs{display:flex;padding:11px 11px 0;gap:5px}
+.tab-btn{flex:1;padding:7px;border-radius:9px 9px 0 0;border:1px solid var(--border2);border-bottom:none;background:transparent;color:var(--muted);font-size:0.7rem;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;cursor:pointer;transition:all 0.2s}
+.tab-btn.active{background:var(--bg3);color:var(--text);border-color:var(--border3)}
+.sidebar-content{flex:1;overflow-y:auto;padding:11px;background:var(--bg3);scrollbar-width:thin;scrollbar-color:#ffffff10 transparent}
+#inventory{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.inv-card{border-radius:var(--r12);padding:9px 7px;background:var(--bg4);border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:3px;transition:border-color 0.2s,transform 0.15s;position:relative;overflow:hidden}
+.inv-card:hover{transform:translateY(-1px)}
+.inv-icon{font-size:1.9rem;line-height:1}
+.inv-name{font-size:0.58rem;font-weight:700;text-align:center}
+.inv-rar{font-size:0.53rem;text-transform:uppercase;letter-spacing:0.8px;opacity:0.65;margin-bottom:2px}
+.inv-btns{display:flex;gap:3px;width:100%}
+.inv-btns button{flex:1;padding:4px;border-radius:5px;font-size:0.56rem;font-weight:700;cursor:pointer;letter-spacing:0.2px;transition:all 0.15s;border:none}
+.bld-btn{background:rgba(245,200,66,0.12);color:var(--gold);border:1px solid rgba(245,200,66,0.28)!important}
+.bld-btn:hover{background:rgba(245,200,66,0.22)!important}
+.sll-btn{background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.22)!important}
+.sll-btn:hover{background:rgba(239,68,68,0.2)!important}
+#shop-ui{display:flex;flex-direction:column;gap:7px}
+.shop-card{border-radius:var(--r12);padding:11px 13px;background:var(--bg4);border:1px solid var(--border2);display:flex;align-items:center;gap:11px}
+.shop-ico{width:36px;height:36px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0}
+.shop-info{flex:1;min-width:0}
+.shop-n{font-size:0.76rem;font-weight:700;color:var(--text)}
+.shop-d{font-size:0.6rem;color:var(--muted2);margin-top:1px}
+.shop-dots{display:flex;gap:3px;margin-top:5px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--border3);transition:background 0.3s}
+.dot.on{background:var(--gold)}
+.shop-r{flex-shrink:0;text-align:right}
+.buy-btn2{padding:6px 9px;border-radius:7px;cursor:pointer;font-size:0.6rem;font-weight:700;background:rgba(74,222,128,0.08);color:#4ade80;border:1px solid rgba(74,222,128,0.22);transition:all 0.15s;white-space:nowrap}
+.buy-btn2:hover{background:rgba(74,222,128,0.18);box-shadow:0 0 10px rgba(74,222,128,0.12)}
+.buy-btn2:disabled{background:rgba(255,255,255,0.03);color:#333;border-color:var(--border);cursor:not-allowed;box-shadow:none}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(8px);background:rgba(13,16,32,0.96);backdrop-filter:blur(12px);border:1px solid var(--border3);color:var(--text);padding:9px 22px;border-radius:28px;opacity:0;transition:opacity 0.22s,transform 0.22s;z-index:1000;font-size:0.8rem;font-weight:600;white-space:nowrap;pointer-events:none;box-shadow:0 8px 30px rgba(0,0,0,0.6)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
 
-<div class="header">
-    <div class="stats-left">
-        <div>💰 <b id="money">500</b> KR</div>
-        <div style="font-size: 0.85rem; opacity: 0.8;">PROD: <span id="pps">0</span>/S</div>
-        <button id="upg-luck-btn" onclick="upgradeBlocks()" style="background:#00ff99; border:none; padding:6px 10px; border-radius:12px; cursor:pointer; font-weight:bold; margin-top:8px; font-size:0.75rem;">
-            LÅS UPP NÄSTA BLOCK: <span id="upg-cost">2500</span> KR
-        </button>
-    </div>
-    <div class="blocks-container">
-        <div class="blocks-row" id="blocks-row"></div>
-    </div>
-    <div style="text-align: right;">
-        <button onclick="resetGame()" style="background:none; border:none; color:rgba(255,255,255,0.3); cursor:pointer;">[ Reset ]</button>
-        <a href="games.html" style="color: white; text-decoration: none; margin-left:10px; font-weight: bold;">[ AVSLUTA ]</a>
-    </div>
+<div id="header">
+  <div>
+    <div class="stat-label">Stadsbudget</div>
+    <div class="stat-money">💰 <span id="money">500</span> <span class="unit">KR</span></div>
+    <div class="stat-pps">Produktion: <span id="pps">0</span>/s</div>
+    <button id="upg-luck-btn" onclick="upgradeBlocks()">⚡ Lås upp nästa block — <span id="upg-cost">2 500</span> KR</button>
+  </div>
+  <div class="blocks-row" id="blocks-row"></div>
+  <div class="header-right">
+    <button class="hdr-btn" onclick="resetGame()">↺ Reset</button>
+    <a class="hdr-link" href="games.html">← Avsluta</a>
+  </div>
 </div>
 
-<div class="game-area">
-    <div id="city-grid"></div>
-    <div class="sidebar">
-        <div class="sidebar-tabs">
-            <button class="tab-btn active" id="inv-tab" onclick="switchTab('inv')">INVENTORY</button>
-            <button class="tab-btn" id="shop-tab" onclick="switchTab('shop')">BUTIK</button>
-        </div>
-        <div id="inventory"></div>
-        <div id="shop-ui" style="display:none;"></div>
+<div id="game-area">
+  <div id="city-grid"></div>
+  <div id="sidebar">
+    <div class="sidebar-tabs">
+      <button class="tab-btn active" id="inv-tab" onclick="switchTab('inv')">Inventory</button>
+      <button class="tab-btn" id="shop-tab" onclick="switchTab('shop')">Butik</button>
     </div>
+    <div class="sidebar-content">
+      <div id="inventory"></div>
+      <div id="shop-ui" style="display:none"></div>
+    </div>
+  </div>
 </div>
 
-<div id="game-msg">Meddelande</div>
+<div id="toast"></div>
 
 <script>
-let money = 500;
-let currentMaxBlock = 1;
-let inventory = [];
-let cityData = Array(24).fill(null);
-let selectedInvIndex = null;
-let cooldowns = [0,0,0,0,0];
-let globalMultiplier = 1;
-let sellBonus = 1;
-let cdReduction = 0;
+let money=500,currentMaxBlock=1,inventory=[],cityData=Array(24).fill(null);
+let selectedInvIndex=null,cooldowns=[0,0,0,0,0];
+let globalMultiplier=1,sellBonus=1,cdReduction=0;
+let blockLevels=[0,0,0,0,0],shopLevels=[0,0,0];
 
-// Block upgrade levels (0-4, max 4 upgrades per block)
-let blockLevels = [0,0,0,0,0];
+const upgCosts=[0,2500,15000,75000,300000];
+const blockPrices=[250,1500,7500,35000,150000];
+const blockIcons=['❓','⭐','💠','💜','👑'];
+const blockNames=['Common','Uncommon','Rare','Epic','Legend'];
 
-const upgCosts = [0, 2500, 15000, 75000, 300000];
-const blockPrices = [250, 1500, 7500, 35000, 150000];
-
-// Shop upgrade costs: 5 levels each, exponential
-const shopUpgrades = [
-    { 
-        name: "Snabbare Leverans", desc: "-1s Cooldown per nivå", key: "cdReduction",
-        costs: [10000, 50000, 200000, 750000, 2500000],
-        maxLevel: 5,
-        apply: () => { cdReduction++; }
-    },
-    { 
-        name: "Skattesänkning", desc: "+25% Säljpris per nivå", key: "sellBonus",
-        costs: [25000, 125000, 500000, 2000000, 8000000],
-        maxLevel: 5,
-        apply: () => { sellBonus += 0.25; }
-    },
-    { 
-        name: "Arbetsmoral", desc: "+15% Global Produktion per nivå", key: "globalMultiplier",
-        costs: [50000, 250000, 1000000, 4000000, 15000000],
-        maxLevel: 5,
-        apply: () => { globalMultiplier += 0.15; }
-    }
-];
-let shopLevels = [0,0,0];
-
-// Block upgrade costs (per tier, 4 upgrades)
-function blockUpgCost(tier, currentLvl) {
-    const base = [5000, 25000, 100000, 400000, 1500000];
-    return Math.floor(base[tier-1] * Math.pow(4, currentLvl));
-}
-
-// Odds tables per block tier & block level
-// Each entry: [common%, uncommon%, rare%, epic%, legendary%, mythic%, celestial%, godly%]
-// Higher block level = slightly better odds on better stuff, but top rarities stay rare
-function getDropResult(tier, blockLvl) {
-    const rand = Math.random() * 100;
-    // Bonus thresholds shift slightly per upgrade level (max +0.3% on top rarities)
-    const celestialBonus  = blockLvl * 0.05;
-    const mythicBonus     = blockLvl * 0.08;
-    const legendaryBonus  = blockLvl * 0.15;
-    const epicBonus       = blockLvl * 0.5;
-
-    if (tier === 1) {
-        if (rand < 0.001 + celestialBonus * 0.2)  return pick(buildings, 27, 29);
-        if (rand < 0.01  + celestialBonus * 0.5)  return pick(buildings, 24, 27);
-        if (rand < 0.1   + mythicBonus)            return pick(buildings, 20, 24);
-        if (rand < 1     + epicBonus)              return pick(buildings, 16, 20);
-        if (rand < 10    + legendaryBonus * 2)     return pick(buildings, 4, 8);
-        return pick(buildings, 0, 4);
-    } else if (tier === 2) {
-        if (rand < 0.005 + celestialBonus * 0.3)  return pick(buildings, 27, 29);
-        if (rand < 0.05  + celestialBonus)         return pick(buildings, 24, 27);
-        if (rand < 0.5   + mythicBonus * 2)        return pick(buildings, 20, 24);
-        if (rand < 5     + epicBonus)              return pick(buildings, 8, 12);
-        if (rand < 35    + legendaryBonus)         return pick(buildings, 4, 8);
-        return pick(buildings, 0, 4);
-    } else if (tier === 3) {
-        if (rand < 0.01  + celestialBonus * 0.5)  return pick(buildings, 27, 29);
-        if (rand < 0.2   + celestialBonus * 1.5)  return pick(buildings, 24, 27);
-        if (rand < 2     + mythicBonus * 2)        return pick(buildings, 12, 16);
-        if (rand < 15    + epicBonus)              return pick(buildings, 8, 12);
-        if (rand < 60    + legendaryBonus)         return pick(buildings, 4, 8);
-        return pick(buildings, 0, 4);
-    } else if (tier === 4) {
-        if (rand < 0.05  + celestialBonus)         return pick(buildings, 27, 29);
-        if (rand < 1     + celestialBonus * 2)     return pick(buildings, 24, 27);
-        if (rand < 5     + mythicBonus * 3)        return pick(buildings, 16, 20);
-        if (rand < 20    + epicBonus)              return pick(buildings, 12, 16);
-        if (rand < 50    + legendaryBonus)         return pick(buildings, 8, 12);
-        return pick(buildings, 0, 8);
-    } else {
-        if (rand < 0.5   + celestialBonus * 2)     return pick(buildings, 27, 29);
-        if (rand < 3     + celestialBonus * 3)     return pick(buildings, 24, 27);
-        if (rand < 10    + mythicBonus * 4)        return pick(buildings, 20, 24);
-        if (rand < 40    + epicBonus * 1.5)        return pick(buildings, 16, 20);
-        if (rand < 70    + legendaryBonus)         return pick(buildings, 12, 16);
-        return pick(buildings, 0, 12);
-    }
-}
-
-function pick(arr, from, to) {
-    const idx = from + Math.floor(Math.random() * (to - from));
-    return arr[Math.min(idx, arr.length - 1)];
-}
-
-const buildings = [
-    { name:"Stuga", icon:"🏠", rarity:"Common", income:10, color:"#b5b5b5", sellPrice:50, level:1 },
-    { name:"Bod", icon:"🛖", rarity:"Common", income:8, color:"#b5b5b5", sellPrice:40, level:1 },
-    { name:"Garage", icon:"🚗", rarity:"Common", income:12, color:"#b5b5b5", sellPrice:60, level:1 },
-    { name:"Kiosk", icon:"🏪", rarity:"Common", income:15, color:"#b5b5b5", sellPrice:75, level:1 },
-    { name:"Länga", icon:"🏡", rarity:"Uncommon", income:35, color:"#1eff00", sellPrice:600, level:1 },
-    { name:"Pizzeria", icon:"🍕", rarity:"Uncommon", income:45, color:"#1eff00", sellPrice:750, level:1 },
-    { name:"Macken", icon:"⛽", rarity:"Uncommon", income:50, color:"#1eff00", sellPrice:800, level:1 },
-    { name:"Skola", icon:"🏫", rarity:"Uncommon", income:40, color:"#1eff00", sellPrice:700, level:1 },
-    { name:"Hyreshus", icon:"🏢", rarity:"Rare", income:120, color:"#0070dd", sellPrice:3000, level:1 },
-    { name:"Gallerian", icon:"🛍️", rarity:"Rare", income:150, color:"#0070dd", sellPrice:4000, level:1 },
-    { name:"Sjukhus", icon:"🏥", rarity:"Rare", income:180, color:"#0070dd", sellPrice:4500, level:1 },
-    { name:"Banken", icon:"🏦", rarity:"Rare", income:200, color:"#0070dd", sellPrice:5000, level:1 },
-    { name:"Fabrik", icon:"🏭", rarity:"Epic", income:550, color:"#a335ee", sellPrice:15000, level:1 },
-    { name:"Kraftverk", icon:"⚛️", rarity:"Epic", income:700, color:"#a335ee", sellPrice:20000, level:1 },
-    { name:"Skyskrapa", icon:"🏙️", rarity:"Epic", income:900, color:"#a335ee", sellPrice:25000, level:1 },
-    { name:"Arena", icon:"🏟️", rarity:"Epic", income:1100, color:"#a335ee", sellPrice:30000, level:1 },
-    { name:"Slott", icon:"🏰", rarity:"Legendary", income:3500, color:"#ff8000", sellPrice:60000, level:1 },
-    { name:"Oljerigg", icon:"🛢️", rarity:"Legendary", income:5000, color:"#ff8000", sellPrice:85000, level:1 },
-    { name:"Guldgruva", icon:"⛏️", rarity:"Legendary", income:6500, color:"#ff8000", sellPrice:100000, level:1 },
-    { name:"Guldpalats", icon:"🏛️", rarity:"Legendary", income:8500, color:"#ff8000", sellPrice:130000, level:1 },
-    { name:"Imperium", icon:"💎", rarity:"Mythic", income:25000, color:"#ff003c", sellPrice:500000, level:1 },
-    { name:"Future City", icon:"🛸", rarity:"Mythic", income:45000, color:"#ff003c", sellPrice:800000, level:1 },
-    { name:"Mega-Bank", icon:"💰", rarity:"Mythic", income:80000, color:"#ff003c", sellPrice:1500000, level:1 },
-    { name:"Atlantis", icon:"🔱", rarity:"Mythic", income:110000, color:"#ff003c", sellPrice:2000000, level:1 },
-    { name:"Galaktisk Bas", icon:"🚀", rarity:"Celestial", income:450000, color:"#00f2ff", sellPrice:10000000, level:1 },
-    { name:"Månbas", icon:"🌕", rarity:"Celestial", income:650000, color:"#00f2ff", sellPrice:15000000, level:1 },
-    { name:"Tidsmaskin", icon:"⌛", rarity:"Celestial", income:950000, color:"#00f2ff", sellPrice:25000000, level:1 },
-    { name:"The Matrix", icon:"🕶️", rarity:"Godly", income:2500000, color:"#ffffff", sellPrice:50000000, level:1 },
-    { name:"Gudaportal", icon:"⛩️", rarity:"Godly", income:5000000, color:"#ffffff", sellPrice:100000000, level:1 }
+const shopUpgrades=[
+  {name:'Snabbare Leverans',desc:'-1s cooldown per nivå',icon:'⚡',costs:[10000,50000,200000,750000,2500000],maxLevel:5,apply:()=>{cdReduction++}},
+  {name:'Skattesänkning',desc:'+25% säljpris per nivå',icon:'💸',costs:[25000,125000,500000,2000000,8000000],maxLevel:5,apply:()=>{sellBonus+=0.25}},
+  {name:'Arbetsmoral',desc:'+15% global produktion per nivå',icon:'📈',costs:[50000,250000,1000000,4000000,15000000],maxLevel:5,apply:()=>{globalMultiplier+=0.15}}
 ];
 
-function buyBlock(tier) {
-    if (cooldowns[tier-1] > 0) return;
-    let price = blockPrices[tier-1];
-    if (money < price) { showMessage("⚠️ För lite pengar!"); return; }
-    money -= price;
-    startCooldown(tier);
-    const wonItem = getDropResult(tier, blockLevels[tier-1]);
-    const copy = { ...wonItem, level: 1, income: wonItem.income, id: Date.now() };
-    inventory.push(copy);
-    showMessage(`🎉 ${copy.icon} ${copy.name} (${copy.rarity})!`);
-    renderInventory(); updateUI(); saveGame();
+function bUpgCost(t,l){return Math.floor([5000,25000,100000,400000,1500000][t-1]*Math.pow(4,l))}
+
+const buildings=[
+  {name:'Stuga',icon:'🏠',rarity:'Common',income:10,color:'#9e9e9e',sellPrice:50,level:1},
+  {name:'Bod',icon:'🛖',rarity:'Common',income:8,color:'#9e9e9e',sellPrice:40,level:1},
+  {name:'Garage',icon:'🚗',rarity:'Common',income:12,color:'#9e9e9e',sellPrice:60,level:1},
+  {name:'Kiosk',icon:'🏪',rarity:'Common',income:15,color:'#9e9e9e',sellPrice:75,level:1},
+  {name:'Länga',icon:'🏡',rarity:'Uncommon',income:35,color:'#4caf50',sellPrice:600,level:1},
+  {name:'Pizzeria',icon:'🍕',rarity:'Uncommon',income:45,color:'#4caf50',sellPrice:750,level:1},
+  {name:'Macken',icon:'⛽',rarity:'Uncommon',income:50,color:'#4caf50',sellPrice:800,level:1},
+  {name:'Skola',icon:'🏫',rarity:'Uncommon',income:40,color:'#4caf50',sellPrice:700,level:1},
+  {name:'Hyreshus',icon:'🏢',rarity:'Rare',income:120,color:'#2196f3',sellPrice:3000,level:1},
+  {name:'Gallerian',icon:'🛍️',rarity:'Rare',income:150,color:'#2196f3',sellPrice:4000,level:1},
+  {name:'Sjukhus',icon:'🏥',rarity:'Rare',income:180,color:'#2196f3',sellPrice:4500,level:1},
+  {name:'Banken',icon:'🏦',rarity:'Rare',income:200,color:'#2196f3',sellPrice:5000,level:1},
+  {name:'Fabrik',icon:'🏭',rarity:'Epic',income:550,color:'#9c27b0',sellPrice:15000,level:1},
+  {name:'Kraftverk',icon:'⚛️',rarity:'Epic',income:700,color:'#9c27b0',sellPrice:20000,level:1},
+  {name:'Skyskrapa',icon:'🏙️',rarity:'Epic',income:900,color:'#9c27b0',sellPrice:25000,level:1},
+  {name:'Arena',icon:'🏟️',rarity:'Epic',income:1100,color:'#9c27b0',sellPrice:30000,level:1},
+  {name:'Slott',icon:'🏰',rarity:'Legendary',income:3500,color:'#ff9800',sellPrice:60000,level:1},
+  {name:'Oljerigg',icon:'🛢️',rarity:'Legendary',income:5000,color:'#ff9800',sellPrice:85000,level:1},
+  {name:'Guldgruva',icon:'⛏️',rarity:'Legendary',income:6500,color:'#ff9800',sellPrice:100000,level:1},
+  {name:'Guldpalats',icon:'🏛️',rarity:'Legendary',income:8500,color:'#ff9800',sellPrice:130000,level:1},
+  {name:'Imperium',icon:'💎',rarity:'Mythic',income:25000,color:'#f44336',sellPrice:500000,level:1},
+  {name:'Future City',icon:'🛸',rarity:'Mythic',income:45000,color:'#f44336',sellPrice:800000,level:1},
+  {name:'Mega-Bank',icon:'💰',rarity:'Mythic',income:80000,color:'#f44336',sellPrice:1500000,level:1},
+  {name:'Atlantis',icon:'🔱',rarity:'Mythic',income:110000,color:'#f44336',sellPrice:2000000,level:1},
+  {name:'Galaktisk Bas',icon:'🚀',rarity:'Celestial',income:450000,color:'#00bcd4',sellPrice:10000000,level:1},
+  {name:'Månbas',icon:'🌕',rarity:'Celestial',income:650000,color:'#00bcd4',sellPrice:15000000,level:1},
+  {name:'Tidsmaskin',icon:'⌛',rarity:'Celestial',income:950000,color:'#00bcd4',sellPrice:25000000,level:1},
+  {name:'The Matrix',icon:'🕶️',rarity:'Godly',income:2500000,color:'#fff',sellPrice:50000000,level:1},
+  {name:'Gudaportal',icon:'⛩️',rarity:'Godly',income:5000000,color:'#fff',sellPrice:100000000,level:1}
+];
+
+function pick(a,f,t){return a[Math.min(f+Math.floor(Math.random()*(t-f)),a.length-1)]}
+
+function getDrop(tier,bl){
+  const r=Math.random()*100,cb=bl*0.05,mb=bl*0.08,lb=bl*0.15,eb=bl*0.5;
+  if(tier===1){
+    if(r<0.001+cb*0.2)return pick(buildings,27,29);
+    if(r<0.01+cb*0.5)return pick(buildings,24,27);
+    if(r<0.1+mb)return pick(buildings,20,24);
+    if(r<1+eb)return pick(buildings,16,20);
+    if(r<10+lb*2)return pick(buildings,4,8);
+    return pick(buildings,0,4);
+  }else if(tier===2){
+    if(r<0.005+cb*0.3)return pick(buildings,27,29);
+    if(r<0.05+cb)return pick(buildings,24,27);
+    if(r<0.5+mb*2)return pick(buildings,20,24);
+    if(r<5+eb)return pick(buildings,8,12);
+    if(r<35+lb)return pick(buildings,4,8);
+    return pick(buildings,0,4);
+  }else if(tier===3){
+    if(r<0.01+cb*0.5)return pick(buildings,27,29);
+    if(r<0.2+cb*1.5)return pick(buildings,24,27);
+    if(r<2+mb*2)return pick(buildings,12,16);
+    if(r<15+eb)return pick(buildings,8,12);
+    if(r<60+lb)return pick(buildings,4,8);
+    return pick(buildings,0,4);
+  }else if(tier===4){
+    if(r<0.05+cb)return pick(buildings,27,29);
+    if(r<1+cb*2)return pick(buildings,24,27);
+    if(r<5+mb*3)return pick(buildings,16,20);
+    if(r<20+eb)return pick(buildings,12,16);
+    if(r<50+lb)return pick(buildings,8,12);
+    return pick(buildings,0,8);
+  }else{
+    if(r<0.5+cb*2)return pick(buildings,27,29);
+    if(r<3+cb*3)return pick(buildings,24,27);
+    if(r<10+mb*4)return pick(buildings,20,24);
+    if(r<40+eb*1.5)return pick(buildings,16,20);
+    if(r<70+lb)return pick(buildings,12,16);
+    return pick(buildings,0,12);
+  }
 }
 
-function upgradeBlockLevel(tier) {
-    const lvl = blockLevels[tier-1];
-    if (lvl >= 4) { showMessage("Max uppgraderat block!"); return; }
-    const cost = blockUpgCost(tier, lvl);
-    if (money < cost) { showMessage(`Behöver ${cost.toLocaleString()} KR!`); return; }
-    money -= cost;
-    blockLevels[tier-1]++;
-    showMessage(`✨ Block ${tier} uppgraderat till nivå ${blockLevels[tier-1]}!`);
-    renderBlocks(); updateUI(); saveGame();
+function buyBlock(tier){
+  if(cooldowns[tier-1]>0)return;
+  const price=blockPrices[tier-1];
+  if(money<price){showToast('⚠️ För lite pengar!');return}
+  money-=price;startCooldown(tier);
+  const won=getDrop(tier,blockLevels[tier-1]);
+  inventory.push({...won,level:1,id:Date.now()});
+  showToast(won.icon+' '+won.name+' — '+won.rarity+'!');
+  renderInv();updateUI();save();
 }
 
-function switchTab(tab) {
-    document.getElementById('inventory').style.display = tab === 'inv' ? 'grid' : 'none';
-    document.getElementById('shop-ui').style.display = tab === 'shop' ? 'grid' : 'none';
-    document.getElementById('inv-tab').classList.toggle('active', tab === 'inv');
-    document.getElementById('shop-tab').classList.toggle('active', tab === 'shop');
-    if (tab === 'shop') renderShop();
+function upgBlockLevel(tier){
+  const l=blockLevels[tier-1];
+  if(l>=4){showToast('Max odds uppnådda!');return}
+  const cost=bUpgCost(tier,l);
+  if(money<cost){showToast('Behöver '+fmt(cost)+' KR');return}
+  money-=cost;blockLevels[tier-1]++;
+  showToast('✨ Block '+tier+' är nu ⭐'+blockLevels[tier-1]);
+  renderBlocks();updateUI();save();
 }
 
-function renderShop() {
-    const shop = document.getElementById('shop-ui');
-    shop.innerHTML = '';
-    shopUpgrades.forEach((upg, i) => {
-        const lvl = shopLevels[i];
-        const maxed = lvl >= upg.maxLevel;
-        const cost = maxed ? 0 : upg.costs[lvl];
-        const div = document.createElement('div');
-        div.className = 'shop-item';
-        const dots = Array.from({length: upg.maxLevel}, (_, d) =>
-            `<div class="level-dot ${d < lvl ? 'filled' : ''}"></div>`).join('');
-        div.innerHTML = `
-            <div class="shop-item-info">
-                <b>${upg.name}</b>
-                <small>${upg.desc}</small>
-            </div>
-            <div class="shop-item-right">
-                <div class="level-dots">${dots}</div>
-                <button class="buy-btn" ${maxed ? 'disabled' : ''} onclick="buyShopUpgrade(${i})">
-                    ${maxed ? 'MAX' : cost.toLocaleString() + ' KR'}
-                </button>
-            </div>`;
-        shop.appendChild(div);
-    });
+function switchTab(tab){
+  document.getElementById('inventory').style.display=tab==='inv'?'grid':'none';
+  document.getElementById('shop-ui').style.display=tab==='shop'?'flex':'none';
+  document.getElementById('inv-tab').classList.toggle('active',tab==='inv');
+  document.getElementById('shop-tab').classList.toggle('active',tab==='shop');
+  if(tab==='shop')renderShop();
 }
 
-function buyShopUpgrade(i) {
-    const upg = shopUpgrades[i];
-    const lvl = shopLevels[i];
-    if (lvl >= upg.maxLevel) { showMessage("Max uppgraderad!"); return; }
-    const cost = upg.costs[lvl];
-    if (money < cost) { showMessage("⚠️ För lite pengar!"); return; }
-    money -= cost;
-    upg.apply();
-    shopLevels[i]++;
-    showMessage(`✅ ${upg.name} uppgraderad till nivå ${shopLevels[i]}!`);
-    renderShop(); updateUI(); saveGame();
+function renderShop(){
+  const el=document.getElementById('shop-ui');el.innerHTML='';
+  shopUpgrades.forEach((upg,i)=>{
+    const l=shopLevels[i],mx=l>=upg.maxLevel,cost=mx?0:upg.costs[l];
+    const dots=Array.from({length:upg.maxLevel},(_,d)=>'<div class="dot '+(d<l?'on':'')+'"></div>').join('');
+    const d=document.createElement('div');d.className='shop-card';
+    d.innerHTML='<div class="shop-ico">'+upg.icon+'</div><div class="shop-info"><div class="shop-n">'+upg.name+'</div><div class="shop-d">'+upg.desc+'</div><div class="shop-dots">'+dots+'</div></div><div class="shop-r"><button class="buy-btn2" '+(mx?'disabled':'')+' data-i="'+i+'">'+(mx?'MAX':fmt(cost)+' KR')+'</button></div>';
+    el.appendChild(d);
+  });
+  el.querySelectorAll('.buy-btn2').forEach(b=>b.addEventListener('click',()=>buyShopUpg(parseInt(b.dataset.i))));
 }
 
-function upgradeBuilding(i) {
-    let b = cityData[i];
-    if (!b) return;
-    if (b.level >= 50) { showMessage("Max level!"); return; }
-    let cost = Math.floor(b.sellPrice * 2 * Math.pow(1.2, b.level - 1));
-    if (money >= cost) {
-        money -= cost;
-        b.level++;
-        b.income = Math.floor(b.income * 1.1);
-        showMessage(`${b.name} nådde Level ${b.level}!`);
-        renderCity(); updateUI(); saveGame();
-    } else {
-        showMessage(`Behöver ${cost.toLocaleString()} KR!`);
+function buyShopUpg(i){
+  const upg=shopUpgrades[i],l=shopLevels[i];
+  if(l>=upg.maxLevel){showToast('Max uppgraderad!');return}
+  const cost=upg.costs[l];
+  if(money<cost){showToast('⚠️ För lite pengar!');return}
+  money-=cost;upg.apply();shopLevels[i]++;
+  showToast('✅ '+upg.name+' → nivå '+shopLevels[i]);
+  renderShop();updateUI();save();
+}
+
+function upgradeBuilding(i){
+  const b=cityData[i];if(!b)return;
+  if(b.level>=50){showToast('Max level!');return}
+  const cost=Math.floor(b.sellPrice*2*Math.pow(1.2,b.level-1));
+  if(money>=cost){money-=cost;b.level++;b.income=Math.floor(b.income*1.1);showToast(b.icon+' '+b.name+' → Level '+b.level+'!');renderCity();updateUI();save();}
+  else showToast('Behöver '+fmt(cost)+' KR!');
+}
+
+function renderCity(){
+  const grid=document.getElementById('city-grid');grid.innerHTML='';
+  cityData.forEach((data,i)=>{
+    const slot=document.createElement('div');
+    slot.className='slot'+(data?'':' empty');
+    if(data){
+      const c=data.color;
+      slot.style.borderColor=c+'44';
+      slot.style.background='linear-gradient(135deg,'+c+'0a,'+c+'04)';
+      const uc=Math.floor(data.sellPrice*2*Math.pow(1.2,data.level-1));
+      slot.innerHTML='<div class="slot-lvl">LVL '+data.level+'</div><div class="slot-icon">'+data.icon+'</div><div class="slot-income">+'+fmt(Math.floor(data.income*globalMultiplier))+'/s</div><button class="upg-btn" data-s="'+i+'">⬆ '+fmtS(uc)+'</button>';
+      if(data.rarity==='Mythic')slot.classList.add('mg');
+      if(data.rarity==='Celestial')slot.classList.add('cg');
+      if(data.rarity==='Godly')slot.classList.add('gg');
     }
-}
-
-function renderCity() {
-    const grid = document.getElementById('city-grid');
-    grid.innerHTML = '';
-    cityData.forEach((data, i) => {
-        const slot = document.createElement('div');
-        slot.className = 'slot';
-        if (data) {
-            slot.style.borderColor = data.color;
-            const upgCost = Math.floor(data.sellPrice * 2 * Math.pow(1.2, data.level - 1));
-            slot.innerHTML = `
-                <div class="level-badge">LVL ${data.level}</div>
-                <div class="building-icon">${data.icon}</div>
-                <div class="income-tag">+${Math.floor(data.income * globalMultiplier).toLocaleString()}/s</div>
-                <button class="upgrade-btn" data-slot="${i}">UPG ${upgCost.toLocaleString()}</button>
-            `;
-            if (data.rarity === "Mythic") slot.classList.add('mythic-glow');
-            if (data.rarity === "Celestial") slot.classList.add('celestial-glow');
-            if (data.rarity === "Godly") slot.classList.add('godly-glow');
-        } else {
-            slot.style.borderColor = "rgba(255,255,255,0.05)";
-        }
-        slot.addEventListener('click', (e) => {
-            if (e.target.classList.contains('upgrade-btn')) {
-                e.stopPropagation();
-                upgradeBuilding(parseInt(e.target.dataset.slot));
-            } else {
-                handleSlotClick(i);
-            }
-        });
-        grid.appendChild(slot);
+    slot.addEventListener('click',e=>{
+      if(e.target.dataset.s!==undefined){e.stopPropagation();upgradeBuilding(parseInt(e.target.dataset.s));}
+      else handleSlotClick(i);
     });
+    grid.appendChild(slot);
+  });
 }
 
-function sellItem(index) {
-    let item = inventory[index];
-    let price = Math.floor(item.sellPrice * sellBonus);
-    money += price;
-    inventory.splice(index, 1);
-    selectedInvIndex = null;
-    showMessage(`💰 Sålde ${item.name} för ${price.toLocaleString()} kr`);
-    renderInventory(); updateUI(); saveGame();
+function renderInv(){
+  const el=document.getElementById('inventory');el.innerHTML='';
+  inventory.forEach((item,idx)=>{
+    const d=document.createElement('div');d.className='inv-card';
+    d.style.borderColor=item.color+'44';
+    d.style.borderTopColor=item.color;
+    d.innerHTML='<div class="inv-icon">'+item.icon+'</div><div class="inv-name" style="color:'+item.color+'">'+item.name+'</div><div class="inv-rar" style="color:'+item.color+'">'+item.rarity+'</div><div class="inv-btns"><button class="bld-btn" data-i="'+idx+'">Bygg</button><button class="sll-btn" data-s="'+idx+'">Sälj</button></div>';
+    el.appendChild(d);
+  });
+  el.querySelectorAll('.bld-btn').forEach(b=>b.addEventListener('click',()=>prepPlace(parseInt(b.dataset.i))));
+  el.querySelectorAll('.sll-btn').forEach(b=>b.addEventListener('click',()=>sellItem(parseInt(b.dataset.s))));
 }
 
-function renderInventory() {
-    const invEl = document.getElementById('inventory');
-    invEl.innerHTML = '';
-    inventory.forEach((item, index) => {
-        const div = document.createElement('div');
-        div.className = 'inv-item';
-        div.style.borderTop = `4px solid ${item.color}`;
-        div.innerHTML = `
-            <b>${item.icon}</b>
-            <span style="color:${item.color}">${item.name}</span>
-            <div class="inv-buttons">
-                <button class="place-btn" data-idx="${index}">BYGG</button>
-                <button class="sell-btn" data-sell="${index}">SÄLJ</button>
-            </div>`;
-        invEl.appendChild(div);
-    });
-    invEl.querySelectorAll('.place-btn').forEach(btn => {
-        btn.addEventListener('click', () => preparePlacement(parseInt(btn.dataset.idx)));
-    });
-    invEl.querySelectorAll('.sell-btn').forEach(btn => {
-        btn.addEventListener('click', () => sellItem(parseInt(btn.dataset.sell)));
-    });
+function handleSlotClick(i){
+  if(selectedInvIndex!==null)placeBuilding(i);
+  else if(cityData[i])pickUp(i);
 }
 
-function handleSlotClick(i) {
-    if (selectedInvIndex !== null) placeBuilding(i);
-    else if (cityData[i]) pickUpBuilding(i);
+function pickUp(i){
+  inventory.push(cityData[i]);cityData[i]=null;
+  showToast('📦 Byggnad i inventory');
+  renderCity();renderInv();updateUI();save();
 }
 
-function pickUpBuilding(i) {
-    inventory.push(cityData[i]);
-    cityData[i] = null;
-    showMessage("📦 Byggnad skickad till inventory!");
-    renderCity(); renderInventory(); updateUI(); saveGame();
+function placeBuilding(si){
+  if(!cityData[si]){
+    cityData[si]=inventory[selectedInvIndex];inventory.splice(selectedInvIndex,1);selectedInvIndex=null;
+    document.querySelectorAll('.slot').forEach(s=>s.classList.remove('highlight'));
+    renderCity();renderInv();updateUI();save();
+  }else showToast('Platsen är redan tagen!');
 }
 
-function placeBuilding(slotIndex) {
-    if (!cityData[slotIndex]) {
-        cityData[slotIndex] = inventory[selectedInvIndex];
-        inventory.splice(selectedInvIndex, 1);
-        selectedInvIndex = null;
-        document.querySelectorAll('.slot').forEach(s => s.classList.remove('highlight'));
-        renderCity(); renderInventory(); updateUI(); saveGame();
-    } else {
-        showMessage("Den platsen är redan upptagen!");
-    }
+function prepPlace(idx){
+  selectedInvIndex=idx;
+  document.querySelectorAll('.slot.empty').forEach(s=>s.classList.add('highlight'));
+  showToast('Klicka på en markerad plats');
 }
 
-function preparePlacement(index) {
-    selectedInvIndex = index;
-    document.querySelectorAll('.slot').forEach(s => {
-        if (!cityData[Array.from(document.querySelectorAll('.slot')).indexOf(s)]) {
-            s.classList.add('highlight');
-        }
-    });
-    showMessage("Klicka på en tom plats i staden!");
+function sellItem(idx){
+  const item=inventory[idx];
+  const price=Math.floor(item.sellPrice*sellBonus);
+  money+=price;inventory.splice(idx,1);selectedInvIndex=null;
+  showToast('💰 Sålde '+item.name+' för '+fmt(price)+' KR');
+  renderInv();updateUI();save();
 }
 
-function startCooldown(tier) {
-    cooldowns[tier-1] = Math.max(1, 5 - cdReduction);
-    renderBlocks();
-    let t = setInterval(() => {
-        cooldowns[tier-1]--;
-        const cdDisplay = document.getElementById(`cd-${tier}`);
-        if (cdDisplay) cdDisplay.innerText = cooldowns[tier-1];
-        if (cooldowns[tier-1] <= 0) { clearInterval(t); renderBlocks(); }
-    }, 1000);
+function startCooldown(tier){
+  cooldowns[tier-1]=Math.max(1,5-cdReduction);renderBlocks();
+  let t=setInterval(()=>{
+    cooldowns[tier-1]--;
+    const cd=document.getElementById('cd-'+tier);
+    if(cd)cd.innerText=cooldowns[tier-1];
+    if(cooldowns[tier-1]<=0){clearInterval(t);renderBlocks();}
+  },1000);
 }
 
-function upgradeBlocks() {
-    let cost = upgCosts[currentMaxBlock];
-    if (money >= cost) {
-        money -= cost;
-        currentMaxBlock++;
-        renderBlocks(); updateUI(); saveGame();
-        showMessage("NYTT BLOCK UPPLÅST!");
-    } else { showMessage("⚠️ För lite pengar!"); }
+function upgradeBlocks(){
+  const cost=upgCosts[currentMaxBlock];
+  if(money>=cost){money-=cost;currentMaxBlock++;renderBlocks();updateUI();save();showToast('🎉 Nytt block upplåst!');}
+  else showToast('⚠️ För lite pengar!');
 }
 
-function renderBlocks() {
-    const row = document.getElementById('blocks-row');
-    row.innerHTML = '';
-    const names = ["COMMON","UNCOMMON","RARE","EPIC","LEGEND"];
-    const icons = ["?","★","◆","✦","👑"];
-    for (let i = 1; i <= currentMaxBlock; i++) {
-        const wrap = document.createElement('div');
-        wrap.className = 'block-wrapper';
-        const isCd = cooldowns[i-1] > 0;
-        const blvl = blockLevels[i-1];
-        const nextUpgCost = blvl < 4 ? blockUpgCost(i, blvl) : null;
-        const stars = Array.from({length: 4}, (_, s) =>
-            `<span class="block-star ${s < blvl ? '' : 'empty'}">★</span>`).join('');
-        wrap.innerHTML = `
-            <div id="block-${i}" class="lucky-block block-${i} ${isCd ? 'disabled' : ''}" onclick="buyBlock(${i})">
-                ${isCd ? '' : `<span style="font-size:3.5rem">${icons[i-1]}</span>`}
-                <div id="cd-${i}" class="cooldown-text" style="display:${isCd?'block':'none'}">${cooldowns[i-1]}</div>
-                <div class="block-upg-row">${stars}</div>
-            </div>
-            <div id="info-${i}" class="drop-info">
-                <div>${names[i-1]} (${blockPrices[i-1].toLocaleString()} KR)</div>
-                ${nextUpgCost ? `<button class="upg-block-btn" onclick="event.stopPropagation(); upgradeBlockLevel(${i})">UPG ODDS: ${nextUpgCost.toLocaleString()} KR</button>` : '<div style="opacity:0.5;font-size:0.6rem">ODDS MAX</div>'}
-            </div>`;
-        row.appendChild(wrap);
-    }
+function renderBlocks(){
+  const row=document.getElementById('blocks-row');row.innerHTML='';
+  for(let i=1;i<=currentMaxBlock;i++){
+    const isCd=cooldowns[i-1]>0,bl=blockLevels[i-1];
+    const nc=bl<4?bUpgCost(i,bl):null;
+    const stars=Array.from({length:4},(_,s)=>'<span class="bstar '+(s<bl?'on':'off')+'">★</span>').join('');
+    const w=document.createElement('div');w.className='block-wrapper';
+    w.innerHTML='<div id="block-'+i+'" class="lucky-block bt'+i+' '+(isCd?'disabled':'')+'" onclick="buyBlock('+i+')">'+(isCd?'<div class="cd-over"><span class="cd-n" id="cd-'+i+'">'+cooldowns[i-1]+'</span></div>':'<div class="block-icon">'+blockIcons[i-1]+'</div><div class="block-stars">'+stars+'</div>')+'</div><div class="block-meta"><div class="block-name">'+blockNames[i-1]+'</div><div class="block-price">'+fmt(blockPrices[i-1])+' KR</div>'+(nc?'<button class="upg-bl-btn" onclick="event.stopPropagation();upgBlockLevel('+i+')">⬆ '+fmtS(nc)+' KR</button>':'<div class="upg-bl-btn mx">Max odds</div>')+'</div>';
+    row.appendChild(w);
+  }
 }
 
-function updateUI() {
-    document.getElementById('money').innerText = Math.floor(money).toLocaleString();
-    const income = cityData.reduce((t, b) => t + (b ? b.income : 0), 0) * globalMultiplier;
-    document.getElementById('pps').innerText = Math.floor(income).toLocaleString();
-    const upgBtn = document.getElementById('upg-luck-btn');
-    if (currentMaxBlock >= 5) upgBtn.style.display = 'none';
-    else document.getElementById('upg-cost').innerText = upgCosts[currentMaxBlock].toLocaleString();
+function updateUI(){
+  document.getElementById('money').innerText=fmt(Math.floor(money));
+  const inc=cityData.reduce((t,b)=>t+(b?b.income:0),0)*globalMultiplier;
+  document.getElementById('pps').innerText=fmt(Math.floor(inc));
+  const btn=document.getElementById('upg-luck-btn');
+  if(currentMaxBlock>=5)btn.style.display='none';
+  else document.getElementById('upg-cost').innerText=fmt(upgCosts[currentMaxBlock]);
 }
 
-function showMessage(h) {
-    const m = document.getElementById('game-msg');
-    m.innerHTML = h;
-    m.classList.add('show-msg');
-    setTimeout(() => m.classList.remove('show-msg'), 2500);
+let _tt;
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),2500);
 }
 
-function saveGame() {
-    localStorage.setItem('lucky_city_v5', JSON.stringify({
-        money, currentMaxBlock, inventory, cityData,
-        globalMultiplier, sellBonus, cdReduction,
-        blockLevels, shopLevels
-    }));
+function fmt(n){return Math.round(n).toLocaleString('sv-SE')}
+function fmtS(n){
+  if(n>=1000000)return(n/1000000).toFixed(1)+'M';
+  if(n>=1000)return Math.round(n/1000)+'k';
+  return String(n);
 }
 
-function loadGame() {
-    const s = localStorage.getItem('lucky_city_v5');
-    if (s) {
-        const d = JSON.parse(s);
-        money = d.money || 500;
-        currentMaxBlock = d.currentMaxBlock || 1;
-        inventory = d.inventory || [];
-        cityData = d.cityData || Array(24).fill(null);
-        globalMultiplier = d.globalMultiplier || 1;
-        sellBonus = d.sellBonus || 1;
-        cdReduction = d.cdReduction || 0;
-        blockLevels = d.blockLevels || [0,0,0,0,0];
-        shopLevels = d.shopLevels || [0,0,0];
-    }
+function save(){
+  localStorage.setItem('lc_v6',JSON.stringify({money,currentMaxBlock,inventory,cityData,globalMultiplier,sellBonus,cdReduction,blockLevels,shopLevels}));
 }
 
-function resetGame() {
-    if (confirm("Nollställa staden?")) {
-        localStorage.removeItem('lucky_city_v5');
-        location.reload();
-    }
+function loadGame(){
+  const s=localStorage.getItem('lc_v6');
+  if(s){const d=JSON.parse(s);money=d.money||500;currentMaxBlock=d.currentMaxBlock||1;inventory=d.inventory||[];cityData=d.cityData||Array(24).fill(null);globalMultiplier=d.globalMultiplier||1;sellBonus=d.sellBonus||1;cdReduction=d.cdReduction||0;blockLevels=d.blockLevels||[0,0,0,0,0];shopLevels=d.shopLevels||[0,0,0];}
 }
 
-setInterval(() => {
-    const inc = cityData.reduce((t, b) => t + (b ? b.income : 0), 0) * globalMultiplier;
-    money += inc; updateUI();
-}, 1000);
+function resetGame(){if(confirm('Nollställa hela staden?')){localStorage.removeItem('lc_v6');location.reload();}}
 
-loadGame(); renderCity(); renderInventory(); renderBlocks(); updateUI();
+setInterval(()=>{
+  const inc=cityData.reduce((t,b)=>t+(b?b.income:0),0)*globalMultiplier;
+  money+=inc;updateUI();
+},1000);
+
+loadGame();renderCity();renderInv();renderBlocks();updateUI();
 </script>
 </body>
 </html>
