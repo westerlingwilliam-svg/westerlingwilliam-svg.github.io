@@ -792,7 +792,7 @@
 
                 let rightSide;
                 if (!owned) {
-                    rightSide = `<div class="price-tag">${t.cost.toLocaleString()} kr</div>`;
+                    rightSide = `<div class="price-tag">${fmt(t.cost)} kr</div>`;
                 } else if (t.type === "skin") {
                     if (isActive) {
                         rightSide = `<span style="color:#28a745; font-weight:bold;">&#10003; AKTIV</span>`;
@@ -854,7 +854,7 @@
             data.money += clickValue;
             data.clicks++;
             if(e) {
-                const t = document.createElement("div"); t.className = "plus-one"; t.innerText = "+" + clickValue.toLocaleString();
+                const t = document.createElement("div"); t.className = "plus-one"; t.innerText = "+" + fmt(clickValue);
                 t.style.left = e.pageX + "px"; t.style.top = e.pageY + "px";
                 document.body.appendChild(t); setTimeout(() => t.remove(), 800);
             }
@@ -912,10 +912,20 @@
             return 0;
         }
 
+        function fmt(n) {
+            n = Math.floor(n);
+            if (n >= 1e15) return (n/1e15).toFixed(2) + "biljard";
+            if (n >= 1e12) return (n/1e12).toFixed(2) + "b";
+            if (n >= 1e9)  return (n/1e9).toFixed(2)  + "md";
+            if (n >= 1e6)  return (n/1e6).toFixed(2)  + "m";
+            if (n >= 1e3)  return (n/1e3).toFixed(1)  + "k";
+            return n.toString();
+        }
+
         function updateNumbersOnly() {
-            document.getElementById("money").innerText = Math.floor(data.money).toLocaleString();
-            document.getElementById("mpc").innerText = Math.floor(calculateMPC() * getSkinMultiplier()).toLocaleString();
-            document.getElementById("pps").innerText = Math.floor(getTotalPPS()).toLocaleString();
+            document.getElementById("money").innerText = fmt(data.money);
+            document.getElementById("mpc").innerText = fmt(calculateMPC() * getSkinMultiplier());
+            document.getElementById("pps").innerText = fmt(getTotalPPS());
             document.getElementById("bonus-val").innerText = Math.round((getQuestBonus()-1)*100);
             
             // Show skin multiplier box if active skin has boost
@@ -929,6 +939,7 @@
             }
             
             document.getElementById("win-mult-box").style.display = data.hasWon ? "inline-block" : "none";
+            document.getElementById("hammer-btn").classList.toggle("disabled", data.money < getDiscountedPrice(data.hammerPrice));
             document.getElementById("auto-btn").classList.toggle("disabled", data.money < getDiscountedPrice(data.autoPrice));
             
             buildings.forEach((_, i) => {
@@ -940,15 +951,15 @@
         }
 
         function renderEverything() {
-            document.getElementById("hammer-cost").innerText = getDiscountedPrice(data.hammerPrice).toLocaleString();
-            document.getElementById("auto-cost").innerText = getDiscountedPrice(data.autoPrice).toLocaleString();
+            document.getElementById("hammer-cost").innerText = fmt(getDiscountedPrice(data.hammerPrice));
+            document.getElementById("auto-cost").innerText = fmt(getDiscountedPrice(data.autoPrice));
             
             let bHtml = "";
             buildings.forEach((b, i) => {
                 const cost = getDiscountedPrice(data.bCosts[i]);
                 if (data.money >= cost * 0.3 || data.bCounts[i] > 0) {
                     bHtml += `<button class="buy-button" id="build-${i}" onclick="buyBuilding(${i})">
-                        <div class="btn-header"><b>${b.name} (${data.bCounts[i]})</b> <div class="price-tag">${cost.toLocaleString()} kr</div></div>
+                        <div class="btn-header"><b>${b.name} (${data.bCounts[i]})</b> <div class="price-tag">${fmt(cost)} kr</div></div>
                         <div class="btn-sub">Ger: ${(b.inc * data.buildingEfficiency[i] * getQuestBonus()).toFixed(1)}/sek styck</div>
                     </button>`;
                 }
@@ -963,7 +974,7 @@
                     bHtml += `
                     <div style="margin-top:15px; border-top: 4px solid #fecc00; padding-top: 15px;">
                         <button class="buy-button ${canAfford ? '' : 'disabled'}" id="build-win" onclick="buyFolkhemmet()" style="background: linear-gradient(135deg, #fecc00, #fff 60%, #fecc00); border: 3px solid #005293;">
-                            <div class="btn-header"><b>🏛️ Bygg Folkhemmet</b> <div class="price-tag" style="background:#005293; color:#fecc00;">50 Biljoner kr</div></div>
+                            <div class="btn-header"><b>🏛️ Bygg Folkhemmet</b> <div class="price-tag" style="background:#005293; color:#fecc00;">50b kr</div></div>
                             <div class="btn-sub" style="color:#005293; font-weight:bold;">Det ultimata målet. Slutför folkhemmet en gång för alla.</div>
                         </button>
                     </div>`;
@@ -998,9 +1009,9 @@
                 achList.forEach(item => {
                     const { type, ach, val, isReady } = item;
                     achHtml += `<div class="ach-card">
-                        <div style="display:flex; justify-content:space-between;"><b>${ach.t}</b> <span style="color:#28a745;">+${ach.reward.toLocaleString()} kr</span></div>
+                        <div style="display:flex; justify-content:space-between;"><b>${ach.t}</b> <span style="color:#28a745;">+${fmt(ach.reward)} kr</span></div>
                         <div style="font-size:0.75rem; margin:5px 0; color:#555;">Krav: ${ach.req}</div>
-                        <div class="progress-container"><div class="progress-bar" style="width: ${Math.min(100, (val/ach.target)*100)}%"></div><div class="progress-text">${Math.floor(val).toLocaleString()} / ${ach.target.toLocaleString()}</div></div>
+                        <div class="progress-container"><div class="progress-bar" style="width: ${Math.min(100, (val/ach.target)*100)}%"></div><div class="progress-text">${fmt(val)} / ${fmt(ach.target)}</div></div>
                         <button class="claim-btn ${isReady ? 'ready' : ''}" onclick="claimAch('${type}')">${isReady ? 'HÄMTA BELÖNING' : 'LÅST'}</button>
                     </div>`;
                 });
@@ -1089,7 +1100,7 @@
                     html += `<div class="lb-row ${cls} ${isMe ? 'lb-me' : ''}">
                         <div class="lb-rank">${rank}</div>
                         <div class="lb-name">${e.name}${isMe ? ' 👈' : ''}</div>
-                        <div class="lb-score">${formatScore(e.score)}</div>
+                        <div class="lb-score">${fmt(e.score)} kr</div>
                     </div>`;
                 });
                 content.innerHTML = html || '<div style="text-align:center;color:#999;padding:30px;">Inga spelare ännu!</div>';
