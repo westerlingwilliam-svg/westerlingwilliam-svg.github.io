@@ -27,8 +27,8 @@ html,body{
     -moz-transform-origin: 0 0;
 }
 
-/* HEADER - Minskat höjden för att flytta upp staden */
-#header{display:grid;grid-template-columns:350px 1fr 200px;align-items:center;padding:0 30px;height:180px;background:var(--bg2);border-bottom:2px solid var(--border2);position:relative;z-index:10;box-shadow:0 4px 50px rgba(0,0,0,0.8)}
+/* HEADER - Återställd till originalhöjd */
+#header{display:grid;grid-template-columns:350px 1fr 200px;align-items:center;padding:0 30px;height:220px;background:var(--bg2);border-bottom:2px solid var(--border2);position:relative;z-index:10;box-shadow:0 4px 50px rgba(0,0,0,0.8)}
 #header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
 
 .stat-label{font-size:0.9rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:5px}
@@ -61,15 +61,16 @@ html,body{
 .block-price{font-size:0.9rem;color:var(--gold);font-weight:800;margin:2px 0}
 .upg-bl-btn{width:100%;padding:6px 0;border-radius:8px;cursor:pointer;font-size:0.75rem;font-weight:800;border:1px solid var(--border2);background:rgba(255,255,255,0.06);color:var(--text)}
 
-/* CITY GRID - Minskat padding och flyttat upp */
-#game-area{display:flex;flex:1;height:calc(100vh - 180px);overflow:hidden}
+/* CITY GRID - Flyttat upp innehållet utan att ändra headern */
+#game-area{display:flex;flex:1;height:calc(100vh - 220px);overflow:hidden}
 #city-grid{
     flex:1;
     display:grid;
     grid-template-columns:repeat(6, 160px);
     grid-auto-rows: 160px;
     gap:15px;
-    padding:20px 40px 40px 40px;
+    padding:15px; /* Minskat padding för att tvinga upp raderna */
+    margin-top: -10px; /* Subtil uppflyttning av rutnätet */
     justify-content:center;
     background:radial-gradient(circle at center, var(--bg2), var(--bg));
     overflow-y: auto;
@@ -298,14 +299,19 @@ function buyShopUpg(i){
   renderShop();updateUI();save();
 }
 
+/* NERFAD UPPGRADERING: Max nivå 50, snabbare prisökning */
 function upgradeBuilding(i){
   const b=cityData[i];if(!b)return;
-  if(b.level>=100)return;
-  const cost=Math.floor(b.sellPrice*2*Math.pow(1.5,b.level-1));
+  if(b.level>=50){showToast('Maxnivå 50 uppnådd!');return}
+  
+  // Bas-pris på minst 200 KR för att förhindra gratisbil-loopen
+  let base = Math.max(b.sellPrice, 200);
+  const cost=Math.floor(base * 2.5 * Math.pow(1.85, b.level-1));
+  
   if(money>=cost){
     money-=cost;
     b.level++;
-    b.income = Math.floor(b.income * 2.5); 
+    b.income = Math.floor(b.income * 2.2); 
     showToast(b.icon+' '+b.name+' → Level '+b.level+'!');
     renderCity();updateUI();save();
   } else showToast('Behöver '+fmt(cost)+' KR!');
@@ -322,8 +328,11 @@ function renderCity(){
       const c=data.color;
       slot.style.borderColor=c;
       slot.style.background='linear-gradient(135deg,'+c+'15,'+c+'05)';
-      const uc=Math.floor(data.sellPrice*2*Math.pow(1.5,data.level-1));
-      slot.innerHTML='<div class="slot-lvl">LVL '+data.level+'</div><div class="slot-icon">'+data.icon+'</div><div class="slot-income">+'+fmt(Math.floor(data.income*globalMultiplier))+'/s</div><button class="upg-btn" data-s="'+i+'">UPG ('+fmtS(uc)+')</button>';
+      
+      let base = Math.max(data.sellPrice, 200);
+      const uc=Math.floor(base * 2.5 * Math.pow(1.85, data.level-1));
+      
+      slot.innerHTML='<div class="slot-lvl">LVL '+data.level+'</div><div class="slot-icon">'+data.icon+'</div><div class="slot-income">+'+fmt(Math.floor(data.income*globalMultiplier))+'/s</div><button class="upg-btn" data-s="'+i+'">'+(data.level>=50?'MAX':'UPG ('+fmtS(uc)+')')+'</button>';
     }
     slot.addEventListener('click',e=>{
       if(e.target.dataset.s!==undefined){e.stopPropagation();upgradeBuilding(parseInt(e.target.dataset.s));}
