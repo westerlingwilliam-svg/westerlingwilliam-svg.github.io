@@ -3,693 +3,837 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jimmie Vandring 3D</title>
+<title>Steal The Jimmie</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans:wght@400;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-body{overflow:hidden;background:#0a1628;font-family:'Segoe UI',system-ui,sans-serif;color:#fff}
+:root{
+  --blue:#005293;--yellow:#fecc00;--dark:#00111f;--mid:#001f38;
+  --red:#e83030;--green:#22c55e;--purple:#8b5cf6;
+}
+body{overflow:hidden;background:var(--dark);color:#fff;font-family:'Noto Sans',system-ui,sans-serif;width:100vw;height:100vh}
 canvas{display:block;position:fixed;inset:0}
 
-#startscreen{
-  position:fixed;inset:0;z-index:200;
-  background:linear-gradient(135deg,#00111f 0%,#003d6e 60%,#005293 100%);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:24px;text-align:center;padding:30px;
-}
-.sd-flag{width:90px;height:60px;background:#005293;border-radius:6px;position:relative;border:3px solid rgba(254,204,0,0.6);box-shadow:0 0 30px rgba(254,204,0,0.3)}
-.sd-flag .v{position:absolute;width:14px;height:100%;background:#fecc00;left:30px;top:0;box-shadow:0 0 12px #fecc00}
-.sd-flag .h{position:absolute;width:100%;height:14px;background:#fecc00;top:23px;left:0;box-shadow:0 0 12px #fecc00}
-#startscreen h1{font-size:3.2rem;color:#fecc00;letter-spacing:6px;text-shadow:0 0 30px rgba(254,204,0,0.6);line-height:1.1}
-#startscreen p{max-width:460px;line-height:1.8;opacity:0.8;font-size:0.95rem}
-#startscreen p strong{color:#fecc00}
-#startbtn{
-  padding:18px 60px;
-  background:linear-gradient(135deg,#fecc00,#e8a000);
-  color:#001a33;font-weight:900;font-size:1.1rem;
-  border:none;border-radius:50px;cursor:pointer;
-  letter-spacing:2px;text-transform:uppercase;
-  box-shadow:0 8px 0 #8a6400,0 12px 30px rgba(0,0,0,0.4);
-  transition:transform 0.1s,box-shadow 0.1s;
-}
-#startbtn:hover{transform:translateY(-2px);box-shadow:0 10px 0 #8a6400}
-#startbtn:active{transform:translateY(4px);box-shadow:0 4px 0 #8a6400}
-.ctrl-hint{font-size:0.72rem;opacity:0.4;letter-spacing:1px}
+/* ── HUD ── */
+#hud{position:fixed;inset:0;pointer-events:none;z-index:10}
 
-#hud{position:fixed;inset:0;pointer-events:none;z-index:10;display:none}
 #topbar{
   position:absolute;top:0;left:0;right:0;
-  padding:14px 30px;
-  background:linear-gradient(180deg,rgba(0,18,45,0.95),transparent);
+  padding:10px 20px;
+  background:linear-gradient(180deg,rgba(0,15,40,0.97),transparent);
   display:flex;justify-content:space-between;align-items:center;
+  gap:16px;
 }
-.hstat{text-align:center}
-.hlbl{font-size:0.58rem;text-transform:uppercase;letter-spacing:3px;color:#fecc00;opacity:0.7;margin-bottom:2px}
-.hval{font-size:1.3rem;font-weight:900}
-#gtitle{font-size:0.9rem;font-weight:900;letter-spacing:5px;color:#fecc00;text-shadow:0 0 20px rgba(254,204,0,0.5)}
-
-#crosshair{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:22px;height:22px}
-#crosshair::before,#crosshair::after{content:'';position:absolute;background:rgba(255,255,255,0.85);border-radius:2px}
-#crosshair::before{width:2px;height:100%;left:10px;top:0}
-#crosshair::after{width:100%;height:2px;top:10px;left:0}
-
-#ehint{
-  position:absolute;bottom:37%;left:50%;transform:translateX(-50%);
-  background:rgba(0,0,0,0.75);border:1px solid rgba(254,204,0,0.7);
-  border-radius:8px;padding:8px 20px;font-size:0.82rem;color:#fecc00;
-  display:none;letter-spacing:1px;
+#gtitle{
+  font-family:'Black Han Sans',sans-serif;
+  font-size:1.6rem;color:var(--yellow);
+  letter-spacing:2px;text-shadow:0 0 20px rgba(254,204,0,0.5);
 }
-#popup{
-  position:absolute;top:34%;left:50%;transform:translate(-50%,-50%);
-  background:rgba(0,25,65,0.97);border:2px solid #fecc00;
-  border-radius:18px;padding:24px 40px;text-align:center;
-  display:none;min-width:280px;box-shadow:0 20px 60px rgba(0,0,0,0.7);
-}
-#popup h3{color:#fecc00;font-size:1.4rem;margin-bottom:8px}
-#popup p{opacity:0.8;font-size:0.88rem}
-#popup .psub{margin-top:8px;font-size:0.75rem;opacity:0.5;text-transform:uppercase;letter-spacing:1px}
+.topstat{text-align:center;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:6px 14px;min-width:80px}
+.tlbl{font-size:0.55rem;text-transform:uppercase;letter-spacing:2px;color:var(--yellow);opacity:0.8}
+.tval{font-size:1.1rem;font-weight:900}
+.tval.green{color:var(--green)}
+.tval.yellow{color:var(--yellow)}
+.tval.red{color:var(--red)}
 
-#minimap{
-  position:absolute;bottom:60px;right:18px;
-  width:130px;height:130px;
-  background:rgba(0,12,35,0.88);
-  border:1px solid rgba(254,204,0,0.35);border-radius:10px;
-  overflow:hidden;
+/* Wave banner */
+#wavebanner{
+  position:absolute;top:70px;left:50%;transform:translateX(-50%);
+  background:linear-gradient(135deg,rgba(0,82,147,0.95),rgba(0,40,90,0.95));
+  border:2px solid var(--yellow);border-radius:30px;
+  padding:8px 28px;font-size:0.8rem;font-weight:900;
+  letter-spacing:2px;text-transform:uppercase;color:var(--yellow);
+  backdrop-filter:blur(4px);white-space:nowrap;
 }
-#minimap canvas{width:130px;height:130px}
 
-#progress{
-  position:absolute;bottom:16px;left:50%;transform:translateX(-50%);
-  display:flex;gap:8px;align-items:center;
-}
-.pstar{font-size:1.3rem;opacity:0.2;transition:opacity 0.3s,transform 0.3s}
-.pstar.found{opacity:1;transform:scale(1.3)}
-
-#bottombar{
+/* ── SHOP PANEL ── */
+#shop{
   position:absolute;bottom:0;left:0;right:0;
-  padding:10px 24px;
-  background:linear-gradient(0deg,rgba(0,8,25,0.88),transparent);
-  display:flex;justify-content:center;gap:28px;font-size:0.68rem;opacity:0.5;
+  background:linear-gradient(0deg,rgba(0,12,35,0.99),rgba(0,20,50,0.95) 80%,transparent);
+  padding:12px 16px 14px;
+  display:flex;gap:10px;align-items:flex-end;justify-content:center;
+  pointer-events:all;
+  flex-wrap:nowrap;overflow-x:auto;
 }
-kbd{background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:4px;font-family:inherit}
-
-#lockprompt{
-  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-  background:rgba(0,0,0,0.7);border:1px solid rgba(254,204,0,0.4);
-  border-radius:10px;padding:12px 24px;font-size:0.82rem;color:#fecc00;
-  display:none;text-align:center;letter-spacing:1px;
+.unit-card{
+  background:linear-gradient(160deg,rgba(0,60,130,0.7),rgba(0,25,60,0.9));
+  border:2px solid rgba(255,255,255,0.1);border-radius:14px;
+  padding:10px 12px;min-width:110px;max-width:130px;
+  text-align:center;cursor:pointer;
+  transition:border-color 0.15s,transform 0.15s,box-shadow 0.15s;
+  flex-shrink:0;
 }
+.unit-card:hover:not(:disabled){
+  border-color:var(--yellow);transform:translateY(-4px);
+  box-shadow:0 8px 24px rgba(0,0,0,0.5);
+}
+.unit-card.can-afford{border-color:rgba(254,204,0,0.45)}
+.unit-card.cant-afford{opacity:0.5;cursor:not-allowed}
+.unit-emoji{font-size:2rem;line-height:1;margin-bottom:4px}
+.unit-name{font-size:0.7rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:var(--yellow);margin-bottom:2px}
+.unit-desc{font-size:0.58rem;opacity:0.6;line-height:1.3;margin-bottom:6px}
+.unit-cost{font-size:0.85rem;font-weight:900;color:var(--yellow)}
+.unit-stats{display:flex;justify-content:center;gap:6px;margin-top:4px}
+.ustat{font-size:0.55rem;background:rgba(255,255,255,0.08);border-radius:5px;padding:2px 5px;opacity:0.8}
 
-#winscreen{
+/* Base health bar */
+#basebar{
+  position:absolute;bottom:200px;left:50%;transform:translateX(-50%);
+  width:260px;text-align:center;
+}
+#basebar-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:2px;color:var(--yellow);opacity:0.8;margin-bottom:4px}
+#basebar-track{height:14px;background:rgba(255,255,255,0.1);border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.15)}
+#basebar-fill{height:100%;background:linear-gradient(90deg,var(--green),#86efac);border-radius:10px;transition:width 0.3s}
+
+/* Wave progress */
+#waveprog{position:absolute;bottom:200px;right:16px;width:130px}
+#waveprog-label{font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--yellow);opacity:0.7;margin-bottom:4px;text-align:right}
+#waveprog-track{height:10px;background:rgba(255,255,255,0.1);border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.12)}
+#waveprog-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--yellow));border-radius:8px;transition:width 0.5s;width:0%}
+
+/* ── GAME OVER / WIN ── */
+#overlay{
   position:fixed;inset:0;z-index:200;
-  background:rgba(0,8,22,0.97);
+  background:rgba(0,8,22,0.95);backdrop-filter:blur(10px);
   display:none;flex-direction:column;align-items:center;justify-content:center;
-  gap:20px;text-align:center;padding:30px;backdrop-filter:blur(10px);
+  gap:18px;text-align:center;padding:30px;
 }
-#winscreen h1{font-size:4.5rem;color:#fecc00;text-shadow:0 0 50px rgba(254,204,0,0.6)}
-#winscreen h2{font-size:1.8rem;opacity:0.9}
-#winscreen p{opacity:0.65;font-size:1rem;max-width:400px;line-height:1.6}
-.wbtn{
-  padding:16px 50px;background:linear-gradient(135deg,#fecc00,#e8a000);
-  color:#001a33;font-weight:900;font-size:1rem;border:none;border-radius:50px;
-  cursor:pointer;letter-spacing:2px;text-transform:uppercase;
-  box-shadow:0 6px 0 #8a6400;margin-top:8px;
+#overlay h1{font-family:'Black Han Sans',sans-serif;font-size:4rem;text-shadow:0 0 40px currentColor}
+#overlay p{opacity:0.75;font-size:1rem;max-width:420px;line-height:1.6}
+.obtn{
+  padding:15px 50px;border:none;border-radius:50px;cursor:pointer;
+  font-weight:900;font-size:1rem;letter-spacing:2px;text-transform:uppercase;
+  background:linear-gradient(135deg,var(--yellow),#e8a000);color:#001a33;
+  box-shadow:0 6px 0 #8a6400;transition:transform 0.1s;
 }
-#winscreen a{color:rgba(255,255,255,0.35);font-size:0.8rem;text-decoration:none;margin-top:4px}
+.obtn:hover{transform:translateY(-2px)}
+
+/* ── START SCREEN ── */
+#startscreen{
+  position:fixed;inset:0;z-index:300;
+  background:linear-gradient(135deg,#00111f,#003d6e 50%,#005293);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:20px;text-align:center;padding:30px;
+}
+#startscreen h1{
+  font-family:'Black Han Sans',sans-serif;
+  font-size:4rem;color:var(--yellow);letter-spacing:4px;
+  text-shadow:0 0 40px rgba(254,204,0,0.5),4px 4px 0 #003d6e;
+  line-height:1;
+}
+.sdflag{width:80px;height:54px;background:#005293;border-radius:5px;position:relative;border:3px solid rgba(254,204,0,0.5);box-shadow:0 0 25px rgba(254,204,0,0.3)}
+.sdflag .v{position:absolute;width:12px;height:100%;background:var(--yellow);left:27px;box-shadow:0 0 10px var(--yellow)}
+.sdflag .h{position:absolute;width:100%;height:12px;background:var(--yellow);top:21px;box-shadow:0 0 10px var(--yellow)}
+#startscreen p{opacity:0.75;max-width:500px;line-height:1.7;font-size:0.95rem}
+#startscreen p strong{color:var(--yellow)}
+#startbtn{
+  padding:18px 60px;border:none;border-radius:50px;cursor:pointer;
+  font-weight:900;font-size:1.1rem;letter-spacing:2px;text-transform:uppercase;
+  background:linear-gradient(135deg,var(--yellow),#e8a000);color:#001a33;
+  box-shadow:0 8px 0 #8a6400,0 12px 30px rgba(0,0,0,0.4);
+  transition:transform 0.1s,box-shadow 0.1s;font-family:'Black Han Sans',sans-serif;
+}
+#startbtn:hover{transform:translateY(-2px)}
+#startbtn:active{transform:translateY(4px);box-shadow:0 4px 0 #8a6400}
 </style>
 </head>
 <body>
 
 <div id="startscreen">
-  <div class="sd-flag"><div class="v"></div><div class="h"></div></div>
-  <h1>JIMMIE<br>VANDRING</h1>
-  <p>Du är Jimmie Åkesson och utforskar en vacker svensk stad. Hitta alla <strong>10 gömda SD-symboler</strong> och visa att du känner ditt land!</p>
+  <div class="sdflag"><div class="v"></div><div class="h"></div></div>
+  <h1>STEAL THE<br>JIMMIE</h1>
+  <p>Köp Jimmie-karaktärer och skicka dem längs vägen mot fiendens bas! Varje Jimmie du rekryterar marscherar mot segern. Håll din bas vid liv och förstör motståndarens!</p>
   <button id="startbtn">▶ STARTA SPELET</button>
-  <div class="ctrl-hint">WASD = rörelse &nbsp;·&nbsp; Klicka = lås mus &nbsp;·&nbsp; Shift = spring &nbsp;·&nbsp; E = plocka upp</div>
+  <p style="font-size:0.72rem;opacity:0.35;margin-top:4px">Klicka på karaktärerna i butiken för att köpa dem</p>
 </div>
 
-<canvas id="glcanvas"></canvas>
+<canvas id="c"></canvas>
 
 <div id="hud">
   <div id="topbar">
-    <div class="hstat"><div class="hlbl">Symboler hittade</div><div class="hval" id="hcol">0 / 10</div></div>
-    <div id="gtitle">JIMMIE VANDRING</div>
-    <div class="hstat"><div class="hlbl">Tid</div><div class="hval" id="htime">0:00</div></div>
+    <div class="topstat">
+      <div class="tlbl">Kronor</div>
+      <div class="tval yellow" id="hmoney">500</div>
+    </div>
+    <div id="gtitle">STEAL THE JIMMIE</div>
+    <div class="topstat">
+      <div class="tlbl">Fiendes HP</div>
+      <div class="tval red" id="henemy-hp">100</div>
+    </div>
   </div>
-  <div id="crosshair"></div>
-  <div id="ehint">⬆ Tryck E för att plocka upp!</div>
-  <div id="lockprompt">🖱 Klicka för att låsa musen</div>
-  <div id="popup">
-    <h3 id="pname"></h3>
-    <p id="pdesc"></p>
-    <div class="psub" id="pcount"></div>
+
+  <div id="wavebanner">Våg 1 — Köp karaktärer och tryck START!</div>
+
+  <div id="basebar">
+    <div id="basebar-label">Din Bas</div>
+    <div id="basebar-track"><div id="basebar-fill" style="width:100%"></div></div>
   </div>
-  <div id="minimap"><canvas id="mmcanvas" width="130" height="130"></canvas></div>
-  <div id="progress"></div>
-  <div id="bottombar">
-    <span><kbd>W A S D</kbd> Rörelse</span>
-    <span><kbd>Mus</kbd> Titta</span>
-    <span><kbd>E</kbd> Plocka upp</span>
-    <span><kbd>Shift</kbd> Spring</span>
+
+  <div id="waveprog">
+    <div id="waveprog-label">Vågframsteg</div>
+    <div id="waveprog-track"><div id="waveprog-fill"></div></div>
+  </div>
+
+  <div id="shop">
+    <!-- filled by JS -->
   </div>
 </div>
 
-<div id="winscreen">
-  <h1>🏆 SEGER!</h1>
-  <h2>Alla symboler hittade!</h2>
-  <p id="winmsg"></p>
-  <button class="wbtn" onclick="location.reload()">SPELA IGEN</button>
-  <a href="games.html">← Tillbaka till menyn</a>
+<div id="overlay">
+  <h1 id="overlay-title">GAME OVER</h1>
+  <p id="overlay-msg"></p>
+  <button class="obtn" onclick="location.reload()">SPELA IGEN</button>
+  <a href="games.html" style="color:rgba(255,255,255,0.35);font-size:0.8rem;text-decoration:none;margin-top:4px">← Tillbaka till menyn</a>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-var SYMBOLS = [
-  {name:'SD-Flagga',       desc:'En vacker blå-gul flagga!',         col:0xfecc00, icon:'⭐'},
-  {name:'Riksdagsstol',    desc:'Jimmies favoritplats i riksdagen.',   col:0x60a5fa, icon:'💺'},
-  {name:'Kärnkraftsboll',  desc:'Rent, tryggt och modernt!',          col:0x4ade80, icon:'⚛️'},
-  {name:'Valaffisch',      desc:'Rösta på rätt parti!',               col:0xfb923c, icon:'📋'},
-  {name:'SD-Rosett',       desc:'Gul och blå, precis rätt!',          col:0xfde68a, icon:'🎀'},
-  {name:'Mikrofon',        desc:'Dags att hålla ett mäktigt tal!',    col:0xc084fc, icon:'🎤'},
-  {name:'Sverige-karta',   desc:'Hela det vackra landet är ditt.',    col:0x34d399, icon:'🗺️'},
-  {name:'Guldmedalj',      desc:'En välförtjänt utmärkelse!',         col:0xffd700, icon:'🥇'},
-  {name:'Kampanjbuss',     desc:'Hela landet på valturné!',           col:0xf472b6, icon:'🚌'},
-  {name:'Jimmies Krona',   desc:'Det ultimata priset — makten!',      col:0xffaa00, icon:'👑'},
+// ════════════════════════════════════════════════════════════════
+//  STEAL THE JIMMIE  —  Path-based 3D strategy game
+// ════════════════════════════════════════════════════════════════
+
+// ── Unit definitions ─────────────────────────────────────────
+var UNITS = [
+  {
+    id:0, name:'Jimmie Junior', emoji:'👦', cost:50,
+    desc:'Liten men ivrig!',
+    hp:60, spd:2.8, dmg:8, col:0x4ade80, scale:0.7,
+    stats:'HP:60 · Skada:8 · Snabb'
+  },
+  {
+    id:1, name:'Jimmie Vandraren', emoji:'🚶', cost:120,
+    desc:'Pålitlig och stark.',
+    hp:120, spd:2.0, dmg:20, col:0x60a5fa, scale:0.9,
+    stats:'HP:120 · Skada:20'
+  },
+  {
+    id:2, name:'Jimmie Flaggan', emoji:'🚩', cost:200,
+    desc:'Bär flaggan högt!',
+    hp:200, spd:1.6, dmg:35, col:0xfecc00, scale:1.0,
+    stats:'HP:200 · Skada:35'
+  },
+  {
+    id:3, name:'Jimmie Talaren', emoji:'🎤', cost:350,
+    desc:'Övertygar alla med ord.',
+    hp:300, spd:1.8, dmg:55, col:0xc084fc, scale:1.1,
+    stats:'HP:300 · Skada:55'
+  },
+  {
+    id:4, name:'Jimmie Järnet', emoji:'⚔️', cost:500,
+    desc:'Stridshärdad veteran!',
+    hp:500, spd:1.4, dmg:90, col:0xfb923c, scale:1.2,
+    stats:'HP:500 · Skada:90'
+  },
+  {
+    id:5, name:'Jimmie Åkesson', emoji:'👑', cost:1200,
+    desc:'Originalet. Oövervinnerlig.',
+    hp:1200, spd:1.6, dmg:200, col:0xffd700, scale:1.5,
+    stats:'HP:1200 · Skada:200 · BOSS'
+  },
 ];
 
-var gameOn = false, collected = 0, totalTime = 0, nearSymbol = null, popupTimer = 0;
-var mouseLocked = false;
+// ── Enemy definitions ────────────────────────────────────────
+var ENEMY_TYPES = [
+  {name:'Motståndare', hp:80,  spd:2.2, dmg:12, col:0xef4444, scale:0.75},
+  {name:'Stor Motståndare', hp:200, spd:1.5, dmg:30, col:0xf97316, scale:1.0},
+  {name:'Boss Motståndare', hp:600, spd:1.2, dmg:80, col:0xdc2626, scale:1.4},
+];
 
-// Renderer
-var renderer = new THREE.WebGLRenderer({canvas:document.getElementById('glcanvas'), antialias:true});
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.0;
+// ── Wave config ──────────────────────────────────────────────
+var WAVES = [
+  [{type:0,count:6,interval:1.5}],
+  [{type:0,count:8,interval:1.2},{type:1,count:2,interval:3}],
+  [{type:0,count:10,interval:1},{type:1,count:4,interval:2}],
+  [{type:1,count:8,interval:1.5},{type:2,count:1,interval:10}],
+  [{type:0,count:15,interval:0.8},{type:1,count:6,interval:1.5},{type:2,count:2,interval:8}],
+];
 
-// Scene
-var scene = new THREE.Scene();
-scene.background = new THREE.Color(0x1a3a6e);
-scene.fog = new THREE.Fog(0x1a3a6e, 22, 70);
+// ── State ────────────────────────────────────────────────────
+var money = 500;
+var baseHp = 100, baseMaxHp = 100;
+var enemyBaseHp = 100, enemyBaseMaxHp = 100;
+var wave = 0;
+var gameActive = false;
+var waveActive = false;
+var playerUnits = [];   // units marching to enemy base
+var enemyUnits = [];    // enemies marching to player base
+var particles = [];
+var spawnQueues = [];   // [{type, count, interval, timer}]
+var enemySpawnQueues = [];
+var incomeTimer = 0;
+var waveKillCount = 0, waveTotalEnemies = 0;
 
-// Camera
-var cam = new THREE.PerspectiveCamera(72, window.innerWidth/window.innerHeight, 0.1, 200);
-cam.position.set(2, 1.75, 2);
+// ── Renderer ─────────────────────────────────────────────────
+var renderer = new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.setSize(window.innerWidth,window.innerHeight);
+renderer.shadowMap.enabled=true;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.0;
 
-// Lights
-scene.add(new THREE.AmbientLight(0xaabbdd, 1.0));
-var sun = new THREE.DirectionalLight(0xfff5cc, 1.8);
-sun.position.set(30, 50, 20);
-sun.castShadow = true;
-sun.shadow.camera.left = -80; sun.shadow.camera.right = 80;
-sun.shadow.camera.top = 80; sun.shadow.camera.bottom = -80;
-sun.shadow.camera.near = 1; sun.shadow.camera.far = 200;
-sun.shadow.mapSize.width = 2048; sun.shadow.mapSize.height = 2048;
+// ── Scene ────────────────────────────────────────────────────
+var scene=new THREE.Scene();
+scene.background=new THREE.Color(0x0a1628);
+scene.fog=new THREE.FogExp2(0x0a1628,0.018);
+
+// ── Camera (third person, angled down) ──────────────────────
+var cam=new THREE.PerspectiveCamera(55,window.innerWidth/window.innerHeight,0.1,300);
+// Position camera looking down the path from the side
+cam.position.set(0,18,-2);
+cam.lookAt(0,0,0);
+
+// ── Lights ───────────────────────────────────────────────────
+scene.add(new THREE.AmbientLight(0x8899bb,0.9));
+var sun=new THREE.DirectionalLight(0xfff5cc,1.5);
+sun.position.set(15,30,10);
+sun.castShadow=true;
+sun.shadow.camera.left=-40; sun.shadow.camera.right=40;
+sun.shadow.camera.top=40; sun.shadow.camera.bottom=-40;
+sun.shadow.camera.far=100;
+sun.shadow.mapSize.set(1024,1024);
 scene.add(sun);
-var fill = new THREE.DirectionalLight(0x336699, 0.5);
-fill.position.set(-20, 10, -15);
-scene.add(fill);
+scene.add(Object.assign(new THREE.DirectionalLight(0x336699,0.4),
+  {position:new THREE.Vector3(-10,8,-8)}));
 
-// Ground — slightly uneven feel with color variation
-var groundMat = new THREE.MeshLambertMaterial({color:0x2d6a2d});
-var groundMesh = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), groundMat);
-groundMesh.rotation.x = -Math.PI/2;
-groundMesh.receiveShadow = true;
-scene.add(groundMesh);
+// ── PATH definition (world coords) ───────────────────────────
+// Path goes left-to-right (player base on left, enemy base on right)
+// Curved S-shape for visual interest
+var PATH_POINTS = [
+  new THREE.Vector3(-22, 0,  0),   // player base exit
+  new THREE.Vector3(-14, 0,  4),
+  new THREE.Vector3( -6, 0,  4),
+  new THREE.Vector3(  0, 0,  0),   // center
+  new THREE.Vector3(  6, 0, -4),
+  new THREE.Vector3( 14, 0, -4),
+  new THREE.Vector3( 22, 0,  0),   // enemy base
+];
+var pathCurve = new THREE.CatmullRomCurve3(PATH_POINTS);
+var PATH_LEN = 100; // sample resolution
 
-// Pavement squares (plazas)
-function plaza(x, z, w, d, col) {
-  var m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), new THREE.MeshLambertMaterial({color: col||0x3a3a4a}));
-  m.rotation.x = -Math.PI/2;
-  m.position.set(x, 0.01, z);
-  m.receiveShadow = true;
-  scene.add(m);
+// Player base at left, enemy base at right
+var PLAYER_BASE_POS = new THREE.Vector3(-22, 0, 0);
+var ENEMY_BASE_POS  = new THREE.Vector3( 22, 0, 0);
+
+// ── BUILD WORLD ──────────────────────────────────────────────
+// Ground
+var groundMat=new THREE.MeshLambertMaterial({color:0x1a4a1a});
+var ground=new THREE.Mesh(new THREE.PlaneGeometry(60,30),groundMat);
+ground.rotation.x=-Math.PI/2; ground.receiveShadow=true; scene.add(ground);
+
+// Path surface
+var pathPts=pathCurve.getPoints(80);
+var pathShape=new THREE.BufferGeometry().setFromPoints(pathPts);
+// Draw path as wide tube
+var tubeMat=new THREE.MeshLambertMaterial({color:0x8a7a5a});
+var tube=new THREE.Mesh(new THREE.TubeGeometry(pathCurve,60,0.9,8,false),tubeMat);
+tube.receiveShadow=true; scene.add(tube);
+
+// Path edge lines (yellow dashed feel)
+var edgeMat=new THREE.LineBasicMaterial({color:0xfecc00,transparent:true,opacity:0.3});
+var pathPtsL=pathCurve.getPoints(60).map(function(p){return new THREE.Vector3(p.x,0.05,p.z+1.1)});
+var pathPtsR=pathCurve.getPoints(60).map(function(p){return new THREE.Vector3(p.x,0.05,p.z-1.1)});
+scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pathPtsL),edgeMat));
+scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pathPtsR),edgeMat));
+
+// ── PLAYER BASE ──────────────────────────────────────────────
+function buildBase(pos, col, isPlayer) {
+  var g=new THREE.Group();
+  // Platform
+  var plat=new THREE.Mesh(new THREE.CylinderGeometry(3.5,4,0.5,8),new THREE.MeshLambertMaterial({color:col}));
+  plat.castShadow=true; plat.receiveShadow=true; g.add(plat);
+  // Tower body
+  var tower=new THREE.Mesh(new THREE.CylinderGeometry(1.5,2,5,8),new THREE.MeshLambertMaterial({color:col}));
+  tower.position.y=2.75; tower.castShadow=true; g.add(tower);
+  // Battlements
+  for(var i=0;i<8;i++){
+    var bt=new THREE.Mesh(new THREE.BoxGeometry(0.5,0.8,0.5),new THREE.MeshLambertMaterial({color:col}));
+    bt.position.set(Math.cos(i/8*Math.PI*2)*1.6,5.5,Math.sin(i/8*Math.PI*2)*1.6);
+    bt.castShadow=true; g.add(bt);
+  }
+  // Flag pole
+  var pole=new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.07,4,5),new THREE.MeshLambertMaterial({color:0xcccccc}));
+  pole.position.y=7.5; g.add(pole);
+  // Flag
+  var flagCol=isPlayer?0x005293:0x991111;
+  var fl=new THREE.Mesh(new THREE.PlaneGeometry(1.4,0.9),new THREE.MeshBasicMaterial({color:flagCol,side:THREE.DoubleSide}));
+  fl.position.set(0.7,9.2,0); g.add(fl);
+  if(isPlayer){
+    var fst=new THREE.Mesh(new THREE.PlaneGeometry(1.4,0.22),new THREE.MeshBasicMaterial({color:0xfecc00,side:THREE.DoubleSide}));
+    fst.position.set(0.7,9.2,0.02); g.add(fst);
+  }
+  // Glow light
+  var light=new THREE.PointLight(col,1.5,8);
+  light.position.y=3; g.add(light);
+  g.position.copy(pos);
+  scene.add(g);
+  return g;
 }
-plaza(0, 0, 200, 7, 0x2a2a3a);   // main roads
-plaza(0, 0, 7, 200, 0x2a2a3a);
-plaza(0, 0, 22, 22, 0x333344);   // central plaza
-plaza(24, 24, 14, 14, 0x333344);
-plaza(-24, 24, 14, 14, 0x333344);
-plaza(24, -24, 14, 14, 0x333344);
-plaza(-24, -24, 14, 14, 0x333344);
 
-// Collision
-var walls = [];
-function addWall(x, z, hw, hd) { walls.push({x:x, z:z, hw:hw, hd:hd}); }
+buildBase(PLAYER_BASE_POS, 0x005293, true);
+buildBase(ENEMY_BASE_POS,  0x991111, false);
 
-// ── BUILDINGS with varied shapes ─────────────────────────────
-// Mix of box, cylinder (towers), and combined shapes
+// Trees decoration
+var trunkMat=new THREE.MeshLambertMaterial({color:0x5c3a1e});
+var crownMats=[
+  new THREE.MeshLambertMaterial({color:0x1a5c1a}),
+  new THREE.MeshLambertMaterial({color:0x2d7a2d}),
+];
+var TREE_POS=[
+  [-18,7],[-16,-7],[-10,8],[-8,-8],[-4,7],
+  [4,-7],[8,8],[10,-8],[16,7],[18,-7],
+  [-20,-5],[-15,5],[-5,-5],[5,5],[15,-5],[20,5],
+];
+TREE_POS.forEach(function(t,i){
+  var x=t[0],z=t[1];
+  var h=2+Math.random();
+  var tr=new THREE.Mesh(new THREE.CylinderGeometry(0.18,0.25,h,6),trunkMat);
+  tr.position.set(x,h/2,z); tr.castShadow=true; scene.add(tr);
+  var cm=crownMats[i%2];
+  [0,1,2].forEach(function(j){
+    var cone=new THREE.Mesh(new THREE.ConeGeometry(1.3-j*0.2,1.8,7),cm);
+    cone.position.set(x,h+j*1.2,z); cone.castShadow=true; scene.add(cone);
+  });
+});
 
-function makeMat(col) { return new THREE.MeshLambertMaterial({color:col}); }
+// Clouds (decorative spheres high up)
+var cloudMat=new THREE.MeshLambertMaterial({color:0xddeeff,transparent:true,opacity:0.6});
+[[-15,14,3],[-5,16,-2],[8,15,4],[18,13,-3]].forEach(function(c){
+  var cl=new THREE.Mesh(new THREE.SphereGeometry(2.5,8,6),cloudMat);
+  cl.position.set(c[0],c[1],c[2]); scene.add(cl);
+  var cl2=new THREE.Mesh(new THREE.SphereGeometry(1.8,8,6),cloudMat);
+  cl2.position.set(c[0]+2,c[1]-0.5,c[2]+1); scene.add(cl2);
+});
 
-function buildBox(x, z, w, h, d, col, rx, rz) {
-  var rx2 = rx||0, rz2 = rz||0;
-  var mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), makeMat(col));
-  mesh.position.set(x + rx2, h/2, z + rz2);
-  mesh.castShadow = true; mesh.receiveShadow = true;
+// ── UNIT 3D CREATION ────────────────────────────────────────
+function makeUnitMesh(def, isEnemy) {
+  var g=new THREE.Group();
+  var col=isEnemy?def.col:def.col;
+  var mat=new THREE.MeshLambertMaterial({color:col, emissive:col, emissiveIntensity:0.1});
+  var darkMat=new THREE.MeshLambertMaterial({color:0x222244});
+
+  // Body
+  var body=new THREE.Mesh(new THREE.CylinderGeometry(0.28,0.32,0.65,8),mat);
+  body.position.y=0.6; body.castShadow=true; g.add(body);
+
+  // Head
+  var head=new THREE.Mesh(new THREE.SphereGeometry(0.28,8,8),mat);
+  head.position.y=1.15; head.castShadow=true; g.add(head);
+
+  // Eyes
+  var eyeMat=new THREE.MeshBasicMaterial({color:0xffffff});
+  var pupilMat=new THREE.MeshBasicMaterial({color:0x111122});
+  [-0.1,0.1].forEach(function(ex){
+    var eye=new THREE.Mesh(new THREE.SphereGeometry(0.07,6,6),eyeMat);
+    eye.position.set(ex,1.18,0.24); g.add(eye);
+    var pupil=new THREE.Mesh(new THREE.SphereGeometry(0.04,5,5),pupilMat);
+    pupil.position.set(ex,1.18,0.28); g.add(pupil);
+  });
+
+  // Legs
+  [-0.14,0.14].forEach(function(lx){
+    var leg=new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.1,0.45,6),darkMat);
+    leg.position.set(lx,0.2,0); leg.castShadow=true; g.add(leg);
+  });
+
+  // Arms
+  [-0.38,0.38].forEach(function(ax){
+    var arm=new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.08,0.4,6),mat);
+    arm.rotation.z=ax>0?-0.5:0.5;
+    arm.position.set(ax,0.75,0); arm.castShadow=true; g.add(arm);
+  });
+
+  // Hat (for player units)
+  if(!isEnemy){
+    var hat=new THREE.Mesh(new THREE.CylinderGeometry(0.18,0.3,0.22,8),new THREE.MeshLambertMaterial({color:0x003d6e}));
+    hat.position.y=1.38; hat.castShadow=true; g.add(hat);
+    var brim=new THREE.Mesh(new THREE.CylinderGeometry(0.36,0.36,0.06,8),new THREE.MeshLambertMaterial({color:0x002a50}));
+    brim.position.y=1.28; g.add(brim);
+  } else {
+    // Enemy gets horns
+    [-0.12,0.12].forEach(function(hx){
+      var horn=new THREE.Mesh(new THREE.ConeGeometry(0.08,0.25,5),new THREE.MeshLambertMaterial({color:0x881111}));
+      horn.position.set(hx,1.45,0); g.add(horn);
+    });
+  }
+
+  var sc=def.scale||1;
+  g.scale.setScalar(sc);
+  return g;
+}
+
+// ── SPAWN UNIT ────────────────────────────────────────────────
+function spawnPlayerUnit(unitDef) {
+  var mesh=makeUnitMesh(unitDef,false);
+  // Start at player base, move toward enemy base (t goes 0→1)
+  var t=0.01;
+  var pos=pathCurve.getPoint(t);
+  mesh.position.set(pos.x,pos.y+0.1,pos.z);
   scene.add(mesh);
-  return mesh;
+
+  // Health bar
+  var hbGroup=makeHealthBar(unitDef.col);
+  hbGroup.position.y=unitDef.scale*1.7+0.3;
+  mesh.add(hbGroup);
+
+  playerUnits.push({
+    mesh:mesh, hbGroup:hbGroup,
+    def:unitDef, t:t,
+    hp:unitDef.hp, maxHp:unitDef.hp,
+    spd:unitDef.spd, dmg:unitDef.dmg,
+    dead:false, attackTimer:0, legTimer:0,
+  });
 }
 
-function buildCyl(x, y, z, r, h, segs, col) {
-  var mesh = new THREE.Mesh(new THREE.CylinderGeometry(r*0.9, r, h, segs||16), makeMat(col));
-  mesh.position.set(x, y + h/2, z);
-  mesh.castShadow = true; mesh.receiveShadow = true;
+function spawnEnemyUnit(enemyDef) {
+  var mesh=makeUnitMesh(enemyDef,true);
+  var t=0.99;
+  var pos=pathCurve.getPoint(t);
+  mesh.position.set(pos.x,pos.y+0.1,pos.z);
   scene.add(mesh);
-  return mesh;
+  var hbGroup=makeHealthBar(enemyDef.col);
+  hbGroup.position.y=enemyDef.scale*1.7+0.3;
+  mesh.add(hbGroup);
+
+  enemyUnits.push({
+    mesh:mesh, hbGroup:hbGroup,
+    def:enemyDef, t:t,
+    hp:enemyDef.hp, maxHp:enemyDef.hp,
+    spd:enemyDef.spd, dmg:enemyDef.dmg,
+    dead:false, attackTimer:0, legTimer:0,
+  });
 }
 
-function buildCone(x, y, z, r, h, segs, col) {
-  var mesh = new THREE.Mesh(new THREE.ConeGeometry(r, h, segs||8), makeMat(col));
-  mesh.position.set(x, y + h/2, z);
-  mesh.castShadow = true;
-  scene.add(mesh);
-  return mesh;
+function makeHealthBar(col) {
+  var g=new THREE.Group();
+  var bg=new THREE.Mesh(new THREE.PlaneGeometry(0.7,0.1),new THREE.MeshBasicMaterial({color:0x333}));
+  var fg=new THREE.Mesh(new THREE.PlaneGeometry(0.7,0.1),new THREE.MeshBasicMaterial({color:col}));
+  fg.position.z=0.01; fg.name='hpbar';
+  g.add(bg); g.add(fg);
+  g.rotation.x=-Math.PI/6;
+  return g;
 }
 
-function addWindows(bx, bz, w, h, d, col) {
-  var litMat = new THREE.MeshBasicMaterial({color: col||0xffffaa});
-  var darkMat = new THREE.MeshBasicMaterial({color: 0x1a2a3a});
-  for (var wy = 1.5; wy < h - 1; wy += 2.5) {
-    for (var wx = -w/2+1.2; wx < w/2; wx += 2.0) {
-      var lit = Math.random() > 0.28;
-      var wm = new THREE.Mesh(new THREE.PlaneGeometry(0.85, 0.65), lit ? litMat : darkMat);
-      wm.position.set(bx + wx, h/2 - h/2 + wy, bz + d/2 + 0.03);
-      scene.add(wm);
+function updateHealthBar(unit) {
+  var fg=unit.hbGroup.getObjectByName('hpbar');
+  if(fg){
+    var pct=Math.max(0,unit.hp/unit.maxHp);
+    fg.scale.x=pct;
+    fg.position.x=(pct-1)*0.35;
+    fg.material.color.setHex(pct>0.5?0x22c55e:pct>0.25?0xfacc15:0xef4444);
+  }
+}
+
+// ── PARTICLES ────────────────────────────────────────────────
+function explode(pos, col, n) {
+  for(var i=0;i<(n||8);i++){
+    var m=new THREE.Mesh(new THREE.SphereGeometry(0.1,4,4),
+      new THREE.MeshBasicMaterial({color:col}));
+    m.position.copy(pos).add(new THREE.Vector3((Math.random()-0.5)*0.5,0.3,(Math.random()-0.5)*0.5));
+    scene.add(m);
+    var vel=new THREE.Vector3((Math.random()-0.5)*0.15,Math.random()*0.18,(Math.random()-0.5)*0.15);
+    particles.push({mesh:m,vel:vel,life:1.0,col:col});
+  }
+}
+
+// ── SHOP UI ───────────────────────────────────────────────────
+function buildShop() {
+  var shop=document.getElementById('shop');
+  shop.innerHTML='';
+
+  UNITS.forEach(function(u) {
+    var card=document.createElement('div');
+    card.className='unit-card '+(money>=u.cost?'can-afford':'cant-afford');
+    card.id='card-'+u.id;
+    card.innerHTML='<div class="unit-emoji">'+u.emoji+'</div>'
+      +'<div class="unit-name">'+u.name+'</div>'
+      +'<div class="unit-desc">'+u.desc+'</div>'
+      +'<div class="unit-cost">'+u.cost+' kr</div>'
+      +'<div class="unit-stats"><span class="ustat">'+u.stats+'</span></div>';
+    card.onclick=function(){ buyUnit(u); };
+    shop.appendChild(card);
+  });
+
+  // Start wave button
+  var btn=document.createElement('div');
+  btn.style.cssText='background:linear-gradient(135deg,#005293,#003d6e);border:2px solid var(--yellow);border-radius:14px;padding:10px 14px;min-width:100px;text-align:center;cursor:pointer;flex-shrink:0;pointer-events:all;font-weight:900;font-size:0.8rem;color:var(--yellow);letter-spacing:1px;text-transform:uppercase;transition:all 0.15s';
+  btn.id='wavebtn';
+  btn.textContent=waveActive?'PÅGÅR...':'▶ START VÅG';
+  btn.onclick=function(){ if(!waveActive) startWave(); };
+  btn.onmouseover=function(){if(!waveActive)btn.style.background='linear-gradient(135deg,#006ab8,#004f90)'};
+  btn.onmouseout=function(){btn.style.background='linear-gradient(135deg,#005293,#003d6e)'};
+  shop.appendChild(btn);
+}
+
+function updateShopAffordability() {
+  UNITS.forEach(function(u) {
+    var card=document.getElementById('card-'+u.id);
+    if(card){
+      card.className='unit-card '+(money>=u.cost?'can-afford':'cant-afford');
     }
-  }
-}
-
-// Central plaza — landmark building (town hall style)
-buildBox(0, 0, 12, 10, 10, 0x2a3a6e);
-buildBox(0, 10, 8, 6, 8, 0x243060);
-buildCyl(0, 16, 0, 3, 5, 8, 0x1a2450);
-buildCone(0, 21, 0, 2.5, 4, 8, 0x243080);
-addWindows(0, 0, 12, 10, 10, 0xffffaa);
-addWall(0, 0, 7, 6);
-
-// Tall office tower NE
-buildBox(14, 14, 8, 28, 8, 0x1e3060);
-buildBox(14, 14, 5, 32, 5, 0x243070);
-buildCyl(14, 32, 14, 1.2, 6, 8, 0x4488ff);
-addWindows(14, 14, 8, 28, 8, 0xaaddff);
-addWall(14, 14, 6, 6);
-
-// Round tower NW
-buildCyl(-14, 0, 14, 5, 22, 16, 0x1a2a4a);
-buildCyl(-14, 22, 14, 5.5, 1.5, 16, 0x243050);
-buildCone(-14, 23.5, 14, 4, 6, 16, 0x162040);
-addWindows(-14, 14, 8, 20, 8, 0xffffcc);
-addWall(-14, 14, 6.5, 6.5);
-
-// Short wide building SE
-buildBox(14, -14, 14, 8, 10, 0x243560);
-buildBox(14, -14, 10, 4, 7, 0x1e2d50);
-addWindows(14, -14, 14, 8, 10, 0xffeeaa);
-addWall(14, -14, 8, 6);
-
-// Stepped tower SW
-buildBox(-14, -14, 10, 6, 10, 0x162040);
-buildBox(-14, -14, 7, 14, 7, 0x1a2840);
-buildBox(-14, -14, 4, 20, 4, 0x1e2e50);
-buildCyl(-14, 20, -14, 1.5, 5, 8, 0x2244aa);
-addWindows(-14, -14, 10, 20, 10, 0xaabbff);
-addWall(-14, -14, 6, 6);
-
-// E block
-buildBox(26, 5, 7, 12, 7, 0x1a3060);
-buildCone(26, 12, 5, 3, 5, 4, 0x1a2040);
-addWindows(26, 5, 7, 12, 7);
-addWall(26, 5, 4.5, 4.5);
-
-buildCyl(-26, 0, 5, 5, 18, 12, 0x1f3050);
-buildCone(-26, 18, 5, 4.5, 5, 12, 0x162040);
-addWall(-26, 5, 6, 6);
-
-buildBox(26, -5, 8, 20, 8, 0x1c2b48);
-buildBox(26, -5, 5, 24, 5, 0x243560);
-addWindows(26, -5, 8, 20, 8, 0xffffbb);
-addWall(26, -5, 5, 5);
-
-buildCyl(-26, 0, -5, 4, 14, 10, 0x243560);
-buildCone(-26, 14, -5, 3.5, 4, 10, 0x1a2040);
-addWall(-26, -5, 5, 5);
-
-// Outer ring buildings
-buildBox(38, 38, 11, 26, 11, 0x1a2a4a);
-buildBox(38, 38, 7, 30, 7, 0x162040);
-buildCyl(38, 30, 38, 2, 8, 8, 0x2244cc);
-addWindows(38, 38, 11, 26, 11, 0xaaddff);
-addWall(38, 38, 7, 7);
-
-buildCyl(-38, 0, 38, 6, 22, 14, 0x162040);
-buildCone(-38, 22, 38, 5.5, 6, 14, 0x111830);
-addWall(-38, 38, 7, 7);
-
-buildBox(38, -38, 9, 18, 9, 0x1e3050);
-buildCyl(38, 18, -38, 2, 4, 6, 0xfecc00);
-addWindows(38, -38, 9, 18, 9, 0xffeeaa);
-addWall(38, -38, 6, 6);
-
-buildBox(-38, -38, 13, 32, 13, 0x1a2840);
-buildBox(-38, -38, 8, 36, 8, 0x151f35);
-buildCyl(-38, 36, -38, 2, 8, 8, 0xff4444);
-addWindows(-38, -38, 13, 32, 13, 0xffbbaa);
-addWall(-38, -38, 8, 8);
-
-buildBox(38, 0, 9, 14, 9, 0x243060);
-addWindows(38, 0, 9, 14, 9);
-addWall(38, 0, 6, 6);
-
-buildCyl(-38, 0, 0, 5, 20, 12, 0x1c2b48);
-buildCone(-38, 20, 0, 4.5, 5, 12, 0x141e38);
-addWall(-38, 0, 6, 6);
-
-buildBox(0, 38, 12, 24, 12, 0x1f3060);
-buildBox(0, 38, 7, 28, 7, 0x1a2650);
-addWindows(0, 38, 12, 24, 12, 0xaaddff);
-addWall(0, 38, 7, 7);
-
-buildBox(0, -38, 9, 15, 9, 0x1a2840);
-addWindows(0, -38, 9, 15, 9);
-addWall(0, -38, 6, 6);
-
-// Small houses / shops
-var HOUSES = [
-  [10,24],[11,24],[-10,24],[-11,24],
-  [10,-24],[11,-24],[-10,-24],[-11,-24],
-  [24,10],[24,11],[24,-10],[24,-11],
-  [-24,10],[-24,11],[-24,-10],[-24,-11],
-];
-HOUSES.forEach(function(h, i) {
-  var x = h[0], z = h[1];
-  var w = 4 + Math.random()*2, hi = 4 + Math.random()*3, d = 4 + Math.random()*2;
-  var col = [0x2a3a20, 0x3a2a20, 0x2a2a3a, 0x3a3020][i%4];
-  buildBox(x, z, w, hi, d, col);
-  // Roof
-  buildCone(x, hi, z, w*0.7, 2, 4, 0x222);
-  addWall(x, z, w/2+0.5, d/2+0.5);
-});
-
-// ── TREES — conical, better looking ──────────────────────────
-var trunkMat = new THREE.MeshLambertMaterial({color:0x5c3a1e});
-var crown1 = new THREE.MeshLambertMaterial({color:0x1a5c1a});
-var crown2 = new THREE.MeshLambertMaterial({color:0x2d7a2d});
-var TREES = [
-  [7,7],[-7,7],[7,-7],[-7,-7],
-  [17,17],[-17,17],[17,-17],[-17,-17],
-  [5,30],[-5,30],[5,-30],[-5,-30],
-  [30,5],[30,-5],[-30,5],[-30,-5],
-  [33,20],[-33,20],[33,-20],[-33,-20],
-  [20,33],[-20,33],[20,-33],[-20,-33],
-  [10,10],[-10,10],[10,-10],[-10,-10],
-];
-TREES.forEach(function(t, i) {
-  var x = t[0], z = t[1];
-  var h = 2.5 + Math.random()*1.5;
-  var trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.28, h, 6), trunkMat);
-  trunk.position.set(x, h/2, z);
-  trunk.castShadow = true;
-  scene.add(trunk);
-  // Multiple cone layers for fuller look
-  var cr = i%2===0 ? crown1 : crown2;
-  var c1 = new THREE.Mesh(new THREE.ConeGeometry(1.8, 2.5, 8), cr);
-  c1.position.set(x, h+1.25, z); c1.castShadow = true; scene.add(c1);
-  var c2 = new THREE.Mesh(new THREE.ConeGeometry(1.4, 2.2, 8), cr);
-  c2.position.set(x, h+2.5, z); c2.castShadow = true; scene.add(c2);
-  var c3 = new THREE.Mesh(new THREE.ConeGeometry(0.9, 1.8, 8), cr);
-  c3.position.set(x, h+3.8, z); c3.castShadow = true; scene.add(c3);
-  addWall(x, z, 1.1, 1.1);
-});
-
-// ── BENCHES & DECORATIONS ────────────────────────────────────
-var woodMat = new THREE.MeshLambertMaterial({color:0x7a4a1a});
-var metalMat = new THREE.MeshLambertMaterial({color:0x555566});
-[[5,5],[5,-5],[-5,5],[-5,-5],[0,8],[0,-8],[8,0],[-8,0]].forEach(function(b) {
-  var bench = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.15, 0.6), woodMat);
-  bench.position.set(b[0], 0.5, b[1]);
-  scene.add(bench);
-});
-
-// ── FOUNTAIN in center ───────────────────────────────────────
-var stoneMat = new THREE.MeshLambertMaterial({color:0x888899});
-var waterMat = new THREE.MeshLambertMaterial({color:0x3399cc, transparent:true, opacity:0.8});
-var fBase = new THREE.Mesh(new THREE.CylinderGeometry(2.5, 3, 0.5, 16), stoneMat);
-fBase.position.set(0, 0.25, 0); fBase.castShadow=true; fBase.receiveShadow=true; scene.add(fBase);
-var fWater = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.2, 0.3, 16), waterMat);
-fWater.position.set(0, 0.65, 0); scene.add(fWater);
-var fPillar = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.35, 1.5, 8), stoneMat);
-fPillar.position.set(0, 1, 0); scene.add(fPillar);
-addWall(0, 0, 3, 3);
-
-// ── FLAG POLES ───────────────────────────────────────────────
-var poleMat = new THREE.MeshLambertMaterial({color:0xbbbbbb});
-var flagBlue = new THREE.MeshBasicMaterial({color:0x005293, side:THREE.DoubleSide});
-var flagYel  = new THREE.MeshBasicMaterial({color:0xfecc00, side:THREE.DoubleSide});
-var POLES = [[0,10],[11,11],[-11,11],[11,-11],[-11,-11],[0,-10],[28,28],[-28,28],[28,-28],[-28,-28]];
-POLES.forEach(function(p) {
-  var x = p[0], z = p[1];
-  var pole = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 6, 6), poleMat);
-  pole.position.set(x, 3, z); scene.add(pole);
-  var fl = new THREE.Mesh(new THREE.PlaneGeometry(1.8, 1.2), flagBlue);
-  fl.position.set(x+0.9, 5.4, z); scene.add(fl);
-  var st = new THREE.Mesh(new THREE.PlaneGeometry(1.8, 0.28), flagYel);
-  st.position.set(x+0.9, 5.4, z+0.02); scene.add(st);
-});
-
-// ── STREETLAMPS ──────────────────────────────────────────────
-var LAMPS = [
-  [5,0],[-5,0],[0,5],[0,-5],[11,0],[-11,0],[0,11],[0,-11],
-  [5,24],[-5,24],[5,-24],[-5,-24],[24,5],[24,-5],[-24,5],[-24,-5]
-];
-LAMPS.forEach(function(l) {
-  var x = l[0], z = l[1];
-  var post = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.1, 4.5, 5), metalMat);
-  post.position.set(x, 2.25, z); scene.add(post);
-  var arm = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 1, 4), metalMat);
-  arm.rotation.z = Math.PI/2; arm.position.set(x+0.5, 4.4, z); scene.add(arm);
-  var glow = new THREE.Mesh(new THREE.SphereGeometry(0.18, 6, 6), new THREE.MeshBasicMaterial({color:0xffffcc}));
-  glow.position.set(x+1, 4.35, z); scene.add(glow);
-  var pl = new THREE.PointLight(0xffffaa, 0.9, 10);
-  pl.position.set(x+1, 4.2, z); scene.add(pl);
-});
-
-// ── STARS ────────────────────────────────────────────────────
-var sv = new Float32Array(1000*3);
-for (var i = 0; i < 1000; i++) {
-  sv[i*3]   = (Math.random()-0.5)*250;
-  sv[i*3+1] = Math.random()*60+20;
-  sv[i*3+2] = (Math.random()-0.5)*250;
-}
-var sg = new THREE.BufferGeometry();
-sg.setAttribute('position', new THREE.BufferAttribute(sv, 3));
-scene.add(new THREE.Points(sg, new THREE.PointsMaterial({color:0xffffff, size:0.2})));
-
-// ── COLLECTIBLES ─────────────────────────────────────────────
-var CPOS = [
-  [3,3], [18,6], [-15,9], [8,-18], [-8,20],
-  [34,10], [-31,-8], [12,34], [-20,-29], [28,-28]
-];
-var collectibles = [];
-CPOS.forEach(function(pos, i) {
-  var s = SYMBOLS[i];
-  var group = new THREE.Group();
-
-  var orb = new THREE.Mesh(
-    new THREE.SphereGeometry(0.42, 16, 16),
-    new THREE.MeshLambertMaterial({color:s.col, emissive:s.col, emissiveIntensity:0.6})
-  );
-  group.add(orb);
-
-  var ring = new THREE.Mesh(
-    new THREE.TorusGeometry(0.75, 0.06, 10, 32),
-    new THREE.MeshBasicMaterial({color:s.col, transparent:true, opacity:0.8})
-  );
-  ring.rotation.x = Math.PI/2;
-  group.add(ring);
-
-  var ring2 = new THREE.Mesh(
-    new THREE.TorusGeometry(0.5, 0.04, 8, 24),
-    new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, opacity:0.4})
-  );
-  group.add(ring2);
-
-  var pl = new THREE.PointLight(s.col, 2.5, 10);
-  group.add(pl);
-
-  group.position.set(pos[0], 1.5, pos[1]);
-  scene.add(group);
-  collectibles.push({group:group, ring:ring, ring2:ring2, done:false, idx:i});
-});
-
-// Progress stars
-var progEl = document.getElementById('progress');
-progEl.innerHTML = '';
-for (var si = 0; si < 10; si++) {
-  var sp = document.createElement('span');
-  sp.className = 'pstar';
-  sp.id = 'pstar'+si;
-  sp.textContent = '⭐';
-  progEl.appendChild(sp);
-}
-
-// ── CONTROLS ─────────────────────────────────────────────────
-var keys = {};
-document.addEventListener('keydown', function(e) {
-  keys[e.code] = true;
-  if (e.code === 'KeyE' && nearSymbol) grab(nearSymbol);
-});
-document.addEventListener('keyup', function(e) { keys[e.code] = false; });
-
-var yaw = 0, pitch = 0;
-
-// Pointer lock
-document.getElementById('glcanvas').addEventListener('click', function() {
-  if (gameOn) document.getElementById('glcanvas').requestPointerLock();
-});
-
-document.addEventListener('pointerlockchange', function() {
-  mouseLocked = document.pointerLockElement === document.getElementById('glcanvas');
-  document.getElementById('lockprompt').style.display = (gameOn && !mouseLocked) ? 'block' : 'none';
-});
-
-document.addEventListener('mousemove', function(e) {
-  if (mouseLocked) {
-    yaw   -= e.movementX * 0.0022;
-    pitch  = Math.max(-1.15, Math.min(1.15, pitch - e.movementY * 0.0022));
-  }
-});
-
-// Minimap
-var mmCanvas = document.getElementById('mmcanvas');
-var mmCtx    = mmCanvas.getContext('2d');
-function drawMinimap() {
-  mmCtx.clearRect(0,0,130,130);
-  mmCtx.fillStyle='rgba(0,12,35,0.92)'; mmCtx.fillRect(0,0,130,130);
-  var sc=1.1, cx=65, cz=65, px=cam.position.x, pz=cam.position.z;
-  // Draw walls as buildings
-  mmCtx.fillStyle='#1a2e55';
-  walls.forEach(function(w) {
-    mmCtx.fillRect(cx+(w.x-w.hw-px)*sc, cz+(w.z-w.hd-pz)*sc, w.hw*2*sc, w.hd*2*sc);
   });
-  collectibles.forEach(function(c) {
-    if (c.done) return;
-    mmCtx.beginPath();
-    mmCtx.arc(cx+(c.group.position.x-px)*sc, cz+(c.group.position.z-pz)*sc, 3.5, 0, Math.PI*2);
-    mmCtx.fillStyle='#fecc00'; mmCtx.fill();
+}
+
+function buyUnit(u) {
+  if(money<u.cost||!gameActive)return;
+  money-=u.cost;
+  spawnPlayerUnit(u);
+  updateUI();
+}
+
+// ── WAVE SYSTEM ───────────────────────────────────────────────
+function startWave() {
+  if(waveActive||wave>=WAVES.length)return;
+  waveActive=true;
+  var waveDef=WAVES[wave];
+  enemySpawnQueues=waveDef.map(function(w){
+    return {type:w.type,count:w.count,interval:w.interval,timer:w.interval*0.5};
   });
-  mmCtx.beginPath(); mmCtx.arc(cx,cz,4.5,0,Math.PI*2);
-  mmCtx.fillStyle='#4ade80'; mmCtx.fill();
-  mmCtx.beginPath(); mmCtx.moveTo(cx,cz);
-  mmCtx.lineTo(cx+Math.sin(yaw)*12, cz+Math.cos(yaw)*12);
-  mmCtx.strokeStyle='#4ade80'; mmCtx.lineWidth=2.5; mmCtx.stroke();
-  mmCtx.strokeStyle='rgba(254,204,0,0.25)'; mmCtx.lineWidth=1; mmCtx.strokeRect(0,0,130,130);
+  waveTotalEnemies=waveDef.reduce(function(s,w){return s+w.count;},0);
+  waveKillCount=0;
+  document.getElementById('wavebanner').textContent='Våg '+(wave+1)+' pågår! Försvara din bas!';
+  var btn=document.getElementById('wavebtn');
+  if(btn)btn.textContent='PÅGÅR...';
+  updateUI();
 }
 
-function grab(c) {
-  if (c.done) return;
-  c.done = true; collected++;
-  scene.remove(c.group);
-  var s = SYMBOLS[c.idx];
-  document.getElementById('pname').textContent  = s.icon+' '+s.name;
-  document.getElementById('pdesc').textContent  = s.desc;
-  document.getElementById('pcount').textContent = collected+' av 10 funna';
-  document.getElementById('popup').style.display = 'block';
-  popupTimer = 2.8;
-  document.getElementById('hcol').textContent = collected+' / 10';
-  var star = document.getElementById('pstar'+(collected-1));
-  if (star) star.classList.add('found');
-  document.getElementById('ehint').style.display = 'none';
-  nearSymbol = null;
-  if (collected >= 10) {
-    setTimeout(function() {
-      var m=Math.floor(totalTime/60), s2=Math.floor(totalTime%60);
-      document.getElementById('winmsg').textContent =
-        'Du klarade det på '+m+':'+(s2<10?'0'+s2:s2)+'! Sverige är tryggt med Jimmie!';
-      document.getElementById('winscreen').style.display = 'flex';
-    }, 1800);
+function endWave() {
+  waveActive=false;
+  wave++;
+  var bonus=150+wave*100;
+  money+=bonus;
+  if(wave>=WAVES.length){
+    showOverlay(true,'Alla 5 vågor klarade! Sverige är säkrat!');
+    return;
   }
+  document.getElementById('wavebanner').textContent='Våg '+wave+' klar! +'+(bonus)+' kr — Förbered nästa!';
+  var btn=document.getElementById('wavebtn');
+  if(btn)btn.textContent='▶ START VÅG '+(wave+1);
+  updateUI();
 }
 
-function isBlocked(nx, nz) {
-  for (var i = 0; i < walls.length; i++) {
-    var w = walls[i];
-    if (Math.abs(nx-w.x)<w.hw && Math.abs(nz-w.z)<w.hd) return true;
-  }
-  return Math.abs(nx)>78 || Math.abs(nz)>78;
+// ── COMBAT ────────────────────────────────────────────────────
+function findClosestEnemy(unit) {
+  var best=null, bestDist=3.5; // attack range
+  enemyUnits.forEach(function(e){
+    if(e.dead)return;
+    var d=unit.mesh.position.distanceTo(e.mesh.position);
+    if(d<bestDist){bestDist=d;best=e;}
+  });
+  return best;
+}
+function findClosestPlayer(unit) {
+  var best=null, bestDist=3.5;
+  playerUnits.forEach(function(p){
+    if(p.dead)return;
+    var d=unit.mesh.position.distanceTo(p.mesh.position);
+    if(d<bestDist){bestDist=d;best=p;}
+  });
+  return best;
 }
 
-var clock = new THREE.Clock();
+// ── MAIN LOOP ─────────────────────────────────────────────────
+var clock=new THREE.Clock();
 
-document.getElementById('startbtn').addEventListener('click', function() {
-  document.getElementById('startscreen').style.display = 'none';
-  document.getElementById('hud').style.display = 'block';
-  document.getElementById('lockprompt').style.display = 'block';
-  gameOn = true;
-  clock.start();
-  document.getElementById('glcanvas').requestPointerLock();
-});
+// ── UI ────────────────────────────────────────────────────────
+function updateUI() {
+  document.getElementById('hmoney').textContent=money;
+  document.getElementById('henemy-hp').textContent=Math.max(0,Math.ceil(enemyBaseHp));
+  var bpct=Math.max(0,baseHp/baseMaxHp)*100;
+  document.getElementById('basebar-fill').style.width=bpct+'%';
+  document.getElementById('basebar-fill').style.background=
+    bpct>50?'linear-gradient(90deg,#22c55e,#86efac)':
+    bpct>25?'linear-gradient(90deg,#facc15,#fde68a)':
+    'linear-gradient(90deg,#ef4444,#fca5a5)';
+  var wpct=waveTotalEnemies>0?(waveKillCount/waveTotalEnemies)*100:0;
+  document.getElementById('waveprog-fill').style.width=wpct+'%';
+  updateShopAffordability();
+}
 
-function loop() {
+function showOverlay(win, msg) {
+  gameActive=false;
+  var el=document.getElementById('overlay');
+  document.getElementById('overlay-title').textContent=win?'🏆 SEGER!':'💀 GAME OVER';
+  document.getElementById('overlay-title').style.color=win?'var(--yellow)':'var(--red)';
+  document.getElementById('overlay-msg').textContent=msg;
+  el.style.display='flex';
+}
+
+// Passive income
+var INCOME_INTERVAL=3.0;
+var INCOME_AMOUNT=30;
+
+function loop(){
   requestAnimationFrame(loop);
-  var dt = Math.min(clock.getDelta(), 0.05);
-  var elapsed = clock.getElapsedTime();
+  var dt=Math.min(clock.getDelta(),0.05);
+  var elapsed=clock.getElapsedTime();
+  if(!gameActive)return;
 
-  if (gameOn) {
-    totalTime += dt;
-    var tm=Math.floor(totalTime/60), ts=Math.floor(totalTime%60);
-    document.getElementById('htime').textContent = tm+':'+(ts<10?'0'+ts:ts);
+  // Passive income
+  incomeTimer+=dt;
+  if(incomeTimer>=INCOME_INTERVAL){
+    incomeTimer=0;
+    money+=INCOME_AMOUNT+(wave*10);
+    updateUI();
+  }
 
-    // Movement — W=forward, S=backward, A=left, D=right
-    var spd = (keys['ShiftLeft']||keys['ShiftRight']) ? 8.5 : 5.0;
-    var fwdX =  Math.sin(yaw);
-    var fwdZ =  Math.cos(yaw);
-    var rgtX =  Math.cos(yaw);
-    var rgtZ = -Math.sin(yaw);
-    var mx=0, mz=0;
-    if (keys['KeyW']) { mx -= fwdX; mz -= fwdZ; }  // forward
-    if (keys['KeyS']) { mx += fwdX; mz += fwdZ; }  // backward
-    if (keys['KeyA']) { mx -= rgtX; mz -= rgtZ; }  // left
-    if (keys['KeyD']) { mx += rgtX; mz += rgtZ; }  // right
-
-    var len = Math.sqrt(mx*mx+mz*mz);
-    if (len > 0) {
-      mx = mx/len*spd*dt; mz = mz/len*spd*dt;
-      var nx=cam.position.x+mx, nz=cam.position.z+mz;
-      if (!isBlocked(nx, cam.position.z)) cam.position.x = nx;
-      if (!isBlocked(cam.position.x, nz)) cam.position.z = nz;
+  // Spawn enemies from queue
+  if(waveActive){
+    var allDone=true;
+    enemySpawnQueues.forEach(function(q){
+      if(q.count>0){
+        allDone=false;
+        q.timer-=dt;
+        if(q.timer<=0){
+          spawnEnemyUnit(ENEMY_TYPES[q.type]);
+          q.count--;
+          q.timer=q.interval;
+        }
+      }
+    });
+    // Check wave end: all spawned and all dead/reached base
+    if(allDone&&enemyUnits.every(function(e){return e.dead||e.reachedBase;})){
+      endWave();
     }
-    cam.rotation.order='YXZ';
-    cam.rotation.y=yaw; cam.rotation.x=pitch;
   }
 
-  // Animate collectibles
-  var nearest=null, nearestD=Infinity;
-  for (var ci=0; ci<collectibles.length; ci++) {
-    var c=collectibles[ci];
-    if (c.done) continue;
-    c.group.position.y = 1.5 + Math.sin(elapsed*2.0+ci*0.9)*0.32;
-    c.group.rotation.y += dt*1.4;
-    c.ring.rotation.z  += dt*0.85;
-    c.ring2.rotation.x += dt*1.1;
-    var dx=cam.position.x-c.group.position.x, dz=cam.position.z-c.group.position.z;
-    var dist=Math.sqrt(dx*dx+dz*dz);
-    if (dist<nearestD){nearestD=dist;nearest=c;}
+  // ── Move & update player units ───────────────────────────
+  playerUnits.forEach(function(u){
+    if(u.dead)return;
+
+    // Check for enemy to fight
+    var target=findClosestEnemy(u);
+    if(target){
+      // Attack
+      u.attackTimer-=dt;
+      if(u.attackTimer<=0){
+        u.attackTimer=1.2;
+        target.hp-=u.dmg;
+        explode(target.mesh.position.clone().add(new THREE.Vector3(0,0.8,0)),0xfecc00,5);
+        updateHealthBar(target);
+        if(target.hp<=0){
+          target.dead=true;
+          scene.remove(target.mesh);
+          explode(target.mesh.position,target.def.col,10);
+          waveKillCount++;
+          money+=20+(target.def.hp/10|0);
+          updateUI();
+        }
+      }
+      // Wiggle in place
+      u.legTimer+=dt*5;
+      u.mesh.position.x+=Math.sin(u.legTimer)*0.005;
+    } else {
+      // Move forward along path
+      var pathSpd=u.spd*0.0012;
+      u.t=Math.min(1,u.t+pathSpd*dt*60);
+      u.legTimer+=dt*8;
+      var pos=pathCurve.getPoint(u.t);
+      var posAhead=pathCurve.getPoint(Math.min(1,u.t+0.01));
+      u.mesh.position.set(pos.x,pos.y+0.1,pos.z);
+      u.mesh.rotation.y=Math.atan2(posAhead.x-pos.x,posAhead.z-pos.z)+Math.PI;
+      // Leg bob
+      u.mesh.children[0] && (u.mesh.children[0].position.y=0.6+Math.abs(Math.sin(u.legTimer))*0.05);
+
+      if(u.t>=0.99){
+        // Reached enemy base!
+        u.dead=true;
+        u.reachedBase=true;
+        scene.remove(u.mesh);
+        explode(ENEMY_BASE_POS.clone().add(new THREE.Vector3(0,1,0)),0xfecc00,12);
+        enemyBaseHp-=u.dmg*2;
+        updateUI();
+        if(enemyBaseHp<=0){
+          showOverlay(true,'Du förstörde fiendens bas! Sverige är fritt!');
+        }
+      }
+    }
+    updateHealthBar(u);
+    // Billboard health bar to camera
+    u.hbGroup.rotation.y=cam.rotation.y;
+  });
+
+  // ── Move & update enemy units ─────────────────────────────
+  enemyUnits.forEach(function(e){
+    if(e.dead)return;
+
+    var target=findClosestPlayer(e);
+    if(target){
+      e.attackTimer-=dt;
+      if(e.attackTimer<=0){
+        e.attackTimer=1.2;
+        target.hp-=e.dmg;
+        explode(target.mesh.position.clone().add(new THREE.Vector3(0,0.8,0)),0xef4444,5);
+        updateHealthBar(target);
+        if(target.hp<=0){
+          target.dead=true;
+          scene.remove(target.mesh);
+          explode(target.mesh.position,target.def.col,10);
+        }
+      }
+      e.legTimer+=dt*5;
+      e.mesh.position.x+=Math.sin(e.legTimer)*0.005;
+    } else {
+      // Move backward along path (from t=1 toward t=0)
+      var pathSpd=e.spd*0.0012;
+      e.t=Math.max(0,e.t-pathSpd*dt*60);
+      e.legTimer+=dt*8;
+      var pos=pathCurve.getPoint(e.t);
+      var posAhead=pathCurve.getPoint(Math.max(0,e.t-0.01));
+      e.mesh.position.set(pos.x,pos.y+0.1,pos.z);
+      e.mesh.rotation.y=Math.atan2(posAhead.x-pos.x,posAhead.z-pos.z)+Math.PI;
+
+      if(e.t<=0.01){
+        // Reached player base
+        e.dead=true; e.reachedBase=true;
+        scene.remove(e.mesh);
+        explode(PLAYER_BASE_POS.clone().add(new THREE.Vector3(0,1,0)),0xef4444,12);
+        baseHp-=e.dmg*2;
+        updateUI();
+        if(baseHp<=0){
+          showOverlay(false,'Din bas förstördes! Bättre lycka nästa gång!');
+        }
+      }
+    }
+    updateHealthBar(e);
+    e.hbGroup.rotation.y=cam.rotation.y;
+  });
+
+  // Clean up dead units from arrays
+  playerUnits=playerUnits.filter(function(u){return !u.dead;});
+  enemyUnits=enemyUnits.filter(function(e){return !e.dead;});
+
+  // ── Particles ──────────────────────────────────────────────
+  for(var pi=particles.length-1;pi>=0;pi--){
+    var p=particles[pi];
+    p.life-=dt*1.8;
+    p.vel.y-=dt*0.3;
+    p.mesh.position.add(p.vel);
+    p.mesh.material.opacity=p.life;
+    p.mesh.material.transparent=true;
+    if(p.life<=0){scene.remove(p.mesh);particles.splice(pi,1);}
   }
-  nearSymbol = nearestD<3.0 ? nearest : null;
-  document.getElementById('ehint').style.display = nearSymbol?'block':'none';
 
-  if (popupTimer>0){popupTimer-=dt;if(popupTimer<=0)document.getElementById('popup').style.display='none';}
+  // Gentle camera bob
+  cam.position.y=18+Math.sin(elapsed*0.3)*0.2;
 
-  drawMinimap();
-  renderer.render(scene, cam);
+  renderer.render(scene,cam);
 }
-loop();
 
-window.addEventListener('resize', function(){
+// ── START ─────────────────────────────────────────────────────
+document.getElementById('startbtn').addEventListener('click',function(){
+  document.getElementById('startscreen').style.display='none';
+  gameActive=true;
+  buildShop();
+  updateUI();
+  clock.start();
+  loop();
+});
+
+window.addEventListener('resize',function(){
   cam.aspect=window.innerWidth/window.innerHeight;
   cam.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(window.innerWidth,window.innerHeight);
 });
 </script>
 </body>
