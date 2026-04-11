@@ -6,97 +6,118 @@
 <title>Steal The Jimmie</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{overflow:hidden;background:#0a1628;color:#fff;font-family:'Segoe UI',system-ui,sans-serif;width:100vw;height:100vh}
-canvas{display:block;position:fixed;inset:0}
+:root{
+  --yellow:#fecc00;--blue:#005293;--dark:#00111f;
+  --green:#22c55e;--red:#ef4444;
+}
+body{overflow:hidden;background:var(--dark);color:#fff;
+  font-family:'Segoe UI',system-ui,sans-serif;width:100vw;height:100vh}
+#c{display:block;position:fixed;inset:0;width:100%!important;height:100%!important}
 
-/* ── START SCREEN ── */
+/* ─── START ─── */
 #startscreen{
   position:fixed;inset:0;z-index:300;
-  background:linear-gradient(135deg,#00111f,#003d6e 50%,#005293);
+  background:radial-gradient(ellipse at 40% 40%,#003d6e,#001428 70%);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:20px;text-align:center;padding:30px;
+  gap:22px;text-align:center;padding:40px;
 }
-#startscreen h1{font-size:3.8rem;color:#fecc00;letter-spacing:4px;
-  text-shadow:0 0 40px rgba(254,204,0,0.5);line-height:1.1}
-#startscreen p{opacity:0.78;max-width:480px;line-height:1.8;font-size:0.95rem}
-#startscreen p strong{color:#fecc00}
-.sdflag{width:80px;height:54px;background:#005293;border-radius:5px;position:relative;
-  border:3px solid rgba(254,204,0,0.5);box-shadow:0 0 25px rgba(254,204,0,0.3)}
-.sdflag .v{position:absolute;width:12px;height:100%;background:#fecc00;left:27px;box-shadow:0 0 10px #fecc00}
-.sdflag .h{position:absolute;width:100%;height:12px;background:#fecc00;top:21px;box-shadow:0 0 10px #fecc00}
+.sdflag{width:90px;height:60px;background:#005293;border-radius:6px;position:relative;
+  border:3px solid rgba(254,204,0,0.55);box-shadow:0 0 30px rgba(254,204,0,0.3)}
+.sdflag .v{position:absolute;width:13px;height:100%;background:var(--yellow);left:28px;
+  box-shadow:0 0 12px var(--yellow)}
+.sdflag .h{position:absolute;width:100%;height:13px;background:var(--yellow);top:22px;
+  box-shadow:0 0 12px var(--yellow)}
+#startscreen h1{font-size:3.6rem;color:var(--yellow);letter-spacing:4px;
+  text-shadow:0 0 40px rgba(254,204,0,0.55),4px 4px 0 rgba(0,50,100,0.5);line-height:1.05}
+#startscreen .subtitle{font-size:1.05rem;opacity:0.78;max-width:500px;line-height:1.8}
+#startscreen .subtitle strong{color:var(--yellow)}
+.how-to{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;margin-top:4px}
+.how-item{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);
+  border-radius:12px;padding:10px 18px;font-size:0.8rem;opacity:0.8}
+.how-item span{color:var(--yellow);font-weight:700}
 #startbtn{
-  padding:18px 60px;border:none;border-radius:50px;cursor:pointer;
-  font-weight:900;font-size:1.1rem;letter-spacing:2px;text-transform:uppercase;
-  background:linear-gradient(135deg,#fecc00,#e8a000);color:#001a33;
-  box-shadow:0 8px 0 #8a6400,0 12px 30px rgba(0,0,0,0.4);
-  transition:transform 0.1s,box-shadow 0.1s;
+  padding:20px 70px;border:none;border-radius:50px;cursor:pointer;
+  font-weight:900;font-size:1.15rem;letter-spacing:2px;text-transform:uppercase;
+  background:linear-gradient(135deg,var(--yellow),#e8a000);color:#001a33;
+  box-shadow:0 8px 0 #8a6400,0 14px 35px rgba(0,0,0,0.45);
+  transition:transform 0.12s,box-shadow 0.12s;
 }
-#startbtn:hover{transform:translateY(-2px)}
-#startbtn:active{transform:translateY(4px);box-shadow:0 4px 0 #8a6400}
+#startbtn:hover{transform:translateY(-3px);box-shadow:0 11px 0 #8a6400,0 18px 40px rgba(0,0,0,0.45)}
+#startbtn:active{transform:translateY(5px);box-shadow:0 3px 0 #8a6400}
 
-/* ── HUD ── */
+/* ─── HUD ─── */
 #hud{position:fixed;inset:0;pointer-events:none;z-index:10;display:none}
-#topbar{
-  position:absolute;top:0;left:0;right:0;padding:12px 24px;
-  background:linear-gradient(180deg,rgba(0,15,40,0.96),transparent);
-  display:flex;justify-content:space-between;align-items:center;
+
+#topbar{position:absolute;top:0;left:0;right:0;padding:13px 26px;
+  background:linear-gradient(180deg,rgba(0,15,40,0.97) 0%,transparent 100%);
+  display:flex;justify-content:space-between;align-items:center;gap:20px}
+#gtitle{font-size:1.05rem;font-weight:900;letter-spacing:4px;color:var(--yellow);
+  text-shadow:0 0 18px rgba(254,204,0,0.5)}
+.hstat{text-align:center;background:rgba(0,0,0,0.5);
+  border:1px solid rgba(255,255,255,0.13);border-radius:11px;padding:7px 18px;min-width:90px}
+.hlbl{font-size:0.55rem;text-transform:uppercase;letter-spacing:2px;color:var(--yellow);opacity:0.75;margin-bottom:2px}
+.hval{font-size:1.2rem;font-weight:900}
+
+/* Progress bar */
+#progbar{position:absolute;top:72px;left:50%;transform:translateX(-50%);
+  width:280px;text-align:center}
+#progbar-lbl{font-size:0.58rem;text-transform:uppercase;letter-spacing:2px;
+  color:var(--yellow);opacity:0.75;margin-bottom:5px}
+#progbar-track{height:11px;background:rgba(255,255,255,0.1);border-radius:8px;
+  overflow:hidden;border:1px solid rgba(255,255,255,0.14)}
+#progbar-fill{height:100%;width:0%;border-radius:8px;transition:width 0.5s ease;
+  background:linear-gradient(90deg,var(--yellow),#fff176)}
+
+/* Crosshair */
+#xhair{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:22px;height:22px;pointer-events:none}
+#xhair::before,#xhair::after{content:'';position:absolute;background:rgba(255,255,255,0.82);border-radius:2px}
+#xhair::before{width:2px;height:100%;left:10px}
+#xhair::after{width:100%;height:2px;top:10px}
+
+/* Recruit hint */
+#rhint{
+  position:absolute;bottom:36%;left:50%;transform:translateX(-50%);
+  background:rgba(0,0,0,0.82);border:2px solid var(--yellow);
+  border-radius:14px;padding:11px 26px;font-size:0.9rem;
+  color:var(--yellow);font-weight:700;letter-spacing:1px;display:none;
+  text-align:center;box-shadow:0 0 24px rgba(254,204,0,0.18);
+  backdrop-filter:blur(4px);
 }
-#gtitle{font-size:1.1rem;font-weight:900;letter-spacing:4px;color:#fecc00;
-  text-shadow:0 0 20px rgba(254,204,0,0.5)}
-.topstat{text-align:center;background:rgba(0,0,0,0.45);
-  border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:6px 16px}
-.tlbl{font-size:0.55rem;text-transform:uppercase;letter-spacing:2px;color:#fecc00;opacity:0.8}
-.tval{font-size:1.2rem;font-weight:900}
 
-#crosshair{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:22px;height:22px}
-#crosshair::before,#crosshair::after{content:'';position:absolute;background:rgba(255,255,255,0.85);border-radius:2px}
-#crosshair::before{width:2px;height:100%;left:10px}
-#crosshair::after{width:100%;height:2px;top:10px}
-
-#buyhint{
-  position:absolute;bottom:37%;left:50%;transform:translateX(-50%);
-  background:rgba(0,0,0,0.8);border:2px solid #fecc00;
-  border-radius:12px;padding:10px 24px;font-size:0.88rem;color:#fecc00;
-  display:none;text-align:center;font-weight:700;letter-spacing:1px;
-  box-shadow:0 0 20px rgba(254,204,0,0.2);
-}
-
+/* Popup */
 #popup{
-  position:absolute;top:34%;left:50%;transform:translate(-50%,-50%);
-  background:rgba(0,25,65,0.97);border:2px solid #fecc00;
-  border-radius:18px;padding:24px 40px;text-align:center;
-  display:none;min-width:280px;box-shadow:0 20px 60px rgba(0,0,0,0.7);
+  position:absolute;top:33%;left:50%;transform:translate(-50%,-50%);
+  background:rgba(0,22,60,0.97);border:2px solid var(--yellow);
+  border-radius:20px;padding:26px 44px;text-align:center;
+  display:none;min-width:300px;box-shadow:0 24px 70px rgba(0,0,0,0.75);
+  backdrop-filter:blur(6px);
 }
-#popup h3{color:#fecc00;font-size:1.5rem;margin-bottom:6px}
-#popup p{opacity:0.8;font-size:0.9rem}
+#popup h3{color:var(--yellow);font-size:1.55rem;margin-bottom:7px}
+#popup p{opacity:0.82;font-size:0.9rem;line-height:1.5}
 
-#basebar-wrap{position:absolute;top:70px;left:50%;transform:translateX(-50%);
-  width:260px;text-align:center}
-#basebar-lbl{font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;color:#fecc00;opacity:0.8;margin-bottom:4px}
-#basebar-track{height:12px;background:rgba(255,255,255,0.1);border-radius:8px;
-  overflow:hidden;border:1px solid rgba(255,255,255,0.15)}
-#basebar-fill{height:100%;background:linear-gradient(90deg,#fecc00,#fff176);
-  border-radius:8px;transition:width 0.4s;width:0%}
+/* Lock prompt */
+#lockprompt{position:absolute;bottom:46%;left:50%;transform:translateX(-50%);
+  background:rgba(0,0,0,0.72);border:1px solid rgba(254,204,0,0.4);border-radius:10px;
+  padding:11px 22px;font-size:0.82rem;color:var(--yellow);display:none;text-align:center;
+  pointer-events:all;cursor:pointer}
 
-#lockprompt{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-  background:rgba(0,0,0,0.75);border:1px solid rgba(254,204,0,0.4);border-radius:10px;
-  padding:12px 24px;font-size:0.82rem;color:#fecc00;display:none;text-align:center}
-
+/* Bottom hint bar */
 #bottombar{position:absolute;bottom:0;left:0;right:0;padding:10px 24px;
-  background:linear-gradient(0deg,rgba(0,8,25,0.9),transparent);
+  background:linear-gradient(0deg,rgba(0,8,28,0.9) 0%,transparent 100%);
   display:flex;justify-content:center;gap:28px;font-size:0.68rem;opacity:0.5}
-kbd{background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:4px;font-family:inherit}
+kbd{background:rgba(255,255,255,0.16);padding:2px 8px;border-radius:5px;font-family:inherit}
 
-/* ── WIN ── */
+/* ─── WIN ─── */
 #winscreen{position:fixed;inset:0;z-index:200;background:rgba(0,8,22,0.97);
   display:none;flex-direction:column;align-items:center;justify-content:center;
-  gap:18px;text-align:center;padding:30px;backdrop-filter:blur(10px)}
-#winscreen h1{font-size:4rem;color:#fecc00;text-shadow:0 0 50px rgba(254,204,0,0.6)}
-#winscreen p{opacity:0.7;font-size:1rem;max-width:420px;line-height:1.6}
-.wbtn{padding:16px 50px;background:linear-gradient(135deg,#fecc00,#e8a000);
+  gap:18px;text-align:center;padding:30px;backdrop-filter:blur(12px)}
+#winscreen h1{font-size:4.5rem;color:var(--yellow);text-shadow:0 0 60px rgba(254,204,0,0.6)}
+#winscreen p{opacity:0.72;font-size:1.05rem;max-width:430px;line-height:1.65}
+.wbtn{padding:16px 52px;background:linear-gradient(135deg,var(--yellow),#e8a000);
   color:#001a33;font-weight:900;font-size:1rem;border:none;border-radius:50px;
   cursor:pointer;letter-spacing:2px;text-transform:uppercase;box-shadow:0 6px 0 #8a6400}
-#winscreen a{color:rgba(255,255,255,0.35);font-size:0.8rem;text-decoration:none;margin-top:4px}
+#winscreen a{color:rgba(255,255,255,0.35);font-size:0.82rem;text-decoration:none;margin-top:6px}
 </style>
 </head>
 <body>
@@ -104,641 +125,1041 @@ kbd{background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:4px;font-fam
 <div id="startscreen">
   <div class="sdflag"><div class="v"></div><div class="h"></div></div>
   <h1>STEAL THE<br>JIMMIE</h1>
-  <p>Jimmie-karaktärer vandrar längs vägen. <strong>Gå nära dem och tryck E</strong> för att rekrytera dem till din bas! Hitta och rekrytera alla 10 för att vinna.</p>
+  <p class="subtitle">
+    Jimmie-karaktärer vandrar längs vägen mot din bas.<br>
+    <strong>Gå nära och tryck E</strong> för att rekrytera dem!<br>
+    Hitta och rekrytera alla <strong>10 Jimmies</strong> för att vinna.
+  </p>
+  <div class="how-to">
+    <div class="how-item"><span>WASD</span> Rörelse</div>
+    <div class="how-item"><span>Mus</span> Titta runt</div>
+    <div class="how-item"><span>E</span> Rekrytera Jimmie</div>
+    <div class="how-item"><span>Shift</span> Spring</div>
+  </div>
   <button id="startbtn">▶ STARTA SPELET</button>
-  <p style="font-size:0.7rem;opacity:0.35;margin-top:4px">WASD = rörelse · Mus = titta · E = rekrytera · Shift = spring</p>
 </div>
 
 <canvas id="c"></canvas>
 
 <div id="hud">
   <div id="topbar">
-    <div class="topstat"><div class="tlbl">Rekryterade</div><div class="tval" id="hcount" style="color:#fecc00">0 / 10</div></div>
+    <div class="hstat">
+      <div class="hlbl">Rekryterade</div>
+      <div class="hval" id="hcount" style="color:var(--yellow)">0 / 10</div>
+    </div>
     <div id="gtitle">STEAL THE JIMMIE</div>
-    <div class="topstat"><div class="tlbl">Kronor</div><div class="tval" id="hmoney" style="color:#4ade80">0</div></div>
+    <div class="hstat">
+      <div class="hlbl">Kronor</div>
+      <div class="hval" id="hmoney" style="color:#4ade80">0 kr</div>
+    </div>
   </div>
-  <div id="crosshair"></div>
-  <div id="buyhint">E — Rekrytera Jimmie!</div>
+  <div id="progbar">
+    <div id="progbar-lbl">Jimmies rekryterade</div>
+    <div id="progbar-track"><div id="progbar-fill"></div></div>
+  </div>
+  <div id="xhair"></div>
+  <div id="rhint"></div>
   <div id="popup"><h3 id="pname"></h3><p id="pdesc"></p></div>
-  <div id="basebar-wrap">
-    <div id="basebar-lbl">Din Bas — Rekryterade Jimmies</div>
-    <div id="basebar-track"><div id="basebar-fill"></div></div>
-  </div>
-  <div id="lockprompt">🖱 Klicka för att låsa musen</div>
+  <div id="lockprompt" onclick="document.getElementById('c').requestPointerLock()">🖱 Klicka här för att låsa musen och titta runt</div>
   <div id="bottombar">
-    <span><kbd>WASD</kbd> Rörelse</span>
+    <span><kbd>W A S D</kbd> Rörelse</span>
     <span><kbd>Mus</kbd> Titta</span>
     <span><kbd>E</kbd> Rekrytera</span>
     <span><kbd>Shift</kbd> Spring</span>
+    <span><kbd>Esc</kbd> Lås upp mus</span>
   </div>
 </div>
 
 <div id="winscreen">
   <h1>🏆 SEGER!</h1>
-  <p id="winmsg"></p>
+  <p id="winmsg">Du rekryterade alla Jimmies!</p>
   <button class="wbtn" onclick="location.reload()">SPELA IGEN</button>
   <a href="games.html">← Tillbaka till menyn</a>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-// ════════════════════════════════════════════════════════════
-//  STEAL THE JIMMIE  —  First Person Collector
-// ════════════════════════════════════════════════════════════
+'use strict';
 
-var JIMMIE_DEFS = [
-  {name:'Jimmie Junior',    desc:'Liten men ivrig sverigevan!',       col:0x4ade80, cost:50,  icon:'👦', scale:0.75},
-  {name:'Jimmie Vandraren', desc:'Vandrar stolt för Sverige!',         col:0x60a5fa, cost:100, icon:'🚶', scale:0.9},
-  {name:'Jimmie Flaggbäraren',desc:'Bär flaggan med stolthet!',       col:0xfecc00, cost:150, icon:'🚩', scale:1.0},
-  {name:'Jimmie Talaren',   desc:'Håller tal som berör hela nationen!',col:0xc084fc, cost:200, icon:'🎤', scale:1.0},
-  {name:'Jimmie Järnet',    desc:'Stridshärdad veteran för Sverige!',  col:0xfb923c, cost:300, icon:'⚔️', scale:1.1},
-  {name:'Jimmie Jubilaren', desc:'Firar 30 år i politiken!',           col:0xf472b6, cost:400, icon:'🎉', scale:1.0},
-  {name:'Jimmie Kungen',    desc:'Tar hem segern varje gång!',         col:0xffd700, cost:500, icon:'👑', scale:1.2},
-  {name:'Jimmie Riksdagen', desc:'Hemma på riksdagsgolvet!',           col:0x34d399, cost:600, icon:'🏛️', scale:1.1},
-  {name:'Jimmie Hjälten',   desc:'Folkets hjälte från Sölvesborg!',    col:0xff6b6b, cost:700, icon:'🦸', scale:1.2},
-  {name:'Jimmie Åkesson',   desc:'ORIGINALET! Den ende, den sanne!',   col:0xffd700, cost:999, icon:'⭐', scale:1.4},
+// ════════════════════════════════════════════════════════════════════
+//  STEAL THE JIMMIE  v3  —  First Person 3D Collector
+//  Fix: never assign .position directly on geometry; always use
+//  mesh.position.set() or group.position.set()
+// ════════════════════════════════════════════════════════════════════
+
+// ── Jimmie definitions ───────────────────────────────────────────────
+var JIMMIES = [
+  {name:'Jimmie Junior',      desc:'Liten men ivrig sverigevan!',           col:0x4ade80, cost:50,   icon:'👦', sc:0.75, hat:'none'},
+  {name:'Jimmie Vandraren',   desc:'Vandrar stolt för Sverige!',            col:0x60a5fa, cost:100,  icon:'🚶', sc:0.9,  hat:'fedora'},
+  {name:'Jimmie Flaggbäraren',desc:'Bär flaggan med stolthet!',             col:0xfecc00, cost:150,  icon:'🚩', sc:1.0,  hat:'none'},
+  {name:'Jimmie Talaren',     desc:'Håller tal som rör hela nationen!',     col:0xc084fc, cost:200,  icon:'🎤', sc:1.0,  hat:'none'},
+  {name:'Jimmie Järnet',      desc:'Stridshärdad veteran för Sverige!',     col:0xfb923c, cost:300,  icon:'⚔️', sc:1.1,  hat:'helmet'},
+  {name:'Jimmie Jubilaren',   desc:'Firar 30 år i politiken!',              col:0xf472b6, cost:400,  icon:'🎉', sc:1.0,  hat:'party'},
+  {name:'Jimmie Kungen',      desc:'Tar hem segern varje gång!',            col:0xffd700, cost:500,  icon:'👑', sc:1.2,  hat:'crown'},
+  {name:'Jimmie Riksdagen',   desc:'Hemma på riksdagsgolvet!',              col:0x34d399, cost:600,  icon:'🏛️', sc:1.1,  hat:'fedora'},
+  {name:'Jimmie Hjälten',     desc:'Folkets hjälte från Sölvesborg!',       col:0xff6b6b, cost:700,  icon:'🦸', sc:1.2,  hat:'helmet'},
+  {name:'Jimmie Åkesson',     desc:'ORIGINALET! Den ende, den sanne Jimmie!',col:0xffd700,cost:1000, icon:'⭐', sc:1.5,  hat:'crown'},
 ];
 
-var gameOn = false, recruited = 0, money = 0, popupTimer = 0, mouseLocked = false;
-var nearJimmie = null;
-var wanderers = [];   // Jimmies on path
-var baseJimmies = []; // Jimmies at base (decorative)
-var particles = [];
+// ── State ─────────────────────────────────────────────────────────────
+var gameOn      = false;
+var recruited   = 0;
+var money       = 0;
+var popupTimer  = 0;
+var mouseLocked = false;
+var nearJimmie  = null;
+var wanderers   = [];
+var particles   = [];
+var incomeTimer = 0;
+var totalTime   = 0;
 
-// ── Renderer ─────────────────────────────────────────────────
-var renderer = new THREE.WebGLRenderer({canvas:document.getElementById('c'), antialias:true});
+// ── Three.js setup ────────────────────────────────────────────────────
+var canvas = document.getElementById('c');
+
+var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, powerPreference: 'high-performance' });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.0;
+renderer.toneMappingExposure = 1.05;
+renderer.outputEncoding = THREE.sRGBEncoding;
 
-// ── Scene ────────────────────────────────────────────────────
 var scene = new THREE.Scene();
 scene.background = new THREE.Color(0x1a3a6e);
-scene.fog = new THREE.Fog(0x1a3a6e, 20, 80);
+scene.fog = new THREE.Fog(0x1a3a6e, 25, 85);
 
-// ── Camera ───────────────────────────────────────────────────
-var cam = new THREE.PerspectiveCamera(72, window.innerWidth/window.innerHeight, 0.1, 200);
-cam.position.set(0, 1.75, -15);
-cam.lookAt(0, 1.75, 0);
+var cam = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.05, 200);
+cam.position.set(0, 1.75, -18);
 
-// ── Lights ───────────────────────────────────────────────────
-scene.add(new THREE.AmbientLight(0xaabbdd, 1.0));
-var sun = new THREE.DirectionalLight(0xfff5cc, 1.8);
-sun.position.set(20, 40, 10);
-sun.castShadow = true;
-sun.shadow.camera.left = -60; sun.shadow.camera.right = 60;
-sun.shadow.camera.top = 60; sun.shadow.camera.bottom = -60;
-sun.shadow.camera.far = 150;
-sun.shadow.mapSize.set(2048, 2048);
-scene.add(sun);
-scene.add(Object.assign(new THREE.DirectionalLight(0x336699, 0.5), {position: new THREE.Vector3(-15, 10, -10)}));
+// ── Lights ────────────────────────────────────────────────────────────
+var ambLight = new THREE.AmbientLight(0x99aabb, 0.9);
+scene.add(ambLight);
 
-// ── Ground ───────────────────────────────────────────────────
-var ground = new THREE.Mesh(new THREE.PlaneGeometry(160, 160),
-  new THREE.MeshLambertMaterial({color:0x2d6a2d}));
-ground.rotation.x = -Math.PI/2;
-ground.receiveShadow = true;
-scene.add(ground);
+var sunLight = new THREE.DirectionalLight(0xfff5cc, 1.9);
+sunLight.position.set(25, 45, 15);
+sunLight.castShadow = true;
+sunLight.shadow.camera.left   = -70;
+sunLight.shadow.camera.right  =  70;
+sunLight.shadow.camera.top    =  70;
+sunLight.shadow.camera.bottom = -70;
+sunLight.shadow.camera.near   = 1;
+sunLight.shadow.camera.far    = 180;
+sunLight.shadow.mapSize.width  = 2048;
+sunLight.shadow.mapSize.height = 2048;
+sunLight.shadow.bias = -0.001;
+scene.add(sunLight);
 
-// ── STRAIGHT ROAD ────────────────────────────────────────────
-// Road goes from z=+30 (far end) to z=-30 (player base)
-var roadMat = new THREE.MeshLambertMaterial({color:0x2a2a3a});
-var road = new THREE.Mesh(new THREE.PlaneGeometry(5, 80), roadMat);
-road.rotation.x = -Math.PI/2;
-road.position.set(0, 0.01, 0);
-road.receiveShadow = true;
-scene.add(road);
+var fillLight = new THREE.DirectionalLight(0x3366aa, 0.45);
+fillLight.position.set(-18, 12, -12);
+scene.add(fillLight);
 
-// Road markings (dashed center line)
-for (var ri = -8; ri <= 8; ri++) {
-  var dash = new THREE.Mesh(new THREE.PlaneGeometry(0.18, 1.8),
-    new THREE.MeshBasicMaterial({color:0xffd700, transparent:true, opacity:0.5}));
-  dash.rotation.x = -Math.PI/2;
-  dash.position.set(0, 0.02, ri * 4);
-  scene.add(dash);
+var hemiLight = new THREE.HemisphereLight(0x4488cc, 0x224422, 0.35);
+scene.add(hemiLight);
+
+// ── Helper: safe mesh maker (never reuse geometry/material) ───────────
+function box(w, h, d, col, emissive, emissiveInt) {
+  var geo = new THREE.BoxGeometry(w, h, d);
+  var mat = new THREE.MeshLambertMaterial({ color: col });
+  if (emissive) { mat.emissive = new THREE.Color(emissive); mat.emissiveIntensity = emissiveInt || 0.1; }
+  var m = new THREE.Mesh(geo, mat);
+  m.castShadow = true; m.receiveShadow = true;
+  return m;
+}
+function cyl(rt, rb, h, segs, col) {
+  var m = new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, segs || 12),
+    new THREE.MeshLambertMaterial({ color: col }));
+  m.castShadow = true; m.receiveShadow = true;
+  return m;
+}
+function cone(r, h, segs, col) {
+  var m = new THREE.Mesh(new THREE.ConeGeometry(r, h, segs || 8),
+    new THREE.MeshLambertMaterial({ color: col }));
+  m.castShadow = true; return m;
+}
+function sphere(r, segs, col, emissive, ei) {
+  var mat = new THREE.MeshLambertMaterial({ color: col });
+  if (emissive) { mat.emissive = new THREE.Color(emissive); mat.emissiveIntensity = ei || 0.1; }
+  var m = new THREE.Mesh(new THREE.SphereGeometry(r, segs || 10, segs || 10), mat);
+  m.castShadow = true; return m;
+}
+function plane(w, h, col, opacity) {
+  var mat;
+  if (opacity !== undefined) {
+    mat = new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: opacity, side: THREE.DoubleSide });
+  } else {
+    mat = new THREE.MeshBasicMaterial({ color: col, side: THREE.DoubleSide });
+  }
+  return new THREE.Mesh(new THREE.PlaneGeometry(w, h), mat);
 }
 
-// Road edges
-for (var side = -1; side <= 1; side += 2) {
-  var edge = new THREE.Mesh(new THREE.PlaneGeometry(0.15, 80),
-    new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, opacity:0.6}));
-  edge.rotation.x = -Math.PI/2;
-  edge.position.set(side * 2.5, 0.02, 0);
-  scene.add(edge);
+// ── Ground ────────────────────────────────────────────────────────────
+var groundMesh = new THREE.Mesh(
+  new THREE.PlaneGeometry(180, 180),
+  new THREE.MeshLambertMaterial({ color: 0x2a6028 })
+);
+groundMesh.rotation.x = -Math.PI / 2;
+groundMesh.position.set(0, 0, 0);
+groundMesh.receiveShadow = true;
+scene.add(groundMesh);
+
+// Subtle grass texture variation patches
+for (var gi = 0; gi < 40; gi++) {
+  var patch = new THREE.Mesh(
+    new THREE.PlaneGeometry(3 + Math.random() * 4, 3 + Math.random() * 4),
+    new THREE.MeshLambertMaterial({ color: Math.random() > 0.5 ? 0x2d6a2a : 0x256020 })
+  );
+  patch.rotation.x = -Math.PI / 2;
+  patch.position.set((Math.random() - 0.5) * 100, 0.005, (Math.random() - 0.5) * 100);
+  patch.receiveShadow = true;
+  scene.add(patch);
 }
 
-// ── PLAYER BASE (behind player, z=-35) ───────────────────────
-var BASE_Z = -35;
-var BASE_POS = new THREE.Vector3(0, 0, BASE_Z);
+// ── Road ──────────────────────────────────────────────────────────────
+// Straight road z = +38 (far) to z = -38 (near base)
+var roadSurface = new THREE.Mesh(
+  new THREE.PlaneGeometry(6, 82),
+  new THREE.MeshLambertMaterial({ color: 0x252535 })
+);
+roadSurface.rotation.x = -Math.PI / 2;
+roadSurface.position.set(0, 0.01, 0);
+roadSurface.receiveShadow = true;
+scene.add(roadSurface);
+
+// Road kerbs
+[-3.2, 3.2].forEach(function(sx) {
+  var kerb = new THREE.Mesh(
+    new THREE.BoxGeometry(0.25, 0.1, 82),
+    new THREE.MeshLambertMaterial({ color: 0xaaaaaa })
+  );
+  kerb.position.set(sx, 0.05, 0);
+  kerb.castShadow = true; kerb.receiveShadow = true;
+  scene.add(kerb);
+});
+
+// Road dashes
+for (var di = -9; di <= 9; di++) {
+  var dashM = plane(0.2, 2.2, 0xffd700, 0.55);
+  dashM.rotation.x = -Math.PI / 2;
+  dashM.position.set(0, 0.02, di * 4.2);
+  scene.add(dashM);
+}
+
+// Sidewalk strips
+[-3.7, 3.7].forEach(function(sx) {
+  var sw = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.0, 82),
+    new THREE.MeshLambertMaterial({ color: 0x888898 })
+  );
+  sw.rotation.x = -Math.PI / 2;
+  sw.position.set(sx, 0.015, 0);
+  sw.receiveShadow = true;
+  scene.add(sw);
+});
+
+// ── Player Base ───────────────────────────────────────────────────────
+var BASE_Z = -36;
 
 function buildPlayerBase() {
   var g = new THREE.Group();
-  // Ground platform
-  var plat = new THREE.Mesh(new THREE.CylinderGeometry(6, 7, 0.4, 12),
-    new THREE.MeshLambertMaterial({color:0x334488}));
-  plat.receiveShadow = true; plat.castShadow = true; g.add(plat);
-  // Tower
-  var tower = new THREE.Mesh(new THREE.CylinderGeometry(2, 2.5, 8, 10),
-    new THREE.MeshLambertMaterial({color:0x005293}));
-  tower.position.y = 4.4; tower.castShadow = true; g.add(tower);
-  // Tower roof
-  var roof = new THREE.Mesh(new THREE.ConeGeometry(2.5, 3.5, 10),
-    new THREE.MeshLambertMaterial({color:0x003d6e}));
-  roof.position.y = 10; roof.castShadow = true; g.add(roof);
-  // Battlements ring
-  for (var bi = 0; bi < 10; bi++) {
-    var batt = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.9, 0.5),
-      new THREE.MeshLambertMaterial({color:0x004080}));
-    var ang = (bi/10)*Math.PI*2;
-    batt.position.set(Math.cos(ang)*2.1, 8.8, Math.sin(ang)*2.1);
-    batt.castShadow = true; g.add(batt);
-  }
-  // Flag pole
-  var pole = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 5, 6),
-    new THREE.MeshLambertMaterial({color:0xcccccc}));
-  pole.position.y = 14; g.add(pole);
-  var fl = new THREE.Mesh(new THREE.PlaneGeometry(2, 1.3),
-    new THREE.MeshBasicMaterial({color:0x005293, side:THREE.DoubleSide}));
-  fl.position.set(1, 16, 0); g.add(fl);
-  var fst = new THREE.Mesh(new THREE.PlaneGeometry(2, 0.3),
-    new THREE.MeshBasicMaterial({color:0xfecc00, side:THREE.DoubleSide}));
-  fst.position.set(1, 16, 0.02); g.add(fst);
-  // Gate arch
-  var gateL = new THREE.Mesh(new THREE.BoxGeometry(0.5, 3, 0.5),
-    new THREE.MeshLambertMaterial({color:0x004080}));
-  gateL.position.set(-1.2, 1.7, 6.5); gateL.castShadow = true; g.add(gateL);
-  var gateR = gateL.clone();
-  gateR.position.x = 1.2; g.add(gateR);
-  var gateTop = new THREE.Mesh(new THREE.BoxGeometry(3, 0.5, 0.5),
-    new THREE.MeshLambertMaterial({color:0x004080}));
-  gateTop.position.set(0, 3.25, 6.5); gateTop.castShadow = true; g.add(gateTop);
-  // Point lights
-  var pl = new THREE.PointLight(0x4488ff, 1.5, 15);
-  pl.position.set(0, 3, 0); g.add(pl);
-  var pl2 = new THREE.PointLight(0xfecc00, 0.8, 8);
-  pl2.position.set(0, 15, 0); g.add(pl2);
 
-  g.position.copy(BASE_POS);
+  // Courtyard ground
+  var court = new THREE.Mesh(
+    new THREE.PlaneGeometry(18, 18),
+    new THREE.MeshLambertMaterial({ color: 0x334466 })
+  );
+  court.rotation.x = -Math.PI / 2;
+  court.position.set(0, 0.02, 0);
+  court.receiveShadow = true;
+  g.add(court);
+
+  // Outer wall ring (8 pillars)
+  for (var pi = 0; pi < 8; pi++) {
+    var ang = (pi / 8) * Math.PI * 2;
+    var pill = cyl(0.4, 0.5, 5.5, 8, 0x3355aa);
+    pill.position.set(Math.cos(ang) * 7.5, 2.75, Math.sin(ang) * 7.5);
+    g.add(pill);
+    var capM = cyl(0.45, 0.45, 0.25, 8, 0x4466cc);
+    capM.position.set(Math.cos(ang) * 7.5, 5.65, Math.sin(ang) * 7.5);
+    g.add(capM);
+  }
+
+  // Wall segments connecting pillars
+  for (var wi2 = 0; wi2 < 8; wi2++) {
+    var a1 = (wi2 / 8) * Math.PI * 2;
+    var a2 = ((wi2 + 1) / 8) * Math.PI * 2;
+    var mx = (Math.cos(a1) + Math.cos(a2)) / 2 * 7.5;
+    var mz = (Math.sin(a1) + Math.sin(a2)) / 2 * 7.5;
+    var wSeg = box(2.4, 4, 0.5, 0x2a4488);
+    wSeg.position.set(mx, 2, mz);
+    wSeg.rotation.y = Math.atan2(Math.sin(a2) - Math.sin(a1), Math.cos(a2) - Math.cos(a1));
+    g.add(wSeg);
+  }
+
+  // Main tower
+  var towerBase = cyl(2.2, 2.8, 10, 12, 0x244488);
+  towerBase.position.set(0, 5, 0);
+  g.add(towerBase);
+  var towerMid = cyl(2.0, 2.2, 3, 12, 0x2a50a0);
+  towerMid.position.set(0, 11.5, 0);
+  g.add(towerMid);
+
+  // Battlements
+  for (var bi = 0; bi < 12; bi++) {
+    var bang = (bi / 12) * Math.PI * 2;
+    var batt = box(0.5, 1.0, 0.5, 0x1a3a88);
+    batt.position.set(Math.cos(bang) * 2.0, 13.6, Math.sin(bang) * 2.0);
+    g.add(batt);
+  }
+
+  // Cone roof
+  var roofM = cone(2.5, 4.5, 12, 0x1a2a6e);
+  roofM.position.set(0, 15.5, 0);
+  g.add(roofM);
+
+  // Flag pole
+  var poleM = cyl(0.07, 0.07, 6, 5, 0xdddddd);
+  poleM.position.set(0, 18.5, 0);
+  g.add(poleM);
+
+  // Flag
+  var flagBody = plane(2.2, 1.4, 0x005293);
+  flagBody.position.set(1.1, 21.3, 0);
+  g.add(flagBody);
+  var flagStripe = plane(2.2, 0.32, 0xfecc00);
+  flagStripe.position.set(1.1, 21.3, 0.02);
+  g.add(flagStripe);
+
+  // Gate
+  var gateL2 = box(0.45, 3.2, 0.55, 0x1a3a88);
+  gateL2.position.set(-1.3, 1.6, 7.6);
+  g.add(gateL2);
+  var gateR2 = box(0.45, 3.2, 0.55, 0x1a3a88);
+  gateR2.position.set(1.3, 1.6, 7.6);
+  g.add(gateR2);
+  var gateTop2 = box(3.2, 0.55, 0.55, 0x1a3a88);
+  gateTop2.position.set(0, 3.35, 7.6);
+  g.add(gateTop2);
+
+  // Gate arch glow
+  var archGlow = new THREE.PointLight(0x4488ff, 1.8, 12);
+  archGlow.position.set(0, 2, 6);
+  g.add(archGlow);
+
+  // Tower glow
+  var towerGlow = new THREE.PointLight(0x6699ff, 2.0, 16);
+  towerGlow.position.set(0, 8, 0);
+  g.add(towerGlow);
+
+  // Crown glow
+  var crownGlow = new THREE.PointLight(0xfecc00, 1.2, 10);
+  crownGlow.position.set(0, 20, 0);
+  g.add(crownGlow);
+
+  g.position.set(0, 0, BASE_Z);
   scene.add(g);
 }
 buildPlayerBase();
 
-// Raised platform for player near base
-var startPlat = new THREE.Mesh(new THREE.PlaneGeometry(8, 8),
-  new THREE.MeshLambertMaterial({color:0x333344}));
-startPlat.rotation.x = -Math.PI/2;
-startPlat.position.set(0, 0.01, -28);
-scene.add(startPlat);
+// Starting zone (paved area near player)
+var startZone = new THREE.Mesh(
+  new THREE.PlaneGeometry(10, 10),
+  new THREE.MeshLambertMaterial({ color: 0x2a2a3a })
+);
+startZone.rotation.x = -Math.PI / 2;
+startZone.position.set(0, 0.015, -26);
+startZone.receiveShadow = true;
+scene.add(startZone);
 
-// ── ENVIRONMENT ──────────────────────────────────────────────
-// Trees along road
-var trunkMat = new THREE.MeshLambertMaterial({color:0x5c3a1e});
-var leafMats = [
-  new THREE.MeshLambertMaterial({color:0x1a5c1a}),
-  new THREE.MeshLambertMaterial({color:0x2d7a2d}),
-  new THREE.MeshLambertMaterial({color:0x225522}),
+// ── Trees ─────────────────────────────────────────────────────────────
+var TREE_POS = [
+  [5.5, 30],[6, 22],[5.5, 14],[6, 6],[5.5, -2],[6, -10],[5.5, -18],
+  [-5.5, 30],[-6, 22],[-5.5, 14],[-6, 6],[-5.5, -2],[-6, -10],[-5.5, -18],
+  [9, 26],[-9, 26],[9, 12],[-9, 12],[9, -4],[-9, -4],[9, -16],[-9, -16],
+  [14, 20],[-14, 20],[14, 0],[-14, 0],[14, -14],[-14, -14],
+  [20, 15],[-20, 15],[20, -8],[-20, -8],
 ];
-[
-  [5,25],[6,18],[5.5,10],[6,2],[5,-5],[6,-12],[5,-20],
-  [-5,25],[-6,18],[-5.5,10],[-6,2],[-5,-5],[-6,-12],[-5,-20],
-  [8,22],[-8,22],[8,8],[-8,8],[8,-8],[-8,-8],[8,-18],[-8,-18],
-].forEach(function(t, i) {
-  var x = t[0], z = t[1];
-  var h = 2 + Math.random()*1.5;
-  var tr = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.28, h, 6), trunkMat);
-  tr.position.set(x, h/2, z); tr.castShadow = true; scene.add(tr);
-  var lm = leafMats[i % leafMats.length];
-  [0, 1, 2].forEach(function(j) {
-    var cone = new THREE.Mesh(new THREE.ConeGeometry(1.4 - j*0.2, 2, 8), lm);
-    cone.position.set(x, h + j*1.2, z); cone.castShadow = true; scene.add(cone);
+var trunkMat = new THREE.MeshLambertMaterial({ color: 0x5c3a1e });
+var leafColors = [0x1a5c1a, 0x2d7a2d, 0x226022, 0x1e6818, 0x357535];
+
+TREE_POS.forEach(function(tp, ti) {
+  var tx = tp[0], tz = tp[1];
+  var th = 2.2 + Math.random() * 1.8;
+  var trunkM = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.28, th, 6), trunkMat);
+  trunkM.position.set(tx, th / 2, tz);
+  trunkM.castShadow = true; trunkM.receiveShadow = true;
+  scene.add(trunkM);
+  var lc = leafColors[ti % leafColors.length];
+  var lm = new THREE.MeshLambertMaterial({ color: lc });
+  // Three stacked cones for full look
+  [0, 1, 2].forEach(function(li) {
+    var lCone = new THREE.Mesh(new THREE.ConeGeometry(1.5 - li * 0.22, 2.0, 9), lm);
+    lCone.position.set(tx, th + li * 1.15, tz);
+    lCone.castShadow = true;
+    scene.add(lCone);
   });
 });
 
-// Lamp posts along road
-var lampPostMat = new THREE.MeshLambertMaterial({color:0x888888});
-var lampGlowMat = new THREE.MeshBasicMaterial({color:0xffffcc});
-[-20, -10, 0, 10, 20].forEach(function(z) {
+// ── Lamp posts ────────────────────────────────────────────────────────
+var lampMetalMat = new THREE.MeshLambertMaterial({ color: 0x777788 });
+var lampGlowMat  = new THREE.MeshBasicMaterial({ color: 0xffffcc });
+
+[-22, -12, -2, 8, 18, 28].forEach(function(lz) {
   [-1, 1].forEach(function(side) {
-    var post = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.1, 5, 5), lampPostMat);
-    post.position.set(side * 3.5, 2.5, z); scene.add(post);
-    var arm = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 1, 4), lampPostMat);
-    arm.rotation.z = Math.PI/2; arm.position.set(side * 3.5 + side*0.5, 4.8, z); scene.add(arm);
-    var bulb = new THREE.Mesh(new THREE.SphereGeometry(0.18, 6, 6), lampGlowMat);
-    bulb.position.set(side * 4, 4.75, z); scene.add(bulb);
-    var light = new THREE.PointLight(0xffffaa, 0.7, 10);
-    light.position.set(side * 4, 4.5, z); scene.add(light);
+    var lx = side * 4.2;
+    var postM = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.11, 5.5, 6), lampMetalMat);
+    postM.position.set(lx, 2.75, lz);
+    postM.castShadow = true;
+    scene.add(postM);
+    var armM = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 1.1, 4), lampMetalMat);
+    armM.rotation.z = Math.PI / 2;
+    armM.position.set(lx + side * 0.55, 5.25, lz);
+    scene.add(armM);
+    var bulbM = new THREE.Mesh(new THREE.SphereGeometry(0.2, 7, 7), lampGlowMat);
+    bulbM.position.set(lx + side * 1.05, 5.2, lz);
+    scene.add(bulbM);
+    var ptLight = new THREE.PointLight(0xffffaa, 0.75, 11);
+    ptLight.position.set(lx + side * 1.05, 5.0, lz);
+    scene.add(ptLight);
   });
 });
 
-// Stars
-var sv = new Float32Array(1000*3);
-for (var i = 0; i < 1000; i++) {
-  sv[i*3]   = (Math.random()-0.5)*250;
-  sv[i*3+1] = Math.random()*70+20;
-  sv[i*3+2] = (Math.random()-0.5)*250;
+// ── Benches ───────────────────────────────────────────────────────────
+var benchWoodMat = new THREE.MeshLambertMaterial({ color: 0x7a4a1a });
+var benchMetMat  = new THREE.MeshLambertMaterial({ color: 0x555566 });
+[-20, -8, 4, 16, 26].forEach(function(bz) {
+  [-1, 1].forEach(function(side) {
+    var bx = side * 5;
+    var seat = new THREE.Mesh(new THREE.BoxGeometry(2, 0.12, 0.7), benchWoodMat);
+    seat.position.set(bx, 0.5, bz);
+    seat.castShadow = true; scene.add(seat);
+    var back = new THREE.Mesh(new THREE.BoxGeometry(2, 0.55, 0.1), benchWoodMat);
+    back.position.set(bx, 0.85, bz + side * 0.3);
+    scene.add(back);
+    [-0.75, 0.75].forEach(function(lx2) {
+      var leg = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.5, 0.6), benchMetMat);
+      leg.position.set(bx + lx2, 0.25, bz);
+      scene.add(leg);
+    });
+  });
+});
+
+// ── Fountain in centre ────────────────────────────────────────────────
+var stoneMat = new THREE.MeshLambertMaterial({ color: 0x8888aa });
+var waterMat = new THREE.MeshLambertMaterial({ color: 0x3399cc, transparent: true, opacity: 0.75 });
+
+var fBase2 = cyl(2.8, 3.2, 0.55, 16, 0x7777aa);
+fBase2.position.set(0, 0.27, 5);
+scene.add(fBase2);
+var fWater2 = new THREE.Mesh(new THREE.CylinderGeometry(2.4, 2.4, 0.25, 16), waterMat);
+fWater2.position.set(0, 0.67, 5);
+scene.add(fWater2);
+var fPillar2 = cyl(0.22, 0.3, 2.0, 8, 0x8888aa);
+fPillar2.position.set(0, 1.25, 5);
+scene.add(fPillar2);
+var fTop2 = cyl(0.6, 0.6, 0.22, 10, 0x8888aa);
+fTop2.position.set(0, 2.35, 5);
+scene.add(fTop2);
+var fountainLight = new THREE.PointLight(0x44aaff, 1.2, 8);
+fountainLight.position.set(0, 1.5, 5);
+scene.add(fountainLight);
+
+// ── SD Flag poles along road ──────────────────────────────────────────
+var poleMat = new THREE.MeshLambertMaterial({ color: 0xbbbbbb });
+var flagBlueMat2  = new THREE.MeshBasicMaterial({ color: 0x005293, side: THREE.DoubleSide });
+var flagYelMat2   = new THREE.MeshBasicMaterial({ color: 0xfecc00, side: THREE.DoubleSide });
+
+[-28, -14, 0, 14, 28].forEach(function(fz) {
+  [-1, 1].forEach(function(side) {
+    var fx = side * 7;
+    var fp = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 6, 6), poleMat);
+    fp.position.set(fx, 3, fz);
+    scene.add(fp);
+    var ffl = new THREE.Mesh(new THREE.PlaneGeometry(1.7, 1.1), flagBlueMat2);
+    ffl.position.set(fx + side * 0.85, 5.45, fz);
+    scene.add(ffl);
+    var ffst = new THREE.Mesh(new THREE.PlaneGeometry(1.7, 0.26), flagYelMat2);
+    ffst.position.set(fx + side * 0.85, 5.45, fz + 0.02);
+    scene.add(ffst);
+  });
+});
+
+// ── Stars ─────────────────────────────────────────────────────────────
+var starArr = new Float32Array(1200 * 3);
+for (var si = 0; si < 1200; si++) {
+  starArr[si * 3]     = (Math.random() - 0.5) * 280;
+  starArr[si * 3 + 1] = Math.random() * 70 + 22;
+  starArr[si * 3 + 2] = (Math.random() - 0.5) * 280;
 }
 var starGeo = new THREE.BufferGeometry();
-starGeo.setAttribute('position', new THREE.BufferAttribute(sv, 3));
-scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({color:0xffffff, size:0.2})));
+starGeo.setAttribute('position', new THREE.BufferAttribute(starArr, 3));
+scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.18 })));
 
-// Clouds
-var cloudMat = new THREE.MeshLambertMaterial({color:0xcce0ff, transparent:true, opacity:0.65});
-[[-15,16,5],[0,18,-10],[18,15,8],[-8,17,20]].forEach(function(c) {
-  var cl = new THREE.Mesh(new THREE.SphereGeometry(2.8, 8, 6), cloudMat);
-  cl.position.set(c[0], c[1], c[2]); scene.add(cl);
-  var cl2 = cl.clone(); cl2.position.x += 2.5; cl2.scale.setScalar(0.7); scene.add(cl2);
-  var cl3 = cl.clone(); cl3.position.x -= 2; cl3.scale.setScalar(0.65); scene.add(cl3);
+// ── Clouds ────────────────────────────────────────────────────────────
+var cloudObjects = [];
+var cloudMat = new THREE.MeshLambertMaterial({ color: 0xccddff, transparent: true, opacity: 0.6 });
+[[-18, 18, 6], [2, 20, -15], [20, 17, 10], [-8, 19, 25], [12, 21, -5]].forEach(function(cpos) {
+  var cg = new THREE.Group();
+  [0, 1, 2].forEach(function(ci2) {
+    var cs = sphere(2.2 - ci2 * 0.3, 7, 0xccddff);
+    cs.material = cloudMat;
+    cs.position.set(ci2 * 2.2 - 2, (ci2 % 2) * 0.5, 0);
+    cg.add(cs);
+  });
+  cg.position.set(cpos[0], cpos[1], cpos[2]);
+  scene.add(cg);
+  cloudObjects.push(cg);
 });
 
-// ── CREATE JIMMIE CHARACTER MESH ─────────────────────────────
-function createJimmieMesh(def) {
+// ── Build Jimmie character mesh ───────────────────────────────────────
+function buildJimmieMesh(def) {
   var g = new THREE.Group();
-  var sc = def.scale || 1.0;
+  var sc = def.sc || 1.0;
 
-  // Materials
-  var bodyMat  = new THREE.MeshLambertMaterial({color:def.col, emissive:def.col, emissiveIntensity:0.12});
-  var skinMat  = new THREE.MeshLambertMaterial({color:0xffdab9});
-  var darkMat  = new THREE.MeshLambertMaterial({color:0x223355});
-  var shoeMat  = new THREE.MeshLambertMaterial({color:0x1a1a2e});
-  var eyeWMat  = new THREE.MeshBasicMaterial({color:0xffffff});
-  var eyePMat  = new THREE.MeshBasicMaterial({color:0x0a0a1a});
-  var smileMat = new THREE.MeshBasicMaterial({color:0x331100});
+  // ---- Materials (new instance each time — NO reuse) ----
+  var bodyCol  = def.col;
+  var bodyMat  = new THREE.MeshLambertMaterial({ color: bodyCol, emissive: bodyCol, emissiveIntensity: 0.08 });
+  var skinMat  = new THREE.MeshLambertMaterial({ color: 0xffd5a8 });
+  var pantsMat = new THREE.MeshLambertMaterial({ color: 0x223355 });
+  var shoeMat2 = new THREE.MeshLambertMaterial({ color: 0x111122 });
+  var eyeWMat2 = new THREE.MeshBasicMaterial({ color: 0xffffff });
+  var eyePMat2 = new THREE.MeshBasicMaterial({ color: 0x080818 });
+  var hairMat2 = new THREE.MeshLambertMaterial({ color: 0x1e0e04 });
+  var whiteMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
+  var tieMat   = new THREE.MeshLambertMaterial({ color: bodyCol });
 
-  // Torso
-  var torso = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.65, 0.32), bodyMat);
-  torso.position.y = 0.9; torso.castShadow = true; g.add(torso);
+  // -- Shoes --
+  var shoeL2 = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.14, 0.36), shoeMat2);
+  shoeL2.position.set(-0.14, 0.07, 0.03);
+  shoeL2.castShadow = true; g.add(shoeL2);
+  var shoeR2 = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.14, 0.36), shoeMat2);
+  shoeR2.position.set(0.14, 0.07, 0.03);
+  shoeR2.castShadow = true; g.add(shoeR2);
 
-  // Collar
-  var collar = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.1, 0.33),
-    new THREE.MeshLambertMaterial({color:0xffffff}));
-  collar.position.y = 1.18; g.add(collar);
+  // -- Legs --
+  var legL = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.52, 0.26), pantsMat);
+  legL.position.set(-0.14, 0.4, 0);
+  legL.castShadow = true; g.add(legL);
+  var legR = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.52, 0.26), pantsMat);
+  legR.position.set(0.14, 0.4, 0);
+  legR.castShadow = true; g.add(legR);
 
-  // Tie
-  var tie = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.4, 0.02),
-    new THREE.MeshLambertMaterial({color:def.col}));
-  tie.position.set(0, 0.95, 0.17); g.add(tie);
+  // -- Belt --
+  var belt2 = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.09, 0.3), new THREE.MeshLambertMaterial({ color: 0x3a2800 }));
+  belt2.position.set(0, 0.68, 0);
+  g.add(belt2);
 
-  // Pants
-  var pantsL = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.5, 0.28), darkMat);
-  pantsL.position.set(-0.14, 0.38, 0); pantsL.castShadow = true; g.add(pantsL);
-  var pantsR = pantsL.clone(); pantsR.position.x = 0.14; g.add(pantsR);
+  // -- Torso (suit jacket) --
+  var torso2 = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.68, 0.32), bodyMat);
+  torso2.position.set(0, 1.07, 0);
+  torso2.castShadow = true; g.add(torso2);
 
-  // Shoes
-  var shoeL = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.14, 0.35), shoeMat);
-  shoeL.position.set(-0.14, 0.08, 0.04); g.add(shoeL);
-  var shoeR = shoeL.clone(); shoeR.position.x = 0.14; g.add(shoeR);
+  // -- Shirt / collar --
+  var collar2 = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.28, 0.33), whiteMat);
+  collar2.position.set(0, 1.22, 0);
+  g.add(collar2);
 
-  // Head
-  var head = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.46, 0.44), skinMat);
-  head.position.y = 1.6; head.castShadow = true; g.add(head);
+  // -- Tie --
+  var tieM = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.38, 0.02), tieMat);
+  tieM.position.set(0, 1.0, 0.17);
+  g.add(tieM);
+  var tieKnot = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.1, 0.03), tieMat);
+  tieKnot.position.set(0, 1.21, 0.17);
+  g.add(tieKnot);
 
-  // Hair
-  var hair = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.18, 0.46),
-    new THREE.MeshLambertMaterial({color:0x2a1a0a}));
-  hair.position.y = 1.82; g.add(hair);
+  // -- Arms --
+  var armLU = new THREE.Mesh(new THREE.BoxGeometry(0.19, 0.38, 0.22), bodyMat);
+  armLU.position.set(-0.39, 1.08, 0);
+  armLU.rotation.z = 0.12;
+  armLU.castShadow = true; g.add(armLU);
+  var armRU = new THREE.Mesh(new THREE.BoxGeometry(0.19, 0.38, 0.22), bodyMat);
+  armRU.position.set(0.39, 1.08, 0);
+  armRU.rotation.z = -0.12;
+  armRU.castShadow = true; g.add(armRU);
 
-  // Eyes
-  [-0.12, 0.12].forEach(function(ex) {
-    var eye = new THREE.Mesh(new THREE.SphereGeometry(0.06, 7, 7), eyeWMat);
-    eye.position.set(ex, 1.64, 0.22); g.add(eye);
-    var pupil = new THREE.Mesh(new THREE.SphereGeometry(0.035, 6, 6), eyePMat);
-    pupil.position.set(ex, 1.64, 0.255); g.add(pupil);
-  });
+  var handL2 = new THREE.Mesh(new THREE.SphereGeometry(0.1, 7, 7), skinMat);
+  handL2.position.set(-0.42, 0.78, 0);
+  g.add(handL2);
+  var handR2 = new THREE.Mesh(new THREE.SphereGeometry(0.1, 7, 7), skinMat);
+  handR2.position.set(0.42, 0.78, 0);
+  g.add(handR2);
+
+  // -- Neck --
+  var neckM = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.12, 0.22, 7), skinMat);
+  neckM.position.set(0, 1.46, 0);
+  g.add(neckM);
+
+  // -- Head (slightly rounded box) --
+  var head2 = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.46, 0.45), skinMat);
+  head2.position.set(0, 1.72, 0);
+  head2.castShadow = true; g.add(head2);
+
+  // -- Hair --
+  var topHair = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.16, 0.47), hairMat2);
+  topHair.position.set(0, 1.94, -0.01);
+  g.add(topHair);
+  var sideHairL = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.32, 0.44), hairMat2);
+  sideHairL.position.set(-0.25, 1.76, 0);
+  g.add(sideHairL);
+  var sideHairR = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.32, 0.44), hairMat2);
+  sideHairR.position.set(0.25, 1.76, 0);
+  g.add(sideHairR);
+
+  // -- Ears --
+  var earL2 = new THREE.Mesh(new THREE.SphereGeometry(0.075, 6, 6), skinMat);
+  earL2.position.set(-0.26, 1.72, 0);
+  g.add(earL2);
+  var earR2 = new THREE.Mesh(new THREE.SphereGeometry(0.075, 6, 6), skinMat);
+  earR2.position.set(0.26, 1.72, 0);
+  g.add(earR2);
+
+  // -- Eyes --
+  var eyeL2 = new THREE.Mesh(new THREE.SphereGeometry(0.065, 7, 7), eyeWMat2);
+  eyeL2.position.set(-0.12, 1.75, 0.225);
+  g.add(eyeL2);
+  var eyeR2 = new THREE.Mesh(new THREE.SphereGeometry(0.065, 7, 7), eyeWMat2);
+  eyeR2.position.set(0.12, 1.75, 0.225);
+  g.add(eyeR2);
+  var pupilL2 = new THREE.Mesh(new THREE.SphereGeometry(0.038, 6, 6), eyePMat2);
+  pupilL2.position.set(-0.12, 1.75, 0.258);
+  g.add(pupilL2);
+  var pupilR2 = new THREE.Mesh(new THREE.SphereGeometry(0.038, 6, 6), eyePMat2);
+  pupilR2.position.set(0.12, 1.75, 0.258);
+  g.add(pupilR2);
+
+  // Eyebrows
+  var browL = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.025, 0.015), hairMat2);
+  browL.position.set(-0.12, 1.815, 0.228);
+  browL.rotation.z = 0.15;
+  g.add(browL);
+  var browR = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.025, 0.015), hairMat2);
+  browR.position.set(0.12, 1.815, 0.228);
+  browR.rotation.z = -0.15;
+  g.add(browR);
+
+  // Nose
+  var noseM = new THREE.Mesh(new THREE.SphereGeometry(0.04, 6, 6), skinMat);
+  noseM.position.set(0, 1.7, 0.245);
+  g.add(noseM);
 
   // Smile
-  var smile = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.015, 5, 10, Math.PI),
-    smileMat);
-  smile.rotation.z = Math.PI; smile.position.set(0, 1.54, 0.225); g.add(smile);
+  var smileM = new THREE.Mesh(
+    new THREE.TorusGeometry(0.09, 0.016, 5, 10, Math.PI),
+    new THREE.MeshBasicMaterial({ color: 0x771100 })
+  );
+  smileM.rotation.z = Math.PI;
+  smileM.position.set(0, 1.635, 0.228);
+  g.add(smileM);
 
-  // Ears
-  [-0.25, 0.25].forEach(function(ex) {
-    var ear = new THREE.Mesh(new THREE.SphereGeometry(0.07, 6, 6), skinMat);
-    ear.position.set(ex, 1.6, 0); g.add(ear);
-  });
-
-  // Arms
-  [-0.38, 0.38].forEach(function(ax, ai) {
-    var upper = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.38, 0.22), bodyMat);
-    upper.position.set(ax, 0.98, 0);
-    upper.rotation.z = ax < 0 ? 0.15 : -0.15;
-    upper.castShadow = true; g.add(upper);
-    var hand = new THREE.Mesh(new THREE.SphereGeometry(0.1, 7, 7), skinMat);
-    hand.position.set(ax < 0 ? ax-0.02 : ax+0.02, 0.72, 0); g.add(hand);
-  });
-
-  // Special accessories per type
-  if (def.icon === '🚩') {
-    // Flag pole accessory
-    var fp = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.9, 5),
-      new THREE.MeshLambertMaterial({color:0xcccccc}));
-    fp.position.set(0.45, 1.2, 0); g.add(fp);
-    var fl = new THREE.Mesh(new THREE.PlaneGeometry(0.35, 0.24),
-      new THREE.MeshBasicMaterial({color:0x005293, side:THREE.DoubleSide}));
-    fl.position.set(0.62, 1.58, 0); g.add(fl);
-  }
-  if (def.icon === '👑' || def.icon === '⭐') {
-    // Crown
-    var crown = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.22, 0.22, 5),
-      new THREE.MeshLambertMaterial({color:0xffd700, emissive:0xffd700, emissiveIntensity:0.3}));
-    crown.position.y = 1.92; g.add(crown);
-    // Crown points
-    for (var ci = 0; ci < 5; ci++) {
-      var ang = (ci/5)*Math.PI*2;
-      var pt = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.15, 4),
-        new THREE.MeshLambertMaterial({color:0xffd700}));
-      pt.position.set(Math.cos(ang)*0.22, 2.06, Math.sin(ang)*0.22);
-      g.add(pt);
+  // ── Accessories by type ──
+  if (def.hat === 'crown' || def.icon === '⭐') {
+    var crownBase2 = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.2, 0.2, 6),
+      new THREE.MeshLambertMaterial({ color: 0xffd700, emissive: 0xffd700, emissiveIntensity: 0.3 }));
+    crownBase2.position.set(0, 1.98, 0);
+    g.add(crownBase2);
+    for (var cri = 0; cri < 6; cri++) {
+      var cang = (cri / 6) * Math.PI * 2;
+      var cpt = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.18, 4),
+        new THREE.MeshLambertMaterial({ color: 0xffd700 }));
+      cpt.position.set(Math.cos(cang) * 0.2, 2.1, Math.sin(cang) * 0.2);
+      g.add(cpt);
     }
+    // Gem on crown
+    var gem = new THREE.Mesh(new THREE.OctahedronGeometry(0.06),
+      new THREE.MeshLambertMaterial({ color: 0xff2255, emissive: 0xff2255, emissiveIntensity: 0.5 }));
+    gem.position.set(0, 2.12, 0);
+    g.add(gem);
+  }
+  if (def.hat === 'fedora') {
+    var fedBrim = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.38, 0.06, 10),
+      new THREE.MeshLambertMaterial({ color: 0x2a1a0a }));
+    fedBrim.position.set(0, 1.965, 0);
+    g.add(fedBrim);
+    var fedTop2 = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.22, 0.28, 10),
+      new THREE.MeshLambertMaterial({ color: 0x2a1a0a }));
+    fedTop2.position.set(0, 2.1, 0);
+    g.add(fedTop2);
+  }
+  if (def.hat === 'helmet') {
+    var helmBase = new THREE.Mesh(new THREE.SphereGeometry(0.28, 10, 8),
+      new THREE.MeshLambertMaterial({ color: 0x336644 }));
+    helmBase.scale.y = 0.75;
+    helmBase.position.set(0, 1.97, 0);
+    g.add(helmBase);
+    var helmVis = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.1, 0.04),
+      new THREE.MeshLambertMaterial({ color: 0x8aaacc, transparent: true, opacity: 0.6 }));
+    helmVis.position.set(0, 1.86, 0.25);
+    g.add(helmVis);
+  }
+  if (def.hat === 'party') {
+    var partyCone = new THREE.Mesh(new THREE.ConeGeometry(0.18, 0.45, 8),
+      new THREE.MeshLambertMaterial({ color: 0xff44bb }));
+    partyCone.position.set(0, 2.15, 0);
+    g.add(partyCone);
+  }
+
+  if (def.icon === '🚩') {
+    var fpole = cyl(0.025, 0.025, 1.0, 5, 0xcccccc);
+    fpole.position.set(0.44, 1.35, 0);
+    g.add(fpole);
+    var ffl2 = new THREE.Mesh(new THREE.PlaneGeometry(0.38, 0.25), flagBlueMat2);
+    ffl2.position.set(0.63, 1.72, 0);
+    g.add(ffl2);
+    var fst2 = new THREE.Mesh(new THREE.PlaneGeometry(0.38, 0.07), flagYelMat2);
+    fst2.position.set(0.63, 1.72, 0.02);
+    g.add(fst2);
   }
   if (def.icon === '🎤') {
-    // Microphone
-    var mic = new THREE.Mesh(new THREE.SphereGeometry(0.08, 7, 7),
-      new THREE.MeshLambertMaterial({color:0x888888}));
-    mic.position.set(-0.45, 1.1, 0); g.add(mic);
-    var micH = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.25, 5),
-      new THREE.MeshLambertMaterial({color:0x666666}));
-    micH.position.set(-0.45, 0.9, 0); g.add(micH);
+    var micBall = sphere(0.085, 7, 0x888888);
+    micBall.position.set(-0.46, 1.18, 0);
+    g.add(micBall);
+    var micStick = cyl(0.025, 0.025, 0.28, 5, 0x666666);
+    micStick.position.set(-0.46, 0.96, 0);
+    g.add(micStick);
+  }
+  if (def.icon === '🎉') {
+    // Confetti dots floating around
+    [0, 1, 2, 3].forEach(function(ci3) {
+      var ang3 = (ci3 / 4) * Math.PI * 2;
+      var conf = new THREE.Mesh(new THREE.SphereGeometry(0.06, 5, 5),
+        new THREE.MeshBasicMaterial({ color: [0xff4444, 0x44ff44, 0x4444ff, 0xffff44][ci3] }));
+      conf.position.set(Math.cos(ang3) * 0.55, 1.4 + ci3 * 0.1, Math.sin(ang3) * 0.2);
+      g.add(conf);
+    });
   }
 
-  // Glow under feet
-  var glowMat = new THREE.MeshBasicMaterial({color:def.col, transparent:true, opacity:0.2});
-  var glow = new THREE.Mesh(new THREE.CircleGeometry(0.6, 12), glowMat);
-  glow.rotation.x = -Math.PI/2; glow.position.y = 0.01; g.add(glow);
+  // Glow circle under feet
+  var glowCirc = new THREE.Mesh(
+    new THREE.CircleGeometry(0.65, 14),
+    new THREE.MeshBasicMaterial({ color: def.col, transparent: true, opacity: 0.22, side: THREE.DoubleSide })
+  );
+  glowCirc.rotation.x = -Math.PI / 2;
+  glowCirc.position.set(0, 0.01, 0);
+  g.add(glowCirc);
 
-  // Name label (floating)
-  var nameGeo = new THREE.SphereGeometry(0.08, 6, 6);
-  var nameMat = new THREE.MeshBasicMaterial({color:def.col});
-  var dot = new THREE.Mesh(nameGeo, nameMat);
-  dot.position.y = 2.3; dot.name = 'namedot'; g.add(dot);
+  // Point light (soft glow)
+  var jimmieLight = new THREE.PointLight(def.col, 0.9, 5);
+  jimmieLight.position.set(0, 1.2, 0);
+  g.add(jimmieLight);
+
+  // Name dot (bobbing indicator)
+  var nameDot = sphere(0.09, 6, def.col, def.col, 0.6);
+  nameDot.position.set(0, 2.45, 0);
+  nameDot.name = 'namedot';
+  g.add(nameDot);
+
+  // Leg references for animation
+  g.userData.legL = legL;
+  g.userData.legR = legR;
+  g.userData.armLU = armLU;
+  g.userData.armRU = armRU;
+  g.userData.shoeL = shoeL2;
+  g.userData.shoeR = shoeR2;
 
   g.scale.setScalar(sc);
   return g;
 }
 
-// ── SPAWN WANDERERS ──────────────────────────────────────────
-// Jimmies walk down the road from z=+35 toward player
-// Player must intercept and press E to recruit
+// ── Spawn all Jimmies ─────────────────────────────────────────────────
+var JIMMIE_SPAWN_Z = 34; // start at far end
 
-function spawnWanderer(defIdx, startZ) {
-  var def = JIMMIE_DEFS[defIdx];
-  var mesh = createJimmieMesh(def);
-  // Slight x offset so multiple don't overlap
-  var xOff = (Math.random() - 0.5) * 1.5;
-  mesh.position.set(xOff, 0, startZ);
-  mesh.rotation.y = Math.PI; // facing toward player
-  scene.add(mesh);
-  wanderers.push({
-    mesh: mesh, def: def, defIdx: defIdx,
-    xOff: xOff,
-    z: startZ, spd: 1.8 + Math.random()*0.8,
-    recruited: false,
-    bobPhase: Math.random()*Math.PI*2,
-    armPhase: Math.random()*Math.PI*2,
+function spawnWanderers() {
+  JIMMIES.forEach(function(def, idx) {
+    var g = buildJimmieMesh(def);
+    var startZ = JIMMIE_SPAWN_Z - idx * 6.5;
+    var xOff = (Math.random() - 0.5) * 1.4;
+    g.position.set(xOff, 0, startZ);
+    g.rotation.y = Math.PI;
+    scene.add(g);
+    wanderers.push({
+      mesh: g, def: def,
+      xOff: xOff,
+      z: startZ,
+      spd: 1.6 + Math.random() * 0.7,
+      bobPhase: Math.random() * Math.PI * 2,
+      recruited: false,
+      movingToBase: false,
+      targetX: 0, targetZ: 0,
+      wobble: Math.random() * Math.PI * 2,
+    });
   });
 }
 
-// Spawn all 10 Jimmies spread along the road
-function spawnAllJimmies() {
-  JIMMIE_DEFS.forEach(function(def, i) {
-    var z = 28 - i * 5.5; // spread from z=28 down to z=-26
-    spawnWanderer(i, z);
-  });
-}
-
-// ── MOVE JIMMIE TO BASE ───────────────────────────────────────
+// ── Recruit ───────────────────────────────────────────────────────────
 function recruitJimmie(w) {
+  if (w.recruited) return;
   w.recruited = true;
   recruited++;
-
-  // Show popup
-  document.getElementById('pname').textContent = w.def.icon + ' ' + w.def.name;
-  document.getElementById('pdesc').textContent = w.def.desc + ' — Rekryterad! (' + recruited + '/10)';
-  document.getElementById('popup').style.display = 'block';
-  popupTimer = 2.5;
   money += w.def.cost;
+
+  // Popup
+  document.getElementById('pname').textContent = w.def.icon + '  ' + w.def.name;
+  document.getElementById('pdesc').textContent = w.def.desc + '\n+' + w.def.cost + ' kr rekryterad!  (' + recruited + ' / 10)';
+  document.getElementById('popup').style.display = 'block';
+  popupTimer = 3.0;
+
   document.getElementById('hcount').textContent = recruited + ' / 10';
-  document.getElementById('hmoney').textContent = money;
-  document.getElementById('basebar-fill').style.width = (recruited/10*100) + '%';
+  document.getElementById('hmoney').textContent = money + ' kr';
+  document.getElementById('progbar-fill').style.width = (recruited / 10 * 100) + '%';
+
   nearJimmie = null;
-  document.getElementById('buyhint').style.display = 'none';
+  document.getElementById('rhint').style.display = 'none';
 
-  // Sparkle
-  explode(w.mesh.position.clone().add(new THREE.Vector3(0, 1, 0)), w.def.col, 14);
+  // Celebrate: burst of particles
+  explodeParts(w.mesh.position, w.def.col, 18);
 
-  // Move mesh to base area (decorative placement)
-  var angle = (recruited / 10) * Math.PI * 2;
-  var rad = 2 + Math.random() * 2;
-  var bx = Math.cos(angle) * rad;
-  var bz = BASE_Z + Math.sin(angle) * rad;
-
-  // Animate to base
+  // Set target in base courtyard
+  var ang2 = (recruited / 10) * Math.PI * 1.6 - 0.8;
+  var rad = 1.8 + Math.random() * 2.5;
+  w.targetX = Math.cos(ang2) * rad;
+  w.targetZ = BASE_Z + Math.sin(ang2) * rad;
   w.movingToBase = true;
-  w.targetPos = new THREE.Vector3(bx, 0, bz);
-  w.mesh.rotation.y = 0; // face away from road
 
   if (recruited >= 10) {
     setTimeout(function() {
-      var el = document.getElementById('winscreen');
       document.getElementById('winmsg').textContent =
-        'Du rekryterade alla 10 Jimmies och samlade ' + money + ' kr! Basen är full av sverigevänner!';
-      el.style.display = 'flex';
-    }, 2000);
+        'Du rekryterade alla 10 Jimmies och samlade ' + money + ' kr! Basen svämmar över av sverigevänner!';
+      document.getElementById('winscreen').style.display = 'flex';
+    }, 2200);
   }
 }
 
-// ── PARTICLES ────────────────────────────────────────────────
-function explode(pos, col, n) {
-  for (var i = 0; i < (n||8); i++) {
-    var m = new THREE.Mesh(new THREE.SphereGeometry(0.09, 4, 4),
-      new THREE.MeshBasicMaterial({color:col, transparent:true}));
-    m.position.copy(pos).add(new THREE.Vector3(
-      (Math.random()-0.5)*0.6, Math.random()*0.4, (Math.random()-0.5)*0.6));
-    scene.add(m);
+// ── Particles ─────────────────────────────────────────────────────────
+function explodeParts(pos, col, n) {
+  for (var i = 0; i < n; i++) {
+    var pm = new THREE.Mesh(
+      new THREE.SphereGeometry(0.08 + Math.random() * 0.07, 4, 4),
+      new THREE.MeshBasicMaterial({ color: col, transparent: true })
+    );
+    pm.position.set(pos.x, pos.y + 0.8 + Math.random() * 0.4, pos.z);
+    scene.add(pm);
     particles.push({
-      mesh: m,
-      vel: new THREE.Vector3((Math.random()-0.5)*0.14, 0.12+Math.random()*0.12, (Math.random()-0.5)*0.14),
-      life: 1.0
+      mesh: pm,
+      vx: (Math.random() - 0.5) * 0.18,
+      vy: 0.1 + Math.random() * 0.18,
+      vz: (Math.random() - 0.5) * 0.18,
+      life: 1.0,
     });
   }
 }
 
-// ── CONTROLS ─────────────────────────────────────────────────
-var keys = {};
+// ── Controls ──────────────────────────────────────────────────────────
+var keys2 = {};
 document.addEventListener('keydown', function(e) {
-  keys[e.code] = true;
-  if (e.code === 'KeyE' && nearJimmie) recruitJimmie(nearJimmie);
+  keys2[e.code] = true;
+  if (e.code === 'KeyE' && nearJimmie && !nearJimmie.recruited) {
+    recruitJimmie(nearJimmie);
+  }
 });
-document.addEventListener('keyup', function(e) { keys[e.code] = false; });
+document.addEventListener('keyup', function(e) { keys2[e.code] = false; });
 
-var yaw = 0, pitch = 0;
-document.getElementById('c').addEventListener('click', function() {
-  if (gameOn) document.getElementById('c').requestPointerLock();
+var yaw2 = 0, pitch2 = 0;
+canvas.addEventListener('click', function() {
+  if (gameOn) canvas.requestPointerLock();
 });
 document.addEventListener('pointerlockchange', function() {
-  mouseLocked = document.pointerLockElement === document.getElementById('c');
-  if (gameOn) document.getElementById('lockprompt').style.display = mouseLocked ? 'none' : 'block';
+  mouseLocked = document.pointerLockElement === canvas;
+  if (gameOn) {
+    document.getElementById('lockprompt').style.display = mouseLocked ? 'none' : 'block';
+  }
 });
 document.addEventListener('mousemove', function(e) {
   if (!mouseLocked) return;
-  yaw   -= e.movementX * 0.0022;
-  pitch  = Math.max(-1.1, Math.min(1.1, pitch - e.movementY * 0.0022));
+  yaw2   -= e.movementX * 0.002;
+  pitch2  = Math.max(-1.1, Math.min(1.1, pitch2 - e.movementY * 0.002));
 });
 
-// Collision (simple)
-var walls2 = [];
-function blocked(nx, nz) {
-  for (var i = 0; i < walls2.length; i++) {
-    var w = walls2[i];
-    if (Math.abs(nx-w.x)<w.hw && Math.abs(nz-w.z)<w.hd) return true;
-  }
-  return Math.abs(nx) > 70 || nz < BASE_Z - 10 || nz > 38;
+// ── Collision ─────────────────────────────────────────────────────────
+function isBlocked2(nx, nz) {
+  // Base fortress wall (approximate cylinder)
+  var bx2 = nx, bz2 = nz - BASE_Z;
+  if (Math.sqrt(bx2 * bx2 + bz2 * bz2) < 7.5) return true;
+  // World bounds
+  if (Math.abs(nx) > 75 || nz < BASE_Z - 8 || nz > 42) return true;
+  return false;
 }
-// Base wall
-walls2.push({x:0, z:BASE_Z, hw:5, hd:5});
 
-// ── MINIMAP removed for cleaner look ────────────────────────
-// ── UPDATE HUD ───────────────────────────────────────────────
+// ── HUD update ────────────────────────────────────────────────────────
+var clock = new THREE.Clock();
+
 function updateHud() {
   document.getElementById('hcount').textContent = recruited + ' / 10';
-  document.getElementById('hmoney').textContent = money;
+  document.getElementById('hmoney').textContent = money + ' kr';
 }
 
-// ── CLOCK ────────────────────────────────────────────────────
-var clock = new THREE.Clock();
-var incomeTimer = 0;
-
-// ── START ────────────────────────────────────────────────────
+// ── START BUTTON ──────────────────────────────────────────────────────
 document.getElementById('startbtn').addEventListener('click', function() {
   document.getElementById('startscreen').style.display = 'none';
   document.getElementById('hud').style.display = 'block';
   document.getElementById('lockprompt').style.display = 'block';
   gameOn = true;
+  spawnWanderers();
   clock.start();
-  spawnAllJimmies();
-  document.getElementById('c').requestPointerLock();
+  canvas.requestPointerLock();
 });
 
-// ── MAIN LOOP ─────────────────────────────────────────────────
+// ── MAIN LOOP ─────────────────────────────────────────────────────────
 function loop() {
   requestAnimationFrame(loop);
   var dt = Math.min(clock.getDelta(), 0.05);
   var elapsed = clock.getElapsedTime();
+
   if (!gameOn) { renderer.render(scene, cam); return; }
+  totalTime += dt;
 
-  // Passive income
+  // -- Passive income --
   incomeTimer += dt;
-  if (incomeTimer >= 4) { incomeTimer = 0; money += 25; updateHud(); }
-
-  // Player movement
-  var spd = (keys['ShiftLeft'] || keys['ShiftRight']) ? 9 : 5;
-  var fwdX = Math.sin(yaw), fwdZ = Math.cos(yaw);
-  var rgtX = Math.cos(yaw), rgtZ = -Math.sin(yaw);
-  var mx = 0, mz = 0;
-  if (keys['KeyW']) { mx -= fwdX; mz -= fwdZ; }
-  if (keys['KeyS']) { mx += fwdX; mz += fwdZ; }
-  if (keys['KeyA']) { mx -= rgtX; mz -= rgtZ; }
-  if (keys['KeyD']) { mx += rgtX; mz += rgtZ; }
-  var len = Math.sqrt(mx*mx + mz*mz);
-  if (len > 0) {
-    mx = mx/len*spd*dt; mz = mz/len*spd*dt;
-    var nx = cam.position.x + mx, nz = cam.position.z + mz;
-    if (!blocked(nx, cam.position.z)) cam.position.x = nx;
-    if (!blocked(cam.position.x, nz)) cam.position.z = nz;
+  if (incomeTimer >= 5.0) {
+    incomeTimer = 0;
+    money += 30 + recruited * 10;
+    updateHud();
   }
-  cam.rotation.order = 'YXZ';
-  cam.rotation.y = yaw; cam.rotation.x = pitch;
 
-  // Animate wanderers + find nearest
-  var nearest = null, nearestDist = Infinity;
+  // -- Player movement with smooth acceleration --
+  var spd2 = (keys2['ShiftLeft'] || keys2['ShiftRight']) ? 9.5 : 5.5;
+  var fX = Math.sin(yaw2), fZ = Math.cos(yaw2);
+  var rX = Math.cos(yaw2), rZ = -Math.sin(yaw2);
+  var mvx = 0, mvz = 0;
+  if (keys2['KeyW'] || keys2['ArrowUp'])   { mvx -= fX; mvz -= fZ; }
+  if (keys2['KeyS'] || keys2['ArrowDown']) { mvx += fX; mvz += fZ; }
+  if (keys2['KeyA'] || keys2['ArrowLeft']) { mvx -= rX; mvz -= rZ; }
+  if (keys2['KeyD'] || keys2['ArrowRight']){ mvx += rX; mvz += rZ; }
+  var mvlen = Math.sqrt(mvx * mvx + mvz * mvz);
+  if (mvlen > 0) {
+    mvx = mvx / mvlen * spd2 * dt;
+    mvz = mvz / mvlen * spd2 * dt;
+    var nx2 = cam.position.x + mvx;
+    var nz2 = cam.position.z + mvz;
+    if (!isBlocked2(nx2, cam.position.z)) cam.position.x = nx2;
+    if (!isBlocked2(cam.position.x, nz2)) cam.position.z = nz2;
+  }
+
+  // Gentle head bob when moving
+  if (mvlen > 0) {
+    cam.position.y = 1.75 + Math.sin(elapsed * 9) * 0.03;
+  } else {
+    cam.position.y += (1.75 - cam.position.y) * dt * 8;
+  }
+
+  cam.rotation.order = 'YXZ';
+  cam.rotation.y = yaw2;
+  cam.rotation.x = pitch2;
+
+  // -- Animate wanderers --
+  var closestJimmie = null;
+  var closestDist = Infinity;
+
   wanderers.forEach(function(w, wi) {
+    var mesh = w.mesh;
+
     if (w.recruited) {
-      // Move toward base position
-      if (w.movingToBase && w.targetPos) {
-        var dx = w.targetPos.x - w.mesh.position.x;
-        var dz = w.targetPos.z - w.mesh.position.z;
-        var d2 = Math.sqrt(dx*dx + dz*dz);
-        if (d2 > 0.15) {
-          w.mesh.position.x += (dx/d2) * 3 * dt;
-          w.mesh.position.z += (dz/d2) * 3 * dt;
-          w.mesh.rotation.y = Math.atan2(dx, dz);
+      if (w.movingToBase) {
+        var dx3 = w.targetX - mesh.position.x;
+        var dz3 = w.targetZ - mesh.position.z;
+        var d3 = Math.sqrt(dx3 * dx3 + dz3 * dz3);
+        if (d3 > 0.2) {
+          mesh.position.x += (dx3 / d3) * 3.5 * dt;
+          mesh.position.z += (dz3 / d3) * 3.5 * dt;
+          mesh.rotation.y = Math.atan2(dx3, dz3);
+          // Walk animation
+          w.bobPhase += dt * 6;
+          mesh.position.y = Math.abs(Math.sin(w.bobPhase)) * 0.1;
+          if (mesh.userData.legL) {
+            mesh.userData.legL.rotation.x =  Math.sin(w.bobPhase) * 0.5;
+            mesh.userData.legR.rotation.x = -Math.sin(w.bobPhase) * 0.5;
+            mesh.userData.armLU.rotation.x = -Math.sin(w.bobPhase) * 0.4;
+            mesh.userData.armRU.rotation.x =  Math.sin(w.bobPhase) * 0.4;
+          }
         } else {
           w.movingToBase = false;
-          // Happy idle bob at base
-          w.mesh.position.y = Math.abs(Math.sin(elapsed*2 + wi)) * 0.1;
+          mesh.position.y = 0;
+          // Happy idle
         }
       } else {
-        w.mesh.position.y = Math.abs(Math.sin(elapsed*2 + wi)) * 0.12;
+        // Happy idle at base
+        mesh.position.y = Math.abs(Math.sin(elapsed * 1.8 + wi)) * 0.08;
+        mesh.rotation.y += dt * 0.4;
       }
       return;
     }
 
-    // Walk down the road toward player base
-    w.z -= w.spd * dt;
-    if (w.z < BASE_Z + 8) {
-      // Reached base area, idle near gate
-      w.z = BASE_Z + 8;
+    // Walk down road toward player
+    w.bobPhase += dt * w.spd * 2.8;
+    w.wobble  += dt * 0.6;
+
+    var targetZ3 = BASE_Z + 9;
+    if (w.z > targetZ3) {
+      w.z -= w.spd * dt;
+    } else {
+      w.z = targetZ3;
     }
-    w.mesh.position.z = w.z;
-    w.mesh.position.x = w.xOff + Math.sin(elapsed*0.5 + wi) * 0.1;
+    mesh.position.x = w.xOff + Math.sin(w.wobble) * 0.12;
+    mesh.position.z = w.z;
+    mesh.position.y = Math.abs(Math.sin(w.bobPhase)) * 0.12;
+    mesh.rotation.y = Math.PI + Math.sin(elapsed * 0.5 + wi * 0.8) * 0.07;
 
-    // Walking bob animation
-    w.bobPhase += dt * w.spd * 3;
-    w.mesh.position.y = Math.abs(Math.sin(w.bobPhase)) * 0.12;
-    // Arm swing (rotate children that are arms)
-    w.armPhase += dt * w.spd * 4;
-
-    // Face direction of movement
-    if (w.z > BASE_Z + 8) {
-      w.mesh.rotation.y = Math.PI + Math.sin(elapsed*0.3 + wi)*0.05;
+    // Walking animation
+    if (mesh.userData.legL) {
+      mesh.userData.legL.rotation.x =  Math.sin(w.bobPhase * 2) * 0.45;
+      mesh.userData.legR.rotation.x = -Math.sin(w.bobPhase * 2) * 0.45;
+      mesh.userData.shoeL.rotation.x = Math.sin(w.bobPhase * 2 + 0.3) * 0.3;
+      mesh.userData.shoeR.rotation.x = -Math.sin(w.bobPhase * 2 + 0.3) * 0.3;
+      mesh.userData.armLU.rotation.x = -Math.sin(w.bobPhase * 2) * 0.35;
+      mesh.userData.armRU.rotation.x =  Math.sin(w.bobPhase * 2) * 0.35;
     }
 
-    // Dot bob
-    var dot = w.mesh.getObjectByName('namedot');
-    if (dot) dot.position.y = 2.3 + Math.sin(elapsed*3 + wi)*0.08;
+    // Name dot bob
+    var nd = mesh.getObjectByName('namedot');
+    if (nd) nd.position.y = 2.45 + Math.sin(elapsed * 3.5 + wi) * 0.1;
 
     // Distance to player
-    var dx2 = cam.position.x - w.mesh.position.x;
-    var dz2 = cam.position.z - w.mesh.position.z;
-    var dist = Math.sqrt(dx2*dx2 + dz2*dz2);
-    if (dist < nearestDist) { nearestDist = dist; nearest = w; }
+    var pdx = cam.position.x - mesh.position.x;
+    var pdz = cam.position.z - mesh.position.z;
+    var pdist = Math.sqrt(pdx * pdx + pdz * pdz);
+    if (pdist < closestDist) { closestDist = pdist; closestJimmie = w; }
   });
 
-  // Show recruit hint
-  nearJimmie = (nearestDist < 3.5 && nearest && !nearest.recruited) ? nearest : null;
-  var hint = document.getElementById('buyhint');
-  if (nearJimmie) {
+  // Recruit hint
+  if (closestDist < 3.8 && closestJimmie && !closestJimmie.recruited) {
+    nearJimmie = closestJimmie;
+    var hint = document.getElementById('rhint');
     hint.style.display = 'block';
-    hint.textContent = 'E — Rekrytera ' + nearJimmie.def.icon + ' ' + nearJimmie.def.name + ' (' + nearJimmie.def.cost + ' kr)';
+    hint.innerHTML = '<span style="font-size:1.2rem">' + closestJimmie.def.icon + '</span>  Tryck <strong>E</strong> för att rekrytera ' + closestJimmie.def.name + '<br><small style="opacity:0.7">Kostnad: ' + closestJimmie.def.cost + ' kr</small>';
   } else {
-    hint.style.display = 'none';
+    nearJimmie = null;
+    document.getElementById('rhint').style.display = 'none';
   }
 
-  // Popup timer
+  // -- Popup timer --
   if (popupTimer > 0) {
     popupTimer -= dt;
     if (popupTimer <= 0) document.getElementById('popup').style.display = 'none';
   }
 
-  // Particles
-  for (var pi = particles.length-1; pi >= 0; pi--) {
-    var p = particles[pi];
-    p.life -= dt * 1.8;
-    p.vel.y -= dt * 0.3;
-    p.mesh.position.add(p.vel);
-    p.mesh.material.opacity = p.life;
-    if (p.life <= 0) { scene.remove(p.mesh); particles.splice(pi, 1); }
+  // -- Particles --
+  for (var pi = particles.length - 1; pi >= 0; pi--) {
+    var p2 = particles[pi];
+    p2.life -= dt * 1.6;
+    p2.vx  *= 0.97;
+    p2.vy  -= dt * 0.4;
+    p2.vz  *= 0.97;
+    p2.mesh.position.x += p2.vx;
+    p2.mesh.position.y += p2.vy;
+    p2.mesh.position.z += p2.vz;
+    p2.mesh.material.opacity = p2.life;
+    if (p2.life <= 0) { scene.remove(p2.mesh); particles.splice(pi, 1); }
   }
 
-  // Gentle clouds drift
-  scene.children.forEach(function(obj) {
-    if (obj.geometry && obj.geometry.type === 'SphereGeometry' && obj.material === cloudMat) {
-      obj.position.x += dt * 0.04;
-      if (obj.position.x > 25) obj.position.x = -25;
-    }
+  // -- Clouds drift --
+  cloudObjects.forEach(function(cobj) {
+    cobj.position.x += dt * 0.05;
+    if (cobj.position.x > 28) cobj.position.x = -28;
   });
+
+  // -- Fountain ripple --
+  if (fWater2) {
+    fWater2.position.y = 0.67 + Math.sin(elapsed * 2.5) * 0.03;
+  }
 
   renderer.render(scene, cam);
 }
