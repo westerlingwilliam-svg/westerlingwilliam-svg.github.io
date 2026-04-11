@@ -3,198 +3,303 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riksdags Opinion Tycoon - OMEGA EDITION</title>
+    <title>Riksdags Opinion Tycoon</title>
     <style>
         :root {
             --sd-blue: #005293;
             --sd-yellow: #fecc00;
-            --dark-blue: #001a33;
+            --dark-blue: #00111f;
+            --mid-blue: #001f38;
             --gold: #ffd700;
         }
 
+        *{box-sizing:border-box;margin:0;padding:0}
+
         body {
-            font-family: 'Segoe UI', Impact, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             background: var(--dark-blue);
             color: white;
-            margin: 0;
             overflow-x: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
 
-        /* Bakgrundsanimation från Elite Edition */
         .bg-glow {
             position: fixed;
             top: 50%; left: 50%;
-            width: 100vw; height: 100vh;
-            background: radial-gradient(circle, rgba(0,82,147,0.3) 0%, rgba(0,0,0,0) 70%);
+            width: 120vw; height: 120vh;
+            background: radial-gradient(ellipse at center, rgba(0,82,147,0.25) 0%, transparent 70%);
             transform: translate(-50%, -50%);
-            z-index: -1;
+            z-index: 0;
             pointer-events: none;
-            animation: pulse 5s infinite alternate;
+            animation: pulse 6s infinite alternate;
         }
-
         @keyframes pulse {
-            0% { opacity: 0.4; transform: translate(-50%, -50%) scale(1); }
-            100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
+            0%  { opacity: 0.4; transform: translate(-50%, -50%) scale(1); }
+            100%{ opacity: 0.9; transform: translate(-50%, -50%) scale(1.1); }
         }
 
+        /* ── HEADER ── */
         .stats-header {
-            background: linear-gradient(180deg, var(--sd-blue), #003d6e);
+            background: linear-gradient(180deg, #005293 0%, #003a6a 100%);
             width: 100%;
-            padding: 25px 0;
+            padding: 20px 40px;
             display: flex;
             justify-content: center;
-            gap: 50px;
-            border-bottom: 5px solid var(--sd-yellow);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            gap: 60px;
+            border-bottom: 4px solid var(--sd-yellow);
+            box-shadow: 0 8px 40px rgba(0,0,0,0.8);
             position: sticky;
             top: 0;
             z-index: 100;
         }
-
         .stat-item { text-align: center; }
-        .stat-label { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0.8; color: var(--sd-yellow); }
-        .stat-num { font-size: 2.2rem; font-weight: 900; text-shadow: 0 0 15px rgba(254, 204, 0, 0.5); }
+        .stat-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 3px; opacity: 0.7; color: var(--sd-yellow); margin-bottom: 4px; }
+        .stat-num { font-size: 2rem; font-weight: 900; color: #fff; text-shadow: 0 0 20px rgba(254,204,0,0.4); }
 
-        /* Opinion Bar */
-        .progress-wrapper {
+        /* ── OPINION BAR ── */
+        .progress-section {
             width: 90%;
             max-width: 1000px;
-            margin: 40px 0;
+            margin: 35px 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+        .bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            opacity: 0.6;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .bar-container {
+            height: 42px;
+            background: rgba(255,255,255,0.07);
+            border-radius: 25px;
+            border: 2px solid rgba(255,255,255,0.15);
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5), inset 0 2px 4px rgba(0,0,0,0.3);
             position: relative;
         }
-
-        .bar-container {
-            height: 45px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 25px;
-            border: 4px solid #fff;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-        }
-
         #opinion-bar {
             height: 100%;
             width: 20%;
-            background: linear-gradient(90deg, #ffcc00, #fff700, #ffcc00);
+            background: linear-gradient(90deg, #fecc00, #fff176, #fecc00);
             background-size: 200% 100%;
-            animation: shine 2s linear infinite;
+            animation: shine 2.5s linear infinite;
             transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+            border-radius: 25px;
         }
-
         @keyframes shine {
-            0% { background-position: 200% 0; }
+            0%   { background-position: 200% 0; }
             100% { background-position: -200% 0; }
         }
 
-        .milestone-marker {
+        /* 4% spärr-markör */
+        .marker-4 {
             position: absolute;
-            top: -10px;
-            height: 65px;
-            width: 4px;
-            background: red;
+            left: 8%; /* 4% av 50% = 8% av baren */
+            top: 0; bottom: 0;
+            width: 3px;
+            background: #ff4444;
             z-index: 5;
+            border-radius: 2px;
+        }
+        .marker-4-label {
+            position: absolute;
+            left: 8%;
+            top: -22px;
+            font-size: 0.65rem;
+            color: #ff6666;
+            white-space: nowrap;
+            transform: translateX(-50%);
         }
 
-        /* Dashboard grid (3 på bredden) */
+        /* 50% majoritet — längst till höger */
+        .marker-50 {
+            position: absolute;
+            right: 0;
+            top: -8px;
+            bottom: -8px;
+            width: 4px;
+            background: var(--sd-yellow);
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--sd-yellow);
+            z-index: 5;
+        }
+        .marker-50-label {
+            position: absolute;
+            right: 0;
+            top: -22px;
+            font-size: 0.65rem;
+            color: var(--sd-yellow);
+            white-space: nowrap;
+            transform: translateX(50%);
+            font-weight: 800;
+        }
+
+        /* ── JIMMIE-KNAPPEN ── */
+        .click-section {
+            position: relative;
+            z-index: 1;
+            margin: 10px 0 30px;
+        }
+        .jimmie-btn {
+            width: 140px; height: 140px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #0068bb, #003d70);
+            border: 5px solid var(--sd-yellow);
+            color: white;
+            font-weight: 900;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s;
+            box-shadow: 0 0 30px rgba(0,82,147,0.6), 0 8px 0 #001a33;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            line-height: 1.4;
+        }
+        .jimmie-btn:hover { box-shadow: 0 0 45px rgba(254,204,0,0.4), 0 8px 0 #001a33; }
+        .jimmie-btn:active { transform: scale(0.93) translateY(4px); box-shadow: 0 2px 0 #001a33; }
+
+        /* ── SHOP GRID ── */
         .dashboard {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
+            gap: 20px;
             width: 95%;
             max-width: 1200px;
-            padding-bottom: 100px;
+            padding-bottom: 80px;
+            position: relative;
+            z-index: 1;
         }
 
         .upgrade-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 20px;
-            padding: 25px;
+            background: linear-gradient(145deg, rgba(0,82,147,0.25), rgba(0,20,50,0.4));
+            border-radius: 18px;
+            padding: 22px;
             border: 1px solid rgba(255,255,255,0.1);
-            transition: 0.3s;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            gap: 12px;
         }
-
         .upgrade-card:hover {
-            background: rgba(255,255,255,0.1);
-            transform: translateY(-5px);
+            transform: translateY(-4px);
             border-color: var(--sd-yellow);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
         }
-
-        .upgrade-card h3 { color: var(--sd-yellow); margin: 0; font-size: 1.4rem; }
+        .upgrade-card h3 {
+            color: var(--sd-yellow);
+            font-size: 1.2rem;
+            margin-bottom: 6px;
+        }
+        .upgrade-card p {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            line-height: 1.4;
+        }
+        .card-stats {
+            display: flex;
+            gap: 12px;
+            font-size: 0.8rem;
+        }
+        .card-stat {
+            background: rgba(255,255,255,0.07);
+            border-radius: 8px;
+            padding: 4px 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .card-stat span { color: var(--sd-yellow); font-weight: 700; }
 
         .buy-btn {
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             border: none;
-            border-radius: 12px;
-            background: var(--sd-yellow);
-            color: var(--dark-blue);
+            border-radius: 10px;
+            background: linear-gradient(135deg, #fecc00, #e8a800);
+            color: #001a33;
             font-weight: 900;
             text-transform: uppercase;
             cursor: pointer;
-            box-shadow: 0 5px 0 #b38f00;
-            margin-top: 10px;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 0 #8a6400;
+            transition: opacity 0.15s, transform 0.1s;
         }
+        .buy-btn:hover { opacity: 0.9; }
+        .buy-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #8a6400; }
+        .buy-btn:disabled { background: #2a3a4a; box-shadow: none; cursor: not-allowed; color: #445; }
 
-        .buy-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #b38f00; }
-        .buy-btn:disabled { background: #555; box-shadow: none; cursor: not-allowed; color: #888; }
-
-        /* Jimmie-knappen för att tjäna pengar snabbt */
-        .jimmie-btn {
-            width: 150px; height: 150px;
-            border-radius: 50%;
-            background: var(--sd-blue);
-            border: 6px solid var(--sd-yellow);
-            color: white;
-            font-weight: 900;
-            cursor: pointer;
-            margin-bottom: 40px;
-            transition: 0.1s;
-            box-shadow: 0 0 30px rgba(0, 82, 147, 0.5);
-        }
-
-        .jimmie-btn:active { transform: scale(0.9); }
-
-        /* Popups / Modaler */
+        /* ── EVENT MODAL ── */
         .overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 999; display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 999;
+            display: none;
+            backdrop-filter: blur(4px);
         }
-
         .modal {
             position: fixed; top: 50%; left: 50%;
-            transform: translate(-50%, -50%) scale(0.8);
-            background: #fff; color: #222;
-            padding: 40px; border-radius: 30px;
-            z-index: 1000; display: none;
-            text-align: center; width: 450px;
-            border: 10px solid var(--sd-blue);
+            transform: translate(-50%, -50%) scale(0.85);
+            background: linear-gradient(160deg, #003d6e, #001f38);
+            color: white;
+            padding: 40px;
+            border-radius: 24px;
+            z-index: 1000;
+            display: none;
+            text-align: center;
+            width: 460px;
+            border: 3px solid var(--sd-yellow);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
         }
-
         .modal.active { display: block; animation: popIn 0.3s forwards; }
-
+        .modal h2 { color: var(--sd-yellow); font-size: 1.6rem; margin-bottom: 12px; }
+        .modal p { opacity: 0.8; margin-bottom: 20px; line-height: 1.5; }
         @keyframes popIn { to { transform: translate(-50%, -50%) scale(1); } }
+        .modal .buy-btn { margin: 8px 0; }
 
-        /* Victory Screen */
+        /* ── VICTORY SCREEN ── */
         #victory-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--sd-blue); z-index: 5000;
-            display: none; flex-direction: column; align-items: center; justify-content: center;
+            position: fixed; inset: 0;
+            background: linear-gradient(135deg, #005293, #002040);
+            z-index: 5000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
         }
+        #victory-screen h1 { font-size: 7rem; color: var(--sd-yellow); text-shadow: 0 0 60px rgba(254,204,0,0.6); }
+        #victory-screen h2 { font-size: 2.5rem; }
+        #victory-screen p { opacity: 0.7; font-size: 1.1rem; }
+
+        /* ── BACK LINK ── */
+        .back-link {
+            padding: 40px;
+            position: relative;
+            z-index: 1;
+        }
+        .back-link a { color: rgba(255,255,255,0.4); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+        .back-link a:hover { color: rgba(255,255,255,0.8); }
+
+        /* scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
     </style>
 </head>
 <body onclick="spawnParticle(event)">
 
     <div id="victory-screen">
-        <h1 style="font-size: 8rem; color: var(--sd-yellow); margin: 0;">50.0%</h1>
-        <h2 style="font-size: 3rem;">ABSOLUT MAJORITET!</h2>
+        <h1>50.0%</h1>
+        <h2>ABSOLUT MAJORITET!</h2>
         <p>Du har vunnit valet och makten i Sverige.</p>
-        <button class="buy-btn" onclick="location.reload()" style="width: auto; padding: 20px 60px;">SPELA IGEN</button>
+        <button class="buy-btn" onclick="location.reload()" style="width:auto;padding:18px 60px;margin-top:20px">SPELA IGEN</button>
     </div>
 
     <div class="bg-glow"></div>
@@ -210,24 +315,37 @@
         </div>
         <div class="stat-item">
             <div class="stat-label">Opinions-växt</div>
-            <div class="stat-num" id="growth-val">+0.000%</div>
+            <div class="stat-num" id="growth-val">+0.0000%/s</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Inkomst</div>
+            <div class="stat-num" id="income-val">800 kr/s</div>
         </div>
     </div>
 
-    <div class="progress-wrapper">
-        <div class="bar-container">
+    <div class="progress-section">
+        <div class="bar-label">
+            <span>Nuvarande opinion</span>
+            <span>Mål: 50% majoritet</span>
+        </div>
+        <div class="bar-container" style="position:relative">
             <div id="opinion-bar"></div>
+            <div class="marker-4"></div>
+            <div class="marker-50"></div>
         </div>
-        <div class="milestone-marker" style="left: 4%;"></div> 
-        <div style="position:absolute; left: 4%; top: 55px; font-size: 0.7rem;">4% SPÄRREN</div>
-        
-        <div class="milestone-marker" style="left: 50.1%; border-color: gold;"></div>
-        <div style="position:absolute; left: 45%; top: 55px; font-size: 0.8rem; color: gold; font-weight: bold;">MAJORITET (50%)</div>
+        <div style="position:relative;height:22px;margin-top:4px">
+            <span class="marker-4-label">4% SPÄRREN</span>
+            <span class="marker-50-label">MAJORITET</span>
+        </div>
     </div>
 
-    <button class="jimmie-btn" onclick="clickMoney(event)">HÅLL ETT TAL<br><small>+ Pengar</small></button>
+    <div class="click-section">
+        <button class="jimmie-btn" onclick="clickMoney(event)">HÅLL ETT<br>TAL<br><small style="font-size:0.7rem;opacity:0.8">+ Pengar</small></button>
+    </div>
 
     <div class="dashboard" id="shop"></div>
+
+    <div class="back-link"><a href="games.html">← Tillbaka till menyn</a></div>
 
     <div class="overlay" id="overlay"></div>
     <div class="modal" id="event-modal">
@@ -236,56 +354,62 @@
         <div id="ev-choices"></div>
     </div>
 
-    <center style="padding: 40px;">
-        <a href="games.html" style="color: white; text-decoration: none; opacity: 0.5;">Tillbaka till menyn</a>
-    </center>
-
     <script>
         let state = {
             money: 150000,
             opinion: 20.0,
             moneyRate: 800,
-            opinionRate: 0.0001, // Extremt långsamt (per 0.1s)
+            opinionRate: 0.0001,
             clickPower: 750,
             active: true
         };
 
         const upgrades = [
-            { id: 1, name: "Ny Slips", desc: "Ser proffsigare ut i TV.", cost: 10000, o: 0.0002, m: 200 },
-            { id: 2, name: "Meme-fabrik", desc: "Nå de unga väljarna.", cost: 25000, o: 0.0008, m: 500 },
-            { id: 3, name: "YouTube-shorts", desc: "Algoritmen älskar dig.", cost: 80000, o: 0.002, m: 1200 },
-            { id: 4, name: "Eget Flygblad", desc: "Information till alla hem.", cost: 200000, o: 0.006, m: 3000 },
-            { id: 5, name: "Kampanjbuss", desc: "Turnera i hela landet.", cost: 500000, o: 0.015, m: 8000 },
-            { id: 6, name: "Kärnkraft-Merch", desc: "Sälj lysande tröjor.", cost: 1200000, o: 0.04, m: 20000 },
-            { id: 7, name: "Eget Mediehus", desc: "Sänd nyheter dygnet runt.", cost: 4000000, o: 0.12, m: 60000 },
-            { id: 8, name: "AI-Talskrivare", desc: "Perfekta tal varje gång.", cost: 10000000, o: 0.35, m: 150000 },
-            { id: 9, name: "Sanningens Torn", desc: "Ett monument i huvudstaden.", cost: 25000000, o: 1.0, m: 400000 },
-            { id: 10, name: "Slutspurten", desc: "Allt eller inget.", cost: 75000000, o: 5.0, m: 0 }
+            { id:1,  name:"Ny Slips",         desc:"Ser proffsigare ut i TV.", cost:10000,    o:0.0002, m:200    },
+            { id:2,  name:"Meme-fabrik",       desc:"Nå de unga väljarna.",    cost:25000,    o:0.0008, m:500    },
+            { id:3,  name:"YouTube-shorts",    desc:"Algoritmen älskar dig.",  cost:80000,    o:0.002,  m:1200   },
+            { id:4,  name:"Eget Flygblad",     desc:"Info till alla hem.",     cost:200000,   o:0.006,  m:3000   },
+            { id:5,  name:"Kampanjbuss",       desc:"Turnera i hela landet.",  cost:500000,   o:0.015,  m:8000   },
+            { id:6,  name:"Kärnkraft-Merch",   desc:"Sälj lysande tröjor.",    cost:1200000,  o:0.04,   m:20000  },
+            { id:7,  name:"Eget Mediehus",     desc:"Sänd nyheter dygnet runt.",cost:4000000, o:0.12,   m:60000  },
+            { id:8,  name:"AI-Talskrivare",    desc:"Perfekta tal varje gång.", cost:10000000,o:0.35,   m:150000 },
+            { id:9,  name:"Sanningens Torn",   desc:"Monument i huvudstaden.", cost:25000000, o:1.0,    m:400000 },
+            { id:10, name:"Slutspurten",       desc:"Allt eller inget.",       cost:75000000, o:5.0,    m:0      }
         ];
 
         const events = [
-            { t: "TV4 NYHETERNA", d: "Du får en tuff fråga om invandring.", c: [{t:"Svara lugnt", o:0.4, m:0}, {t:"Gå till attack", o:1.2, m:-50000}]},
-            { t: "DONATION", d: "En anonym person ger ett bidrag.", c: [{t:"Tacka (Pengar)", o:-0.2, m:200000}, {t:"Neka (Heder)", o:0.5, m:0}]},
-            { t: "MATLAGNING", d: "Du lagar korv i TV. Hur går det?", c: [{t:"Det blir succé!", o:0.8, m:0}, {t:"Du bränner den", o:-0.4, m:10000}]},
-            { t: "TWITTER-STORM", d: "Ett gammalt citat dyker upp.", c: [{t:"Be om ursäkt", o:0.1, m:0}, {t:"Dubbla ner", o:1.5, m:0}]}
+            { t:"TV4 NYHETERNA",  d:"Du får en tuff fråga om invandring.", c:[{t:"Svara lugnt",o:0.4,m:0},{t:"Gå till attack",o:1.2,m:-50000}]},
+            { t:"DONATION",       d:"En anonym person ger ett bidrag.",     c:[{t:"Tacka (Pengar)",o:-0.2,m:200000},{t:"Neka (Heder)",o:0.5,m:0}]},
+            { t:"MATLAGNING",     d:"Du lagar korv i TV. Hur går det?",     c:[{t:"Det blir succé!",o:0.8,m:0},{t:"Du bränner den",o:-0.4,m:10000}]},
+            { t:"TWITTER-STORM",  d:"Ett gammalt citat dyker upp.",         c:[{t:"Be om ursäkt",o:0.1,m:0},{t:"Dubbla ner",o:1.5,m:0}]}
         ];
+
+        function fmtMoney(n){
+            if(n>=1e9) return (n/1e9).toFixed(1)+'B kr';
+            if(n>=1e6) return (n/1e6).toFixed(1)+'M kr';
+            if(n>=1e3) return Math.round(n/1e3)+'k kr';
+            return Math.round(n).toLocaleString('sv-SE')+' kr';
+        }
 
         function initShop() {
             const shop = document.getElementById('shop');
-            shop.innerHTML = "";
+            shop.innerHTML = '';
             upgrades.forEach(u => {
                 shop.innerHTML += `
-                    <div class="upgrade-card" id="u-${u.id}">
-                        <div>
-                            <h3>${u.name}</h3>
-                            <p>${u.desc}</p>
-                        </div>
-                        <div>
-                            <div style="font-weight:bold">${u.cost.toLocaleString()} kr</div>
-                            <button class="buy-btn" id="btn-${u.id}" onclick="buyItem(${u.id})">KÖP NU</button>
-                        </div>
+                <div class="upgrade-card" id="u-${u.id}">
+                    <div>
+                        <h3>${u.name}</h3>
+                        <p>${u.desc}</p>
                     </div>
-                `;
+                    <div class="card-stats">
+                        ${u.o>0?`<div class="card-stat">Opinion <span>+${(u.o*10).toFixed(3)}%/s</span></div>`:''}
+                        ${u.m>0?`<div class="card-stat">Inkomst <span>+${fmtMoney(u.m)}/s</span></div>`:''}
+                    </div>
+                    <div>
+                        <div style="font-weight:800;color:var(--sd-yellow);margin-bottom:8px">${fmtMoney(u.cost)}</div>
+                        <button class="buy-btn" id="btn-${u.id}" onclick="buyItem(${u.id})">KÖP NU</button>
+                    </div>
+                </div>`;
             });
         }
 
@@ -309,12 +433,14 @@
 
         function updateUI() {
             if (!state.active) return;
-            document.getElementById('money-val').innerText = Math.floor(state.money).toLocaleString() + " kr";
-            document.getElementById('opinion-val').innerText = state.opinion.toFixed(3) + "%";
-            document.getElementById('growth-val').innerText = "+" + (state.opinionRate * 10).toFixed(4) + "%";
-            
-            let w = (state.opinion / 50) * 100;
-            document.getElementById('opinion-bar').style.width = Math.min(w, 100) + "%";
+            document.getElementById('money-val').innerText = fmtMoney(state.money);
+            document.getElementById('opinion-val').innerText = state.opinion.toFixed(3) + '%';
+            document.getElementById('growth-val').innerText = '+' + (state.opinionRate * 10).toFixed(4) + '%/s';
+            document.getElementById('income-val').innerText = fmtMoney(state.moneyRate) + '/s';
+
+            // Bar goes from 0% to 50% opinion = 0% to 100% width
+            const w = (state.opinion / 50) * 100;
+            document.getElementById('opinion-bar').style.width = Math.min(w, 100) + '%';
 
             if (state.opinion >= 50) {
                 state.active = false;
@@ -333,10 +459,11 @@
             document.getElementById('ev-title').innerText = ev.t;
             document.getElementById('ev-desc').innerText = ev.d;
             const cBox = document.getElementById('ev-choices');
-            cBox.innerHTML = "";
+            cBox.innerHTML = '';
             ev.c.forEach(choice => {
                 const b = document.createElement('button');
-                b.className = "buy-btn"; b.style.margin = "10px 0";
+                b.className = 'buy-btn';
+                b.style.margin = '8px 0';
                 b.innerText = choice.t;
                 b.onclick = () => {
                     state.opinion += choice.o;
@@ -352,12 +479,12 @@
         }
 
         function spawnParticle(e) {
-            if (e.target.className !== 'jimmie-btn') return;
+            if (!e.target.classList.contains('jimmie-btn')) return;
             const p = document.createElement('div');
-            p.innerText = "+" + state.clickPower + "kr";
-            p.style.cssText = `position:fixed; left:${e.clientX}px; top:${e.clientY}px; color:var(--sd-yellow); font-weight:bold; pointer-events:none; z-index:9999;`;
+            p.innerText = '+' + state.clickPower.toLocaleString('sv-SE') + ' kr';
+            p.style.cssText = `position:fixed;left:${e.clientX}px;top:${e.clientY}px;color:var(--sd-yellow);font-weight:900;pointer-events:none;z-index:9999;font-size:1.1rem;text-shadow:0 0 10px rgba(254,204,0,0.6)`;
             document.body.appendChild(p);
-            p.animate([{transform:'translateY(0)', opacity:1}, {transform:'translateY(-100px)', opacity:0}], 1000).onfinish = () => p.remove();
+            p.animate([{transform:'translateY(0)',opacity:1},{transform:'translateY(-80px)',opacity:0}],900).onfinish=()=>p.remove();
         }
 
         setInterval(() => {
