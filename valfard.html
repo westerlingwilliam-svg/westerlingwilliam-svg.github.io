@@ -800,6 +800,17 @@ function codeSubmit(){
   }
 }
 
+
+// ── Dynamisk skalning efter skärmstorlek ─────────────────────────────────
+function applyScale(){
+  const baseWidth = 1440;
+  const scale = Math.max(0.5, Math.min(2.0, window.innerWidth / baseWidth));
+  document.documentElement.style.setProperty('--page-scale', scale);
+  document.body.style.zoom = scale;
+}
+applyScale();
+window.addEventListener('resize', applyScale);
+
 loadGame();renderCity();renderInv();renderBlocks();updateUI();
 </script>
 
