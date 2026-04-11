@@ -112,7 +112,9 @@ html,body{width:100%;height:100vh;overflow:hidden;background:var(--bg);color:var
 
 /* ── SIDEBAR ── */
 #sidebar{width:var(--sbar);flex-shrink:0;background:linear-gradient(180deg,#0d1124 0%,#0b0f1e 100%);border-left:2px solid #ffffff1a;display:flex;flex-direction:column}
-.sidebar-tabs{display:flex;padding:var(--pad);gap:var(--gap)}
+.sidebar-tabs{display:flex;padding:var(--pad);gap:var(--gap);flex-wrap:wrap}
+.sell-all-btn{width:100%;padding:8px;border-radius:var(--r);border:1px solid #f8717155;background:rgba(239,68,68,0.12);color:#f87171;font-size:var(--fxs);font-weight:800;cursor:pointer;transition:background 0.15s;text-transform:uppercase;letter-spacing:1px}
+.sell-all-btn:hover{background:rgba(239,68,68,0.25)}
 .tab-btn{flex:1;padding:clamp(7px,1.1vh,13px);border-radius:var(--r);border:2px solid var(--border2);background:var(--bg3);color:var(--muted);font-size:var(--fsm);font-weight:800;text-transform:uppercase;cursor:pointer;transition:border-color 0.2s}
 .tab-btn.active{background:linear-gradient(135deg,#f7d050,#e8a800);color:#000;border-color:var(--gold);box-shadow:0 0 22px var(--gold-glow),0 2px 8px rgba(0,0,0,0.4)}
 .sidebar-content{flex:1;overflow-y:auto;padding:var(--pad)}
@@ -268,6 +270,7 @@ html,body{width:100%;height:100vh;overflow:hidden;background:var(--bg);color:var
     <div class="sidebar-tabs">
       <button class="tab-btn active" id="inv-tab" onclick="switchTab('inv')">Lager</button>
       <button class="tab-btn" id="shop-tab" onclick="switchTab('shop')">Butik</button>
+      <button class="sell-all-btn" onclick="sellAll()">🗑 Sälj Allt</button>
     </div>
     <div class="sidebar-content">
       <div id="inventory"></div>
@@ -636,6 +639,17 @@ function prepPlace(idx){
   selectedInvIndex=(selectedInvIndex===idx)?null:idx;
   renderInv();renderCity();
   if(selectedInvIndex!==null) showToast('Klicka på en lysande plats i staden!');
+}
+
+function sellAll(){
+  if(inventory.length===0){showToast('Lagret är tomt!');return}
+  const bonus=isNaN(sellBonus)?1:sellBonus;
+  const total=inventory.reduce((sum,item)=>sum+Math.floor(item.sellPrice*bonus),0);
+  money+=total;
+  inventory=[];
+  selectedInvIndex=null;
+  showToast('💰 Sålde allt för '+fmtS(total)+' KR!');
+  renderInv();renderCity();updateUI();save();
 }
 
 function sellItem(idx){
