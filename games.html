@@ -41,7 +41,7 @@
             width: 60px; height: 40px;
             background: #005293; position: relative;
             display: inline-block; vertical-align: middle;
-            margin: 0 25px; 
+            margin: 0 25px;
             border: 2px solid rgba(255,255,255,0.3);
             box-shadow: 0 0 15px rgba(254, 204, 0, 0.4);
             border-radius: 4px;
@@ -93,9 +93,7 @@
             border-color: #fff;
         }
 
-        .game-card:hover::before {
-            left: 100%;
-        }
+        .game-card:hover::before { left: 100%; }
 
         .game-card h3 {
             font-size: 1.5rem;
@@ -103,6 +101,28 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             line-height: 1.2;
+        }
+
+        /* Special highlight card for the new 3D game */
+        .game-card.featured {
+            border-bottom: 4px solid #00e5ff;
+            background: rgba(0, 229, 255, 0.05);
+        }
+        .game-card.featured:hover {
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 30px rgba(0, 229, 255, 0.25);
+            border-color: #00e5ff;
+        }
+        .new-badge {
+            position: absolute;
+            top: 16px; right: 16px;
+            background: linear-gradient(135deg, #00e5ff, #0072ff);
+            color: #fff;
+            font-size: 0.6rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 4px 10px;
+            border-radius: 20px;
         }
 
         .card-flag {
@@ -113,6 +133,8 @@
         }
         .cf-v { position: absolute; width: 8px; height: 100%; background: #fecc00; left: 13px; }
         .cf-h { position: absolute; width: 100%; height: 8px; background: #fecc00; top: 9px; }
+
+        .card-icon { font-size: 2.5rem; margin-bottom: 10px; }
 
         .back-btn {
             display: inline-block;
@@ -129,16 +151,13 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-
         .back-btn:hover {
             transform: translateY(3px);
             box-shadow: 0 7px 0 #b38f00, 0 10px 20px rgba(0,0,0,0.3);
             background: #fff;
         }
 
-        center {
-            padding-bottom: 50px;
-        }
+        center { padding-bottom: 50px; }
     </style>
 </head>
 <body>
@@ -178,6 +197,13 @@
             <div class="card-flag"><div class="cf-h"></div><div class="cf-v"></div></div>
             <h3>Riksdags Opinion Tycoon</h3>
             <p style="opacity: 0.7; font-weight: normal;">Ta över makten med strategi!</p>
+        </a>
+
+        <a href="jimmie_tycoon_3d.html" class="game-card featured">
+            <span class="new-badge">✨ NYTT</span>
+            <div class="card-icon">🏰</div>
+            <h3>Jimmie Vandring 3D</h3>
+            <p style="opacity: 0.7; font-weight: normal;">Utforska en svensk stad i first person och hitta alla gömda SD-symboler!</p>
         </a>
     </div>
 
