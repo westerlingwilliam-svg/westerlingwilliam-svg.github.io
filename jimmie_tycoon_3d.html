@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jimmie.Fun - Spel och Saker</title>
+    <style>
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(-45deg, #001f3f, #005293, #003d6e, #001a33);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            margin: 0;
+            padding: 40px 20px;
+            color: white;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        h1 {
+            font-size: 4rem;
+            letter-spacing: 8px;
+            margin: 0;
+            color: #fecc00;
+            text-shadow: 0 0 20px rgba(254, 204, 0, 0.6), 4px 4px 0px #005293;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .header-flag {
+            width: 60px; height: 40px;
+            background: #005293; position: relative;
+            display: inline-block; vertical-align: middle;
+            margin: 0 25px;
+            border: 2px solid rgba(255,255,255,0.3);
+            box-shadow: 0 0 15px rgba(254, 204, 0, 0.4);
+            border-radius: 4px;
+        }
+        .f-y-v { position: absolute; width: 10px; height: 100%; background: #fecc00; left: 20px; box-shadow: 0 0 10px #fecc00; }
+        .f-y-h { position: absolute; width: 100%; height: 10px; background: #fecc00; top: 15px; box-shadow: 0 0 10px #fecc00; }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 4px solid #fecc00;
+            padding: 40px 25px;
+            text-decoration: none;
+            color: white;
+            text-align: center;
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: 0.5s;
+        }
+
+        .game-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(254, 204, 0, 0.2);
+            border-color: #fff;
+        }
+
+        .game-card:hover::before { left: 100%; }
+
+        .game-card h3 {
+            font-size: 1.5rem;
+            margin: 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            line-height: 1.2;
+        }
+
+        /* Special highlight card for the new 3D game */
+        .game-card.featured {
+            border-bottom: 4px solid #00e5ff;
+            background: rgba(0, 229, 255, 0.05);
+        }
+        .game-card.featured:hover {
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 30px rgba(0, 229, 255, 0.25);
+            border-color: #00e5ff;
+        }
+        .new-badge {
+            position: absolute;
+            top: 16px; right: 16px;
+            background: linear-gradient(135deg, #00e5ff, #0072ff);
+            color: #fff;
+            font-size: 0.6rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .card-flag {
+            width: 40px; height: 26px; background: #005293;
+            position: relative; margin: 0 auto 20px;
+            border-radius: 2px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .cf-v { position: absolute; width: 8px; height: 100%; background: #fecc00; left: 13px; }
+        .cf-h { position: absolute; width: 100%; height: 8px; background: #fecc00; top: 9px; }
+
+        .card-icon { font-size: 2.5rem; margin-bottom: 10px; }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 60px;
+            color: #005293;
+            text-decoration: none;
+            background: #fecc00;
+            padding: 18px 45px;
+            font-weight: 900;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            box-shadow: 0 10px 0 #b38f00, 0 15px 30px rgba(0,0,0,0.3);
+            transition: 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .back-btn:hover {
+            transform: translateY(3px);
+            box-shadow: 0 7px 0 #b38f00, 0 10px 20px rgba(0,0,0,0.3);
+            background: #fff;
+        }
+
+        center { padding-bottom: 50px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-flag"><div class="f-y-h"></div><div class="f-y-v"></div></div>
+        <h1>JIMMIE.FUN</h1>
+        <div class="header-flag"><div class="f-y-h"></div><div class="f-y-v"></div></div>
+    </header>
+
+    <div class="game-grid">
+        <a href="valfard.html" class="game-card" style="border-bottom-color: #00ff99;">
+            <div class="card-flag" style="background: #005293;"><div class="cf-h"></div><div class="cf-v"></div></div>
+            <h3>VÄLFÄRDSBYGGAREN</h3>
+            <p style="opacity: 0.7; font-weight: normal;">Uppgradera Sverige till Omega-nivå!</p>
+        </a>
+
+        <a href="quotes.html" class="game-card">
+            <div class="card-flag"><div class="cf-h"></div><div class="cf-v"></div></div>
+            <h3>Jimmie Quotes</h3>
+            <p style="opacity: 0.7; font-weight: normal;">Legendariska citat från Jimmie</p>
+        </a>
+
+        <a href="folkhemmet.html" class="game-card">
+            <div class="card-flag"><div class="cf-h"></div><div class="cf-v"></div></div>
+            <h3>Bygg Folkhemmet</h3>
+            <p style="opacity: 0.7; font-weight: normal;">Det ultimata clicker-spelet</p>
+        </a>
+
+        <a href="wheel.html" class="game-card">
+            <div class="card-flag"><div class="cf-h"></div><div class="cf-v"></div></div>
+            <h3>VILKET PARTI SKA DU RÖSTA PÅ?</h3>
+            <p style="opacity: 0.7; font-weight: normal;">Låt ödet (och Jimmie) bestämma!</p>
+        </a>
+
+        <a href="opinion.html" class="game-card">
+            <div class="card-flag"><div class="cf-h"></div><div class="cf-v"></div></div>
+            <h3>Riksdags Opinion Tycoon</h3>
+            <p style="opacity: 0.7; font-weight: normal;">Ta över makten med strategi!</p>
+        </a>
+
+        <a href="jimmie_tycoon_3d.html" class="game-card featured">
+            <span class="new-badge">✨ NYTT</span>
+            <div class="card-icon">🏰</div>
+            <h3>Jimmie Vandring 3D</h3>
+            <p style="opacity: 0.7; font-weight: normal;">Utforska en svensk stad i first person och hitta alla gömda SD-symboler!</p>
+        </a>
+    </div>
+
+    <center>
+        <a href="index.html" class="back-btn">Tillbaka till start</a>
+    </center>
+
+</body>
+</html>
