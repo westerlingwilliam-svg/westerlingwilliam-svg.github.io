@@ -476,8 +476,8 @@ ga(gGroup,Box(GD,0.45,GW,0x111122),  0,GH,0);
 // Opening header
 ga(gGroup,Box(0.45,0.8,GW,0x222244),-GD/2,GH-0.4,0);
 // Opening columns
-ga(gGroup,Box(0.45,GH,0.6,0x2233aa,-GD/2,GH/2,-GW/2+0.3));
-ga(gGroup,Box(0.45,GH,0.6,0x2233aa,-GD/2,GH/2, GW/2-0.3));
+ga(gGroup,Box(0.45,GH,0.6,0x2233aa), -GD/2, GH/2, -GW/2+0.3);
+ga(gGroup,Box(0.45,GH,0.6,0x2233aa), -GD/2, GH/2,  GW/2-0.3);
 // Ceiling light strips
 var sMat=new THREE.MeshBasicMaterial({color:0xeeeeff});
 [-4,0,4].forEach(function(sz){
