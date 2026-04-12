@@ -6,129 +6,71 @@
 <title>Steal The Jimmie</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--yellow:#fecc00;--blue:#005293;--dark:#00111f;--green:#22c55e}
+:root{--y:#fecc00;--b:#005293;--dark:#00111f;--g:#22c55e;--r:#ef4444}
 body{overflow:hidden;background:var(--dark);color:#fff;font-family:'Segoe UI',system-ui,sans-serif;width:100vw;height:100vh}
 #c{display:block;position:fixed;inset:0}
-
-/* ── START / PAUSE SCREEN ── */
-#startscreen{
-  position:fixed;inset:0;z-index:300;
-  background:radial-gradient(ellipse at 40% 40%,#003d6e,#001428 70%);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:20px;text-align:center;padding:40px;
-}
-.sdflag{width:80px;height:54px;background:#005293;border-radius:5px;position:relative;
-  border:3px solid rgba(254,204,0,0.55);box-shadow:0 0 30px rgba(254,204,0,0.3)}
-.sdflag .v{position:absolute;width:12px;height:100%;background:var(--yellow);left:27px;box-shadow:0 0 10px var(--yellow)}
-.sdflag .h{position:absolute;width:100%;height:12px;background:var(--yellow);top:21px;box-shadow:0 0 10px var(--yellow)}
-#startscreen h1{font-size:3.4rem;color:var(--yellow);letter-spacing:4px;
-  text-shadow:0 0 40px rgba(254,204,0,0.55),4px 4px 0 rgba(0,50,100,0.5);line-height:1.05}
-#startscreen p.subtitle{font-size:0.95rem;opacity:0.78;max-width:460px;line-height:1.8}
-#startscreen p.subtitle strong{color:var(--yellow)}
-.how-to{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
-.how-item{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);
-  border-radius:10px;padding:8px 16px;font-size:0.78rem;opacity:0.85}
-.how-item span{color:var(--yellow);font-weight:700}
-.btn-row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
-.btn-main{
-  padding:18px 56px;border:none;border-radius:50px;cursor:pointer;
-  font-weight:900;font-size:1.1rem;letter-spacing:2px;text-transform:uppercase;
-  background:linear-gradient(135deg,var(--yellow),#e8a000);color:#001a33;
-  box-shadow:0 8px 0 #8a6400,0 14px 35px rgba(0,0,0,0.45);
-  transition:transform 0.12s,box-shadow 0.12s;
-}
-.btn-main:hover{transform:translateY(-3px)}
-.btn-main:active{transform:translateY(5px);box-shadow:0 3px 0 #8a6400}
-.btn-back{
-  padding:18px 36px;border:2px solid rgba(255,255,255,0.25);border-radius:50px;
-  cursor:pointer;font-weight:700;font-size:0.95rem;letter-spacing:1px;text-transform:uppercase;
-  background:rgba(255,255,255,0.07);color:#fff;
-  transition:background 0.15s,border-color 0.15s;
-}
-.btn-back:hover{background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.4)}
-
-/* ── HUD ── */
+#startscreen{position:fixed;inset:0;z-index:300;background:radial-gradient(ellipse at 40% 40%,#003d6e,#001428 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:40px}
+.sdflag{width:80px;height:54px;background:#005293;border-radius:5px;position:relative;border:3px solid rgba(254,204,0,.55);box-shadow:0 0 30px rgba(254,204,0,.3)}
+.sdflag .v{position:absolute;width:12px;height:100%;background:var(--y);left:27px;box-shadow:0 0 10px var(--y)}
+.sdflag .h{position:absolute;width:100%;height:12px;background:var(--y);top:21px;box-shadow:0 0 10px var(--y)}
+#startscreen h1{font-size:3.2rem;color:var(--y);letter-spacing:4px;text-shadow:0 0 40px rgba(254,204,0,.55),4px 4px 0 rgba(0,50,100,.5);line-height:1.05}
+#startscreen p{font-size:.92rem;opacity:.78;max-width:460px;line-height:1.8}
+#startscreen p strong{color:var(--y)}
+.how{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.hi{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:7px 14px;font-size:.76rem}
+.hi span{color:var(--y);font-weight:700}
+.btnrow{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btnmain{padding:16px 52px;border:none;border-radius:50px;cursor:pointer;font-weight:900;font-size:1.05rem;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(135deg,var(--y),#e8a000);color:#001a33;box-shadow:0 8px 0 #8a6400;transition:transform .12s,box-shadow .12s}
+.btnmain:hover{transform:translateY(-2px)}.btnmain:active{transform:translateY(4px);box-shadow:0 4px 0 #8a6400}
+.btnsec{padding:16px 32px;border:2px solid rgba(255,255,255,.25);border-radius:50px;cursor:pointer;font-weight:700;font-size:.9rem;letter-spacing:1px;text-transform:uppercase;background:rgba(255,255,255,.07);color:#fff;transition:background .15s}
+.btnsec:hover{background:rgba(255,255,255,.15)}
 #hud{position:fixed;inset:0;pointer-events:none;z-index:10;display:none}
-#topbar{position:absolute;top:0;left:0;right:0;padding:12px 24px;
-  background:linear-gradient(180deg,rgba(0,15,40,0.97),transparent);
-  display:flex;justify-content:space-between;align-items:center;gap:16px}
-#gtitle{font-size:1rem;font-weight:900;letter-spacing:4px;color:var(--yellow);
-  text-shadow:0 0 18px rgba(254,204,0,0.5)}
-.hstat{text-align:center;background:rgba(0,0,0,0.5);
-  border:1px solid rgba(255,255,255,0.13);border-radius:10px;padding:6px 16px;min-width:85px}
-.hlbl{font-size:0.54rem;text-transform:uppercase;letter-spacing:2px;color:var(--yellow);opacity:0.75;margin-bottom:2px}
-.hval{font-size:1.15rem;font-weight:900}
-
-#progbar{position:absolute;top:68px;left:50%;transform:translateX(-50%);width:260px;text-align:center}
-#progbar-lbl{font-size:0.56rem;text-transform:uppercase;letter-spacing:2px;color:var(--yellow);opacity:0.72;margin-bottom:4px}
-#progbar-track{height:10px;background:rgba(255,255,255,0.1);border-radius:7px;overflow:hidden;border:1px solid rgba(255,255,255,0.13)}
-#progbar-fill{height:100%;width:0%;border-radius:7px;transition:width 0.5s ease;
-  background:linear-gradient(90deg,var(--yellow),#fff176)}
-
-#xhair{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:22px;height:22px}
-#xhair::before,#xhair::after{content:'';position:absolute;background:rgba(255,255,255,0.82);border-radius:2px}
-#xhair::before{width:2px;height:100%;left:10px}
-#xhair::after{width:100%;height:2px;top:10px}
-
-#rhint{position:absolute;bottom:36%;left:50%;transform:translateX(-50%);
-  background:rgba(0,0,0,0.82);border:2px solid var(--yellow);border-radius:14px;
-  padding:11px 26px;font-size:0.88rem;color:var(--yellow);font-weight:700;
-  letter-spacing:1px;display:none;text-align:center;
-  box-shadow:0 0 22px rgba(254,204,0,0.18);backdrop-filter:blur(4px)}
-
-#popup{position:absolute;top:33%;left:50%;transform:translate(-50%,-50%);
-  background:rgba(0,22,60,0.97);border:2px solid var(--yellow);border-radius:18px;
-  padding:24px 40px;text-align:center;display:none;min-width:290px;
-  box-shadow:0 24px 70px rgba(0,0,0,0.75);backdrop-filter:blur(6px)}
-#popup h3{color:var(--yellow);font-size:1.45rem;margin-bottom:6px}
-#popup p{opacity:0.82;font-size:0.88rem;line-height:1.5}
-
-/* Pause / menu button in corner */
-#pausebtn{position:absolute;top:14px;right:14px;pointer-events:all;
-  background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);
-  border-radius:9px;padding:7px 14px;color:#fff;font-size:0.75rem;
-  font-weight:700;cursor:pointer;letter-spacing:1px;text-transform:uppercase;
-  transition:background 0.15s}
-#pausebtn:hover{background:rgba(255,255,255,0.15)}
-
-#lockprompt{position:absolute;bottom:45%;left:50%;transform:translateX(-50%);
-  background:rgba(0,0,0,0.72);border:1px solid rgba(254,204,0,0.4);border-radius:10px;
-  padding:10px 20px;font-size:0.8rem;color:var(--yellow);display:none;text-align:center;
-  pointer-events:all;cursor:pointer}
-
-#bottombar{position:absolute;bottom:0;left:0;right:0;padding:10px 24px;
-  background:linear-gradient(0deg,rgba(0,8,28,0.9),transparent);
-  display:flex;justify-content:center;gap:24px;font-size:0.66rem;opacity:0.48}
-kbd{background:rgba(255,255,255,0.16);padding:2px 7px;border-radius:4px;font-family:inherit}
-
-/* ── WIN ── */
-#winscreen{position:fixed;inset:0;z-index:200;background:rgba(0,8,22,0.97);
-  display:none;flex-direction:column;align-items:center;justify-content:center;
-  gap:18px;text-align:center;padding:30px;backdrop-filter:blur(12px)}
-#winscreen h1{font-size:4.2rem;color:var(--yellow);text-shadow:0 0 60px rgba(254,204,0,0.6)}
-#winscreen p{opacity:0.72;font-size:1rem;max-width:420px;line-height:1.6}
-.wbtn{padding:15px 48px;background:linear-gradient(135deg,var(--yellow),#e8a000);
-  color:#001a33;font-weight:900;font-size:0.95rem;border:none;border-radius:50px;
-  cursor:pointer;letter-spacing:2px;text-transform:uppercase;box-shadow:0 6px 0 #8a6400}
+#topbar{position:absolute;top:0;left:0;right:0;padding:12px 22px;background:linear-gradient(180deg,rgba(0,15,40,.97),transparent);display:flex;justify-content:space-between;align-items:center;gap:14px}
+#gtitle{font-size:.95rem;font-weight:900;letter-spacing:4px;color:var(--y);text-shadow:0 0 18px rgba(254,204,0,.5)}
+.hst{text-align:center;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.13);border-radius:10px;padding:6px 14px;min-width:80px}
+.hlbl{font-size:.52rem;text-transform:uppercase;letter-spacing:2px;color:var(--y);opacity:.75;margin-bottom:2px}
+.hval{font-size:1.1rem;font-weight:900}
+#progwrap{position:absolute;top:66px;left:50%;transform:translateX(-50%);width:260px;text-align:center}
+#proglbl{font-size:.54rem;text-transform:uppercase;letter-spacing:2px;color:var(--y);opacity:.7;margin-bottom:4px}
+#progtrack{height:10px;background:rgba(255,255,255,.1);border-radius:7px;overflow:hidden;border:1px solid rgba(255,255,255,.12)}
+#progfill{height:100%;width:0%;border-radius:7px;transition:width .5s;background:linear-gradient(90deg,var(--y),#fff176)}
+#xhair{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:20px;height:20px}
+#xhair::before,#xhair::after{content:'';position:absolute;background:rgba(255,255,255,.82);border-radius:2px}
+#xhair::before{width:2px;height:100%;left:9px}#xhair::after{width:100%;height:2px;top:9px}
+#rhint{position:absolute;bottom:36%;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.84);border:2px solid var(--y);border-radius:14px;padding:10px 24px;font-size:.86rem;color:var(--y);font-weight:700;display:none;text-align:center;box-shadow:0 0 20px rgba(254,204,0,.18)}
+#qhint{position:absolute;bottom:30%;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.75);border:2px solid var(--r);border-radius:10px;padding:7px 18px;font-size:.75rem;color:#fca5a5;display:none;text-align:center}
+#popup{position:absolute;top:32%;left:50%;transform:translate(-50%,-50%);background:rgba(0,22,60,.97);border:2px solid var(--y);border-radius:18px;padding:22px 38px;text-align:center;display:none;min-width:280px;box-shadow:0 24px 70px rgba(0,0,0,.75)}
+#popup h3{color:var(--y);font-size:1.4rem;margin-bottom:6px}#popup p{opacity:.82;font-size:.87rem;line-height:1.5}
+#pausebtn{position:absolute;top:14px;right:14px;pointer-events:all;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.2);border-radius:9px;padding:6px 12px;color:#fff;font-size:.72rem;font-weight:700;cursor:pointer;letter-spacing:1px;text-transform:uppercase;transition:background .15s}
+#pausebtn:hover{background:rgba(255,255,255,.15)}
+#lockprompt{position:absolute;bottom:45%;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.72);border:1px solid rgba(254,204,0,.4);border-radius:10px;padding:9px 18px;font-size:.78rem;color:var(--y);display:none;text-align:center;pointer-events:all;cursor:pointer}
+#bottombar{position:absolute;bottom:0;left:0;right:0;padding:9px 24px;background:linear-gradient(0deg,rgba(0,8,28,.9),transparent);display:flex;justify-content:center;gap:22px;font-size:.64rem;opacity:.45}
+kbd{background:rgba(255,255,255,.16);padding:2px 7px;border-radius:4px;font-family:inherit}
+/* Rarity colors */
+.rar-common{color:#9e9e9e}.rar-uncommon{color:#4ade80}.rar-rare{color:#60a5fa}.rar-epic{color:#c084fc}.rar-legendary{color:#fecc00}
+#winscreen{position:fixed;inset:0;z-index:200;background:rgba(0,8,22,.97);display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:30px;backdrop-filter:blur(12px)}
+#winscreen h1{font-size:4rem;color:var(--y);text-shadow:0 0 60px rgba(254,204,0,.6)}
+#winscreen p{opacity:.72;font-size:1rem;max-width:420px;line-height:1.6}
+.wbtn{padding:14px 46px;background:linear-gradient(135deg,var(--y),#e8a000);color:#001a33;font-weight:900;font-size:.95rem;border:none;border-radius:50px;cursor:pointer;letter-spacing:2px;text-transform:uppercase;box-shadow:0 6px 0 #8a6400}
 </style>
 </head>
 <body>
 
-<!-- ══ START / PAUSE SCREEN ══ -->
 <div id="startscreen">
   <div class="sdflag"><div class="v"></div><div class="h"></div></div>
   <h1>STEAL THE<br>JIMMIE</h1>
-  <p class="subtitle">Jimmie-karaktärer vandrar längs vägen. <strong>Gå nära och tryck E</strong> för att rekrytera dem till ditt garage! Rekrytera alla <strong>10 Jimmies</strong> för att vinna.</p>
-  <div class="how-to">
-    <div class="how-item"><span>WASD</span> Rörelse</div>
-    <div class="how-item"><span>Mus</span> Titta runt</div>
-    <div class="how-item"><span>E</span> Rekrytera</div>
-    <div class="how-item"><span>Shift</span> Spring</div>
-    <div class="how-item"><span>Esc</span> Meny</div>
+  <p>Jimmie-karaktärer vandrar längs vägen. <strong>Tryck E</strong> nära en för att rekrytera till garaget! Samla så många sällsynta Jimmies som möjligt! <strong>Legendary</strong> och <strong>Epic</strong> är värda mest.</p>
+  <div class="how">
+    <div class="hi"><span>WASD</span> Rörelse</div>
+    <div class="hi"><span>Mus</span> Titta</div>
+    <div class="hi"><span>E</span> Rekrytera</div>
+    <div class="hi"><span>Q</span> Sälj markerad</div>
+    <div class="hi"><span>Shift</span> Sprint</div>
+    <div class="hi"><span>Esc</span> Meny</div>
   </div>
-  <div class="btn-row">
-    <button id="startbtn" class="btn-main">▶ STARTA SPELET</button>
-    <button class="btn-back" onclick="window.location.href='games.html'">← Game-menyn</button>
+  <div class="btnrow">
+    <button id="startbtn" class="btnmain">▶ STARTA SPELET</button>
+    <button class="btnсec btnmain" style="background:rgba(255,255,255,.08);color:#fff;border:2px solid rgba(255,255,255,.25);box-shadow:none" onclick="location.href='games.html'">← Menyn</button>
   </div>
 </div>
 
@@ -136,34 +78,36 @@ kbd{background:rgba(255,255,255,0.16);padding:2px 7px;border-radius:4px;font-fam
 
 <div id="hud">
   <div id="topbar">
-    <div class="hstat"><div class="hlbl">Rekryterade</div><div class="hval" id="hcount" style="color:var(--yellow)">0 / 10</div></div>
+    <div class="hst"><div class="hlbl">I Garaget</div><div class="hval" id="hcount" style="color:var(--y)">0/10</div></div>
     <div id="gtitle">STEAL THE JIMMIE</div>
-    <div class="hstat"><div class="hlbl">Kronor</div><div class="hval" id="hmoney" style="color:#4ade80">0 kr</div></div>
+    <div class="hst"><div class="hlbl">Kronor</div><div class="hval" id="hmoney" style="color:#4ade80">0 kr</div></div>
   </div>
-  <div id="progbar">
-    <div id="progbar-lbl">Jimmies i garaget</div>
-    <div id="progbar-track"><div id="progbar-fill"></div></div>
+  <div id="progwrap">
+    <div id="proglbl">Plattformar i garaget (0/10)</div>
+    <div id="progtrack"><div id="progfill"></div></div>
   </div>
   <div id="xhair"></div>
   <div id="rhint"></div>
+  <div id="qhint"></div>
   <div id="popup"><h3 id="pname"></h3><p id="pdesc"></p></div>
   <button id="pausebtn">☰ Meny (Esc)</button>
-  <div id="lockprompt" onclick="document.getElementById('c').requestPointerLock()">🖱 Klicka för att låsa musen och titta runt</div>
+  <div id="lockprompt" id="lp" onclick="document.getElementById('c').requestPointerLock()">🖱 Klicka för att låsa musen</div>
   <div id="bottombar">
     <span><kbd>WASD</kbd> Rörelse</span>
     <span><kbd>Mus</kbd> Titta</span>
     <span><kbd>E</kbd> Rekrytera</span>
+    <span><kbd>Q</kbd> Sälj</span>
     <span><kbd>Shift</kbd> Sprint</span>
     <span><kbd>Esc</kbd> Meny</span>
   </div>
 </div>
 
-<div id="winscreen">
+<div id="winscreen" style="display:none!important">
   <h1>🏆 SEGER!</h1>
-  <p id="winmsg">Du rekryterade alla Jimmies!</p>
-  <div class="btn-row">
+  <p id="winmsg">Du rekryterade alla sällsynta Jimmies!</p>
+  <div class="btnrow" style="pointer-events:all">
     <button class="wbtn" onclick="location.reload()">SPELA IGEN</button>
-    <button class="btn-back" style="pointer-events:all" onclick="window.location.href='games.html'">← Game-menyn</button>
+    <button class="wbtn" style="background:rgba(255,255,255,.1);color:#fff;border:2px solid rgba(255,255,255,.3);box-shadow:none" onclick="location.href='games.html'">← Menyn</button>
   </div>
 </div>
 
@@ -171,538 +115,817 @@ kbd{background:rgba(255,255,255,0.16);padding:2px 7px;border-radius:4px;font-fam
 <script>
 'use strict';
 
+// ── Rarities & Jimmies ────────────────────────────────────────
+var RARE = {COMMON:'Common', UNCOMMON:'Uncommon', RARE:'Rare', EPIC:'Epic', LEGENDARY:'Legendary'};
+
 var JIMMIES = [
-  {name:'Jimmie Junior',      desc:'Liten men ivrig sverigevan!',            col:0x4ade80, cost:50,   icon:'👦', sc:0.75, acc:'none'},
-  {name:'Jimmie Vandraren',   desc:'Vandrar stolt för Sverige!',             col:0x60a5fa, cost:100,  icon:'🚶', sc:0.9,  acc:'fedora'},
-  {name:'Jimmie Flaggbäraren',desc:'Bär flaggan med stolthet!',              col:0xfecc00, cost:150,  icon:'🚩', sc:1.0,  acc:'flag'},
-  {name:'Jimmie Talaren',     desc:'Håller tal som rör hela nationen!',      col:0xc084fc, cost:200,  icon:'🎤', sc:1.0,  acc:'mic'},
-  {name:'Jimmie Järnet',      desc:'Stridshärdad veteran för Sverige!',      col:0xfb923c, cost:300,  icon:'⚔️', sc:1.1,  acc:'helmet'},
-  {name:'Jimmie Jubilaren',   desc:'Firar 30 år i politiken!',               col:0xf472b6, cost:400,  icon:'🎉', sc:1.0,  acc:'party'},
-  {name:'Jimmie Kungen',      desc:'Tar hem segern varje gång!',             col:0xffd700, cost:500,  icon:'👑', sc:1.2,  acc:'crown'},
-  {name:'Jimmie Riksdagen',   desc:'Hemma på riksdagsgolvet!',               col:0x34d399, cost:600,  icon:'🏛️', sc:1.1,  acc:'fedora'},
-  {name:'Jimmie Hjälten',     desc:'Folkets hjälte från Sölvesborg!',        col:0xff6b6b, cost:700,  icon:'🦸', sc:1.2,  acc:'helmet'},
-  {name:'Jimmie Åkesson',     desc:'ORIGINALET! Den ende, den sanne Jimmie!',col:0xffd700, cost:1000, icon:'⭐', sc:1.5,  acc:'crown'},
+  {name:'Jimmie Junior',       rarity:RARE.COMMON,    col:0x9e9e9e, cost:30,   sell:15,  icon:'👦', sc:0.75, acc:'none'},
+  {name:'Jimmie Vandraren',    rarity:RARE.COMMON,    col:0x9e9e9e, cost:40,   sell:20,  icon:'🚶', sc:0.85, acc:'none'},
+  {name:'Jimmie Flaggan',      rarity:RARE.UNCOMMON,  col:0x4ade80, cost:80,   sell:40,  icon:'🚩', sc:0.95, acc:'flag'},
+  {name:'Jimmie Talaren',      rarity:RARE.UNCOMMON,  col:0x4ade80, cost:100,  sell:50,  icon:'🎤', sc:1.0,  acc:'mic'},
+  {name:'Jimmie Järnet',       rarity:RARE.RARE,      col:0x60a5fa, cost:200,  sell:100, icon:'⚔️', sc:1.0,  acc:'helmet'},
+  {name:'Jimmie Jubilaren',    rarity:RARE.RARE,      col:0x60a5fa, cost:250,  sell:125, icon:'🎉', sc:1.0,  acc:'party'},
+  {name:'Jimmie Kungen',       rarity:RARE.EPIC,      col:0xc084fc, cost:500,  sell:250, icon:'👑', sc:1.15, acc:'crown'},
+  {name:'Jimmie Riksdagen',    rarity:RARE.EPIC,      col:0xc084fc, cost:600,  sell:300, icon:'🏛️', sc:1.1,  acc:'fedora'},
+  {name:'Jimmie Hjälten',      rarity:RARE.LEGENDARY, col:0xfecc00, cost:1000, sell:500, icon:'🦸', sc:1.3,  acc:'crown'},
+  {name:'Jimmie Åkesson',      rarity:RARE.LEGENDARY, col:0xfecc00, cost:1500, sell:750, icon:'⭐', sc:1.5,  acc:'crown'},
 ];
 
-var gameOn=false, paused=false, recruited=0, money=0, popupTimer=0, mouseLocked=false;
-var nearJimmie=null, wanderers=[], particles=[], incomeTimer=0;
+// Win condition: collect all Epic+ (indices 6,7,8,9)
+var WIN_INDICES = [6,7,8,9];
+
+// ── State ─────────────────────────────────────────────────────
+var gameStarted = false;
+var paused      = false;
+var money       = 200;
+var popupTimer  = 0;
+var mouseLocked = false;
+var nearJimmie  = null;
+var nearGarage  = null; // which garage slot the player is near
+var wanderers   = [];
+var particles   = [];
+var incomeTimer = 0;
+var garageSlots = []; // array of 10 {mesh, jimmie or null, pos}
+var winCondMet  = false;
 
 // ── Renderer ─────────────────────────────────────────────────
-var canvas=document.getElementById('c');
-var renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,powerPreference:'high-performance'});
-renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-renderer.setSize(window.innerWidth,window.innerHeight);
-renderer.shadowMap.enabled=true;
-renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-renderer.toneMapping=THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure=1.05;
+var canvas = document.getElementById('c');
+var renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
 
-var scene=new THREE.Scene();
-scene.background=new THREE.Color(0x1a3a6e);
-scene.fog=new THREE.Fog(0x1a3a6e,18,60);
+var scene = new THREE.Scene();
+scene.background = new THREE.Color(0x1a3a6e);
+scene.fog = new THREE.Fog(0x1a3a6e, 20, 65);
 
-var cam=new THREE.PerspectiveCamera(70,window.innerWidth/window.innerHeight,0.05,200);
-cam.position.set(8,1.75,0); // player starts near garage side
-cam.lookAt(0,1.75,0);
+var cam = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.05, 200);
+cam.position.set(6, 1.75, 0);
 
 // ── Lights ────────────────────────────────────────────────────
-scene.add(new THREE.AmbientLight(0x99aabb,0.9));
-var sun=new THREE.DirectionalLight(0xfff5cc,1.9);
-sun.position.set(20,35,10);
-sun.castShadow=true;
-sun.shadow.camera.left=-40; sun.shadow.camera.right=40;
-sun.shadow.camera.top=40; sun.shadow.camera.bottom=-40;
-sun.shadow.camera.far=120; sun.shadow.mapSize.set(1024,1024);
-sun.shadow.bias=-0.001;
+scene.add(new THREE.AmbientLight(0x99aabb, 0.9));
+var sun = new THREE.DirectionalLight(0xfff5cc, 1.8);
+sun.position.set(20, 35, 10);
+sun.castShadow = true;
+sun.shadow.camera.left   = -40;
+sun.shadow.camera.right  =  40;
+sun.shadow.camera.top    =  40;
+sun.shadow.camera.bottom = -40;
+sun.shadow.camera.far    = 120;
+sun.shadow.mapSize.set(1024, 1024);
+sun.shadow.bias = -0.001;
 scene.add(sun);
-scene.add(Object.assign(new THREE.DirectionalLight(0x3366aa,0.4),{position:new THREE.Vector3(-15,10,-8)}));
-scene.add(new THREE.HemisphereLight(0x4488cc,0x224422,0.3));
+var fillLight2 = new THREE.DirectionalLight(0x3366aa, 0.4); fillLight2.position.set(-15, 10, -8); scene.add(fillLight2);
+scene.add(new THREE.HemisphereLight(0x4488cc, 0x224422, 0.3));
 
-// ── Helpers (always create fresh geometry/material) ───────────
-function mkBox(w,h,d,col){
-  var m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshLambertMaterial({color:col}));
-  m.castShadow=true; m.receiveShadow=true; return m;
+// ── Safe geometry helpers — never reuse geo or mat ────────────
+function mkMesh(geo, col, emCol, ei) {
+  var mat = new THREE.MeshLambertMaterial({color: col});
+  if (emCol !== undefined) {
+    mat.emissive = new THREE.Color(emCol);
+    mat.emissiveIntensity = ei || 0.12;
+  }
+  var m = new THREE.Mesh(geo, mat);
+  m.castShadow = true;
+  m.receiveShadow = true;
+  return m;
 }
-function mkCyl(rt,rb,h,seg,col){
-  var m=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg||10),new THREE.MeshLambertMaterial({color:col}));
-  m.castShadow=true; m.receiveShadow=true; return m;
-}
-function mkPlane(w,h,col,op){
-  var mat=op!=null?new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:op,side:THREE.DoubleSide}):new THREE.MeshBasicMaterial({color:col,side:THREE.DoubleSide});
-  return new THREE.Mesh(new THREE.PlaneGeometry(w,h),mat);
-}
+function Box(w, h, d, col, emCol, ei) { return mkMesh(new THREE.BoxGeometry(w, h, d), col, emCol, ei); }
+function Cyl(rt, rb, h, seg, col)     { return mkMesh(new THREE.CylinderGeometry(rt, rb, h, seg || 10), col); }
+function Sph(r, seg, col, emCol, ei)  { return mkMesh(new THREE.SphereGeometry(r, seg || 8, seg || 8), col, emCol, ei); }
+function Cone(r, h, seg, col)         { return mkMesh(new THREE.ConeGeometry(r, h, seg || 8), col); }
+function addToScene(mesh, x, y, z)    { mesh.position.set(x, y, z); scene.add(mesh); return mesh; }
+function groupAdd(g, mesh, x, y, z)   { mesh.position.set(x, y, z); g.add(mesh); return mesh; }
 
-// ── World layout ─────────────────────────────────────────────
-// Road goes along Z axis: z=+20 (spawn) → z=-20 (despawn)
-// Garage (player base) sits to the right side of road at x=+10
-var ROAD_Z_SPAWN  =  22;
-var ROAD_Z_DESPAWN= -22;
-var GARAGE_X      =  12;
-var GARAGE_Z      =   0;
+// ── World ─────────────────────────────────────────────────────
+var ROAD_SPAWN   =  22;
+var ROAD_DESPAWN = -22;
+var GX = 13, GZ = 0; // Garage center
 
 // Ground
-var gnd=new THREE.Mesh(new THREE.PlaneGeometry(80,60),new THREE.MeshLambertMaterial({color:0x2a6028}));
-gnd.rotation.x=-Math.PI/2; gnd.receiveShadow=true;
-gnd.position.set(0,0,0);
-scene.add(gnd);
+var gnd = Box(80, 0.1, 60, 0x2a6028);
+addToScene(gnd, 0, -0.05, 0);
 
-// Asphalt patches (varied)
-[[0,0,80,60,0x272732],[0,0,6,48,0x252535]].forEach(function(r){
-  var pm=new THREE.Mesh(new THREE.PlaneGeometry(r[2],r[3]),new THREE.MeshLambertMaterial({color:r[4]}));
-  pm.rotation.x=-Math.PI/2; pm.position.set(r[0],0.01,r[1]); pm.receiveShadow=true; scene.add(pm);
-});
+// Road
+var road = Box(6, 0.12, 48, 0x252535);
+addToScene(road, 0, 0.0, 0);
 
-// Road surface
-var roadM=new THREE.Mesh(new THREE.PlaneGeometry(6,48),new THREE.MeshLambertMaterial({color:0x252535}));
-roadM.rotation.x=-Math.PI/2; roadM.position.set(0,0.01,0); roadM.receiveShadow=true; scene.add(roadM);
-
-// Road kerbs
-[-3.2,3.2].forEach(function(kx){
-  var kerb=mkBox(0.22,0.1,48,0xaaaaaa); kerb.position.set(kx,0.05,0); scene.add(kerb);
-});
+// Kerbs
+addToScene(Box(0.2, 0.12, 48, 0xaaaaaa), -3.2, 0.06, 0);
+addToScene(Box(0.2, 0.12, 48, 0xaaaaaa),  3.2, 0.06, 0);
 
 // Road dashes
-for(var di=-10;di<=10;di++){
-  var dash=mkPlane(0.2,2.2,0xffd700,0.5); dash.rotation.x=-Math.PI/2; dash.position.set(0,0.025,di*4.2); scene.add(dash);
+for (var di = -10; di <= 10; di++) {
+  var dm = new THREE.Mesh(new THREE.PlaneGeometry(0.2, 2), new THREE.MeshBasicMaterial({color: 0xffd700, transparent: true, opacity: 0.5}));
+  dm.rotation.x = -Math.PI / 2;
+  dm.position.set(0, 0.07, di * 4);
+  scene.add(dm);
 }
 
-// Pavement strip on garage side
-var pave=new THREE.Mesh(new THREE.PlaneGeometry(5,48),new THREE.MeshLambertMaterial({color:0x888898}));
-pave.rotation.x=-Math.PI/2; pave.position.set(5.5,0.015,0); pave.receiveShadow=true; scene.add(pave);
+// Pavement strip (garage side)
+var pave = new THREE.Mesh(new THREE.PlaneGeometry(4, 48), new THREE.MeshLambertMaterial({color: 0x888898}));
+pave.rotation.x = -Math.PI / 2;
+pave.position.set(5, 0.06, 0);
+pave.receiveShadow = true;
+scene.add(pave);
 
-// ── SPAWN / DESPAWN visual markers ────────────────────────────
-// Spawn portal (far end z=+22) — green arch
-var spawnArch=mkBox(6,0.3,0.3,0x22c55e); spawnArch.position.set(0,4,ROAD_Z_SPAWN); scene.add(spawnArch);
-var spawnL=mkBox(0.3,8,0.3,0x22c55e); spawnL.position.set(-3,4,ROAD_Z_SPAWN); scene.add(spawnL);
-var spawnR=mkBox(0.3,8,0.3,0x22c55e); spawnR.position.set(3,4,ROAD_Z_SPAWN); scene.add(spawnR);
-var spawnLight=new THREE.PointLight(0x22c55e,2,10); spawnLight.position.set(0,5,ROAD_Z_SPAWN); scene.add(spawnLight);
+// ── SPAWN portal (green, far end z=+22) ───────────────────────
+addToScene(Box(7, 0.3, 0.3, 0x22c55e), 0, 7.15, ROAD_SPAWN);
+addToScene(Box(0.3, 8, 0.3, 0x22c55e), -3.5, 4, ROAD_SPAWN);
+addToScene(Box(0.3, 8, 0.3, 0x22c55e),  3.5, 4, ROAD_SPAWN);
+var spawnPL = new THREE.PointLight(0x22c55e, 2.5, 12);
+spawnPL.position.set(0, 5, ROAD_SPAWN);
+scene.add(spawnPL);
 
-// Despawn portal (near end z=-22) — red arch
-var despawnArch=mkBox(6,0.3,0.3,0xef4444); despawnArch.position.set(0,4,ROAD_Z_DESPAWN); scene.add(despawnArch);
-var despawnL=mkBox(0.3,8,0.3,0xef4444); despawnL.position.set(-3,4,ROAD_Z_DESPAWN); scene.add(despawnL);
-var despawnR=mkBox(0.3,8,0.3,0xef4444); despawnR.position.set(3,4,ROAD_Z_DESPAWN); scene.add(despawnR);
-var despawnLight=new THREE.PointLight(0xef4444,2,10); despawnLight.position.set(0,5,ROAD_Z_DESPAWN); scene.add(despawnLight);
+// ── DESPAWN portal (red, near end z=-22) ─────────────────────
+addToScene(Box(7, 0.3, 0.3, 0xef4444), 0, 7.15, ROAD_DESPAWN);
+addToScene(Box(0.3, 8, 0.3, 0xef4444), -3.5, 4, ROAD_DESPAWN);
+addToScene(Box(0.3, 8, 0.3, 0xef4444),  3.5, 4, ROAD_DESPAWN);
+var despawnPL = new THREE.PointLight(0xef4444, 2.5, 12);
+despawnPL.position.set(0, ROAD_DESPAWN);
+scene.add(despawnPL);
+despawnPL.position.set(0, 5, ROAD_DESPAWN);
 
-// Lamp posts along road (both sides)
-var lampMat=new THREE.MeshLambertMaterial({color:0x777788});
-var glowMat2=new THREE.MeshBasicMaterial({color:0xffffcc});
-[-16,-8,0,8,16].forEach(function(lz){
-  [-1,1].forEach(function(side){
-    var lx=side*4.5;
-    var post=new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.1,5,6),lampMat);
-    post.position.set(lx,2.5,lz); post.castShadow=true; scene.add(post);
-    var arm=new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.04,0.9,4),lampMat);
-    arm.rotation.z=Math.PI/2; arm.position.set(lx+side*0.45,4.9,lz); scene.add(arm);
-    var bulb=new THREE.Mesh(new THREE.SphereGeometry(0.18,6,6),glowMat2);
-    bulb.position.set(lx+side*0.9,4.85,lz); scene.add(bulb);
-    var pl=new THREE.PointLight(0xffffaa,0.7,9); pl.position.set(lx+side*0.9,4.7,lz); scene.add(pl);
+// Lamp posts
+var lampMat2 = new THREE.MeshLambertMaterial({color: 0x777788});
+var bulbMat2 = new THREE.MeshBasicMaterial({color: 0xffffcc});
+[-16, -8, 0, 8, 16].forEach(function(lz) {
+  [-1, 1].forEach(function(side) {
+    var lx = side * 4.5;
+    var post = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.1, 5.5, 6), lampMat2);
+    post.position.set(lx, 2.75, lz);
+    post.castShadow = true;
+    scene.add(post);
+    var arm = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.9, 4), lampMat2);
+    arm.rotation.z = Math.PI / 2;
+    arm.position.set(lx + side * 0.45, 4.9, lz);
+    scene.add(arm);
+    var bulb = new THREE.Mesh(new THREE.SphereGeometry(0.18, 6, 6), bulbMat2);
+    bulb.position.set(lx + side * 0.9, 4.85, lz);
+    scene.add(bulb);
+    var pl3 = new THREE.PointLight(0xffffaa, 0.7, 9);
+    pl3.position.set(lx + side * 0.9, 4.65, lz);
+    scene.add(pl3);
   });
 });
 
-// ── GARAGE (player base) ──────────────────────────────────────
-// Sits at x=12, centered at z=0, big open front facing the road
-function buildGarage(){
-  var g=new THREE.Group();
-  var W=10, H=6, D=12; // width, height, depth
+// ── GARAGE ────────────────────────────────────────────────────
+// Big open garage on right side, wide opening facing the road
+// Dimensions: 14 wide (x), 6 tall (y), 16 deep (z)
+var GW = 14, GH = 6, GD = 16;
 
-  // Floor
-  var floor=new THREE.Mesh(new THREE.PlaneGeometry(W,D),new THREE.MeshLambertMaterial({color:0x333344}));
-  floor.rotation.x=-Math.PI/2; floor.receiveShadow=true; g.add(floor);
+var garageGroup = new THREE.Group();
+garageGroup.position.set(GX, 0, GZ);
 
-  // Back wall
-  var back=mkBox(W,H,0.4,0x2a3a88); back.position.set(0,H/2,-D/2); g.add(back);
+// Floor
+var gfloor = new THREE.Mesh(new THREE.PlaneGeometry(GW, GD), new THREE.MeshLambertMaterial({color: 0x2a2a3a}));
+gfloor.rotation.x = -Math.PI / 2;
+gfloor.receiveShadow = true;
+garageGroup.add(gfloor);
 
-  // Side walls (left and right)
-  var sideL=mkBox(0.4,H,D,0x2a3a88); sideL.position.set(-W/2,H/2,0); g.add(sideL);
-  var sideR=mkBox(0.4,H,D,0x2a3a88); sideR.position.set(W/2,H/2,0); g.add(sideR);
+// Back wall
+groupAdd(garageGroup, Box(GW, GH, 0.45, 0x222244), 0, GH/2, -GD/2);
+// Left wall
+groupAdd(garageGroup, Box(0.45, GH, GD, 0x222244), -GW/2, GH/2, 0);
+// Right wall
+groupAdd(garageGroup, Box(0.45, GH, GD, 0x222244),  GW/2, GH/2, 0);
+// Roof
+groupAdd(garageGroup, Box(GW, 0.45, GD, 0x1a1a33), 0, GH, 0);
+// Front header above opening
+groupAdd(garageGroup, Box(GW, 0.6, 0.45, 0x222244), 0, GH - 0.3, GD/2);
+// Front columns
+groupAdd(garageGroup, Box(0.6, GH, 0.45, 0x2a2a55), -GW/2 + 0.3, GH/2, GD/2);
+groupAdd(garageGroup, Box(0.6, GH, 0.45, 0x2a2a55),  GW/2 - 0.3, GH/2, GD/2);
 
-  // Roof
-  var roof=mkBox(W+0.4,0.4,D+0.4,0x222255); roof.position.set(0,H,0); g.add(roof);
+// Interior ceiling light strips
+var stripMat3 = new THREE.MeshBasicMaterial({color: 0xffffff});
+[-3, 0, 3].forEach(function(sx) {
+  var strip = new THREE.Mesh(new THREE.PlaneGeometry(0.3, GD - 2), stripMat3);
+  strip.rotation.x = Math.PI / 2;
+  strip.position.set(sx, GH - 0.1, 0);
+  garageGroup.add(strip);
+  var sl2 = new THREE.PointLight(0xffffff, 0.9, 14);
+  sl2.position.set(sx, GH - 0.3, 0);
+  garageGroup.add(sl2);
+});
 
-  // Front opening header (above door)
-  var header=mkBox(W,0.6,0.4,0x2a3a88); header.position.set(0,H-0.3,D/2); g.add(header);
+// Entrance glow
+var entL = new THREE.PointLight(0x4488ff, 1.4, 9);
+entL.position.set(-3, 3, GD/2 + 1);
+garageGroup.add(entL);
+var entR = new THREE.PointLight(0x4488ff, 1.4, 9);
+entR.position.set(3, 3, GD/2 + 1);
+garageGroup.add(entR);
 
-  // Front columns (door frame)
-  var colL=mkBox(0.5,H,0.4,0x334499); colL.position.set(-W/2+0.25,H/2,D/2); g.add(colL);
-  var colR=mkBox(0.5,H,0.4,0x334499); colR.position.set(W/2-0.25,H/2,D/2); g.add(colR);
+// SD flag inside
+var sdBlueMat = new THREE.MeshBasicMaterial({color: 0x005293, side: THREE.DoubleSide});
+var sdYelMat  = new THREE.MeshBasicMaterial({color: 0xfecc00, side: THREE.DoubleSide});
+var sdf = new THREE.Mesh(new THREE.PlaneGeometry(2.5, 1.6), sdBlueMat);
+sdf.position.set(0, GH - 1.2, -GD/2 + 0.3);
+garageGroup.add(sdf);
+var sds = new THREE.Mesh(new THREE.PlaneGeometry(2.5, 0.38), sdYelMat);
+sds.position.set(0, GH - 1.2, -GD/2 + 0.32);
+garageGroup.add(sds);
 
-  // Interior floor markings
-  var floorMark=new THREE.Mesh(new THREE.PlaneGeometry(8,10),new THREE.MeshLambertMaterial({color:0x3a3a55}));
-  floorMark.rotation.x=-Math.PI/2; floorMark.position.y=0.01; g.add(floorMark);
+scene.add(garageGroup);
 
-  // Interior light strips on ceiling
-  var stripMat=new THREE.MeshBasicMaterial({color:0xffffee});
-  [-2,2].forEach(function(sx){
-    var strip=new THREE.Mesh(new THREE.PlaneGeometry(0.3,D-1),stripMat);
-    strip.rotation.x=Math.PI/2; strip.position.set(sx,H-0.1,0); g.add(strip);
-    var sl=new THREE.PointLight(0xffffee,1.0,12); sl.position.set(sx,H-0.3,0); g.add(sl);
-  });
-
-  // SD flag on back wall
-  var sdFlag=mkPlane(2,1.3,0x005293); sdFlag.position.set(0,H-1.2,-D/2+0.25); g.add(sdFlag);
-  var sdStripe=mkPlane(2,0.3,0xfecc00); sdStripe.position.set(0,H-1.2,-D/2+0.26); g.add(sdStripe);
-
-  // Sign above entrance
-  var signBg=mkBox(4,0.8,0.15,0x0a1428); signBg.position.set(0,H+0.4,D/2+0.1); g.add(signBg);
-  // (text would be a texture, we use yellow strip for now)
-  var signLine=mkBox(3.6,0.12,0.16,0xfecc00); signLine.position.set(0,H+0.1,D/2+0.1); g.add(signLine);
-
-  // Exterior glow lights at entrance
-  var entrL=new THREE.PointLight(0x4488ff,1.4,8); entrL.position.set(-3,3,D/2+1); g.add(entrL);
-  var entrR=new THREE.PointLight(0x4488ff,1.4,8); entrR.position.set(3,3,D/2+1); g.add(entrR);
-
-  g.position.set(GARAGE_X,0,GARAGE_Z);
-  scene.add(g);
+// ── GARAGE PLATFORMS (10 spots for Jimmies) ───────────────────
+// Arranged in 2 rows of 5 inside the garage
+var PLATFORM_POSITIONS = [];
+for (var row = 0; row < 2; row++) {
+  for (var col2 = 0; col2 < 5; col2++) {
+    var px = GX + (-GW/2 + 1.8 + col2 * (GW - 2) / 4);
+    var pz = GZ + (row === 0 ? -GD/2 + 2.5 : GD/2 - 2.5);
+    PLATFORM_POSITIONS.push({x: px, z: pz});
+  }
 }
-buildGarage();
 
-// ── Stars ─────────────────────────────────────────────────────
-var sv=new Float32Array(800*3);
-for(var si=0;si<800;si++){sv[si*3]=(Math.random()-0.5)*180;sv[si*3+1]=Math.random()*60+20;sv[si*3+2]=(Math.random()-0.5)*180;}
-var sgeo=new THREE.BufferGeometry(); sgeo.setAttribute('position',new THREE.BufferAttribute(sv,3));
-scene.add(new THREE.Points(sgeo,new THREE.PointsMaterial({color:0xffffff,size:0.18})));
+// Build platforms and init slots
+PLATFORM_POSITIONS.forEach(function(pp, idx) {
+  // Platform base
+  var platBase = Box(1.8, 0.18, 1.8, 0x334466);
+  platBase.position.set(pp.x, 0.09, pp.z);
+  scene.add(platBase);
+  // Platform top strip (colored, empty = grey)
+  var platTop = Box(1.6, 0.06, 1.6, 0x444466);
+  platTop.position.set(pp.x, 0.19, pp.z);
+  platTop.name = 'plattop_' + idx;
+  scene.add(platTop);
+  // Number marker
+  var numMat = new THREE.MeshBasicMaterial({color: 0x888899});
+  var numMesh = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 0.5), numMat);
+  numMesh.rotation.x = -Math.PI / 2;
+  numMesh.position.set(pp.x, 0.21, pp.z);
+  scene.add(numMesh);
 
-// ── Build Jimmie mesh (no geometry/material reuse) ────────────
-function buildJimmieMesh(def){
-  var g=new THREE.Group();
-  var sc=def.sc||1;
+  garageSlots.push({
+    idx: idx, x: pp.x, z: pp.z,
+    jimmie: null,       // Jimmie object sitting here
+    platTop: platTop,
+  });
+});
 
-  function mat(col,emCol,ei){ var m=new THREE.MeshLambertMaterial({color:col}); if(emCol){m.emissive=new THREE.Color(emCol);m.emissiveIntensity=ei||0.1;} return m; }
-  function bx(w,h,d,col,emCol,ei){ var m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat(col,emCol,ei)); m.castShadow=true; return m; }
-  function cy(rt,rb,h,seg,col){ var m=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg||8),mat(col)); m.castShadow=true; return m; }
-  function sp(r,seg,col,emCol,ei){ var m=new THREE.Mesh(new THREE.SphereGeometry(r,seg||8,seg||8),mat(col,emCol,ei)); m.castShadow=true; return m; }
+// Stars
+var sv2 = new Float32Array(700 * 3);
+for (var si2 = 0; si2 < 700; si2++) {
+  sv2[si2*3]     = (Math.random() - 0.5) * 160;
+  sv2[si2*3 + 1] = Math.random() * 60 + 20;
+  sv2[si2*3 + 2] = (Math.random() - 0.5) * 160;
+}
+var starGeo2 = new THREE.BufferGeometry();
+starGeo2.setAttribute('position', new THREE.BufferAttribute(sv2, 3));
+scene.add(new THREE.Points(starGeo2, new THREE.PointsMaterial({color: 0xffffff, size: 0.18})));
 
-  var bodyCol=def.col;
-  var skinCol=0xffd5a8;
+// ── Build Jimmie mesh (all new geo + mat, NO cloning) ─────────
+function buildJimmieMesh(def) {
+  var g = new THREE.Group();
+
+  // Local helpers that always make fresh meshes
+  function B(w, h, d, c, em, ei) { return Box(w, h, d, c, em, ei); }
+  function C(rt, rb, h, seg, c)  { return Cyl(rt, rb, h, seg, c); }
+  function S(r, seg, c, em, ei)  { return Sph(r, seg, c, em, ei); }
+
+  var bc  = def.col;
+  var sk  = 0xffd5a8;
+  var dk  = 0x223355;
+  var blk = 0x111122;
+  var wh  = 0xffffff;
+  var br  = 0x1e0e04;
 
   // Shoes
-  var sL=bx(0.22,0.14,0.36,0x111122); sL.position.set(-0.14,0.07,0.03); g.add(sL);
-  var sR=bx(0.22,0.14,0.36,0x111122); sR.position.set(0.14,0.07,0.03); g.add(sR);
-  // Legs
-  var lL=bx(0.22,0.52,0.26,0x223355); lL.position.set(-0.14,0.4,0); g.add(lL);
-  var lR=bx(0.22,0.52,0.26,0x223355); lR.position.set(0.14,0.4,0); g.add(lR);
+  groupAdd(g, B(0.22, 0.14, 0.36, blk),  -0.14, 0.07, 0.03);
+  groupAdd(g, B(0.22, 0.14, 0.36, blk),   0.14, 0.07, 0.03);
+  // Legs — store refs for animation
+  var legL = B(0.22, 0.52, 0.26, dk);  groupAdd(g, legL,  -0.14, 0.4, 0);
+  var legR = B(0.22, 0.52, 0.26, dk);  groupAdd(g, legR,   0.14, 0.4, 0);
   // Belt
-  var belt=bx(0.56,0.09,0.3,0x3a2800); belt.position.set(0,0.68,0); g.add(belt);
+  groupAdd(g, B(0.56, 0.09, 0.3, 0x3a2800), 0, 0.68, 0);
   // Torso
-  var torso=bx(0.56,0.68,0.32,bodyCol,bodyCol,0.08); torso.position.set(0,1.07,0); g.add(torso);
+  var torsoM = B(0.56, 0.68, 0.32, bc, bc, 0.08); groupAdd(g, torsoM, 0, 1.07, 0);
   // Shirt
-  var shirt=bx(0.2,0.28,0.33,0xffffff); shirt.position.set(0,1.22,0); g.add(shirt);
+  groupAdd(g, B(0.2, 0.28, 0.33, wh), 0, 1.22, 0);
   // Tie
-  var tie=bx(0.09,0.38,0.02,bodyCol); tie.position.set(0,1.0,0.17); g.add(tie);
-  var tieKnot=bx(0.11,0.1,0.03,bodyCol); tieKnot.position.set(0,1.21,0.17); g.add(tieKnot);
+  groupAdd(g, B(0.09, 0.38, 0.02, bc), 0, 1.0,  0.17);
+  groupAdd(g, B(0.11, 0.10, 0.03, bc), 0, 1.21, 0.17);
   // Arms
-  var aL=bx(0.19,0.38,0.22,bodyCol); aL.position.set(-0.39,1.08,0); aL.rotation.z=0.12; g.add(aL);
-  var aR=bx(0.19,0.38,0.22,bodyCol); aR.position.set(0.39,1.08,0); aR.rotation.z=-0.12; g.add(aR);
-  var hL=sp(0.1,7,skinCol); hL.position.set(-0.42,0.78,0); g.add(hL);
-  var hR=sp(0.1,7,skinCol); hR.position.set(0.42,0.78,0); g.add(hR);
+  var armL = B(0.19, 0.38, 0.22, bc); armL.rotation.z =  0.12; groupAdd(g, armL, -0.39, 1.08, 0);
+  var armR = B(0.19, 0.38, 0.22, bc); armR.rotation.z = -0.12; groupAdd(g, armR,  0.39, 1.08, 0);
+  groupAdd(g, S(0.10, 7, sk), -0.42, 0.78, 0);
+  groupAdd(g, S(0.10, 7, sk),  0.42, 0.78, 0);
   // Neck
-  var neck=cy(0.1,0.12,0.22,7,skinCol); neck.position.set(0,1.46,0); g.add(neck);
+  groupAdd(g, C(0.10, 0.12, 0.22, 7, sk), 0, 1.46, 0);
   // Head
-  var head=bx(0.48,0.46,0.45,skinCol); head.position.set(0,1.72,0); g.add(head);
+  groupAdd(g, B(0.48, 0.46, 0.45, sk), 0, 1.72, 0);
   // Hair
-  var hairTop=bx(0.5,0.16,0.47,0x1e0e04); hairTop.position.set(0,1.94,-0.01); g.add(hairTop);
-  var hairL=bx(0.06,0.32,0.44,0x1e0e04); hairL.position.set(-0.25,1.76,0); g.add(hairL);
-  var hairR=bx(0.06,0.32,0.44,0x1e0e04); hairR.position.set(0.25,1.76,0); g.add(hairR);
+  groupAdd(g, B(0.50, 0.16, 0.47, br), 0, 1.94, -0.01);
+  groupAdd(g, B(0.06, 0.32, 0.44, br), -0.25, 1.76, 0);
+  groupAdd(g, B(0.06, 0.32, 0.44, br),  0.25, 1.76, 0);
   // Ears
-  var earL=sp(0.075,6,skinCol); earL.position.set(-0.26,1.72,0); g.add(earL);
-  var earR=sp(0.075,6,skinCol); earR.position.set(0.26,1.72,0); g.add(earR);
+  groupAdd(g, S(0.075, 6, sk), -0.26, 1.72, 0);
+  groupAdd(g, S(0.075, 6, sk),  0.26, 1.72, 0);
   // Eyes
-  var eWL=sp(0.065,7,0xffffff); eWL.position.set(-0.12,1.75,0.225); g.add(eWL);
-  var eWR=sp(0.065,7,0xffffff); eWR.position.set(0.12,1.75,0.225); g.add(eWR);
-  var ePL=sp(0.038,6,0x080818); ePL.position.set(-0.12,1.75,0.258); g.add(ePL);
-  var ePR=sp(0.038,6,0x080818); ePR.position.set(0.12,1.75,0.258); g.add(ePR);
+  groupAdd(g, S(0.065, 7, wh), -0.12, 1.75, 0.225);
+  groupAdd(g, S(0.065, 7, wh),  0.12, 1.75, 0.225);
+  groupAdd(g, S(0.038, 6, 0x080818), -0.12, 1.75, 0.258);
+  groupAdd(g, S(0.038, 6, 0x080818),  0.12, 1.75, 0.258);
   // Eyebrows
-  var ebL=bx(0.1,0.025,0.015,0x1e0e04); ebL.position.set(-0.12,1.815,0.228); ebL.rotation.z=0.15; g.add(ebL);
-  var ebR=bx(0.1,0.025,0.015,0x1e0e04); ebR.position.set(0.12,1.815,0.228); ebR.rotation.z=-0.15; g.add(ebR);
+  var ebL2 = B(0.1, 0.025, 0.015, br); ebL2.rotation.z =  0.15; groupAdd(g, ebL2, -0.12, 1.815, 0.228);
+  var ebR2 = B(0.1, 0.025, 0.015, br); ebR2.rotation.z = -0.15; groupAdd(g, ebR2,  0.12, 1.815, 0.228);
   // Nose
-  var nose=sp(0.04,6,skinCol); nose.position.set(0,1.7,0.245); g.add(nose);
+  groupAdd(g, S(0.04, 6, sk), 0, 1.70, 0.245);
   // Smile
-  var smile=new THREE.Mesh(new THREE.TorusGeometry(0.09,0.016,5,10,Math.PI),new THREE.MeshBasicMaterial({color:0x771100}));
-  smile.rotation.z=Math.PI; smile.position.set(0,1.635,0.228); g.add(smile);
+  var smileG = new THREE.Mesh(new THREE.TorusGeometry(0.09, 0.016, 5, 10, Math.PI),
+    new THREE.MeshBasicMaterial({color: 0x771100}));
+  smileG.rotation.z = Math.PI;
+  smileG.position.set(0, 1.635, 0.228);
+  g.add(smileG);
 
   // Accessories
-  if(def.acc==='crown'||def.icon==='⭐'){
-    var crownB=cy(0.24,0.2,0.2,6,0xffd700); crownB.position.set(0,1.98,0); g.add(crownB);
-    for(var ci=0;ci<6;ci++){var ca=(ci/6)*Math.PI*2; var cp=new THREE.Mesh(new THREE.ConeGeometry(0.05,0.18,4),new THREE.MeshLambertMaterial({color:0xffd700})); cp.position.set(Math.cos(ca)*0.2,2.1,Math.sin(ca)*0.2); g.add(cp);}
-    var gem2=sp(0.06,6,0xff2255,0xff2255,0.5); gem2.position.set(0,2.12,0); g.add(gem2);
+  if (def.acc === 'crown') {
+    var cb = C(0.24, 0.20, 0.20, 6, 0xffd700); groupAdd(g, cb, 0, 1.98, 0);
+    for (var ci3 = 0; ci3 < 6; ci3++) {
+      var ca2 = (ci3 / 6) * Math.PI * 2;
+      var cp2 = Cone(0.05, 0.18, 4, 0xffd700);
+      cp2.position.set(Math.cos(ca2)*0.2, 2.10, Math.sin(ca2)*0.2);
+      g.add(cp2);
+    }
+    groupAdd(g, S(0.06, 6, 0xff2255, 0xff2255, 0.5), 0, 2.12, 0);
   }
-  if(def.acc==='fedora'){
-    var fedBrim2=cy(0.36,0.38,0.06,10,0x2a1a0a); fedBrim2.position.set(0,1.965,0); g.add(fedBrim2);
-    var fedTop2=cy(0.2,0.22,0.28,10,0x2a1a0a); fedTop2.position.set(0,2.1,0); g.add(fedTop2);
+  if (def.acc === 'fedora') {
+    groupAdd(g, C(0.36, 0.38, 0.06, 10, 0x2a1a0a), 0, 1.965, 0);
+    groupAdd(g, C(0.20, 0.22, 0.28, 10, 0x2a1a0a), 0, 2.10,  0);
   }
-  if(def.acc==='helmet'){
-    var hBase=sp(0.28,10,0x336644); hBase.scale.y=0.75; hBase.position.set(0,1.97,0); g.add(hBase);
+  if (def.acc === 'helmet') {
+    var hb2 = S(0.28, 10, 0x336644); hb2.scale.y = 0.75; groupAdd(g, hb2, 0, 1.97, 0);
   }
-  if(def.acc==='party'){
-    var pc=new THREE.Mesh(new THREE.ConeGeometry(0.18,0.45,8),new THREE.MeshLambertMaterial({color:0xff44bb})); pc.position.set(0,2.15,0); g.add(pc);
+  if (def.acc === 'party') {
+    groupAdd(g, Cone(0.18, 0.45, 8, 0xff44bb), 0, 2.15, 0);
   }
-  if(def.acc==='flag'){
-    var fp=cy(0.025,0.025,1.0,5,0xcccccc); fp.position.set(0.44,1.35,0); g.add(fp);
-    var ffl=mkPlane(0.38,0.25,0x005293); ffl.position.set(0.63,1.72,0); g.add(ffl);
-    var fst=mkPlane(0.38,0.07,0xfecc00); fst.position.set(0.63,1.72,0.02); g.add(fst);
+  if (def.acc === 'flag') {
+    groupAdd(g, C(0.025, 0.025, 1.0, 5, 0xcccccc), 0.44, 1.35, 0);
+    var ffl3 = new THREE.Mesh(new THREE.PlaneGeometry(0.38, 0.25), new THREE.MeshBasicMaterial({color:0x005293,side:THREE.DoubleSide}));
+    ffl3.position.set(0.63, 1.72, 0); g.add(ffl3);
+    var fst3 = new THREE.Mesh(new THREE.PlaneGeometry(0.38, 0.07), new THREE.MeshBasicMaterial({color:0xfecc00,side:THREE.DoubleSide}));
+    fst3.position.set(0.63, 1.72, 0.02); g.add(fst3);
   }
-  if(def.acc==='mic'){
-    var mb=sp(0.085,7,0x888888); mb.position.set(-0.46,1.18,0); g.add(mb);
-    var ms=cy(0.025,0.025,0.28,5,0x666666); ms.position.set(-0.46,0.96,0); g.add(ms);
+  if (def.acc === 'mic') {
+    groupAdd(g, S(0.085, 7, 0x888888), -0.46, 1.18, 0);
+    groupAdd(g, C(0.025, 0.025, 0.28, 5, 0x666666), -0.46, 0.96, 0);
   }
 
-  // Glow circle
-  var gc=new THREE.Mesh(new THREE.CircleGeometry(0.65,14),new THREE.MeshBasicMaterial({color:bodyCol,transparent:true,opacity:0.22,side:THREE.DoubleSide}));
-  gc.rotation.x=-Math.PI/2; gc.position.y=0.01; g.add(gc);
+  // Glow ring
+  var gcm = new THREE.Mesh(new THREE.CircleGeometry(0.7, 14),
+    new THREE.MeshBasicMaterial({color: bc, transparent: true, opacity: 0.25, side: THREE.DoubleSide}));
+  gcm.rotation.x = -Math.PI / 2;
+  gcm.position.set(0, 0.02, 0);
+  g.add(gcm);
+
   // Point light
-  var pl2=new THREE.PointLight(bodyCol,0.8,5); pl2.position.set(0,1.2,0); g.add(pl2);
-  // Name dot
-  var nd=sp(0.09,6,bodyCol,bodyCol,0.6); nd.position.set(0,2.45,0); nd.name='namedot'; g.add(nd);
+  var jl = new THREE.PointLight(bc, 0.8, 5);
+  jl.position.set(0, 1.2, 0);
+  g.add(jl);
 
-  g.userData.legL=lL; g.userData.legR=lR; g.userData.armL=aL; g.userData.armR=aR; g.userData.shoeL=sL; g.userData.shoeR=sR;
-  g.scale.setScalar(sc);
+  // Floating name dot
+  var nd2 = S(0.09, 6, bc, bc, 0.6);
+  nd2.position.set(0, 2.5, 0);
+  nd2.name = 'namedot';
+  g.add(nd2);
+
+  // Store limb refs for animation
+  g.userData.legL  = legL;
+  g.userData.legR  = legR;
+  g.userData.armL  = armL;
+  g.userData.armR  = armR;
+
+  g.scale.setScalar(def.sc || 1.0);
   return g;
 }
 
-// ── Spawn Jimmies ─────────────────────────────────────────────
-// They all start beyond ROAD_Z_SPAWN, staggered
-function spawnWanderers(){
-  JIMMIES.forEach(function(def,idx){
-    var g=buildJimmieMesh(def);
-    var startZ=ROAD_Z_SPAWN + idx*3.5; // staggered beyond spawn portal
-    var xOff=(Math.random()-0.5)*1.2;
-    g.position.set(xOff,0,startZ);
-    g.rotation.y=Math.PI; // face negative Z (toward despawn)
-    scene.add(g);
-    wanderers.push({
-      mesh:g, def:def, xOff:xOff, z:startZ,
-      spd:1.4+Math.random()*0.5,
-      bobPhase:Math.random()*Math.PI*2,
-      wobble:Math.random()*Math.PI*2,
-      recruited:false, movingToGarage:false,
-      targetX:0, targetZ:0,
-      despawned:false,
-    });
+// ── Wanderer spawning ─────────────────────────────────────────
+// Jimmies spawn continuously, cycling through types
+var spawnTimer2    = 0;
+var spawnInterval  = 3.5;  // seconds between spawns
+var spawnCycleIdx  = 0;
+// Spawn order: weighted so rarer ones appear less often
+var spawnOrder = [0,1,0,2,1,3,0,4,2,5,1,6,3,0,7,2,4,1,8,0,9,3,0,1,2];
+
+function spawnNext() {
+  var defIdx = spawnOrder[spawnCycleIdx % spawnOrder.length];
+  spawnCycleIdx++;
+  var def = JIMMIES[defIdx];
+  var mesh = buildJimmieMesh(def);
+  var xOff = (Math.random() - 0.5) * 1.2;
+  mesh.position.set(xOff, 0, ROAD_SPAWN + 1);
+  mesh.rotation.y = Math.PI;
+  scene.add(mesh);
+  wanderers.push({
+    mesh:   mesh,
+    def:    def,
+    defIdx: defIdx,
+    xOff:   xOff,
+    z:      ROAD_SPAWN + 1,
+    spd:    1.3 + Math.random() * 0.5,
+    bobP:   Math.random() * Math.PI * 2,
+    wobble: Math.random() * Math.PI * 2,
+    recruited: false,
+    despawned:  false,
+    movingToSlot: false,
+    targetSlotIdx: -1,
   });
 }
 
+// ── Find free garage slot ─────────────────────────────────────
+function findFreeSlot() {
+  for (var i = 0; i < garageSlots.length; i++) {
+    if (!garageSlots[i].jimmie) return i;
+  }
+  return -1;
+}
+
 // ── Recruit ───────────────────────────────────────────────────
-function recruitJimmie(w){
-  if(w.recruited||w.despawned) return;
-  w.recruited=true; recruited++; money+=w.def.cost;
-  document.getElementById('pname').textContent=w.def.icon+'  '+w.def.name;
-  document.getElementById('pdesc').textContent=w.def.desc+'\n+'+w.def.cost+' kr!  ('+recruited+' / 10)';
-  document.getElementById('popup').style.display='block';
-  popupTimer=3.0;
-  document.getElementById('hcount').textContent=recruited+' / 10';
-  document.getElementById('hmoney').textContent=money+' kr';
-  document.getElementById('progbar-fill').style.width=(recruited/10*100)+'%';
-  nearJimmie=null;
-  document.getElementById('rhint').style.display='none';
-  explodeParts(w.mesh.position,w.def.col,18);
-  // Place inside garage
-  var angle=(recruited/10)*Math.PI*1.5;
-  var rad=1.5+Math.random()*2;
-  w.targetX=GARAGE_X+Math.cos(angle)*rad;
-  w.targetZ=GARAGE_Z+Math.sin(angle)*rad;
-  w.movingToGarage=true;
-  if(recruited>=10){
-    setTimeout(function(){
-      document.getElementById('winmsg').textContent='Du rekryterade alla 10 Jimmies och samlade '+money+' kr! Garaget svämmar över!';
-      document.getElementById('winscreen').style.display='flex';
-    },2200);
+function recruitJimmie(w) {
+  if (w.recruited || w.despawned) return;
+  var slotIdx = findFreeSlot();
+  if (slotIdx === -1) {
+    showPopup('Garaget är fullt!', 'Sälj en Jimmie med Q för att göra plats.', null);
+    return;
+  }
+  w.recruited = true;
+  w.movingToSlot = true;
+  w.targetSlotIdx = slotIdx;
+
+  var slot = garageSlots[slotIdx];
+  slot.jimmie = w;
+  // Color the platform top with rarity color
+  slot.platTop.material = new THREE.MeshLambertMaterial({
+    color: w.def.col, emissive: w.def.col, emissiveIntensity: 0.18
+  });
+
+  money += w.def.cost;
+  showPopup(w.def.icon + '  ' + w.def.name, rarityLabel(w.def.rarity) + '\n+' + w.def.cost + ' kr rekryterad!', w.def.col);
+
+  nearJimmie = null;
+  document.getElementById('rhint').style.display = 'none';
+
+  explodeParts(w.mesh.position, w.def.col, 16);
+  updateHUD();
+}
+
+// ── Sell closest garage jimmie ────────────────────────────────
+function sellClosestGarageJimmie() {
+  // Find occupied slot closest to player
+  var bestSlot = null, bestDist = 5.0;
+  garageSlots.forEach(function(slot) {
+    if (!slot.jimmie) return;
+    var dx = cam.position.x - slot.x;
+    var dz = cam.position.z - slot.z;
+    var d = Math.sqrt(dx*dx + dz*dz);
+    if (d < bestDist) { bestDist = d; bestSlot = slot; }
+  });
+  if (!bestSlot) return;
+  var w = bestSlot.jimmie;
+  var sellAmt = w.def.sell;
+  money += sellAmt;
+  // Remove from scene
+  scene.remove(w.mesh);
+  // Clear slot
+  bestSlot.jimmie = null;
+  bestSlot.platTop.material = new THREE.MeshLambertMaterial({color: 0x444466});
+  // Remove from wanderers so it's gone
+  w.despawned = true;
+  showPopup('Sålde ' + w.def.name, '−' + w.def.icon + '  +' + sellAmt + ' kr', 0xef4444);
+  explodeParts(new THREE.Vector3(bestSlot.x, 1, bestSlot.z), 0xef4444, 10);
+  updateHUD();
+}
+
+// ── Win check ────────────────────────────────────────────────
+function checkWin() {
+  if (winCondMet) return;
+  // Win = have at least one Legendary AND one Epic in garage
+  var hasLeg = false, hasEpic = false;
+  garageSlots.forEach(function(slot) {
+    if (!slot.jimmie) return;
+    if (slot.jimmie.def.rarity === RARE.LEGENDARY) hasLeg = true;
+    if (slot.jimmie.def.rarity === RARE.EPIC)      hasEpic = true;
+  });
+  if (hasLeg && hasEpic) {
+    winCondMet = true;
+    setTimeout(function() {
+      document.getElementById('winmsg').textContent =
+        'Du har en Legendary och en Epic Jimmie i garaget! Totalt ' + money + ' kr tjänat!';
+      document.getElementById('winscreen').style.display = 'flex';
+    }, 1800);
   }
 }
 
+// ── Popup ─────────────────────────────────────────────────────
+function showPopup(title, desc, col) {
+  document.getElementById('pname').textContent = title;
+  document.getElementById('pname').style.color = col ? '#' + col.toString(16).padStart(6,'0') : 'var(--y)';
+  document.getElementById('pdesc').textContent = desc;
+  document.getElementById('popup').style.display = 'block';
+  popupTimer = 3.0;
+}
+
+function rarityLabel(r) {
+  var colors = {Common:'#9e9e9e',Uncommon:'#4ade80',Rare:'#60a5fa',Epic:'#c084fc',Legendary:'#fecc00'};
+  return r;
+}
+
 // ── Particles ─────────────────────────────────────────────────
-function explodeParts(pos,col,n){
-  for(var i=0;i<n;i++){
-    var pm=new THREE.Mesh(new THREE.SphereGeometry(0.08+Math.random()*0.07,4,4),
-      new THREE.MeshBasicMaterial({color:col,transparent:true}));
-    pm.position.set(pos.x,pos.y+0.8+Math.random()*0.4,pos.z);
+function explodeParts(pos, col, n) {
+  for (var i = 0; i < (n||8); i++) {
+    var pm = new THREE.Mesh(
+      new THREE.SphereGeometry(0.08 + Math.random()*0.07, 4, 4),
+      new THREE.MeshBasicMaterial({color: col, transparent: true})
+    );
+    pm.position.set(pos.x, pos.y + 0.5 + Math.random()*0.5, pos.z);
     scene.add(pm);
-    particles.push({mesh:pm,vx:(Math.random()-0.5)*0.18,vy:0.1+Math.random()*0.18,vz:(Math.random()-0.5)*0.18,life:1.0});
+    particles.push({
+      mesh: pm,
+      vx: (Math.random()-0.5)*0.18,
+      vy: 0.1 + Math.random()*0.16,
+      vz: (Math.random()-0.5)*0.18,
+      life: 1.0
+    });
   }
 }
 
 // ── Controls ──────────────────────────────────────────────────
-var keys2={};
-document.addEventListener('keydown',function(e){
-  keys2[e.code]=true;
-  if(e.code==='KeyE'&&nearJimmie&&!nearJimmie.recruited) recruitJimmie(nearJimmie);
-  if(e.code==='Escape') toggleMenu();
+var keys3 = {};
+document.addEventListener('keydown', function(e) {
+  keys3[e.code] = true;
+  if (e.code === 'KeyE' && nearJimmie && !nearJimmie.recruited && !nearJimmie.despawned) {
+    recruitJimmie(nearJimmie);
+  }
+  if (e.code === 'KeyQ') {
+    sellClosestGarageJimmie();
+  }
+  if (e.code === 'Escape') togglePause();
 });
-document.addEventListener('keyup',function(e){ keys2[e.code]=false; });
+document.addEventListener('keyup', function(e) { keys3[e.code] = false; });
 
-var yaw=0,pitch=0;
-canvas.addEventListener('click',function(){ if(gameOn&&!paused) canvas.requestPointerLock(); });
-document.addEventListener('pointerlockchange',function(){
-  mouseLocked=document.pointerLockElement===canvas;
-  if(gameOn) document.getElementById('lockprompt').style.display=mouseLocked?'none':'block';
+var yaw3 = 0, pitch3 = 0;
+canvas.addEventListener('click', function() {
+  if (gameStarted && !paused) canvas.requestPointerLock();
 });
-document.addEventListener('mousemove',function(e){
-  if(!mouseLocked||paused) return;
-  yaw  -=e.movementX*0.002;
-  pitch =Math.max(-1.1,Math.min(1.1,pitch-e.movementY*0.002));
+document.addEventListener('pointerlockchange', function() {
+  mouseLocked = document.pointerLockElement === canvas;
+  var lp = document.getElementById('lockprompt');
+  if (lp) lp.style.display = (gameStarted && !mouseLocked) ? 'block' : 'none';
+});
+document.addEventListener('mousemove', function(e) {
+  if (!mouseLocked || paused) return;
+  yaw3   -= e.movementX * 0.002;
+  pitch3  = Math.max(-1.1, Math.min(1.1, pitch3 - e.movementY * 0.002));
 });
 
-function toggleMenu(){
-  if(!gameOn) return;
-  paused=!paused;
-  if(paused){
+// Pause / menu
+function togglePause() {
+  if (!gameStarted) return;
+  paused = !paused;
+  if (paused) {
     document.exitPointerLock();
-    document.getElementById('startscreen').style.display='flex';
-    document.getElementById('startbtn').textContent='▶ FORTSÄTT';
+    document.getElementById('startscreen').style.display = 'flex';
+    document.getElementById('startbtn').textContent = '▶ FORTSÄTT';
   } else {
-    document.getElementById('startscreen').style.display='none';
+    document.getElementById('startscreen').style.display = 'none';
     canvas.requestPointerLock();
   }
 }
-document.getElementById('pausebtn').addEventListener('click',toggleMenu);
+document.getElementById('pausebtn').addEventListener('click', togglePause);
 
 // Collision
-function blocked(nx,nz){
-  // Garage walls (rough bounding box)
-  if(nx>GARAGE_X-5.5&&nx<GARAGE_X+5.5&&nz>GARAGE_Z-6.5&&nz<GARAGE_Z+5.5) return true;
-  if(Math.abs(nx)>38||nz>28||nz<-28) return true;
+function isBlocked3(nx, nz) {
+  // Inside garage walls (but allow entering through open front)
+  var relX = nx - GX, relZ = nz - GZ;
+  var frontZ = GD/2;
+  if (relX > -GW/2 + 0.8 && relX < GW/2 - 0.8 && relZ < frontZ - 0.3 && relZ > -GD/2 + 0.8) {
+    // Inside garage — allowed
+  } else if (relX > -GW/2 && relX < GW/2 && relZ < -GD/2) {
+    return true; // behind garage
+  } else if ((relX < -GW/2 || relX > GW/2) && Math.abs(relZ) < GD/2) {
+    return true; // garage side walls
+  }
+  if (Math.abs(nx) > 38 || nz > 26 || nz < -26) return true;
   return false;
 }
 
-var clock=new THREE.Clock();
+// HUD
+function updateHUD() {
+  var occ = garageSlots.filter(function(s){return s.jimmie;}).length;
+  document.getElementById('hcount').textContent = occ + '/10';
+  document.getElementById('hmoney').textContent = money + ' kr';
+  document.getElementById('progfill').style.width = (occ/10*100) + '%';
+  document.getElementById('proglbl').textContent = 'Plattformar i garaget (' + occ + '/10)';
+}
 
-// Start
-document.getElementById('startbtn').addEventListener('click',function(){
-  if(!gameOn){
-    gameOn=true;
-    spawnWanderers();
-    clock.start();
-    document.getElementById('hud').style.display='block';
-    document.getElementById('lockprompt').style.display='block';
-    document.getElementById('startscreen').style.display='none';
+// ── Clock & Loop ──────────────────────────────────────────────
+var clock2 = new THREE.Clock();
+clock2.start(); // start immediately so getDelta works from frame 1
+
+// Start button
+document.getElementById('startbtn').addEventListener('click', function() {
+  if (!gameStarted) {
+    gameStarted = true;
+    document.getElementById('hud').style.display = 'block';
+    document.getElementById('startscreen').style.display = 'none';
+    document.getElementById('lockprompt').style.display = 'block';
     canvas.requestPointerLock();
-  } else if(paused){
-    toggleMenu();
+    updateHUD();
+  } else if (paused) {
+    togglePause();
   }
 });
 
-// ── MAIN LOOP ─────────────────────────────────────────────────
-function loop(){
+function loop() {
   requestAnimationFrame(loop);
-  var dt=Math.min(clock.getDelta(),0.05);
-  var elapsed=clock.getElapsedTime();
-  if(!gameOn||paused){ renderer.render(scene,cam); return; }
+  var dt = Math.min(clock2.getDelta(), 0.05);
+  var elapsed = clock2.getElapsedTime();
+
+  if (!gameStarted || paused) { renderer.render(scene, cam); return; }
 
   // Passive income
-  incomeTimer+=dt;
-  if(incomeTimer>=5){ incomeTimer=0; money+=25+recruited*8; document.getElementById('hmoney').textContent=money+' kr'; }
+  incomeTimer += dt;
+  if (incomeTimer >= 6) {
+    incomeTimer = 0;
+    var occ2 = garageSlots.filter(function(s){return s.jimmie;}).length;
+    money += 20 + occ2 * 5;
+    updateHUD();
+  }
+
+  // Spawn new wanderers
+  spawnTimer2 += dt;
+  if (spawnTimer2 >= spawnInterval && wanderers.filter(function(w){return !w.despawned&&!w.recruited;}).length < 6) {
+    spawnTimer2 = 0;
+    spawnNext();
+  }
 
   // Player movement
-  var spd=(keys2['ShiftLeft']||keys2['ShiftRight'])?9.5:5.5;
-  var fX=Math.sin(yaw),fZ=Math.cos(yaw),rX=Math.cos(yaw),rZ=-Math.sin(yaw);
-  var mvx=0,mvz=0;
-  if(keys2['KeyW']||keys2['ArrowUp'])   {mvx-=fX;mvz-=fZ;}
-  if(keys2['KeyS']||keys2['ArrowDown']) {mvx+=fX;mvz+=fZ;}
-  if(keys2['KeyA']||keys2['ArrowLeft']) {mvx-=rX;mvz-=rZ;}
-  if(keys2['KeyD']||keys2['ArrowRight']){mvx+=rX;mvz+=rZ;}
-  var mlen=Math.sqrt(mvx*mvx+mvz*mvz);
-  if(mlen>0){
-    mvx=mvx/mlen*spd*dt; mvz=mvz/mlen*spd*dt;
-    var nx=cam.position.x+mvx, nz=cam.position.z+mvz;
-    if(!blocked(nx,cam.position.z)) cam.position.x=nx;
-    if(!blocked(cam.position.x,nz)) cam.position.z=nz;
+  var spd3 = (keys3['ShiftLeft'] || keys3['ShiftRight']) ? 9 : 5.5;
+  var fX2 = Math.sin(yaw3), fZ2 = Math.cos(yaw3);
+  var rX2 = Math.cos(yaw3), rZ2 = -Math.sin(yaw3);
+  var mx2 = 0, mz2 = 0;
+  if (keys3['KeyW'] || keys3['ArrowUp'])    { mx2 -= fX2; mz2 -= fZ2; }
+  if (keys3['KeyS'] || keys3['ArrowDown'])  { mx2 += fX2; mz2 += fZ2; }
+  if (keys3['KeyA'] || keys3['ArrowLeft'])  { mx2 -= rX2; mz2 -= rZ2; }
+  if (keys3['KeyD'] || keys3['ArrowRight']) { mx2 += rX2; mz2 += rZ2; }
+  var ml2 = Math.sqrt(mx2*mx2 + mz2*mz2);
+  if (ml2 > 0) {
+    mx2 = mx2/ml2*spd3*dt; mz2 = mz2/ml2*spd3*dt;
+    var nx3 = cam.position.x + mx2, nz3 = cam.position.z + mz2;
+    if (!isBlocked3(nx3, cam.position.z)) cam.position.x = nx3;
+    if (!isBlocked3(cam.position.x, nz3)) cam.position.z = nz3;
   }
   // Head bob
-  cam.position.y=mlen>0?1.75+Math.sin(elapsed*9)*0.03:1.75+(cam.position.y-1.75)*Math.max(0,1-dt*8);
-  cam.rotation.order='YXZ'; cam.rotation.y=yaw; cam.rotation.x=pitch;
+  if (ml2 > 0) {
+    cam.position.y = 1.75 + Math.sin(elapsed * 9) * 0.03;
+  } else {
+    cam.position.y += (1.75 - cam.position.y) * Math.min(1, dt * 8);
+  }
+  cam.rotation.order = 'YXZ';
+  cam.rotation.y = yaw3;
+  cam.rotation.x = pitch3;
 
   // Animate wanderers
-  var closest=null,closestD=Infinity;
-  wanderers.forEach(function(w,wi){
-    if(w.despawned) return;
-    var mesh=w.mesh;
+  var closestW = null, closestWD = Infinity;
+  for (var wi3 = wanderers.length - 1; wi3 >= 0; wi3--) {
+    var w = wanderers[wi3];
+    if (w.despawned) { wanderers.splice(wi3, 1); continue; }
 
-    if(w.recruited){
-      if(w.movingToGarage){
-        var dx=w.targetX-mesh.position.x, dz=w.targetZ-mesh.position.z;
-        var d=Math.sqrt(dx*dx+dz*dz);
-        if(d>0.2){
-          mesh.position.x+=dx/d*3.5*dt; mesh.position.z+=dz/d*3.5*dt;
-          mesh.rotation.y=Math.atan2(dx,dz);
-          w.bobPhase+=dt*6;
-          mesh.position.y=Math.abs(Math.sin(w.bobPhase))*0.1;
-          if(mesh.userData.legL){mesh.userData.legL.rotation.x=Math.sin(w.bobPhase)*0.45;mesh.userData.legR.rotation.x=-Math.sin(w.bobPhase)*0.45;}
-        } else {
-          w.movingToGarage=false; mesh.position.y=0;
+    var mesh = w.mesh;
+
+    if (w.recruited) {
+      if (w.movingToSlot) {
+        var slot2 = garageSlots[w.targetSlotIdx];
+        if (slot2) {
+          var tdx = slot2.x - mesh.position.x;
+          var tdz = slot2.z - mesh.position.z;
+          var td = Math.sqrt(tdx*tdx + tdz*tdz);
+          if (td > 0.25) {
+            mesh.position.x += tdx/td * 4 * dt;
+            mesh.position.z += tdz/td * 4 * dt;
+            mesh.rotation.y = Math.atan2(tdx, tdz);
+            w.bobP += dt * 6;
+            mesh.position.y = Math.abs(Math.sin(w.bobP)) * 0.1;
+            if (w.mesh.userData.legL) {
+              w.mesh.userData.legL.rotation.x =  Math.sin(w.bobP) * 0.4;
+              w.mesh.userData.legR.rotation.x = -Math.sin(w.bobP) * 0.4;
+            }
+          } else {
+            w.movingToSlot = false;
+            mesh.position.x = slot2.x;
+            mesh.position.z = slot2.z;
+            mesh.position.y = 0.22;
+            mesh.rotation.y = -Math.PI / 2; // face road
+          }
         }
       } else {
-        // Happy idle inside garage
-        mesh.position.y=Math.abs(Math.sin(elapsed*1.8+wi))*0.07;
-        mesh.rotation.y+=dt*0.5;
+        // Idle on platform
+        mesh.position.y = 0.22 + Math.sin(elapsed * 2 + wi3) * 0.04;
+        mesh.rotation.y += dt * 0.5;
       }
-      return;
+      continue;
     }
 
-    // Walk from spawn toward despawn (decreasing Z)
-    w.bobPhase+=dt*w.spd*2.8; w.wobble+=dt*0.5;
-    w.z-=w.spd*dt;
-    mesh.position.x=w.xOff+Math.sin(w.wobble)*0.1;
-    mesh.position.z=w.z;
-    mesh.position.y=Math.abs(Math.sin(w.bobPhase))*0.12;
-    mesh.rotation.y=Math.PI+Math.sin(elapsed*0.4+wi*0.9)*0.06;
+    // Walk down road (decreasing Z)
+    w.bobP   += dt * w.spd * 2.8;
+    w.wobble += dt * 0.5;
+    w.z -= w.spd * dt;
+    mesh.position.x = w.xOff + Math.sin(w.wobble) * 0.1;
+    mesh.position.z = w.z;
+    mesh.position.y = Math.abs(Math.sin(w.bobP)) * 0.12;
+    mesh.rotation.y = Math.PI;
 
-    // Walk anim
-    if(mesh.userData.legL){
-      mesh.userData.legL.rotation.x=Math.sin(w.bobPhase*2)*0.45;
-      mesh.userData.legR.rotation.x=-Math.sin(w.bobPhase*2)*0.45;
-      mesh.userData.shoeL.rotation.x=Math.sin(w.bobPhase*2+0.3)*0.25;
-      mesh.userData.shoeR.rotation.x=-Math.sin(w.bobPhase*2+0.3)*0.25;
-      mesh.userData.armL.rotation.x=-Math.sin(w.bobPhase*2)*0.35;
-      mesh.userData.armR.rotation.x=Math.sin(w.bobPhase*2)*0.35;
-    }
-    var nd=mesh.getObjectByName('namedot');
-    if(nd) nd.position.y=2.45+Math.sin(elapsed*3.5+wi)*0.1;
-
-    // Despawn if past the portal
-    if(w.z<ROAD_Z_DESPAWN-1){
-      w.despawned=true; scene.remove(mesh);
-      return;
+    // Walk animation
+    if (mesh.userData.legL) {
+      mesh.userData.legL.rotation.x =  Math.sin(w.bobP * 2) * 0.45;
+      mesh.userData.legR.rotation.x = -Math.sin(w.bobP * 2) * 0.45;
+      mesh.userData.armL.rotation.x = -Math.sin(w.bobP * 2) * 0.35;
+      mesh.userData.armR.rotation.x =  Math.sin(w.bobP * 2) * 0.35;
     }
 
-    // Distance to player
-    var pdx=cam.position.x-mesh.position.x, pdz=cam.position.z-mesh.position.z;
-    var pd=Math.sqrt(pdx*pdx+pdz*pdz);
-    if(pd<closestD){closestD=pd;closest=w;}
-  });
+    // Name dot bob
+    var nd3 = mesh.getObjectByName('namedot');
+    if (nd3) nd3.position.y = 2.5 + Math.sin(elapsed * 3.5 + wi3) * 0.1;
+
+    // Despawn
+    if (w.z < ROAD_DESPAWN - 1) {
+      w.despawned = true;
+      scene.remove(mesh);
+      continue;
+    }
+
+    // Distance to player for recruit hint
+    var pdx3 = cam.position.x - mesh.position.x;
+    var pdz3 = cam.position.z - mesh.position.z;
+    var pd3  = Math.sqrt(pdx3*pdx3 + pdz3*pdz3);
+    if (pd3 < closestWD) { closestWD = pd3; closestW = w; }
+  }
 
   // Recruit hint
-  if(closestD<3.8&&closest&&!closest.recruited&&!closest.despawned){
-    nearJimmie=closest;
-    var hint=document.getElementById('rhint');
-    hint.style.display='block';
-    hint.innerHTML='<span style="font-size:1.2rem">'+closest.def.icon+'</span>  Tryck <strong>E</strong> — '+closest.def.name+'<br><small style="opacity:0.65">'+closest.def.cost+' kr</small>';
+  var hint = document.getElementById('rhint');
+  if (closestWD < 3.8 && closestW) {
+    nearJimmie = closestW;
+    hint.style.display = 'block';
+    var rc = closestW.def.col.toString(16).padStart(6,'0');
+    hint.innerHTML = closestW.def.icon + '  <strong>E</strong> — Rekrytera <span style="color:#'+rc+'">' + closestW.def.name + '</span><br><small style="opacity:.65">' + closestW.def.rarity + ' · ' + closestW.def.cost + ' kr</small>';
   } else {
-    nearJimmie=null;
-    document.getElementById('rhint').style.display='none';
+    nearJimmie = null;
+    hint.style.display = 'none';
+  }
+
+  // Q-sell hint (nearest occupied slot)
+  var qhint = document.getElementById('qhint');
+  var qBest = null, qBestD = 4.5;
+  garageSlots.forEach(function(slot) {
+    if (!slot.jimmie || slot.jimmie.movingToSlot) return;
+    var dx4 = cam.position.x - slot.x, dz4 = cam.position.z - slot.z;
+    var d4 = Math.sqrt(dx4*dx4 + dz4*dz4);
+    if (d4 < qBestD) { qBestD = d4; qBest = slot; }
+  });
+  if (qBest) {
+    qhint.style.display = 'block';
+    qhint.textContent = 'Q — Sälj ' + qBest.jimmie.def.name + ' (+' + qBest.jimmie.def.sell + ' kr)';
+  } else {
+    qhint.style.display = 'none';
   }
 
   // Popup timer
-  if(popupTimer>0){popupTimer-=dt;if(popupTimer<=0)document.getElementById('popup').style.display='none';}
-
-  // Particles
-  for(var pi=particles.length-1;pi>=0;pi--){
-    var p=particles[pi]; p.life-=dt*1.6; p.vx*=0.97; p.vy-=dt*0.4; p.vz*=0.97;
-    p.mesh.position.x+=p.vx; p.mesh.position.y+=p.vy; p.mesh.position.z+=p.vz;
-    p.mesh.material.opacity=p.life;
-    if(p.life<=0){scene.remove(p.mesh);particles.splice(pi,1);}
+  if (popupTimer > 0) {
+    popupTimer -= dt;
+    if (popupTimer <= 0) document.getElementById('popup').style.display = 'none';
   }
 
-  // Animate portal glows
-  var glow=0.8+Math.sin(elapsed*3)*0.4;
-  spawnLight.intensity=glow*2; despawnLight.intensity=glow*2;
+  // Particles
+  for (var pi2 = particles.length - 1; pi2 >= 0; pi2--) {
+    var p3 = particles[pi2];
+    p3.life -= dt * 1.6;
+    p3.vx *= 0.97; p3.vy -= dt * 0.4; p3.vz *= 0.97;
+    p3.mesh.position.x += p3.vx;
+    p3.mesh.position.y += p3.vy;
+    p3.mesh.position.z += p3.vz;
+    p3.mesh.material.opacity = p3.life;
+    if (p3.life <= 0) { scene.remove(p3.mesh); particles.splice(pi2, 1); }
+  }
 
-  renderer.render(scene,cam);
+  // Portal pulse
+  var glow2 = 0.8 + Math.sin(elapsed * 3) * 0.5;
+  spawnPL.intensity   = glow2 * 2.5;
+  despawnPL.intensity = glow2 * 2.5;
+
+  renderer.render(scene, cam);
 }
+
 loop();
 
-window.addEventListener('resize',function(){
-  cam.aspect=window.innerWidth/window.innerHeight;
+window.addEventListener('resize', function() {
+  cam.aspect = window.innerWidth / window.innerHeight;
   cam.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth,window.innerHeight);
+  renderer.setSize(window.innerWidth, window.innerHeight);
 });
 </script>
 </body>
