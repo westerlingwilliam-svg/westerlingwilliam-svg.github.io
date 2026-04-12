@@ -1117,33 +1117,35 @@ function loop() {
   var active = wanderers.filter(function(w){return !w.despawned&&!w.recruited;}).length;
   if (spawnTimer2 >= spawnInterval && active < 7) { spawnTimer2 = 0; spawnNext(); }
 
-  // Movement
-  var spd4 = (keys4['ShiftLeft']||keys4['ShiftRight']) ? 9 : 5.5;
-  var fX3=Math.sin(yaw4), fZ3=Math.cos(yaw4), rX3=Math.cos(yaw4), rZ3=-Math.sin(yaw4);
+  // ── Mouse look ─────────────────────────────────────────────
+  yaw4   -= mouseDX * 0.002;
+  pitch4  = Math.max(-1.1, Math.min(1.1, pitch4 - mouseDY * 0.002));
+  mouseDX = 0; mouseDY = 0;
+
+  // ── Movement ────────────────────────────────────────────────
+  var spd4 = SHIFT ? 9 : 5.5;
+  var fX3  = Math.sin(yaw4), fZ3 = Math.cos(yaw4);
+  var rX3  = Math.cos(yaw4), rZ3 = -Math.sin(yaw4);
   var mx3=0, mz3=0;
-  if(keys4['KeyW']||keys4['ArrowUp'])    {mx3-=fX3;mz3-=fZ3;}
-  if(keys4['KeyS']||keys4['ArrowDown'])  {mx3+=fX3;mz3+=fZ3;}
-  if(keys4['KeyA']||keys4['ArrowLeft'])  {mx3-=rX3;mz3-=rZ3;}
-  if(keys4['KeyD']||keys4['ArrowRight']) {mx3+=rX3;mz3+=rZ3;}
-  var ml3=Math.sqrt(mx3*mx3+mz3*mz3);
-  if(ml3>0){
-    mx3=mx3/ml3*spd4*dt; mz3=mz3/ml3*spd4*dt;
-    var nx4=cam.position.x+mx3, nz4=cam.position.z+mz3;
-    if(!isBlocked4(nx4,cam.position.z)) cam.position.x=nx4;
-    if(!isBlocked4(cam.position.x,nz4)) cam.position.z=nz4;
+  if(W)  { mx3 -= fX3; mz3 -= fZ3; }
+  if(S2) { mx3 += fX3; mz3 += fZ3; }
+  if(A)  { mx3 -= rX3; mz3 -= rZ3; }
+  if(D)  { mx3 += rX3; mz3 += rZ3; }
+  var ml3 = Math.sqrt(mx3*mx3 + mz3*mz3);
+  if(ml3 > 0){
+    mx3 = mx3/ml3*spd4*dt; mz3 = mz3/ml3*spd4*dt;
+    var nx4 = cam.position.x + mx3;
+    var nz4 = cam.position.z + mz3;
+    if(!isBlocked4(nx4, cam.position.z)) cam.position.x = nx4;
+    if(!isBlocked4(cam.position.x, nz4)) cam.position.z = nz4;
   }
-  // Jump + gravity
+
+  // ── Jump + gravity ───────────────────────────────────────────
   velY += GRAVITY * dt;
   cam.position.y += velY * dt;
-  if (cam.position.y <= 1.75) { cam.position.y=1.75; velY=0; isOnGround=true; }
-  // Head bob
-  if (isOnGround && ml3>0) cam.position.y = 1.75 + Math.sin(el*9)*0.025;
-  // Apply accumulated mouse movement (works for any polling rate)
-  var sens = 0.0022;
-  yaw4  -= mouseDX * sens;
-  pitch4 = Math.max(-1.1, Math.min(1.1, pitch4 - mouseDY * sens));
-  mouseDX = 0;
-  mouseDY = 0;
+  if(cam.position.y <= 1.75){ cam.position.y=1.75; velY=0; isOnGround=true; }
+  if(isOnGround && ml3>0) cam.position.y = 1.75 + Math.sin(el*9)*0.025;
+
   cam.rotation.order='YXZ'; cam.rotation.y=yaw4; cam.rotation.x=pitch4;
 
   // Animate wanderers
