@@ -324,28 +324,24 @@ var spawnOrder = [0,1,2,0,3,1,4,0,5,2,1,6,0,3,7,1,2,0,8,4,1,3,0,9,2,1,5,0,10,3,1
 // ── Renderer ───────────────────────────────────────────────────
 var canvas = document.getElementById('c');
 var renderer = new THREE.WebGLRenderer({canvas:canvas, antialias:true});
-renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.shadowMap.enabled = false;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.0;
 
 var scene = new THREE.Scene();
 scene.background = new THREE.Color(0x00050f);
-scene.fog = new THREE.FogExp2(0x001228, 0.022);
+scene.fog = new THREE.Fog(0x001228, 30, 80);
 
 var cam = new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHeight, 0.05, 200);
 cam.position.set(6, 1.75, 0);
 
 // ── Lights ─────────────────────────────────────────────────────
-scene.add(new THREE.AmbientLight(0x223355, 1.1));
+scene.add(new THREE.AmbientLight(0x334466, 1.6));
 var sun = new THREE.DirectionalLight(0xfff5cc, 1.7);
-sun.position.set(20,35,10); sun.castShadow = true;
-sun.shadow.camera.left=-45; sun.shadow.camera.right=45;
-sun.shadow.camera.top=45; sun.shadow.camera.bottom=-45;
-sun.shadow.camera.far=130; sun.shadow.mapSize.set(1024,1024);
-sun.shadow.bias=-0.001; scene.add(sun);
+sun.position.set(20,35,10); // sun.castShadow = false
+scene.add(sun);
 var fill1 = new THREE.DirectionalLight(0x0033aa, 0.5);
 fill1.position.set(-15,10,-8); scene.add(fill1);
 scene.add(new THREE.HemisphereLight(0x112244, 0x111111, 0.4));
@@ -357,16 +353,13 @@ function mkMat(col,em,ei){
   return m;
 }
 function Box(w,h,d,col,em,ei){
-  var m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mkMat(col,em,ei));
-  m.castShadow=true; m.receiveShadow=true; return m;
+  return new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mkMat(col,em,ei));
 }
 function Cyl(rt,rb,h,seg,col,em,ei){
-  var m=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg||10),mkMat(col,em,ei));
-  m.castShadow=true; return m;
+  return new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg||10),mkMat(col,em,ei));
 }
 function Sph(r,seg,col,em,ei){
-  var m=new THREE.Mesh(new THREE.SphereGeometry(r,seg||9,seg||9),mkMat(col,em,ei));
-  m.castShadow=true; return m;
+  return new THREE.Mesh(new THREE.SphereGeometry(r,seg||9,seg||9),mkMat(col,em,ei));
 }
 function place(mesh,x,y,z,rx,ry,rz){
   mesh.position.set(x,y,z);
@@ -403,7 +396,7 @@ for(var di=-10;di<=10;di++){
 // Pavement
 var pave=new THREE.Mesh(new THREE.PlaneGeometry(5,48),
   new THREE.MeshLambertMaterial({color:0x222233}));
-pave.rotation.x=-Math.PI/2; pave.position.set(5,0.06,0); pave.receiveShadow=true; scene.add(pave);
+pave.rotation.x=-Math.PI/2; pave.position.set(5,0.06,0); scene.add(pave);
 
 // ── SPAWN PORTAL (green, z=+22) ────────────────────────────────
 function makePortal(pz, col, label) {
@@ -428,13 +421,12 @@ var bulbMat = new THREE.MeshBasicMaterial({color:0xffffdd});
   [-1,1].forEach(function(side){
     var lx=side*4.6;
     var post=new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.1,5.5,6),lampMat);
-    post.position.set(lx,2.75,lz); post.castShadow=true; scene.add(post);
+    post.position.set(lx,2.75,lz); scene.add(post);
     var arm=new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.04,0.9,4),lampMat);
     arm.rotation.z=Math.PI/2; arm.position.set(lx+side*0.45,4.9,lz); scene.add(arm);
     var bulb=new THREE.Mesh(new THREE.SphereGeometry(0.18,6,6),bulbMat);
     bulb.position.set(lx+side*0.9,4.85,lz); scene.add(bulb);
-    var pl2=new THREE.PointLight(0xffffaa,0.65,10);
-    pl2.position.set(lx+side*0.9,4.65,lz); scene.add(pl2);
+    // Lamp glow via emissive only
   });
 });
 
@@ -445,21 +437,17 @@ var wallBlue = new THREE.MeshLambertMaterial({color:0x003d7a,emissive:new THREE.
 // N/S walls
 [[0,26,90,false],[0,-26,90,false]].forEach(function(w){
   var wm=new THREE.Mesh(new THREE.BoxGeometry(w[2],5.5,1.2),wallMat2);
-  wm.position.set(w[0],2.75,w[1]); wm.castShadow=true; wm.receiveShadow=true; scene.add(wm);
+  wm.position.set(w[0],2.75,w[1]); scene.add(wm);
   var ws=new THREE.Mesh(new THREE.BoxGeometry(w[2],0.35,1.25),wallYel);
   ws.position.set(w[0],5.1,w[1]); scene.add(ws);
   var wb=new THREE.Mesh(new THREE.BoxGeometry(w[2],0.55,1.3),wallBlue);
   wb.position.set(w[0],0.27,w[1]); scene.add(wb);
-  // Wall lights
-  for(var wi=-35;wi<=35;wi+=12){
-    var wl=new THREE.PointLight(0x0044aa,0.5,10);
-    wl.position.set(wi,4,w[1]); scene.add(wl);
-  }
+  // Wall lights removed for performance
 });
 // E/W walls
 [[36,0,54,true],[-20,0,54,true]].forEach(function(w){
   var wm=new THREE.Mesh(new THREE.BoxGeometry(1.2,5.5,w[2]),wallMat2);
-  wm.position.set(w[0],2.75,w[1]); wm.castShadow=true; wm.receiveShadow=true; scene.add(wm);
+  wm.position.set(w[0],2.75,w[1]); scene.add(wm);
   var ws=new THREE.Mesh(new THREE.BoxGeometry(1.25,0.35,w[2]),wallYel);
   ws.position.set(w[0],5.1,w[1]); scene.add(ws);
   var wb=new THREE.Mesh(new THREE.BoxGeometry(1.3,0.55,w[2]),wallBlue);
@@ -472,7 +460,7 @@ var gGroup = new THREE.Group();
 gGroup.position.set(GX, 0, GZ);
 
 var gFloor=new THREE.Mesh(new THREE.PlaneGeometry(GD,GW),new THREE.MeshLambertMaterial({color:0x1a1a2e}));
-gFloor.rotation.x=-Math.PI/2; gFloor.receiveShadow=true; gGroup.add(gFloor);
+gFloor.rotation.x=-Math.PI/2; gGroup.add(gFloor);
 // Floor lines
 for(var gli=-5;gli<=5;gli++){
   var gl=new THREE.Mesh(new THREE.PlaneGeometry(GD,0.06),new THREE.MeshBasicMaterial({color:0x334466,transparent:true,opacity:0.6}));
@@ -502,18 +490,15 @@ var sdB=new THREE.Mesh(new THREE.PlaneGeometry(1.6,2.4),new THREE.MeshBasicMater
 sdB.rotation.y=Math.PI/2; sdB.position.set(GD/2-0.25,GH-1.4,0); gGroup.add(sdB);
 var sdY2=new THREE.Mesh(new THREE.PlaneGeometry(0.38,2.4),new THREE.MeshBasicMaterial({color:0xfecc00,side:THREE.DoubleSide}));
 sdY2.rotation.y=Math.PI/2; sdY2.position.set(GD/2-0.23,GH-1.4,0); gGroup.add(sdY2);
-// More interior lights at corners
-var cl1=new THREE.PointLight(0xddeeff,1.2,10); cl1.position.set(-GD/2+2,GH-0.5,-GW/2+2); gGroup.add(cl1);
-var cl2=new THREE.PointLight(0xddeeff,1.2,10); cl2.position.set(-GD/2+2,GH-0.5, GW/2-2); gGroup.add(cl2);
-var cl3=new THREE.PointLight(0xddeeff,1.0,10); cl3.position.set( GD/2-2,GH-0.5,-GW/2+2); gGroup.add(cl3);
-var cl4=new THREE.PointLight(0xddeeff,1.0,10); cl4.position.set( GD/2-2,GH-0.5, GW/2-2); gGroup.add(cl4);
-// Wall sconce lights
+// Two main interior fill lights (not per-corner)
+var cl1=new THREE.PointLight(0xddeeff,1.8,20); cl1.position.set(0,GH-0.5,0); gGroup.add(cl1);
+var cl2=new THREE.PointLight(0xddeeff,1.2,16); cl2.position.set(-GD/2+3,GH-0.5,0); gGroup.add(cl2);
+// Sconce meshes (visible but no per-sconce light)
 [-GD/2+3, 0, GD/2-3].forEach(function(lx2) {
   [-GW/2+0.35, GW/2-0.35].forEach(function(lz2) {
     var sconce = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.2,0.15),
-      new THREE.MeshLambertMaterial({color:0xffffcc,emissive:new THREE.Color(0xffffaa),emissiveIntensity:0.6}));
+      new THREE.MeshLambertMaterial({color:0xffffcc,emissive:new THREE.Color(0xffffaa),emissiveIntensity:0.8}));
     sconce.position.set(lx2, GH-1.2, lz2); gGroup.add(sconce);
-    var spl = new THREE.PointLight(0xffffaa, 0.7, 5); spl.position.set(lx2, GH-1.3, lz2); gGroup.add(spl);
   });
 });
 // WINDOWS on side walls (GZ-GW/2 and GZ+GW/2 walls, which are Z walls in group space)
@@ -532,8 +517,7 @@ var winFrameMat = new THREE.MeshLambertMaterial({color:0x334466});
     wH.position.set(wx,GH-1.8,wz2); gGroup.add(wH);
     var wV = new THREE.Mesh(new THREE.BoxGeometry(0.06,1.1,0.06),new THREE.MeshLambertMaterial({color:0x223355}));
     wV.position.set(wx,GH-1.8,wz2); gGroup.add(wV);
-    // Window glow outside
-    var wl=new THREE.PointLight(0x88ccff,0.6,6); wl.position.set(wx,GH-1.8,wz2+wside*1); gGroup.add(wl);
+    // Window glow - emissive only, no point light
   });
 });
 // Entrance glow
@@ -571,13 +555,8 @@ PLATFORM_POSITIONS.forEach(function(pp,idx){
   var eLbl = new THREE.Mesh(new THREE.BoxGeometry(0.18,0.18,0.07),
     new THREE.MeshLambertMaterial({color:0x22cc55, emissive:new THREE.Color(0x22cc55), emissiveIntensity:0.6}));
   eLbl.position.set(poleX, 1.65, poleZ+0.04); scene.add(eLbl);
-  var eLight = new THREE.PointLight(0x22cc55, 0, 2);
-  eLight.position.set(poleX, 1.65, poleZ+0.1);
-  eLight.name = 'upglight_'+idx;
-  scene.add(eLight);
-
   upgradeButtons.push({
-    signPlate: signPlate, eLbl: eLbl, light: eLight,
+    signPlate: signPlate, eLbl: eLbl,
     slotIdx: idx, pos: new THREE.Vector3(poleX, 1.65, poleZ)
   });
 
@@ -585,8 +564,8 @@ PLATFORM_POSITIONS.forEach(function(pp,idx){
 });
 
 // Stars
-var sv=new Float32Array(600*3);
-for(var si=0;si<600;si++){sv[si*3]=(Math.random()-0.5)*160;sv[si*3+1]=Math.random()*55+18;sv[si*3+2]=(Math.random()-0.5)*160;}
+var sv=new Float32Array(300*3);
+for(var si=0;si<300;si++){sv[si*3]=(Math.random()-0.5)*160;sv[si*3+1]=Math.random()*55+18;sv[si*3+2]=(Math.random()-0.5)*160;}
 var sg=new THREE.BufferGeometry(); sg.setAttribute('position',new THREE.BufferAttribute(sv,3));
 scene.add(new THREE.Points(sg,new THREE.PointsMaterial({color:0x8899ff,size:0.15})));
 
@@ -595,9 +574,9 @@ function buildJimmieMesh(def) {
   var g = new THREE.Group();
   var bc = def.col;
   // helpers
-  function B(w,h,d,c,em,ei){var m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mkMat(c,em,ei));m.castShadow=true;return m;}
-  function C(rt,rb,h,seg,c,em,ei){var m=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg||9),mkMat(c,em,ei));m.castShadow=true;return m;}
-  function S(r,seg,c,em,ei){var m=new THREE.Mesh(new THREE.SphereGeometry(r,seg||9,seg||9),mkMat(c,em,ei));m.castShadow=true;return m;}
+  function B(w,h,d,c,em,ei){var m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mkMat(c,em,ei));return m;}
+  function C(rt,rb,h,seg,c,em,ei){var m=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg||9),mkMat(c,em,ei));return m;}
+  function S(r,seg,c,em,ei){var m=new THREE.Mesh(new THREE.SphereGeometry(r,seg||9,seg||9),mkMat(c,em,ei));return m;}
   function a(m,x,y,z,rx,ry,rz){m.position.set(x,y,z);if(rx!==undefined)m.rotation.set(rx,ry||0,rz||0);g.add(m);return m;}
 
   if (def.isJimmie) {
@@ -766,8 +745,7 @@ function buildJimmieMesh(def) {
   gr.rotation.x=-Math.PI/2; gr.position.set(0,0.02,0); g.add(gr);
   var gi2=new THREE.Mesh(new THREE.CircleGeometry(0.58,16),new THREE.MeshBasicMaterial({color:bc,transparent:true,opacity:0.1,side:THREE.DoubleSide}));
   gi2.rotation.x=-Math.PI/2; gi2.position.set(0,0.03,0); g.add(gi2);
-  // Point light
-  var jl=new THREE.PointLight(bc,1.1,6); jl.position.set(0,1.2,0); g.add(jl);
+  // No per-character point light (performance)
   // Floating name dot
   var nd=S(0.1,7,bc,bc,0.75); nd.position.set(0,2.75,0); nd.name='namedot'; g.add(nd);
   var dr=new THREE.Mesh(new THREE.TorusGeometry(0.19,0.026,6,14),new THREE.MeshBasicMaterial({color:bc,transparent:true,opacity:0.65}));
@@ -1222,12 +1200,7 @@ function loop() {
     if (!slot5.jimmie || slot5.jimmie.movingToSlot) { ub.light.intensity=0; return; }
     var dx6=cam.position.x-ub.pos.x, dy6=cam.position.y-ub.pos.y, dz6=cam.position.z-ub.pos.z;
     var dist6=Math.sqrt(dx6*dx6+dy6*dy6+dz6*dz6);
-    if(dist6<3.5){
-      ub.light.intensity=1.5+Math.sin(el*4)*0.5;
-      nearUpgradeBtn=ub;
-    } else {
-      ub.light.intensity=slot5.jimmie?0.3:0;
-    }
+    if(dist6<3.5){ nearUpgradeBtn=ub; }
   });
 
   if(nearUpgradeBtn){
