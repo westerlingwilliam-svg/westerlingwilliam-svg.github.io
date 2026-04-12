@@ -1038,12 +1038,8 @@ document.getElementById('pausebtn').addEventListener('click', togglePause);
 
 // Collision
 function isBlocked4(nx, nz) {
-  var inGX = nx>(GX-GD/2+0.5) && nx<(GX+GD/2-0.5);
-  var inGZ = nz>(GZ-GW/2+0.5) && nz<(GZ+GW/2-0.5);
-  if (inGX && inGZ) {} // inside OK
-  else if (nx>(GX+GD/2-0.5) && inGZ) return true;
-  else if (inGX && !inGZ && nx>GX-GD/2+1) return true;
-  if (nx>35 || nx<-19 || nz>25 || nz<-25) return true;
+  // World bounds only
+  if (nx > 35 || nx < -19 || nz > 25 || nz < -25) return true;
   return false;
 }
 
@@ -1074,6 +1070,7 @@ function updateHUD() {
 // ── Clock ──────────────────────────────────────────────────────
 var clock3 = new THREE.Clock();
 clock3.start();
+var lastFrameTime = performance.now();
 
 document.getElementById('startbtn').addEventListener('click', function() {
   if (!gameStarted) {
@@ -1090,15 +1087,15 @@ document.getElementById('startbtn').addEventListener('click', function() {
 // ── MAIN LOOP ──────────────────────────────────────────────────
 function loop() {
   requestAnimationFrame(loop);
+  var now = performance.now();
+  var dt = Math.min((now - lastFrameTime) / 1000, 0.05);
+  lastFrameTime = now;
   var el = clock3.getElapsedTime();
 
   if (!gameStarted || paused) {
-    clock3.getDelta(); // consume so dt doesn't accumulate
     renderer.render(scene, cam);
     return;
   }
-
-  var dt = Math.min(clock3.getDelta(), 0.05);
 
   // Passive income from garage Jimmies
   incomeTimer += dt;
