@@ -206,7 +206,7 @@ kbd{background:rgba(254,204,0,.15);padding:2px 7px;border-radius:4px;font-family
   <div id="uhint"></div>
   <div id="popup"><h3 id="pname"></h3><p id="pdesc"></p></div>
   <button id="pausebtn">☰ Meny (Esc)</button>
-  <div id="lockprompt" onclick="document.getElementById('c').requestPointerLock()">🖱 Klicka för att låsa musen</div>
+  <div id="lockprompt" onclick="if(document.pointerLockElement!==document.getElementById('c'))document.getElementById('c').requestPointerLock()">🖱 Klicka för att låsa musen</div>
   <div id="bottombar">
     <span><kbd>WASD</kbd> Rörelse</span>
     <span><kbd>Mus</kbd> Titta</span>
@@ -1006,7 +1006,11 @@ document.addEventListener('keydown', function(e) {
 document.addEventListener('keyup', function(e) { keys4[e.code] = false; });
 
 var yaw4 = 0, pitch4 = 0;
-canvas.addEventListener('click', function() { if (gameStarted && !paused) canvas.requestPointerLock(); });
+canvas.addEventListener('click', function() {
+  if (gameStarted && !paused && document.pointerLockElement !== canvas) {
+    canvas.requestPointerLock();
+  }
+});
 document.addEventListener('pointerlockchange', function() {
   mouseLocked = document.pointerLockElement === canvas;
   var lp = document.getElementById('lockprompt');
@@ -1014,15 +1018,24 @@ document.addEventListener('pointerlockchange', function() {
 });
 document.addEventListener('mousemove', function(e) {
   if (!mouseLocked || paused) return;
-  yaw4   -= e.movementX * 0.002;
-  pitch4  = Math.max(-1.1, Math.min(1.1, pitch4 - e.movementY * 0.002));
+  // Clamp movement to avoid large jumps when pointer lock first activates
+  var dx = Math.max(-50, Math.min(50, e.movementX));
+  var dy = Math.max(-50, Math.min(50, e.movementY));
+  yaw4   -= dx * 0.002;
+  pitch4  = Math.max(-1.1, Math.min(1.1, pitch4 - dy * 0.002));
 });
 
 function togglePause() {
   if (!gameStarted) return;
   paused = !paused;
-  if (paused) { document.exitPointerLock(); document.getElementById('startscreen').style.display='flex'; document.getElementById('startbtn').textContent='▶ FORTSÄTT'; }
-  else { document.getElementById('startscreen').style.display='none'; canvas.requestPointerLock(); }
+  if (paused) {
+    if (document.pointerLockElement === canvas) document.exitPointerLock();
+    document.getElementById('startscreen').style.display='flex';
+    document.getElementById('startbtn').textContent='▶ FORTSÄTT';
+  } else {
+    document.getElementById('startscreen').style.display='none';
+    if (document.pointerLockElement !== canvas) canvas.requestPointerLock();
+  }
 }
 document.getElementById('pausebtn').addEventListener('click', togglePause);
 
@@ -1073,7 +1086,7 @@ document.getElementById('startbtn').addEventListener('click', function() {
     document.getElementById('hud').style.display = 'block';
     document.getElementById('startscreen').style.display = 'none';
     document.getElementById('lockprompt').style.display = 'block';
-    canvas.requestPointerLock();
+    if (document.pointerLockElement !== canvas) canvas.requestPointerLock();
   } else if (paused) { togglePause(); }
 });
 
