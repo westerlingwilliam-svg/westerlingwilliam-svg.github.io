@@ -1005,12 +1005,20 @@ document.addEventListener('pointerlockchange', function() {
   var lp = document.getElementById('lockprompt');
   if (lp) lp.style.display = (gameStarted && !paused && !mouseLocked) ? 'block' : 'none';
 });
+document.addEventListener('pointerlockerror', function() {
+  // Retry after short delay if lock fails
+  setTimeout(function() {
+    if (gameStarted && !paused && document.pointerLockElement !== canvas) {
+      canvas.requestPointerLock();
+    }
+  }, 500);
+});
+var mouseDX = 0, mouseDY = 0;
 document.addEventListener('mousemove', function(e) {
   if (paused || !gameStarted) return;
-  if (mouseLocked) {
-    // Pointer lock: use movementX/Y directly
-    yaw4  -= e.movementX * 0.002;
-    pitch4 = Math.max(-1.1, Math.min(1.1, pitch4 - e.movementY * 0.002));
+  if (document.pointerLockElement === canvas) {
+    mouseDX += e.movementX;
+    mouseDY += e.movementY;
   }
 });
 
@@ -1082,10 +1090,15 @@ document.getElementById('startbtn').addEventListener('click', function() {
 // ── MAIN LOOP ──────────────────────────────────────────────────
 function loop() {
   requestAnimationFrame(loop);
-  var dt  = Math.min(clock3.getDelta(), 0.05);
-  var el  = clock3.getElapsedTime();
+  var el = clock3.getElapsedTime();
 
-  if (!gameStarted || paused) { renderer.render(scene, cam); return; }
+  if (!gameStarted || paused) {
+    clock3.getDelta(); // consume so dt doesn't accumulate
+    renderer.render(scene, cam);
+    return;
+  }
+
+  var dt = Math.min(clock3.getDelta(), 0.05);
 
   // Passive income from garage Jimmies
   incomeTimer += dt;
@@ -1125,6 +1138,12 @@ function loop() {
   if (cam.position.y <= 1.75) { cam.position.y=1.75; velY=0; isOnGround=true; }
   // Head bob
   if (isOnGround && ml3>0) cam.position.y = 1.75 + Math.sin(el*9)*0.025;
+  // Apply accumulated mouse movement (works for any polling rate)
+  var sens = 0.0022;
+  yaw4  -= mouseDX * sens;
+  pitch4 = Math.max(-1.1, Math.min(1.1, pitch4 - mouseDY * sens));
+  mouseDX = 0;
+  mouseDY = 0;
   cam.rotation.order='YXZ'; cam.rotation.y=yaw4; cam.rotation.x=pitch4;
 
   // Animate wanderers
