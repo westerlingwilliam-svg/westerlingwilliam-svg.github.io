@@ -27,13 +27,13 @@ body{overflow:hidden;background:var(--dark);color:#fff;font-family:'Segoe UI',sy
 #hud{position:fixed;inset:0;pointer-events:none;z-index:10;display:none}
 #topbar{position:absolute;top:0;left:0;right:0;padding:12px 22px;background:linear-gradient(180deg,rgba(0,15,40,.97),transparent);display:flex;justify-content:space-between;align-items:center;gap:14px}
 #gtitle{font-size:.95rem;font-weight:900;letter-spacing:4px;color:var(--y);text-shadow:0 0 18px rgba(254,204,0,.5)}
-.hst{text-align:center;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.13);border-radius:10px;padding:6px 14px;min-width:80px}
+.hst{text-align:center;background:linear-gradient(160deg,rgba(0,30,70,0.8),rgba(0,15,40,0.9));border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:8px 18px;min-width:90px;box-shadow:0 4px 16px rgba(0,0,0,0.4)}
 .hlbl{font-size:.52rem;text-transform:uppercase;letter-spacing:2px;color:var(--y);opacity:.75;margin-bottom:2px}
 .hval{font-size:1.1rem;font-weight:900}
 #progwrap{position:absolute;top:66px;left:50%;transform:translateX(-50%);width:260px;text-align:center}
 #proglbl{font-size:.54rem;text-transform:uppercase;letter-spacing:2px;color:var(--y);opacity:.7;margin-bottom:4px}
-#progtrack{height:10px;background:rgba(255,255,255,.1);border-radius:7px;overflow:hidden;border:1px solid rgba(255,255,255,.12)}
-#progfill{height:100%;width:0%;border-radius:7px;transition:width .5s;background:linear-gradient(90deg,var(--y),#fff176)}
+#progtrack{height:12px;background:rgba(0,0,0,0.4);border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,.15);box-shadow:inset 0 2px 4px rgba(0,0,0,0.4)}
+#progfill{height:100%;width:0%;border-radius:8px;transition:width .5s;background:linear-gradient(90deg,#f5a800,#fecc00,#fff176);box-shadow:0 0 8px rgba(254,204,0,0.4)}
 #xhair{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:20px;height:20px}
 #xhair::before,#xhair::after{content:'';position:absolute;background:rgba(255,255,255,.82);border-radius:2px}
 #xhair::before{width:2px;height:100%;left:9px}#xhair::after{width:100%;height:2px;top:9px}
@@ -41,17 +41,28 @@ body{overflow:hidden;background:var(--dark);color:#fff;font-family:'Segoe UI',sy
 #qhint{position:absolute;bottom:30%;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.75);border:2px solid var(--r);border-radius:10px;padding:7px 18px;font-size:.75rem;color:#fca5a5;display:none;text-align:center}
 #popup{position:absolute;top:32%;left:50%;transform:translate(-50%,-50%);background:rgba(0,22,60,.97);border:2px solid var(--y);border-radius:18px;padding:22px 38px;text-align:center;display:none;min-width:280px;box-shadow:0 24px 70px rgba(0,0,0,.75)}
 #popup h3{color:var(--y);font-size:1.4rem;margin-bottom:6px}#popup p{opacity:.82;font-size:.87rem;line-height:1.5}
-#pausebtn{position:absolute;top:14px;right:14px;pointer-events:all;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.2);border-radius:9px;padding:6px 12px;color:#fff;font-size:.72rem;font-weight:700;cursor:pointer;letter-spacing:1px;text-transform:uppercase;transition:background .15s}
+#pausebtn{position:absolute;top:14px;right:14px;pointer-events:all;background:rgba(0,15,40,0.75);border:1px solid rgba(255,255,255,.22);border-radius:10px;padding:8px 16px;color:rgba(255,255,255,.85);font-size:.72rem;font-weight:700;cursor:pointer;letter-spacing:1px;text-transform:uppercase;transition:all .15s;backdrop-filter:blur(6px)}
 #pausebtn:hover{background:rgba(255,255,255,.15)}
 #lockprompt{position:absolute;bottom:45%;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.72);border:1px solid rgba(254,204,0,.4);border-radius:10px;padding:9px 18px;font-size:.78rem;color:var(--y);display:none;text-align:center;pointer-events:all;cursor:pointer}
 #bottombar{position:absolute;bottom:0;left:0;right:0;padding:9px 24px;background:linear-gradient(0deg,rgba(0,8,28,.9),transparent);display:flex;justify-content:center;gap:22px;font-size:.64rem;opacity:.45}
 kbd{background:rgba(255,255,255,.16);padding:2px 7px;border-radius:4px;font-family:inherit}
 /* Rarity colors */
 .rar-common{color:#9e9e9e}.rar-uncommon{color:#4ade80}.rar-rare{color:#60a5fa}.rar-epic{color:#c084fc}.rar-legendary{color:#fecc00}
+#rhint{background:linear-gradient(135deg,rgba(0,20,60,0.95),rgba(0,10,40,0.95))!important;border:2px solid var(--y)!important;border-radius:16px!important;padding:14px 28px!important;font-size:.92rem!important;box-shadow:0 4px 30px rgba(254,204,0,0.2),0 0 0 1px rgba(254,204,0,0.1)!important;backdrop-filter:blur(8px)!important}
+#qhint{background:linear-gradient(135deg,rgba(60,0,0,0.92),rgba(40,0,0,0.92))!important;border:2px solid var(--r)!important;border-radius:14px!important;padding:10px 22px!important;font-size:.82rem!important;box-shadow:0 4px 20px rgba(239,68,68,0.2)!important;backdrop-filter:blur(6px)!important;color:#fca5a5!important}
+#popup{background:linear-gradient(160deg,rgba(0,25,70,0.98),rgba(0,12,40,0.98))!important;backdrop-filter:blur(10px)!important;box-shadow:0 30px 80px rgba(0,0,0,0.8),0 0 0 1px rgba(255,255,255,0.06)!important}
 #winscreen{position:fixed;inset:0;z-index:200;background:rgba(0,8,22,.97);display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:30px;backdrop-filter:blur(12px)}
 #winscreen h1{font-size:4rem;color:var(--y);text-shadow:0 0 60px rgba(254,204,0,.6)}
 #winscreen p{opacity:.72;font-size:1rem;max-width:420px;line-height:1.6}
 .wbtn{padding:14px 46px;background:linear-gradient(135deg,var(--y),#e8a000);color:#001a33;font-weight:900;font-size:.95rem;border:none;border-radius:50px;cursor:pointer;letter-spacing:2px;text-transform:uppercase;box-shadow:0 6px 0 #8a6400}
+
+.rar-badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.65rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.rar-badge.Common{background:rgba(158,158,158,.2);color:#9e9e9e;border:1px solid rgba(158,158,158,.3)}
+.rar-badge.Uncommon{background:rgba(74,222,128,.15);color:#4ade80;border:1px solid rgba(74,222,128,.35)}
+.rar-badge.Rare{background:rgba(96,165,250,.15);color:#60a5fa;border:1px solid rgba(96,165,250,.35)}
+.rar-badge.Epic{background:rgba(192,132,252,.15);color:#c084fc;border:1px solid rgba(192,132,252,.35)}
+.rar-badge.Legendary{background:rgba(254,204,0,.18);color:#fecc00;border:1px solid rgba(254,204,0,.4);box-shadow:0 0 10px rgba(254,204,0,.15)}
+#popup h3{font-size:1.5rem;margin-bottom:4px!important}
 </style>
 </head>
 <body>
@@ -70,7 +81,7 @@ kbd{background:rgba(255,255,255,.16);padding:2px 7px;border-radius:4px;font-fami
   </div>
   <div class="btnrow">
     <button id="startbtn" class="btnmain">▶ STARTA SPELET</button>
-    <button class="btnсec btnmain" style="background:rgba(255,255,255,.08);color:#fff;border:2px solid rgba(255,255,255,.25);box-shadow:none" onclick="location.href='games.html'">← Menyn</button>
+    <button class="btnmain" style="background:rgba(255,255,255,.08);color:#fff;border:2px solid rgba(255,255,255,.25);box-shadow:none;backdrop-filter:blur(4px)" onclick="location.href='games.html'">← Game-menyn</button>
   </div>
 </div>
 
@@ -119,20 +130,19 @@ kbd{background:rgba(255,255,255,.16);padding:2px 7px;border-radius:4px;font-fami
 var RARE = {COMMON:'Common', UNCOMMON:'Uncommon', RARE:'Rare', EPIC:'Epic', LEGENDARY:'Legendary'};
 
 var JIMMIES = [
-  {name:'Jimmie Junior',       rarity:RARE.COMMON,    col:0x9e9e9e, cost:30,   sell:15,  icon:'👦', sc:0.75, acc:'none'},
-  {name:'Jimmie Vandraren',    rarity:RARE.COMMON,    col:0x9e9e9e, cost:40,   sell:20,  icon:'🚶', sc:0.85, acc:'none'},
-  {name:'Jimmie Flaggan',      rarity:RARE.UNCOMMON,  col:0x4ade80, cost:80,   sell:40,  icon:'🚩', sc:0.95, acc:'flag'},
-  {name:'Jimmie Talaren',      rarity:RARE.UNCOMMON,  col:0x4ade80, cost:100,  sell:50,  icon:'🎤', sc:1.0,  acc:'mic'},
-  {name:'Jimmie Järnet',       rarity:RARE.RARE,      col:0x60a5fa, cost:200,  sell:100, icon:'⚔️', sc:1.0,  acc:'helmet'},
-  {name:'Jimmie Jubilaren',    rarity:RARE.RARE,      col:0x60a5fa, cost:250,  sell:125, icon:'🎉', sc:1.0,  acc:'party'},
-  {name:'Jimmie Kungen',       rarity:RARE.EPIC,      col:0xc084fc, cost:500,  sell:250, icon:'👑', sc:1.15, acc:'crown'},
-  {name:'Jimmie Riksdagen',    rarity:RARE.EPIC,      col:0xc084fc, cost:600,  sell:300, icon:'🏛️', sc:1.1,  acc:'fedora'},
-  {name:'Jimmie Hjälten',      rarity:RARE.LEGENDARY, col:0xfecc00, cost:1000, sell:500, icon:'🦸', sc:1.3,  acc:'crown'},
+  {name:'Lill-Jimmie',         rarity:RARE.COMMON,    col:0x9e9e9e, cost:30,   sell:15,  icon:'👶', sc:0.75, acc:'none'},
+  {name:'Jimmie på Promenad',  rarity:RARE.COMMON,    col:0x9e9e9e, cost:40,   sell:20,  icon:'🚶', sc:0.85, acc:'none'},
+  {name:'SD-Micke Jr',         rarity:RARE.UNCOMMON,  col:0x4ade80, cost:80,   sell:40,  icon:'🚩', sc:0.95, acc:'flag'},
+  {name:'Jimmie på Mikrofonen',rarity:RARE.UNCOMMON,  col:0x4ade80, cost:100,  sell:50,  icon:'🎤', sc:1.0,  acc:'mic'},
+  {name:'Jimmie med Hjälm',    rarity:RARE.RARE,      col:0x60a5fa, cost:200,  sell:100, icon:'⛑️', sc:1.0,  acc:'helmet'},
+  {name:'Jimmie Festfixaren',  rarity:RARE.RARE,      col:0x60a5fa, cost:250,  sell:125, icon:'🎉', sc:1.0,  acc:'party'},
+  {name:'SDmicke Deluxe',      rarity:RARE.EPIC,      col:0xc084fc, cost:500,  sell:250, icon:'👑', sc:1.15, acc:'crown'},
+  {name:'Jimmie från Sölve',   rarity:RARE.LEGENDARY, col:0xfecc00, cost:1000, sell:500, icon:'🦸', sc:1.3,  acc:'crown'},
   {name:'Jimmie Åkesson',      rarity:RARE.LEGENDARY, col:0xfecc00, cost:1500, sell:750, icon:'⭐', sc:1.5,  acc:'crown'},
 ];
 
 // Win condition: collect all Epic+ (indices 6,7,8,9)
-var WIN_INDICES = [6,7,8,9];
+var WIN_INDICES = [6,7,8];
 
 // ── State ─────────────────────────────────────────────────────
 var gameStarted = false;
@@ -279,26 +289,28 @@ var GW = 14, GH = 6, GD = 16;
 
 var garageGroup = new THREE.Group();
 garageGroup.position.set(GX, 0, GZ);
+// Garage opening faces -X (toward road)
+// GD extends in X direction, GW extends in Z direction
 
 // Floor
-var gfloor = new THREE.Mesh(new THREE.PlaneGeometry(GW, GD), new THREE.MeshLambertMaterial({color: 0x2a2a3a}));
+var gfloor = new THREE.Mesh(new THREE.PlaneGeometry(GD, GW), new THREE.MeshLambertMaterial({color: 0x2a2a3a}));
 gfloor.rotation.x = -Math.PI / 2;
 gfloor.receiveShadow = true;
 garageGroup.add(gfloor);
 
-// Back wall
-groupAdd(garageGroup, Box(GW, GH, 0.45, 0x222244), 0, GH/2, -GD/2);
-// Left wall
-groupAdd(garageGroup, Box(0.45, GH, GD, 0x222244), -GW/2, GH/2, 0);
-// Right wall
-groupAdd(garageGroup, Box(0.45, GH, GD, 0x222244),  GW/2, GH/2, 0);
+// Back wall (+X side, far from road)
+groupAdd(garageGroup, Box(0.45, GH, GW, 0x222244),  GD/2, GH/2, 0);
+// Left wall (one Z side)
+groupAdd(garageGroup, Box(GD, GH, 0.45, 0x222244), 0, GH/2, -GW/2);
+// Right wall (other Z side)
+groupAdd(garageGroup, Box(GD, GH, 0.45, 0x222244), 0, GH/2,  GW/2);
 // Roof
-groupAdd(garageGroup, Box(GW, 0.45, GD, 0x1a1a33), 0, GH, 0);
-// Front header above opening
-groupAdd(garageGroup, Box(GW, 0.6, 0.45, 0x222244), 0, GH - 0.3, GD/2);
-// Front columns
-groupAdd(garageGroup, Box(0.6, GH, 0.45, 0x2a2a55), -GW/2 + 0.3, GH/2, GD/2);
-groupAdd(garageGroup, Box(0.6, GH, 0.45, 0x2a2a55),  GW/2 - 0.3, GH/2, GD/2);
+groupAdd(garageGroup, Box(GD, 0.45, GW, 0x1a1a33), 0, GH, 0);
+// Opening header (-X side, facing road)
+groupAdd(garageGroup, Box(0.45, 0.7, GW, 0x222244), -GD/2, GH - 0.35, 0);
+// Opening columns
+groupAdd(garageGroup, Box(0.45, GH, 0.6, 0x2a2a55), -GD/2, GH/2, -GW/2 + 0.3);
+groupAdd(garageGroup, Box(0.45, GH, 0.6, 0x2a2a55), -GD/2, GH/2,  GW/2 - 0.3);
 
 // Interior ceiling light strips
 var stripMat3 = new THREE.MeshBasicMaterial({color: 0xffffff});
@@ -335,10 +347,12 @@ scene.add(garageGroup);
 // ── GARAGE PLATFORMS (10 spots for Jimmies) ───────────────────
 // Arranged in 2 rows of 5 inside the garage
 var PLATFORM_POSITIONS = [];
+// 8 platforms: 2 rows of 4 along X, rows offset in Z
+// Garage: X from GX-GD/2 to GX+GD/2, Z from GZ-GW/2 to GZ+GW/2
 for (var row = 0; row < 2; row++) {
-  for (var col2 = 0; col2 < 5; col2++) {
-    var px = GX + (-GW/2 + 1.8 + col2 * (GW - 2) / 4);
-    var pz = GZ + (row === 0 ? -GD/2 + 2.5 : GD/2 - 2.5);
+  for (var col2 = 0; col2 < 4; col2++) {
+    var px = GX + (-GD/2 + 2.5 + col2 * (GD - 4) / 3);
+    var pz = GZ + (row === 0 ? -GW/2 + 2.5 : GW/2 - 2.5);
     PLATFORM_POSITIONS.push({x: px, z: pz});
   }
 }
@@ -510,7 +524,7 @@ var spawnTimer2    = 0;
 var spawnInterval  = 3.5;  // seconds between spawns
 var spawnCycleIdx  = 0;
 // Spawn order: weighted so rarer ones appear less often
-var spawnOrder = [0,1,0,2,1,3,0,4,2,5,1,6,3,0,7,2,4,1,8,0,9,3,0,1,2];
+var spawnOrder = [0,1,0,2,1,3,0,4,2,0,1,5,3,0,6,2,4,1,0,7,3,0,1,2,8,0,1,3];
 
 function spawnNext() {
   var defIdx = spawnOrder[spawnCycleIdx % spawnOrder.length];
@@ -550,7 +564,7 @@ function recruitJimmie(w) {
   if (w.recruited || w.despawned) return;
   var slotIdx = findFreeSlot();
   if (slotIdx === -1) {
-    showPopup('Garaget är fullt!', 'Sälj en Jimmie med Q för att göra plats.', null);
+    showPopup('🚫 Garaget är fullt!', 'Tryck Q nära en plattform för att sälja.', 0xef4444);
     return;
   }
   w.recruited = true;
@@ -596,7 +610,7 @@ function sellClosestGarageJimmie() {
   bestSlot.platTop.material = new THREE.MeshLambertMaterial({color: 0x444466});
   // Remove from wanderers so it's gone
   w.despawned = true;
-  showPopup('Sålde ' + w.def.name, '−' + w.def.icon + '  +' + sellAmt + ' kr', 0xef4444);
+  showPopup('Sålde ' + w.def.name, '+' + sellAmt + ' kr tillbaka till kassan', 0xef4444);
   explodeParts(new THREE.Vector3(bestSlot.x, 1, bestSlot.z), 0xef4444, 10);
   updateHUD();
 }
@@ -622,10 +636,16 @@ function checkWin() {
 }
 
 // ── Popup ─────────────────────────────────────────────────────
-function showPopup(title, desc, col) {
-  document.getElementById('pname').textContent = title;
-  document.getElementById('pname').style.color = col ? '#' + col.toString(16).padStart(6,'0') : 'var(--y)';
-  document.getElementById('pdesc').textContent = desc;
+function showPopup(title, desc, col, rarity) {
+  var pname = document.getElementById('pname');
+  var pdesc = document.getElementById('pdesc');
+  pname.textContent = title;
+  pname.style.color = col ? '#' + col.toString(16).padStart(6,'0') : 'var(--y)';
+  if (rarity) {
+    pdesc.innerHTML = '<span class="rar-badge ' + rarity + '">' + rarity + '</span><br>' + desc;
+  } else {
+    pdesc.textContent = desc;
+  }
   document.getElementById('popup').style.display = 'block';
   popupTimer = 3.0;
 }
@@ -701,14 +721,16 @@ document.getElementById('pausebtn').addEventListener('click', togglePause);
 // Collision
 function isBlocked3(nx, nz) {
   // Inside garage walls (but allow entering through open front)
-  var relX = nx - GX, relZ = nz - GZ;
-  var frontZ = GD/2;
-  if (relX > -GW/2 + 0.8 && relX < GW/2 - 0.8 && relZ < frontZ - 0.3 && relZ > -GD/2 + 0.8) {
-    // Inside garage — allowed
-  } else if (relX > -GW/2 && relX < GW/2 && relZ < -GD/2) {
-    return true; // behind garage
-  } else if ((relX < -GW/2 || relX > GW/2) && Math.abs(relZ) < GD/2) {
-    return true; // garage side walls
+  // Garage: X from GX-GD/2 to GX+GD/2, Z from GZ-GW/2 to GZ+GW/2
+  // Opening at -X face (x = GX - GD/2), so player enters from left
+  var inGarageX = nx > (GX - GD/2 + 0.5) && nx < (GX + GD/2 - 0.5);
+  var inGarageZ = nz > (GZ - GW/2 + 0.5) && nz < (GZ + GW/2 - 0.5);
+  if (inGarageX && inGarageZ) {
+    // allowed inside
+  } else if (nx > (GX + GD/2 - 0.5) && inGarageZ) {
+    return true; // back wall
+  } else if (inGarageX && !inGarageZ && nx > GX - GD/2 + 1) {
+    return true; // side walls (but not if near opening)
   }
   if (Math.abs(nx) > 38 || nz > 26 || nz < -26) return true;
   return false;
@@ -717,10 +739,10 @@ function isBlocked3(nx, nz) {
 // HUD
 function updateHUD() {
   var occ = garageSlots.filter(function(s){return s.jimmie;}).length;
-  document.getElementById('hcount').textContent = occ + '/10';
+  document.getElementById('hcount').textContent = occ + '/8';
   document.getElementById('hmoney').textContent = money + ' kr';
-  document.getElementById('progfill').style.width = (occ/10*100) + '%';
-  document.getElementById('proglbl').textContent = 'Plattformar i garaget (' + occ + '/10)';
+  document.getElementById('progfill').style.width = (occ/8*100) + '%';
+  document.getElementById('proglbl').textContent = 'Plattformar i garaget (' + occ + '/8)';
 }
 
 // ── Clock & Loop ──────────────────────────────────────────────
@@ -820,7 +842,7 @@ function loop() {
             mesh.position.x = slot2.x;
             mesh.position.z = slot2.z;
             mesh.position.y = 0.22;
-            mesh.rotation.y = -Math.PI / 2; // face road
+            mesh.rotation.y = -Math.PI / 2; // face -X = toward road
           }
         }
       } else {
