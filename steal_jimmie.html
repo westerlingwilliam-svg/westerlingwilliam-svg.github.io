@@ -1123,14 +1123,14 @@ function loop() {
   mouseDX = 0; mouseDY = 0;
 
   // ── Movement ────────────────────────────────────────────────
-  var spd4 = SHIFT ? 9 : 5.5;
+  var spd4 = (keys4['ShiftLeft']||keys4['ShiftRight']) ? 9 : 5.5;
   var fX3  = Math.sin(yaw4), fZ3 = Math.cos(yaw4);
   var rX3  = Math.cos(yaw4), rZ3 = -Math.sin(yaw4);
   var mx3=0, mz3=0;
-  if(W)  { mx3 -= fX3; mz3 -= fZ3; }
-  if(S2) { mx3 += fX3; mz3 += fZ3; }
-  if(A)  { mx3 -= rX3; mz3 -= rZ3; }
-  if(D)  { mx3 += rX3; mz3 += rZ3; }
+  if(keys4['KeyW']||keys4['ArrowUp'])    { mx3 -= fX3; mz3 -= fZ3; }
+  if(keys4['KeyS']||keys4['ArrowDown'])  { mx3 += fX3; mz3 += fZ3; }
+  if(keys4['KeyA']||keys4['ArrowLeft'])  { mx3 -= rX3; mz3 -= rZ3; }
+  if(keys4['KeyD']||keys4['ArrowRight']) { mx3 += rX3; mz3 += rZ3; }
   var ml3 = Math.sqrt(mx3*mx3 + mz3*mz3);
   if(ml3 > 0){
     mx3 = mx3/ml3*spd4*dt; mz3 = mz3/ml3*spd4*dt;
@@ -1229,7 +1229,7 @@ function loop() {
   var nearUpgradeBtn = null;
   upgradeButtons.forEach(function(ub) {
     var slot5 = garageSlots[ub.slotIdx];
-    if (!slot5.jimmie || slot5.jimmie.movingToSlot) { ub.light.intensity=0; return; }
+    if (!slot5.jimmie || slot5.jimmie.movingToSlot) return;
     var dx6=cam.position.x-ub.pos.x, dy6=cam.position.y-ub.pos.y, dz6=cam.position.z-ub.pos.z;
     var dist6=Math.sqrt(dx6*dx6+dy6*dy6+dz6*dz6);
     if(dist6<3.5){ nearUpgradeBtn=ub; }
@@ -1263,9 +1263,7 @@ function loop() {
     if(p4.life<=0){scene.remove(p4.mesh);particles.splice(pi,1);}
   }
 
-  // Portal pulse
-  var gv=0.7+Math.sin(el*3)*0.5;
-  spawnPL.intensity=gv*3; despawnPL.intensity=gv*3;
+  // Portal pulse removed
 
   renderer.render(scene, cam);
 }
