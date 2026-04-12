@@ -958,22 +958,32 @@ function showPopup(title, desc, col, rarity) {
 
 // ── Controls ───────────────────────────────────────────────────
 var keys4 = {};
+var yaw4 = 0, pitch4 = 0;
+
+// Key input
 document.addEventListener('keydown', function(e) {
-  if (e.code === 'Space') e.preventDefault();
+  if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'ArrowDown') e.preventDefault();
   keys4[e.code] = true;
+  if (!gameStarted || paused) return;
   if (e.code === 'KeyE') {
-    if (nearJimmie && !nearJimmie.recruited) recruitJimmie(nearJimmie);
-    else {
-      // Check if near upgrade button
+    if (nearJimmie && !nearJimmie.recruited) {
+      recruitJimmie(nearJimmie);
+    } else {
       var nearBtn = null, nearBtnDist = 3.5;
       upgradeButtons.forEach(function(ub) {
-        var slot5b=garageSlots[ub.slotIdx];
-        if(!slot5b.jimmie||slot5b.jimmie.movingToSlot)return;
-        var dx7=cam.position.x-ub.pos.x,dy7=cam.position.y-ub.pos.y,dz7=cam.position.z-ub.pos.z;
-        var d7=Math.sqrt(dx7*dx7+dy7*dy7+dz7*dz7);
-        if(d7<nearBtnDist){nearBtnDist=d7;nearBtn=ub;}
+        var sb = garageSlots[ub.slotIdx];
+        if (!sb.jimmie || sb.jimmie.movingToSlot) return;
+        var dx7 = cam.position.x - ub.pos.x;
+        var dz7 = cam.position.z - ub.pos.z;
+        var d7 = Math.sqrt(dx7*dx7 + dz7*dz7);
+        if (d7 < nearBtnDist) { nearBtnDist = d7; nearBtn = ub; }
       });
-      if(nearBtn) { var slotForBtn=garageSlots[nearBtn.slotIdx]; if(slotForBtn.jimmie&&!slotForBtn.jimmie.movingToSlot){ var savedNear=nearestOccupiedSlot(99); /* temporarily upgrade this slot's jimmie */ var realBest={jimmie:slotForBtn.jimmie,x:slotForBtn.x,z:slotForBtn.z,platTop:slotForBtn.platTop}; upgradeSlot(realBest); } }
+      if (nearBtn) {
+        var sb2 = garageSlots[nearBtn.slotIdx];
+        if (sb2.jimmie && !sb2.jimmie.movingToSlot) {
+          upgradeSlot({jimmie:sb2.jimmie, x:sb2.x, z:sb2.z, platTop:sb2.platTop});
+        }
+      }
     }
   }
   if (e.code === 'KeyU') upgradeClosestGarageJimmie();
@@ -983,24 +993,25 @@ document.addEventListener('keydown', function(e) {
 });
 document.addEventListener('keyup', function(e) { keys4[e.code] = false; });
 
-var yaw4 = 0, pitch4 = 0;
+// Mouse look — works with OR without pointer lock
+var lastMouseX = 0, lastMouseY = 0, mouseActive = false;
+
+// Pointer lock approach
 canvas.addEventListener('click', function() {
-  if (gameStarted && !paused && document.pointerLockElement !== canvas) {
-    canvas.requestPointerLock();
-  }
+  if (gameStarted && !paused) canvas.requestPointerLock();
 });
 document.addEventListener('pointerlockchange', function() {
   mouseLocked = document.pointerLockElement === canvas;
   var lp = document.getElementById('lockprompt');
-  if (lp) lp.style.display = (gameStarted && !mouseLocked) ? 'block' : 'none';
+  if (lp) lp.style.display = (gameStarted && !paused && !mouseLocked) ? 'block' : 'none';
 });
 document.addEventListener('mousemove', function(e) {
-  if (!mouseLocked || paused) return;
-  // Clamp movement to avoid large jumps when pointer lock first activates
-  var dx = Math.max(-50, Math.min(50, e.movementX));
-  var dy = Math.max(-50, Math.min(50, e.movementY));
-  yaw4   -= dx * 0.002;
-  pitch4  = Math.max(-1.1, Math.min(1.1, pitch4 - dy * 0.002));
+  if (paused || !gameStarted) return;
+  if (mouseLocked) {
+    // Pointer lock: use movementX/Y directly
+    yaw4  -= e.movementX * 0.002;
+    pitch4 = Math.max(-1.1, Math.min(1.1, pitch4 - e.movementY * 0.002));
+  }
 });
 
 function togglePause() {
