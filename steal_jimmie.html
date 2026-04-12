@@ -132,15 +132,29 @@ kbd{background:rgba(255,255,255,.16);padding:2px 7px;border-radius:4px;font-fami
 var RARE = {COMMON:'Common', UNCOMMON:'Uncommon', RARE:'Rare', EPIC:'Epic', LEGENDARY:'Legendary'};
 
 var JIMMIES = [
-  {name:'Lill-Jimmie',         rarity:RARE.COMMON,    col:0x9e9e9e, cost:30,   sell:15,  icon:'👶', sc:0.75, acc:'none'},
-  {name:'Jimmie på Promenad',  rarity:RARE.COMMON,    col:0x9e9e9e, cost:40,   sell:20,  icon:'🚶', sc:0.85, acc:'none'},
-  {name:'SD-Micke Jr',         rarity:RARE.UNCOMMON,  col:0x4ade80, cost:80,   sell:40,  icon:'🚩', sc:0.95, acc:'flag'},
-  {name:'Jimmie på Mikrofonen',rarity:RARE.UNCOMMON,  col:0x4ade80, cost:100,  sell:50,  icon:'🎤', sc:1.0,  acc:'mic'},
-  {name:'Jimmie med Hjälm',    rarity:RARE.RARE,      col:0x60a5fa, cost:200,  sell:100, icon:'⛑️', sc:1.0,  acc:'helmet'},
-  {name:'Jimmie Festfixaren',  rarity:RARE.RARE,      col:0x60a5fa, cost:250,  sell:125, icon:'🎉', sc:1.0,  acc:'party'},
-  {name:'SDmicke Deluxe',      rarity:RARE.EPIC,      col:0xc084fc, cost:500,  sell:250, icon:'👑', sc:1.15, acc:'crown'},
-  {name:'Jimmie från Sölve',   rarity:RARE.LEGENDARY, col:0xfecc00, cost:1000, sell:500, icon:'🦸', sc:1.3,  acc:'crown'},
-  {name:'Jimmie Åkesson',      rarity:RARE.LEGENDARY, col:0xfecc00, cost:1500, sell:750, icon:'⭐', sc:1.5,  acc:'crown'},
+  // COMMON
+  {name:'Lill-Jimmie',           rarity:RARE.COMMON,    col:0xaaaaaa, cost:25,   sell:12,  icon:'👶', sc:0.7,  acc:'none'},
+  {name:'Jimmie på Promenad',    rarity:RARE.COMMON,    col:0x999999, cost:35,   sell:17,  icon:'🚶', sc:0.82, acc:'none'},
+  {name:'Jimmie i Kö',           rarity:RARE.COMMON,    col:0x888888, cost:40,   sell:20,  icon:'🧍', sc:0.78, acc:'none'},
+  {name:'Wille (Honous.aep)',     rarity:RARE.COMMON,    col:0x77aa77, cost:45,   sell:22,  icon:'💻', sc:0.8,  acc:'none'},
+  // UNCOMMON
+  {name:'SD-Micke Jr',           rarity:RARE.UNCOMMON,  col:0x4ade80, cost:80,   sell:40,  icon:'🚩', sc:0.92, acc:'flag'},
+  {name:'Jimmie på Mikrofonen',  rarity:RARE.UNCOMMON,  col:0x34d399, cost:100,  sell:50,  icon:'🎤', sc:1.0,  acc:'mic'},
+  {name:'Jimmie Sölvesborg FC',  rarity:RARE.UNCOMMON,  col:0x22c55e, cost:110,  sell:55,  icon:'⚽', sc:0.95, acc:'none'},
+  {name:'Jimmie efter Debatten', rarity:RARE.UNCOMMON,  col:0x4ade80, cost:120,  sell:60,  icon:'😤', sc:0.9,  acc:'none'},
+  // RARE
+  {name:'Jimmie med Hjälm',      rarity:RARE.RARE,      col:0x60a5fa, cost:200,  sell:100, icon:'⛑️', sc:1.0,  acc:'helmet'},
+  {name:'Jimmie Festfixaren',    rarity:RARE.RARE,      col:0x38bdf8, cost:250,  sell:125, icon:'🎉', sc:1.0,  acc:'party'},
+  {name:'Jimmie i Hatt',         rarity:RARE.RARE,      col:0x7dd3fc, cost:220,  sell:110, icon:'🎩', sc:1.0,  acc:'fedora'},
+  {name:'Richard Jomshof',       rarity:RARE.RARE,      col:0x93c5fd, cost:280,  sell:140, icon:'📜', sc:1.05, acc:'none'},
+  // EPIC
+  {name:'SDmicke Deluxe',        rarity:RARE.EPIC,      col:0xc084fc, cost:500,  sell:250, icon:'👑', sc:1.12, acc:'crown'},
+  {name:'Jimmie i Kostym',       rarity:RARE.EPIC,      col:0xa855f7, cost:550,  sell:275, icon:'🕴️', sc:1.1,  acc:'fedora'},
+  {name:'Oscar Sjöstedt',        rarity:RARE.EPIC,      col:0xd946ef, cost:600,  sell:300, icon:'💰', sc:1.1,  acc:'none'},
+  // LEGENDARY
+  {name:'Jimmie från Sölve',     rarity:RARE.LEGENDARY, col:0xfecc00, cost:1000, sell:500, icon:'🦸', sc:1.3,  acc:'crown'},
+  {name:'Super-SD-Jimmie',       rarity:RARE.LEGENDARY, col:0xffd700, cost:1200, sell:600, icon:'🌟', sc:1.35, acc:'crown'},
+  {name:'Jimmie Åkesson',        rarity:RARE.LEGENDARY, col:0xfecc00, cost:1500, sell:750, icon:'⭐', sc:1.5,  acc:'crown'},
 ];
 
 // Win condition: collect all Epic+ (indices 6,7,8,9)
@@ -443,123 +457,242 @@ scene.add(new THREE.Points(starGeo2, new THREE.PointsMaterial({color: 0xffffff, 
 // ── Build Jimmie mesh (all new geo + mat, NO cloning) ─────────
 function buildJimmieMesh(def) {
   var g = new THREE.Group();
+  var bc = def.col;
 
-  // Local helpers that always make fresh meshes
-  function B(w, h, d, c, em, ei) { return Box(w, h, d, c, em, ei); }
-  function C(rt, rb, h, seg, c)  { return Cyl(rt, rb, h, seg, c); }
-  function S(r, seg, c, em, ei)  { return Sph(r, seg, c, em, ei); }
+  // ── Palette ──────────────────────────────────────────────────
+  var skin   = 0xffcba4;
+  var pants  = 0x1a2744;
+  var shoes2 = 0x0d0d1a;
+  var white2 = 0xf8f8ff;
+  var hair2  = 0x18080a;
+  var dark2  = 0x111122;
 
-  var bc  = def.col;
-  var sk  = 0xffd5a8;
-  var dk  = 0x223355;
-  var blk = 0x111122;
-  var wh  = 0xffffff;
-  var br  = 0x1e0e04;
+  // ── Fresh mesh helpers ───────────────────────────────────────
+  function MB(w,h,d,col,em,ei){
+    var mat=new THREE.MeshLambertMaterial({color:col});
+    if(em!==undefined){mat.emissive=new THREE.Color(em);mat.emissiveIntensity=ei||0.15;}
+    var m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);
+    m.castShadow=true; return m;
+  }
+  function MC(rt,rb,h,seg,col,em,ei){
+    var mat=new THREE.MeshLambertMaterial({color:col});
+    if(em!==undefined){mat.emissive=new THREE.Color(em);mat.emissiveIntensity=ei||0.12;}
+    var m=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg||10),mat);
+    m.castShadow=true; return m;
+  }
+  function MS(r,seg,col,em,ei){
+    var mat=new THREE.MeshLambertMaterial({color:col});
+    if(em!==undefined){mat.emissive=new THREE.Color(em);mat.emissiveIntensity=ei||0.12;}
+    var m=new THREE.Mesh(new THREE.SphereGeometry(r,seg||10,seg||10),mat);
+    m.castShadow=true; return m;
+  }
+  function add(mesh,x,y,z,rx,ry,rz){
+    mesh.position.set(x,y,z);
+    if(rx!==undefined) mesh.rotation.set(rx,ry||0,rz||0);
+    g.add(mesh); return mesh;
+  }
 
-  // Shoes
-  groupAdd(g, B(0.22, 0.14, 0.36, blk),  -0.14, 0.07, 0.03);
-  groupAdd(g, B(0.22, 0.14, 0.36, blk),   0.14, 0.07, 0.03);
-  // Legs — store refs for animation
-  var legL = B(0.22, 0.52, 0.26, dk);  groupAdd(g, legL,  -0.14, 0.4, 0);
-  var legR = B(0.22, 0.52, 0.26, dk);  groupAdd(g, legR,   0.14, 0.4, 0);
-  // Belt
-  groupAdd(g, B(0.56, 0.09, 0.3, 0x3a2800), 0, 0.68, 0);
-  // Torso
-  var torsoM = B(0.56, 0.68, 0.32, bc, bc, 0.08); groupAdd(g, torsoM, 0, 1.07, 0);
-  // Shirt
-  groupAdd(g, B(0.2, 0.28, 0.33, wh), 0, 1.22, 0);
+  // ── SHOES ────────────────────────────────────────────────────
+  var shL=MB(0.23,0.13,0.38,shoes2); add(shL,-0.14,0.065,0.04);
+  var shR=MB(0.23,0.13,0.38,shoes2); add(shR, 0.14,0.065,0.04);
+  // Shoe highlight
+  var shHL=MB(0.18,0.04,0.35,0x333355); add(shHL,-0.14,0.13,0.04);
+  var shHR=MB(0.18,0.04,0.35,0x333355); add(shHR, 0.14,0.13,0.04);
+
+  // ── LEGS ─────────────────────────────────────────────────────
+  var legL=MB(0.21,0.54,0.25,pants); add(legL,-0.135,0.41,0);
+  var legR=MB(0.21,0.54,0.25,pants); add(legR, 0.135,0.41,0);
+  // Pant crease
+  var crL=MB(0.04,0.5,0.02,0x151f33); add(crL,-0.135,0.41,0.13);
+  var crR=MB(0.04,0.5,0.02,0x151f33); add(crR, 0.135,0.41,0.13);
+
+  // ── BELT ────────────────────────────────────────────────────
+  var belt2=MB(0.56,0.1,0.29,0x2a1a00); add(belt2,0,0.695,0);
+  var buckle=MB(0.1,0.08,0.03,0xddaa00,0xddaa00,0.3); add(buckle,0,0.695,0.155);
+
+  // ── TORSO (suit jacket with lapels) ─────────────────────────
+  var torso2=MB(0.58,0.7,0.32,bc,bc,0.1); add(torso2,0,1.085,0);
+  // Jacket shading sides
+  var jkL=MB(0.06,0.68,0.33,0x00000033); add(jkL,-0.28,1.085,0);
+  var jkR=MB(0.06,0.68,0.33,0x00000033); add(jkR, 0.28,1.085,0);
+  // Shirt / chest area
+  var shirt2=MB(0.22,0.62,0.34,white2); add(shirt2,0,1.085,0);
+  // Lapels (two triangular-ish pieces)
+  var lapL=MB(0.1,0.28,0.34,bc,bc,0.05); lapL.rotation.z= 0.35; add(lapL,-0.18,1.22,0);
+  var lapR=MB(0.1,0.28,0.34,bc,bc,0.05); lapR.rotation.z=-0.35; add(lapR, 0.18,1.22,0);
   // Tie
-  groupAdd(g, B(0.09, 0.38, 0.02, bc), 0, 1.0,  0.17);
-  groupAdd(g, B(0.11, 0.10, 0.03, bc), 0, 1.21, 0.17);
-  // Arms
-  var armL = B(0.19, 0.38, 0.22, bc); armL.rotation.z =  0.12; groupAdd(g, armL, -0.39, 1.08, 0);
-  var armR = B(0.19, 0.38, 0.22, bc); armR.rotation.z = -0.12; groupAdd(g, armR,  0.39, 1.08, 0);
-  groupAdd(g, S(0.10, 7, sk), -0.42, 0.78, 0);
-  groupAdd(g, S(0.10, 7, sk),  0.42, 0.78, 0);
-  // Neck
-  groupAdd(g, C(0.10, 0.12, 0.22, 7, sk), 0, 1.46, 0);
-  // Head
-  groupAdd(g, B(0.48, 0.46, 0.45, sk), 0, 1.72, 0);
-  // Hair
-  groupAdd(g, B(0.50, 0.16, 0.47, br), 0, 1.94, -0.01);
-  groupAdd(g, B(0.06, 0.32, 0.44, br), -0.25, 1.76, 0);
-  groupAdd(g, B(0.06, 0.32, 0.44, br),  0.25, 1.76, 0);
-  // Ears
-  groupAdd(g, S(0.075, 6, sk), -0.26, 1.72, 0);
-  groupAdd(g, S(0.075, 6, sk),  0.26, 1.72, 0);
-  // Eyes
-  groupAdd(g, S(0.065, 7, wh), -0.12, 1.75, 0.225);
-  groupAdd(g, S(0.065, 7, wh),  0.12, 1.75, 0.225);
-  groupAdd(g, S(0.038, 6, 0x080818), -0.12, 1.75, 0.258);
-  groupAdd(g, S(0.038, 6, 0x080818),  0.12, 1.75, 0.258);
-  // Eyebrows
-  var ebL2 = B(0.1, 0.025, 0.015, br); ebL2.rotation.z =  0.15; groupAdd(g, ebL2, -0.12, 1.815, 0.228);
-  var ebR2 = B(0.1, 0.025, 0.015, br); ebR2.rotation.z = -0.15; groupAdd(g, ebR2,  0.12, 1.815, 0.228);
-  // Nose
-  groupAdd(g, S(0.04, 6, sk), 0, 1.70, 0.245);
-  // Smile
-  var smileG = new THREE.Mesh(new THREE.TorusGeometry(0.09, 0.016, 5, 10, Math.PI),
-    new THREE.MeshBasicMaterial({color: 0x771100}));
-  smileG.rotation.z = Math.PI;
-  smileG.position.set(0, 1.635, 0.228);
-  g.add(smileG);
+  var tieK=MB(0.12,0.12,0.035,0xaa0000); add(tieK,0,1.27,0.17);
+  var tieB=MB(0.09,0.42,0.035,0xcc0000); add(tieB,0,1.01,0.17);
+  var tieT=MB(0.13,0.08,0.035,0xaa0000); add(tieT,0,0.75,0.17);
+  // Jacket buttons
+  var btn1=MS(0.025,5,0x888888); add(btn1,0,1.15,0.17);
+  var btn2=MS(0.025,5,0x888888); add(btn2,0,1.0,0.17);
 
-  // Accessories
+  // ── ARMS ─────────────────────────────────────────────────────
+  var armLU=MB(0.2,0.36,0.21,bc,bc,0.05); armLU.rotation.z= 0.14; add(armLU,-0.4,1.1,0);
+  var armRU=MB(0.2,0.36,0.21,bc,bc,0.05); armRU.rotation.z=-0.14; add(armRU, 0.4,1.1,0);
+  // Forearms
+  var armLL=MB(0.17,0.3,0.19,bc,bc,0.05); armLL.rotation.z= 0.1; add(armLL,-0.43,0.78,0);
+  var armRL=MB(0.17,0.3,0.19,bc,bc,0.05); armRL.rotation.z=-0.1; add(armRL, 0.43,0.78,0);
+  // Shirt cuffs
+  var cufL=MB(0.19,0.1,0.21,white2); cufL.rotation.z= 0.1; add(cufL,-0.44,0.63,0);
+  var cufR=MB(0.19,0.1,0.21,white2); cufR.rotation.z=-0.1; add(cufR, 0.44,0.63,0);
+  // Hands
+  var handL2=MS(0.11,8,skin); add(handL2,-0.44,0.53,0);
+  var handR2=MS(0.11,8,skin); add(handR2, 0.44,0.53,0);
+  // Fingers (3 box fingers)
+  [-0.04,0,0.04].forEach(function(fz){
+    var fl=MB(0.04,0.1,0.04,skin); add(fl,-0.44,0.44,fz);
+    var fr=MB(0.04,0.1,0.04,skin); add(fr, 0.44,0.44,fz);
+  });
+
+  // ── COLLAR ───────────────────────────────────────────────────
+  var col3=MB(0.42,0.18,0.32,white2); add(col3,0,1.41,0);
+  // Collar points
+  var colPL=MB(0.12,0.12,0.02,white2); colPL.rotation.z= 0.5; add(colPL,-0.15,1.35,0.17);
+  var colPR=MB(0.12,0.12,0.02,white2); colPR.rotation.z=-0.5; add(colPR, 0.15,1.35,0.17);
+
+  // ── NECK ─────────────────────────────────────────────────────
+  var neck2=MC(0.1,0.12,0.24,8,skin); add(neck2,0,1.56,0);
+
+  // ── HEAD (slightly tapered) ──────────────────────────────────
+  var head2=MB(0.5,0.5,0.48,skin); add(head2,0,1.82,0);
+  // Jaw wider at bottom
+  var jaw=MB(0.48,0.14,0.46,skin); add(jaw,0,1.59,0);
+  // Cheeks
+  var cheekL=MS(0.12,7,skin); add(cheekL,-0.22,1.8,0.16);
+  var cheekR=MS(0.12,7,skin); add(cheekR, 0.22,1.8,0.16);
+  // Forehead
+  var forehead=MB(0.46,0.14,0.44,skin); add(forehead,0,2.02,0);
+
+  // ── HAIR ─────────────────────────────────────────────────────
+  var hairTop2=MB(0.52,0.18,0.5,hair2); add(hairTop2,0,2.1,-0.01);
+  var hairSL=MB(0.07,0.38,0.5,hair2); add(hairSL,-0.26,1.88,0);
+  var hairSR=MB(0.07,0.38,0.5,hair2); add(hairSR, 0.26,1.88,0);
+  var hairBack=MB(0.5,0.44,0.1,hair2); add(hairBack,0,1.88,-0.24);
+  // Hair part line
+  var part=MB(0.02,0.04,0.48,0x0a0406); add(part,0.04,2.14,0);
+
+  // ── EARS ─────────────────────────────────────────────────────
+  var earL2=MS(0.085,7,skin); add(earL2,-0.275,1.82,0);
+  var earR2=MS(0.085,7,skin); add(earR2, 0.275,1.82,0);
+  // Ear inner
+  var earIL=MS(0.05,6,0xffb898); add(earIL,-0.31,1.82,0);
+  var earIR=MS(0.05,6,0xffb898); add(earIR, 0.31,1.82,0);
+
+  // ── EYES (detailed) ──────────────────────────────────────────
+  // Eye whites
+  var ewL=MB(0.155,0.1,0.04,white2); add(ewL,-0.13,1.845,0.237);
+  var ewR=MB(0.155,0.1,0.04,white2); add(ewR, 0.13,1.845,0.237);
+  // Irises
+  var irisL=MB(0.09,0.09,0.042,0x3355aa); add(irisL,-0.13,1.845,0.239);
+  var irisR=MB(0.09,0.09,0.042,0x3355aa); add(irisR, 0.13,1.845,0.239);
+  // Pupils
+  var pupL=MB(0.05,0.06,0.045,0x050508); add(pupL,-0.13,1.845,0.241);
+  var pupR=MB(0.05,0.06,0.045,0x050508); add(pupR, 0.13,1.845,0.241);
+  // Eye shine
+  var shineL=MB(0.025,0.025,0.046,0xffffff); add(shineL,-0.11,1.86,0.242);
+  var shineR=MB(0.025,0.025,0.046,0xffffff); add(shineR, 0.15,1.86,0.242);
+  // Eyelids
+  var lidL=MB(0.17,0.04,0.043,skin); add(lidL,-0.13,1.895,0.237);
+  var lidR=MB(0.17,0.04,0.043,skin); add(lidR, 0.13,1.895,0.237);
+
+  // ── EYEBROWS ─────────────────────────────────────────────────
+  var brL2=MB(0.13,0.03,0.02,hair2); brL2.rotation.z= 0.12; add(brL2,-0.13,1.93,0.232);
+  var brR2=MB(0.13,0.03,0.02,hair2); brR2.rotation.z=-0.12; add(brR2, 0.13,1.93,0.232);
+
+  // ── NOSE ─────────────────────────────────────────────────────
+  var noseBr=MB(0.08,0.07,0.07,skin); add(noseBr,0,1.785,0.25);
+  var noseL2=MS(0.042,6,skin); add(noseL2,-0.045,1.765,0.258);
+  var noseR2=MS(0.042,6,skin); add(noseR2, 0.045,1.765,0.258);
+  var noseTip=MS(0.045,6,skin); add(noseTip,0,1.8,0.265);
+
+  // ── MOUTH ────────────────────────────────────────────────────
+  var lipU=MB(0.16,0.04,0.035,0xcc8866); add(lipU,0,1.705,0.245);
+  var lipL2=MB(0.14,0.04,0.035,0xbb7755); add(lipL2,0,1.672,0.245);
+  // Smile lines
+  var smileL=MB(0.04,0.07,0.03,skin); smileL.rotation.z= 0.5; add(smileL,-0.1,1.69,0.243);
+  var smileR=MB(0.04,0.07,0.03,skin); smileR.rotation.z=-0.5; add(smileR, 0.1,1.69,0.243);
+
+  // ── ACCESSORIES ──────────────────────────────────────────────
   if (def.acc === 'crown') {
-    var cb = C(0.24, 0.20, 0.20, 6, 0xffd700); groupAdd(g, cb, 0, 1.98, 0);
-    for (var ci3 = 0; ci3 < 6; ci3++) {
-      var ca2 = (ci3 / 6) * Math.PI * 2;
-      var cp2 = Cone(0.05, 0.18, 4, 0xffd700);
-      cp2.position.set(Math.cos(ca2)*0.2, 2.10, Math.sin(ca2)*0.2);
-      g.add(cp2);
+    var crBase=MC(0.26,0.22,0.22,7,0xffd700,0xffd700,0.4); add(crBase,0,2.16,0);
+    for (var ci4=0;ci4<7;ci4++){
+      var ca4=(ci4/7)*Math.PI*2;
+      var cp4=new THREE.Mesh(new THREE.ConeGeometry(0.055,0.22,4),new THREE.MeshLambertMaterial({color:0xffd700,emissive:0xffd700,emissiveIntensity:0.3}));
+      cp4.position.set(Math.cos(ca4)*0.22,2.29,Math.sin(ca4)*0.22);
+      g.add(cp4);
     }
-    groupAdd(g, S(0.06, 6, 0xff2255, 0xff2255, 0.5), 0, 2.12, 0);
+    // Jewels in crown
+    [0xff2255, 0x22aaff, 0xff2255].forEach(function(jc,ji){
+      var jm=MS(0.055,6,jc,jc,0.6);
+      jm.position.set((ji-1)*0.16,2.28,0.22);
+      g.add(jm);
+    });
   }
   if (def.acc === 'fedora') {
-    groupAdd(g, C(0.36, 0.38, 0.06, 10, 0x2a1a0a), 0, 1.965, 0);
-    groupAdd(g, C(0.20, 0.22, 0.28, 10, 0x2a1a0a), 0, 2.10,  0);
+    var fedBrim3=MC(0.38,0.4,0.07,12,0x1a0f05); add(fedBrim3,0,2.11,0);
+    var fedBody=MC(0.22,0.24,0.32,10,0x1a0f05); add(fedBody,0,2.27,0);
+    var fedBand=MC(0.225,0.225,0.06,10,bc); add(fedBand,0,2.14,0);
   }
   if (def.acc === 'helmet') {
-    var hb2 = S(0.28, 10, 0x336644); hb2.scale.y = 0.75; groupAdd(g, hb2, 0, 1.97, 0);
+    var helm=new THREE.Mesh(new THREE.SphereGeometry(0.3,10,8),new THREE.MeshLambertMaterial({color:0x2d5a3d}));
+    helm.scale.y=0.78; helm.position.set(0,2.09,0); g.add(helm);
+    var helmBrim=MC(0.32,0.32,0.06,10,0x245030); add(helmBrim,0,1.97,0);
+    var helmVis=MB(0.26,0.1,0.05,0x8ab4cc); helmVis.material.transparent=true; helmVis.material.opacity=0.65; add(helmVis,0,1.94,0.27);
+    var helmStar=MS(0.055,6,0xffd700,0xffd700,0.5); add(helmStar,0,2.1,0.28);
   }
   if (def.acc === 'party') {
-    groupAdd(g, Cone(0.18, 0.45, 8, 0xff44bb), 0, 2.15, 0);
+    var pBase=MC(0.2,0.1,0.12,8,0xff44bb); add(pBase,0,2.07,0);
+    var pCone=new THREE.Mesh(new THREE.ConeGeometry(0.2,0.55,8),new THREE.MeshLambertMaterial({color:0xff44bb})); pCone.position.set(0,2.38,0); g.add(pCone);
+    var pBall=MS(0.06,6,0xffffff,0xffffff,0.5); add(pBall,0,2.67,0);
+    // Confetti
+    [0,1,2,3,4].forEach(function(ci5){
+      var ca5=(ci5/5)*Math.PI*2; var cc=[0xff4444,0x44ff44,0x4444ff,0xffff44,0xff44ff][ci5];
+      var conf=MS(0.04,4,cc); conf.position.set(Math.cos(ca5)*0.45,1.6+ci5*0.15,Math.sin(ca5)*0.2); g.add(conf);
+    });
   }
   if (def.acc === 'flag') {
-    groupAdd(g, C(0.025, 0.025, 1.0, 5, 0xcccccc), 0.44, 1.35, 0);
-    var ffl3 = new THREE.Mesh(new THREE.PlaneGeometry(0.38, 0.25), new THREE.MeshBasicMaterial({color:0x005293,side:THREE.DoubleSide}));
-    ffl3.position.set(0.63, 1.72, 0); g.add(ffl3);
-    var fst3 = new THREE.Mesh(new THREE.PlaneGeometry(0.38, 0.07), new THREE.MeshBasicMaterial({color:0xfecc00,side:THREE.DoubleSide}));
-    fst3.position.set(0.63, 1.72, 0.02); g.add(fst3);
+    var fpole2=MC(0.025,0.025,1.1,5,0xcccccc); add(fpole2,0.44,1.45,0);
+    var ffl4=new THREE.Mesh(new THREE.PlaneGeometry(0.42,0.28),new THREE.MeshBasicMaterial({color:0x005293,side:THREE.DoubleSide}));
+    ffl4.position.set(0.65,1.84,0); g.add(ffl4);
+    var fst4=new THREE.Mesh(new THREE.PlaneGeometry(0.42,0.07),new THREE.MeshBasicMaterial({color:0xfecc00,side:THREE.DoubleSide}));
+    fst4.position.set(0.65,1.84,0.02); g.add(fst4);
   }
   if (def.acc === 'mic') {
-    groupAdd(g, S(0.085, 7, 0x888888), -0.46, 1.18, 0);
-    groupAdd(g, C(0.025, 0.025, 0.28, 5, 0x666666), -0.46, 0.96, 0);
+    var micGrille=MS(0.09,8,0x888888); add(micGrille,-0.47,1.28,0);
+    var micMesh2=new THREE.Mesh(new THREE.SphereGeometry(0.075,8,8),new THREE.MeshLambertMaterial({color:0x333333}));
+    micMesh2.position.set(-0.47,1.28,0); g.add(micMesh2);
+    var micSt=MC(0.025,0.025,0.32,5,0x555555); add(micSt,-0.47,1.04,0);
+    var micHand=MB(0.06,0.1,0.06,0x555555); add(micHand,-0.44,0.87,0);
   }
 
-  // Glow ring
-  var gcm = new THREE.Mesh(new THREE.CircleGeometry(0.7, 14),
-    new THREE.MeshBasicMaterial({color: bc, transparent: true, opacity: 0.25, side: THREE.DoubleSide}));
-  gcm.rotation.x = -Math.PI / 2;
-  gcm.position.set(0, 0.02, 0);
-  g.add(gcm);
+  // ── GLOW ring ─────────────────────────────────────────────────
+  var glowRing=new THREE.Mesh(new THREE.RingGeometry(0.55,0.75,18),
+    new THREE.MeshBasicMaterial({color:bc,transparent:true,opacity:0.3,side:THREE.DoubleSide}));
+  glowRing.rotation.x=-Math.PI/2; glowRing.position.set(0,0.02,0); g.add(glowRing);
+
+  // Inner glow
+  var glowInner=new THREE.Mesh(new THREE.CircleGeometry(0.55,16),
+    new THREE.MeshBasicMaterial({color:bc,transparent:true,opacity:0.12,side:THREE.DoubleSide}));
+  glowInner.rotation.x=-Math.PI/2; glowInner.position.set(0,0.03,0); g.add(glowInner);
 
   // Point light
-  var jl = new THREE.PointLight(bc, 0.8, 5);
-  jl.position.set(0, 1.2, 0);
-  g.add(jl);
+  var jLight=new THREE.PointLight(bc,1.0,6);
+  jLight.position.set(0,1.2,0); g.add(jLight);
 
-  // Floating name dot
-  var nd2 = S(0.09, 6, bc, bc, 0.6);
-  nd2.position.set(0, 2.5, 0);
-  nd2.name = 'namedot';
-  g.add(nd2);
+  // Floating rarity dot
+  var ndot=MS(0.1,7,bc,bc,0.7); ndot.position.set(0,2.7,0); ndot.name='namedot'; g.add(ndot);
+  // Second ring around dot
+  var dotRing=new THREE.Mesh(new THREE.TorusGeometry(0.18,0.025,6,14),
+    new THREE.MeshBasicMaterial({color:bc,transparent:true,opacity:0.6}));
+  dotRing.position.set(0,2.7,0); dotRing.name='dotring'; g.add(dotRing);
 
-  // Store limb refs for animation
+  // Store animation refs
   g.userData.legL  = legL;
   g.userData.legR  = legR;
-  g.userData.armL  = armL;
-  g.userData.armR  = armR;
+  g.userData.armL  = armLU;
+  g.userData.armR  = armRU;
 
   g.scale.setScalar(def.sc || 1.0);
   return g;
@@ -571,7 +704,7 @@ var spawnTimer2    = 0;
 var spawnInterval  = 3.5;  // seconds between spawns
 var spawnCycleIdx  = 0;
 // Spawn order: weighted so rarer ones appear less often
-var spawnOrder = [0,1,0,2,1,3,0,4,2,0,1,5,3,0,6,2,4,1,0,7,3,0,1,2,8,0,1,3];
+var spawnOrder = [0,1,2,0,3,1,4,0,5,2,1,6,0,3,7,1,2,0,8,4,1,3,0,9,2,1,5,0,10,3,1,2,0,11,4,1,0,12,2,3,13,0,1,14,2,0,3,15,1,0,16,2,17,0,1,2];
 
 function spawnNext() {
   var defIdx = spawnOrder[spawnCycleIdx % spawnOrder.length];
