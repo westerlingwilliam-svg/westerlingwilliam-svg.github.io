@@ -315,11 +315,11 @@ var nearJimmie = null;
 var wanderers = [], particles = [];
 var incomeTimer = 0, saveTimer = 0, spawnTimer2 = 0;
 var garageSlots = [];
-var velY = 0, isOnGround = true;
+var velY = 0, velX = 0, velZ = 0, isOnGround = true;
 var GRAVITY = -18, JUMP_FORCE = 7.5;
 var spawnInterval = 3.2;
 var spawnCycleIdx = 0;
-var spawnOrder = [0,1,2,0,3,1,4,0,5,2,1,6,0,3,7,1,2,0,8,4,1,3,0,9,2,1,5,0,10,3,1,2,0,11,4,1,0,12,2,3,13,0,1,14,2,0,3,15,1,0,16,2,17,0,1,2];
+var spawnOrder = [0,1,2,0,3,1,0,2,0,1,3,0,4,1,0,2,0,1,0,3,5,0,2,1,0,4,0,3,1,0,2,6,0,1,0,3,0,2,1,4,0,5,0,1,0,2,3,0,8,1,0,4,0,2,1,0,3,5,0,1,2,0,6,0,1,3,0,2,4,0,1,0,9,0,2,1,3,0,4,0,1,2,0,5,0,3,1,0,10,0,2,1,0,3,0,4,1,2,0,5,0,1,0,11,3,0,2,1,4,0,0,1,2,0,3,1,0,12,4,0,2,1,3,0,5,0,1,2,0,4,0,3,1,0,0,2,1,0,3,0,13,1,2,4,0,0,1,0,3,2,0,5,1,0,4,0,2,3,1,0,0,1,2,0,14,3,0,1,4,0,2,0,1,3,0,5,0,0,1,2,0,3,4,0,1,0,2,0,3,15,1,0,2,0,4,1,3,0,0,2,1,0,3,0,5,2,0,1,4,0,3,0,2,1,0,16,0,1,2,3,0,4,0,1,0,2,3,0,5,1,0,2,0,4,3,1,0,17,0,2,1,0,3,0,1,2];
 
 // ── Renderer ───────────────────────────────────────────────────
 var canvas = document.getElementById('c');
@@ -331,14 +331,14 @@ renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.0;
 
 var scene = new THREE.Scene();
-scene.background = new THREE.Color(0x00050f);
-scene.fog = new THREE.Fog(0x001228, 30, 80);
+scene.background = new THREE.Color(0x000c1e);
+scene.fog = new THREE.Fog(0x000c1e, 25, 75);
 
 var cam = new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHeight, 0.05, 200);
 cam.position.set(6, 1.75, 0);
 
 // ── Lights ─────────────────────────────────────────────────────
-scene.add(new THREE.AmbientLight(0x334466, 1.6));
+scene.add(new THREE.AmbientLight(0x445577, 1.8));
 var sun = new THREE.DirectionalLight(0xfff5cc, 1.7);
 sun.position.set(20,35,10); // sun.castShadow = false
 scene.add(sun);
@@ -376,7 +376,7 @@ var ROAD_SPAWN=22, ROAD_DESPAWN=-22, GX=22, GZ=0, GW=14, GH=6.5, GD=16;
 var ROAD_X = 0; // road center x
 
 // Ground — dark with subtle grid feel
-var gnd = Box(90, 0.1, 60, 0x0a1a0a); gnd.position.set(0,-0.05,0); scene.add(gnd);
+var gnd = Box(90, 0.1, 60, 0x0d1a0d); gnd.position.set(0,-0.05,0); scene.add(gnd);
 // Ground glow strip along road
 var roadGlow = new THREE.Mesh(new THREE.PlaneGeometry(6,48),
   new THREE.MeshBasicMaterial({color:0x003366,transparent:true,opacity:0.3}));
@@ -423,10 +423,10 @@ var bulbMat = new THREE.MeshBasicMaterial({color:0xffffdd});
     var post=new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.1,5.5,6),lampMat);
     post.position.set(lx,2.75,lz); scene.add(post);
     var arm=new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.04,0.9,4),lampMat);
-    arm.rotation.z=Math.PI/2; arm.position.set(lx+side*0.45,4.9,lz); scene.add(arm);
+    arm.rotation.z=Math.PI/2; arm.position.set(lx-side*0.45,4.9,lz); scene.add(arm);
     var bulb=new THREE.Mesh(new THREE.SphereGeometry(0.18,6,6),bulbMat);
-    bulb.position.set(lx+side*0.9,4.85,lz); scene.add(bulb);
-    // Lamp glow via emissive only
+    bulb.position.set(lx-side*0.9,4.85,lz); scene.add(bulb);
+    var lpl=new THREE.PointLight(0xffffaa,0.5,9); lpl.position.set(lx-side*0.9,4.65,lz); scene.add(lpl);
   });
 });
 
@@ -460,11 +460,11 @@ var gGroup = new THREE.Group();
 gGroup.position.set(GX, 0, GZ);
 
 var gFloor=new THREE.Mesh(new THREE.PlaneGeometry(GD,GW),new THREE.MeshLambertMaterial({color:0x1a1a2e}));
-gFloor.rotation.x=-Math.PI/2; gGroup.add(gFloor);
+gFloor.rotation.x=-Math.PI/2; gFloor.position.y=0.06; gGroup.add(gFloor);
 // Floor lines
 for(var gli=-5;gli<=5;gli++){
   var gl=new THREE.Mesh(new THREE.PlaneGeometry(GD,0.06),new THREE.MeshBasicMaterial({color:0x334466,transparent:true,opacity:0.6}));
-  gl.rotation.x=-Math.PI/2; gl.position.set(0,0.01,gli*1.1); gGroup.add(gl);
+  gl.rotation.x=-Math.PI/2; gl.position.set(0,0.08,gli*1.1); gGroup.add(gl);
 }
 // Back wall
 ga(gGroup,Box(0.45,GH,GW,0x1a1a33),  GD/2,GH/2,0);
@@ -856,8 +856,8 @@ function restoreGarage() {
     mesh.add(idot);
     slot.jimmie = {
       mesh: mesh, def: def, defIdx: slotData.defIdx,
-      level: slotData.level, movingToSlot: false,
-      recruited: true, despawned: false,
+      level: slotData.level || 1, movingToSlot: false,
+      recruited: true, despawned: false, targetSlotIdx: idx,
     };
     slot.platTop.material = mkMat(def.col, def.col, 0.25);
   });
@@ -1119,20 +1119,26 @@ function loop() {
   pitch4  = Math.max(-1.1, Math.min(1.1, pitch4 - mouseDY * 0.002));
   mouseDX = 0; mouseDY = 0;
 
-  // ── Movement ────────────────────────────────────────────────
-  var spd4 = (keys4['ShiftLeft']||keys4['ShiftRight']) ? 9 : 5.5;
-  var fX3  = Math.sin(yaw4), fZ3 = Math.cos(yaw4);
-  var rX3  = Math.cos(yaw4), rZ3 = -Math.sin(yaw4);
-  var mx3=0, mz3=0;
-  if(keys4['KeyW']||keys4['ArrowUp'])    { mx3 -= fX3; mz3 -= fZ3; }
-  if(keys4['KeyS']||keys4['ArrowDown'])  { mx3 += fX3; mz3 += fZ3; }
-  if(keys4['KeyA']||keys4['ArrowLeft'])  { mx3 -= rX3; mz3 -= rZ3; }
-  if(keys4['KeyD']||keys4['ArrowRight']) { mx3 += rX3; mz3 += rZ3; }
-  var ml3 = Math.sqrt(mx3*mx3 + mz3*mz3);
-  if(ml3 > 0){
-    mx3 = mx3/ml3*spd4*dt; mz3 = mz3/ml3*spd4*dt;
-    var nx4 = cam.position.x + mx3;
-    var nz4 = cam.position.z + mz3;
+  // ── Movement with smooth acceleration ───────────────────────
+  var targetSpd = (keys4['ShiftLeft']||keys4['ShiftRight']) ? 9 : 5.5;
+  var fX3 = Math.sin(yaw4), fZ3 = Math.cos(yaw4);
+  var rX3 = Math.cos(yaw4), rZ3 = -Math.sin(yaw4);
+  var wx=0, wz=0;
+  if(keys4['KeyW']||keys4['ArrowUp'])    { wx -= fX3; wz -= fZ3; }
+  if(keys4['KeyS']||keys4['ArrowDown'])  { wx += fX3; wz += fZ3; }
+  if(keys4['KeyA']||keys4['ArrowLeft'])  { wx -= rX3; wz -= rZ3; }
+  if(keys4['KeyD']||keys4['ArrowRight']) { wx += rX3; wz += rZ3; }
+  var wl = Math.sqrt(wx*wx+wz*wz);
+  if(wl > 0){ wx /= wl; wz /= wl; }
+  // Smooth velocity
+  velX += (wx*targetSpd - velX) * Math.min(1, dt*12);
+  velZ += (wz*targetSpd - velZ) * Math.min(1, dt*12);
+  // Apply friction when no input
+  if(wl === 0){ velX *= Math.max(0, 1 - dt*14); velZ *= Math.max(0, 1 - dt*14); }
+  var ml3 = Math.sqrt(velX*velX+velZ*velZ);
+  if(ml3 > 0.05){
+    var nx4 = cam.position.x + velX*dt;
+    var nz4 = cam.position.z + velZ*dt;
     if(!isBlocked4(nx4, cam.position.z)) cam.position.x = nx4;
     if(!isBlocked4(cam.position.x, nz4)) cam.position.z = nz4;
   }
@@ -1141,7 +1147,7 @@ function loop() {
   velY += GRAVITY * dt;
   cam.position.y += velY * dt;
   if(cam.position.y <= 1.75){ cam.position.y=1.75; velY=0; isOnGround=true; }
-  if(isOnGround && ml3>0) cam.position.y = 1.75 + Math.sin(el*9)*0.025;
+  if(isOnGround && ml3>0.3) cam.position.y = 1.75 + Math.sin(el*9)*0.025;
 
   cam.rotation.order='YXZ'; cam.rotation.y=yaw4; cam.rotation.x=pitch4;
 
