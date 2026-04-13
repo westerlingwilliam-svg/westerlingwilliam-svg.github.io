@@ -346,20 +346,20 @@ renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.0;
 
 var scene = new THREE.Scene();
-scene.background = new THREE.Color(0x000c1e);
-scene.fog = new THREE.Fog(0x000c1e, 25, 75);
+scene.background = new THREE.Color(0x050d22);
+scene.fog = new THREE.Fog(0x050d22, 28, 78);
 
 var cam = new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHeight, 0.05, 200);
 cam.position.set(6, 1.75, 0);
 
 // ── Lights ─────────────────────────────────────────────────────
-scene.add(new THREE.AmbientLight(0x445577, 1.8));
+scene.add(new THREE.AmbientLight(0x667799, 1.6));
 var sun = new THREE.DirectionalLight(0xfff5cc, 1.7);
 sun.position.set(20,35,10); // sun.castShadow = false
 scene.add(sun);
 var fill1 = new THREE.DirectionalLight(0x0033aa, 0.5);
 fill1.position.set(-15,10,-8); scene.add(fill1);
-scene.add(new THREE.HemisphereLight(0x112244, 0x111111, 0.4));
+scene.add(new THREE.HemisphereLight(0x3366cc, 0x224422, 0.6));
 
 // ── Mesh helpers ───────────────────────────────────────────────
 function mkMat(col,em,ei){
@@ -391,17 +391,17 @@ var ROAD_SPAWN=22, ROAD_DESPAWN=-22, GX=22, GZ=0, GW=14, GH=6.5, GD=16;
 var ROAD_X = 0; // road center x
 
 // Ground — dark with subtle grid feel
-var gnd = Box(90, 0.1, 60, 0x0d1a0d); gnd.position.set(0,-0.05,0); scene.add(gnd);
+var gnd = Box(90, 0.1, 60, 0x0f2010); gnd.position.set(0,-0.05,0); scene.add(gnd);
 // Ground glow strip along road
 var roadGlow = new THREE.Mesh(new THREE.PlaneGeometry(6,48),
-  new THREE.MeshBasicMaterial({color:0x003366,transparent:true,opacity:0.3}));
+  new THREE.MeshBasicMaterial({color:0x0044aa,transparent:true,opacity:0.4}));
 roadGlow.rotation.x=-Math.PI/2; roadGlow.position.set(0,0.02,0); scene.add(roadGlow);
 
 // Road
-var road = Box(6,0.12,48,0x1a1a2a); road.position.set(0,0,0); scene.add(road);
+var road = Box(6,0.12,48,0x14141f); road.position.set(0,0,0); scene.add(road);
 // Kerbs
-addS(Box(0.22,0.14,48,0x4455aa), -3.2, 0.07, 0);
-addS(Box(0.22,0.14,48,0x4455aa),  3.2, 0.07, 0);
+addS(Box(0.22,0.14,48,0x5566cc), -3.2, 0.07, 0);
+addS(Box(0.22,0.14,48,0x5566cc),  3.2, 0.07, 0);
 // Road dashes — glowing blue/yellow
 for(var di=-10;di<=10;di++){
   var dm=new THREE.Mesh(new THREE.PlaneGeometry(0.18,2),
@@ -410,8 +410,20 @@ for(var di=-10;di<=10;di++){
 }
 // Pavement
 var pave=new THREE.Mesh(new THREE.PlaneGeometry(5,48),
-  new THREE.MeshLambertMaterial({color:0x222233}));
+  new THREE.MeshLambertMaterial({color:0x2a2a44}));
 pave.rotation.x=-Math.PI/2; pave.position.set(5,0.06,0); scene.add(pave);
+
+// Colored accent lights along road
+var roadColors = [0x0055ff, 0x4400aa, 0x0077ff, 0x3300cc, 0x0055ff];
+roadColors.forEach(function(rc2, ri) {
+  var rl = new THREE.PointLight(rc2, 0.7, 12);
+  rl.position.set(0, 0.5, -16 + ri * 8);
+  scene.add(rl);
+});
+// Add a warm golden light near garage entrance
+var garageEntLight = new THREE.PointLight(0xffaa33, 1.4, 14);
+garageEntLight.position.set(GX - GD/2 - 2, 3, GZ);
+scene.add(garageEntLight);
 
 // ── SPAWN PORTAL (green, z=+22) ────────────────────────────────
 function makePortal(pz, col, label) {
@@ -446,9 +458,9 @@ var bulbMat = new THREE.MeshBasicMaterial({color:0xffffdd});
 });
 
 // ── BOUNDARY WALLS (concrete with SD yellow stripe) ────────────
-var wallMat2 = new THREE.MeshLambertMaterial({color:0x222233});
-var wallYel  = new THREE.MeshLambertMaterial({color:0xfecc00,emissive:new THREE.Color(0xfecc00),emissiveIntensity:0.15});
-var wallBlue = new THREE.MeshLambertMaterial({color:0x003d7a,emissive:new THREE.Color(0x003d7a),emissiveIntensity:0.1});
+var wallMat2 = new THREE.MeshLambertMaterial({color:0x1a1a2e});
+var wallYel  = new THREE.MeshLambertMaterial({color:0xfecc00,emissive:new THREE.Color(0xfecc00),emissiveIntensity:0.3});
+var wallBlue = new THREE.MeshLambertMaterial({color:0x0044aa,emissive:new THREE.Color(0x0044aa),emissiveIntensity:0.2});
 // N/S walls
 [[0,26,90,false],[0,-26,90,false]].forEach(function(w){
   var wm=new THREE.Mesh(new THREE.BoxGeometry(w[2],5.5,1.2),wallMat2);
@@ -457,7 +469,10 @@ var wallBlue = new THREE.MeshLambertMaterial({color:0x003d7a,emissive:new THREE.
   ws.position.set(w[0],5.1,w[1]); scene.add(ws);
   var wb=new THREE.Mesh(new THREE.BoxGeometry(w[2],0.55,1.3),wallBlue);
   wb.position.set(w[0],0.27,w[1]); scene.add(wb);
-  // Wall lights removed for performance
+  for(var wli=-35;wli<=35;wli+=18){
+    var wlp=new THREE.PointLight(0x3355ff,0.4,12);
+    wlp.position.set(wli,3,w[1]); scene.add(wlp);
+  }
 });
 // E/W walls
 [[36,0,54,true],[-20,0,54,true]].forEach(function(w){
@@ -474,7 +489,7 @@ var wallBlue = new THREE.MeshLambertMaterial({color:0x003d7a,emissive:new THREE.
 var gGroup = new THREE.Group();
 gGroup.position.set(GX, 0, GZ);
 
-var gFloor=new THREE.Mesh(new THREE.PlaneGeometry(GD,GW),new THREE.MeshLambertMaterial({color:0x1a1a2e}));
+var gFloor=new THREE.Mesh(new THREE.PlaneGeometry(GD,GW),new THREE.MeshLambertMaterial({color:0x181830}));
 gFloor.rotation.x=-Math.PI/2; gFloor.position.y=0.06; gGroup.add(gFloor);
 // Floor lines
 for(var gli=-5;gli<=5;gli++){
@@ -482,10 +497,10 @@ for(var gli=-5;gli<=5;gli++){
   gl.rotation.x=-Math.PI/2; gl.position.set(0,0.08,gli*1.1); gGroup.add(gl);
 }
 // Back wall
-ga(gGroup,Box(0.45,GH,GW,0x1a1a33),  GD/2,GH/2,0);
+ga(gGroup,Box(0.45,GH,GW,0x1e1e38),  GD/2,GH/2,0);
 // Side walls
-ga(gGroup,Box(GD,GH,0.45,0x1a1a33),  0,GH/2,-GW/2);
-ga(gGroup,Box(GD,GH,0.45,0x1a1a33),  0,GH/2, GW/2);
+ga(gGroup,Box(GD,GH,0.45,0x1e1e38),  0,GH/2,-GW/2);
+ga(gGroup,Box(GD,GH,0.45,0x1e1e38),  0,GH/2, GW/2);
 // Roof
 ga(gGroup,Box(GD,0.45,GW,0x111122),  0,GH,0);
 // Opening header
@@ -506,8 +521,9 @@ sdB.rotation.y=Math.PI/2; sdB.position.set(GD/2-0.25,GH-1.4,0); gGroup.add(sdB);
 var sdY2=new THREE.Mesh(new THREE.PlaneGeometry(0.38,2.4),new THREE.MeshBasicMaterial({color:0xfecc00,side:THREE.DoubleSide}));
 sdY2.rotation.y=Math.PI/2; sdY2.position.set(GD/2-0.23,GH-1.4,0); gGroup.add(sdY2);
 // Two main interior fill lights (not per-corner)
-var cl1=new THREE.PointLight(0xddeeff,1.8,20); cl1.position.set(0,GH-0.5,0); gGroup.add(cl1);
-var cl2=new THREE.PointLight(0xddeeff,1.2,16); cl2.position.set(-GD/2+3,GH-0.5,0); gGroup.add(cl2);
+var cl1=new THREE.PointLight(0xaaccff,2.2,22); cl1.position.set(0,GH-0.5,0); gGroup.add(cl1);
+var cl2=new THREE.PointLight(0x88aaff,1.4,16); cl2.position.set(-GD/2+3,GH-0.5,0); gGroup.add(cl2);
+var cl3=new THREE.PointLight(0xffcc44,0.8,10); cl3.position.set(GD/2-3,GH-0.7,0); gGroup.add(cl3);
 // Sconce meshes (visible but no per-sconce light)
 [-GD/2+3, 0, GD/2-3].forEach(function(lx2) {
   [-GW/2+0.35, GW/2-0.35].forEach(function(lz2) {
@@ -551,8 +567,8 @@ for(var row=0;row<2;row++){
 }
 var upgradeButtons = []; // {mesh, slotIdx, pos}
 PLATFORM_POSITIONS.forEach(function(pp,idx){
-  var base=Box(1.9,0.2,1.9,0x2233aa,0x0033aa,0.1); base.position.set(pp.x,0.1,pp.z); scene.add(base);
-  var top=Box(1.65,0.07,1.65,0x445566); top.position.set(pp.x,0.21,pp.z); top.name='plattop_'+idx; scene.add(top);
+  var base=Box(1.9,0.2,1.9,0x2244cc,0x1133aa,0.15); base.position.set(pp.x,0.1,pp.z); scene.add(base);
+  var top=Box(1.65,0.07,1.65,0x334488); top.position.set(pp.x,0.21,pp.z); top.name='plattop_'+idx; scene.add(top);
 
   // Upgrade button: pole in front corner + sign
   // Place pole at front-left corner of platform (toward road = -x direction)
@@ -582,7 +598,7 @@ PLATFORM_POSITIONS.forEach(function(pp,idx){
 var sv=new Float32Array(300*3);
 for(var si=0;si<300;si++){sv[si*3]=(Math.random()-0.5)*160;sv[si*3+1]=Math.random()*55+18;sv[si*3+2]=(Math.random()-0.5)*160;}
 var sg=new THREE.BufferGeometry(); sg.setAttribute('position',new THREE.BufferAttribute(sv,3));
-scene.add(new THREE.Points(sg,new THREE.PointsMaterial({color:0x8899ff,size:0.15})));
+scene.add(new THREE.Points(sg,new THREE.PointsMaterial({color:0xaabbff,size:0.18})));
 
 // ── BUILD JIMMIE MESH ──────────────────────────────────────────
 function buildJimmieMesh(def) {
@@ -902,9 +918,16 @@ function recruitJimmie(w) {
   var slot = garageSlots[slotIdx];
   slot.jimmie = w; w.level = 1;
   slot.platTop.material = mkMat(w.def.col, w.def.col, 0.25);
-  money += w.def.cost; totalEarned += w.def.cost;
+  if (money < w.def.cost) {
+    w.recruited = false; w.movingToSlot = false;
+    garageSlots[slotIdx].jimmie = null;
+    garageSlots[slotIdx].platTop.material = mkMat(0x445566);
+    showPopup('⚠️ Inte nog pengar!', 'Kostar ' + fmtNum(w.def.cost) + ' kr', 0xef4444);
+    return;
+  }
+  money -= w.def.cost;
   var idot = makeIncomeLabel(w.defIdx, 1); w.mesh.add(idot);
-  showPopup(w.def.icon + ' ' + w.def.name, '+' + w.def.cost + ' kr — ' + w.def.pps + ' kr/s', w.def.col, w.def.rarity);
+  showPopup(w.def.icon + ' ' + w.def.name, '-' + fmtNum(w.def.cost) + ' kr — +' + fmtNum(w.def.pps) + ' kr/s', w.def.col, w.def.rarity);
   nearJimmie = null; explodeParts(w.mesh.position, w.def.col, 18);
   updateHUD(); saveState();
 }
@@ -1068,8 +1091,23 @@ document.getElementById('pausebtn').addEventListener('click', togglePause);
 
 // Collision
 function isBlocked4(nx, nz) {
-  // World bounds only
+  // World boundaries
   if (nx > 35 || nx < -19 || nz > 25 || nz < -25) return true;
+  // Garage walls — opening faces -X (left side at GX-GD/2 = 14)
+  var gLeft  = GX - GD/2;  // 14 = opening
+  var gRight = GX + GD/2;  // 30 = back wall
+  var gFront = GZ - GW/2;  // -7
+  var gBack  = GZ + GW/2;  // +7
+  var pr = 0.5; // player radius
+  // Inside garage zone
+  var inX = nx > gLeft + pr && nx < gRight - pr;
+  var inZ = nz > gFront + pr && nz < gBack - pr;
+  if (inX && inZ) return false; // inside = allowed
+  // Back wall (+X face)
+  if (nx > gRight - pr && nz > gFront - pr && nz < gBack + pr) return true;
+  // Side walls
+  if (nz < gFront + pr && nx > gLeft && nx < gRight) return true;
+  if (nz > gBack  - pr && nx > gLeft && nx < gRight) return true;
   return false;
 }
 
@@ -1256,7 +1294,8 @@ function loop() {
     nearJimmie=closestW;
     rhint.style.display='block';
     var rc=('000000'+closestW.def.col.toString(16)).slice(-6);
-    rhint.innerHTML=closestW.def.icon+' <strong>E</strong> — Rekrytera <span style="color:#'+rc+'">'+closestW.def.name+'</span><br><small style="opacity:.65">'+closestW.def.rarity+' · +'+closestW.def.cost+' kr · '+closestW.def.pps+' kr/s</small>';
+    var canAfford = money >= closestW.def.cost;
+    rhint.innerHTML=closestW.def.icon+' <strong>E</strong> — Rekrytera <span style="color:#'+rc+'">'+closestW.def.name+'</span><br><small style="opacity:.65">'+closestW.def.rarity+' · <span style="color:'+(canAfford?'#4ade80':'#f87171')+'">'+fmtNum(closestW.def.cost)+' kr</span> · '+fmtNum(closestW.def.pps)+' kr/s</small>';
   } else { nearJimmie=null; rhint.style.display='none'; }
 
   var qhint2=document.getElementById('qhint'), uhint=document.getElementById('uhint');
