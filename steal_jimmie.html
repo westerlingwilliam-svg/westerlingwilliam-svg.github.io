@@ -358,7 +358,8 @@ function upgradedPps(def, level) {
 }
 
 // ── Persistent state ───────────────────────────────────────────
-var SAVE_KEY = 'stj_v7';
+var SAVE_KEY = 'stj_v8';
+try { localStorage.removeItem('stj_v7'); localStorage.removeItem('stj_v6'); localStorage.removeItem('stj_v5'); } catch(e) {}
 
 function defaultState() {
   return {
@@ -669,58 +670,102 @@ var eg1=new THREE.PointLight(0x0066ff,1.8,10); eg1.position.set(-GD/2-1,3,-4); g
 var eg2=new THREE.PointLight(0x0066ff,1.8,10); eg2.position.set(-GD/2-1,3, 4); gGroup.add(eg2);
 scene.add(gGroup);
 
-// ── GARAGE 2ND FLOOR (unlocked by rebirth) ─────────────────────
-// 2nd floor sits above the garage, connected by staircase on right side
-var GH2 = GH + 0.45 + 3.5; // floor 2 height = garage roof + ceiling + 3.5m
+// ── GARAGE 2ND FLOOR ─────────────────────────────────────────────
+// GH = 6.5 = garage wall height. Roof slab top = GH + 0.225 ≈ 6.73
+// 2nd floor room: floor at y=GH+0.225, room height 3.5, ceiling at y=GH+3.725
+var GH2 = GH + 0.225;  // y of 2nd floor surface (top of garage roof slab)
+var F2RH = 3.5;         // 2nd floor room height
+
 var floor2Group = new THREE.Group();
-floor2Group.position.set(GX, 0, GZ);
 
-// Floor platform
-var f2Floor = new THREE.Mesh(new THREE.PlaneGeometry(GD, GW),
-  new THREE.MeshLambertMaterial({color:0x12122a}));
-f2Floor.rotation.x = -Math.PI/2; f2Floor.position.y = GH2 + 0.06; floor2Group.add(f2Floor);
+// Decorative floor mesh (just above roof slab)
+var f2FloorMesh = new THREE.Mesh(new THREE.PlaneGeometry(GD-0.5, GW-0.5),
+  new THREE.MeshLambertMaterial({color:0x16162e}));
+f2FloorMesh.rotation.x = -Math.PI/2;
+f2FloorMesh.position.set(GX, GH2+0.05, GZ);
+floor2Group.add(f2FloorMesh);
 
-// Side walls (same as garage but thinner)
-var f2W1 = new THREE.Mesh(new THREE.BoxGeometry(GD, 3.5, 0.4), new THREE.MeshLambertMaterial({color:0x1e1e40}));
-f2W1.position.set(0, GH2 + 1.75, -GW/2); floor2Group.add(f2W1);
-var f2W2 = new THREE.Mesh(new THREE.BoxGeometry(GD, 3.5, 0.4), new THREE.MeshLambertMaterial({color:0x1e1e40}));
-f2W2.position.set(0, GH2 + 1.75, GW/2); floor2Group.add(f2W2);
-var f2Back = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.5, GW), new THREE.MeshLambertMaterial({color:0x1e1e40}));
-f2Back.position.set(GD/2, GH2 + 1.75, 0); floor2Group.add(f2Back);
+// Side wall z=-7 (full, no opening)
+var f2W1m = new THREE.Mesh(new THREE.BoxGeometry(GD, F2RH, 0.4),
+  new THREE.MeshLambertMaterial({color:0x1e1e3a}));
+f2W1m.position.set(GX, GH2+F2RH/2, GZ-GW/2);
+floor2Group.add(f2W1m);
 
-// Railing on open side (left = toward road)
-for (var ri2 = 0; ri2 < 8; ri2++) {
-  var rail = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.1, 0.06),
-    new THREE.MeshLambertMaterial({color:0x4455aa,emissive:new THREE.Color(0x2233aa),emissiveIntensity:0.3}));
-  rail.position.set(-GD/2 + 1 + ri2*2, GH2 + 0.55, -GW/2 + 0.2); floor2Group.add(rail);
-  var rail2 = rail.clone();
-  rail2.position.set(-GD/2 + 1 + ri2*2, GH2 + 0.55, GW/2 - 0.2); floor2Group.add(rail2);
+// Side wall z=+7: two pieces with opening (door) for staircase at front end
+// Opening: x from GX-GD/2 to GX-GD/2+3.5, full height
+var f2W2left = new THREE.Mesh(new THREE.BoxGeometry(GD-3.5, F2RH, 0.4),
+  new THREE.MeshLambertMaterial({color:0x1e1e3a}));
+f2W2left.position.set(GX+1.75, GH2+F2RH/2, GZ+GW/2);
+floor2Group.add(f2W2left);
+
+// Back wall x=+30
+var f2BackM = new THREE.Mesh(new THREE.BoxGeometry(0.4, F2RH, GW),
+  new THREE.MeshLambertMaterial({color:0x1e1e3a}));
+f2BackM.position.set(GX+GD/2, GH2+F2RH/2, GZ);
+floor2Group.add(f2BackM);
+
+// Ceiling
+var f2CeilM = new THREE.Mesh(new THREE.BoxGeometry(GD, 0.3, GW),
+  new THREE.MeshLambertMaterial({color:0x111126}));
+f2CeilM.position.set(GX, GH2+F2RH, GZ);
+floor2Group.add(f2CeilM);
+
+// Railing on open front side (-X) and partial +Z
+var railMatF2 = new THREE.MeshLambertMaterial({color:0x5566cc,emissive:new THREE.Color(0x4455bb),emissiveIntensity:0.35});
+for(var ri2=0; ri2<9; ri2++){
+  var rp1=new THREE.Mesh(new THREE.BoxGeometry(0.1,1.1,0.1),railMatF2);
+  rp1.position.set(GX-GD/2+ri2*1.9, GH2+0.55, GZ-GW/2+0.2); floor2Group.add(rp1);
 }
-var hRail1 = new THREE.Mesh(new THREE.BoxGeometry(GD-1, 0.07, 0.07),
-  new THREE.MeshLambertMaterial({color:0x6677cc,emissive:new THREE.Color(0x4455aa),emissiveIntensity:0.4}));
-hRail1.position.set(0, GH2 + 1.1, -GW/2+0.2); floor2Group.add(hRail1);
-var hRail2 = hRail1.clone(); hRail2.position.z = GW/2-0.2; floor2Group.add(hRail2);
+var hrail1=new THREE.Mesh(new THREE.BoxGeometry(GD-0.4,0.08,0.08),railMatF2);
+hrail1.position.set(GX, GH2+1.1, GZ-GW/2+0.2); floor2Group.add(hrail1);
 
-// Ceiling lights floor 2
-var f2Light = new THREE.PointLight(0xaaccff, 1.8, 18);
-f2Light.position.set(0, GH2 + 3.0, 0); floor2Group.add(f2Light);
-var f2Strip = new THREE.Mesh(new THREE.PlaneGeometry(GD-2, 0.3),
-  new THREE.MeshBasicMaterial({color:0xccddff}));
-f2Strip.rotation.x = Math.PI/2; f2Strip.position.set(0, GH2 + 3.4, 0); floor2Group.add(f2Strip);
+// Lights
+var f2LightA = new THREE.PointLight(0xaaccff, 2.0, 20);
+f2LightA.position.set(GX, GH2+F2RH-0.5, GZ);
+floor2Group.add(f2LightA);
+var f2StripM=new THREE.Mesh(new THREE.PlaneGeometry(GD-2,0.3),
+  new THREE.MeshBasicMaterial({color:0xbbccff}));
+f2StripM.rotation.x=Math.PI/2;
+f2StripM.position.set(GX, GH2+F2RH-0.1, GZ);
+floor2Group.add(f2StripM);
 
 scene.add(floor2Group);
-floor2Group.visible = false; // hidden until rebirth
+floor2Group.visible = false;
 
-// ── STAIRCASE (right side of garage, z = GZ+GW/2+1) ─────────────
+// ── STAIRCASE along +Z wall, steps run in X direction ────────────
+// Stair goes from x=GX-GD/2 (front) to x=GX-GD/2+3.5 (back, matching door opening)
+// y rises from 0 to GH2, z is just outside the +Z wall
 var stairGroup = new THREE.Group();
-var STAIR_X = GX; var STAIR_Z = GZ + GW/2 + 2; var STAIR_STEPS = 10;
-var stepH = (GH2) / STAIR_STEPS, stepD = 1.2;
-for (var si2 = 0; si2 < STAIR_STEPS; si2++) {
-  var step = new THREE.Mesh(new THREE.BoxGeometry(3, stepH, stepD),
-    new THREE.MeshLambertMaterial({color:0x2a2a4a,emissive:new THREE.Color(0x2233aa),emissiveIntensity:0.08}));
-  step.position.set(STAIR_X, si2*stepH + stepH/2, STAIR_Z + si2*stepD);
-  stairGroup.add(step);
+var STAIR_N  = 10;
+var STAIR_X0 = GX - GD/2;          // stair starts at garage front
+var STAIR_X1 = GX - GD/2 + 3.5;    // stair ends at door opening
+var STAIR_ZS = GZ + GW/2 + 0.02;   // flush against +Z wall
+var sStepW   = (STAIR_X1-STAIR_X0)/STAIR_N;  // X width per step
+var sStepH   = GH2/STAIR_N;                   // Y rise per step
+var sStepD   = 2.2;                            // Z depth of each step (outward)
+var sStepMat = new THREE.MeshLambertMaterial({color:0x2a3a5a,emissive:new THREE.Color(0x1a2a4a),emissiveIntensity:0.2});
+for(var si2=0; si2<STAIR_N; si2++){
+  var sx = STAIR_X0 + si2*sStepW + sStepW/2;
+  var sy = (si2+0.5)*sStepH;       // center Y of this step column
+  var stepM = new THREE.Mesh(new THREE.BoxGeometry(sStepW, sy*2, sStepD), sStepMat);
+  stepM.position.set(sx, sy, STAIR_ZS + sStepD/2);
+  stairGroup.add(stepM);
 }
+// Handrail posts
+var srMatF = new THREE.MeshLambertMaterial({color:0x5566cc,emissive:new THREE.Color(0x4455aa),emissiveIntensity:0.4});
+for(var sri=0; sri<=STAIR_N; sri++){
+  var srx=STAIR_X0+sri*sStepW, sry=sri*sStepH;
+  var srp=new THREE.Mesh(new THREE.BoxGeometry(0.1,1.1,0.1),srMatF);
+  srp.position.set(srx, sry+0.55, STAIR_ZS+sStepD+0.1);
+  stairGroup.add(srp);
+}
+// Sloped rail
+var srBeamM=new THREE.Mesh(new THREE.BoxGeometry(0.08,0.08,(STAIR_X1-STAIR_X0)*1.1),srMatF);
+var srLen=Math.sqrt((STAIR_X1-STAIR_X0)*(STAIR_X1-STAIR_X0)+GH2*GH2);
+srBeamM=new THREE.Mesh(new THREE.BoxGeometry(srLen,0.08,0.08),srMatF);
+srBeamM.rotation.z=-Math.atan2(GH2,STAIR_X1-STAIR_X0);
+srBeamM.position.set(STAIR_X0+(STAIR_X1-STAIR_X0)/2, GH2/2+0.55, STAIR_ZS+sStepD+0.1);
+stairGroup.add(srBeamM);
 scene.add(stairGroup);
 stairGroup.visible = false;
 
@@ -764,7 +809,7 @@ for (var f2row = 0; f2row < 2; f2row++) {
   for (var f2col = 0; f2col < 4; f2col++) {
     var f2px = GX + (-GD/2 + 2.2 + f2col*(GD-3.5)/3);
     var f2pz = GZ + (f2row === 0 ? -GW/2 + 2.5 : GW/2 - 2.5);
-    FLOOR2_POSITIONS.push({x:f2px, z:f2pz, y:GH2+0.22}); // GH2=GH=6.5, platform top
+    FLOOR2_POSITIONS.push({x:f2px, z:f2pz, y:GH2+0.35});
   }
 }
 FLOOR2_POSITIONS.forEach(function(pp, idx) {
