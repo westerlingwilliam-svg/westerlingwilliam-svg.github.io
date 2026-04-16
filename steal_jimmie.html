@@ -732,56 +732,29 @@ floor2Group.add(f2StripM);
 scene.add(floor2Group);
 floor2Group.visible = false;
 
-// ── STAIRCASE along RIGHT SIDE (+Z outside), steps run in +X ────
-// Each step: player walks in +X direction to go UP
-// Stair is OUTSIDE garage (z > GZ+GW/2 = 7)
-// Steps go from x=GX-GD/2 (14) to x=GX-GD/2+GD-2 (28)
-// Rising from y=0 to y=GH2 (6.725)
-var stairGroup = new THREE.Group();
-var STAIR_N2  = 10;
-var S_X0      = GX - GD/2;           // 14 - start X (bottom)
-var S_ZFront  = GZ + GW/2;           // 7  - flush with garage right wall
-var S_ZDepth  = 2.2;                  // how far steps stick out in +Z
-var S_StepW   = (GD - 2) / STAIR_N2; // 1.4m per step in X direction
-var S_StepH   = GH2 / STAIR_N2;      // 0.67m rise per step
-var S_Mat     = new THREE.MeshLambertMaterial({
-  color: 0x334488, emissive: new THREE.Color(0x223377), emissiveIntensity: 0.25
-});
-
-for (var si2 = 0; si2 < STAIR_N2; si2++) {
-  // Step tread: the flat surface you walk on
-  var treadX = S_X0 + si2 * S_StepW + S_StepW / 2;
-  var treadY = (si2 + 1) * S_StepH;
-  var treadZ = S_ZFront + S_ZDepth / 2;
-  // Solid block from y=0 up to treadY (so no gaps)
-  var stepBlock = new THREE.Mesh(
-    new THREE.BoxGeometry(S_StepW, treadY, S_ZDepth),
-    S_Mat
-  );
-  stepBlock.position.set(treadX, treadY / 2, treadZ);
-  stairGroup.add(stepBlock);
+// ── LADDER (replaces staircase) ──────────────────────────────────
+// Simple ladder against the +Z wall, at x = GX-GD/2 (garage front corner)
+// When player walks into it they get lifted to 2nd floor
+var ladderGroup = new THREE.Group();
+var LAD_X = GX - GD/2 + 0.8;  // x position of ladder
+var LAD_Z = GZ + GW/2 + 0.3;  // just outside +Z wall
+var LAD_MAT = new THREE.MeshLambertMaterial({color:0x8899cc, emissive:new THREE.Color(0x5566aa), emissiveIntensity:0.3});
+// Two vertical rails
+var rail1 = new THREE.Mesh(new THREE.BoxGeometry(0.1, GH2+0.3, 0.1), LAD_MAT);
+rail1.position.set(LAD_X - 0.3, GH2/2, LAD_Z);
+ladderGroup.add(rail1);
+var rail2 = new THREE.Mesh(new THREE.BoxGeometry(0.1, GH2+0.3, 0.1), LAD_MAT);
+rail2.position.set(LAD_X + 0.3, GH2/2, LAD_Z);
+ladderGroup.add(rail2);
+// Rungs
+var numRungs = 8;
+for (var ri=0; ri<numRungs; ri++) {
+  var rung = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.1, 0.1), LAD_MAT);
+  rung.position.set(LAD_X, (ri+1) * GH2/(numRungs+1), LAD_Z);
+  ladderGroup.add(rung);
 }
-
-// Handrail
-var HR_Mat = new THREE.MeshLambertMaterial({
-  color: 0x5577cc, emissive: new THREE.Color(0x4466bb), emissiveIntensity: 0.4
-});
-for (var hri = 0; hri <= STAIR_N2; hri++) {
-  var hx = S_X0 + hri * S_StepW;
-  var hy = hri * S_StepH;
-  var post = new THREE.Mesh(new THREE.BoxGeometry(0.1, 1.1, 0.1), HR_Mat);
-  post.position.set(hx, hy + 0.55, S_ZFront + 0.15);
-  stairGroup.add(post);
-}
-// Sloped rail beam
-var rLen = Math.sqrt(Math.pow((GD-2), 2) + Math.pow(GH2, 2));
-var rBeam = new THREE.Mesh(new THREE.BoxGeometry(rLen, 0.09, 0.09), HR_Mat);
-rBeam.rotation.z = -Math.atan2(GH2, GD - 2);
-rBeam.position.set(S_X0 + (GD-2)/2, GH2/2 + 0.55, S_ZFront + 0.15);
-stairGroup.add(rBeam);
-
-scene.add(stairGroup);
-stairGroup.visible = false;
+scene.add(ladderGroup);
+ladderGroup.visible = false;
 
 // ── REBIRTH BUTTON: physical button outside garage near entrance ──
 var rbGroup2 = new THREE.Group();
@@ -1544,8 +1517,7 @@ function confirmRebirth() {
 function showFloor2Slots() {
   // Show all floor2Group children
   floor2Group.children.forEach(function(ch){ch.visible=true;});
-  stairGroup.children.forEach(function(ch){ch.visible=true;});
-  stairGroup.visible = true;
+  ladderGroup.visible = true;
   // Show unlocked platform slots
   for (var fi=0; fi<extraFloors && fi<floor2PlatMeshes.length; fi++) {
     floor2PlatMeshes[fi].base.visible = true;
