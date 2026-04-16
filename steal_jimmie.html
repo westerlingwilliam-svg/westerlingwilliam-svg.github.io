@@ -736,21 +736,22 @@ floor2Group.visible = false;
 // Simple ladder against the +Z wall, at x = GX-GD/2 (garage front corner)
 // When player walks into it they get lifted to 2nd floor
 var ladderGroup = new THREE.Group();
-var LAD_X = GX - GD/2 + 0.8;  // x position of ladder
-var LAD_Z = GZ + GW/2 + 0.3;  // just outside +Z wall
+var LAD_X = GX - GD/2 - 0.3;  // just outside front opening (-X face)
+var LAD_Z = GZ;               // centered on front face
 var LAD_MAT = new THREE.MeshLambertMaterial({color:0x8899cc, emissive:new THREE.Color(0x5566aa), emissiveIntensity:0.3});
 // Two vertical rails
 var rail1 = new THREE.Mesh(new THREE.BoxGeometry(0.1, GH2+0.3, 0.1), LAD_MAT);
-rail1.position.set(LAD_X - 0.3, GH2/2, LAD_Z);
+rail1.position.set(LAD_X, GH2/2, LAD_Z - 0.35);
 ladderGroup.add(rail1);
 var rail2 = new THREE.Mesh(new THREE.BoxGeometry(0.1, GH2+0.3, 0.1), LAD_MAT);
-rail2.position.set(LAD_X + 0.3, GH2/2, LAD_Z);
+rail2.position.set(LAD_X, GH2/2, LAD_Z + 0.35);
 ladderGroup.add(rail2);
 // Rungs
 var numRungs = 8;
 for (var ri=0; ri<numRungs; ri++) {
   var rung = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.1, 0.1), LAD_MAT);
   rung.position.set(LAD_X, (ri+1) * GH2/(numRungs+1), LAD_Z);
+  rung.rotation.y = Math.PI/2;
   ladderGroup.add(rung);
 }
 scene.add(ladderGroup);
