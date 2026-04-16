@@ -252,15 +252,12 @@ kbd{background:rgba(254,204,0,.15);padding:2px 7px;border-radius:4px;font-family
     <div id="held-name" style="font-size:0.9rem;font-weight:900;color:#fff"></div>
     <div style="font-size:0.65rem;color:rgba(255,255,255,0.5);margin-top:2px">Tryck R nära en plattform för att placera</div>
   </div>
-  <!-- Rebirth button -->
-  <div style="position:absolute;bottom:20px;right:20px;pointer-events:all">
-    <button id="rebirth-btn" onclick="openRebirthMenu()"
-      style="background:linear-gradient(135deg,#ff6600,#cc3300);color:#fff;border:none;
-      border-radius:12px;padding:10px 18px;font-size:0.72rem;font-weight:900;letter-spacing:1px;
-      cursor:pointer;text-transform:uppercase;box-shadow:0 0 20px rgba(255,102,0,0.4);
-      transition:all 0.15s">
-      ⚡ REBIRTH #1 — ?
-    </button>
+  <!-- Rebirth cost hint shown when near button -->
+  <div id="rebirth-hint" style="position:absolute;bottom:29%;left:50%;transform:translateX(-50%);
+    background:rgba(40,10,0,0.9);border:2px solid #ff6600;border-radius:14px;
+    padding:10px 22px;font-size:0.85rem;color:#ff9944;font-weight:700;
+    display:none;text-align:center;backdrop-filter:blur(8px);pointer-events:none">
+    E — ⚡ REBIRTH (cost shown here)
   </div>
   <div id="popup"><h3 id="pname"></h3><p id="pdesc"></p></div>
   <button id="pausebtn">☰ Meny (Esc)</button>
@@ -745,7 +742,7 @@ for (var f2row = 0; f2row < 2; f2row++) {
   for (var f2col = 0; f2col < 4; f2col++) {
     var f2px = GX + (-GD/2 + 2.2 + f2col*(GD-3.5)/3);
     var f2pz = GZ + (f2row === 0 ? -GW/2 + 2.5 : GW/2 - 2.5);
-    FLOOR2_POSITIONS.push({x:f2px, z:f2pz, y:GH2+0.1});
+    FLOOR2_POSITIONS.push({x:f2px, z:f2pz, y:GH2+0.22}); // GH2=GH=6.5, platform top
   }
 }
 FLOOR2_POSITIONS.forEach(function(pp, idx) {
@@ -1219,6 +1216,12 @@ document.addEventListener('keydown', function(e) {
   keys4[e.code] = true;
   if (!gameStarted || paused) return;
   if (e.code === 'KeyE') {
+    // Check rebirth button proximity first
+    var rbPosE = new THREE.Vector3(GX - GD/2 - 0.5, 1.6, GZ - GW/2 + 2);
+    var rbDxE = cam.position.x - rbPosE.x, rbDzE = cam.position.z - rbPosE.z;
+    if (Math.sqrt(rbDxE*rbDxE+rbDzE*rbDzE) < 3.5) {
+      openRebirthMenu(); return;
+    }
     if (nearJimmie && !nearJimmie.recruited) {
       recruitJimmie(nearJimmie);
     } else {
@@ -1343,12 +1346,7 @@ function updateHUD() {
   document.getElementById('hpps').textContent   = fmtNum(calcTotalPps())+'/s';
   document.getElementById('progfill').style.width = (occ/total*100)+'%';
   document.getElementById('proglbl').textContent = 'Plattformar ('+occ+'/'+total+')';
-  var rb = document.getElementById('rebirth-btn');
-  if (rb) {
-    var cost = rebirthCost();
-    rb.textContent = '⚡ REBIRTH #'+(rebirths+1)+' — '+fmtNum(cost)+' kr';
-    rb.style.opacity = money >= cost ? '1' : '0.45';
-  }
+  // rebirth button is now in-world, no DOM button
   var mult = document.getElementById('hud-mult');
   if (mult) mult.textContent = 'x'+multiplier.toFixed(1);
   var reb = document.getElementById('hud-reb');
@@ -1462,8 +1460,11 @@ function confirmRebirth() {
 }
 
 function showFloor2Slots() {
-  floor2Group.visible = true;
+  // Show all floor2Group children
+  floor2Group.children.forEach(function(ch){ch.visible=true;});
+  stairGroup.children.forEach(function(ch){ch.visible=true;});
   stairGroup.visible = true;
+  // Show unlocked platform slots
   for (var fi=0; fi<extraFloors && fi<floor2PlatMeshes.length; fi++) {
     floor2PlatMeshes[fi].base.visible = true;
     floor2PlatMeshes[fi].top.visible = true;
@@ -1701,6 +1702,22 @@ function loop() {
     var canAfford = money >= closestW.def.cost;
     rhint.innerHTML=closestW.def.icon+' <strong>E</strong> — Rekrytera <span style="color:#'+rc+'">'+closestW.def.name+'</span><br><small style="opacity:.65">'+closestW.def.rarity+' · <span style="color:'+(canAfford?'#4ade80':'#f87171')+'">'+fmtNum(closestW.def.cost)+' kr</span> · '+fmtNum(closestW.def.pps)+' kr/s</small>';
   } else { nearJimmie=null; rhint.style.display='none'; }
+
+  // R-key hint
+  // Rebirth button proximity check
+  var rbHint = document.getElementById('rebirth-hint');
+  var rbPos = new THREE.Vector3(GX - GD/2 - 0.5, 1.6, GZ - GW/2 + 2);
+  var rbDx = cam.position.x - rbPos.x, rbDz = cam.position.z - rbPos.z;
+  var rbDist = Math.sqrt(rbDx*rbDx + rbDz*rbDz);
+  if (rbDist < 3.5 && gameStarted) {
+    var rbCost = rebirthCost();
+    rbHint.style.display = 'block';
+    rbHint.innerHTML = 'E — ⚡ REBIRTH #'+(rebirths+1)+'<br><small style="opacity:0.7">Kostnad: '+fmtNum(rbCost)+' kr · Mult: x'+(multiplier+0.5).toFixed(1)+'</small>';
+    rbLight.intensity = 1.5 + Math.sin(el*5)*0.6;
+  } else {
+    rbHint.style.display = 'none';
+    rbLight.intensity = 0.6;
+  }
 
   // R-key hint
   var rhintR = document.getElementById('rh-hint');
