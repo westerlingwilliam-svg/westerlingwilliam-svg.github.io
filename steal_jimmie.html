@@ -724,6 +724,28 @@ for (var si2 = 0; si2 < STAIR_STEPS; si2++) {
 scene.add(stairGroup);
 stairGroup.visible = false;
 
+// ── REBIRTH BUTTON: physical button outside garage near entrance ──
+var rbGroup2 = new THREE.Group();
+var rbPostM = new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.07,1.6,6),
+  new THREE.MeshLambertMaterial({color:0x446699}));
+rbPostM.position.set(0, 0.8, 0);
+rbGroup2.add(rbPostM);
+var rbPlateM = new THREE.Mesh(new THREE.BoxGeometry(1.3, 0.6, 0.12),
+  new THREE.MeshLambertMaterial({color:0xff6600, emissive:new THREE.Color(0xff4400), emissiveIntensity:0.4}));
+rbPlateM.position.set(0, 1.75, 0);
+rbGroup2.add(rbPlateM);
+var rbBtnM = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.38, 0.14),
+  new THREE.MeshLambertMaterial({color:0xffcc00, emissive:new THREE.Color(0xff9900), emissiveIntensity:0.7}));
+rbBtnM.position.set(0, 1.75, 0.1);
+rbGroup2.add(rbBtnM);
+window._rbLight = new THREE.PointLight(0xff6600, 1.2, 6);
+window._rbLight.position.set(0, 2.0, 0.4);
+rbGroup2.add(window._rbLight);
+// Place outside garage front, left corner (x = GX-GD/2-0.8, z = GZ-GW/2+2)
+rbGroup2.position.set(GX - GD/2 - 0.8, 0, GZ - GW/2 + 2);
+rbGroup2.rotation.y = Math.PI / 2; // face toward road
+scene.add(rbGroup2);
+
 // ── PLATFORMS floor 1 (8 spots, 2×4) ─────────────────────────────
 
 // ── PLATFORMS (8 spots, 2×4) ───────────────────────────────────
@@ -1217,7 +1239,7 @@ document.addEventListener('keydown', function(e) {
   if (!gameStarted || paused) return;
   if (e.code === 'KeyE') {
     // Check rebirth button proximity first
-    var rbPosE = new THREE.Vector3(GX - GD/2 - 0.5, 1.6, GZ - GW/2 + 2);
+    var rbPosE = new THREE.Vector3(GX - GD/2 - 0.8, 1.75, GZ - GW/2 + 2);
     var rbDxE = cam.position.x - rbPosE.x, rbDzE = cam.position.z - rbPosE.z;
     if (Math.sqrt(rbDxE*rbDxE+rbDzE*rbDzE) < 3.5) {
       openRebirthMenu(); return;
@@ -1437,7 +1459,7 @@ function confirmRebirth() {
   if (extraFloors < 8) { extraFloors++; showFloor2Slots(); }
   keepCount = Math.max(1, rebirths >= 5 ? 2+(rebirths-5) : 1);
   keepCount = Math.min(keepCount, 8);
-  money = 0;
+  money = 400;
   rebuildSpawnWeights();
 
   // Restore kept jimmies to garage slots
@@ -1706,17 +1728,17 @@ function loop() {
   // R-key hint
   // Rebirth button proximity check
   var rbHint = document.getElementById('rebirth-hint');
-  var rbPos = new THREE.Vector3(GX - GD/2 - 0.5, 1.6, GZ - GW/2 + 2);
+  var rbPos = new THREE.Vector3(GX - GD/2 - 0.8, 1.75, GZ - GW/2 + 2);
   var rbDx = cam.position.x - rbPos.x, rbDz = cam.position.z - rbPos.z;
   var rbDist = Math.sqrt(rbDx*rbDx + rbDz*rbDz);
   if (rbDist < 3.5 && gameStarted) {
     var rbCost = rebirthCost();
     rbHint.style.display = 'block';
     rbHint.innerHTML = 'E — ⚡ REBIRTH #'+(rebirths+1)+'<br><small style="opacity:0.7">Kostnad: '+fmtNum(rbCost)+' kr · Mult: x'+(multiplier+0.5).toFixed(1)+'</small>';
-    rbLight.intensity = 1.5 + Math.sin(el*5)*0.6;
+    window._rbLight.intensity = 1.5 + Math.sin(el*5)*0.6;
   } else {
     rbHint.style.display = 'none';
-    rbLight.intensity = 0.6;
+    window._rbLight.intensity = 0.6;
   }
 
   // R-key hint
