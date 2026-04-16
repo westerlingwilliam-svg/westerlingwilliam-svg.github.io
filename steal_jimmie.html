@@ -165,6 +165,37 @@ kbd{background:rgba(254,204,0,.15);padding:2px 7px;border-radius:4px;font-family
 #winscreen{position:fixed;inset:0;z-index:200;background:rgba(0,5,18,.97);display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:30px;backdrop-filter:blur(14px)}
 #winscreen h1{font-size:4rem;color:var(--y);text-shadow:0 0 60px rgba(254,204,0,.7)}
 #winscreen p{opacity:.72;font-size:1rem;max-width:420px;line-height:1.6}
+/* Rebirth menu */
+#rebirth-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.85);
+  backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center}
+#rebirth-panel{background:linear-gradient(160deg,rgba(20,5,0,0.98),rgba(40,10,0,0.98));
+  border:2px solid #ff6600;border-radius:22px;padding:32px;max-width:520px;width:90%;
+  box-shadow:0 0 60px rgba(255,102,0,0.3);text-align:center}
+#rebirth-panel h2{color:#ff6600;font-size:1.8rem;margin-bottom:6px;letter-spacing:2px}
+#rebirth-panel p{opacity:0.75;font-size:0.88rem;line-height:1.6;margin-bottom:16px}
+.keep-slots{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:14px 0}
+.keep-card{background:rgba(0,0,0,0.5);border:2px solid rgba(255,255,255,0.15);
+  border-radius:10px;padding:8px 12px;cursor:pointer;font-size:0.72rem;
+  transition:all 0.15s;text-align:center;min-width:90px}
+.keep-card:hover{border-color:var(--y)}
+.keep-card.selected{border-color:var(--y);background:rgba(254,204,0,0.15);color:var(--y)}
+.keep-card.selected2{border-color:#4ade80;background:rgba(74,222,128,0.12);color:#4ade80}
+.rebirth-info{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:14px 0}
+.ri{background:rgba(255,102,0,0.12);border:1px solid rgba(255,102,0,0.3);
+  border-radius:10px;padding:8px 16px;font-size:0.75rem}
+.ri span{color:#ff9944;font-weight:900;display:block;font-size:1.1rem}
+.rbtn-row{display:flex;gap:10px;justify-content:center;margin-top:16px}
+.rbtn-confirm{padding:12px 36px;background:linear-gradient(135deg,#ff6600,#cc3300);
+  color:#fff;border:none;border-radius:50px;cursor:pointer;font-weight:900;
+  font-size:0.95rem;letter-spacing:1px;text-transform:uppercase;
+  box-shadow:0 4px 0 #882200}
+.rbtn-cancel{padding:12px 28px;background:rgba(255,255,255,0.08);color:#fff;
+  border:2px solid rgba(255,255,255,0.2);border-radius:50px;cursor:pointer;
+  font-size:0.9rem;letter-spacing:1px;text-transform:uppercase}
+#rh-hint{position:absolute;bottom:36%;left:50%;transform:translateX(-50%);
+  background:rgba(0,0,0,0.82);border:2px solid #ff9944;border-radius:14px;
+  padding:10px 24px;font-size:0.86rem;color:#ff9944;font-weight:700;
+  display:none;text-align:center;backdrop-filter:blur(8px)}
 </style>
 </head>
 <body>
@@ -194,7 +225,13 @@ kbd{background:rgba(254,204,0,.15);padding:2px 7px;border-radius:4px;font-family
   <div id="topbar">
     <div class="hst"><div class="hlbl">I Garaget</div><div class="hval" id="hcount" style="color:var(--y)">0/8</div></div>
     <div class="hst"><div class="hlbl">Kr/sek</div><div class="hval" id="hpps" style="color:#4ade80">0</div></div>
-    <div id="gtitle">STEAL THE JIMMIE</div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+      <div id="gtitle">STEAL THE JIMMIE</div>
+      <div style="display:flex;gap:10px;font-size:0.58rem">
+        <span style="color:#ff9944">⚡ Rebirth: <span id="hud-reb" style="font-weight:900">0</span></span>
+        <span style="color:#ff44cc">✦ Mult: <span id="hud-mult" style="font-weight:900">x1.0</span></span>
+      </div>
+    </div>
     <div class="hst"><div class="hlbl">Kronor</div><div class="hval" id="hmoney" style="color:#4ade80">0 kr</div></div>
     <div class="hst"><div class="hlbl">Total tjänat</div><div class="hval" id="htotal" style="color:#a78bfa">0 kr</div></div>
   </div>
@@ -206,6 +243,25 @@ kbd{background:rgba(254,204,0,.15);padding:2px 7px;border-radius:4px;font-family
   <div id="rhint"></div>
   <div id="qhint"></div>
   <div id="uhint"></div>
+  <!-- Held jimmie display -->
+  <div id="held-bar" style="position:absolute;bottom:90px;left:50%;transform:translateX(-50%);
+    display:none;background:rgba(0,10,30,0.92);border:2px solid var(--y);border-radius:16px;
+    padding:10px 24px;text-align:center;backdrop-filter:blur(8px);pointer-events:none;
+    box-shadow:0 0 20px rgba(254,204,0,0.25)">
+    <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--y);margin-bottom:3px">Håller i handen</div>
+    <div id="held-name" style="font-size:0.9rem;font-weight:900;color:#fff"></div>
+    <div style="font-size:0.65rem;color:rgba(255,255,255,0.5);margin-top:2px">Tryck R nära en plattform för att placera</div>
+  </div>
+  <!-- Rebirth button -->
+  <div style="position:absolute;bottom:20px;right:20px;pointer-events:all">
+    <button id="rebirth-btn" onclick="openRebirthMenu()"
+      style="background:linear-gradient(135deg,#ff6600,#cc3300);color:#fff;border:none;
+      border-radius:12px;padding:10px 18px;font-size:0.72rem;font-weight:900;letter-spacing:1px;
+      cursor:pointer;text-transform:uppercase;box-shadow:0 0 20px rgba(255,102,0,0.4);
+      transition:all 0.15s">
+      ⚡ REBIRTH #1 — ?
+    </button>
+  </div>
   <div id="popup"><h3 id="pname"></h3><p id="pdesc"></p></div>
   <button id="pausebtn">☰ Meny (Esc)</button>
   <div id="lockprompt" onclick="if(document.pointerLockElement!==document.getElementById('c'))document.getElementById('c').requestPointerLock()">🖱 Klicka för att låsa musen</div>
@@ -216,9 +272,31 @@ kbd{background:rgba(254,204,0,.15);padding:2px 7px;border-radius:4px;font-family
     <span><kbd>U</kbd> Uppgradera</span>
     <span><kbd>Q</kbd> Sälj</span>
     <span><kbd>Space</kbd> Hoppa</span>
+    <span><kbd>R</kbd> Flytta Jimmie</span>
     <span><kbd>Esc</kbd> Meny</span>
   </div>
 </div>
+
+<div id="rebirth-overlay">
+  <div id="rebirth-panel">
+    <h2>⚡ REBIRTH</h2>
+    <p id="rebirth-desc">Du börjar om från början men med en permanent multiplier och bättre chans på sällsynta karaktärer. Välj vilken Jimmie du vill behålla!</p>
+    <div class="rebirth-info">
+      <div class="ri">Ny Multiplier<span id="rb-mult">x?</span></div>
+      <div class="ri">Luck Bonus<span id="rb-luck">+?%</span></div>
+      <div class="ri">Behåll<span id="rb-keep">? st</span></div>
+      <div class="ri">Extra Plats<span id="rb-floor">+? plats</span></div>
+    </div>
+    <div style="font-size:0.75rem;color:rgba(255,255,255,0.5);margin-bottom:8px">Välj vilken/vilka Jimmies du vill ta med dig:</div>
+    <div class="keep-slots" id="keep-slots"></div>
+    <div class="rbtn-row">
+      <button class="rbtn-confirm" onclick="confirmRebirth()">⚡ REBIRTH!</button>
+      <button class="rbtn-cancel" onclick="closeRebirthMenu()">Avbryt</button>
+    </div>
+  </div>
+</div>
+
+<div id="rh-hint"></div>
 
 <div id="winscreen">
   <h1>🏆 SEGER!</h1>
@@ -269,6 +347,11 @@ var JIMMIES = [
   {name:'JIMMIE ETERNAL',       rarity:RARE.MYTHIC,    col:0xff2244, cost:5000,sell:2500,pps:1000,icon:'🔥',sc:1.7,  acc:'crown',   isJimmie:true},
 ];
 
+function rebirthCost() {
+  return Math.floor(1000 * Math.pow(3.5, rebirths));
+}
+function rebirthLuckBonus() { return rebirths * 8; } // +8% rare weight per rebirth
+
 // ── Upgrade costs per level ────────────────────────────────────
 function upgradeCost(def, level) {
   return Math.floor(def.cost * 1.5 * Math.pow(2, level - 1));
@@ -278,13 +361,18 @@ function upgradedPps(def, level) {
 }
 
 // ── Persistent state ───────────────────────────────────────────
-var SAVE_KEY = 'stj_v6';
+var SAVE_KEY = 'stj_v7';
 
 function defaultState() {
   return {
     money: 200,
     totalEarned: 0,
-    slots: Array(8).fill(null), // each: {defIdx, level} or null
+    rebirths: 0,
+    multiplier: 1.0,
+    extraFloorSlots: 0, // slots on 2nd floor (1 per rebirth, max 8)
+    slots: Array(8).fill(null),
+    floorSlots: Array(8).fill(null),
+    keepCount: 1, // how many jimmies to keep on rebirth
   };
 }
 
@@ -300,7 +388,15 @@ function saveState() {
   var s = {
     money: money,
     totalEarned: totalEarned,
+    rebirths: rebirths,
+    multiplier: multiplier,
+    extraFloorSlots: extraFloors,
+    keepCount: keepCount,
     slots: garageSlots.map(function(slot) {
+      if (!slot.jimmie) return null;
+      return { defIdx: slot.jimmie.defIdx, level: slot.jimmie.level };
+    }),
+    floorSlots: floor2Slots.map(function(slot) {
       if (!slot.jimmie) return null;
       return { defIdx: slot.jimmie.defIdx, level: slot.jimmie.level };
     }),
@@ -308,9 +404,14 @@ function saveState() {
   try { localStorage.setItem(SAVE_KEY, JSON.stringify(s)); } catch(e) {}
 }
 
-var savedState = loadState();
-var money       = savedState.money;
-var totalEarned = savedState.totalEarned || 0;
+var savedState  = loadState();
+var money        = savedState.money;
+var totalEarned  = savedState.totalEarned || 0;
+var rebirths     = savedState.rebirths    || 0;
+var multiplier   = savedState.multiplier  || 1.0;
+var extraFloors  = savedState.extraFloorSlots || 0; // 2nd floor slots unlocked
+var keepCount    = savedState.keepCount   || 1;
+var heldJimmie   = null;  // jimmie currently held in hand (for R-move)
 
 // ── Runtime state ──────────────────────────────────────────────
 var gameStarted = false, paused = false;
@@ -322,16 +423,27 @@ var garageSlots = [];
 var velY = 0, velX = 0, velZ = 0, isOnGround = true;
 var GRAVITY = -18, JUMP_FORCE = 7.5;
 var spawnInterval = 3.2;
-// Weighted random spawn — different every session
-// Weights by rarity: Common=50, Uncommon=28, Rare=14, Epic=5, Legendary=2, Mythic=1
+// Weighted random spawn — different every session, boosted by rebirth luck
 var SPAWN_WEIGHTS = [];
-(function() {
-  var weights = {Common:50, Uncommon:28, Rare:14, Epic:5, Legendary:2, Mythic:1};
+function rebuildSpawnWeights() {
+  SPAWN_WEIGHTS = [];
+  var luck = rebirthLuckBonus(); // +8 per rebirth
+  // Base: Common=50, Uncommon=28, Rare=14, Epic=5, Legend=2, Mythic=1
+  // Each rebirth shifts weight from common toward rare
+  var w = {
+    Common:    Math.max(10, 50 - luck*2),
+    Uncommon:  Math.max(8,  28 - luck),
+    Rare:      Math.min(40, 14 + luck),
+    Epic:      Math.min(20, 5  + Math.floor(luck/2)),
+    Legendary: Math.min(10, 2  + Math.floor(luck/3)),
+    Mythic:    Math.min(5,  1  + Math.floor(luck/8)),
+  };
   JIMMIES.forEach(function(def, idx) {
-    var w = weights[def.rarity] || 1;
-    for (var i = 0; i < w; i++) SPAWN_WEIGHTS.push(idx);
+    var wt = w[def.rarity] || 1;
+    for (var i = 0; i < wt; i++) SPAWN_WEIGHTS.push(idx);
   });
-})();
+}
+rebuildSpawnWeights();
 function pickRandomJimmie() {
   return SPAWN_WEIGHTS[Math.floor(Math.random() * SPAWN_WEIGHTS.length)];
 }
@@ -353,13 +465,13 @@ var cam = new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHeight, 
 cam.position.set(6, 1.75, 0);
 
 // ── Lights ─────────────────────────────────────────────────────
-scene.add(new THREE.AmbientLight(0x667799, 1.6));
+scene.add(new THREE.AmbientLight(0x7788aa, 2.0));
 var sun = new THREE.DirectionalLight(0xfff5cc, 1.7);
 sun.position.set(20,35,10); // sun.castShadow = false
 scene.add(sun);
 var fill1 = new THREE.DirectionalLight(0x0033aa, 0.5);
 fill1.position.set(-15,10,-8); scene.add(fill1);
-scene.add(new THREE.HemisphereLight(0x3366cc, 0x224422, 0.6));
+scene.add(new THREE.HemisphereLight(0x4477ee, 0x336633, 0.8));
 
 // ── Mesh helpers ───────────────────────────────────────────────
 function mkMat(col,em,ei){
@@ -391,10 +503,10 @@ var ROAD_SPAWN=22, ROAD_DESPAWN=-22, GX=22, GZ=0, GW=14, GH=6.5, GD=16;
 var ROAD_X = 0; // road center x
 
 // Ground — dark with subtle grid feel
-var gnd = Box(90, 0.1, 60, 0x0f2010); gnd.position.set(0,-0.05,0); scene.add(gnd);
+var gnd = Box(90, 0.1, 60, 0x112211); gnd.position.set(0,-0.05,0); scene.add(gnd);
 // Ground glow strip along road
 var roadGlow = new THREE.Mesh(new THREE.PlaneGeometry(6,48),
-  new THREE.MeshBasicMaterial({color:0x0044aa,transparent:true,opacity:0.4}));
+  new THREE.MeshBasicMaterial({color:0x0055cc,transparent:true,opacity:0.55}));
 roadGlow.rotation.x=-Math.PI/2; roadGlow.position.set(0,0.02,0); scene.add(roadGlow);
 
 // Road
@@ -405,7 +517,7 @@ addS(Box(0.22,0.14,48,0x5566cc),  3.2, 0.07, 0);
 // Road dashes — glowing blue/yellow
 for(var di=-10;di<=10;di++){
   var dm=new THREE.Mesh(new THREE.PlaneGeometry(0.18,2),
-    new THREE.MeshBasicMaterial({color:0xfecc00,transparent:true,opacity:0.45}));
+    new THREE.MeshBasicMaterial({color:0xfecc00,transparent:true,opacity:0.7}));
   dm.rotation.x=-Math.PI/2; dm.position.set(0,0.07,di*4); scene.add(dm);
 }
 // Pavement
@@ -414,14 +526,15 @@ var pave=new THREE.Mesh(new THREE.PlaneGeometry(5,48),
 pave.rotation.x=-Math.PI/2; pave.position.set(5,0.06,0); scene.add(pave);
 
 // Colored accent lights along road
-var roadColors = [0x0055ff, 0x4400aa, 0x0077ff, 0x3300cc, 0x0055ff];
+var roadColors = [0x0077ff, 0x8800ff, 0x00aaff, 0x5500ee, 0x0077ff];
 roadColors.forEach(function(rc2, ri) {
   var rl = new THREE.PointLight(rc2, 0.7, 12);
-  rl.position.set(0, 0.5, -16 + ri * 8);
+  rl.position.set(0, 0.8, -16 + ri * 8);
+  rl.intensity = 1.0;
   scene.add(rl);
 });
 // Add a warm golden light near garage entrance
-var garageEntLight = new THREE.PointLight(0xffaa33, 1.4, 14);
+var garageEntLight = new THREE.PointLight(0xffcc44, 2.0, 18);
 garageEntLight.position.set(GX - GD/2 - 2, 3, GZ);
 scene.add(garageEntLight);
 
@@ -434,8 +547,11 @@ function makePortal(pz, col, label) {
   var pm = new THREE.Mesh(new THREE.PlaneGeometry(6.5,8),
     new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:0.06,side:THREE.DoubleSide}));
   pm.position.set(0,4,pz); scene.add(pm);
-  var pl = new THREE.PointLight(col, 3, 14);
+  var pl = new THREE.PointLight(col, 4.5, 18);
   pl.position.set(0, 5, pz); scene.add(pl);
+  // Glow panel
+  var gp2 = new THREE.Mesh(new THREE.PlaneGeometry(5.5,7.5),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:0.08,side:THREE.DoubleSide}));
+  gp2.position.set(0,4,pz+0.1); scene.add(gp2);
   return pl;
 }
 var spawnPL   = makePortal(ROAD_SPAWN,   0x22c55e, 'SPAWN');
@@ -459,8 +575,8 @@ var bulbMat = new THREE.MeshBasicMaterial({color:0xffffdd});
 
 // ── BOUNDARY WALLS (concrete with SD yellow stripe) ────────────
 var wallMat2 = new THREE.MeshLambertMaterial({color:0x1a1a2e});
-var wallYel  = new THREE.MeshLambertMaterial({color:0xfecc00,emissive:new THREE.Color(0xfecc00),emissiveIntensity:0.3});
-var wallBlue = new THREE.MeshLambertMaterial({color:0x0044aa,emissive:new THREE.Color(0x0044aa),emissiveIntensity:0.2});
+var wallYel  = new THREE.MeshLambertMaterial({color:0xfecc00,emissive:new THREE.Color(0xfecc00),emissiveIntensity:0.5});
+var wallBlue = new THREE.MeshLambertMaterial({color:0x0055cc,emissive:new THREE.Color(0x0055cc),emissiveIntensity:0.35});
 // N/S walls
 [[0,26,90,false],[0,-26,90,false]].forEach(function(w){
   var wm=new THREE.Mesh(new THREE.BoxGeometry(w[2],5.5,1.2),wallMat2);
@@ -470,7 +586,7 @@ var wallBlue = new THREE.MeshLambertMaterial({color:0x0044aa,emissive:new THREE.
   var wb=new THREE.Mesh(new THREE.BoxGeometry(w[2],0.55,1.3),wallBlue);
   wb.position.set(w[0],0.27,w[1]); scene.add(wb);
   for(var wli=-35;wli<=35;wli+=18){
-    var wlp=new THREE.PointLight(0x3355ff,0.4,12);
+    var wlp=new THREE.PointLight(0x4466ff,0.7,14);
     wlp.position.set(wli,3,w[1]); scene.add(wlp);
   }
 });
@@ -509,11 +625,11 @@ ga(gGroup,Box(0.45,0.8,GW,0x222244),-GD/2,GH-0.4,0);
 ga(gGroup,Box(0.45,GH,0.6,0x2233aa), -GD/2, GH/2, -GW/2+0.3);
 ga(gGroup,Box(0.45,GH,0.6,0x2233aa), -GD/2, GH/2,  GW/2-0.3);
 // Ceiling light strips
-var sMat=new THREE.MeshBasicMaterial({color:0xeeeeff});
+var sMat=new THREE.MeshBasicMaterial({color:0xccddff});
 [-4,0,4].forEach(function(sz){
   var strip=new THREE.Mesh(new THREE.PlaneGeometry(GD-1,0.3),sMat);
   strip.rotation.x=Math.PI/2; strip.position.set(0,GH-0.1,sz); gGroup.add(strip);
-  var sl=new THREE.PointLight(0xaaaaff,0.8,14); sl.position.set(0,GH-0.3,sz); gGroup.add(sl);
+  var sl=new THREE.PointLight(0xaabbff,1.2,16); sl.position.set(0,GH-0.3,sz); gGroup.add(sl);
 });
 // SD colours on back wall
 var sdB=new THREE.Mesh(new THREE.PlaneGeometry(1.6,2.4),new THREE.MeshBasicMaterial({color:0x005293,side:THREE.DoubleSide}));
@@ -556,6 +672,63 @@ var eg1=new THREE.PointLight(0x0066ff,1.8,10); eg1.position.set(-GD/2-1,3,-4); g
 var eg2=new THREE.PointLight(0x0066ff,1.8,10); eg2.position.set(-GD/2-1,3, 4); gGroup.add(eg2);
 scene.add(gGroup);
 
+// ── GARAGE 2ND FLOOR (unlocked by rebirth) ─────────────────────
+// 2nd floor sits above the garage, connected by staircase on right side
+var GH2 = GH + 0.45 + 3.5; // floor 2 height = garage roof + ceiling + 3.5m
+var floor2Group = new THREE.Group();
+floor2Group.position.set(GX, 0, GZ);
+
+// Floor platform
+var f2Floor = new THREE.Mesh(new THREE.PlaneGeometry(GD, GW),
+  new THREE.MeshLambertMaterial({color:0x12122a}));
+f2Floor.rotation.x = -Math.PI/2; f2Floor.position.y = GH2 + 0.06; floor2Group.add(f2Floor);
+
+// Side walls (same as garage but thinner)
+var f2W1 = new THREE.Mesh(new THREE.BoxGeometry(GD, 3.5, 0.4), new THREE.MeshLambertMaterial({color:0x1e1e40}));
+f2W1.position.set(0, GH2 + 1.75, -GW/2); floor2Group.add(f2W1);
+var f2W2 = new THREE.Mesh(new THREE.BoxGeometry(GD, 3.5, 0.4), new THREE.MeshLambertMaterial({color:0x1e1e40}));
+f2W2.position.set(0, GH2 + 1.75, GW/2); floor2Group.add(f2W2);
+var f2Back = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.5, GW), new THREE.MeshLambertMaterial({color:0x1e1e40}));
+f2Back.position.set(GD/2, GH2 + 1.75, 0); floor2Group.add(f2Back);
+
+// Railing on open side (left = toward road)
+for (var ri2 = 0; ri2 < 8; ri2++) {
+  var rail = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.1, 0.06),
+    new THREE.MeshLambertMaterial({color:0x4455aa,emissive:new THREE.Color(0x2233aa),emissiveIntensity:0.3}));
+  rail.position.set(-GD/2 + 1 + ri2*2, GH2 + 0.55, -GW/2 + 0.2); floor2Group.add(rail);
+  var rail2 = rail.clone();
+  rail2.position.set(-GD/2 + 1 + ri2*2, GH2 + 0.55, GW/2 - 0.2); floor2Group.add(rail2);
+}
+var hRail1 = new THREE.Mesh(new THREE.BoxGeometry(GD-1, 0.07, 0.07),
+  new THREE.MeshLambertMaterial({color:0x6677cc,emissive:new THREE.Color(0x4455aa),emissiveIntensity:0.4}));
+hRail1.position.set(0, GH2 + 1.1, -GW/2+0.2); floor2Group.add(hRail1);
+var hRail2 = hRail1.clone(); hRail2.position.z = GW/2-0.2; floor2Group.add(hRail2);
+
+// Ceiling lights floor 2
+var f2Light = new THREE.PointLight(0xaaccff, 1.8, 18);
+f2Light.position.set(0, GH2 + 3.0, 0); floor2Group.add(f2Light);
+var f2Strip = new THREE.Mesh(new THREE.PlaneGeometry(GD-2, 0.3),
+  new THREE.MeshBasicMaterial({color:0xccddff}));
+f2Strip.rotation.x = Math.PI/2; f2Strip.position.set(0, GH2 + 3.4, 0); floor2Group.add(f2Strip);
+
+scene.add(floor2Group);
+floor2Group.visible = false; // hidden until rebirth
+
+// ── STAIRCASE (right side of garage, z = GZ+GW/2+1) ─────────────
+var stairGroup = new THREE.Group();
+var STAIR_X = GX; var STAIR_Z = GZ + GW/2 + 2; var STAIR_STEPS = 10;
+var stepH = (GH2) / STAIR_STEPS, stepD = 1.2;
+for (var si2 = 0; si2 < STAIR_STEPS; si2++) {
+  var step = new THREE.Mesh(new THREE.BoxGeometry(3, stepH, stepD),
+    new THREE.MeshLambertMaterial({color:0x2a2a4a,emissive:new THREE.Color(0x2233aa),emissiveIntensity:0.08}));
+  step.position.set(STAIR_X, si2*stepH + stepH/2, STAIR_Z + si2*stepD);
+  stairGroup.add(step);
+}
+scene.add(stairGroup);
+stairGroup.visible = false;
+
+// ── PLATFORMS floor 1 (8 spots, 2×4) ─────────────────────────────
+
 // ── PLATFORMS (8 spots, 2×4) ───────────────────────────────────
 var PLATFORM_POSITIONS = [];
 for(var row=0;row<2;row++){
@@ -565,10 +738,37 @@ for(var row=0;row<2;row++){
     PLATFORM_POSITIONS.push({x:px,z:pz});
   }
 }
+// ── FLOOR 2 PLATFORMS (up to 8, unlocked per rebirth) ────────────
+var FLOOR2_POSITIONS = [];
+var floor2PlatMeshes = []; // {base, top, platTop} per slot
+for (var f2row = 0; f2row < 2; f2row++) {
+  for (var f2col = 0; f2col < 4; f2col++) {
+    var f2px = GX + (-GD/2 + 2.2 + f2col*(GD-3.5)/3);
+    var f2pz = GZ + (f2row === 0 ? -GW/2 + 2.5 : GW/2 - 2.5);
+    FLOOR2_POSITIONS.push({x:f2px, z:f2pz, y:GH2+0.1});
+  }
+}
+FLOOR2_POSITIONS.forEach(function(pp, idx) {
+  var base2 = new THREE.Mesh(new THREE.BoxGeometry(1.9,0.2,1.9),
+    new THREE.MeshLambertMaterial({color:0x3333bb,emissive:new THREE.Color(0x2233cc),emissiveIntensity:0.2}));
+  base2.position.set(pp.x, pp.y, pp.z);
+  var top2 = new THREE.Mesh(new THREE.BoxGeometry(1.65,0.07,1.65),
+    new THREE.MeshLambertMaterial({color:0x445588}));
+  top2.position.set(pp.x, pp.y+0.14, pp.z);
+  top2.name = 'f2plattop_'+idx;
+  floor2PlatMeshes.push({base:base2, top:top2});
+  scene.add(base2); scene.add(top2);
+  base2.visible=false; top2.visible=false;
+});
+
+var floor2Slots = FLOOR2_POSITIONS.map(function(pp, idx) {
+  return {idx:idx, x:pp.x, y:pp.y, z:pp.z, jimmie:null, platTop:floor2PlatMeshes[idx].top, isFloor2:true};
+});
+
 var upgradeButtons = []; // {mesh, slotIdx, pos}
 PLATFORM_POSITIONS.forEach(function(pp,idx){
-  var base=Box(1.9,0.2,1.9,0x2244cc,0x1133aa,0.15); base.position.set(pp.x,0.1,pp.z); scene.add(base);
-  var top=Box(1.65,0.07,1.65,0x334488); top.position.set(pp.x,0.21,pp.z); top.name='plattop_'+idx; scene.add(top);
+  var base=Box(1.9,0.25,1.9,0x3355dd,0x2244cc,0.3); base.position.set(pp.x,0.12,pp.z); scene.add(base);
+  var top=Box(1.65,0.09,1.65,0x4466bb,0x3355aa,0.2); top.position.set(pp.x,0.24,pp.z); top.name='plattop_'+idx; scene.add(top);
 
   // Upgrade button: pole in front corner + sign
   // Place pole at front-left corner of platform (toward road = -x direction)
@@ -598,7 +798,7 @@ PLATFORM_POSITIONS.forEach(function(pp,idx){
 var sv=new Float32Array(300*3);
 for(var si=0;si<300;si++){sv[si*3]=(Math.random()-0.5)*160;sv[si*3+1]=Math.random()*55+18;sv[si*3+2]=(Math.random()-0.5)*160;}
 var sg=new THREE.BufferGeometry(); sg.setAttribute('position',new THREE.BufferAttribute(sv,3));
-scene.add(new THREE.Points(sg,new THREE.PointsMaterial({color:0xaabbff,size:0.18})));
+scene.add(new THREE.Points(sg,new THREE.PointsMaterial({color:0xbbccff,size:0.22})));
 
 // ── BUILD JIMMIE MESH ──────────────────────────────────────────
 function buildJimmieMesh(def) {
@@ -895,7 +1095,7 @@ function restoreGarage() {
     var mesh = buildJimmieMesh(def);
     var slot = garageSlots[idx];
     mesh.position.set(slot.x, 0, slot.z);
-    mesh.rotation.y = -Math.PI / 2;
+    mesh.rotation.y = 0; // will be updated each frame to face player
     scene.add(mesh);
     // Add income dot
     var idot = makeIncomeLabel(slotData.defIdx, slotData.level);
@@ -1042,6 +1242,7 @@ document.addEventListener('keydown', function(e) {
   if (e.code === 'KeyU') upgradeClosestGarageJimmie();
   if (e.code === 'KeyQ') sellClosestGarageJimmie();
   if (e.code === 'Space' && isOnGround) { velY = JUMP_FORCE; isOnGround = false; }
+  if (e.code === 'KeyR') handleRKey();
   if (e.code === 'Escape') togglePause();
 });
 document.addEventListener('keyup', function(e) { keys4[e.code] = false; });
@@ -1118,7 +1319,11 @@ function calcTotalPps() {
     if (!slot.jimmie || slot.jimmie.movingToSlot) return;
     total += upgradedPps(slot.jimmie.def, slot.jimmie.level || 1);
   });
-  return total;
+  floor2Slots.forEach(function(slot) {
+    if (!slot.jimmie || slot.jimmie.movingToSlot) return;
+    total += upgradedPps(slot.jimmie.def, slot.jimmie.level || 1);
+  });
+  return Math.floor(total * multiplier);
 }
 function fmtNum(n) {
   if (n < 0) return '-' + fmtNum(-n);
@@ -1129,13 +1334,211 @@ function fmtNum(n) {
   return Math.round(n).toString();
 }
 function updateHUD() {
-  var occ = garageSlots.filter(function(s){return s.jimmie;}).length;
-  document.getElementById('hcount').textContent = occ+'/8';
+  var occ = garageSlots.filter(function(s){return s.jimmie;}).length
+          + floor2Slots.filter(function(s){return s.jimmie;}).length;
+  var total = 8 + extraFloors;
+  document.getElementById('hcount').textContent = occ+'/'+total;
   document.getElementById('hmoney').textContent = fmtNum(Math.floor(money))+' kr';
   document.getElementById('htotal').textContent = fmtNum(Math.floor(totalEarned))+' kr';
   document.getElementById('hpps').textContent   = fmtNum(calcTotalPps())+'/s';
-  document.getElementById('progfill').style.width = (occ/8*100)+'%';
-  document.getElementById('proglbl').textContent = 'Plattformar ('+occ+'/8)';
+  document.getElementById('progfill').style.width = (occ/total*100)+'%';
+  document.getElementById('proglbl').textContent = 'Plattformar ('+occ+'/'+total+')';
+  var rb = document.getElementById('rebirth-btn');
+  if (rb) {
+    var cost = rebirthCost();
+    rb.textContent = '⚡ REBIRTH #'+(rebirths+1)+' — '+fmtNum(cost)+' kr';
+    rb.style.opacity = money >= cost ? '1' : '0.45';
+  }
+  var mult = document.getElementById('hud-mult');
+  if (mult) mult.textContent = 'x'+multiplier.toFixed(1);
+  var reb = document.getElementById('hud-reb');
+  if (reb) reb.textContent = rebirths;
+}
+
+// ── Rebirth ──────────────────────────────────────────────────────
+var rebirthKeepSelected = []; // indices into garageSlots+floor2Slots of selected keep
+
+function openRebirthMenu() {
+  if (!gameStarted) return;
+  var cost = rebirthCost();
+  if (money < cost) { showPopup('⚠️ Inte nog pengar!', 'Rebirth kostar '+fmtNum(cost)+' kr', 0xef4444); return; }
+  var newMult = parseFloat((multiplier + 0.5).toFixed(1));
+  var newLuck = rebirthLuckBonus() + 8;
+  var kc = Math.max(1, rebirths >= 4 ? 2 + (rebirths-4) : 1);
+  kc = Math.min(kc, 8);
+  document.getElementById('rb-mult').textContent = 'x'+newMult;
+  document.getElementById('rb-luck').textContent = '+'+newLuck+'%';
+  document.getElementById('rb-keep').textContent = kc+' st';
+  document.getElementById('rb-floor').textContent = extraFloors < 8 ? '+1 plats' : 'Max!';
+  // Build keep slot selector
+  rebirthKeepSelected = [];
+  var keepDiv = document.getElementById('keep-slots');
+  keepDiv.innerHTML = '';
+  var allSlots = [];
+  garageSlots.forEach(function(s,i){if(s.jimmie)allSlots.push({slot:s,label:'P1-'+(i+1)});});
+  floor2Slots.forEach(function(s,i){if(s.jimmie)allSlots.push({slot:s,label:'P2-'+(i+1)});});
+  if (allSlots.length === 0) {
+    keepDiv.innerHTML = '<div style="opacity:0.5;font-size:0.8rem">Inga Jimmies att spara</div>';
+  }
+  allSlots.forEach(function(item, i) {
+    var w2 = item.slot.jimmie;
+    var card = document.createElement('div');
+    card.className = 'keep-card';
+    card.innerHTML = w2.def.icon+'<br><b>'+w2.def.name+'</b><br><span style="opacity:0.6">Lvl '+w2.level+'</span>';
+    card.dataset.idx = i;
+    card.dataset.slotRef = JSON.stringify({defIdx:w2.defIdx,level:w2.level});
+    card.onclick = function() {
+      var kc2 = Math.max(1, rebirths >= 4 ? 2+(rebirths-4) : 1);
+      kc2 = Math.min(kc2, 8);
+      var alreadySel = rebirthKeepSelected.indexOf(i);
+      if (alreadySel >= 0) {
+        rebirthKeepSelected.splice(alreadySel,1);
+        card.className='keep-card';
+      } else if (rebirthKeepSelected.length < kc2) {
+        rebirthKeepSelected.push(i);
+        card.className='keep-card '+(rebirthKeepSelected.indexOf(i)===0?'selected':'selected2');
+      }
+    };
+    keepDiv.appendChild(card);
+  });
+  document.getElementById('rebirth-desc').textContent =
+    'Kostnad: '+fmtNum(cost)+' kr. Du behåller '+kc+' Jimmie(s). Allt annat nollställs.';
+  document.exitPointerLock();
+  document.getElementById('rebirth-overlay').style.display = 'flex';
+}
+
+function closeRebirthMenu() {
+  document.getElementById('rebirth-overlay').style.display = 'none';
+  if (gameStarted && !paused) canvas.requestPointerLock();
+}
+
+function confirmRebirth() {
+  var cost = rebirthCost();
+  if (money < cost) return;
+  // Collect keep data
+  var allSlots = [];
+  garageSlots.forEach(function(s){if(s.jimmie)allSlots.push(s);});
+  floor2Slots.forEach(function(s){if(s.jimmie)allSlots.push(s);});
+  var keepData = rebirthKeepSelected.map(function(i){
+    var s = allSlots[i]; if(!s||!s.jimmie) return null;
+    return {defIdx:s.jimmie.defIdx, level:s.jimmie.level};
+  }).filter(Boolean);
+
+  // Clear all garage jimmies from scene
+  garageSlots.forEach(function(s){if(s.jimmie){scene.remove(s.jimmie.mesh);s.jimmie=null;s.platTop.material=mkMat(0x334488);}});
+  floor2Slots.forEach(function(s){if(s.jimmie){scene.remove(s.jimmie.mesh);s.jimmie=null;s.platTop.material=mkMat(0x445588);}});
+  // Clear wanderers
+  wanderers.forEach(function(w){if(!w.despawned)scene.remove(w.mesh);});
+  wanderers = [];
+  // Clear heldJimmie
+  if (heldJimmie) { scene.remove(heldJimmie.mesh); heldJimmie = null; updateHeldBar(); }
+
+  // Apply rebirth
+  rebirths++;
+  multiplier = parseFloat((multiplier + 0.5).toFixed(1));
+  if (extraFloors < 8) { extraFloors++; showFloor2Slots(); }
+  keepCount = Math.max(1, rebirths >= 5 ? 2+(rebirths-5) : 1);
+  keepCount = Math.min(keepCount, 8);
+  money = 0;
+  rebuildSpawnWeights();
+
+  // Restore kept jimmies to garage slots
+  keepData.forEach(function(kd, ki) {
+    if (ki >= garageSlots.length) return;
+    var def = JIMMIES[kd.defIdx]; if(!def) return;
+    var mesh = buildJimmieMesh(def);
+    var slot = garageSlots[ki];
+    mesh.position.set(slot.x, 0.22, slot.z);
+    scene.add(mesh);
+    var idot = makeIncomeLabel(kd.defIdx, kd.level); mesh.add(idot);
+    slot.jimmie = {mesh:mesh,def:def,defIdx:kd.defIdx,level:kd.level,movingToSlot:false,recruited:true,despawned:false};
+    slot.platTop.material = mkMat(def.col,def.col,0.25);
+  });
+
+  closeRebirthMenu();
+  saveState();
+  updateHUD();
+  showPopup('⚡ REBIRTH '+rebirths+'!', 'Multiplier: x'+multiplier+' · Luck: +'+rebirthLuckBonus()+'%', 0xff6600);
+}
+
+function showFloor2Slots() {
+  floor2Group.visible = true;
+  stairGroup.visible = true;
+  for (var fi=0; fi<extraFloors && fi<floor2PlatMeshes.length; fi++) {
+    floor2PlatMeshes[fi].base.visible = true;
+    floor2PlatMeshes[fi].top.visible = true;
+  }
+}
+
+// ── R-key pick/place ──────────────────────────────────────────────
+function updateHeldBar() {
+  var bar = document.getElementById('held-bar');
+  if (heldJimmie) {
+    bar.style.display = 'block';
+    document.getElementById('held-name').textContent = heldJimmie.def.icon+' '+heldJimmie.def.name+' (Lvl '+heldJimmie.level+')';
+  } else {
+    bar.style.display = 'none';
+  }
+}
+
+function handleRKey() {
+  if (heldJimmie) {
+    // Try to place on nearest free slot
+    var bestSlot = null, bestDist = 3.5;
+    var checkSlots = garageSlots.concat(floor2Slots.slice(0, extraFloors));
+    checkSlots.forEach(function(slot) {
+      if (slot.jimmie) return;
+      var slotY = slot.isFloor2 ? slot.y : 0;
+      var dx = cam.position.x - slot.x, dz = cam.position.z - slot.z;
+      var d = Math.sqrt(dx*dx+dz*dz);
+      if (d < bestDist) { bestDist=d; bestSlot=slot; }
+    });
+    if (bestSlot) {
+      heldJimmie.mesh.position.set(bestSlot.x, bestSlot.isFloor2 ? bestSlot.y+0.22 : 0.22, bestSlot.z);
+      heldJimmie.movingToSlot = false;
+      bestSlot.jimmie = heldJimmie;
+      bestSlot.platTop.material = mkMat(heldJimmie.def.col, heldJimmie.def.col, 0.25);
+      scene.add(heldJimmie.mesh);
+      heldJimmie = null;
+      updateHeldBar(); saveState();
+    } else {
+      showPopup('⚠️ Ingen plats!', 'Ingen fri plattform i närheten.', 0xef4444);
+    }
+  } else {
+    // Pick up nearest owned jimmie
+    var bestSlot2 = null, bestDist2 = 3.0;
+    var checkSlots2 = garageSlots.concat(floor2Slots.slice(0, extraFloors));
+    checkSlots2.forEach(function(slot) {
+      if (!slot.jimmie || slot.jimmie.movingToSlot) return;
+      var dx = cam.position.x - slot.x, dz = cam.position.z - slot.z;
+      var d = Math.sqrt(dx*dx+dz*dz);
+      if (d < bestDist2) { bestDist2=d; bestSlot2=slot; }
+    });
+    if (bestSlot2) {
+      heldJimmie = bestSlot2.jimmie;
+      scene.remove(heldJimmie.mesh);
+      bestSlot2.jimmie = null;
+      bestSlot2.platTop.material = mkMat(0x334488);
+      updateHeldBar(); saveState();
+    }
+  }
+}
+
+// ── Restore floor2 on load ────────────────────────────────────────
+function restoreFloor2() {
+  if (extraFloors > 0) showFloor2Slots();
+  if (!savedState.floorSlots) return;
+  savedState.floorSlots.forEach(function(slotData, idx) {
+    if (!slotData || idx >= extraFloors) return;
+    var def = JIMMIES[slotData.defIdx]; if(!def) return;
+    var mesh = buildJimmieMesh(def);
+    var slot = floor2Slots[idx];
+    mesh.position.set(slot.x, slot.y+0.22, slot.z);
+    scene.add(mesh);
+    var idot = makeIncomeLabel(slotData.defIdx, slotData.level); mesh.add(idot);
+    slot.jimmie = {mesh:mesh,def:def,defIdx:slotData.defIdx,level:slotData.level,movingToSlot:false,recruited:true,despawned:false,targetSlotIdx:idx};
+    slot.platTop.material = mkMat(def.col,def.col,0.25);
+  });
 }
 
 // ── Clock ──────────────────────────────────────────────────────
@@ -1147,6 +1550,7 @@ document.getElementById('startbtn').addEventListener('click', function() {
   if (!gameStarted) {
     gameStarted = true;
     restoreGarage();
+    restoreFloor2();
     updateHUD();
     document.getElementById('hud').style.display = 'block';
     document.getElementById('startscreen').style.display = 'none';
@@ -1297,6 +1701,23 @@ function loop() {
     var canAfford = money >= closestW.def.cost;
     rhint.innerHTML=closestW.def.icon+' <strong>E</strong> — Rekrytera <span style="color:#'+rc+'">'+closestW.def.name+'</span><br><small style="opacity:.65">'+closestW.def.rarity+' · <span style="color:'+(canAfford?'#4ade80':'#f87171')+'">'+fmtNum(closestW.def.cost)+' kr</span> · '+fmtNum(closestW.def.pps)+' kr/s</small>';
   } else { nearJimmie=null; rhint.style.display='none'; }
+
+  // R-key hint
+  var rhintR = document.getElementById('rh-hint');
+  if (heldJimmie) {
+    rhintR.style.display = 'block';
+    rhintR.textContent = '📦 R — Placera '+heldJimmie.def.icon+' '+heldJimmie.def.name;
+  } else {
+    // Show pick-up hint if near an occupied slot
+    var nearPick = false;
+    garageSlots.concat(floor2Slots.slice(0, extraFloors)).forEach(function(slot) {
+      if (!slot.jimmie || slot.jimmie.movingToSlot) return;
+      var dx=cam.position.x-slot.x, dz=cam.position.z-slot.z;
+      if (Math.sqrt(dx*dx+dz*dz)<3.0) nearPick=true;
+    });
+    rhintR.style.display = nearPick ? 'block' : 'none';
+    if (nearPick) rhintR.textContent = 'R — Plocka upp Jimmie';
+  }
 
   var qhint2=document.getElementById('qhint'), uhint=document.getElementById('uhint');
   var nearSlot=nearestOccupiedSlot(4.5);
