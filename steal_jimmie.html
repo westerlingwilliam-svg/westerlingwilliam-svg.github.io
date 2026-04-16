@@ -770,14 +770,14 @@ for (var hri = 0; hri <= STAIR_N2; hri++) {
   var hx = S_X0 + hri * S_StepW;
   var hy = hri * S_StepH;
   var post = new THREE.Mesh(new THREE.BoxGeometry(0.1, 1.1, 0.1), HR_Mat);
-  post.position.set(hx, hy + 0.55, S_ZFront + S_ZDepth - 0.1);
+  post.position.set(hx, hy + 0.55, S_ZFront + 0.15);
   stairGroup.add(post);
 }
 // Sloped rail beam
 var rLen = Math.sqrt(Math.pow((GD-2), 2) + Math.pow(GH2, 2));
 var rBeam = new THREE.Mesh(new THREE.BoxGeometry(rLen, 0.09, 0.09), HR_Mat);
 rBeam.rotation.z = -Math.atan2(GH2, GD - 2);
-rBeam.position.set(S_X0 + (GD-2)/2, GH2/2 + 0.55, S_ZFront + S_ZDepth - 0.1);
+rBeam.position.set(S_X0 + (GD-2)/2, GH2/2 + 0.55, S_ZFront + 0.15);
 stairGroup.add(rBeam);
 
 scene.add(stairGroup);
