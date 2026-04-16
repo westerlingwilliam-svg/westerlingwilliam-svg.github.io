@@ -732,55 +732,53 @@ floor2Group.add(f2StripM);
 scene.add(floor2Group);
 floor2Group.visible = false;
 
-// ── STAIRCASE: simple steps up the outside of +Z wall ───────────
-// Steps stick OUT in +Z direction, each step higher than last
-// At the top, you step through the opening in the +Z wall onto floor 2
-// GH2 = 6.725 (floor 2 level), STAIR_N steps
+// ── STAIRCASE along RIGHT SIDE (+Z outside), steps run in +X ────
+// Each step: player walks in +X direction to go UP
+// Stair is OUTSIDE garage (z > GZ+GW/2 = 7)
+// Steps go from x=GX-GD/2 (14) to x=GX-GD/2+GD-2 (28)
+// Rising from y=0 to y=GH2 (6.725)
 var stairGroup = new THREE.Group();
-var STAIR_N  = 10;
-var STAIR_WX = 3.0;        // width of staircase in X
-var STAIR_ZW = 1.0;        // depth of each step in Z direction
-var STAIR_SH = GH2 / STAIR_N; // rise per step
-// Staircase sits at x = GX-GD/2 (front of garage), z starts at GZ+GW/2
-var STX = GX - GD/2 + STAIR_WX/2;  // center X of stair
-var STZ0 = GZ + GW/2;               // flush with garage wall
-
-var sMatF = new THREE.MeshLambertMaterial({
-  color: 0x2a3a6a, emissive: new THREE.Color(0x1a2a5a), emissiveIntensity: 0.2
+var STAIR_N2  = 10;
+var S_X0      = GX - GD/2;           // 14 - start X (bottom)
+var S_ZFront  = GZ + GW/2;           // 7  - flush with garage right wall
+var S_ZDepth  = 2.2;                  // how far steps stick out in +Z
+var S_StepW   = (GD - 2) / STAIR_N2; // 1.4m per step in X direction
+var S_StepH   = GH2 / STAIR_N2;      // 0.67m rise per step
+var S_Mat     = new THREE.MeshLambertMaterial({
+  color: 0x334488, emissive: new THREE.Color(0x223377), emissiveIntensity: 0.25
 });
 
-for (var si2 = 0; si2 < STAIR_N; si2++) {
-  // Each step is a box. It spans from y=0 up to (si2+1)*STAIR_SH
-  // and extends from STZ0 to STZ0 + (si2+1)*STAIR_ZW
-  var stepH2 = (si2 + 1) * STAIR_SH;
-  var stepZ  = STZ0 + (si2 + 0.5) * STAIR_ZW;
-  var sM = new THREE.Mesh(new THREE.BoxGeometry(STAIR_WX, stepH2, STAIR_ZW), sMatF);
-  sM.position.set(STX, stepH2 / 2, stepZ);
-  stairGroup.add(sM);
+for (var si2 = 0; si2 < STAIR_N2; si2++) {
+  // Step tread: the flat surface you walk on
+  var treadX = S_X0 + si2 * S_StepW + S_StepW / 2;
+  var treadY = (si2 + 1) * S_StepH;
+  var treadZ = S_ZFront + S_ZDepth / 2;
+  // Solid block from y=0 up to treadY (so no gaps)
+  var stepBlock = new THREE.Mesh(
+    new THREE.BoxGeometry(S_StepW, treadY, S_ZDepth),
+    S_Mat
+  );
+  stepBlock.position.set(treadX, treadY / 2, treadZ);
+  stairGroup.add(stepBlock);
 }
 
-// Simple handrail: vertical posts + horizontal bar on outer edge
-var srM2 = new THREE.MeshLambertMaterial({
-  color: 0x4466bb, emissive: new THREE.Color(0x3355aa), emissiveIntensity: 0.4
+// Handrail
+var HR_Mat = new THREE.MeshLambertMaterial({
+  color: 0x5577cc, emissive: new THREE.Color(0x4466bb), emissiveIntensity: 0.4
 });
-for (var sri = 0; sri <= STAIR_N; sri++) {
-  var postY = sri * STAIR_SH;
-  var postZ = STZ0 + sri * STAIR_ZW;
-  var post = new THREE.Mesh(new THREE.BoxGeometry(0.1, 1.1, 0.1), srM2);
-  post.position.set(STX + STAIR_WX/2 - 0.1, postY + 0.55, postZ);
+for (var hri = 0; hri <= STAIR_N2; hri++) {
+  var hx = S_X0 + hri * S_StepW;
+  var hy = hri * S_StepH;
+  var post = new THREE.Mesh(new THREE.BoxGeometry(0.1, 1.1, 0.1), HR_Mat);
+  post.position.set(hx, hy + 0.55, S_ZFront + S_ZDepth - 0.1);
   stairGroup.add(post);
 }
-// Top rail beam (sloped)
-var railLen = Math.sqrt(STAIR_N*STAIR_N * STAIR_ZW*STAIR_ZW + GH2*GH2);
-var railAngle = Math.atan2(GH2, STAIR_N * STAIR_ZW);
-var railBeam = new THREE.Mesh(new THREE.BoxGeometry(0.08, railLen, 0.08), srM2);
-railBeam.rotation.x = railAngle;
-railBeam.position.set(
-  STX + STAIR_WX/2 - 0.1,
-  GH2/2 + 0.55,
-  STZ0 + STAIR_N * STAIR_ZW / 2
-);
-stairGroup.add(railBeam);
+// Sloped rail beam
+var rLen = Math.sqrt(Math.pow((GD-2), 2) + Math.pow(GH2, 2));
+var rBeam = new THREE.Mesh(new THREE.BoxGeometry(rLen, 0.09, 0.09), HR_Mat);
+rBeam.rotation.z = -Math.atan2(GH2, GD - 2);
+rBeam.position.set(S_X0 + (GD-2)/2, GH2/2 + 0.55, S_ZFront + S_ZDepth - 0.1);
+stairGroup.add(rBeam);
 
 scene.add(stairGroup);
 stairGroup.visible = false;
@@ -1394,8 +1392,8 @@ function isBlocked4(nx, nz) {
   if (nx > gRight - pr && nz > gFront - pr && nz < gBack + pr) return true;
   // Side walls — but allow passage at staircase opening (front section of +Z wall)
   if (nz < gFront + pr && nx > gLeft && nx < gRight) return true;
-  // +Z wall: only block where wall exists (NOT at stair opening x=gLeft to gLeft+3.5)
-  if (nz > gBack - pr && nx > gLeft + 3.5 && nx < gRight) return true;
+  // +Z wall: block only middle/back section (stair opening at front x=gLeft..gLeft+GD-2)
+  if (nz > gBack - pr && nx > gLeft && nx < gRight) return true;
   return false;
 }
 
