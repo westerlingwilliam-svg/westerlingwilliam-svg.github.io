@@ -1243,8 +1243,10 @@ function sellClosestGarageJimmie() {
 
 function nearestOccupiedSlot(maxDist) {
   var best = null, bd = maxDist;
-  var allSlots = garageSlots.concat(floor2Slots.slice(0, extraFloors));
-  allSlots.forEach(function(slot) {
+  var onFloor2 = cam.position.y > GH2 + 1.0;
+  // Only check slots on the same floor as player
+  var slots = onFloor2 ? floor2Slots.slice(0, extraFloors) : garageSlots;
+  slots.forEach(function(slot) {
     if (!slot.jimmie || slot.jimmie.movingToSlot) return;
     var dx = cam.position.x - slot.x, dz = cam.position.z - slot.z;
     var d = Math.sqrt(dx*dx + dz*dz);
@@ -1579,7 +1581,8 @@ function handleRKey() {
   } else {
     // Pick up nearest owned jimmie
     var bestSlot2 = null, bestDist2 = 3.0;
-    var checkSlots2 = garageSlots.concat(floor2Slots.slice(0, extraFloors));
+    var onF2pick = cam.position.y > GH2 + 1.0;
+    var checkSlots2 = onF2pick ? floor2Slots.slice(0, extraFloors) : garageSlots;
     checkSlots2.forEach(function(slot) {
       if (!slot.jimmie || slot.jimmie.movingToSlot) return;
       var dx = cam.position.x - slot.x, dz = cam.position.z - slot.z;
@@ -1704,11 +1707,11 @@ function loop() {
     }
   }
 
-  // Floor2 check — only when player is near floor2 level (above GH2)
+  // Floor2 check — only when falling toward it (velY < 0) or standing on it
   var inGarageX = cam.position.x > GX-GD/2+0.3 && cam.position.x < GX+GD/2-0.3;
   var inGarageZ = cam.position.z > GZ-GW/2+0.3 && cam.position.z < GZ+GW/2-0.3;
-  var F2_FLOOR = GH2 + 1.75; // = 8.475
-  if (inGarageX && inGarageZ && cam.position.y <= F2_FLOOR && cam.position.y > GH2 + 0.5) {
+  var F2_FLOOR = GH2 + 1.75;
+  if (inGarageX && inGarageZ && cam.position.y < F2_FLOOR + 0.05 && cam.position.y > GH2 + 0.5 && velY <= 0) {
     cam.position.y = F2_FLOOR;
     velY = 0; isOnGround = true;
   }
@@ -1716,7 +1719,8 @@ function loop() {
   // Ground floor check
   if (cam.position.y <= 1.75) { cam.position.y = 1.75; velY = 0; isOnGround = true; }
 
-  if(isOnGround && ml3>0.3) cam.position.y = cam.position.y + Math.sin(el*9)*0.025;
+  var baseY = (inGarageX && inGarageZ && cam.position.y >= GH2 + 1.6) ? F2_FLOOR : 1.75;
+  if(isOnGround && ml3>0.3) cam.position.y = baseY + Math.sin(el*9)*0.02;
 
   cam.rotation.order='YXZ'; cam.rotation.y=yaw4; cam.rotation.x=pitch4;
 
@@ -1820,9 +1824,11 @@ function loop() {
     rhintR.style.display = 'block';
     rhintR.textContent = '📦 R — Placera '+heldJimmie.def.icon+' '+heldJimmie.def.name;
   } else {
-    // Show pick-up hint if near an occupied slot
+    // Show pick-up hint — same floor only
     var nearPick = false;
-    garageSlots.concat(floor2Slots.slice(0, extraFloors)).forEach(function(slot) {
+    var onF2hint = cam.position.y > GH2 + 1.0;
+    var hintSlots = onF2hint ? floor2Slots.slice(0, extraFloors) : garageSlots;
+    hintSlots.forEach(function(slot) {
       if (!slot.jimmie || slot.jimmie.movingToSlot) return;
       var dx=cam.position.x-slot.x, dz=cam.position.z-slot.z;
       if (Math.sqrt(dx*dx+dz*dz)<3.0) nearPick=true;
