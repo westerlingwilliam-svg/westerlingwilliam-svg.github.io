@@ -1146,8 +1146,9 @@ function restoreGarage() {
     if (!def) return;
     var mesh = buildJimmieMesh(def);
     var slot = garageSlots[idx];
-    mesh.position.set(slot.x, 0, slot.z);
-    mesh.rotation.y = 0; // will be updated each frame to face player
+    var restoreY = slot.isFloor2 ? slot.y : 0;
+    mesh.position.set(slot.x, restoreY, slot.z);
+    mesh.rotation.y = 0;
     scene.add(mesh);
     // Add income dot
     var idot = makeIncomeLabel(slotData.defIdx, slotData.level);
@@ -1170,6 +1171,7 @@ function recruitJimmie(w) {
   var slotIdx = slot.idx;
   w.recruited = true; w.movingToSlot = true; w.targetSlotIdx = slotIdx;
   w.isFloor2Slot = freeResult.isF2;
+  w.targetY = slot.y; // store exact Y to walk to
   if (freeResult.isF2) {
     // mark floor2 slot
     floor2Slots[slotIdx].jimmie = w;
@@ -1602,7 +1604,7 @@ function restoreFloor2() {
     var def = JIMMIES[slotData.defIdx]; if(!def) return;
     var mesh = buildJimmieMesh(def);
     var slot = floor2Slots[idx];
-    mesh.position.set(slot.x, slot.y+0.22, slot.z);
+    mesh.position.set(slot.x, slot.y, slot.z);
     scene.add(mesh);
     var idot = makeIncomeLabel(slotData.defIdx, slotData.level); mesh.add(idot);
     slot.jimmie = {mesh:mesh,def:def,defIdx:slotData.defIdx,level:slotData.level,movingToSlot:false,recruited:true,despawned:false,targetSlotIdx:idx};
@@ -1690,26 +1692,30 @@ function loop() {
   // ── Jump + gravity ───────────────────────────────────────────
   velY += GRAVITY * dt;
   cam.position.y += velY * dt;
-  if(cam.position.y <= 1.75){ cam.position.y=1.75; velY=0; isOnGround=true; }
-  // Ladder: walk close to it to ride up/down
+
+  // Ladder: walk close to ride up
   if (ladderGroup.visible) {
     var ldx = cam.position.x - LAD_X;
     var ldz = cam.position.z - LAD_Z;
-    if (Math.abs(ldx) < 1.0 && Math.abs(ldz) < 1.0) {
-      if (cam.position.y < GH2 + 1.75) {
-        cam.position.y += 4.0 * dt;
-        velY = 0; isOnGround = false;
-      }
+    if (Math.abs(ldx) < 1.2 && Math.abs(ldz) < 1.2 && cam.position.y < GH2 + 1.75) {
+      cam.position.y += 4.5 * dt;
+      velY = 0; isOnGround = false;
     }
   }
-  // 2nd floor: clamp to floor surface when above garage roof area
-  var onGarageXZ = (cam.position.x > GX-GD/2+0.5 && cam.position.x < GX+GD/2-0.5 &&
-                    cam.position.z > GZ-GW/2+0.5 && cam.position.z < GZ+GW/2-0.5);
-  if (onGarageXZ && cam.position.y <= GH2 + 1.75 && cam.position.y > GH2 - 0.5) {
-    cam.position.y = GH2 + 1.75;
+
+  // Floor2 check FIRST — player above garage footprint
+  var inGarageX = cam.position.x > GX-GD/2 && cam.position.x < GX+GD/2;
+  var inGarageZ = cam.position.z > GZ-GW/2 && cam.position.z < GZ+GW/2;
+  var F2_FLOOR = GH2 + 1.75; // = 8.475
+  if (inGarageX && inGarageZ && cam.position.y <= F2_FLOOR && cam.position.y > 1.8) {
+    cam.position.y = F2_FLOOR;
     velY = 0; isOnGround = true;
   }
-  if(isOnGround && ml3>0.3) cam.position.y = 1.75 + Math.sin(el*9)*0.025;
+
+  // Ground floor check
+  if (cam.position.y <= 1.75) { cam.position.y = 1.75; velY = 0; isOnGround = true; }
+
+  if(isOnGround && ml3>0.3) cam.position.y = cam.position.y + Math.sin(el*9)*0.025;
 
   cam.rotation.order='YXZ'; cam.rotation.y=yaw4; cam.rotation.x=pitch4;
 
@@ -1733,7 +1739,7 @@ function loop() {
             if(mesh.userData.legL){mesh.userData.legL.rotation.x=Math.sin(w.bobP)*0.4;mesh.userData.legR.rotation.x=-Math.sin(w.bobP)*0.4;}
           } else {
             w.movingToSlot=false;
-          var targetFloorY = slot4.isFloor2 ? slot4.y : 0.22;
+          var targetFloorY = w.targetY || 0.22;
           mesh.position.set(slot4.x, targetFloorY, slot4.z); mesh.rotation.y=-Math.PI/2;
           }
         }
