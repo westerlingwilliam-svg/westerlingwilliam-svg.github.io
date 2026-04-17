@@ -351,10 +351,10 @@ function rebirthLuckBonus() { return rebirths * 8; } // +8% rare weight per rebi
 
 // ── Upgrade costs per level ────────────────────────────────────
 function upgradeCost(def, level) {
-  return Math.floor(def.cost * 1.5 * Math.pow(2, level - 1));
+  return Math.floor(def.cost * 2.5 * Math.pow(2.5, level - 1));
 }
 function upgradedPps(def, level) {
-  return Math.floor(def.pps * Math.pow(1.8, level - 1));
+  return Math.floor(def.pps * Math.pow(1.4, level - 1));
 }
 
 // ── Persistent state ───────────────────────────────────────────
@@ -1429,6 +1429,7 @@ var rebirthKeepSelected = []; // indices into garageSlots+floor2Slots of selecte
 
 function openRebirthMenu() {
   if (!gameStarted) return;
+  if (rebirths >= 8) { showPopup('🏆 Max Rebirth!', 'Du har nått max 8 rebirths!', 0xfecc00); return; }
   var cost = rebirthCost();
   if (money < cost) { showPopup('⚠️ Inte nog pengar!', 'Rebirth kostar '+fmtNum(cost)+' kr', 0xef4444); return; }
   var newMult = parseFloat((multiplier + 0.5).toFixed(1));
@@ -1505,7 +1506,7 @@ function confirmRebirth() {
   // Apply rebirth
   rebirths++;
   multiplier = parseFloat((multiplier + 0.5).toFixed(1));
-  if (extraFloors < 8) { extraFloors++; showFloor2Slots(); }
+  if (extraFloors < 8 && rebirths <= 8) { extraFloors++; showFloor2Slots(); }
   keepCount = Math.max(1, rebirths >= 5 ? 2+(rebirths-5) : 1);
   keepCount = Math.min(keepCount, 8);
   money = 400;
@@ -1703,11 +1704,11 @@ function loop() {
     }
   }
 
-  // Floor2 check FIRST — player above garage footprint
-  var inGarageX = cam.position.x > GX-GD/2 && cam.position.x < GX+GD/2;
-  var inGarageZ = cam.position.z > GZ-GW/2 && cam.position.z < GZ+GW/2;
+  // Floor2 check — only when player is near floor2 level (above GH2)
+  var inGarageX = cam.position.x > GX-GD/2+0.3 && cam.position.x < GX+GD/2-0.3;
+  var inGarageZ = cam.position.z > GZ-GW/2+0.3 && cam.position.z < GZ+GW/2-0.3;
   var F2_FLOOR = GH2 + 1.75; // = 8.475
-  if (inGarageX && inGarageZ && cam.position.y <= F2_FLOOR && cam.position.y > 1.8) {
+  if (inGarageX && inGarageZ && cam.position.y <= F2_FLOOR && cam.position.y > GH2 + 0.5) {
     cam.position.y = F2_FLOOR;
     velY = 0; isOnGround = true;
   }
