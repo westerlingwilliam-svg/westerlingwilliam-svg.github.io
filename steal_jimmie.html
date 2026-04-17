@@ -797,16 +797,16 @@ for (var f2row = 0; f2row < 2; f2row++) {
   for (var f2col = 0; f2col < 4; f2col++) {
     var f2px = GX + (-GD/2 + 2.2 + f2col*(GD-3.5)/3);
     var f2pz = GZ + (f2row === 0 ? -GW/2 + 2.5 : GW/2 - 2.5);
-    FLOOR2_POSITIONS.push({x:f2px, z:f2pz, y:GH2+0.35});
+    FLOOR2_POSITIONS.push({x:f2px, z:f2pz, y:GH2+0.24}); // platform top surface
   }
 }
 FLOOR2_POSITIONS.forEach(function(pp, idx) {
   var base2 = new THREE.Mesh(new THREE.BoxGeometry(1.9,0.2,1.9),
     new THREE.MeshLambertMaterial({color:0x3333bb,emissive:new THREE.Color(0x2233cc),emissiveIntensity:0.2}));
-  base2.position.set(pp.x, pp.y, pp.z);
+  base2.position.set(pp.x, GH2 + 0.11, pp.z);
   var top2 = new THREE.Mesh(new THREE.BoxGeometry(1.65,0.07,1.65),
     new THREE.MeshLambertMaterial({color:0x445588}));
-  top2.position.set(pp.x, pp.y+0.14, pp.z);
+  top2.position.set(pp.x, GH2 + 0.24, pp.z);
   top2.name = 'f2plattop_'+idx;
   floor2PlatMeshes.push({base:base2, top:top2});
   scene.add(base2); scene.add(top2);
@@ -1702,9 +1702,12 @@ function loop() {
       }
     }
   }
-  // 2nd floor: if player is on 2nd floor level, prevent falling through roof
-  if (cam.position.y > GH2 + 1.0 && cam.position.y < GH2 + 2.5) {
-    if (cam.position.y < GH2 + 1.75) { cam.position.y = GH2 + 1.75; velY = 0; isOnGround = true; }
+  // 2nd floor: clamp to floor surface when above garage roof area
+  var onGarageXZ = (cam.position.x > GX-GD/2+0.5 && cam.position.x < GX+GD/2-0.5 &&
+                    cam.position.z > GZ-GW/2+0.5 && cam.position.z < GZ+GW/2-0.5);
+  if (onGarageXZ && cam.position.y <= GH2 + 1.75 && cam.position.y > GH2 - 0.5) {
+    cam.position.y = GH2 + 1.75;
+    velY = 0; isOnGround = true;
   }
   if(isOnGround && ml3>0.3) cam.position.y = 1.75 + Math.sin(el*9)*0.025;
 
@@ -1730,7 +1733,7 @@ function loop() {
             if(mesh.userData.legL){mesh.userData.legL.rotation.x=Math.sin(w.bobP)*0.4;mesh.userData.legR.rotation.x=-Math.sin(w.bobP)*0.4;}
           } else {
             w.movingToSlot=false;
-          var targetFloorY = (slot4.isFloor2 ? slot4.y : 0) + 0.22;
+          var targetFloorY = slot4.isFloor2 ? slot4.y : 0.22;
           mesh.position.set(slot4.x, targetFloorY, slot4.z); mesh.rotation.y=-Math.PI/2;
           }
         }
