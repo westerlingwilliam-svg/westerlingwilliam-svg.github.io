@@ -47,8 +47,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 #sightings-row{display:flex;gap:8px;align-items:center;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
 .sighting-chip{display:flex;flex-direction:column;align-items:center;background:linear-gradient(145deg,#f8f8f8,#f0f0f0);border-radius:16px;padding:8px 10px;cursor:pointer;transition:.15s;position:relative;min-width:56px;border:1px solid rgba(0,0,0,0.06);box-shadow:0 2px 6px rgba(0,0,0,0.06)}
 .sighting-chip:active{transform:scale(0.90);box-shadow:none}
-.sighting-chip .s-icon{font-size:1.7rem;line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.15))}
-.sighting-chip .s-dist{font-size:0.55rem;color:#999;font-weight:800;margin-top:3px}
+.sighting-chip .s-icon{font-size:1.9rem;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.2))}
+.sighting-chip .s-dist{font-size:0.62rem;color:#888;font-weight:800;margin-top:3px}
 .sighting-chip .s-dot{position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%}
 .no-nearby{font-size:0.75rem;color:#aaa;font-weight:600;padding:4px 0}
 
@@ -79,8 +79,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 }
 #enc-popup.show{opacity:1;transform:translateX(-50%) scale(1) translateY(0);pointer-events:all}
 .enc-rarity-bar{height:5px;border-radius:3px;margin-bottom:12px;width:48px;margin-left:auto;margin-right:auto;box-shadow:0 0 8px currentColor}
-.enc-emoji{font-size:3.2rem;line-height:1;margin-bottom:7px;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.15))}
-.enc-name{font-size:1.1rem;font-weight:900;color:#1a1a1a;margin-bottom:3px;letter-spacing:-.2px}
+.enc-emoji{font-size:3.6rem;line-height:1;margin-bottom:8px;filter:drop-shadow(0 4px 16px rgba(0,0,0,0.2))}
+.enc-name{font-size:1.2rem;font-weight:900;color:#1a1a1a;margin-bottom:4px;letter-spacing:-.2px}
 .enc-sub{font-size:0.7rem;color:#888;font-weight:600;margin-bottom:10px}
 .enc-tap-btn{background:linear-gradient(135deg,var(--b),#5a6fd6);color:white;font-size:0.72rem;font-weight:900;padding:9px 22px;border-radius:50px;letter-spacing:.8px;animation:pulse-btn 1.4s ease-in-out infinite;border:none;cursor:pointer;font-family:var(--font);box-shadow:0 4px 16px rgba(59,76,202,0.4)}
 @keyframes pulse-btn{0%,100%{box-shadow:0 0 0 0 rgba(59,76,202,0.5)}50%{box-shadow:0 0 0 8px rgba(59,76,202,0)}}
@@ -108,7 +108,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 #catch-ring-circle{filter:drop-shadow(0 0 6px currentColor)}
 
 /* Jimmie emoji with glow */
-#catch-emoji{font-size:7rem;line-height:1;position:relative;z-index:2;will-change:transform;filter:drop-shadow(0 12px 32px rgba(0,0,0,0.5))}
+#catch-emoji{font-size:8rem;line-height:1;position:relative;z-index:2;will-change:transform;filter:drop-shadow(0 12px 32px rgba(0,0,0,0.5))}
 #catch-glow-ring{position:absolute;inset:-20px;border-radius:50%;opacity:0;transition:opacity .4s;pointer-events:none}
 
 /* Animations */
@@ -132,7 +132,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 /* Ball — large, beautiful, with glow */
 #ball-display{
   position:absolute;bottom:6px;left:50%;transform:translateX(-50%);
-  font-size:3.8rem;line-height:1;cursor:grab;transition:transform .1s, filter .2s;
+  font-size:4.2rem;line-height:1;cursor:grab;transition:transform .1s, filter .2s;
   will-change:transform;
   filter:drop-shadow(0 6px 20px rgba(255,255,255,0.3));
 }
@@ -145,9 +145,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 .bsel{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:8px 14px;border-radius:14px;border:1.5px solid transparent;transition:all .2s}
 .bsel.active{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.35);box-shadow:0 0 16px rgba(255,255,255,0.08)}
 .bsel:active{transform:scale(0.94)}
-.bsel-icon{font-size:1.9rem;line-height:1}
+.bsel-icon{font-size:2.1rem;line-height:1}
 .bsel-name{font-size:0.52rem;color:rgba(255,255,255,0.5);font-weight:800;text-transform:uppercase;letter-spacing:.8px}
-.bsel-count{font-size:0.75rem;color:var(--y);font-weight:900;background:rgba(255,203,5,0.12);border-radius:20px;padding:1px 7px;margin-top:1px}
+.bsel-count{font-size:0.8rem;color:var(--y);font-weight:900;background:rgba(255,203,5,0.15);border-radius:20px;padding:2px 8px;margin-top:2px}
 
 /* Catch result overlay — full beautiful card */
 #catch-overlay{
@@ -189,8 +189,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 .dc:active{transform:scale(0.96)}
 .dc.dc-caught{border:2px solid transparent}
 .dc.dc-new::after{content:'NEW';position:absolute;top:6px;right:6px;background:var(--r);color:white;font-size:0.42rem;font-weight:900;padding:2px 5px;border-radius:4px;letter-spacing:.5px}
-.dc-icon{font-size:2.2rem;margin-bottom:4px;display:block}
-.dc-name{font-size:0.62rem;font-weight:800;color:#1a1a1a;line-height:1.3}
+.dc-icon{font-size:2.5rem;margin-bottom:6px;display:block}
+.dc-name{font-size:0.68rem;font-weight:800;color:#1a1a1a;line-height:1.3}
 .dc-rarity{font-size:0.52rem;font-weight:700;margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
 .dc-count{font-size:0.58rem;color:#aaa;font-weight:600;margin-top:2px}
 .dc.dc-unseen{opacity:0.32;filter:grayscale(1)}
@@ -232,16 +232,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 .nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;
   padding:6px 0 2px;transition:transform .15s,opacity .15s;-webkit-tap-highlight-color:transparent}
 .nb:active{transform:scale(0.88)}
-.nb-icon{font-size:1.4rem;line-height:1;transition:transform .2s cubic-bezier(.34,1.56,.64,1),filter .2s}
-.nb-lbl{font-size:0.54rem;font-weight:800;color:#bbb;letter-spacing:.4px;text-transform:uppercase;transition:color .2s}
+.nb-icon{font-size:1.6rem;line-height:1;transition:transform .2s cubic-bezier(.34,1.56,.64,1),filter .2s}
+.nb-lbl{font-size:0.62rem;font-weight:800;color:#bbb;letter-spacing:.4px;text-transform:uppercase;transition:color .2s}
 .nb.active .nb-lbl{color:var(--b)}
 .nb.active .nb-icon{transform:scale(1.1);filter:drop-shadow(0 2px 8px rgba(59,76,202,0.5))}
 
 /* Center Jimmie button */
 #nb-center{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:0 0 2px;margin-top:-22px}
-#nb-center-btn{width:66px;height:66px;background:linear-gradient(145deg,#fff 40%,#f5f5f5);border-radius:50%;
-  box-shadow:0 4px 20px rgba(0,0,0,0.2),0 0 0 3px white,0 0 0 5px var(--y);
-  display:flex;align-items:center;justify-content:center;font-size:2.2rem;
+#nb-center-btn{width:72px;height:72px;background:white;border-radius:50%;
+  box-shadow:0 4px 24px rgba(0,0,0,0.22),0 0 0 3px white,0 0 0 6px var(--y);
+  display:flex;align-items:center;justify-content:center;font-size:2.4rem;
   transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s;
   border:none;cursor:pointer;background:white}
 #nb-center-btn:active{transform:scale(0.88)}
@@ -260,10 +260,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 .smenu-btn{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;
   animation:none;transition:transform .2s cubic-bezier(.34,1.56,.64,1)}
 .smenu-btn:active{transform:scale(0.9)}
-.smenu-icon-wrap{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;
-  justify-content:center;font-size:1.7rem;box-shadow:0 6px 20px rgba(0,0,0,0.2);
+.smenu-icon-wrap{width:68px;height:68px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:1.9rem;box-shadow:0 8px 24px rgba(0,0,0,0.25);
   backdrop-filter:blur(8px)}
-.smenu-lbl{font-size:0.6rem;font-weight:900;color:white;text-shadow:0 1px 4px rgba(0,0,0,0.6);
+.smenu-lbl{font-size:0.65rem;font-weight:900;color:white;text-shadow:0 1px 4px rgba(0,0,0,0.6);
   letter-spacing:.5px;text-transform:uppercase;
   background:rgba(0,0,0,0.4);padding:3px 8px;border-radius:50px;backdrop-filter:blur(4px)}
 @keyframes smenu-pop{from{transform:scale(0) translateY(30px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
@@ -287,10 +287,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 /* Garage screen */
 #garage-screen{background:#f2f2f7}
 #garage-grid{flex:1;overflow-y:auto;padding:12px 12px 90px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.gc{background:white;border-radius:18px;padding:12px 8px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,0.07);position:relative;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s}
+.gc{background:white;border-radius:20px;padding:16px 10px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,0.07);position:relative;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s}
 .gc:active{transform:scale(0.94);box-shadow:0 1px 4px rgba(0,0,0,0.1)}
-.gc-icon{font-size:2.4rem;margin-bottom:4px;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.12))}
-.gc-name{font-size:0.62rem;font-weight:800;color:#1a1a1a;line-height:1.3}
+.gc-icon{font-size:2.8rem;margin-bottom:6px;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.15))}
+.gc-name{font-size:0.68rem;font-weight:800;color:#1a1a1a;line-height:1.3}
 .gc-cp{font-size:0.6rem;font-weight:700;color:#888;margin-top:2px}
 .gc-count{position:absolute;top:8px;right:8px;background:var(--b);color:white;font-size:0.55rem;font-weight:900;padding:2px 6px;border-radius:50px}
 .gc-rarity{font-size:0.52rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-top:3px}
@@ -406,7 +406,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
     <div id="throw-zone">
       <div id="throw-hint">👆 DRA UPPÅT FÖR ATT KASTA</div>
       <div id="ball-pulse-ring"></div>
-      <div id="ball-display">⚪</div>
+      <canvas id="ball-display-canvas" width="96" height="96" style="position:absolute;bottom:6px;left:50%;transform:translateX(-50%);cursor:grab;filter:drop-shadow(0 6px 20px rgba(255,255,255,0.3))"></canvas>
     </div>
     <div id="catch-ball-totals" style="display:flex;gap:16px;opacity:0.55;font-size:0.7rem;font-weight:800;color:white;letter-spacing:.5px">
       <span>⚪ <span id="c-tot-0">0</span></span>
@@ -415,17 +415,17 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
     </div>
     <div id="ball-selector">
       <div class="bsel active" id="bsel-0" onclick="selectBall(0)">
-        <div class="bsel-icon">⚪</div>
+        <canvas class="bsel-canvas" id="bsel-c-0" width="48" height="48" style="display:block;margin:0 auto"></canvas>
         <div class="bsel-name">SD-Boll</div>
         <div class="bsel-count" id="bsel-cnt-0">×20</div>
       </div>
       <div class="bsel" id="bsel-1" onclick="selectBall(1)">
-        <div class="bsel-icon">🔵</div>
+        <canvas class="bsel-canvas" id="bsel-c-1" width="48" height="48" style="display:block;margin:0 auto"></canvas>
         <div class="bsel-name">Super</div>
         <div class="bsel-count" id="bsel-cnt-1">×5</div>
       </div>
       <div class="bsel" id="bsel-2" onclick="selectBall(2)">
-        <div class="bsel-icon">🟡</div>
+        <canvas class="bsel-canvas" id="bsel-c-2" width="48" height="48" style="display:block;margin:0 auto"></canvas>
         <div class="bsel-name">Jimmie</div>
         <div class="bsel-count" id="bsel-cnt-2">×1</div>
       </div>
@@ -495,17 +495,17 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 
 <!-- ── SUBMENU ── -->
 <div id="submenu">
-  <div class="smenu-btn" onclick="closeSubmenu();showScreen('bag-screen')" style="animation-delay:.05s">
-    <div class="smenu-icon-wrap" style="background:linear-gradient(135deg,#F7544B,#cc2200)">🎒</div>
-    <div class="smenu-lbl">Väska</div>
+  <div class="smenu-btn" onclick="closeSubmenu();showScreen('garage-screen')" style="animation-delay:.05s">
+    <div class="smenu-icon-wrap" style="background:linear-gradient(135deg,#22c55e,#16a34a)"><canvas class="smenu-ball-canvas" id="smenu-garage-canvas" width="44" height="44"></canvas></div>
+    <div class="smenu-lbl">Garage</div>
   </div>
   <div class="smenu-btn" onclick="closeSubmenu();showScreen('dex-screen')" style="animation-delay:.1s">
     <div class="smenu-icon-wrap" style="background:linear-gradient(135deg,var(--b),#4a5ed4)">📖</div>
     <div class="smenu-lbl">Jimmie-Dex</div>
   </div>
-  <div class="smenu-btn" onclick="closeSubmenu();showScreen('garage-screen')" style="animation-delay:.15s">
-    <div class="smenu-icon-wrap" style="background:linear-gradient(135deg,#22c55e,#16a34a)">🏠</div>
-    <div class="smenu-lbl">Jimmie Garage</div>
+  <div class="smenu-btn" onclick="closeSubmenu();showScreen('bag-screen')" style="animation-delay:.15s">
+    <div class="smenu-icon-wrap" style="background:linear-gradient(135deg,#F7544B,#cc2200)">🎒</div>
+    <div class="smenu-lbl">Väska</div>
   </div>
 </div>
 
@@ -880,6 +880,146 @@ function updateHUD(){
   document.getElementById('bag-candy').textContent=G.candy;
 }
 
+
+// ── BALL DRAWING ─────────────────────────────────────────────────
+function drawBall(ctx, type, size) {
+  const cx = size/2, cy = size/2, r = size/2 - 2;
+  ctx.clearRect(0, 0, size, size);
+
+  if (type === 0) {
+    // SD-Boll: Blue top / White bottom, yellow band, blue button
+    // Top half
+    ctx.beginPath(); ctx.arc(cx,cy,r,Math.PI,0); ctx.closePath();
+    const tg = ctx.createLinearGradient(cx-r,cy-r,cx+r,cy);
+    tg.addColorStop(0,'#1a40b0'); tg.addColorStop(1,'#3B4CCA');
+    ctx.fillStyle = tg; ctx.fill();
+    // Bottom half
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI); ctx.closePath();
+    const bg2 = ctx.createLinearGradient(cx-r,cy,cx+r,cy+r);
+    bg2.addColorStop(0,'#f0f0f0'); bg2.addColorStop(1,'#e0e0e0');
+    ctx.fillStyle = bg2; ctx.fill();
+    // SD stripe band
+    ctx.beginPath(); ctx.rect(cx-r, cy-4, r*2, 8);
+    const sg = ctx.createLinearGradient(cx-r,0,cx+r,0);
+    sg.addColorStop(0,'#FFCB05'); sg.addColorStop(0.5,'#ffe04a'); sg.addColorStop(1,'#FFCB05');
+    ctx.fillStyle = sg; ctx.fill();
+    // Middle line
+    ctx.beginPath(); ctx.moveTo(cx-r,cy); ctx.lineTo(cx+r,cy);
+    ctx.strokeStyle='#FFCB05'; ctx.lineWidth=2; ctx.stroke();
+    // Button
+    ctx.beginPath(); ctx.arc(cx,cy,r*0.2,0,Math.PI*2);
+    ctx.fillStyle='white'; ctx.fill();
+    ctx.strokeStyle='#FFCB05'; ctx.lineWidth=2.5; ctx.stroke();
+    // Inner button
+    ctx.beginPath(); ctx.arc(cx,cy,r*0.1,0,Math.PI*2);
+    ctx.fillStyle='#3B4CCA'; ctx.fill();
+    // Shine
+    ctx.beginPath(); ctx.arc(cx-r*0.3,cy-r*0.35,r*0.18,0,Math.PI*2);
+    ctx.fillStyle='rgba(255,255,255,0.35)'; ctx.fill();
+    // Outer ring
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+    ctx.strokeStyle='rgba(0,0,0,0.15)'; ctx.lineWidth=1.5; ctx.stroke();
+
+  } else if (type === 1) {
+    // Super-Boll: Deep blue top / white bottom, gold accents
+    ctx.beginPath(); ctx.arc(cx,cy,r,Math.PI,0); ctx.closePath();
+    const tg = ctx.createLinearGradient(cx-r,cy-r,cx+r,cy);
+    tg.addColorStop(0,'#0a1a5e'); tg.addColorStop(1,'#1a2e9a');
+    ctx.fillStyle=tg; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI); ctx.closePath();
+    ctx.fillStyle='#f5f5f5'; ctx.fill();
+    // Gold band
+    ctx.beginPath(); ctx.rect(cx-r,cy-5,r*2,10);
+    const gg = ctx.createLinearGradient(cx-r,0,cx+r,0);
+    gg.addColorStop(0,'#b8860b'); gg.addColorStop(0.5,'#FFD700'); gg.addColorStop(1,'#b8860b');
+    ctx.fillStyle=gg; ctx.fill();
+    // Gold stripe on top half
+    ctx.save();
+    ctx.beginPath(); ctx.arc(cx,cy,r,Math.PI,0); ctx.closePath(); ctx.clip();
+    ctx.fillStyle='rgba(255,215,0,0.15)';
+    for(let i=0;i<3;i++){ctx.fillRect(cx-r+i*r*0.7,cy-r,r*0.2,r);}
+    ctx.restore();
+    // Center line
+    ctx.beginPath(); ctx.moveTo(cx-r,cy); ctx.lineTo(cx+r,cy);
+    ctx.strokeStyle='#FFD700'; ctx.lineWidth=1.5; ctx.stroke();
+    // Button — gold
+    ctx.beginPath(); ctx.arc(cx,cy,r*0.22,0,Math.PI*2);
+    ctx.fillStyle='white'; ctx.fill();
+    ctx.strokeStyle='#FFD700'; ctx.lineWidth=2.5; ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx,cy,r*0.11,0,Math.PI*2);
+    ctx.fillStyle='#1a2e9a'; ctx.fill();
+    // Shine
+    ctx.beginPath(); ctx.arc(cx-r*0.28,cy-r*0.3,r*0.16,0,Math.PI*2);
+    ctx.fillStyle='rgba(255,255,255,0.3)'; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+    ctx.strokeStyle='rgba(0,0,0,0.12)'; ctx.lineWidth=1.5; ctx.stroke();
+
+  } else {
+    // Jimmie-Boll: Golden Swedish SD-themed masterball
+    // Top: gold gradient
+    ctx.beginPath(); ctx.arc(cx,cy,r,Math.PI,0); ctx.closePath();
+    const tg = ctx.createLinearGradient(cx-r,cy-r,cx+r,cy);
+    tg.addColorStop(0,'#c8960a'); tg.addColorStop(0.5,'#FFCB05'); tg.addColorStop(1,'#e8a800');
+    ctx.fillStyle=tg; ctx.fill();
+    // Bottom: deep blue
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI); ctx.closePath();
+    const bg3 = ctx.createLinearGradient(cx,cy,cx,cy+r);
+    bg3.addColorStop(0,'#1a2e9a'); bg3.addColorStop(1,'#0a1a6a');
+    ctx.fillStyle=bg3; ctx.fill();
+    // Star pattern on top
+    ctx.save();
+    ctx.beginPath(); ctx.arc(cx,cy,r,Math.PI,0); ctx.closePath(); ctx.clip();
+    ctx.fillStyle='rgba(255,255,255,0.18)';
+    const stars2 = [[cx-r*0.4,cy-r*0.55],[cx+r*0.3,cy-r*0.35],[cx-r*0.1,cy-r*0.7]];
+    stars2.forEach(([sx,sy])=>{
+      ctx.beginPath();
+      for(let i=0;i<5;i++){
+        const a=(i/5)*Math.PI*2-Math.PI/2, a2=a+Math.PI/5;
+        i===0?ctx.moveTo(sx+Math.cos(a)*7,sy+Math.sin(a)*7):ctx.lineTo(sx+Math.cos(a)*7,sy+Math.sin(a)*7);
+        ctx.lineTo(sx+Math.cos(a2)*3,sy+Math.sin(a2)*3);
+      }
+      ctx.closePath(); ctx.fill();
+    });
+    ctx.restore();
+    // White band
+    ctx.beginPath(); ctx.rect(cx-r,cy-4,r*2,8);
+    ctx.fillStyle='rgba(255,255,255,0.95)'; ctx.fill();
+    // Center line
+    ctx.beginPath(); ctx.moveTo(cx-r,cy); ctx.lineTo(cx+r,cy);
+    ctx.strokeStyle='rgba(255,255,255,0.6)'; ctx.lineWidth=1; ctx.stroke();
+    // Center button — crown button
+    ctx.beginPath(); ctx.arc(cx,cy,r*0.24,0,Math.PI*2);
+    const cg=ctx.createRadialGradient(cx-2,cy-2,0,cx,cy,r*0.24);
+    cg.addColorStop(0,'#fff'); cg.addColorStop(1,'#ffe066');
+    ctx.fillStyle=cg; ctx.fill();
+    ctx.strokeStyle='rgba(0,0,0,0.15)'; ctx.lineWidth=2; ctx.stroke();
+    // J letter in center
+    ctx.fillStyle='#0a1a6a'; ctx.font=`bold ${r*0.28}px Arial Black,sans-serif`;
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('J',cx,cy+1);
+    // Shine
+    ctx.beginPath(); ctx.arc(cx-r*0.3,cy-r*0.38,r*0.2,0,Math.PI*2);
+    ctx.fillStyle='rgba(255,255,255,0.45)'; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+    ctx.strokeStyle='rgba(0,0,0,0.1)'; ctx.lineWidth=1.5; ctx.stroke();
+  }
+}
+
+function initBallCanvases() {
+  [0,1,2].forEach(i => {
+    const c2 = document.getElementById('bsel-c-'+i);
+    if (c2) { const x = c2.getContext('2d'); drawBall(x, i, 48); }
+  });
+  updateBallDisplay(0);
+}
+
+function updateBallDisplay(type) {
+  const c2 = document.getElementById('ball-display-canvas');
+  if (!c2) return;
+  const x = c2.getContext('2d');
+  drawBall(x, type, 96);
+}
+
 // ── CATCH ────────────────────────────────────────────────────────
 // Background canvas
 const bgC = document.getElementById('catch-bg-canvas');
@@ -1065,7 +1205,7 @@ function startCatch() {
   document.getElementById('ring-stop2').setAttribute('stop-color', RC[w.j.rarity] + 'aa');
   document.getElementById('catch-overlay').classList.remove('show');
   document.getElementById('throw-hint').style.opacity = '1';
-  document.getElementById('ball-display').textContent = ['⚪','🔵','🟡'][selBall];
+  updateBallDisplay(selBall);
   showScreen('catch-screen');
   save();
 }
@@ -1092,7 +1232,7 @@ function tickCatchRing(dt) {
 window.selectBall = function(i) {
   selBall = i;
   document.querySelectorAll('.bsel').forEach((b,idx) => b.classList.toggle('active', idx===i));
-  document.getElementById('ball-display').textContent = ['⚪','🔵','🟡'][i];
+  updateBallDisplay(i);
 };
 
 // Throw setup
@@ -1116,7 +1256,8 @@ function doThrow() {
   document.getElementById('throw-hint').style.opacity = '0';
 
   // Animate ball flying toward jimmie
-  const ballEmoji = ['⚪','🔵','🟡'][selBall];
+  const ballEmojis = ['⚪','🔵','🟡'];
+  const ballEmoji = ballEmojis[selBall];
   const ballEl = document.getElementById('ball-display');
   ballEl.style.transition = 'none';
   ballEl.style.display = 'none';
@@ -1276,6 +1417,144 @@ function closeSubmenu() {
   document.getElementById('nb-center-btn').classList.remove('open');
 }
 
+
+// ── MINI JIMMIE DRAWING ──────────────────────────────────────────
+function drawMiniJimmie(ctx, size, jdef) {
+  ctx.clearRect(0,0,size,size);
+  const cx = size/2, s = size;
+  const col = jdef.col;
+  const rc = RC[jdef.rarity];
+  const isMythic = jdef.rarity === 'Mythic';
+  const isLegend = jdef.rarity === 'Legendary';
+
+  // Glow for rare+
+  if (isLegend || isMythic) {
+    const glowG = ctx.createRadialGradient(cx,cx,0,cx,cx,s*0.48);
+    glowG.addColorStop(0, rc+'44'); glowG.addColorStop(1,'transparent');
+    ctx.fillStyle=glowG; ctx.fillRect(0,0,s,s);
+  }
+
+  // Shadow
+  ctx.beginPath(); ctx.ellipse(cx,s*0.88,s*0.22,s*0.07,0,0,Math.PI*2);
+  ctx.fillStyle='rgba(0,0,0,0.18)'; ctx.fill();
+
+  // Body (suit) — rectangle
+  const bw=s*0.38, bh=s*0.38, bx=cx-bw/2, by=s*0.48;
+  const bodyG = ctx.createLinearGradient(bx,by,bx+bw,by+bh);
+  bodyG.addColorStop(0, shiftColor(col,30));
+  bodyG.addColorStop(1, col);
+  ctx.beginPath(); ctx.roundRect(bx,by,bw,bh,4);
+  ctx.fillStyle=bodyG; ctx.fill();
+
+  // Suit lapels (white)
+  ctx.beginPath();
+  ctx.moveTo(cx,by+bh*0.08); ctx.lineTo(cx-bw*0.18,by+bh*0.65);
+  ctx.lineTo(cx,by+bh*0.45); ctx.closePath();
+  ctx.fillStyle='rgba(255,255,255,0.85)'; ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(cx,by+bh*0.08); ctx.lineTo(cx+bw*0.18,by+bh*0.65);
+  ctx.lineTo(cx,by+bh*0.45); ctx.closePath();
+  ctx.fillStyle='rgba(255,255,255,0.85)'; ctx.fill();
+
+  // Tie (SD party color by rarity)
+  ctx.beginPath();
+  ctx.moveTo(cx,by+bh*0.1); ctx.lineTo(cx-s*0.04,by+bh*0.35);
+  ctx.lineTo(cx,by+bh*0.55); ctx.lineTo(cx+s*0.04,by+bh*0.35); ctx.closePath();
+  ctx.fillStyle=rc; ctx.fill();
+
+  // Head
+  const hr=s*0.19, hy=by-hr*1.15;
+  const headG=ctx.createRadialGradient(cx-hr*0.2,hy-hr*0.2,0,cx,hy,hr);
+  headG.addColorStop(0,'#ffe0c0'); headG.addColorStop(1,'#e8c090');
+  ctx.beginPath(); ctx.arc(cx,hy,hr,0,Math.PI*2);
+  ctx.fillStyle=headG; ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,0.08)'; ctx.lineWidth=1; ctx.stroke();
+
+  // Hair (dark, side-parted like Jimmie)
+  ctx.save();
+  ctx.beginPath(); ctx.arc(cx,hy,hr,0,Math.PI*2); ctx.clip();
+  const hairG=ctx.createLinearGradient(cx-hr,hy-hr,cx+hr,hy-hr*0.2);
+  hairG.addColorStop(0,'#2a1a0a'); hairG.addColorStop(1,'#3a2810');
+  ctx.fillStyle=hairG; ctx.fillRect(cx-hr,hy-hr,hr*2,hr*0.7);
+  // Part line
+  ctx.beginPath(); ctx.moveTo(cx-hr*0.1,hy-hr); ctx.lineTo(cx-hr*0.1,hy-hr*0.3);
+  ctx.strokeStyle='rgba(255,255,255,0.2)'; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.restore();
+
+  // Eyes
+  ctx.fillStyle='#1a1a1a';
+  ctx.beginPath(); ctx.arc(cx-hr*0.3,hy+hr*0.05,hr*0.1,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(cx+hr*0.3,hy+hr*0.05,hr*0.1,0,Math.PI*2); ctx.fill();
+  // Eye shine
+  ctx.fillStyle='white';
+  ctx.beginPath(); ctx.arc(cx-hr*0.26,hy+hr*0.01,hr*0.04,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(cx+hr*0.34,hy+hr*0.01,hr*0.04,0,Math.PI*2); ctx.fill();
+  // Smile
+  ctx.beginPath(); ctx.arc(cx,hy+hr*0.18,hr*0.22,0.1,Math.PI-0.1);
+  ctx.strokeStyle='#8B4513'; ctx.lineWidth=1.2; ctx.stroke();
+
+  // Accessories
+  if (jdef.acc === 'crown' || isLegend || isMythic) {
+    // Crown
+    const cy2=hy-hr*0.95, cw=hr*1.1;
+    ctx.beginPath();
+    ctx.moveTo(cx-cw,cy2); ctx.lineTo(cx-cw,cy2-hr*0.45);
+    ctx.lineTo(cx-cw*0.4,cy2-hr*0.2); ctx.lineTo(cx,cy2-hr*0.55);
+    ctx.lineTo(cx+cw*0.4,cy2-hr*0.2); ctx.lineTo(cx+cw,cy2-hr*0.45);
+    ctx.lineTo(cx+cw,cy2); ctx.closePath();
+    const crg=ctx.createLinearGradient(cx,cy2-hr*0.5,cx,cy2);
+    crg.addColorStop(0,'#FFD700'); crg.addColorStop(1,'#b8860b');
+    ctx.fillStyle=crg; ctx.fill();
+    ctx.strokeStyle='rgba(0,0,0,0.1)'; ctx.lineWidth=0.8; ctx.stroke();
+    // Crown gems
+    [cx-cw*0.5,cx,cx+cw*0.5].forEach((gx,gi)=>{
+      ctx.beginPath(); ctx.arc(gx,cy2-hr*0.12,hr*0.08,0,Math.PI*2);
+      ctx.fillStyle=['#ff4466','#4ade80','#60a5fa'][gi]; ctx.fill();
+    });
+  } else if (jdef.acc === 'helmet') {
+    ctx.save();
+    ctx.beginPath(); ctx.arc(cx,hy,hr*1.1,Math.PI,0); ctx.closePath();
+    ctx.fillStyle='#ffcc00'; ctx.fill();
+    ctx.strokeStyle='#cc9900'; ctx.lineWidth=1.2; ctx.stroke();
+    ctx.restore();
+  } else if (jdef.acc === 'flag') {
+    // Mini flag
+    ctx.fillStyle='#005293'; ctx.fillRect(cx+hr*0.8,hy-hr*1.1,hr*0.08,hr*1.0);
+    ctx.fillStyle='#fecc00'; ctx.fillRect(cx+hr*0.88,hy-hr*1.1,hr*0.5,hr*0.35);
+    ctx.fillStyle='#005293'; ctx.fillRect(cx+hr*0.88,hy-hr*1.1,hr*0.5,hr*0.18);
+  } else if (jdef.acc === 'mic') {
+    ctx.beginPath(); ctx.arc(cx-hr*0.85,hy+hr*0.1,hr*0.2,0,Math.PI*2);
+    ctx.fillStyle='#666'; ctx.fill();
+    ctx.beginPath(); ctx.moveTo(cx-hr*0.85,hy+hr*0.3); ctx.lineTo(cx-hr*0.85,hy+hr*0.7);
+    ctx.strokeStyle='#888'; ctx.lineWidth=2; ctx.stroke();
+  } else if (jdef.acc === 'fedora') {
+    ctx.beginPath(); ctx.ellipse(cx,hy-hr*0.9,hr*1.15,hr*0.18,0,0,Math.PI*2);
+    ctx.fillStyle='#2d1a0a'; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx,hy-hr*1.05,hr*0.65,Math.PI,0); ctx.closePath();
+    ctx.fillStyle='#3d2a1a'; ctx.fill();
+  } else if (jdef.acc === 'party') {
+    // Party hat
+    ctx.beginPath();
+    ctx.moveTo(cx-hr*0.5,hy-hr*0.9); ctx.lineTo(cx,hy-hr*1.7); ctx.lineTo(cx+hr*0.5,hy-hr*0.9);
+    ctx.closePath();
+    ctx.fillStyle=rc; ctx.fill();
+    // Stars on hat
+    ctx.fillStyle='#FFD700'; ctx.font=`${hr*0.3}px serif`;
+    ctx.textAlign='center'; ctx.fillText('✦',cx,hy-hr*1.1);
+  }
+
+  // Rarity glow outline
+  if (isMythic) {
+    ctx.beginPath(); ctx.arc(cx,hy,hr*1.1,0,Math.PI*2);
+    ctx.strokeStyle=rc+'88'; ctx.lineWidth=2.5; ctx.stroke();
+  }
+}
+
+function shiftColor(hex, amount) {
+  const r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
+  return '#'+[r,g,b].map(v=>Math.min(255,v+amount).toString(16).padStart(2,'0')).join('');
+}
+
 // ── GARAGE ───────────────────────────────────────────────────────
 function renderGarage() {
   const grid = document.getElementById('garage-grid');
@@ -1290,17 +1569,25 @@ function renderGarage() {
     </div>`;
     return;
   }
-  grid.innerHTML = entries.map(j => {
+  grid.innerHTML = entries.map((j,idx) => {
     const n = G.caught[j.id];
     const bestCp = Math.floor(j.cp * 1.3);
-    return `<div class="gc" style="border:2px solid ${RC[j.rarity]}22;background:linear-gradient(160deg,white,${RC[j.rarity]}08)">
-      <div class="gc-count">×${n}</div>
-      <div class="gc-icon">${j.icon}</div>
+    const rarityBg = RC[j.rarity];
+    return `<div class="gc" style="border:2px solid ${rarityBg}33;background:linear-gradient(160deg,white 60%,${rarityBg}12)">
+      <div class="gc-count" style="background:${rarityBg};color:${j.rarity==='Common'?'#333':'white'}">×${n}</div>
+      <canvas class="gc-canvas" id="gc-c-${j.id}" width="72" height="72" style="display:block;margin:0 auto 6px"></canvas>
       <div class="gc-name">${j.name}</div>
-      <div class="gc-rarity" style="color:${RC[j.rarity]}">${j.rarity}</div>
-      <div class="gc-cp">CP ${Math.floor(j.cp*0.9)}–${bestCp}</div>
+      <div class="gc-rarity" style="color:${rarityBg}">${j.rarity}</div>
+      <div class="gc-cp" style="font-size:0.62rem;color:#999;font-weight:700;margin-top:2px">CP ${Math.floor(j.cp*0.9)}–${bestCp}</div>
     </div>`;
   }).join('');
+  // Draw mini Jimmie on each card
+  setTimeout(()=>{
+    entries.forEach(j => {
+      const c2 = document.getElementById('gc-c-'+j.id);
+      if (c2) drawMiniJimmie(c2.getContext('2d'), 72, j);
+    });
+  }, 50);
 }
 
 // ── SETTINGS ─────────────────────────────────────────────────────
@@ -1335,16 +1622,28 @@ function renderDex(){
   let n=0;
   const isNew=JSON.parse(sessionStorage.getItem('newCaught')||'{}');
   document.getElementById('dex-grid').innerHTML=JIMMIES.map(j=>{
-    const c=G.caught[j.id]>0;const s=G.seen[j.id];
-    if(c)n++;
-    const cls=`dc ${c?'dc-caught':''}${!s&&!c?' dc-unseen':''}${isNew[j.id]?' dc-new':''}`;
-    return `<div class="${cls}" style="${c?`border-color:${RC[j.rarity]}33`:''};background:${c?RC[j.rarity]+'0a':'white'}">
-      <span class="dc-icon">${s||c?j.icon:'❓'}</span>
-      <div class="dc-name">${s||c?j.name:'???'}</div>
+    const caught=G.caught[j.id]>0;const seen=G.seen[j.id];
+    if(caught)n++;
+    const cls=`dc ${caught?'dc-caught':''}${!seen&&!caught?' dc-unseen':''}${isNew[j.id]?' dc-new':''}`;
+    const showIcon = seen||caught;
+    return `<div class="${cls}" style="${caught?`border-color:${RC[j.rarity]}44;background:linear-gradient(160deg,white,${RC[j.rarity]}0a)`:''}" onclick="">
+      <canvas class="dc-canvas" id="dc-c-${j.id}" width="64" height="64" style="display:block;margin:0 auto 4px;${!showIcon?'filter:grayscale(1) brightness(0.5)':''}"></canvas>
+      <div class="dc-name">${showIcon?j.name:'???'}</div>
       <div class="dc-rarity" style="color:${RC[j.rarity]}">${j.rarity}</div>
-      <div class="dc-count">${c?G.caught[j.id]+' fångade':'—'}</div>
+      <div class="dc-count">${caught?G.caught[j.id]+' fångade':'—'}</div>
     </div>`;
   }).join('');
+  // Draw mini Jimmies in dex
+  setTimeout(()=>{
+    JIMMIES.forEach(j=>{
+      const c2=document.getElementById('dc-c-'+j.id);
+      if(c2){
+        const x2=c2.getContext('2d');
+        if(G.seen[j.id]||G.caught[j.id]>0) drawMiniJimmie(x2,64,j);
+        else { x2.font='36px serif'; x2.textAlign='center'; x2.textBaseline='middle'; x2.fillText('❓',32,32); }
+      }
+    });
+  },50);
   document.getElementById('dex-n').textContent=n;
   document.getElementById('dex-t').textContent=JIMMIES.length;
 }
@@ -1374,7 +1673,7 @@ function toast(msg){
 }
 
 // ── INIT ────────────────────────────────────────────────────────
-load();buildW();
+load();buildW();setTimeout(initBallCanvases,100);
 for(let i=0;i<6;i++)spawnWJ();
 setInterval(()=>{if(G.balls.reduce((a,b)=>a+b,0)<4){G.balls[0]+=5;toast('SD-Bollar påfyllda! ⚪');updateHUD();}},120000);
 updateHUD();renderDex();
