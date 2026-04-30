@@ -223,13 +223,84 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 .ps-lbl{font-size:0.58rem;color:#aaa;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:3px}
 
 /* ── NAV BAR ── */
-#nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:white;border-top:1px solid #e5e5ea;display:flex;padding:8px 0 max(env(safe-area-inset-bottom),10px);box-shadow:0 -4px 20px rgba(0,0,0,0.08)}
-.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 0;transition:.15s}
-.nb:active{opacity:0.6}
-.nb-icon{font-size:1.35rem;line-height:1}
-.nb-lbl{font-size:0.55rem;font-weight:800;color:#ccc;letter-spacing:.3px;text-transform:uppercase}
+/* ── NAV ── */
+#nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(255,255,255,0.96);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-top:1px solid rgba(0,0,0,0.08);display:flex;align-items:flex-end;
+  padding:6px 0 max(env(safe-area-inset-bottom),12px);
+  box-shadow:0 -1px 0 rgba(0,0,0,0.06),0 -8px 32px rgba(0,0,0,0.07)}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;
+  padding:6px 0 2px;transition:transform .15s,opacity .15s;-webkit-tap-highlight-color:transparent}
+.nb:active{transform:scale(0.88)}
+.nb-icon{font-size:1.4rem;line-height:1;transition:transform .2s cubic-bezier(.34,1.56,.64,1),filter .2s}
+.nb-lbl{font-size:0.54rem;font-weight:800;color:#bbb;letter-spacing:.4px;text-transform:uppercase;transition:color .2s}
 .nb.active .nb-lbl{color:var(--b)}
-.nb.active .nb-icon{filter:drop-shadow(0 2px 6px rgba(59,76,202,0.4))}
+.nb.active .nb-icon{transform:scale(1.1);filter:drop-shadow(0 2px 8px rgba(59,76,202,0.5))}
+
+/* Center Jimmie button */
+#nb-center{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:0 0 2px;margin-top:-22px}
+#nb-center-btn{width:66px;height:66px;background:linear-gradient(145deg,#fff 40%,#f5f5f5);border-radius:50%;
+  box-shadow:0 4px 20px rgba(0,0,0,0.2),0 0 0 3px white,0 0 0 5px var(--y);
+  display:flex;align-items:center;justify-content:center;font-size:2.2rem;
+  transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s;
+  border:none;cursor:pointer;background:white}
+#nb-center-btn:active{transform:scale(0.88)}
+#nb-center-btn.open{box-shadow:0 6px 28px rgba(0,0,0,0.25),0 0 0 3px white,0 0 0 6px #FFCB05;transform:rotate(15deg) scale(1.08)}
+#nb-center-lbl{font-size:0.54rem;font-weight:800;color:#bbb;letter-spacing:.4px;text-transform:uppercase;margin-top:3px}
+
+/* Sub-menu */
+#submenu{position:fixed;bottom:0;left:0;right:0;z-index:99;
+  padding:16px 20px max(env(safe-area-inset-bottom),80px);
+  transform:translateY(100%);transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+  pointer-events:none;display:flex;justify-content:center;align-items:flex-end;gap:16px}
+#submenu.open{transform:translateY(0);pointer-events:all}
+#submenu-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0);z-index:98;
+  transition:background .3s;pointer-events:none}
+#submenu-backdrop.open{background:rgba(0,0,0,0.2);pointer-events:all}
+.smenu-btn{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;
+  animation:none;transition:transform .2s cubic-bezier(.34,1.56,.64,1)}
+.smenu-btn:active{transform:scale(0.9)}
+.smenu-icon-wrap{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:1.7rem;box-shadow:0 6px 20px rgba(0,0,0,0.2);
+  backdrop-filter:blur(8px)}
+.smenu-lbl{font-size:0.6rem;font-weight:900;color:white;text-shadow:0 1px 4px rgba(0,0,0,0.6);
+  letter-spacing:.5px;text-transform:uppercase;
+  background:rgba(0,0,0,0.4);padding:3px 8px;border-radius:50px;backdrop-filter:blur(4px)}
+@keyframes smenu-pop{from{transform:scale(0) translateY(30px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+
+/* Settings screen */
+#settings-screen{background:#f2f2f7}
+.settings-group{background:white;border-radius:18px;margin:0 14px 14px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+.settings-row{display:flex;align-items:center;padding:16px 18px;gap:14px;border-bottom:1px solid #f0f0f5;cursor:pointer;transition:background .15s}
+.settings-row:last-child{border-bottom:none}
+.settings-row:active{background:#f5f5fa}
+.settings-icon{font-size:1.5rem;width:34px;text-align:center;flex-shrink:0}
+.settings-body{flex:1}
+.settings-name{font-size:0.95rem;font-weight:800;color:#1a1a1a}
+.settings-desc{font-size:0.72rem;color:#aaa;margin-top:2px}
+.settings-arrow{color:#ccc;font-size:1rem}
+.settings-toggle{width:48px;height:28px;background:#ddd;border-radius:50px;position:relative;cursor:pointer;transition:background .3s;flex-shrink:0}
+.settings-toggle.on{background:var(--g)}
+.settings-toggle::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;background:white;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.2);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.settings-toggle.on::after{transform:translateX(20px)}
+
+/* Garage screen */
+#garage-screen{background:#f2f2f7}
+#garage-grid{flex:1;overflow-y:auto;padding:12px 12px 90px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.gc{background:white;border-radius:18px;padding:12px 8px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,0.07);position:relative;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s}
+.gc:active{transform:scale(0.94);box-shadow:0 1px 4px rgba(0,0,0,0.1)}
+.gc-icon{font-size:2.4rem;margin-bottom:4px;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.12))}
+.gc-name{font-size:0.62rem;font-weight:800;color:#1a1a1a;line-height:1.3}
+.gc-cp{font-size:0.6rem;font-weight:700;color:#888;margin-top:2px}
+.gc-count{position:absolute;top:8px;right:8px;background:var(--b);color:white;font-size:0.55rem;font-weight:900;padding:2px 6px;border-radius:50px}
+.gc-rarity{font-size:0.52rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-top:3px}
+
+/* Screen transitions */
+.screen{transition:opacity .2s}
+.screen-exit{opacity:0;pointer-events:none}
+
+/* Animated pulse for map jimmies */
+@keyframes map-jimmie-pop{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
 
 /* ── TOAST ── */
 #toast{
@@ -279,14 +350,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
         <div id="sightings-row"><span class="no-nearby">Inga Jimmies i närheten…</span></div>
       </div>
       <div id="bottom-actions">
-        <button class="side-fab" onclick="showScreen('dex-screen')">📖</button>
-        <button id="main-ball-btn" onclick="showScreen('bag-screen')">
+        <button class="side-fab" onclick="showScreen('profile-screen')">👤</button>
+        <button id="main-ball-btn" onclick="toggleSubmenu()">
           <div class="ball-btn-inner">
-            <div class="ball-btn-icon">⚪</div>
-            <div class="ball-btn-lbl">Bollar</div>
+            <div class="ball-btn-icon">🌸</div>
+            <div class="ball-btn-lbl">Meny</div>
           </div>
         </button>
-        <button class="side-fab" onclick="showScreen('profile-screen')">👤</button>
+        <button class="side-fab" onclick="showScreen('settings-screen')">⚙️</button>
       </div>
     </div>
   </div>
@@ -419,12 +490,103 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
   </div>
 </div>
 
+<!-- ── SUBMENU BACKDROP ── -->
+<div id="submenu-backdrop" onclick="closeSubmenu()"></div>
+
+<!-- ── SUBMENU ── -->
+<div id="submenu">
+  <div class="smenu-btn" onclick="closeSubmenu();showScreen('bag-screen')" style="animation-delay:.05s">
+    <div class="smenu-icon-wrap" style="background:linear-gradient(135deg,#F7544B,#cc2200)">🎒</div>
+    <div class="smenu-lbl">Väska</div>
+  </div>
+  <div class="smenu-btn" onclick="closeSubmenu();showScreen('dex-screen')" style="animation-delay:.1s">
+    <div class="smenu-icon-wrap" style="background:linear-gradient(135deg,var(--b),#4a5ed4)">📖</div>
+    <div class="smenu-lbl">Jimmie-Dex</div>
+  </div>
+  <div class="smenu-btn" onclick="closeSubmenu();showScreen('garage-screen')" style="animation-delay:.15s">
+    <div class="smenu-icon-wrap" style="background:linear-gradient(135deg,#22c55e,#16a34a)">🏠</div>
+    <div class="smenu-lbl">Jimmie Garage</div>
+  </div>
+</div>
+
 <!-- ── NAV ── -->
 <div id="nav">
-  <div class="nb active" id="nb-map" onclick="showScreen('map-screen')"><div class="nb-icon">🗺️</div><div class="nb-lbl">Karta</div></div>
-  <div class="nb" id="nb-dex" onclick="showScreen('dex-screen')"><div class="nb-icon">📖</div><div class="nb-lbl">Jimmie-Dex</div></div>
-  <div class="nb" id="nb-bag" onclick="showScreen('bag-screen')"><div class="nb-icon">🎒</div><div class="nb-lbl">Väska</div></div>
-  <div class="nb" id="nb-prof" onclick="showScreen('profile-screen')"><div class="nb-icon">👤</div><div class="nb-lbl">Profil</div></div>
+  <div class="nb active" id="nb-map" onclick="showScreen('map-screen')">
+    <div class="nb-icon">🗺️</div><div class="nb-lbl">Karta</div>
+  </div>
+  <div id="nb-center">
+    <button id="nb-center-btn" onclick="toggleSubmenu()">🌸</button>
+    <div class="nb-center-lbl" id="nb-center-lbl">JIMMIE</div>
+  </div>
+  <div class="nb" id="nb-settings" onclick="showScreen('settings-screen')">
+    <div class="nb-icon">⚙️</div><div class="nb-lbl">Inställningar</div>
+  </div>
+</div>
+
+<!-- ── GARAGE SCREEN ── -->
+<div id="garage-screen" class="screen">
+  <div class="screen-header">
+    <button class="back-fab" onclick="showScreen('map-screen')">←</button>
+    <h2>🏠 Jimmie Garage</h2>
+  </div>
+  <div style="padding:8px 14px 0;display:flex;justify-content:space-between;align-items:center">
+    <div style="font-size:0.7rem;color:#aaa;font-weight:700"><span id="garage-count">0</span> Jimmies</div>
+    <div style="font-size:0.7rem;color:#aaa;font-weight:700">🍬 <span id="garage-candy">0</span> godis</div>
+  </div>
+  <div id="garage-grid"></div>
+</div>
+
+<!-- ── SETTINGS SCREEN ── -->
+<div id="settings-screen" class="screen">
+  <div class="screen-header">
+    <button class="back-fab" onclick="showScreen('map-screen')">←</button>
+    <h2>⚙️ Inställningar</h2>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:16px 0 90px">
+    <div style="font-size:0.62rem;font-weight:800;color:#aaa;text-transform:uppercase;letter-spacing:2px;padding:0 20px 8px">Konto</div>
+    <div class="settings-group">
+      <div class="settings-row" onclick="changeName()">
+        <div class="settings-icon">👤</div>
+        <div class="settings-body"><div class="settings-name">Tränarnamn</div><div class="settings-desc" id="st-name-val">Jimmie-Tränare</div></div>
+        <div class="settings-arrow">›</div>
+      </div>
+    </div>
+    <div style="font-size:0.62rem;font-weight:800;color:#aaa;text-transform:uppercase;letter-spacing:2px;padding:8px 20px">Spel</div>
+    <div class="settings-group">
+      <div class="settings-row">
+        <div class="settings-icon">🔊</div>
+        <div class="settings-body"><div class="settings-name">Ljud</div><div class="settings-desc">Ljudeffekter och musik</div></div>
+        <div class="settings-toggle on" id="st-sound" onclick="toggleSetting('sound',this)"></div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-icon">📳</div>
+        <div class="settings-body"><div class="settings-name">Vibration</div><div class="settings-desc">Haptisk feedback vid fångst</div></div>
+        <div class="settings-toggle on" id="st-vibro" onclick="toggleSetting('vibro',this)"></div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-icon">✨</div>
+        <div class="settings-body"><div class="settings-name">Partiklar</div><div class="settings-desc">Explosioner och sparkles</div></div>
+        <div class="settings-toggle on" id="st-particles" onclick="toggleSetting('particles',this)"></div>
+      </div>
+    </div>
+    <div style="font-size:0.62rem;font-weight:800;color:#aaa;text-transform:uppercase;letter-spacing:2px;padding:8px 20px">Info</div>
+    <div class="settings-group">
+      <div class="settings-row">
+        <div class="settings-icon">📊</div>
+        <div class="settings-body"><div class="settings-name">Version</div><div class="settings-desc">Jimmie GO! v2.0</div></div>
+      </div>
+      <div class="settings-row" onclick="refillBalls()">
+        <div class="settings-icon">⚪</div>
+        <div class="settings-body"><div class="settings-name">Fyll på bollar</div><div class="settings-desc">Gratis påfyllning om du kört slut</div></div>
+        <div class="settings-arrow">›</div>
+      </div>
+      <div class="settings-row" style="color:#F7544B" onclick="confirmReset()">
+        <div class="settings-icon">🗑️</div>
+        <div class="settings-body"><div class="settings-name" style="color:#F7544B">Återställ data</div><div class="settings-desc">Tar bort all sparad data</div></div>
+        <div class="settings-arrow" style="color:#F7544B">›</div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ── LEVEL UP SPLASH ── -->
@@ -464,7 +626,7 @@ const RC={Common:'#9e9e9e',Uncommon:'#4ade80',Rare:'#60a5fa',Epic:'#c084fc',Lege
 const RW={Common:50,Uncommon:28,Rare:14,Epic:5,Legendary:2,Mythic:1};
 
 const SAVE='jgo_v3';
-let G={lv:1,xp:0,xpMax:1000,balls:[20,5,1],candy:0,seen:{},caught:{},stats:{km:0,throws:0,esc:0,total:0,best:''}};
+let G={lv:1,xp:0,xpMax:1000,balls:[20,5,1],candy:0,seen:{},caught:{},trainerName:'Jimmie-Tränare',stats:{km:0,throws:0,esc:0,total:0,best:''}};
 function save(){try{localStorage.setItem(SAVE,JSON.stringify(G));}catch(e){}}
 function load(){try{const s=localStorage.getItem(SAVE);if(s)G={...G,...JSON.parse(s)};}catch(e){}}
 
@@ -1091,6 +1253,83 @@ function addXP(n) {
   }
 }
 
+// ── SUBMENU ──────────────────────────────────────────────────────
+let submenuOpen = false;
+function toggleSubmenu() {
+  submenuOpen ? closeSubmenu() : openSubmenu();
+}
+function openSubmenu() {
+  submenuOpen = true;
+  document.getElementById('submenu').classList.add('open');
+  document.getElementById('submenu-backdrop').classList.add('open');
+  document.getElementById('nb-center-btn').classList.add('open');
+  // Animate children
+  document.querySelectorAll('.smenu-btn').forEach((b,i) => {
+    b.style.animation = 'none'; void b.offsetWidth;
+    b.style.animation = `smenu-pop .35s cubic-bezier(.34,1.56,.64,1) ${i*0.06+0.05}s both`;
+  });
+}
+function closeSubmenu() {
+  submenuOpen = false;
+  document.getElementById('submenu').classList.remove('open');
+  document.getElementById('submenu-backdrop').classList.remove('open');
+  document.getElementById('nb-center-btn').classList.remove('open');
+}
+
+// ── GARAGE ───────────────────────────────────────────────────────
+function renderGarage() {
+  const grid = document.getElementById('garage-grid');
+  const entries = JIMMIES.filter(j => G.caught[j.id] > 0);
+  document.getElementById('garage-count').textContent = entries.reduce((a,j) => a+(G.caught[j.id]||0), 0);
+  document.getElementById('garage-candy').textContent = G.candy;
+  if (entries.length === 0) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:#bbb">
+      <div style="font-size:4rem;margin-bottom:12px">🌸</div>
+      <div style="font-size:1rem;font-weight:800;color:#ccc">Inga Jimmies ännu</div>
+      <div style="font-size:0.8rem;margin-top:6px">Gå ut och fånga din första!</div>
+    </div>`;
+    return;
+  }
+  grid.innerHTML = entries.map(j => {
+    const n = G.caught[j.id];
+    const bestCp = Math.floor(j.cp * 1.3);
+    return `<div class="gc" style="border:2px solid ${RC[j.rarity]}22;background:linear-gradient(160deg,white,${RC[j.rarity]}08)">
+      <div class="gc-count">×${n}</div>
+      <div class="gc-icon">${j.icon}</div>
+      <div class="gc-name">${j.name}</div>
+      <div class="gc-rarity" style="color:${RC[j.rarity]}">${j.rarity}</div>
+      <div class="gc-cp">CP ${Math.floor(j.cp*0.9)}–${bestCp}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── SETTINGS ─────────────────────────────────────────────────────
+const ST = {sound:true, vibro:true, particles:true};
+function toggleSetting(key, el) {
+  ST[key] = !ST[key];
+  el.classList.toggle('on', ST[key]);
+}
+function changeName() {
+  const name = prompt('Ange ditt tränarnamn:', G.trainerName || 'Jimmie-Tränare');
+  if (name && name.trim()) {
+    G.trainerName = name.trim().substring(0, 20);
+    document.getElementById('st-name-val').textContent = G.trainerName;
+    document.getElementById('prof-trainer-name').textContent = G.trainerName.toUpperCase();
+    save();
+    toast('✅ Namn sparat!');
+  }
+}
+function refillBalls() {
+  G.balls[0] += 20; G.balls[1] += 5; G.balls[2] += 1;
+  updateHUD(); save();
+  toast('⚪ +20 SD-Bollar, 🔵 +5 Super, 🟡 +1 Jimmie-Boll!');
+}
+function confirmReset() {
+  if (confirm('Är du säker? All data raderas!')) {
+    localStorage.removeItem(SAVE); location.reload();
+  }
+}
+
 // ── DEX ──────────────────────────────────────────────────────────
 function renderDex(){
   let n=0;
@@ -1111,13 +1350,18 @@ function renderDex(){
 }
 
 // ── SCREENS ──────────────────────────────────────────────────────
-const NAV_MAP={'map-screen':'nb-map','dex-screen':'nb-dex','bag-screen':'nb-bag','profile-screen':'nb-prof'};
+const NAV_MAP={'map-screen':'nb-map','settings-screen':'nb-settings','profile-screen':'nb-map'};
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
   if(NAV_MAP[id])document.getElementById(NAV_MAP[id]).classList.add('active');
+  closeSubmenu();
   if(id==='dex-screen')renderDex();
+  if(id==='garage-screen')renderGarage();
+  if(id==='settings-screen'){
+    document.getElementById('st-name-val').textContent=G.trainerName||'Jimmie-Tränare';
+  }
   updateHUD();
 }
 
