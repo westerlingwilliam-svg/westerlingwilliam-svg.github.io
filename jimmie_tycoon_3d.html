@@ -123,9 +123,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 
 /* ── CATCH PANEL ── */
 #catch-panel{position:relative;z-index:10;
-  background:linear-gradient(180deg,rgba(8,18,10,0.82) 0%,rgba(5,12,7,0.97) 100%);
-  backdrop-filter:blur(24px);border-radius:32px 32px 0 0;
-  padding:14px 16px 28px;display:flex;flex-direction:column;align-items:center;gap:10px;
+  background:linear-gradient(180deg,rgba(8,18,10,0.88) 0%,rgba(5,12,7,0.98) 100%);
+  backdrop-filter:blur(24px);border-radius:28px 28px 0 0;
+  padding:12px 14px 24px;display:flex;flex-direction:column;align-items:center;gap:8px;
   border-top:1px solid rgba(255,255,255,0.1)}
 
 /* Meter mini-game */
@@ -143,15 +143,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
   font-weight:900;font-size:0.85rem;padding:10px 28px;border-radius:50px;border:none;
   cursor:pointer;font-family:var(--font);box-shadow:0 4px 16px rgba(59,76,202,0.5);
   letter-spacing:.5px;display:none}
+#throw-meter-btn{display:none}
 #throw-meter-btn.active{display:block}
 
 /* Ball selector row — compact */
-#ball-selector{display:flex;gap:6px;width:100%}
-.bsel{display:flex;align-items:center;gap:8px;cursor:pointer;padding:9px 12px;
-  border-radius:16px;border:2px solid rgba(255,255,255,0.08);transition:all .2s;flex:1;
-  background:rgba(255,255,255,0.05)}
-.bsel.active{background:rgba(255,255,255,0.14);border-color:rgba(255,255,255,0.35);
-  box-shadow:0 0 16px rgba(255,255,255,0.08)}
+#ball-selector{display:flex;gap:8px;justify-content:center}
+.bsel{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:8px 14px;
+  border-radius:14px;border:2px solid rgba(255,255,255,0.15);transition:all .2s;
+  background:rgba(255,255,255,0.07)}
+.bsel.active{background:rgba(255,255,255,0.18);border-color:rgba(255,255,255,0.5);
+  box-shadow:0 0 12px rgba(255,255,255,0.15)}
 .bsel:active{transform:scale(0.95)}
 .bsel-canvas{flex-shrink:0;border-radius:50%}
 .bsel-info{display:flex;flex-direction:column;gap:1px}
@@ -233,6 +234,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 
 /* ── NAV BAR ── */
 /* ── NAV ── */
+#catch-screen.active ~ #nav, #catch-screen.active + #nav{display:none!important}
 #nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(255,255,255,0.97);
   backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   border-top:1px solid rgba(0,0,0,0.08);display:flex;align-items:flex-end;
@@ -412,6 +414,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
       </div>
     </div>
     <div id="catch-rarity-label">COMMON</div>
+    <button id="throw-meter-btn" onclick="startMeter()" style="display:none;margin-top:12px;background:linear-gradient(135deg,var(--b),#5a6fd6);color:white;font-weight:900;font-size:1rem;padding:12px 36px;border-radius:50px;border:none;cursor:pointer;font-family:var(--font);box-shadow:0 6px 24px rgba(59,76,202,0.5);letter-spacing:.5px;animation:pulse-btn 1.4s ease-in-out infinite">🎯 KASTA</button>
   </div>
   <div id="catch-panel">
     <!-- Meter mini-game -->
@@ -426,28 +429,27 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
     <!-- Ball selector -->
     <div id="ball-selector">
       <div class="bsel active" id="bsel-0" onclick="selectBall(0)">
-        <canvas class="bsel-canvas" id="bsel-c-0" width="42" height="42"></canvas>
+        <canvas class="bsel-canvas" id="bsel-c-0" width="44" height="44"></canvas>
         <div class="bsel-info">
           <div class="bsel-name">SD-Boll</div>
           <div class="bsel-count" id="bsel-cnt-0">×20</div>
         </div>
       </div>
       <div class="bsel" id="bsel-1" onclick="selectBall(1)">
-        <canvas class="bsel-canvas" id="bsel-c-1" width="42" height="42"></canvas>
+        <canvas class="bsel-canvas" id="bsel-c-1" width="44" height="44"></canvas>
         <div class="bsel-info">
           <div class="bsel-name">Super</div>
           <div class="bsel-count" id="bsel-cnt-1">×5</div>
         </div>
       </div>
       <div class="bsel" id="bsel-2" onclick="selectBall(2)">
-        <canvas class="bsel-canvas" id="bsel-c-2" width="42" height="42"></canvas>
+        <canvas class="bsel-canvas" id="bsel-c-2" width="44" height="44"></canvas>
         <div class="bsel-info">
           <div class="bsel-name">Jimmie</div>
           <div class="bsel-count" id="bsel-cnt-2">×1</div>
         </div>
       </div>
     </div>
-    <button id="throw-meter-btn" onclick="startMeter()">🎯 KASTA</button>
   </div>
   <!-- Full-screen result -->
   <div id="catch-overlay">
@@ -1092,7 +1094,7 @@ function drawBall(ctx, type, size) {
 function initBallCanvases() {
   [0,1,2].forEach(i => {
     const c2 = document.getElementById('bsel-c-'+i);
-    if (c2) { const x = c2.getContext('2d'); c2.width=42;c2.height=42;drawBall(x, i, 42); }
+    if (c2) { c2.width=44;c2.height=44;const x=c2.getContext('2d');drawBall(x,i,44); }
   });
   updateBallDisplay(0);
 }
@@ -1291,7 +1293,7 @@ function startCatch() {
   document.getElementById('ring-stop2').setAttribute('stop-color', RC[w.j.rarity] + 'aa');
   document.getElementById('catch-overlay').classList.remove('show');
   document.getElementById('throw-meter-wrap').classList.remove('active');
-  document.getElementById('throw-meter-btn').classList.add('active');
+  document.getElementById('throw-meter-btn').style.display='block';
   updateBallDisplay(selBall);
   initBallCanvases();
   showScreen('catch-screen');
@@ -1376,7 +1378,7 @@ document.getElementById('throw-meter-track').onclick = releaseMeter;
 function doThrow(accuracy) {
   if (accuracy === undefined) accuracy = 0.5;
   if (!curCatch) return;
-  document.getElementById('throw-meter-btn').classList.remove('active');
+  document.getElementById('throw-meter-btn').style.display='none';
   if (G.balls[selBall] <= 0) { toast('Inga bollar av den typen!'); return; }
   G.balls[selBall]--; G.stats.throws++; catchTries++;
   // throw-hint removed
@@ -1783,6 +1785,10 @@ function showScreen(id){
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
   if(NAV_MAP[id])document.getElementById(NAV_MAP[id]).classList.add('active');
   closeSubmenu();
+  // Hide nav on catch screen
+  document.getElementById('nav').style.display = id==='catch-screen' ? 'none' : 'flex';
+  document.getElementById('submenu').classList.remove('open');
+  document.getElementById('submenu-backdrop').classList.remove('open');
   if(id==='dex-screen')renderDex();
   if(id==='garage-screen')renderGarage();
   if(id==='settings-screen'){
