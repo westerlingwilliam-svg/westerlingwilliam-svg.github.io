@@ -239,8 +239,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 .nb.active .nb-icon{transform:scale(1.1);filter:drop-shadow(0 2px 8px rgba(59,76,202,0.5))}
 
 /* Center Jimmie button */
-#nb-center{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:0 0 2px;margin-top:-44px}
-#nb-center-btn{width:88px;height:88px;background:white;border-radius:50%;
+#nb-center{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:0 0 2px}
+#nb-center-btn{width:88px;height:88px;background:white;border-radius:50%;position:relative;bottom:48px;
   box-shadow:0 4px 24px rgba(0,0,0,0.22),0 0 0 3px white,0 0 0 6px var(--y);
   display:flex;align-items:center;justify-content:center;font-size:3rem;
   transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s;
@@ -287,15 +287,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 
 /* Garage screen */
 #garage-screen{background:#f2f2f7}
-#garage-grid{flex:1;overflow-y:auto;padding:14px 14px 100px;display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-.gc{background:white;border-radius:24px;padding:20px 14px 16px;text-align:center;box-shadow:0 4px 18px rgba(0,0,0,0.09);position:relative;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s;overflow:hidden}
-.gc::before{content:"";position:absolute;inset:0;opacity:0.04;background:radial-gradient(circle at 30% 20%,white,transparent 60%);pointer-events:none}
+#garage-grid{flex:1;overflow-y:auto;padding:12px 10px 100px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.gc{background:white;border-radius:18px;padding:12px 6px 10px;text-align:center;box-shadow:0 3px 12px rgba(0,0,0,0.08);position:relative;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s;overflow:hidden}
+.gc::before{content:"";position:absolute;inset:0;opacity:0.06;background:radial-gradient(circle at 30% 20%,white,transparent 60%);pointer-events:none}
 .gc:active{transform:scale(0.94);box-shadow:0 1px 4px rgba(0,0,0,0.1)}
 .gc-canvas{display:block;margin:0 auto 8px}
-.gc-name{font-size:0.82rem;font-weight:800;color:#1a1a1a;line-height:1.3}
+.gc-name{font-size:0.58rem;font-weight:800;color:#1a1a1a;line-height:1.3}
 .gc-cp{font-size:0.6rem;font-weight:700;color:#888;margin-top:2px}
-.gc-count{position:absolute;top:10px;right:10px;font-size:0.7rem;font-weight:900;padding:4px 9px;border-radius:50px;color:white}
-.gc-rarity{font-size:0.62rem;font-weight:900;text-transform:uppercase;letter-spacing:.8px;margin-top:5px}
+.gc-count{position:absolute;top:6px;right:6px;font-size:0.55rem;font-weight:900;padding:2px 6px;border-radius:50px;color:white}
+.gc-rarity{font-size:0.48rem;font-weight:900;text-transform:uppercase;letter-spacing:.6px;margin-top:3px}
 
 /* Screen transitions */
 .screen{transition:opacity .2s}
@@ -676,7 +676,9 @@ const MAP_COLORS={
 
 let px=0,py=0;
 const wJs=[];
+const stops=[];
 let spawnT=0;
+let stopSpawnDone=false;
 
 function spawnWJ(){
   const a=Math.random()*Math.PI*2,d=120+Math.random()*280;
@@ -773,6 +775,51 @@ function drawMap(){
   }
   nearbyArr.sort((a,b)=>a.dist-b.dist);
 
+  // Jimmie Stops
+  const now2 = Date.now()/1000;
+  stops.forEach((s,si) => {
+    const sx=s.x+ox, sy=s.y+oy;
+    if(sx<-60||sx>W+60||sy<-60||sy>H+60) return;
+    const ready = s.cooldown<=0;
+    const col = ready ? s.col : '#aaa';
+    // Spin if recently interacted
+    if(s.spinning){ s.spinAngle+=0.06; if(s.spinAngle>Math.PI*4) s.spinning=false; }
+    // Pole
+    mctx.beginPath(); mctx.moveTo(sx,sy+20); mctx.lineTo(sx,sy-10);
+    mctx.strokeStyle=col; mctx.lineWidth=3; mctx.stroke();
+    // Disc
+    mctx.save(); mctx.translate(sx,sy-14);
+    if(s.spinning) mctx.rotate(s.spinAngle);
+    // Outer glow
+    if(ready){
+      const grd=mctx.createRadialGradient(0,0,0,0,0,18);
+      grd.addColorStop(0,col+'66'); grd.addColorStop(1,'transparent');
+      mctx.beginPath(); mctx.arc(0,0,18,0,Math.PI*2); mctx.fillStyle=grd; mctx.fill();
+    }
+    // Main disc
+    mctx.beginPath(); mctx.arc(0,0,12,0,Math.PI*2);
+    mctx.fillStyle=ready?col:'#ccc'; mctx.fill();
+    mctx.strokeStyle='white'; mctx.lineWidth=2.5; mctx.stroke();
+    // Inner ring
+    mctx.beginPath(); mctx.arc(0,0,5,0,Math.PI*2);
+    mctx.fillStyle='white'; mctx.fill();
+    // SD symbol in center
+    mctx.fillStyle=col; mctx.font='bold 6px Arial'; mctx.textAlign='center'; mctx.textBaseline='middle';
+    mctx.fillText('J',0,0.5);
+    mctx.restore();
+    // Label if close
+    const dx2=px-s.x, dy2=py-s.y, dist2=Math.sqrt(dx2*dx2+dy2*dy2);
+    if(dist2<150){
+      mctx.font='bold 9px '+getComputedStyle(document.body).fontFamily;
+      mctx.textAlign='center'; mctx.fillStyle='white';
+      mctx.fillText(s.label, sx, sy-32);
+      // Cooldown update
+      if(s.cooldown>0) s.cooldown=Math.max(0,s.cooldown-1/60);
+      // Auto-interact if very close
+      if(dist2<45 && ready){ spinStop(si); }
+    }
+  });
+
   // Player
   // Shadow
   mctx.beginPath();mctx.ellipse(W/2,H/2+22,15,5,0,0,Math.PI*2);mctx.fillStyle='rgba(0,0,0,0.2)';mctx.fill();
@@ -785,6 +832,25 @@ function drawMap(){
   mctx.font='20px serif';mctx.textAlign='center';mctx.textBaseline='middle';mctx.fillText('🕵️',W/2,H/2);
 
   updateSightings();
+}
+
+function spinStop(idx) {
+  const s = stops[idx];
+  if(s.cooldown>0) return;
+  s.cooldown = s.maxCd;
+  s.spinning = true;
+  s.spinAngle = 0;
+  // Reward: balls + candy
+  const roll = Math.random();
+  let reward = '';
+  if(roll < 0.5) { G.balls[0]+=3; reward='⚪ +3 SD-Bollar'; }
+  else if(roll < 0.8) { G.balls[0]+=2; G.balls[1]+=1; reward='⚪+2 🔵+1 Bollar'; }
+  else if(roll < 0.95) { G.balls[1]+=2; G.candy+=2; reward='🔵+2 Super-Bollar + 🍬×2'; }
+  else { G.balls[2]+=1; reward='+1 Jimmie-Boll! Sallsynt!'; }
+  G.candy+=1;
+  toast('Stop: ' + s.label + ' · ' + reward);
+  addXP(50);
+  updateHUD(); save();
 }
 
 function updateSightings(){
@@ -1239,17 +1305,33 @@ window.selectBall = function(i) {
 
 // Throw setup
 const tz = document.getElementById('throw-zone');
+const catchStage = document.getElementById('catch-stage');
 let throwStart = null;
-tz.addEventListener('touchstart', e => { e.preventDefault(); throwStart={y:e.touches[0].clientY}; }, {passive:false});
-tz.addEventListener('touchend', e => {
-  e.preventDefault();
-  if (!throwStart) return;
-  if (throwStart.y - e.changedTouches[0].clientY > 30) doThrow();
+
+function isOnCatchScreen() {
+  return document.getElementById('catch-screen').classList.contains('active');
+}
+
+// Touch: swipe anywhere on catch screen
+document.addEventListener('touchstart', e => {
+  if (!isOnCatchScreen()) return;
+  throwStart = {x: e.touches[0].clientX, y: e.touches[0].clientY};
+}, {passive:true});
+document.addEventListener('touchend', e => {
+  if (!isOnCatchScreen() || !throwStart || document.getElementById('catch-overlay').classList.contains('show')) return;
+  const dy = throwStart.y - e.changedTouches[0].clientY;
+  const dx = Math.abs(throwStart.x - e.changedTouches[0].clientX);
+  if (dy > 50 && dy > dx * 1.5) doThrow();
   throwStart = null;
-}, {passive:false});
+}, {passive:true});
+
+// Mouse: swipe on throw zone
 let mdn2 = false, msy2 = 0;
 tz.addEventListener('mousedown', e => { mdn2=true; msy2=e.clientY; });
-document.addEventListener('mouseup', e => { if(mdn2 && msy2-e.clientY>30) doThrow(); mdn2=false; });
+document.addEventListener('mouseup', e => {
+  if(mdn2 && isOnCatchScreen() && msy2-e.clientY>50) doThrow();
+  mdn2=false;
+});
 
 function doThrow() {
   if (!curCatch) return;
@@ -1575,9 +1657,9 @@ function renderGarage() {
     const n = G.caught[j.id];
     const bestCp = Math.floor(j.cp * 1.3);
     const rarityBg = RC[j.rarity];
-    return `<div class="gc" style="border:2px solid ${rarityBg}33;background:linear-gradient(160deg,white 60%,${rarityBg}12)">
+    return `<div class="gc" style="border:2px solid ${rarityBg}44;background:linear-gradient(160deg,white 55%,${rarityBg}18);box-shadow:0 3px 14px ${rarityBg}22,0 1px 4px rgba(0,0,0,0.08)">
       <div class="gc-count" style="background:${rarityBg};color:${j.rarity==='Common'?'#333':'white'}">×${n}</div>
-      <canvas class="gc-canvas" id="gc-c-${j.id}" width="90" height="90" style="display:block;margin:0 auto 8px"></canvas>
+      <canvas class="gc-canvas" id="gc-c-${j.id}" width="60" height="60" style="display:block;margin:0 auto 5px"></canvas>
       <div class="gc-name">${j.name}</div>
       <div class="gc-rarity" style="color:${rarityBg}">${j.rarity}</div>
       <div class="gc-cp" style="font-size:0.62rem;color:#999;font-weight:700;margin-top:2px">CP ${Math.floor(j.cp*0.9)}–${bestCp}</div>
@@ -1587,7 +1669,7 @@ function renderGarage() {
   setTimeout(()=>{
     entries.forEach(j => {
       const c2 = document.getElementById('gc-c-'+j.id);
-      if (c2) { c2.width=90;c2.height=90;drawMiniJimmie(c2.getContext('2d'), 90, j); }
+      if (c2) { c2.width=60;c2.height=60;drawMiniJimmie(c2.getContext('2d'), 60, j); }
     });
   }, 50);
 }
@@ -1678,6 +1760,17 @@ function toast(msg){
 // ── INIT ────────────────────────────────────────────────────────
 load();buildW();setTimeout(initBallCanvases,100);
 for(let i=0;i<6;i++)spawnWJ();
+// Spawn Jimmie Stops around start
+for(let i=0;i<8;i++){
+  const a=Math.random()*Math.PI*2, d=80+Math.random()*400;
+  stops.push({
+    x:Math.cos(a)*d, y:Math.sin(a)*d,
+    cooldown:0, maxCd:30, // 30 sec cooldown
+    col:['#3B4CCA','#22c55e','#F7544B','#a855f7','#FFCB05'][i%5],
+    label:['SD-Valstuga','Riksdagen','Sölvesborg Torg','SD-Kontor','Jimmie Staty','Folkhemmet','Partihuset','SD-Arena'][i],
+    spinning:false, spinAngle:0
+  });
+}
 setInterval(()=>{if(G.balls.reduce((a,b)=>a+b,0)<4){G.balls[0]+=5;toast('SD-Bollar påfyllda! ⚪');updateHUD();}},120000);
 updateHUD();renderDex();
 </script>
