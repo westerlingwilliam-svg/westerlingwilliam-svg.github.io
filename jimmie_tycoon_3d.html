@@ -1410,10 +1410,7 @@ function doThrow(accuracy) {
   // throw-hint removed
 
   // Animate ball flying toward jimmie
-  const ballEmojis = ['⚪','🔵','🟡'];
-  const ballEmoji = ballEmojis[selBall];
-  ballEl.style.transition = 'none';
-  ballEl.style.display = 'none';
+  const ballEmoji = ['⚪','🔵','🟡'][selBall];
 
   // Create flying ball div
   const fb = document.createElement('div');
@@ -1779,7 +1776,7 @@ function renderDex(){
     const cls=`dc ${caught?'dc-caught':''}${!seen&&!caught?' dc-unseen':''}${isNew[j.id]?' dc-new':''}`;
     const showIcon = seen||caught;
     return `<div class="${cls}" style="${caught?`border-color:${RC[j.rarity]}44;background:linear-gradient(160deg,white,${RC[j.rarity]}0a)`:''}" onclick="">
-      <canvas class="dc-canvas" id="dc-c-${j.id}" width="72" height="72" style="display:block;margin:0 auto 4px;${!showIcon?'filter:grayscale(1) brightness(0.5)':''}"></canvas>
+<canvas class="dc-canvas" id="dc-c-${j.id}" width="72" height="72" style="display:block;margin:0 auto 4px"></canvas>
       <div class="dc-name">${showIcon?j.name:'???'}</div>
       <div class="dc-rarity" style="color:${RC[j.rarity]}">${j.rarity}</div>
       <div class="dc-count">${caught?G.caught[j.id]+' fångade':'—'}</div>
@@ -1793,7 +1790,7 @@ function renderDex(){
         c2.width=72;c2.height=72;
         const x2=c2.getContext('2d');
         if(G.seen[j.id]||G.caught[j.id]>0) drawMiniJimmie(x2,72,j);
-        else { x2.font='40px serif'; x2.textAlign='center'; x2.textBaseline='middle'; x2.fillText('❓',36,36); }
+        else { x2.clearRect(0,0,72,72); x2.font='40px serif'; x2.textAlign='center'; x2.textBaseline='middle'; x2.fillStyle='#ccc'; x2.fillText('?',36,38); }
       }
     });
   },50);
