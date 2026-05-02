@@ -122,32 +122,41 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 #catch-rarity-label{margin-top:16px;font-size:0.65rem;font-weight:900;letter-spacing:3px;text-transform:uppercase;padding:5px 16px;border-radius:50px;color:white;backdrop-filter:blur(8px)}
 
 /* ── CATCH PANEL ── */
-#catch-panel{position:relative;z-index:10;background:linear-gradient(180deg,rgba(8,20,12,0.7) 0%,rgba(8,20,12,0.95) 100%);backdrop-filter:blur(20px);border-radius:32px 32px 0 0;padding:20px 20px 32px;display:flex;flex-direction:column;align-items:center;gap:14px;border-top:1px solid rgba(255,255,255,0.08)}
+#catch-panel{position:relative;z-index:10;
+  background:linear-gradient(180deg,rgba(8,18,10,0.82) 0%,rgba(5,12,7,0.97) 100%);
+  backdrop-filter:blur(24px);border-radius:32px 32px 0 0;
+  padding:14px 16px 28px;display:flex;flex-direction:column;align-items:center;gap:10px;
+  border-top:1px solid rgba(255,255,255,0.1)}
 
-/* Throw zone with animated dashed guideline */
-#throw-zone{width:100%;height:130px;position:relative;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:20px}
-#throw-zone::before{content:'';position:absolute;left:50%;top:0;bottom:28px;width:2px;background:linear-gradient(180deg,transparent,rgba(255,255,255,0.12),transparent);transform:translateX(-50%)}
-#throw-hint{font-size:0.68rem;color:rgba(255,255,255,0.38);letter-spacing:2px;text-transform:uppercase;text-align:center;pointer-events:none;transition:opacity .4s;font-weight:700}
+/* Meter mini-game */
+#throw-meter-wrap{width:100%;display:none;flex-direction:column;align-items:center;gap:6px}
+#throw-meter-wrap.active{display:flex}
+#throw-meter-track{width:90%;height:28px;background:rgba(255,255,255,0.08);border-radius:14px;
+  overflow:hidden;position:relative;border:1.5px solid rgba(255,255,255,0.15);cursor:pointer}
+#throw-meter-bar{position:absolute;top:0;bottom:0;left:0;width:12px;border-radius:10px;
+  background:linear-gradient(90deg,#22c55e,#FFCB05,#22c55e);
+  box-shadow:0 0 10px rgba(74,222,128,0.6);transition:none}
+#throw-meter-center{position:absolute;left:50%;top:0;bottom:0;width:3px;
+  background:rgba(255,255,255,0.4);transform:translateX(-50%)}
+#throw-meter-hint{font-size:0.7rem;color:rgba(255,255,255,0.5);font-weight:700;letter-spacing:1px;text-transform:uppercase}
+#throw-meter-btn{background:linear-gradient(135deg,var(--b),#5a6fd6);color:white;
+  font-weight:900;font-size:0.85rem;padding:10px 28px;border-radius:50px;border:none;
+  cursor:pointer;font-family:var(--font);box-shadow:0 4px 16px rgba(59,76,202,0.5);
+  letter-spacing:.5px;display:none}
+#throw-meter-btn.active{display:block}
 
-/* Ball — large, beautiful, with glow */
-#ball-display{
-  position:absolute;bottom:6px;left:50%;transform:translateX(-50%);
-  font-size:4.2rem;line-height:1;cursor:grab;transition:transform .1s, filter .2s;
-  will-change:transform;
-  filter:drop-shadow(0 6px 20px rgba(255,255,255,0.3));
-}
-#ball-display:active{transform:translateX(-50%) scale(0.9);filter:drop-shadow(0 2px 8px rgba(255,255,255,0.2))}
-#ball-pulse-ring{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);width:56px;height:56px;border-radius:50%;border:2px solid rgba(255,255,255,0.2);animation:ball-pulse 1.8s ease-in-out infinite;pointer-events:none}
-@keyframes ball-pulse{0%,100%{transform:translateX(-50%) scale(1);opacity:0.6}50%{transform:translateX(-50%) scale(1.6);opacity:0}}
-
-/* Ball type selector */
-#ball-selector{display:flex;gap:8px;background:rgba(255,255,255,0.05);border-radius:20px;padding:6px}
-.bsel{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:10px 16px;border-radius:18px;border:2px solid transparent;transition:all .2s}
-.bsel.active{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.35);box-shadow:0 0 16px rgba(255,255,255,0.08)}
-.bsel:active{transform:scale(0.94)}
-.bsel-icon{font-size:2.1rem;line-height:1}
-.bsel-name{font-size:0.6rem;color:rgba(255,255,255,0.55);font-weight:800;text-transform:uppercase;letter-spacing:.6px}
-.bsel-count{font-size:0.85rem;color:var(--y);font-weight:900;background:rgba(255,203,5,0.15);border-radius:20px;padding:3px 10px;margin-top:2px}
+/* Ball selector row — compact */
+#ball-selector{display:flex;gap:6px;width:100%}
+.bsel{display:flex;align-items:center;gap:8px;cursor:pointer;padding:9px 12px;
+  border-radius:16px;border:2px solid rgba(255,255,255,0.08);transition:all .2s;flex:1;
+  background:rgba(255,255,255,0.05)}
+.bsel.active{background:rgba(255,255,255,0.14);border-color:rgba(255,255,255,0.35);
+  box-shadow:0 0 16px rgba(255,255,255,0.08)}
+.bsel:active{transform:scale(0.95)}
+.bsel-canvas{flex-shrink:0;border-radius:50%}
+.bsel-info{display:flex;flex-direction:column;gap:1px}
+.bsel-name{font-size:0.65rem;color:rgba(255,255,255,0.6);font-weight:800;text-transform:uppercase;letter-spacing:.4px}
+.bsel-count{font-size:0.9rem;color:var(--y);font-weight:900}
 
 /* Catch result overlay — full beautiful card */
 #catch-overlay{
@@ -240,7 +249,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 
 /* Center Jimmie button */
 #nb-center{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:0 0 2px}
-#nb-center-btn{width:88px;height:88px;background:white;border-radius:50%;position:relative;bottom:48px;
+#nb-center-btn{width:88px;height:88px;background:white;border-radius:50%;position:relative;bottom:28px;
   box-shadow:0 4px 24px rgba(0,0,0,0.22),0 0 0 3px white,0 0 0 6px var(--y);
   display:flex;align-items:center;justify-content:center;font-size:3rem;
   transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s;
@@ -250,10 +259,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 #nb-center-lbl{font-size:0.54rem;font-weight:800;color:#bbb;letter-spacing:.4px;text-transform:uppercase;margin-top:3px}
 
 /* Sub-menu */
-#submenu{position:fixed;bottom:180px;left:0;right:0;z-index:99;
-  padding:16px 20px;
+#submenu{position:fixed;bottom:140px;left:0;right:0;z-index:99;
+  padding:10px 20px;
   transform:translateY(120px);opacity:0;transition:transform .4s cubic-bezier(.34,1.56,.64,1),opacity .3s;
-  pointer-events:none;display:flex;justify-content:center;align-items:center;gap:24px}
+  pointer-events:none;display:flex;justify-content:center;align-items:center;gap:20px}
 #submenu.open{transform:translateY(0);opacity:1;pointer-events:all}
 #submenu-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0);z-index:98;
   transition:background .3s;pointer-events:none}
@@ -405,33 +414,39 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
     <div id="catch-rarity-label">COMMON</div>
   </div>
   <div id="catch-panel">
-    <div id="throw-zone">
-      <div id="throw-hint">👆 DRA UPPÅT FÖR ATT KASTA</div>
-      <div id="ball-pulse-ring"></div>
-      <canvas id="ball-display-canvas" width="110" height="110" style="position:absolute;bottom:6px;left:50%;transform:translateX(-50%);cursor:grab;filter:drop-shadow(0 6px 20px rgba(255,255,255,0.3))"></canvas>
+    <!-- Meter mini-game -->
+    <div id="throw-meter-wrap">
+      <div id="throw-meter-hint">TRYCK NÄR MÄTAREN ÄR I MITTEN!</div>
+      <div id="throw-meter-track" onclick="releaseMeter()">
+        <div id="throw-meter-bar"></div>
+        <div id="throw-meter-center"></div>
+      </div>
     </div>
-    <div id="catch-ball-totals" style="display:flex;gap:16px;opacity:0.55;font-size:0.7rem;font-weight:800;color:white;letter-spacing:.5px">
-      <span>⚪ <span id="c-tot-0">0</span></span>
-      <span>🔵 <span id="c-tot-1">0</span></span>
-      <span>🟡 <span id="c-tot-2">0</span></span>
-    </div>
+    <!-- Ball selector -->
     <div id="ball-selector">
       <div class="bsel active" id="bsel-0" onclick="selectBall(0)">
-        <canvas class="bsel-canvas" id="bsel-c-0" width="48" height="48" style="display:block;margin:0 auto"></canvas>
-        <div class="bsel-name">SD-Boll</div>
-        <div class="bsel-count" id="bsel-cnt-0">×20</div>
+        <canvas class="bsel-canvas" id="bsel-c-0" width="42" height="42"></canvas>
+        <div class="bsel-info">
+          <div class="bsel-name">SD-Boll</div>
+          <div class="bsel-count" id="bsel-cnt-0">×20</div>
+        </div>
       </div>
       <div class="bsel" id="bsel-1" onclick="selectBall(1)">
-        <canvas class="bsel-canvas" id="bsel-c-1" width="48" height="48" style="display:block;margin:0 auto"></canvas>
-        <div class="bsel-name">Super</div>
-        <div class="bsel-count" id="bsel-cnt-1">×5</div>
+        <canvas class="bsel-canvas" id="bsel-c-1" width="42" height="42"></canvas>
+        <div class="bsel-info">
+          <div class="bsel-name">Super</div>
+          <div class="bsel-count" id="bsel-cnt-1">×5</div>
+        </div>
       </div>
       <div class="bsel" id="bsel-2" onclick="selectBall(2)">
-        <canvas class="bsel-canvas" id="bsel-c-2" width="48" height="48" style="display:block;margin:0 auto"></canvas>
-        <div class="bsel-name">Jimmie</div>
-        <div class="bsel-count" id="bsel-cnt-2">×1</div>
+        <canvas class="bsel-canvas" id="bsel-c-2" width="42" height="42"></canvas>
+        <div class="bsel-info">
+          <div class="bsel-name">Jimmie</div>
+          <div class="bsel-count" id="bsel-cnt-2">×1</div>
+        </div>
       </div>
     </div>
+    <button id="throw-meter-btn" onclick="startMeter()">🎯 KASTA</button>
   </div>
   <!-- Full-screen result -->
   <div id="catch-overlay">
@@ -1076,7 +1091,7 @@ function drawBall(ctx, type, size) {
 function initBallCanvases() {
   [0,1,2].forEach(i => {
     const c2 = document.getElementById('bsel-c-'+i);
-    if (c2) { const x = c2.getContext('2d'); c2.width=54;c2.height=54;drawBall(x, i, 54); }
+    if (c2) { const x = c2.getContext('2d'); c2.width=42;c2.height=42;drawBall(x, i, 42); }
   });
   updateBallDisplay(0);
 }
@@ -1298,42 +1313,63 @@ function tickCatchRing(dt) {
 }
 
 window.selectBall = function(i) {
+  if (G.balls[i] <= 0) { toast('Inga bollar av den typen!'); return; }
   selBall = i;
   document.querySelectorAll('.bsel').forEach((b,idx) => b.classList.toggle('active', idx===i));
-  updateBallDisplay(i);
 };
 
 // Throw setup
-const tz = document.getElementById('throw-zone');
-const catchStage = document.getElementById('catch-stage');
-let throwStart = null;
+// ── METER MINI-GAME ──────────────────────────────────────────────
+let meterActive = false, meterPos = 0, meterDir = 1, meterSpeed = 0.6;
+let meterRAF = null;
 
-function isOnCatchScreen() {
-  return document.getElementById('catch-screen').classList.contains('active');
+function startMeter() {
+  if (!curCatch || meterActive) return;
+  if (G.balls[selBall] <= 0) { toast('Inga bollar kvar!'); return; }
+  meterActive = true;
+  meterPos = 0;
+  // Speed based on rarity — harder for rarer
+  const speeds = {Common:0.45,Uncommon:0.6,Rare:0.75,Epic:0.9,Legendary:1.1,Mythic:1.3};
+  meterSpeed = speeds[curCatch.j.rarity] || 0.6;
+  document.getElementById('throw-meter-wrap').classList.add('active');
+  document.getElementById('throw-meter-btn').textContent = '⏺ STOPPA!';
+  tickMeter();
 }
 
-// Touch: swipe anywhere on catch screen
-document.addEventListener('touchstart', e => {
-  if (!isOnCatchScreen()) return;
-  throwStart = {x: e.touches[0].clientX, y: e.touches[0].clientY};
-}, {passive:true});
-document.addEventListener('touchend', e => {
-  if (!isOnCatchScreen() || !throwStart || document.getElementById('catch-overlay').classList.contains('show')) return;
-  const dy = throwStart.y - e.changedTouches[0].clientY;
-  const dx = Math.abs(throwStart.x - e.changedTouches[0].clientX);
-  if (dy > 50 && dy > dx * 1.5) doThrow();
-  throwStart = null;
-}, {passive:true});
+function tickMeter() {
+  if (!meterActive) return;
+  meterPos += meterDir * meterSpeed;
+  if (meterPos >= 100) { meterPos = 100; meterDir = -1; }
+  if (meterPos <= 0)   { meterPos = 0;   meterDir = 1; }
+  const bar = document.getElementById('throw-meter-bar');
+  const track = document.getElementById('throw-meter-track');
+  const tw = track.offsetWidth || 300;
+  bar.style.left = (meterPos / 100 * (tw - 12)) + 'px';
+  // Color: green near center, red at edges
+  const dist = Math.abs(meterPos - 50) / 50; // 0=center, 1=edge
+  const r = Math.round(dist * 240), g = Math.round((1-dist) * 200 + 50);
+  bar.style.background = `linear-gradient(90deg,rgb(${r},${g},50),rgb(${r+20},${g+20},80))`;
+  bar.style.boxShadow = `0 0 ${12-dist*8}px rgba(${r},${g},50,0.7)`;
+  meterRAF = requestAnimationFrame(tickMeter);
+}
 
-// Mouse: swipe on throw zone
-let mdn2 = false, msy2 = 0;
-tz.addEventListener('mousedown', e => { mdn2=true; msy2=e.clientY; });
-document.addEventListener('mouseup', e => {
-  if(mdn2 && isOnCatchScreen() && msy2-e.clientY>50) doThrow();
-  mdn2=false;
-});
+function releaseMeter() {
+  if (!meterActive) return;
+  meterActive = false;
+  cancelAnimationFrame(meterRAF);
+  // Score: how close to center (0=center, 50=edge)
+  const dist = Math.abs(meterPos - 50); // 0=perfect, 50=miss
+  const accuracy = 1 - dist/50; // 1=perfect, 0=edge
+  document.getElementById('throw-meter-wrap').classList.remove('active');
+  document.getElementById('throw-meter-btn').textContent = '🎯 KASTA';
+  doThrow(accuracy);
+}
 
-function doThrow() {
+// Click track = release
+document.getElementById('throw-meter-track').onclick = releaseMeter;
+
+function doThrow(accuracy) {
+  if (accuracy === undefined) accuracy = 0.5; // default if called directly
   if (!curCatch) return;
   if (G.balls[selBall] <= 0) { toast('Inga bollar av den typen!'); return; }
   G.balls[selBall]--; G.stats.throws++; catchTries++;
@@ -1399,8 +1435,10 @@ function onBallHit() {
     if (i >= shakes.length) {
       // Check catch
       const bonus = [1.0, 1.8, 3.5][selBall];
-      const ringBonus = 1 + (80-ringR)/80 * 0.7;
-      const chance = Math.min(0.97, curCatch.j.cr * bonus * ringBonus);
+      const accuracyBonus = 0.5 + accuracy * 1.5; // 0.5x worst, 2.0x perfect
+      const chance = Math.min(0.97, curCatch.j.cr * bonus * accuracyBonus);
+      const accTxt = accuracy > 0.8 ? 'PERFEKT! 🎯' : accuracy > 0.5 ? 'Bra!' : 'Miss...';
+      toast(accTxt + ' Chans: ' + Math.round(chance*100) + '%');
       if (Math.random() < chance) onCaught();
       else if (catchTries >= 3 && Math.random() < 0.35) onEscaped();
       else {
