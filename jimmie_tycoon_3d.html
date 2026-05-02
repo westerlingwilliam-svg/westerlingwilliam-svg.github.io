@@ -295,7 +295,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 .settings-toggle.on::after{transform:translateX(20px)}
 
 /* Garage screen */
-#garage-screen{background:#f2f2f7;display:flex;flex-direction:column}
+#garage-screen{background:#f2f2f7}
 #garage-grid{flex:1;overflow-y:auto;padding:12px 10px 100px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .gc{background:white;border-radius:18px;padding:12px 6px 10px;text-align:center;box-shadow:0 3px 12px rgba(0,0,0,0.08);position:relative;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s;overflow:hidden}
 .gc::before{content:"";position:absolute;inset:0;opacity:0.06;background:radial-gradient(circle at 30% 20%,white,transparent 60%);pointer-events:none}
@@ -422,6 +422,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
         <div id="throw-meter-center"></div>
       </div>
     </div>
+    <canvas id="ball-display-canvas" width="110" height="110" style="display:none"></canvas>
     <!-- Ball selector -->
     <div id="ball-selector">
       <div class="bsel active" id="bsel-0" onclick="selectBall(0)">
@@ -1097,10 +1098,12 @@ function initBallCanvases() {
 }
 
 function updateBallDisplay(type) {
-  const c2 = document.getElementById('ball-display-canvas');
-  if (!c2) return;
-  const x = c2.getContext('2d');
-  drawBall(x, type, 110);
+  [0,1,2].forEach(i=>{
+    const c2=document.getElementById('bsel-c-'+i);
+    if(c2){c2.width=42;c2.height=42;drawBall(c2.getContext('2d'),i,42);}
+  });
+  // Highlight selected
+  document.querySelectorAll('.bsel').forEach((b,i)=>b.classList.toggle('active',i===type));
 }
 
 // ── CATCH ────────────────────────────────────────────────────────
@@ -1376,12 +1379,11 @@ function doThrow(accuracy) {
   document.getElementById('throw-meter-btn').classList.remove('active');
   if (G.balls[selBall] <= 0) { toast('Inga bollar av den typen!'); return; }
   G.balls[selBall]--; G.stats.throws++; catchTries++;
-  document.getElementById('throw-hint').style.opacity = '0';
+  // throw-hint removed
 
   // Animate ball flying toward jimmie
   const ballEmojis = ['⚪','🔵','🟡'];
   const ballEmoji = ballEmojis[selBall];
-  const ballEl = document.getElementById('ball-display');
   ballEl.style.transition = 'none';
   ballEl.style.display = 'none';
 
@@ -1416,7 +1418,6 @@ function doThrow(accuracy) {
     if (t < 1) { requestAnimationFrame(animBall); }
     else {
       fb.remove();
-      ballEl.style.display = '';
       // Impact particles
       spawnParticles(targetX, targetY + 40, RC[curCatch.j.rarity], 12, 'burst');
       spawnParticles(targetX, targetY + 40, '#fff', 6, 'burst');
@@ -1445,7 +1446,7 @@ function onBallHit() {
       if (Math.random() < chance) onCaught();
       else if (catchTries >= 3 && Math.random() < 0.35) onEscaped();
       else {
-        document.getElementById('throw-hint').style.opacity='1';
+        // throw-hint removed
         // Miss flash
         spawnParticles(catchW/2, catchH*0.35, '#ff4444', 8, 'burst');
         toast(curCatch.j.icon + ' Jimmie bröt sig loss!');
