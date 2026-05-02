@@ -131,14 +131,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 /* Meter mini-game */
 #throw-meter-wrap{width:100%;display:none;flex-direction:column;align-items:center;gap:6px}
 #throw-meter-wrap.active{display:flex}
-#throw-meter-track{width:90%;height:28px;background:rgba(255,255,255,0.08);border-radius:14px;
-  overflow:hidden;position:relative;border:1.5px solid rgba(255,255,255,0.15);cursor:pointer}
-#throw-meter-bar{position:absolute;top:0;bottom:0;left:0;width:12px;border-radius:10px;
-  background:linear-gradient(90deg,#22c55e,#FFCB05,#22c55e);
-  box-shadow:0 0 10px rgba(74,222,128,0.6);transition:none}
+#throw-meter-track{width:92%;height:36px;background:rgba(0,0,0,0.4);border-radius:18px;
+  overflow:hidden;position:relative;border:2px solid rgba(255,255,255,0.2);cursor:pointer}
+#throw-meter-bar{position:absolute;top:3px;bottom:3px;left:0;width:14px;border-radius:8px;
+  background:#22c55e;box-shadow:0 0 14px #22c55e;transition:none}
 #throw-meter-center{position:absolute;left:50%;top:0;bottom:0;width:3px;
-  background:rgba(255,255,255,0.4);transform:translateX(-50%)}
-#throw-meter-hint{font-size:0.7rem;color:rgba(255,255,255,0.5);font-weight:700;letter-spacing:1px;text-transform:uppercase}
+  background:rgba(255,255,255,0.7);transform:translateX(-50%);border-radius:2px}
+#throw-meter-hint{font-size:0.85rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;color:#22c55e;min-height:1.2em;text-align:center;text-shadow:0 0 10px currentColor}
 #throw-meter-btn{background:linear-gradient(135deg,var(--b),#5a6fd6);color:white;
   font-weight:900;font-size:0.85rem;padding:10px 28px;border-radius:50px;border:none;
   cursor:pointer;font-family:var(--font);box-shadow:0 4px 16px rgba(59,76,202,0.5);
@@ -420,7 +419,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
     <!-- Meter mini-game -->
     <div id="throw-meter-wrap">
       <div id="throw-meter-hint">TRYCK NÄR MÄTAREN ÄR I MITTEN!</div>
-      <div id="throw-meter-track" onclick="releaseMeter()">
+      <div id="throw-meter-track">
+        <!-- Zone markers -->
+        <div id="zone-excellent" style="position:absolute;top:0;bottom:0;left:35%;width:30%;background:rgba(100,220,100,0.35);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.5rem;font-weight:900;color:rgba(255,255,255,0.9);letter-spacing:.5px">EXCELLENT</div>
+        <div id="zone-great-l" style="position:absolute;top:0;bottom:0;left:20%;width:15%;background:rgba(80,180,255,0.25);border-radius:6px 0 0 6px"></div>
+        <div id="zone-great-r" style="position:absolute;top:0;bottom:0;right:20%;width:15%;background:rgba(80,180,255,0.25);border-radius:0 6px 6px 0"></div>
         <div id="throw-meter-bar"></div>
         <div id="throw-meter-center"></div>
       </div>
@@ -1330,6 +1333,11 @@ window.selectBall = function(i) {
 let meterActive = false, meterPos = 0, meterDir = 1, meterSpeed = 0.6;
 let meterRAF = null;
 
+function handleMeterBtn() {
+  if (meterActive) releaseMeter();
+  else startMeter();
+}
+
 function startMeter() {
   if (!curCatch || meterActive) return;
   if (G.balls[selBall] <= 0) { toast('Inga bollar kvar!'); return; }
@@ -1339,8 +1347,17 @@ function startMeter() {
   const speeds = {Common:0.45,Uncommon:0.6,Rare:0.75,Epic:0.9,Legendary:1.1,Mythic:1.3};
   meterSpeed = speeds[curCatch.j.rarity] || 0.6;
   document.getElementById('throw-meter-wrap').classList.add('active');
+  document.getElementById('throw-meter-btn').style.display='block';
   document.getElementById('throw-meter-btn').textContent = '⏺ STOPPA!';
   tickMeter();
+}
+
+function getMeterZone(pos) {
+  const d = Math.abs(pos - 50);
+  if (d < 8)  return {name:'Excellent!', col:'#22c55e', accuracy:1.0,   glow:16};
+  if (d < 18) return {name:'Nice!',      col:'#60a5fa', accuracy:0.72,  glow:10};
+  if (d < 30) return {name:'Bra',        col:'#facc15', accuracy:0.45,  glow:6};
+  return              {name:'Miss',       col:'#ef4444', accuracy:0.15,  glow:3};
 }
 
 function tickMeter() {
@@ -1350,13 +1367,16 @@ function tickMeter() {
   if (meterPos <= 0)   { meterPos = 0;   meterDir = 1; }
   const bar = document.getElementById('throw-meter-bar');
   const track = document.getElementById('throw-meter-track');
-  const tw = track.offsetWidth || 300;
-  bar.style.left = (meterPos / 100 * (tw - 12)) + 'px';
-  // Color: green near center, red at edges
-  const dist = Math.abs(meterPos - 50) / 50; // 0=center, 1=edge
-  const r = Math.round(dist * 240), g = Math.round((1-dist) * 200 + 50);
-  bar.style.background = `linear-gradient(90deg,rgb(${r},${g},50),rgb(${r+20},${g+20},80))`;
-  bar.style.boxShadow = `0 0 ${12-dist*8}px rgba(${r},${g},50,0.7)`;
+  const tw = track.offsetWidth || 280;
+  const zone = getMeterZone(meterPos);
+  bar.style.left = (meterPos / 100 * (tw - 14)) + 'px';
+  bar.style.background = zone.col;
+  bar.style.boxShadow = '0 0 ' + zone.glow + 'px ' + zone.col;
+  bar.style.width = '14px';
+  // Update hint text
+  const hint = document.getElementById('throw-meter-hint');
+  if (hint) hint.textContent = zone.name;
+  if (hint) hint.style.color = zone.col;
   meterRAF = requestAnimationFrame(tickMeter);
 }
 
@@ -1364,16 +1384,22 @@ function releaseMeter() {
   if (!meterActive) return;
   meterActive = false;
   cancelAnimationFrame(meterRAF);
-  // Score: how close to center (0=center, 50=edge)
-  const dist = Math.abs(meterPos - 50); // 0=perfect, 50=miss
-  const accuracy = 1 - dist/50; // 1=perfect, 0=edge
+  const zone = getMeterZone(meterPos);
   document.getElementById('throw-meter-wrap').classList.remove('active');
-  document.getElementById('throw-meter-btn').textContent = '🎯 KASTA';
-  doThrow(accuracy);
+  document.getElementById('throw-meter-btn').style.display = 'none';
+  // Flash zone result
+  toast(zone.name + (zone.name==='Excellent!'?' 🌟':zone.name==='Nice!'?' 👍':''));
+  doThrow(zone.accuracy);
 }
 
-// Click track = release
-document.getElementById('throw-meter-track').onclick = releaseMeter;
+// Track click/touch = release meter
+document.getElementById('throw-meter-track').addEventListener('click', function(){
+  if(meterActive) releaseMeter();
+});
+document.getElementById('throw-meter-track').addEventListener('touchend', function(e){
+  e.preventDefault();
+  if(meterActive) releaseMeter();
+},{passive:false});
 
 function doThrow(accuracy) {
   if (accuracy === undefined) accuracy = 0.5;
@@ -1441,10 +1467,8 @@ function onBallHit() {
     if (i >= shakes.length) {
       // Check catch
       const bonus = [1.0, 1.8, 3.5][selBall];
-      const accuracyBonus = 0.5 + accuracy * 1.5; // 0.5x worst, 2.0x perfect
+      const accuracyBonus = 0.5 + accuracy * 1.5;
       const chance = Math.min(0.97, curCatch.j.cr * bonus * accuracyBonus);
-      const accTxt = accuracy > 0.8 ? 'PERFEKT! 🎯' : accuracy > 0.5 ? 'Bra!' : 'Miss...';
-      toast(accTxt + ' Chans: ' + Math.round(chance*100) + '%');
       if (Math.random() < chance) onCaught();
       else if (catchTries >= 3 && Math.random() < 0.35) onEscaped();
       else {
