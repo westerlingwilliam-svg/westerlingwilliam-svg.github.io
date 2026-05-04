@@ -1767,29 +1767,26 @@ function onCaught() {
   addXP(j.xp);
   const rarO = ['Common','Uncommon','Rare','Epic','Legendary','Mythic'];
   if (!G.stats.best || rarO.indexOf(j.rarity) > rarO.indexOf(G.stats.best)) G.stats.best = j.rarity;
-  // 🎉 PARTICLES!
+  // Show result immediately — no async delay
+  const stars = ['','⭐','⭐⭐','⭐⭐⭐','✨⭐✨','🌟🌟🌟'];
+  const si = Math.min(rarO.indexOf(j.rarity)+1, 5);
+  const candyAmt = {Common:1,Uncommon:2,Rare:3,Epic:5,Legendary:10,Mythic:20}[j.rarity]||1;
+  const cpVal = j.cp;
+  document.getElementById('co-stars').textContent = stars[si];
+  const cotitle = document.getElementById('co-title');
+  cotitle.textContent = j.rarity==='Mythic'?'⚡ MYTISK FÅNGST!':j.rarity==='Legendary'?'🌟 LEGENDARISK!':j.rarity==='Epic'?'💜 EPISK!':'✅ FÅNGAD!';
+  cotitle.style.color = RC[j.rarity];
+  document.getElementById('co-jimmie-name').textContent = j.name;
+  document.getElementById('co-rewards').innerHTML =
+    '<div class="co-reward-pill">+'+j.xp+' XP</div><div class="co-reward-pill">CP '+cpVal+'</div><div class="co-reward-pill">+'+candyAmt+' 🍬</div>';
+  const coC = document.getElementById('co-jimmie-canvas');
+  if(coC){ coC.width=120;coC.height=120;drawMiniJimmie(coC.getContext('2d'),120,j); }
+  const gbtn2 = document.getElementById('co-garage-btn');
+  if (gbtn2) gbtn2.style.display='';
+  const fbtn2 = document.getElementById('co-continue-btn');
+  if (fbtn2) fbtn2.textContent='Fortsätt fånga';
+  document.getElementById('catch-overlay').classList.add('show');
   spawnSuccessParticles(RC[j.rarity]);
-  // Show result after particles start
-  setTimeout(() => {
-    const stars = ['','⭐','⭐⭐','⭐⭐⭐','✨⭐✨','🌟🌟🌟'];
-    const si = Math.min(rarO.indexOf(j.rarity)+1, 5);
-    // co-emoji removed — using canvas
-    document.getElementById('co-stars').textContent = stars[si];
-    const title = document.getElementById('co-title');
-    title.textContent = j.rarity==='Mythic'?'⚡ MYTISK FÅNGST!':j.rarity==='Legendary'?'🌟 LEGENDARISK!':j.rarity==='Epic'?'💜 EPISK!':'✅ FÅNGAD!';
-    title.style.color = RC[j.rarity];
-    document.getElementById('co-jimmie-name').textContent = j.name;
-    document.getElementById('co-rewards').innerHTML =
-      `<div class="co-reward-pill">+${j.xp} XP</div><div class="co-reward-pill">CP ${curCatch.j.cp}</div><div class="co-reward-pill">+${({Common:1,Uncommon:2,Rare:3,Epic:5,Legendary:10,Mythic:20}[j.rarity]||1)} 🍬</div>`;
-    // Draw mini Jimmie on result card
-    const coC = document.getElementById('co-jimmie-canvas');
-    if(coC){ coC.width=120;coC.height=120;drawMiniJimmie(coC.getContext('2d'),120,j); }
-    document.getElementById('catch-overlay').classList.add('show');
-    const gbtn2 = document.getElementById('co-garage-btn');
-    if (gbtn2) { gbtn2.style.display=''; }
-    const fbtn2 = document.getElementById('co-continue-btn');
-    if (fbtn2) fbtn2.textContent = 'Fortsätt fånga';
-  }, 400);
   save(); renderDex();
 }
 
@@ -2139,17 +2136,19 @@ function renderGarage() {
     const cp = Math.floor(j.cp*(0.9+G.lv*0.02)) + (instance===0 ? boosted : 0);
     const canvasId = 'gc-c-' + j.id + '-' + instance;
     canvasIds.push({canvasId, j});
-    return `<div class="gc" style="border:2px solid ${rarityBg}44;background:linear-gradient(160deg,white 60%,${rarityBg}14);box-shadow:0 3px 14px ${rarityBg}33" onclick="openJimmiePanel(${j.id})">
-      <canvas class="gc-canvas" id="${canvasId}" width="60" height="60" style="display:block;margin:0 auto 4px"></canvas>
-      <div class="gc-name">${j.name}</div>
-      <div class="gc-rarity" style="color:${rarityBg}">${j.rarity}</div>
-      <div class="gc-cp" style="font-size:0.68rem;color:#888;font-weight:800;margin-top:2px">CP ${cp}</div>
+    return `<div class="gc" style="border:2px solid ${rarityBg}44;background:linear-gradient(160deg,white 60%,${rarityBg}12);box-shadow:0 3px 12px ${rarityBg}44" onclick="openJimmiePanel(${j.id})">
+      <canvas class="gc-canvas" id="${canvasId}" width="80" height="80" style="display:block;width:100%;height:90px;border-radius:16px 16px 0 0;flex-shrink:0"></canvas>
+      <div style="padding:4px 6px 0;width:100%">
+        <div class="gc-name" style="font-size:0.62rem;font-weight:900;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${j.name}</div>
+        <div class="gc-rarity" style="font-size:0.52rem;font-weight:800;text-transform:uppercase;color:${rarityBg};letter-spacing:.5px">${j.rarity}</div>
+        <div class="gc-cp" style="font-size:0.6rem;color:#888;font-weight:700">CP ${cp}</div>
+      </div>
     </div>`;
   }).join('');
   setTimeout(()=>{
     canvasIds.forEach(({canvasId, j}) => {
       const c2 = document.getElementById(canvasId);
-      if (c2) { c2.width=60;c2.height=60;drawMiniJimmie(c2.getContext('2d'),60,j); }
+      if (c2) { c2.width=90;c2.height=90;drawMiniJimmie(c2.getContext('2d'),90,j); }
     });
   }, 50);
 }
