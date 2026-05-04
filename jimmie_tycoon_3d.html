@@ -303,6 +303,80 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 .settings-toggle::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;background:white;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.2);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
 .settings-toggle.on::after{transform:translateX(20px)}
 
+/* Jimmie detail panel */
+#jimmie-panel{
+  position:fixed;inset:0;z-index:250;
+  display:flex;align-items:flex-end;
+  pointer-events:none;
+}
+#jimmie-panel.open{pointer-events:all}
+#jimmie-panel-backdrop{
+  position:absolute;inset:0;background:rgba(0,0,0,0);
+  transition:background .35s;cursor:pointer;
+}
+#jimmie-panel.open #jimmie-panel-backdrop{background:rgba(0,0,0,0.55);}
+#jimmie-panel-card{
+  position:relative;width:100%;
+  background:white;border-radius:28px 28px 0 0;
+  padding:0 0 32px;
+  transform:translateY(100%);
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 -8px 40px rgba(0,0,0,0.2);
+  max-height:88vh;overflow-y:auto;
+}
+#jimmie-panel.open #jimmie-panel-card{transform:translateY(0)}
+#jp-drag{width:44px;height:5px;background:#ddd;border-radius:3px;margin:12px auto 0}
+#jp-hero{padding:20px 20px 16px;display:flex;gap:16px;align-items:center}
+#jp-canvas{border-radius:16px;flex-shrink:0;box-shadow:0 4px 16px rgba(0,0,0,0.1)}
+#jp-info{flex:1}
+#jp-name{font-size:1.2rem;font-weight:900;color:#1a1a1a;line-height:1.2}
+#jp-rarity{font-size:0.7rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;margin-top:3px}
+#jp-cp{font-size:1.8rem;font-weight:900;color:var(--b);margin-top:4px}
+#jp-cp-lbl{font-size:0.62rem;color:#aaa;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+#jp-candy-row{display:flex;align-items:center;gap:8px;margin-top:10px;background:#fafafa;border-radius:12px;padding:8px 12px}
+#jp-candy-icon{font-size:1.4rem}
+#jp-candy-info{flex:1}
+#jp-candy-label{font-size:0.72rem;font-weight:800;color:#555}
+#jp-candy-count{font-size:0.85rem;font-weight:900;color:var(--b)}
+#jp-actions{padding:0 16px;display:flex;flex-direction:column;gap:10px}
+.jp-powerup-btn{
+  background:linear-gradient(135deg,#FFCB05,#e8a800);
+  color:#1a1a1a;border:none;padding:16px;border-radius:18px;
+  font-size:1rem;font-weight:900;cursor:pointer;
+  font-family:var(--font);box-shadow:0 4px 16px rgba(255,203,5,0.4);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:.15s;
+}
+.jp-powerup-btn:active{transform:scale(0.97)}
+.jp-powerup-btn:disabled{background:#eee;color:#bbb;box-shadow:none;cursor:not-allowed}
+.jp-delete-btn{
+  background:white;color:#ef4444;border:2px solid #ef4444;
+  padding:14px;border-radius:18px;font-size:0.95rem;font-weight:900;
+  cursor:pointer;font-family:var(--font);transition:.15s;
+}
+.jp-delete-btn:active{background:#fff0f0}
+/* Confirm delete dialog */
+#delete-confirm{
+  position:fixed;inset:0;z-index:400;
+  background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+#delete-confirm.show{display:flex}
+#delete-confirm-card{
+  background:white;border-radius:24px;padding:28px 24px;
+  width:100%;max-width:320px;text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,0.3);
+  animation:co-card-in .3s cubic-bezier(.34,1.56,.64,1);
+}
+#delete-confirm-card h3{font-size:1.2rem;font-weight:900;color:#1a1a1a;margin-bottom:8px}
+#delete-confirm-card p{font-size:0.85rem;color:#888;line-height:1.5;margin-bottom:20px}
+.dc-cancel{background:#f2f2f7;color:#1a1a1a;border:none;padding:14px;
+  border-radius:50px;font-weight:900;font-size:0.9rem;cursor:pointer;
+  font-family:var(--font);width:100%;margin-bottom:8px}
+.dc-delete{background:#ef4444;color:white;border:none;padding:14px;
+  border-radius:50px;font-weight:900;font-size:0.9rem;cursor:pointer;
+  font-family:var(--font);width:100%}
+
 /* Garage screen */
 #garage-screen{background:#f2f2f7}
 #garage-grid{flex:1;overflow-y:auto;padding:12px 10px 100px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
@@ -661,6 +735,45 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
   <button class="lvl-dismiss" onclick="document.getElementById('lvl-splash').classList.remove('show')">OKEJ!</button>
 </div>
 
+<!-- ── JIMMIE DETAIL PANEL ── -->
+<div id="jimmie-panel">
+  <div id="jimmie-panel-backdrop" onclick="closeJimmiePanel()"></div>
+  <div id="jimmie-panel-card">
+    <div id="jp-drag"></div>
+    <div id="jp-hero">
+      <canvas id="jp-canvas" width="100" height="100"></canvas>
+      <div id="jp-info">
+        <div id="jp-name">Jimmie</div>
+        <div id="jp-rarity">Common</div>
+        <div id="jp-cp-lbl">Stridsvärde</div>
+        <div id="jp-cp">12</div>
+        <div id="jp-candy-row">
+          <div id="jp-candy-icon">🍬</div>
+          <div id="jp-candy-info">
+            <div id="jp-candy-label">Godis kvar</div>
+            <div id="jp-candy-count">0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="jp-actions">
+      <button class="jp-powerup-btn" id="jp-powerup" onclick="powerUpJimmie()">⚡ Power Up  <span id="jp-cost">3 🍬</span></button>
+      <button class="jp-delete-btn" onclick="confirmDeleteJimmie()">🗑️ Ta bort Jimmie</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── DELETE CONFIRM ── -->
+<div id="delete-confirm">
+  <div id="delete-confirm-card">
+    <div style="font-size:3rem;margin-bottom:8px">😬</div>
+    <h3>Är du säker?</h3>
+    <p id="dc-text">Vill du verkligen ta bort <b></b>? Det går inte att ångra.</p>
+    <button class="dc-cancel" onclick="closeDeleteConfirm()">Avbryt</button>
+    <button class="dc-delete" onclick="executeDelete()">Ta bort</button>
+  </div>
+</div>
+
 <div id="tutorial-overlay">
   <div id="tut-spotlight" style="display:none"></div>
 </div>
@@ -693,7 +806,7 @@ const RC={Common:'#9e9e9e',Uncommon:'#4ade80',Rare:'#60a5fa',Epic:'#c084fc',Lege
 const RW={Common:50,Uncommon:28,Rare:14,Epic:5,Legendary:2,Mythic:1};
 
 const SAVE='jgo_v4';
-let G={lv:1,xp:0,xpMax:200,tutorialDone:false,balls:[20,5,1],candy:0,seen:{},caught:{},trainerName:'Jimmie-Tränare',stats:{km:0,throws:0,esc:0,total:0,best:''}};
+let G={lv:1,xp:0,xpMax:200,tutorialDone:false,balls:[20,5,1],candy:{Common:0,Uncommon:0,Rare:0,Epic:0,Legendary:0,Mythic:0},jimmieCP:{},seen:{},caught:{},trainerName:'Jimmie-Tränare',stats:{km:0,throws:0,esc:0,total:0,best:''}};
 function save(){try{localStorage.setItem(SAVE,JSON.stringify(G));}catch(e){}}
 function load(){try{const s=localStorage.getItem(SAVE);if(s)G={...G,...JSON.parse(s)};}catch(e){}}
 
@@ -1013,9 +1126,9 @@ function spinStop(idx) {
   let reward = '';
   if(roll < 0.5) { G.balls[0]+=3; reward='⚪ +3 SD-Bollar'; }
   else if(roll < 0.8) { G.balls[0]+=2; G.balls[1]+=1; reward='⚪+2 🔵+1 Bollar'; }
-  else if(roll < 0.95) { G.balls[1]+=2; G.candy+=2; reward='🔵+2 Super-Bollar + 🍬×2'; }
+  else if(roll < 0.95) { G.balls[1]+=2; const rc2=JIMMIES[Math.floor(Math.random()*JIMMIES.length)].rarity; if(!G.candy[rc2])G.candy[rc2]=0; G.candy[rc2]+=2; reward='🔵+2 Super-Bollar + 🍬×2'; }
   else { G.balls[2]+=1; reward='+1 Jimmie-Boll! Sallsynt!'; }
-  G.candy+=1;
+  // stop gives random candy
   toast('Stop: ' + s.label + ' · ' + reward);
   addXP(80);
   updateHUD(); save();
@@ -1121,7 +1234,7 @@ function updateHUD(){
     const ct=document.getElementById('c-tot-'+i);
     if(ct) ct.textContent=G.balls[i];
   });
-  document.getElementById('bag-candy').textContent=G.candy;
+  const totalCandy=typeof G.candy==='object'?Object.values(G.candy).reduce((a,b)=>a+b,0):G.candy; document.getElementById('bag-candy').textContent=totalCandy;
 }
 
 
@@ -1645,7 +1758,10 @@ function onCaught() {
   const j = curCatch.j;
   if (!G.caught[j.id]) G.caught[j.id] = 0;
   G.caught[j.id]++;
-  G.stats.total++; G.candy += 3;
+  G.stats.total++;
+  const candyGain = {Common:1,Uncommon:2,Rare:3,Epic:5,Legendary:10,Mythic:20}[j.rarity]||1;
+  if(!G.candy[j.rarity]) G.candy[j.rarity]=0;
+  G.candy[j.rarity] += candyGain;
   addXP(j.xp);
   const rarO = ['Common','Uncommon','Rare','Epic','Legendary','Mythic'];
   if (!G.stats.best || rarO.indexOf(j.rarity) > rarO.indexOf(G.stats.best)) G.stats.best = j.rarity;
@@ -1662,7 +1778,7 @@ function onCaught() {
     title.style.color = RC[j.rarity];
     document.getElementById('co-jimmie-name').textContent = j.name;
     document.getElementById('co-rewards').innerHTML =
-      `<div class="co-reward-pill">+${j.xp} XP</div><div class="co-reward-pill">CP ${curCatch.j.cp}</div><div class="co-reward-pill">+3 🍬</div>`;
+      `<div class="co-reward-pill">+${j.xp} XP</div><div class="co-reward-pill">CP ${curCatch.j.cp}</div><div class="co-reward-pill">+${({Common:1,Uncommon:2,Rare:3,Epic:5,Legendary:10,Mythic:20}[j.rarity]||1)} 🍬</div>`;
     // Draw mini Jimmie on result card
     const coC = document.getElementById('co-jimmie-canvas');
     if(coC){ coC.width=120;coC.height=120;drawMiniJimmie(coC.getContext('2d'),120,j); }
@@ -1873,12 +1989,104 @@ function shiftColor(hex, amount) {
   return '#'+[r,g,b].map(v=>Math.min(255,v+amount).toString(16).padStart(2,'0')).join('');
 }
 
+
+// ── JIMMIE DETAIL PANEL ─────────────────────────────────────────
+let panelJimmie = null; // {j, id}
+
+function openJimmiePanel(jimmieId) {
+  const j = JIMMIES[jimmieId];
+  if (!j || !G.caught[jimmieId]) return;
+  panelJimmie = {j, id: jimmieId};
+  const panel = document.getElementById('jimmie-panel');
+
+  // Draw big canvas
+  const c2 = document.getElementById('jp-canvas');
+  c2.width = 110; c2.height = 110;
+  drawMiniJimmie(c2.getContext('2d'), 110, j);
+
+  // Fill info
+  document.getElementById('jp-name').textContent = j.name;
+  const rDiv = document.getElementById('jp-rarity');
+  rDiv.textContent = j.rarity;
+  rDiv.style.color = RC[j.rarity];
+
+  // CP (boosted or base)
+  const baseCP = Math.floor(j.cp * (0.9 + G.lv * 0.02));
+  const boosted = G.jimmieCP[jimmieId] || 0;
+  const totalCP = baseCP + boosted;
+  document.getElementById('jp-cp').textContent = totalCP;
+
+  // Candy
+  const candy = (typeof G.candy === 'object' ? G.candy[j.rarity] : G.candy) || 0;
+  const cost = candyCost(j.rarity);
+  document.getElementById('jp-candy-count').textContent = candy + ' ' + j.rarity + '-godis';
+  document.getElementById('jp-cost').textContent = cost + ' 🍬';
+  document.getElementById('jp-powerup').disabled = candy < cost;
+
+  panel.classList.add('open');
+}
+
+function closeJimmiePanel() {
+  document.getElementById('jimmie-panel').classList.remove('open');
+  panelJimmie = null;
+}
+
+function candyCost(rarity) {
+  return {Common:3,Uncommon:5,Rare:8,Epic:12,Legendary:20,Mythic:50}[rarity] || 3;
+}
+
+function powerUpJimmie() {
+  if (!panelJimmie) return;
+  const j = panelJimmie.j;
+  const cost = candyCost(j.rarity);
+  const candy = (typeof G.candy === 'object' ? G.candy[j.rarity] : 0) || 0;
+  if (candy < cost) { toast('Inte tillräckligt med godis!'); return; }
+
+  G.candy[j.rarity] = candy - cost;
+  if (!G.jimmieCP) G.jimmieCP = {};
+  G.jimmieCP[panelJimmie.id] = (G.jimmieCP[panelJimmie.id] || 0) + Math.round(j.cp * 0.15);
+
+  // Update display
+  const newCP = Math.floor(j.cp * (0.9 + G.lv * 0.02)) + G.jimmieCP[panelJimmie.id];
+  document.getElementById('jp-cp').textContent = newCP;
+  const newCandy = G.candy[j.rarity];
+  document.getElementById('jp-candy-count').textContent = newCandy + ' ' + j.rarity + '-godis';
+  document.getElementById('jp-powerup').disabled = newCandy < cost;
+
+  toast('⚡ ' + j.name + ' starkare! CP ' + newCP);
+  save();
+  renderGarage();
+}
+
+function confirmDeleteJimmie() {
+  if (!panelJimmie) return;
+  const j = panelJimmie.j;
+  document.getElementById('dc-text').innerHTML = 'Vill du verkligen ta bort <b>' + j.name + '</b>? Det går inte att ångra.';
+  document.getElementById('delete-confirm').classList.add('show');
+}
+
+function closeDeleteConfirm() {
+  document.getElementById('delete-confirm').classList.remove('show');
+}
+
+function executeDelete() {
+  if (!panelJimmie) return;
+  const id = panelJimmie.id;
+  if (G.caught[id] > 1) G.caught[id]--;
+  else { G.caught[id] = 0; delete G.jimmieCP[id]; }
+  closeDeleteConfirm();
+  closeJimmiePanel();
+  save();
+  renderGarage();
+  toast('Jimmie borttagen.');
+}
+
 // ── GARAGE ───────────────────────────────────────────────────────
 function renderGarage() {
   const grid = document.getElementById('garage-grid');
   const entries = JIMMIES.filter(j => G.caught[j.id] > 0);
   document.getElementById('garage-count').textContent = entries.reduce((a,j) => a+(G.caught[j.id]||0), 0);
-  document.getElementById('garage-candy').textContent = G.candy;
+  const gc2=typeof G.candy==='object'?Object.values(G.candy).reduce((a,b)=>a+b,0):G.candy; document.getElementById('garage-candy').textContent=gc2;
   if (entries.length === 0) {
     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:80px 20px;color:#bbb">
       <div style="font-size:5rem;margin-bottom:16px">🌸</div>
