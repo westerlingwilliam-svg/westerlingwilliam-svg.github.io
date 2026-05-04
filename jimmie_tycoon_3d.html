@@ -1784,9 +1784,9 @@ function onCaught() {
     const coC = document.getElementById('co-jimmie-canvas');
     if(coC){ coC.width=120;coC.height=120;drawMiniJimmie(coC.getContext('2d'),120,j); }
     document.getElementById('catch-overlay').classList.add('show');
-    const gbtn2 = document.querySelector('#catch-overlay .co-btn[onclick="goToGarage()"]');
+    const gbtn2 = document.getElementById('co-garage-btn');
     if (gbtn2) { gbtn2.style.display=''; }
-    const fbtn2 = document.querySelector('#catch-overlay .co-btn[onclick="endCatch()"]');
+    const fbtn2 = document.getElementById('co-continue-btn');
     if (fbtn2) fbtn2.textContent = 'Fortsätt fånga';
   }, 400);
   save(); renderDex();
@@ -1807,9 +1807,9 @@ function onEscaped() {
     document.getElementById('co-rewards').innerHTML = '';
     document.getElementById('catch-overlay').classList.add('show');
     // Hide garage button when escaped
-    const gbtn = document.querySelector('#catch-overlay .co-btn[onclick="goToGarage()"]');
+    const gbtn = document.getElementById('co-garage-btn');
     if (gbtn) gbtn.style.display='none';
-    const fbtn = document.querySelector('#catch-overlay .co-btn[onclick="endCatch()"]');
+    const fbtn = document.getElementById('co-continue-btn');
     if (fbtn) fbtn.textContent = '← Tillbaka till kartan';
   }, 300);
   save();
