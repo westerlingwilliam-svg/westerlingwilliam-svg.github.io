@@ -232,33 +232,43 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 
 /* ── NAV BAR ── */
 /* ── NAV ── */
-#catch-screen.active ~ #nav, #catch-screen.active + #nav{display:none!important}
-#nav{position:fixed;bottom:-50px;left:0;right:0;z-index:100;background:rgba(255,255,255,0.97);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border-top:1px solid rgba(0,0,0,0.08);display:flex;align-items:flex-end;
-  padding:10px 0 max(calc(env(safe-area-inset-bottom) + 50px),66px);
-  box-shadow:0 -1px 0 rgba(0,0,0,0.06),0 -8px 40px rgba(0,0,0,0.1)}
-.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;
-  padding:10px 0 2px;transition:transform .15s,opacity .15s;-webkit-tap-highlight-color:transparent}
-.nb:active{transform:scale(0.88)}
-.nb-icon{font-size:2.2rem;line-height:1;transition:transform .2s cubic-bezier(.34,1.56,.64,1),filter .2s}
-.nb-lbl{font-size:0.72rem;font-weight:800;color:#bbb;letter-spacing:.3px;text-transform:uppercase;transition:color .2s}
+/* ── NAV BAR ── */
+#catch-screen.active ~ #nav,#catch-screen.active + #nav{display:none!important}
+#nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-around;
+  height:62px;
+  background:rgba(255,255,255,0.96);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-top:1.5px solid rgba(0,0,0,0.1);
+  box-shadow:0 -4px 24px rgba(0,0,0,0.12);
+  padding:0 8px;
+}
+/* Side nav buttons */
+.nb{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;
+  width:70px;transition:transform .15s;-webkit-tap-highlight-color:transparent;
+  padding:6px 0;border:none;background:none;}
+.nb:active{transform:scale(0.85)}
+.nb-icon{font-size:1.9rem;line-height:1;transition:transform .2s cubic-bezier(.34,1.56,.64,1),filter .2s}
+.nb-lbl{font-size:0.6rem;font-weight:800;color:#bbb;letter-spacing:.3px;text-transform:uppercase}
 .nb.active .nb-lbl{color:var(--b)}
-.nb.active .nb-icon{transform:scale(1.1);filter:drop-shadow(0 2px 8px rgba(59,76,202,0.5))}
-
-/* Center Jimmie button */
-#nb-center{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:0 0 2px}
-#nb-center-btn{width:88px;height:88px;background:white;border-radius:50%;position:relative;bottom:16px;
-  box-shadow:0 4px 24px rgba(0,0,0,0.22),0 0 0 3px white,0 0 0 6px var(--y);
-  display:flex;align-items:center;justify-content:center;font-size:3rem;
+.nb.active .nb-icon{transform:scale(1.12);filter:drop-shadow(0 2px 8px rgba(59,76,202,0.5))}
+/* Center Jimmie button — floats above nav */
+#nb-center{display:flex;flex-direction:column;align-items:center;cursor:pointer;position:relative;width:76px}
+#nb-center-btn{
+  width:72px;height:72px;border-radius:50%;
+  background:white;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:2.6rem;
+  box-shadow:0 4px 18px rgba(0,0,0,0.2),0 0 0 3px white,0 0 0 5px var(--y);
   transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s;
-  border:none;cursor:pointer;background:white}
+  position:relative;bottom:18px;
+}
 #nb-center-btn:active{transform:scale(0.88)}
-#nb-center-btn.open{box-shadow:0 6px 28px rgba(0,0,0,0.25),0 0 0 3px white,0 0 0 6px #FFCB05;transform:rotate(15deg) scale(1.08)}
-#nb-center-lbl{font-size:0.54rem;font-weight:800;color:#bbb;letter-spacing:.4px;text-transform:uppercase;margin-top:3px}
+#nb-center-btn.open{transform:rotate(15deg) scale(1.08);box-shadow:0 6px 24px rgba(0,0,0,0.25),0 0 0 3px white,0 0 0 6px #FFCB05}
+#nb-center-lbl{font-size:0.58rem;font-weight:800;color:#bbb;letter-spacing:.3px;text-transform:uppercase;margin-top:-14px}
 
 /* Sub-menu */
-#submenu{position:fixed;bottom:140px;left:0;right:0;z-index:99;
+#submenu{position:fixed;bottom:150px;left:0;right:0;z-index:99;
   padding:10px 20px;
   transform:translateY(120px);opacity:0;transition:transform .4s cubic-bezier(.34,1.56,.64,1),opacity .3s;
   pointer-events:none;display:flex;justify-content:center;align-items:center;gap:20px}
