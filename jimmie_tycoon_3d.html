@@ -39,10 +39,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 #compass{position:absolute;top:80px;right:14px;width:40px;height:40px;background:var(--card-bg);border-radius:50%;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;font-size:1.1rem;pointer-events:none}
 
 /* Bottom area */
-#map-bottom{pointer-events:all;padding:0 14px 18px;display:flex;flex-direction:column;align-items:center;gap:14px}
+#map-bottom{pointer-events:none;padding:0 14px 18px;display:flex;flex-direction:column;align-items:center;gap:14px}
 
 /* Nearby sightings card */
-#sightings-card{background:var(--card-bg);border-radius:26px;padding:14px 18px;box-shadow:0 8px 36px rgba(0,0,0,0.16);width:100%;max-width:400px;border:1px solid rgba(0,0,0,0.05);backdrop-filter:blur(8px);margin-bottom:4px}
+#sightings-card{pointer-events:all;background:var(--card-bg);border-radius:26px;padding:14px 18px;box-shadow:0 8px 36px rgba(0,0,0,0.16);width:100%;max-width:400px;border:1px solid rgba(0,0,0,0.05);backdrop-filter:blur(8px);margin-bottom:4px}
 #sightings-title{font-size:0.6rem;font-weight:800;color:#bbb;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:5px}
 #sightings-row{display:flex;gap:8px;align-items:center;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
 .sighting-chip{display:flex;flex-direction:column;align-items:center;background:linear-gradient(145deg,#f8f8f8,#f0f0f0);border-radius:18px;padding:10px 12px;cursor:pointer;transition:.15s;position:relative;min-width:62px;border:1px solid rgba(0,0,0,0.06);box-shadow:0 3px 8px rgba(0,0,0,0.07)}
@@ -53,10 +53,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 .no-nearby{font-size:0.75rem;color:#aaa;font-weight:600;padding:4px 0}
 
 /* Bottom buttons row */
-#bottom-actions{display:flex;align-items:flex-end;justify-content:center;gap:16px;width:100%;max-width:360px}
-.side-fab{width:54px;height:54px;background:var(--card-bg);border-radius:50%;box-shadow:0 6px 20px rgba(0,0,0,0.15);display:flex;align-items:center;justify-content:center;font-size:1.4rem;cursor:pointer;transition:.2s cubic-bezier(.34,1.56,.64,1);border:1px solid rgba(0,0,0,0.06);flex-shrink:0}
+#bottom-actions{pointer-events:none;display:flex;align-items:flex-end;justify-content:center;gap:16px;width:100%;max-width:360px}
+.side-fab{pointer-events:all;width:54px;height:54px;background:var(--card-bg);border-radius:50%;box-shadow:0 6px 20px rgba(0,0,0,0.15);display:flex;align-items:center;justify-content:center;font-size:1.4rem;cursor:pointer;transition:.2s cubic-bezier(.34,1.56,.64,1);border:1px solid rgba(0,0,0,0.06);flex-shrink:0}
 .side-fab:active{transform:scale(0.88);box-shadow:0 2px 6px rgba(0,0,0,0.1)}
-#main-ball-btn{width:80px;height:80px;background:white;border-radius:50%;box-shadow:0 6px 24px rgba(0,0,0,0.22),0 0 0 6px rgba(255,203,5,0.35),0 0 0 10px rgba(255,203,5,0.1);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:.2s cubic-bezier(.34,1.56,.64,1);border:none;position:relative;overflow:hidden;flex-shrink:0}
+#main-ball-btn{pointer-events:all;width:80px;height:80px;background:white;border-radius:50%;box-shadow:0 6px 24px rgba(0,0,0,0.22),0 0 0 6px rgba(255,203,5,0.35),0 0 0 10px rgba(255,203,5,0.1);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:.2s cubic-bezier(.34,1.56,.64,1);border:none;position:relative;overflow:hidden;flex-shrink:0}
 #main-ball-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#F7544B 50%,white 50%);border-radius:50%;opacity:0}
 #main-ball-btn:active{transform:scale(0.91);box-shadow:0 3px 12px rgba(0,0,0,0.2)}
 .ball-btn-inner{display:flex;flex-direction:column;align-items:center;gap:2px;position:relative;z-index:1}
@@ -142,8 +142,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
   font-weight:900;font-size:0.85rem;padding:10px 28px;border-radius:50px;border:none;
   cursor:pointer;font-family:var(--font);box-shadow:0 4px 16px rgba(59,76,202,0.5);
   letter-spacing:.5px;display:none}
-#throw-meter-btn{display:none}
-#throw-meter-btn.active{display:block}
+
 
 /* Ball selector row — compact */
 #ball-selector{display:flex;gap:8px;justify-content:center}
@@ -413,7 +412,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
       </div>
     </div>
     <div id="catch-rarity-label">COMMON</div>
-    <button id="throw-meter-btn" onclick="startMeter()" style="display:none;margin-top:12px;background:linear-gradient(135deg,var(--b),#5a6fd6);color:white;font-weight:900;font-size:1rem;padding:12px 36px;border-radius:50px;border:none;cursor:pointer;font-family:var(--font);box-shadow:0 6px 24px rgba(59,76,202,0.5);letter-spacing:.5px;animation:pulse-btn 1.4s ease-in-out infinite">🎯 KASTA</button>
   </div>
   <div id="catch-panel">
     <!-- Meter mini-game -->
@@ -457,12 +455,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
   <!-- Full-screen result -->
   <div id="catch-overlay">
     <div id="co-card">
-      <div class="co-emoji" id="co-emoji">✅</div>
-      <div class="co-stars" id="co-stars"></div>
-      <div class="co-title" id="co-title">FÅNGAD!</div>
-      <div class="co-jimmie-name" id="co-jimmie-name"></div>
-      <div class="co-rewards" id="co-rewards"></div>
-      <button class="co-btn" onclick="endCatch()">FORTSÄTT</button>
+      <canvas id="co-jimmie-canvas" width="120" height="120" style="display:block;margin:0 auto 8px;filter:drop-shadow(0 8px 24px rgba(0,0,0,0.4))"></canvas>
+      <div class="co-stars" id="co-stars" style="text-align:center;font-size:1.4rem;letter-spacing:4px;min-height:1.5rem"></div>
+      <div class="co-title" id="co-title" style="font-size:1.5rem;font-weight:900;text-align:center;margin-top:4px">FÅNGAD!</div>
+      <div class="co-jimmie-name" id="co-jimmie-name" style="font-size:0.95rem;font-weight:700;color:rgba(255,255,255,0.65);text-align:center;margin-top:2px"></div>
+      <div class="co-rewards" id="co-rewards" style="display:flex;gap:8px;margin:10px 0;flex-wrap:wrap;justify-content:center"></div>
+      <div style="display:flex;flex-direction:column;gap:8px;width:100%;margin-top:4px">
+        <button class="co-btn" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:white" onclick="goToGarage()">🏠 Till Jimmie Garage</button>
+        <button class="co-btn" style="background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.8);border:1.5px solid rgba(255,255,255,0.2)" onclick="endCatch()">Fortsätt fånga</button>
+      </div>
     </div>
   </div>
 </div>
@@ -915,7 +916,10 @@ jz.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0];con
 jz.addEventListener('touchmove',e=>{e.preventDefault();if(!jo.a)return;const t=e.touches[0];const r=jz.getBoundingClientRect();let dx=t.clientX-r.left-jo.bx,dy=t.clientY-r.top-jo.by;const d=Math.sqrt(dx*dx+dy*dy);if(d>JR){dx=dx/d*JR;dy=dy/d*JR;}jo.dx=dx;jo.dy=dy;jk.style.left=(54+dx)+'px';jk.style.top=(54+dy)+'px';},{passive:false});
 jz.addEventListener('touchend',e=>{e.preventDefault();jo.a=false;jo.dx=0;jo.dy=0;jk.style.left='54px';jk.style.top='54px';},{passive:false});
 const ks={};
-document.addEventListener('keydown',e=>ks[e.key]=true);
+document.addEventListener('keydown',e=>{
+  ks[e.key]=true;
+  if(e.code==='Space' && meterActive){ e.preventDefault(); releaseMeter(); }
+});
 document.addEventListener('keyup',e=>ks[e.key]=false);
 
 // ── GAME LOOP ─────────────────────────────────────────────────────
@@ -1296,7 +1300,7 @@ function startCatch() {
   document.getElementById('ring-stop2').setAttribute('stop-color', RC[w.j.rarity] + 'aa');
   document.getElementById('catch-overlay').classList.remove('show');
   document.getElementById('throw-meter-wrap').classList.remove('active');
-  document.getElementById('throw-meter-btn').style.display='block';
+  // throw-meter-btn removed
   updateBallDisplay(selBall);
   initBallCanvases();
   showScreen('catch-screen');
@@ -1326,6 +1330,9 @@ window.selectBall = function(i) {
   if (G.balls[i] <= 0) { toast('Inga bollar av den typen!'); return; }
   selBall = i;
   document.querySelectorAll('.bsel').forEach((b,idx) => b.classList.toggle('active', idx===i));
+  if (!meterActive && curCatch && !document.getElementById('catch-overlay').classList.contains('show')) {
+    startMeter();
+  }
 };
 
 // Throw setup
@@ -1347,8 +1354,8 @@ function startMeter() {
   const speeds = {Common:0.45,Uncommon:0.6,Rare:0.75,Epic:0.9,Legendary:1.1,Mythic:1.3};
   meterSpeed = speeds[curCatch.j.rarity] || 0.6;
   document.getElementById('throw-meter-wrap').classList.add('active');
-  document.getElementById('throw-meter-btn').style.display='block';
-  document.getElementById('throw-meter-btn').textContent = '⏺ STOPPA!';
+  // throw-meter-btn removed
+  // throw-meter-btn removed
   tickMeter();
 }
 
@@ -1386,7 +1393,7 @@ function releaseMeter() {
   cancelAnimationFrame(meterRAF);
   const zone = getMeterZone(meterPos);
   document.getElementById('throw-meter-wrap').classList.remove('active');
-  document.getElementById('throw-meter-btn').style.display = 'none';
+  // removed: null.style.display = 'none';
   // Flash zone result
   toast(zone.name + (zone.name==='Excellent!'?' 🌟':zone.name==='Nice!'?' 👍':''));
   doThrow(zone.accuracy);
@@ -1404,7 +1411,7 @@ document.getElementById('throw-meter-track').addEventListener('touchend', functi
 function doThrow(accuracy) {
   if (accuracy === undefined) accuracy = 0.5;
   if (!curCatch) return;
-  document.getElementById('throw-meter-btn').style.display='none';
+  // throw-meter-btn removed
   if (G.balls[selBall] <= 0) { toast('Inga bollar av den typen!'); return; }
   G.balls[selBall]--; G.stats.throws++; catchTries++;
   // throw-hint removed
@@ -1496,7 +1503,7 @@ function onCaught() {
   setTimeout(() => {
     const stars = ['','⭐','⭐⭐','⭐⭐⭐','✨⭐✨','🌟🌟🌟'];
     const si = Math.min(rarO.indexOf(j.rarity)+1, 5);
-    document.getElementById('co-emoji').textContent = j.icon;
+    // co-emoji removed — using canvas
     document.getElementById('co-stars').textContent = stars[si];
     const title = document.getElementById('co-title');
     title.textContent = j.rarity==='Mythic'?'⚡ MYTISK FÅNGST!':j.rarity==='Legendary'?'🌟 LEGENDARISK!':j.rarity==='Epic'?'💜 EPISK!':'✅ FÅNGAD!';
@@ -1504,6 +1511,9 @@ function onCaught() {
     document.getElementById('co-jimmie-name').textContent = j.name;
     document.getElementById('co-rewards').innerHTML =
       `<div class="co-reward-pill">+${j.xp} XP</div><div class="co-reward-pill">CP ${curCatch.j.cp}</div><div class="co-reward-pill">+3 🍬</div>`;
+    // Draw mini Jimmie on result card
+    const coC = document.getElementById('co-jimmie-canvas');
+    if(coC){ coC.width=120;coC.height=120;drawMiniJimmie(coC.getContext('2d'),120,j); }
     document.getElementById('catch-overlay').classList.add('show');
   }, 400);
   save(); renderDex();
@@ -1513,7 +1523,9 @@ function onEscaped() {
   G.stats.esc++;
   spawnParticles(catchW/2, catchH*0.35, '#ff4444', 15, 'burst');
   setTimeout(() => {
-    document.getElementById('co-emoji').textContent = '💨';
+    // co-emoji removed
+    const coC2 = document.getElementById('co-jimmie-canvas');
+    if(coC2){ coC2.width=120;coC2.height=120; const cx2=coC2.getContext('2d'); cx2.clearRect(0,0,120,120); cx2.font='80px serif'; cx2.textAlign='center'; cx2.textBaseline='middle'; cx2.fillText('💨',60,60); }
     document.getElementById('co-stars').textContent = '';
     const title = document.getElementById('co-title');
     title.textContent = 'RYMDE!'; title.style.color = '#F7544B';
@@ -1525,6 +1537,11 @@ function onEscaped() {
 }
 
 window.fleeCatch = function() { showScreen('map-screen'); curCatch=null; catchParticles=[]; };
+window.goToGarage = function() {
+  showScreen('garage-screen');
+  curCatch = null; catchParticles = [];
+};
+
 window.endCatch = function() {
   showScreen('map-screen'); curCatch=null; catchParticles=[];
   if (Math.random() < 0.2) { G.balls[0]++; toast('Hittade en SD-Boll! ⚪'); }
