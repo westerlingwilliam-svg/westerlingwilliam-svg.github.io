@@ -162,7 +162,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
   position:fixed;inset:0;
   background:rgba(0,0,0,0);
   display:none;flex-direction:column;align-items:center;justify-content:center;
-  z-index:200;padding:20px;gap:0
+  z-index:500;padding:24px;gap:0
 }
 #catch-overlay.show{display:flex;animation:co-fade-in .4s ease forwards}
 @keyframes co-fade-in{from{background:rgba(0,0,0,0)}to{background:rgba(0,0,0,0.75)}}
@@ -1338,6 +1338,7 @@ window.selectBall = function(i) {
 // Throw setup
 // ── METER MINI-GAME ──────────────────────────────────────────────
 let meterActive = false, meterPos = 0, meterDir = 1, meterSpeed = 0.6;
+let lastAccuracy = 0.5;
 let meterRAF = null;
 
 function handleMeterBtn() {
@@ -1410,6 +1411,7 @@ document.getElementById('throw-meter-track').addEventListener('touchend', functi
 
 function doThrow(accuracy) {
   if (accuracy === undefined) accuracy = 0.5;
+  lastAccuracy = accuracy;
   if (!curCatch) return;
   // throw-meter-btn removed
   if (G.balls[selBall] <= 0) { toast('Inga bollar av den typen!'); return; }
@@ -1471,15 +1473,14 @@ function onBallHit() {
     if (i >= shakes.length) {
       // Check catch
       const bonus = [1.0, 1.8, 3.5][selBall];
-      const accuracyBonus = 0.5 + accuracy * 1.5;
+      const accuracyBonus = 0.5 + lastAccuracy * 1.5;
       const chance = Math.min(0.97, curCatch.j.cr * bonus * accuracyBonus);
       if (Math.random() < chance) onCaught();
-      else if (catchTries >= 3 && Math.random() < 0.35) onEscaped();
+      else if (Math.random() < 0.10) onEscaped();
       else {
-        // throw-hint removed
-        // Miss flash
         spawnParticles(catchW/2, catchH*0.35, '#ff4444', 8, 'burst');
-        toast(curCatch.j.icon + ' Jimmie bröt sig loss!');
+        toast(curCatch.j.icon + ' Jimmie bröt sig loss! Prova igen.');
+        setTimeout(startMeter, 900);
       }
       return;
     }
