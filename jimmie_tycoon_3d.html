@@ -1993,7 +1993,7 @@ function shiftColor(hex, amount) {
 // ── JIMMIE DETAIL PANEL ─────────────────────────────────────────
 let panelJimmie = null; // {j, id}
 
-function openJimmiePanel(jimmieId) {
+window.openJimmiePanel = function(jimmieId) {
   const j = JIMMIES[jimmieId];
   if (!j || !G.caught[jimmieId]) return;
   panelJimmie = {j, id: jimmieId};
@@ -2095,23 +2095,30 @@ function renderGarage() {
     </div>`;
     return;
   }
-  grid.innerHTML = entries.map((j,idx) => {
-    const n = G.caught[j.id];
-    const bestCp = Math.floor(j.cp * 1.3);
+  // Expand: each copy gets its own card with unique instanceId
+  const cards = [];
+  entries.forEach(j => {
+    const n = G.caught[j.id] || 1;
+    for (let i = 0; i < n; i++) cards.push({j, instance: i});
+  });
+  const canvasIds = [];
+  grid.innerHTML = cards.map(({j, instance}) => {
     const rarityBg = RC[j.rarity];
-    return `<div class="gc" style="border:2px solid ${rarityBg}44;background:linear-gradient(160deg,white 55%,${rarityBg}18);box-shadow:0 3px 14px ${rarityBg}22,0 1px 4px rgba(0,0,0,0.08)">
-      <div class="gc-count" style="background:${rarityBg};color:${j.rarity==='Common'?'#333':'white'}">×${n}</div>
-      <canvas class="gc-canvas" id="gc-c-${j.id}" width="60" height="60" style="display:block;margin:0 auto 5px"></canvas>
+    const boosted = G.jimmieCP && G.jimmieCP[j.id] ? G.jimmieCP[j.id] : 0;
+    const cp = Math.floor(j.cp*(0.9+G.lv*0.02)) + (instance===0 ? boosted : 0);
+    const canvasId = 'gc-c-' + j.id + '-' + instance;
+    canvasIds.push({canvasId, j});
+    return `<div class="gc" style="border:2px solid ${rarityBg}44;background:linear-gradient(160deg,white 60%,${rarityBg}14);box-shadow:0 3px 14px ${rarityBg}33" onclick="openJimmiePanel(${j.id})">
+      <canvas class="gc-canvas" id="${canvasId}" width="60" height="60" style="display:block;margin:0 auto 4px"></canvas>
       <div class="gc-name">${j.name}</div>
       <div class="gc-rarity" style="color:${rarityBg}">${j.rarity}</div>
-      <div class="gc-cp" style="font-size:0.68rem;color:#888;font-weight:800;margin-top:3px">CP ${Math.floor(j.cp*(0.9+G.lv*0.02))}</div>
+      <div class="gc-cp" style="font-size:0.68rem;color:#888;font-weight:800;margin-top:2px">CP ${cp}</div>
     </div>`;
   }).join('');
-  // Draw mini Jimmie on each card
   setTimeout(()=>{
-    entries.forEach(j => {
-      const c2 = document.getElementById('gc-c-'+j.id);
-      if (c2) { c2.width=60;c2.height=60;drawMiniJimmie(c2.getContext('2d'), 60, j); }
+    canvasIds.forEach(({canvasId, j}) => {
+      const c2 = document.getElementById(canvasId);
+      if (c2) { c2.width=60;c2.height=60;drawMiniJimmie(c2.getContext('2d'),60,j); }
     });
   }, 50);
 }
