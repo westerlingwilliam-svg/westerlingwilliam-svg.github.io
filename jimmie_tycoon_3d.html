@@ -310,6 +310,36 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 .screen{transition:opacity .2s}
 .screen-exit{opacity:0;pointer-events:none}
 
+/* Tutorial overlay */
+#tutorial-overlay{position:fixed;inset:0;z-index:300;pointer-events:none}
+.tut-bubble{
+  position:absolute;background:rgba(10,20,40,0.94);
+  border:2px solid var(--y);border-radius:20px;
+  padding:14px 18px;max-width:280px;color:white;
+  box-shadow:0 8px 32px rgba(0,0,0,0.5);
+  pointer-events:all;
+  animation:tut-in .4s cubic-bezier(.34,1.56,.64,1)
+}
+@keyframes tut-in{from{transform:scale(0.8);opacity:0}to{transform:scale(1);opacity:1}}
+.tut-bubble h3{font-size:1rem;font-weight:900;color:var(--y);margin:0 0 6px}
+.tut-bubble p{font-size:0.8rem;line-height:1.5;opacity:0.85;margin:0 0 10px}
+.tut-arrow{font-size:2rem;text-align:center;animation:tut-bounce .7s ease-in-out infinite alternate}
+@keyframes tut-bounce{from{transform:translateY(0)}to{transform:translateY(-8px)}}
+.tut-btn{background:var(--y);color:#1a1a1a;border:none;padding:8px 20px;
+  border-radius:50px;font-weight:900;font-size:0.82rem;cursor:pointer;
+  font-family:var(--font);width:100%}
+.tut-skip{background:none;border:none;color:rgba(255,255,255,0.4);
+  font-size:0.7rem;cursor:pointer;font-family:var(--font);
+  margin-top:6px;width:100%;text-align:center;display:block}
+#tut-spotlight{position:absolute;pointer-events:none;border-radius:50%;
+  box-shadow:0 0 0 9999px rgba(0,0,0,0.6);transition:all .5s ease;
+  border:3px solid var(--y)}
+/* Animated CP bar on map Jimmies */
+.tut-highlight{animation:tut-pulse 1s ease-in-out infinite alternate}
+@keyframes tut-pulse{from{opacity:1}to{opacity:0.5}}
+/* Screen transitions */
+.screen{transition:opacity .2s}
+.screen-exit{opacity:0;pointer-events:none}
 /* Animated pulse for map jimmies */
 @keyframes map-jimmie-pop{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
 
@@ -344,7 +374,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
   <canvas id="map-canvas"></canvas>
   <div id="map-ui">
     <div id="top-hud">
-      <div class="trainer-bubble" onclick="showScreen('profile-screen')">
+      <div class="trainer-bubble" onclick="showScreenWithTut('profile-screen')">
         <div class="trainer-avatar">🕵️</div>
         <div class="trainer-info">
           <span class="trainer-name">JIMMIE-TRÄNARE</span>
@@ -361,14 +391,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
         <div id="sightings-row"><span class="no-nearby">Inga Jimmies i närheten…</span></div>
       </div>
       <div id="bottom-actions">
-        <button class="side-fab" onclick="showScreen('profile-screen')">👤</button>
+        <button class="side-fab" onclick="showScreenWithTut('profile-screen')">👤</button>
         <button id="main-ball-btn" onclick="toggleSubmenu()">
           <div class="ball-btn-inner">
             <div class="ball-btn-icon">🌸</div>
             <div class="ball-btn-lbl">Meny</div>
           </div>
         </button>
-        <button class="side-fab" onclick="showScreen('settings-screen')">⚙️</button>
+        <button class="side-fab" onclick="showScreenWithTut('settings-screen')">⚙️</button>
       </div>
     </div>
   </div>
@@ -471,7 +501,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 <!-- ── DEX ── -->
 <div id="dex-screen" class="screen">
   <div class="screen-header">
-    <button class="back-fab" onclick="showScreen('map-screen')">←</button>
+    <button class="back-fab" onclick="showScreenWithTut('map-screen')">←</button>
     <h2>📖 Jimmie-Dex</h2>
   </div>
   <div class="dex-subtitle"><span id="dex-n">0</span>/<span id="dex-t">18</span> fångade</div>
@@ -481,7 +511,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 <!-- ── BAG ── -->
 <div id="bag-screen" class="screen">
   <div class="screen-header">
-    <button class="back-fab" onclick="showScreen('map-screen')">←</button>
+    <button class="back-fab" onclick="showScreenWithTut('map-screen')">←</button>
     <h2>🎒 Väska</h2>
   </div>
   <div id="bag-list">
@@ -503,7 +533,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
     <div class="prof-xp-wrap"><div class="prof-xp-fill" id="prof-xp-fill" style="width:0%"></div></div>
     <div class="prof-xp-label"><span id="prof-xp-val">0</span> / <span id="prof-xp-max">1000</span> XP</div>
   </div>
-  <button class="back-fab" style="margin:12px 16px;background:white;box-shadow:0 2px 8px rgba(0,0,0,0.1)" onclick="showScreen('map-screen')">← Tillbaka</button>
+  <button class="back-fab" style="margin:12px 16px;background:white;box-shadow:0 2px 8px rgba(0,0,0,0.1)" onclick="showScreenWithTut('map-screen')">← Tillbaka</button>
   <div id="prof-stats">
     <div class="ps"><div class="ps-val" id="ps-caught">0</div><div class="ps-lbl">Fångade</div></div>
     <div class="ps"><div class="ps-val" id="ps-seen">0</div><div class="ps-lbl">Sedda</div></div>
@@ -535,14 +565,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 
 <!-- ── NAV ── -->
 <div id="nav">
-  <div class="nb active" id="nb-map" onclick="showScreen('map-screen')">
+  <div class="nb active" id="nb-map" onclick="showScreenWithTut('map-screen')">
     <div class="nb-icon">🗺️</div><div class="nb-lbl">Karta</div>
   </div>
   <div id="nb-center">
     <button id="nb-center-btn" onclick="toggleSubmenu()">🌸</button>
     <div class="nb-center-lbl" id="nb-center-lbl">JIMMIE</div>
   </div>
-  <div class="nb" id="nb-settings" onclick="showScreen('settings-screen')">
+  <div class="nb" id="nb-settings" onclick="showScreenWithTut('settings-screen')">
     <div class="nb-icon">⚙️</div><div class="nb-lbl">Inställningar</div>
   </div>
 </div>
@@ -550,7 +580,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 <!-- ── GARAGE SCREEN ── -->
 <div id="garage-screen" class="screen">
   <div class="screen-header">
-    <button class="back-fab" onclick="showScreen('map-screen')">←</button>
+    <button class="back-fab" onclick="showScreenWithTut('map-screen')">←</button>
     <h2>🏠 Jimmie Garage</h2>
   </div>
   <div style="padding:10px 16px 0;display:flex;justify-content:space-between;align-items:center">
@@ -563,7 +593,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 <!-- ── SETTINGS SCREEN ── -->
 <div id="settings-screen" class="screen">
   <div class="screen-header">
-    <button class="back-fab" onclick="showScreen('map-screen')">←</button>
+    <button class="back-fab" onclick="showScreenWithTut('map-screen')">←</button>
     <h2>⚙️ Inställningar</h2>
   </div>
   <div style="flex:1;overflow-y:auto;padding:16px 0 90px">
@@ -622,35 +652,39 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
   <button class="lvl-dismiss" onclick="document.getElementById('lvl-splash').classList.remove('show')">OKEJ!</button>
 </div>
 
+<div id="tutorial-overlay">
+  <div id="tut-spotlight" style="display:none"></div>
+</div>
+
 <div id="toast"></div>
 
 <script>
 'use strict';
 const JIMMIES=[
-  {id:0,name:'Lill-Jimmie',icon:'👶',rarity:'Common',col:'#9e9e9e',cp:12,cr:0.90,xp:100},
-  {id:1,name:'Jimmie på Promenad',icon:'🚶',rarity:'Common',col:'#9e9e9e',cp:18,cr:0.85,xp:100},
-  {id:2,name:'Jimmie i Kö',icon:'🧍',rarity:'Common',col:'#888',cp:15,cr:0.87,xp:100},
-  {id:3,name:'Wille',icon:'💻',rarity:'Common',col:'#77aa77',cp:22,cr:0.82,xp:100},
-  {id:4,name:'SD-Micke Jr',icon:'🚩',rarity:'Uncommon',col:'#4ade80',cp:45,cr:0.65,xp:200},
-  {id:5,name:'Jimmie på Mikrofon',icon:'🎤',rarity:'Uncommon',col:'#34d399',cp:55,cr:0.62,xp:200},
-  {id:6,name:'Jimmie Sölvesborg',icon:'⚽',rarity:'Uncommon',col:'#22c55e',cp:60,cr:0.60,xp:200},
-  {id:7,name:'Jimmie med Hjälm',icon:'⛑️',rarity:'Rare',col:'#60a5fa',cp:120,cr:0.40,xp:500},
-  {id:8,name:'Jimmie Festfixaren',icon:'🎉',rarity:'Rare',col:'#38bdf8',cp:145,cr:0.38,xp:500},
-  {id:9,name:'Jimmie i Hatt',icon:'🎩',rarity:'Rare',col:'#7dd3fc',cp:130,cr:0.42,xp:500},
-  {id:10,name:'Richard Jomshof',icon:'📜',rarity:'Rare',col:'#93c5fd',cp:160,cr:0.35,xp:500},
-  {id:11,name:'SDmicke Deluxe',icon:'👑',rarity:'Epic',col:'#c084fc',cp:280,cr:0.20,xp:1000},
-  {id:12,name:'Jimmie i Kostym',icon:'🕴️',rarity:'Epic',col:'#a855f7',cp:320,cr:0.18,xp:1000},
-  {id:13,name:'Oscar Sjöstedt',icon:'💰',rarity:'Epic',col:'#d946ef',cp:300,cr:0.22,xp:1000},
-  {id:14,name:'Jimmie från Sölve',icon:'🦸',rarity:'Legendary',col:'#FFCB05',cp:600,cr:0.08,xp:2000},
-  {id:15,name:'Super-SD-Jimmie',icon:'🌟',rarity:'Legendary',col:'#ffd700',cp:750,cr:0.06,xp:2000},
-  {id:16,name:'Jimmie Åkesson',icon:'⭐',rarity:'Legendary',col:'#FFCB05',cp:900,cr:0.05,xp:3000},
-  {id:17,name:'JIMMIE ETERNAL',icon:'🔥',rarity:'Mythic',col:'#ff2244',cp:9999,cr:0.01,xp:9999},
+  {id:0,name:'Lill-Jimmie',icon:'👶',rarity:'Common',col:'#9e9e9e',cp:12,cr:0.90,xp:30},
+  {id:1,name:'Jimmie på Promenad',icon:'🚶',rarity:'Common',col:'#9e9e9e',cp:18,cr:0.85,xp:30},
+  {id:2,name:'Jimmie i Kö',icon:'🧍',rarity:'Common',col:'#888',cp:15,cr:0.87,xp:30},
+  {id:3,name:'Wille',icon:'💻',rarity:'Common',col:'#77aa77',cp:22,cr:0.82,xp:30},
+  {id:4,name:'SD-Micke Jr',icon:'🚩',rarity:'Uncommon',col:'#4ade80',cp:45,cr:0.65,xp:60},
+  {id:5,name:'Jimmie på Mikrofon',icon:'🎤',rarity:'Uncommon',col:'#34d399',cp:55,cr:0.62,xp:60},
+  {id:6,name:'Jimmie Sölvesborg',icon:'⚽',rarity:'Uncommon',col:'#22c55e',cp:60,cr:0.60,xp:60},
+  {id:7,name:'Jimmie med Hjälm',icon:'⛑️',rarity:'Rare',col:'#60a5fa',cp:120,cr:0.40,xp:120},
+  {id:8,name:'Jimmie Festfixaren',icon:'🎉',rarity:'Rare',col:'#38bdf8',cp:145,cr:0.38,xp:120},
+  {id:9,name:'Jimmie i Hatt',icon:'🎩',rarity:'Rare',col:'#7dd3fc',cp:130,cr:0.42,xp:120},
+  {id:10,name:'Richard Jomshof',icon:'📜',rarity:'Rare',col:'#93c5fd',cp:160,cr:0.35,xp:120},
+  {id:11,name:'SDmicke Deluxe',icon:'👑',rarity:'Epic',col:'#c084fc',cp:280,cr:0.20,xp:300},
+  {id:12,name:'Jimmie i Kostym',icon:'🕴️',rarity:'Epic',col:'#a855f7',cp:320,cr:0.18,xp:300},
+  {id:13,name:'Oscar Sjöstedt',icon:'💰',rarity:'Epic',col:'#d946ef',cp:300,cr:0.22,xp:300},
+  {id:14,name:'Jimmie från Sölve',icon:'🦸',rarity:'Legendary',col:'#FFCB05',cp:600,cr:0.08,xp:600},
+  {id:15,name:'Super-SD-Jimmie',icon:'🌟',rarity:'Legendary',col:'#ffd700',cp:750,cr:0.06,xp:600},
+  {id:16,name:'Jimmie Åkesson',icon:'⭐',rarity:'Legendary',col:'#FFCB05',cp:900,cr:0.05,xp:800},
+  {id:17,name:'JIMMIE ETERNAL',icon:'🔥',rarity:'Mythic',col:'#ff2244',cp:9999,cr:0.01,xp:1500},
 ];
 const RC={Common:'#9e9e9e',Uncommon:'#4ade80',Rare:'#60a5fa',Epic:'#c084fc',Legendary:'#FFCB05',Mythic:'#ff2244'};
 const RW={Common:50,Uncommon:28,Rare:14,Epic:5,Legendary:2,Mythic:1};
 
-const SAVE='jgo_v3';
-let G={lv:1,xp:0,xpMax:1000,balls:[20,5,1],candy:0,seen:{},caught:{},trainerName:'Jimmie-Tränare',stats:{km:0,throws:0,esc:0,total:0,best:''}};
+const SAVE='jgo_v4';
+let G={lv:1,xp:0,xpMax:200,tutorialDone:false,balls:[20,5,1],candy:0,seen:{},caught:{},trainerName:'Jimmie-Tränare',stats:{km:0,throws:0,esc:0,total:0,best:''}};
 function save(){try{localStorage.setItem(SAVE,JSON.stringify(G));}catch(e){}}
 function load(){try{const s=localStorage.getItem(SAVE);if(s)G={...G,...JSON.parse(s)};}catch(e){}}
 
@@ -685,22 +719,27 @@ function gt(tx,ty){
 }
 
 const MAP_COLORS={
-  grass:['#8DC878','#87C270','#7FBA68'],
-  road:'#E8E0D0',
-  roadLine:'#D4C9B2',
-  water:'#7DC5E8',
-  waterShimmer:'#96D4F0',
-  building:'#C8C4BC',
-  buildingDark:'#B8B4AC',
-  buildingWindow:'rgba(255,230,80,0.7)',
-  park:'#A8D87A',
+  grass:['#6ab04c','#74c24f','#5a9e42'],
+  grassDark:'#4e8a38',
+  road:'#b5a99a',
+  roadLine:'rgba(255,255,255,0.5)',
+  roadBorder:'#9e9488',
+  water:'#3a9bd5',
+  waterShimmer:'#5ab4e8',
+  waterDeep:'#2a7bb5',
+  building:'#9e9e9e',
+  buildingRoof:'#7a7a7a',
+  buildingWindow:'rgba(255,230,100,0.85)',
+  park:'#5eb84d',
+  parkTree:'#4a9e3d',
 };
 
 let px=0,py=0;
 const wJs=[];
 const stops=[];
+const WORLD_R = 1800;  // play area radius
 let spawnT=0;
-let stopSpawnDone=false;
+const MAX_WJS = 5;     // max simultaneous wanderers
 
 function spawnWJ(){
   const a=Math.random()*Math.PI*2,d=120+Math.random()*280;
@@ -722,56 +761,83 @@ function drawMap(){
       const tile=gt(tx,ty);
       const sx=tx*TILE+ox,sy=ty*TILE+oy;
       if(tile.t==='road'){
-        mctx.fillStyle=MAP_COLORS.road;mctx.fillRect(sx,sy,TILE,TILE);
-        // Center stripe
-        mctx.fillStyle=MAP_COLORS.roadLine;
-        mctx.fillRect(sx+TILE/2-1,sy,2,TILE);
-        mctx.fillRect(sx,sy+TILE/2-1,TILE,2);
+        mctx.fillStyle=MAP_COLORS.roadBorder;mctx.fillRect(sx,sy,TILE,TILE);
+        mctx.fillStyle=MAP_COLORS.road;mctx.fillRect(sx+1,sy+1,TILE-2,TILE-2);
+        // Dashed center lines
+        mctx.strokeStyle=MAP_COLORS.roadLine;mctx.lineWidth=1.5;
+        mctx.setLineDash([6,6]);
+        mctx.beginPath();mctx.moveTo(sx+TILE/2,sy);mctx.lineTo(sx+TILE/2,sy+TILE);mctx.stroke();
+        mctx.beginPath();mctx.moveTo(sx,sy+TILE/2);mctx.lineTo(sx+TILE,sy+TILE/2);mctx.stroke();
+        mctx.setLineDash([]);
       } else if(tile.t==='water'){
-        mctx.fillStyle=MAP_COLORS.water;mctx.fillRect(sx,sy,TILE,TILE);
-        // shimmer
-        mctx.fillStyle=MAP_COLORS.waterShimmer;
-        mctx.fillRect(sx+4,sy+6,TILE-18,4);
-        mctx.fillRect(sx+10,sy+18,TILE-22,3);
-        mctx.fillRect(sx+2,sy+28,TILE-14,3);
+        // Gradient water
+        const wg=mctx.createLinearGradient(sx,sy,sx+TILE,sy+TILE);
+        wg.addColorStop(0,MAP_COLORS.waterDeep);wg.addColorStop(1,MAP_COLORS.water);
+        mctx.fillStyle=wg;mctx.fillRect(sx,sy,TILE,TILE);
+        // Animated shimmer
+        const wt=Date.now()/2000;
+        mctx.fillStyle='rgba(255,255,255,0.12)';
+        mctx.fillRect(sx+4+Math.sin(wt+sx*0.01)*3,sy+7,TILE-16,3);
+        mctx.fillRect(sx+8+Math.sin(wt*1.3+sy*0.01)*3,sy+18,TILE-20,2);
+        mctx.fillRect(sx+2+Math.sin(wt*0.7+sx*0.02)*3,sy+28,TILE-10,2);
       } else if(tile.t==='building'){
-        mctx.fillStyle=MAP_COLORS.building;mctx.fillRect(sx+2,sy+2,TILE-4,TILE-4);
-        mctx.fillStyle=MAP_COLORS.buildingDark;mctx.fillRect(sx+2,sy+2,TILE-4,5);
-        // windows
-        const wc=(tile.h%3)+2;
+        // Building with colored roof
+        const bh=(tile.h||0);
+        const roofCols=['#8a7a9a','#7a8a9a','#9a8a7a','#8a9a7a'];
+        mctx.fillStyle=roofCols[bh%4];mctx.fillRect(sx+1,sy+1,TILE-2,TILE-2);
+        mctx.fillStyle=MAP_COLORS.building;mctx.fillRect(sx+2,sy+6,TILE-4,TILE-7);
+        // Shadow
+        mctx.fillStyle='rgba(0,0,0,0.15)';mctx.fillRect(sx+TILE-5,sy+6,5,TILE-7);
+        // Windows (lit yellow at night)
+        const wc=(bh%3)+2;
         for(let wi=0;wi<wc;wi++){
           mctx.fillStyle=MAP_COLORS.buildingWindow;
-          mctx.fillRect(sx+5+wi*12,sy+12,8,6);
-          mctx.fillRect(sx+5+wi*12,sy+24,8,6);
+          mctx.fillRect(sx+4+wi*11,sy+10,7,5);
+          mctx.fillRect(sx+4+wi*11,sy+22,7,5);
         }
       } else if(tile.t==='park'){
         mctx.fillStyle=MAP_COLORS.park;mctx.fillRect(sx,sy,TILE,TILE);
-        // trees
-        mctx.font='16px serif';mctx.textAlign='center';mctx.textBaseline='middle';
-        mctx.fillText('🌳',sx+TILE*0.3,sy+TILE*0.4);
-        mctx.fillText('🌿',sx+TILE*0.7,sy+TILE*0.65);
+        // Path through park
+        mctx.fillStyle='rgba(180,160,120,0.4)';
+        mctx.fillRect(sx+TILE/2-3,sy,6,TILE);
+        // Tree circles
+        mctx.fillStyle=MAP_COLORS.parkTree;
+        mctx.beginPath();mctx.arc(sx+TILE*0.28,sy+TILE*0.35,8,0,Math.PI*2);mctx.fill();
+        mctx.beginPath();mctx.arc(sx+TILE*0.72,sy+TILE*0.65,7,0,Math.PI*2);mctx.fill();
+        mctx.fillStyle='rgba(255,255,255,0.15)';
+        mctx.beginPath();mctx.arc(sx+TILE*0.28-2,sy+TILE*0.35-2,3,0,Math.PI*2);mctx.fill();
       } else {
-        const vi=Math.floor(tile.v*30)%3;
+        // Grass with subtle variation
+        const vi=Math.floor((tile.v||0)*30)%3;
         mctx.fillStyle=MAP_COLORS.grass[vi];mctx.fillRect(sx,sy,TILE,TILE);
-        // Grass tufts
-        if(vi===0){mctx.fillStyle='rgba(0,0,0,0.04)';mctx.fillRect(sx+3,sy+TILE-6,4,4);}
+        // Subtle grid lines for texture
+        mctx.fillStyle='rgba(0,0,0,0.04)';
+        mctx.fillRect(sx,sy,TILE,1);
+        mctx.fillRect(sx,sy,1,TILE);
       }
     }
   }
 
   // Player glow rings
+  // Player range rings
+  const t2=Date.now()/1000;
+  [90,55].forEach((r,ri)=>{
+    const pulse=ri===0?Math.sin(t2*1.5)*4:0;
+    mctx.beginPath();mctx.arc(W/2,H/2,r+pulse,0,Math.PI*2);
+    mctx.strokeStyle=`rgba(59,76,202,${0.3-ri*0.1})`;mctx.lineWidth=2-ri*0.5;mctx.stroke();
+  });
   const grd=mctx.createRadialGradient(W/2,H/2,0,W/2,H/2,90);
-  grd.addColorStop(0,'rgba(59,76,202,0.10)');grd.addColorStop(1,'rgba(59,76,202,0)');
+  grd.addColorStop(0,'rgba(59,76,202,0.12)');grd.addColorStop(1,'rgba(59,76,202,0)');
   mctx.beginPath();mctx.arc(W/2,H/2,90,0,Math.PI*2);mctx.fillStyle=grd;mctx.fill();
-  mctx.beginPath();mctx.arc(W/2,H/2,90,0,Math.PI*2);mctx.strokeStyle='rgba(59,76,202,0.25)';mctx.lineWidth=2;mctx.stroke();
-  mctx.beginPath();mctx.arc(W/2,H/2,45,0,Math.PI*2);mctx.strokeStyle='rgba(59,76,202,0.15)';mctx.lineWidth=1.5;mctx.stroke();
 
   // World Jimmies
   const t=Date.now()/1000;
   nearbyArr=[];
   for(let i=wJs.length-1;i>=0;i--){
     const w=wJs[i];w.life-=1/60;w.w+=0.025;
-    if(w.life<=0){wJs.splice(i,1);continue;}
+    // Despawn if far from player or expired
+    const wdx=px-w.x,wdy=py-w.y;
+    if(w.life<=0 || Math.sqrt(wdx*wdx+wdy*wdy)>420){wJs.splice(i,1);continue;}
     const sx=w.x+ox,sy=w.y+oy;
     if(sx<-80||sx>W+80||sy<-120||sy>H+40)continue;
     const bobY=Math.sin(w.w)*4;
@@ -788,7 +854,17 @@ function drawMap(){
     // Emoji
     mctx.font='26px serif';mctx.textAlign='center';mctx.textBaseline='middle';
     mctx.fillText(w.j.icon,sx,sy+bobY);
-    // Rarity ring
+    // CP label
+    mctx.font='bold 11px '+(getComputedStyle?getComputedStyle(document.body).fontFamily:'Arial');
+    mctx.textAlign='center';
+    // CP bubble
+    const cpTxt='CP '+w.cp;
+    const cpW=mctx.measureText(cpTxt).width+10;
+    mctx.fillStyle='rgba(0,0,0,0.6)';
+    mctx.beginPath();mctx.roundRect(sx-cpW/2,sy+bobY-38,cpW,18,6);mctx.fill();
+    mctx.fillStyle='white';mctx.textBaseline='middle';
+    mctx.fillText(cpTxt,sx,sy+bobY-29);
+    // Rarity dot
     mctx.beginPath();mctx.arc(sx+12,sy+bobY-12,5,0,Math.PI*2);
     mctx.fillStyle=RC[w.j.rarity];mctx.fill();
     mctx.strokeStyle='white';mctx.lineWidth=1.5;mctx.stroke();
@@ -796,6 +872,34 @@ function drawMap(){
     if(dist<110)nearbyArr.push({w,dist});
   }
   nearbyArr.sort((a,b)=>a.dist-b.dist);
+
+  // World border — draw AFTER tiles so map stays visible inside
+  const bx=0+ox, by=0+oy;
+  // Dark fog outside the play area (donut shape using clip)
+  mctx.save();
+  mctx.beginPath();
+  // Full canvas rect, then cut out play circle (even-odd rule = donut)
+  mctx.rect(0,0,W,H);
+  mctx.arc(bx,by,WORLD_R,0,Math.PI*2,true);
+  mctx.fillStyle='rgba(0,0,0,0.72)';
+  mctx.fill('evenodd');
+  mctx.restore();
+  // Border ring glow
+  mctx.beginPath(); mctx.arc(bx,by,WORLD_R,0,Math.PI*2);
+  mctx.strokeStyle='rgba(255,203,5,0.85)'; mctx.lineWidth=6;
+  mctx.setLineDash([22,14]); mctx.stroke(); mctx.setLineDash([]);
+  // Inner soft glow on border
+  mctx.beginPath(); mctx.arc(bx,by,WORLD_R-3,0,Math.PI*2);
+  mctx.strokeStyle='rgba(255,203,5,0.2)'; mctx.lineWidth=18; mctx.stroke();
+  // Warning when near edge
+  const playerDist=Math.sqrt(px*px+py*py);
+  if(playerDist > WORLD_R-180){
+    const alpha=Math.min(0.4,(playerDist-(WORLD_R-180))/180);
+    const warnG=mctx.createRadialGradient(W/2,H/2,0,W/2,H/2,Math.min(W,H)*0.6);
+    warnG.addColorStop(0,'transparent');
+    warnG.addColorStop(1,`rgba(255,80,0,${alpha})`);
+    mctx.fillStyle=warnG; mctx.fillRect(0,0,W,H);
+  }
 
   // Jimmie Stops
   const now2 = Date.now()/1000;
@@ -871,7 +975,7 @@ function spinStop(idx) {
   else { G.balls[2]+=1; reward='+1 Jimmie-Boll! Sallsynt!'; }
   G.candy+=1;
   toast('Stop: ' + s.label + ' · ' + reward);
-  addXP(50);
+  addXP(80);
   updateHUD(); save();
 }
 
@@ -933,12 +1037,18 @@ function loop(t){
     if(ks['ArrowLeft']||ks['a'])mx=-1;if(ks['ArrowRight']||ks['d'])mx=1;
     if(ks['ArrowUp']||ks['w'])my=-1;if(ks['ArrowDown']||ks['s'])my=1;
     const spd=110;
-    px+=mx*spd*dt;py+=my*spd*dt;
+    const newPx=px+mx*spd*dt, newPy=py+my*spd*dt;
+    const distFromCenter=Math.sqrt(newPx*newPx+newPy*newPy);
+    if(distFromCenter<WORLD_R){px=newPx;py=newPy;}
+    else{// Slide along border
+      const ang=Math.atan2(newPy,newPx);
+      px=(WORLD_R-2)*Math.cos(ang);py=(WORLD_R-2)*Math.sin(ang);
+    }
     const moved=Math.sqrt((mx*spd*dt)**2+(my*spd*dt)**2);
     distAcc+=moved;
     if(distAcc>5){G.stats.km+=distAcc/1000;distAcc=0;}
     spawnT-=dt;
-    if(spawnT<=0){spawnT=5+Math.random()*9;spawnWJ();}
+    if(spawnT<=0){spawnT=12+Math.random()*18;spawnWJ();} // slow spawn
     drawMap();updateHUD();
   }
   if(document.getElementById('catch-screen').classList.contains('active')){
@@ -1552,7 +1662,7 @@ function addXP(n) {
   G.xp += n;
   if (G.xp >= G.xpMax) {
     G.xp -= G.xpMax; G.lv++;
-    G.xpMax = Math.floor(G.xpMax * 1.5);
+    G.xpMax = Math.floor(G.xpMax * 1.3);
     G.balls[0] += 10;
     if (G.lv%5===0) G.balls[1] += 3;
     if (G.lv%10===0) G.balls[2] += 1;
@@ -1745,7 +1855,7 @@ function renderGarage() {
       <canvas class="gc-canvas" id="gc-c-${j.id}" width="60" height="60" style="display:block;margin:0 auto 5px"></canvas>
       <div class="gc-name">${j.name}</div>
       <div class="gc-rarity" style="color:${rarityBg}">${j.rarity}</div>
-      <div class="gc-cp" style="font-size:0.62rem;color:#999;font-weight:700;margin-top:2px">CP ${Math.floor(j.cp*0.9)}–${bestCp}</div>
+      <div class="gc-cp" style="font-size:0.68rem;color:#888;font-weight:800;margin-top:3px">CP ${Math.floor(j.cp*(0.9+G.lv*0.02))}</div>
     </div>`;
   }).join('');
   // Draw mini Jimmie on each card
@@ -1844,20 +1954,181 @@ function toast(msg){
   clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2500);
 }
 
+
+// ── TUTORIAL ─────────────────────────────────────────────────────
+let tutStep = 0;
+let tutBubble = null;
+let tutSpawnedJimmie = false;
+
+const STEPS = [
+  // Step 0: Welcome
+  { title:'🌸 Välkommen till Jimmie GO!',
+    text:'Fånga Jimmie Åkesson och hans SD-kollegor! Vi ska lära dig allt.',
+    pos:'center', btn:'Kom igång →', anchor:null },
+  // Step 1: Move
+  { title:'🕹️ Flytta dig',
+    text:'Drag joysticken nere till vänster för att röra dig. Prova nu!',
+    pos:'above-joystick', btn:null, anchor:'joystick-zone', waitFn:()=>Math.abs(px)>30||Math.abs(py)>30 },
+  // Step 2: Stops
+  { title:'📍 Jimmie Stops',
+    text:'Gul-streckade discar är Jimmie Stops. Gå nära en för att snurra den och få bollar! De lyser när de är redo.',
+    pos:'top', btn:'Fattar!', anchor:null },
+  // Step 3: Sightings
+  { title:'👀 Jimmies i närheten',
+    text:'Det här kortet visar Jimmies nära dig. Tryck på ett chip — eller vänta tills en popup dyker upp!',
+    pos:'above-sightings', btn:'OK!', anchor:'sightings-card' },
+  // Step 4: Spawn one for tutorial
+  { title:'⚽ Fånga en Jimmie!',
+    text:'Vi har placerat en Jimmie nära dig. Gå fram och tryck på popupen för att starta fångsten!',
+    pos:'top', btn:null, anchor:null, waitFn:()=>document.getElementById('catch-screen').classList.contains('active'), onShow: spawnTutJimmie },
+  // Step 5: In catch screen — select ball
+  { title:'🎯 Välj en boll',
+    text:'Välj vilken boll du vill använda. SD-Bollen är standard. Tryck på den!',
+    pos:'catch-top', btn:null, anchor:null, screen:'catch',
+    waitFn:()=>document.getElementById('catch-overlay').classList.contains('show') },
+  // Step 6: After catch
+  { title:'🏆 Fångad!',
+    text:'Bra jobbat! Du fångade din första Jimmie. Tryck "Till Jimmie Garage" för att se honom.',
+    pos:'catch-top', btn:null, anchor:null, screen:'catch',
+    waitFn:()=>document.getElementById('garage-screen').classList.contains('active') },
+  // Step 7: Garage
+  { title:'🏠 Jimmie Garage',
+    text:'Här ser du alla dina fångade Jimmies med CP och rarity. Fånga fler för att fylla garaget!',
+    pos:'top', btn:'Klart!', anchor:null, screen:'garage', last:true },
+];
+
+function tutVisible() {
+  return tutStep >= 0 && tutStep < STEPS.length && !G.tutorialDone;
+}
+
+function showTutStep() {
+  if (!tutVisible()) return;
+  const step = STEPS[tutStep];
+
+  // Remove old bubble
+  if (tutBubble) { tutBubble.remove(); tutBubble = null; }
+
+  // Only show if on correct screen
+  const onCatch = document.getElementById('catch-screen').classList.contains('active');
+  const onGarage = document.getElementById('garage-screen').classList.contains('active');
+  const onMap = document.getElementById('map-screen').classList.contains('active');
+  if (step.screen === 'catch' && !onCatch) return;
+  if (step.screen === 'garage' && !onGarage) return;
+  if (!step.screen && !onMap && !onCatch && !onGarage) return;
+
+  // onShow callback
+  if (step.onShow) step.onShow();
+
+  // Spotlight
+  const spot = document.getElementById('tut-spotlight');
+  if (step.anchor) {
+    const el = document.getElementById(step.anchor);
+    if (el) {
+      const r = el.getBoundingClientRect(), pad = 12;
+      spot.style.cssText = `display:block;left:${r.left-pad}px;top:${r.top-pad}px;width:${r.width+pad*2}px;height:${r.height+pad*2}px;border-radius:${Math.min(r.width,r.height)/2+pad}px`;
+    }
+  } else {
+    spot.style.display = 'none';
+  }
+
+  // Build bubble
+  const div = document.createElement('div');
+  div.className = 'tut-bubble';
+  div.style.position = 'fixed';
+  div.style.zIndex = '400';
+  div.innerHTML = `<h3>${step.title}</h3><p>${step.text}</p>` +
+    (step.btn ? `<button class="tut-btn" onclick="nextTutStep()">${step.btn}</button>` : '') +
+    (step.waitFn ? `<div style="font-size:0.7rem;color:rgba(255,255,255,0.4);text-align:center;margin-top:6px">↑ Utför för att fortsätta</div>` : '') +
+    `<button class="tut-skip" onclick="endTutorial()">Hoppa över</button>`;
+
+  // Position bubble
+  const W2=window.innerWidth, H2=window.innerHeight;
+  if (step.pos==='center') {
+    div.style.cssText += `;left:50%;top:50%;transform:translate(-50%,-50%)`;
+  } else if (step.pos==='top') {
+    div.style.cssText += `;left:50%;top:80px;transform:translateX(-50%)`;
+  } else if (step.pos==='above-joystick') {
+    div.style.cssText += `;left:14px;bottom:${H2*0.38}px`;
+  } else if (step.pos==='above-sightings') {
+    div.style.cssText += `;left:50%;bottom:220px;transform:translateX(-50%)`;
+  } else if (step.pos==='catch-top') {
+    div.style.cssText += `;left:50%;top:140px;transform:translateX(-50%)`;
+  }
+
+  document.getElementById('tutorial-overlay').appendChild(div);
+  tutBubble = div;
+}
+
+function nextTutStep() {
+  tutStep++;
+  if (tutStep >= STEPS.length) { endTutorial(); return; }
+  showTutStep();
+}
+
+function endTutorial() {
+  G.tutorialDone = true;
+  tutStep = -1;
+  if (tutBubble) { tutBubble.remove(); tutBubble = null; }
+  document.getElementById('tut-spotlight').style.display = 'none';
+  save();
+  toast('Tutorial klar! Lycka till! 🌸');
+}
+
+function spawnTutJimmie() {
+  if (tutSpawnedJimmie) return;
+  tutSpawnedJimmie = true;
+  const j = JIMMIES[0]; // Lill-Jimmie, easiest
+  wJs.push({x:px+60, y:py-40, j, cp:j.cp, w:0, life:999});
+}
+
+// Poll for waitFn conditions
+setInterval(() => {
+  if (!tutVisible()) return;
+  const step = STEPS[tutStep];
+  if (step && step.waitFn && step.waitFn()) {
+    tutStep++;
+    setTimeout(showTutStep, 600);
+  }
+}, 500);
+
+// Re-show bubble when switching to catch/garage screens during tutorial
+const _origShowScreen = showScreen;
+function showScreenWithTut(id) {
+  _origShowScreen(id);
+  if (tutVisible()) setTimeout(showTutStep, 300);
+}
+
+function startTutorial() {
+  if (G.tutorialDone) return;
+  tutStep = 0;
+  setTimeout(showTutStep, 900);
+}
+
 // ── INIT ────────────────────────────────────────────────────────
 load();buildW();setTimeout(initBallCanvases,100);
-for(let i=0;i<6;i++)spawnWJ();
+setTimeout(startTutorial, 800);
+for(let i=0;i<3;i++)spawnWJ();
 // Spawn Jimmie Stops around start
-for(let i=0;i<8;i++){
-  const a=Math.random()*Math.PI*2, d=80+Math.random()*400;
-  stops.push({
-    x:Math.cos(a)*d, y:Math.sin(a)*d,
-    cooldown:0, maxCd:30, // 30 sec cooldown
-    col:['#3B4CCA','#22c55e','#F7544B','#a855f7','#FFCB05'][i%5],
-    label:['SD-Valstuga','Riksdagen','Sölvesborg Torg','SD-Kontor','Jimmie Staty','Folkhemmet','Partihuset','SD-Arena'][i],
-    spinning:false, spinAngle:0
-  });
-}
+const STOP_DEFS=[
+  {x:0,    y:0,    col:'#FFCB05',label:'Riksdagen'},
+  {x:280,  y:-120, col:'#3B4CCA',label:'SD-Kontor'},
+  {x:-300, y:80,   col:'#22c55e',label:'Folkhemmet'},
+  {x:120,  y:320,  col:'#F7544B',label:'Sölvesborg Torg'},
+  {x:-180, y:-280, col:'#a855f7',label:'Jimmie Staty'},
+  {x:500,  y:200,  col:'#3B4CCA',label:'Partihuset'},
+  {x:-500, y:-100, col:'#22c55e',label:'SD-Arena'},
+  {x:200,  y:-500, col:'#FFCB05',label:'Vallokal'},
+  {x:-200, y:500,  col:'#F7544B',label:'Tryckeri'},
+  {x:650,  y:-350, col:'#a855f7',label:'SD-Valstuga'},
+  {x:-650, y:350,  col:'#3B4CCA',label:'Ungdomsförbundet'},
+  {x:800,  y:100,  col:'#22c55e',label:'Debattsalen'},
+  {x:-800, y:-200, col:'#FFCB05',label:'Mottagningen'},
+  {x:100,  y:800,  col:'#F7544B',label:'Valstugan'},
+  {x:-100, y:-800, col:'#a855f7',label:'Kampanjhuset'},
+];
+STOP_DEFS.forEach(def=>{
+  stops.push({...def,cooldown:0,maxCd:25,spinning:false,spinAngle:0});
+});
 setInterval(()=>{if(G.balls.reduce((a,b)=>a+b,0)<4){G.balls[0]+=5;toast('SD-Bollar påfyllda! ⚪');updateHUD();}},120000);
 updateHUD();renderDex();
 </script>
