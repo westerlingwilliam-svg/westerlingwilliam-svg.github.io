@@ -379,11 +379,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 
 /* Garage screen */
 #garage-screen{background:#f2f2f7}
-#garage-grid{flex:1;overflow-y:auto;padding:12px 10px 100px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.gc{background:white;border-radius:18px;padding:12px 6px 10px;text-align:center;box-shadow:0 3px 12px rgba(0,0,0,0.08);position:relative;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s;overflow:hidden}
+#garage-grid{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 10px 100px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-content:start}
+.gc{background:white;border-radius:18px;overflow:hidden;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s;position:relative;display:flex;flex-direction:column}
 .gc::before{content:"";position:absolute;inset:0;opacity:0.06;background:radial-gradient(circle at 30% 20%,white,transparent 60%);pointer-events:none}
 .gc:active{transform:scale(0.94);box-shadow:0 1px 4px rgba(0,0,0,0.1)}
-.gc-canvas{display:block;margin:0 auto 8px}
+.gc-canvas{display:block;width:100%}
 .gc-name{font-size:0.58rem;font-weight:800;color:#1a1a1a;line-height:1.3}
 .gc-cp{font-size:0.6rem;font-weight:700;color:#888;margin-top:2px}
 .gc-count{position:absolute;top:6px;right:6px;font-size:0.55rem;font-weight:900;padding:2px 6px;border-radius:50px;color:white}
@@ -809,7 +809,7 @@ const RW={Common:50,Uncommon:28,Rare:14,Epic:5,Legendary:2,Mythic:1};
 const SAVE='jgo_v4';
 let G={lv:1,xp:0,xpMax:200,tutorialDone:false,balls:[20,5,1],candy:{Common:0,Uncommon:0,Rare:0,Epic:0,Legendary:0,Mythic:0},jimmieCP:{},seen:{},caught:{},trainerName:'Jimmie-Tränare',stats:{km:0,throws:0,esc:0,total:0,best:''}};
 function save(){try{localStorage.setItem(SAVE,JSON.stringify(G));}catch(e){}}
-function load(){try{const s=localStorage.getItem(SAVE);if(s)G={...G,...JSON.parse(s)};}catch(e){}}
+function load(){try{const s=localStorage.getItem(SAVE);if(s){G={...G,...JSON.parse(s)};if(typeof G.candy!=='object')G.candy={Common:0,Uncommon:0,Rare:0,Epic:0,Legendary:0,Mythic:0};if(!G.jimmieCP)G.jimmieCP={};}}catch(e){}}
 
 let weights=[];
 function buildW(){weights=[];JIMMIES.forEach((j,i)=>{const w=RW[j.rarity]||1;for(let k=0;k<w;k++)weights.push(i);});}
@@ -1017,7 +1017,8 @@ function drawMap(){
     const cpTxt='CP '+w.cp;
     const cpW=mctx.measureText(cpTxt).width+10;
     mctx.fillStyle='rgba(0,0,0,0.6)';
-    mctx.beginPath();mctx.roundRect(sx-cpW/2,sy+bobY-38,cpW,18,6);mctx.fill();
+    const rr=6,rx=sx-cpW/2,ry=sy+bobY-38,rw=cpW,rh=18;
+    mctx.beginPath();mctx.moveTo(rx+rr,ry);mctx.lineTo(rx+rw-rr,ry);mctx.arcTo(rx+rw,ry,rx+rw,ry+rr,rr);mctx.lineTo(rx+rw,ry+rh-rr);mctx.arcTo(rx+rw,ry+rh,rx+rw-rr,ry+rh,rr);mctx.lineTo(rx+rr,ry+rh);mctx.arcTo(rx,ry+rh,rx,ry+rh-rr,rr);mctx.lineTo(rx,ry+rr);mctx.arcTo(rx,ry,rx+rr,ry,rr);mctx.closePath();mctx.fill();
     mctx.fillStyle='white';mctx.textBaseline='middle';
     mctx.fillText(cpTxt,sx,sy+bobY-29);
     // Rarity dot
@@ -1779,14 +1780,20 @@ function onCaught() {
   document.getElementById('co-jimmie-name').textContent = j.name;
   document.getElementById('co-rewards').innerHTML =
     '<div class="co-reward-pill">+'+j.xp+' XP</div><div class="co-reward-pill">CP '+cpVal+'</div><div class="co-reward-pill">+'+candyAmt+' 🍬</div>';
-  const coC = document.getElementById('co-jimmie-canvas');
-  if(coC){ coC.width=120;coC.height=120;drawMiniJimmie(coC.getContext('2d'),120,j); }
+  try {
+    const coC = document.getElementById('co-jimmie-canvas');
+    if(coC){ coC.width=120;coC.height=120;drawMiniJimmie(coC.getContext('2d'),120,j); }
+  } catch(e) {
+    console.error('drawMiniJimmie error:', e);
+    const coC = document.getElementById('co-jimmie-canvas');
+    if(coC){ const ctx=coC.getContext('2d'); ctx.clearRect(0,0,120,120); ctx.font='70px serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(j.icon,60,60); }
+  }
   const gbtn2 = document.getElementById('co-garage-btn');
   if (gbtn2) gbtn2.style.display='';
   const fbtn2 = document.getElementById('co-continue-btn');
   if (fbtn2) fbtn2.textContent='Fortsätt fånga';
   document.getElementById('catch-overlay').classList.add('show');
-  spawnSuccessParticles(RC[j.rarity]);
+  try { spawnSuccessParticles(RC[j.rarity]); } catch(e){}
   save(); renderDex();
 }
 
@@ -1815,6 +1822,7 @@ function onEscaped() {
 
 window.fleeCatch = function() { showScreen('map-screen'); curCatch=null; catchParticles=[]; };
 window.goToGarage = function() {
+  document.getElementById('catch-overlay').classList.remove('show');
   if (lastCatchWasSuccess) {
     showScreen('garage-screen');
   } else {
@@ -1826,6 +1834,7 @@ window.goToGarage = function() {
 let lastCatchWasSuccess = false;
 
 window.endCatch = function() {
+  document.getElementById('catch-overlay').classList.remove('show');
   showScreen('map-screen'); curCatch=null; catchParticles=[];
 };
 
@@ -1891,7 +1900,7 @@ function drawMiniJimmie(ctx, size, jdef) {
   const bodyG = ctx.createLinearGradient(bx,by,bx+bw,by+bh);
   bodyG.addColorStop(0, shiftColor(col,30));
   bodyG.addColorStop(1, col);
-  ctx.beginPath(); ctx.roundRect(bx,by,bw,bh,4);
+  ctx.beginPath();ctx.moveTo(bx+4,by);ctx.lineTo(bx+bw-4,by);ctx.arcTo(bx+bw,by,bx+bw,by+4,4);ctx.lineTo(bx+bw,by+bh-4);ctx.arcTo(bx+bw,by+bh,bx+bw-4,by+bh,4);ctx.lineTo(bx+4,by+bh);ctx.arcTo(bx,by+bh,bx,by+bh-4,4);ctx.lineTo(bx,by+4);ctx.arcTo(bx,by,bx+4,by,4);ctx.closePath();
   ctx.fillStyle=bodyG; ctx.fill();
 
   // Suit lapels (white)
@@ -2136,19 +2145,23 @@ function renderGarage() {
     const cp = Math.floor(j.cp*(0.9+G.lv*0.02)) + (instance===0 ? boosted : 0);
     const canvasId = 'gc-c-' + j.id + '-' + instance;
     canvasIds.push({canvasId, j});
-    return `<div class="gc" style="border:2px solid ${rarityBg}44;background:linear-gradient(160deg,white 60%,${rarityBg}12);box-shadow:0 3px 12px ${rarityBg}44" onclick="openJimmiePanel(${j.id})">
-      <canvas class="gc-canvas" id="${canvasId}" width="80" height="80" style="display:block;width:100%;height:90px;border-radius:16px 16px 0 0;flex-shrink:0"></canvas>
-      <div style="padding:4px 6px 0;width:100%">
-        <div class="gc-name" style="font-size:0.62rem;font-weight:900;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${j.name}</div>
-        <div class="gc-rarity" style="font-size:0.52rem;font-weight:800;text-transform:uppercase;color:${rarityBg};letter-spacing:.5px">${j.rarity}</div>
-        <div class="gc-cp" style="font-size:0.6rem;color:#888;font-weight:700">CP ${cp}</div>
+    return `<div class="gc" style="border:2px solid ${rarityBg}55;box-shadow:0 3px 14px ${rarityBg}33" onclick="openJimmiePanel(${j.id})">
+      <canvas class="gc-canvas" id="${canvasId}" width="100" height="100"></canvas>
+      <div style="padding:6px 8px 8px;background:linear-gradient(180deg,white,${rarityBg}18)">
+        <div style="font-size:0.66rem;font-weight:900;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${j.name}</div>
+        <div style="font-size:0.55rem;font-weight:800;text-transform:uppercase;color:${rarityBg};letter-spacing:.5px;margin-top:1px">${j.rarity}</div>
+        <div style="font-size:0.62rem;color:#777;font-weight:700;margin-top:1px">CP ${cp}</div>
       </div>
     </div>`;
   }).join('');
   setTimeout(()=>{
     canvasIds.forEach(({canvasId, j}) => {
       const c2 = document.getElementById(canvasId);
-      if (c2) { c2.width=90;c2.height=90;drawMiniJimmie(c2.getContext('2d'),90,j); }
+      if (!c2) return;
+      const sz = c2.parentElement ? c2.parentElement.offsetWidth : 100;
+      c2.width = sz; c2.height = sz;
+      try { drawMiniJimmie(c2.getContext('2d'), sz, j); }
+      catch(e){ const x=c2.getContext('2d'); x.font=(sz*0.55)+'px serif'; x.textAlign='center'; x.textBaseline='middle'; x.fillText(j.icon,sz/2,sz/2); }
     });
   }, 50);
 }
