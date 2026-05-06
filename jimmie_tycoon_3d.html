@@ -164,8 +164,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
   display:none;flex-direction:column;align-items:center;justify-content:center;
   z-index:500;padding:24px;gap:0
 }
-#catch-overlay.show{display:flex;animation:co-fade-in .4s ease forwards}
-@keyframes co-fade-in{from{background:rgba(0,0,0,0)}to{background:rgba(0,0,0,0.75)}}
+#catch-overlay.show{display:flex;background:rgba(0,0,0,0.75)}
+
 #co-card{
   background:linear-gradient(160deg,#1a2a1e,#0d1a10);
   border:1px solid rgba(255,255,255,0.12);
@@ -2244,6 +2244,11 @@ function showScreen(id){
   document.getElementById('nav').style.display = id==='catch-screen' ? 'none' : 'flex';
   document.getElementById('submenu').classList.remove('open');
   document.getElementById('submenu-backdrop').classList.remove('open');
+  // Always clear overlays when switching screens
+  document.getElementById('catch-overlay').classList.remove('show');
+  document.getElementById('lvl-splash').classList.remove('show');
+  const tdim=document.getElementById('tut-dim'); if(tdim)tdim.style.display='none';
+  document.getElementById('tut-spotlight').style.display='none';
   if(id==='dex-screen')renderDex();
   if(id==='garage-screen')renderGarage();
   if(id==='settings-screen'){
