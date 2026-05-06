@@ -16,7 +16,7 @@
 html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:var(--font)}
 
 /* ── SCREENS ── */
-.screen{position:fixed;inset:0;display:none;flex-direction:column;z-index:10}
+.screen{position:fixed;inset:0;display:none;flex-direction:column;z-index:1}
 .screen.active{display:flex}
 
 /* ── MAP ── */
@@ -378,11 +378,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
   font-family:var(--font);width:100%}
 
 /* Garage screen */
-#garage-screen{background:#f2f2f7;isolation:isolate}
+#garage-screen{background:#f2f2f7}
 #garage-grid{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 8px 100px;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,160px));justify-content:start;gap:8px;align-content:start}
-.gc{background:white;border-radius:14px;overflow:hidden;cursor:pointer;transition:transform .15s;box-shadow:0 2px 8px rgba(0,0,0,0.1);display:flex;flex-direction:column;align-items:stretch}
-.gc::before{content:"";position:absolute;inset:0;opacity:0.06;background:radial-gradient(circle at 30% 20%,white,transparent 60%);pointer-events:none}
-.gc:active{transform:scale(0.94);box-shadow:0 1px 4px rgba(0,0,0,0.1)}
+.gc:hover{transform:scale(1.03);z-index:2}
+.gc{background:white;border-radius:16px;overflow:hidden;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;display:flex;flex-direction:column;align-items:stretch}
+.gc:active{transform:scale(0.93)}
 
 .gc-name{font-size:0.58rem;font-weight:800;color:#1a1a1a;line-height:1.3}
 .gc-cp{font-size:0.6rem;font-weight:700;color:#888;margin-top:2px}
@@ -1408,7 +1408,6 @@ function generateCatchStars() {
 }
 
 function drawCatchBg(dt) {
-  if (!document.getElementById('catch-screen').classList.contains('active')) return;
   catchBgTime += dt * 0.4;
   bgX.clearRect(0, 0, catchW, catchH);
 
@@ -2113,6 +2112,20 @@ function executeDelete() {
   toast('Jimmie borttagen.');
 }
 
+
+function getCardGlow(rarity) {
+  const G2 = {
+    Common:    ['rgba(158,158,158,0.25)','rgba(158,158,158,0.12)','6px'],
+    Uncommon:  ['rgba(74,222,128,0.35)', 'rgba(74,222,128,0.15)', '8px'],
+    Rare:      ['rgba(96,165,250,0.45)', 'rgba(96,165,250,0.18)','12px'],
+    Epic:      ['rgba(192,132,252,0.55)','rgba(192,132,252,0.22)','16px'],
+    Legendary: ['rgba(255,203,5,0.70)',  'rgba(255,203,5,0.30)', '24px'],
+    Mythic:    ['rgba(255,34,68,0.80)',  'rgba(255,34,68,0.35)', '32px'],
+  };
+  const [c1,c2,spread] = G2[rarity]||G2.Common;
+  return `0 0 ${spread} ${c1}, 0 0 ${parseInt(spread)*2}px ${c2}, inset 0 0 0 1.5px ${c1}`;
+}
+
 // ── GARAGE ───────────────────────────────────────────────────────
 function renderGarage() {
   const grid = document.getElementById('garage-grid');
@@ -2154,12 +2167,23 @@ function renderGarage() {
     const cp = Math.floor(j.cp*(0.9+G.lv*0.02)) + (instance===0 ? boosted : 0);
     const canvasId = 'gc-c-' + j.id + '-' + instance;
     canvasIds.push({canvasId, j});
-    return `<div class="gc" style="border:1.5px solid ${rarityBg}44" onclick="openJimmiePanel(${j.id})">
-      <div style="padding:4px 6px 0;font-size:0.72rem;font-weight:900;color:#555">CP <span style="color:#222">${cp}</span></div>
-      <canvas id="${canvasId}" width="90" height="90" style="display:block;width:80%;margin:4px auto 2px"></canvas>
-      <div style="height:3px;background:${rarityBg};margin:0 0 4px"></div>
-      <div style="padding:0 6px 6px;text-align:center">
-        <div style="font-size:0.6rem;font-weight:900;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${j.name}</div>
+    const isLeg = j.rarity==='Legendary'||j.rarity==='Mythic';
+    const cardGlow = getCardGlow(j.rarity);
+    return `<div class="gc" style="box-shadow:${cardGlow};border:1.5px solid ${rarityBg}66;background:linear-gradient(160deg,#fff 70%,${rarityBg}15)" onclick="openJimmiePanel(${j.id})">
+      <!-- Top: CP badge -->
+      <div style="padding:6px 8px 2px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:0.65rem;font-weight:900;color:${rarityBg};background:${rarityBg}18;padding:2px 7px;border-radius:50px;border:1px solid ${rarityBg}44">CP ${cp}</span>
+        ${isLeg?`<span style="font-size:0.7rem">${j.rarity==='Mythic'?'🔥':'⭐'}</span>`:''}
+      </div>
+      <!-- Jimmie canvas -->
+      <canvas id="${canvasId}" width="120" height="120" style="display:block;width:90%;margin:0 auto"></canvas>
+      <!-- Bottom info -->
+      <div style="padding:0 8px 8px;text-align:center">
+        <div style="font-size:0.7rem;font-weight:900;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3">${j.name}</div>
+        <div style="font-size:0.58rem;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:${rarityBg};margin-top:2px;display:flex;align-items:center;justify-content:center;gap:3px">
+          <span style="width:6px;height:6px;border-radius:50%;background:${rarityBg};display:inline-block"></span>
+          ${j.rarity}
+        </div>
       </div>
     </div>`;
   }).join('');
@@ -2167,9 +2191,9 @@ function renderGarage() {
     canvasIds.forEach(({canvasId, j}) => {
       const c2 = document.getElementById(canvasId);
       if (!c2) return;
-      c2.width = 90; c2.height = 90;
-      try { drawMiniJimmie(c2.getContext('2d'), 90, j); }
-      catch(e){ const x=c2.getContext('2d'); x.font='50px serif'; x.textAlign='center'; x.textBaseline='middle'; x.fillText(j.icon,45,45); }
+      c2.width = 120; c2.height = 120;
+      try { drawMiniJimmie(c2.getContext('2d'), 120, j); }
+      catch(e){ const x=c2.getContext('2d'); x.font='60px serif'; x.textAlign='center'; x.textBaseline='middle'; x.fillText(j.icon,60,60); }
     });
   }, 50);
 }
@@ -2250,8 +2274,6 @@ function showScreen(id){
   document.getElementById('lvl-splash').classList.remove('show');
   const tdim=document.getElementById('tut-dim'); if(tdim)tdim.style.display='none';
   document.getElementById('tut-spotlight').style.display='none';
-  // Clear map canvas when leaving map
-  if(id!=='map-screen'){ const mc2=document.getElementById('map-canvas'); if(mc2){const x=mc2.getContext('2d');x.clearRect(0,0,mc2.width,mc2.height);} }
   if(id==='dex-screen')renderDex();
   if(id==='garage-screen')renderGarage();
   if(id==='settings-screen'){
