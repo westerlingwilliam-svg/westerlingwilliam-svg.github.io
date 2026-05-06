@@ -380,10 +380,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 /* Garage screen */
 #garage-screen{background:#f2f2f7}
 #garage-grid{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 10px 100px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-content:start}
-.gc{background:white;border-radius:18px;overflow:hidden;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s;position:relative;display:flex;flex-direction:column}
+#garage-grid .gc{aspect-ratio:1;height:auto}
+.gc{background:white;border-radius:16px;overflow:hidden;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s;position:relative;aspect-ratio:1}
 .gc::before{content:"";position:absolute;inset:0;opacity:0.06;background:radial-gradient(circle at 30% 20%,white,transparent 60%);pointer-events:none}
 .gc:active{transform:scale(0.94);box-shadow:0 1px 4px rgba(0,0,0,0.1)}
-.gc-canvas{display:block;width:100%}
+.gc-canvas{display:block;width:100%;height:70%;object-fit:cover}
 .gc-name{font-size:0.58rem;font-weight:800;color:#1a1a1a;line-height:1.3}
 .gc-cp{font-size:0.6rem;font-weight:700;color:#888;margin-top:2px}
 .gc-count{position:absolute;top:6px;right:6px;font-size:0.55rem;font-weight:900;padding:2px 6px;border-radius:50px;color:white}
@@ -2145,12 +2146,11 @@ function renderGarage() {
     const cp = Math.floor(j.cp*(0.9+G.lv*0.02)) + (instance===0 ? boosted : 0);
     const canvasId = 'gc-c-' + j.id + '-' + instance;
     canvasIds.push({canvasId, j});
-    return `<div class="gc" style="border:2px solid ${rarityBg}55;box-shadow:0 3px 14px ${rarityBg}33" onclick="openJimmiePanel(${j.id})">
-      <canvas class="gc-canvas" id="${canvasId}" width="100" height="100"></canvas>
-      <div style="padding:6px 8px 8px;background:linear-gradient(180deg,white,${rarityBg}18)">
-        <div style="font-size:0.66rem;font-weight:900;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${j.name}</div>
-        <div style="font-size:0.55rem;font-weight:800;text-transform:uppercase;color:${rarityBg};letter-spacing:.5px;margin-top:1px">${j.rarity}</div>
-        <div style="font-size:0.62rem;color:#777;font-weight:700;margin-top:1px">CP ${cp}</div>
+    return `<div class="gc" style="border:2px solid ${rarityBg}55;box-shadow:0 3px 14px ${rarityBg}33;background:linear-gradient(180deg,white 60%,${rarityBg}20)" onclick="openJimmiePanel(${j.id})">
+      <canvas class="gc-canvas" id="${canvasId}" width="100" height="100" style="position:absolute;top:0;left:0;width:100%;height:72%"></canvas>
+      <div style="position:absolute;bottom:0;left:0;right:0;padding:4px 6px 5px;background:linear-gradient(0deg,white 70%,transparent)">
+        <div style="font-size:0.6rem;font-weight:900;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2">${j.name}</div>
+        <div style="font-size:0.5rem;font-weight:800;text-transform:uppercase;color:${rarityBg};letter-spacing:.4px">${j.rarity} · CP${cp}</div>
       </div>
     </div>`;
   }).join('');
@@ -2158,10 +2158,9 @@ function renderGarage() {
     canvasIds.forEach(({canvasId, j}) => {
       const c2 = document.getElementById(canvasId);
       if (!c2) return;
-      const sz = c2.parentElement ? c2.parentElement.offsetWidth : 100;
-      c2.width = sz; c2.height = sz;
-      try { drawMiniJimmie(c2.getContext('2d'), sz, j); }
-      catch(e){ const x=c2.getContext('2d'); x.font=(sz*0.55)+'px serif'; x.textAlign='center'; x.textBaseline='middle'; x.fillText(j.icon,sz/2,sz/2); }
+      c2.width = 100; c2.height = 100;
+      try { drawMiniJimmie(c2.getContext('2d'), 100, j); }
+      catch(e){ const x=c2.getContext('2d'); x.font='55px serif'; x.textAlign='center'; x.textBaseline='middle'; x.fillText(j.icon,50,50); }
     });
   }, 50);
 }
