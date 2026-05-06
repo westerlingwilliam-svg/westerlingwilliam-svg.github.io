@@ -379,7 +379,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 
 /* Garage screen */
 #garage-screen{background:#f2f2f7}
-#garage-grid{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 8px 100px;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,150px));justify-content:start;gap:8px;align-content:start}
+#garage-grid{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 8px 100px;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,160px));justify-content:start;gap:8px;align-content:start}
 .gc{background:white;border-radius:14px;overflow:hidden;cursor:pointer;transition:transform .15s;box-shadow:0 2px 8px rgba(0,0,0,0.1);display:flex;flex-direction:column;align-items:stretch}
 .gc::before{content:"";position:absolute;inset:0;opacity:0.06;background:radial-gradient(circle at 30% 20%,white,transparent 60%);pointer-events:none}
 .gc:active{transform:scale(0.94);box-shadow:0 1px 4px rgba(0,0,0,0.1)}
@@ -415,9 +415,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
   font-size:0.7rem;cursor:pointer;font-family:var(--font);
   margin-top:6px;width:100%;text-align:center;display:block}
 #tut-spotlight{position:fixed;pointer-events:none;border-radius:50%;
-  box-shadow:0 0 0 9999px rgba(0,0,0,0.6);transition:all .4s ease;
-  border:3px solid var(--y);opacity:0}
-#tut-spotlight.visible{opacity:1}
+  border:3px solid var(--y);display:none;z-index:301}
+#tut-dim{position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:300;display:none;pointer-events:none}
 /* Animated CP bar on map Jimmies */
 .tut-highlight{animation:tut-pulse 1s ease-in-out infinite alternate}
 @keyframes tut-pulse{from{opacity:1}to{opacity:0.5}}
@@ -777,7 +776,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 </div>
 
 <div id="tutorial-overlay">
-  <div id="tut-spotlight" style="display:none"></div>
+  <div id="tut-dim"></div>
+  <div id="tut-spotlight"></div>
 </div>
 
 <div id="toast"></div>
@@ -2327,14 +2327,17 @@ function showTutStep() {
 
   // Spotlight
   const spot = document.getElementById('tut-spotlight');
+  const dim = document.getElementById('tut-dim');
   if (step.anchor) {
     const el = document.getElementById(step.anchor);
     if (el) {
       const r = el.getBoundingClientRect(), pad = 12;
-      spot.style.cssText = `display:block;left:${r.left-pad}px;top:${r.top-pad}px;width:${r.width+pad*2}px;height:${r.height+pad*2}px;border-radius:${Math.min(r.width,r.height)/2+pad}px`;
+      spot.style.cssText = `display:block;position:fixed;left:${r.left-pad}px;top:${r.top-pad}px;width:${r.width+pad*2}px;height:${r.height+pad*2}px;border-radius:${Math.min(r.width,r.height)/2+pad}px;z-index:302;border:3px solid var(--y)`;
+      if(dim)dim.style.display='block';
     }
   } else {
-    spot.style.opacity = '0';
+    spot.style.display = 'none';
+    if(dim)dim.style.display='none';
   }
 
   // Build bubble
@@ -2375,7 +2378,8 @@ function endTutorial() {
   G.tutorialDone = true;
   tutStep = -1;
   if (tutBubble) { tutBubble.remove(); tutBubble = null; }
-  document.getElementById('tut-spotlight').style.opacity = '0';
+  document.getElementById('tut-spotlight').style.display = 'none';
+  const tdim=document.getElementById('tut-dim'); if(tdim)tdim.style.display='none';
   save();
   toast('Tutorial klar! Lycka till! 🌸');
 }
