@@ -64,9 +64,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 .ball-btn-lbl{font-size:0.52rem;font-weight:900;color:#666;text-transform:uppercase;letter-spacing:.5px}
 
 /* Joystick */
-#joystick-zone{position:absolute;bottom:180px;left:18px;width:108px;height:108px;pointer-events:all}
-#j-base{width:108px;height:108px;background:rgba(255,255,255,0.18);border:2px solid rgba(255,255,255,0.4);border-radius:50%;backdrop-filter:blur(8px);box-shadow:inset 0 0 20px rgba(255,255,255,0.08)}
-#j-knob{width:52px;height:52px;background:linear-gradient(145deg,rgba(255,255,255,0.9),rgba(255,255,255,0.6));border:2px solid rgba(255,255,255,0.95);border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 4px 16px rgba(0,0,0,0.25),inset 0 1px 0 rgba(255,255,255,0.8)}
 
 /* Encounter popup */
 #enc-popup{
@@ -394,6 +391,38 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 .screen{transition:opacity .2s}
 .screen-exit{opacity:0;pointer-events:none}
 
+/* Trainer profile panel */
+#trainer-panel{position:fixed;inset:0;z-index:260;pointer-events:none}
+#trainer-panel.open{pointer-events:all}
+#trainer-panel-bg{position:absolute;inset:0;background:rgba(0,0,0,0);transition:background .3s;cursor:pointer}
+#trainer-panel.open #trainer-panel-bg{background:rgba(0,0,0,0.5)}
+#trainer-panel-card{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(0.85);
+  background:white;border-radius:28px;padding:0;width:90%;max-width:340px;
+  opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 24px 60px rgba(0,0,0,0.25);overflow:hidden;
+}
+#trainer-panel.open #trainer-panel-card{transform:translate(-50%,-50%) scale(1);opacity:1}
+#tp-header{background:linear-gradient(135deg,var(--b),#6c3fc7);padding:24px 20px 20px;text-align:center;color:white}
+#tp-avatar-big{font-size:4rem;margin-bottom:8px;cursor:pointer;display:inline-block;transition:.15s;line-height:1}
+#tp-avatar-big:active{transform:scale(0.9)}
+#tp-name-display{font-size:1.1rem;font-weight:900;opacity:0.9}
+#tp-level-display{font-size:0.75rem;opacity:0.65;margin-top:3px}
+#tp-body{padding:20px}
+/* Avatar picker */
+#tp-avatar-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:18px;background:#f7f7f7;border-radius:16px;padding:10px}
+.tp-av{font-size:1.6rem;text-align:center;cursor:pointer;border-radius:10px;padding:4px;transition:.15s;border:2px solid transparent}
+.tp-av:active{transform:scale(0.85)}
+.tp-av.selected{background:var(--b);border-color:var(--b);filter:drop-shadow(0 2px 6px rgba(59,76,202,0.4))}
+/* Name input */
+#tp-name-label{font-size:0.72rem;font-weight:800;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+#tp-name-input{width:100%;border:2px solid #e5e5ea;border-radius:12px;padding:12px 14px;font-size:1rem;font-weight:700;font-family:var(--font);color:#1a1a1a;outline:none;transition:border .2s;box-sizing:border-box}
+#tp-name-input:focus{border-color:var(--b)}
+/* Save button */
+#tp-save-btn{width:100%;margin-top:14px;background:linear-gradient(135deg,var(--b),#5a6fd6);color:white;border:none;border-radius:50px;padding:14px;font-size:0.95rem;font-weight:900;cursor:pointer;font-family:var(--font);letter-spacing:.5px;transition:.15s}
+#tp-save-btn:active{transform:scale(0.97)}
+#tp-cancel-btn{width:100%;margin-top:8px;background:none;border:none;color:#aaa;font-size:0.82rem;font-weight:700;cursor:pointer;font-family:var(--font);padding:6px}
+
 /* Tutorial overlay */
 #tutorial-overlay{position:fixed;inset:0;z-index:300;pointer-events:none}
 .tut-bubble{
@@ -458,15 +487,19 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
   <canvas id="map-canvas"></canvas>
   <div id="map-ui">
     <div id="top-hud">
-      <div class="trainer-bubble" onclick="showScreenWithTut('profile-screen')">
-        <div class="trainer-avatar">🕵️</div>
+      <div class="trainer-bubble" onclick="openTrainerPanel()">
+        <div class="trainer-avatar" id="hud-avatar">🕵️</div>
         <div class="trainer-info">
           <span class="trainer-name">JIMMIE-TRÄNARE</span>
           <span class="trainer-lv">Nivå <span id="hud-lv">1</span></span>
         </div>
       </div>
       <div class="top-xp-wrap"><div class="top-xp-fill" id="top-xp-fill" style="width:0%"></div></div>
-      <div class="top-ball-count">⚪ <span id="hud-balls">26</span></div>
+      <div class="top-ball-count" style="gap:10px">
+        <span>⚪<span id="hud-b0" style="font-weight:900;margin-left:2px">20</span></span>
+        <span style="color:#60a5fa">🔵<span id="hud-b1" style="font-weight:900;margin-left:2px">5</span></span>
+        <span style="color:#FFCB05">🟡<span id="hud-b2" style="font-weight:900;margin-left:2px">1</span></span>
+      </div>
     </div>
     <div id="compass">🧭</div>
     <div id="map-bottom">
@@ -486,7 +519,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
       </div>
     </div>
   </div>
-  <div id="joystick-zone"><div id="j-base"></div><div id="j-knob"></div></div>
+
   <!-- Encounter popup -->
   <div id="enc-popup" onclick="startCatch()">
     <div class="enc-rarity-bar" id="enc-rarity-bar"></div>
@@ -731,7 +764,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
     <div class="settings-group">
       <div class="settings-row">
         <div class="settings-icon">📊</div>
-        <div class="settings-body"><div class="settings-name">Version</div><div class="settings-desc">Jimmie GO! v2.0</div></div>
+        <div class="settings-body"><div class="settings-name">Version</div><div class="settings-desc">Jimmie GO! – Demo Version</div></div>
       </div>
 
       <div class="settings-row" style="color:#F7544B" onclick="confirmReset()">
@@ -748,7 +781,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
   <div class="lvl-badge">⭐</div>
   <div class="lvl-title">LEVEL UP!</div>
   <div class="lvl-sub" id="lvl-sub-txt">Du är nu nivå 2!</div>
-  <div style="color:rgba(255,255,255,0.6);font-size:0.8rem">+10 SD-Bollar</div>
+  <div id="lvl-reward-txt" style="color:var(--y);font-size:0.92rem;font-weight:800;letter-spacing:.5px;margin-top:2px">+10 SD-Bollar</div>
   <button class="lvl-dismiss" onclick="document.getElementById('lvl-splash').classList.remove('show')">OKEJ!</button>
 </div>
 
@@ -791,6 +824,39 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
   </div>
 </div>
 
+<!-- ── TRAINER PROFILE PANEL ── -->
+<div id="trainer-panel">
+  <div id="trainer-panel-bg" onclick="closeTrainerPanel()"></div>
+  <div id="trainer-panel-card">
+    <div id="tp-header">
+      <div id="tp-avatar-big" onclick="focusAvatarPicker()">🕵️</div>
+      <div id="tp-name-display">JIMMIE-TRÄNARE</div>
+      <div id="tp-level-display">Nivå 1</div>
+    </div>
+    <div id="tp-body">
+      <div id="tp-name-label">Välj Avatar</div>
+      <div id="tp-avatar-grid">
+        <div class="tp-av selected" onclick="selectAvatar('🕵️')">🕵️</div>
+        <div class="tp-av" onclick="selectAvatar('🤵')">🤵</div>
+        <div class="tp-av" onclick="selectAvatar('👨‍💼')">👨‍💼</div>
+        <div class="tp-av" onclick="selectAvatar('🧑‍💼')">🧑‍💼</div>
+        <div class="tp-av" onclick="selectAvatar('👩‍💼')">👩‍💼</div>
+        <div class="tp-av" onclick="selectAvatar('🦸')">🦸</div>
+        <div class="tp-av" onclick="selectAvatar('🧙')">🧙</div>
+        <div class="tp-av" onclick="selectAvatar('🤠')">🤠</div>
+        <div class="tp-av" onclick="selectAvatar('🥷')">🥷</div>
+        <div class="tp-av" onclick="selectAvatar('👮')">👮</div>
+        <div class="tp-av" onclick="selectAvatar('🎩')">🎩</div>
+        <div class="tp-av" onclick="selectAvatar('🌸')">🌸</div>
+      </div>
+      <div id="tp-name-label">Tränarnamn</div>
+      <input id="tp-name-input" type="text" maxlength="20" placeholder="Ditt namn..." autocomplete="off"/>
+      <button id="tp-save-btn" onclick="saveTrainerProfile()">💾 SPARA PROFIL</button>
+      <button id="tp-cancel-btn" onclick="closeTrainerPanel()">Avbryt</button>
+    </div>
+  </div>
+</div>
+
 <div id="tutorial-overlay">
   <div id="tut-dim"></div>
   <div id="tut-spotlight"></div>
@@ -801,30 +867,30 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 <script>
 'use strict';
 const JIMMIES=[
-  {id:0,name:'Lill-Jimmie',icon:'👶',rarity:'Common',col:'#9e9e9e',cp:12,cr:0.90,xp:30},
-  {id:1,name:'Jimmie på Promenad',icon:'🚶',rarity:'Common',col:'#9e9e9e',cp:18,cr:0.85,xp:30},
-  {id:2,name:'Jimmie i Kö',icon:'🧍',rarity:'Common',col:'#888',cp:15,cr:0.87,xp:30},
-  {id:3,name:'Wille',icon:'💻',rarity:'Common',col:'#77aa77',cp:22,cr:0.82,xp:30},
-  {id:4,name:'SD-Micke Jr',icon:'🚩',rarity:'Uncommon',col:'#4ade80',cp:45,cr:0.65,xp:60},
-  {id:5,name:'Jimmie på Mikrofon',icon:'🎤',rarity:'Uncommon',col:'#34d399',cp:55,cr:0.62,xp:60},
-  {id:6,name:'Jimmie Sölvesborg',icon:'⚽',rarity:'Uncommon',col:'#22c55e',cp:60,cr:0.60,xp:60},
-  {id:7,name:'Jimmie med Hjälm',icon:'⛑️',rarity:'Rare',col:'#60a5fa',cp:120,cr:0.40,xp:120},
-  {id:8,name:'Jimmie Festfixaren',icon:'🎉',rarity:'Rare',col:'#38bdf8',cp:145,cr:0.38,xp:120},
-  {id:9,name:'Jimmie i Hatt',icon:'🎩',rarity:'Rare',col:'#7dd3fc',cp:130,cr:0.42,xp:120},
-  {id:10,name:'Richard Jomshof',icon:'📜',rarity:'Rare',col:'#93c5fd',cp:160,cr:0.35,xp:120},
-  {id:11,name:'SDmicke Deluxe',icon:'👑',rarity:'Epic',col:'#c084fc',cp:280,cr:0.20,xp:300},
-  {id:12,name:'Jimmie i Kostym',icon:'🕴️',rarity:'Epic',col:'#a855f7',cp:320,cr:0.18,xp:300},
-  {id:13,name:'Oscar Sjöstedt',icon:'💰',rarity:'Epic',col:'#d946ef',cp:300,cr:0.22,xp:300},
-  {id:14,name:'Jimmie från Sölve',icon:'🦸',rarity:'Legendary',col:'#FFCB05',cp:600,cr:0.08,xp:600},
-  {id:15,name:'Super-SD-Jimmie',icon:'🌟',rarity:'Legendary',col:'#ffd700',cp:750,cr:0.06,xp:600},
-  {id:16,name:'Jimmie Åkesson',icon:'⭐',rarity:'Legendary',col:'#FFCB05',cp:900,cr:0.05,xp:800},
-  {id:17,name:'JIMMIE ETERNAL',icon:'🔥',rarity:'Mythic',col:'#ff2244',cp:9999,cr:0.01,xp:1500},
+  {id:0, name:'Lill-Jimmie',        icon:'👶',rarity:'Common',   col:'#9e9e9e',cp:12,  cr:0.90,xp:30,  acc:null},
+  {id:1, name:'Jimmie på Promenad', icon:'🚶',rarity:'Common',   col:'#9e9e9e',cp:18,  cr:0.85,xp:30,  acc:'flag'},
+  {id:2, name:'Jimmie i Kö',        icon:'🧍',rarity:'Common',   col:'#888888',cp:15,  cr:0.87,xp:30,  acc:null},
+  {id:3, name:'Wille',              icon:'💻',rarity:'Common',   col:'#77aa77',cp:22,  cr:0.82,xp:30,  acc:'mic'},
+  {id:4, name:'SD-Micke Jr',        icon:'🚩',rarity:'Uncommon', col:'#4ade80',cp:45,  cr:0.65,xp:60,  acc:'flag'},
+  {id:5, name:'Jimmie på Mikrofon', icon:'🎤',rarity:'Uncommon', col:'#34d399',cp:55,  cr:0.62,xp:60,  acc:'mic'},
+  {id:6, name:'Jimmie Sölvesborg',  icon:'⚽',rarity:'Uncommon', col:'#22c55e',cp:60,  cr:0.60,xp:60,  acc:'party'},
+  {id:7, name:'Jimmie med Hjälm',   icon:'⛑️',rarity:'Rare',     col:'#60a5fa',cp:120, cr:0.40,xp:120, acc:'helmet'},
+  {id:8, name:'Jimmie Festfixaren', icon:'🎉',rarity:'Rare',     col:'#38bdf8',cp:145, cr:0.38,xp:120, acc:'party'},
+  {id:9, name:'Jimmie i Hatt',      icon:'🎩',rarity:'Rare',     col:'#7dd3fc',cp:130, cr:0.42,xp:120, acc:'fedora'},
+  {id:10,name:'Richard Jomshof',    icon:'📜',rarity:'Rare',     col:'#93c5fd',cp:160, cr:0.35,xp:120, acc:'mic'},
+  {id:11,name:'SDmicke Deluxe',     icon:'👑',rarity:'Epic',     col:'#c084fc',cp:280, cr:0.20,xp:300, acc:'crown'},
+  {id:12,name:'Jimmie i Kostym',    icon:'🕴️',rarity:'Epic',     col:'#a855f7',cp:320, cr:0.18,xp:300, acc:'fedora'},
+  {id:13,name:'Oscar Sjöstedt',     icon:'💰',rarity:'Epic',     col:'#d946ef',cp:300, cr:0.22,xp:300, acc:'mic'},
+  {id:14,name:'Jimmie från Sölve',  icon:'🦸',rarity:'Legendary',col:'#FFCB05',cp:600, cr:0.08,xp:600, acc:'crown'},
+  {id:15,name:'Super-SD-Jimmie',    icon:'🌟',rarity:'Legendary',col:'#ffd700',cp:750, cr:0.06,xp:600, acc:'crown'},
+  {id:16,name:'Jimmie Åkesson',     icon:'⭐',rarity:'Legendary',col:'#FFCB05',cp:900, cr:0.05,xp:800, acc:'crown'},
+  {id:17,name:'JIMMIE ETERNAL',     icon:'🔥',rarity:'Mythic',   col:'#ff2244',cp:9999,cr:0.01,xp:1500,acc:'crown'},
 ];
 const RC={Common:'#9e9e9e',Uncommon:'#4ade80',Rare:'#60a5fa',Epic:'#c084fc',Legendary:'#FFCB05',Mythic:'#ff2244'};
 const RW={Common:50,Uncommon:28,Rare:14,Epic:5,Legendary:2,Mythic:1};
 
 const SAVE='jgo_v4';
-let G={lv:1,xp:0,xpMax:200,tutorialDone:false,balls:[20,5,1],candy:{Common:0,Uncommon:0,Rare:0,Epic:0,Legendary:0,Mythic:0},jimmieCP:{},seen:{},caught:{},trainerName:'Jimmie-Tränare',stats:{km:0,throws:0,esc:0,total:0,best:''}};
+let G={lv:1,xp:0,xpMax:200,tutorialDone:false,balls:[20,5,1],candy:{Common:0,Uncommon:0,Rare:0,Epic:0,Legendary:0,Mythic:0},jimmieCP:{},trainerAvatar:'🕵️',seen:{},caught:{},trainerName:'Jimmie-Tränare',stats:{km:0,throws:0,esc:0,total:0,best:''}};
 function save(){try{localStorage.setItem(SAVE,JSON.stringify(G));}catch(e){}}
 function load(){try{const s=localStorage.getItem(SAVE);if(s){G={...G,...JSON.parse(s)};if(typeof G.candy!=='object')G.candy={Common:0,Uncommon:0,Rare:0,Epic:0,Legendary:0,Mythic:0};if(!G.jimmieCP)G.jimmieCP={};}}catch(e){}}
 
@@ -1016,17 +1082,30 @@ function drawMap(){
     const bobY=Math.sin(w.w)*4;
     const dx=px-w.x,dy=py-w.y,dist=Math.sqrt(dx*dx+dy*dy);
 
-    // Glow for rare+
-    if(['Rare','Epic','Legendary','Mythic'].includes(w.j.rarity)){
-      const gr=mctx.createRadialGradient(sx,sy+bobY,0,sx,sy+bobY,30);
-      gr.addColorStop(0,RC[w.j.rarity]+'44');gr.addColorStop(1,'transparent');
-      mctx.beginPath();mctx.arc(sx,sy+bobY,30,0,Math.PI*2);mctx.fillStyle=gr;mctx.fill();
+    // Rarity glow — soft halo, no circle outline
+    const glowSizes = {Common:0,Uncommon:18,Rare:26,Epic:32,Legendary:44,Mythic:54};
+    const glowR = glowSizes[w.j.rarity]||0;
+    if(glowR>0){
+      const gr=mctx.createRadialGradient(sx,sy+bobY-8,2,sx,sy+bobY-8,glowR);
+      gr.addColorStop(0,RC[w.j.rarity]+'66');
+      gr.addColorStop(0.5,RC[w.j.rarity]+'22');
+      gr.addColorStop(1,'transparent');
+      mctx.fillStyle=gr;mctx.fillRect(sx-glowR,sy+bobY-8-glowR,glowR*2,glowR*2);
     }
-    // Shadow
-    mctx.beginPath();mctx.ellipse(sx,sy+24,12,4,0,0,Math.PI*2);mctx.fillStyle='rgba(0,0,0,0.15)';mctx.fill();
-    // Emoji
-    mctx.font='26px serif';mctx.textAlign='center';mctx.textBaseline='middle';
-    mctx.fillText(w.j.icon,sx,sy+bobY);
+    // Shadow under feet
+    mctx.beginPath();mctx.ellipse(sx,sy+bobY+24,11,4,0,0,Math.PI*2);
+    mctx.fillStyle='rgba(0,0,0,0.2)';mctx.fill();
+    // Draw mini Jimmie from cache (52x52)
+    if(!window._jimmieCache) window._jimmieCache={}; // cache cleared on each page load
+    const cacheKey='mc_'+w.j.id;
+    if(!window._jimmieCache[cacheKey]){
+      const offC=document.createElement('canvas');offC.width=56;offC.height=56;
+      const offX=offC.getContext('2d');
+      try{ drawMiniJimmie(offX,56,w.j); }
+      catch(e){ offX.font='34px serif';offX.textAlign='center';offX.textBaseline='middle';offX.fillText(w.j.icon,28,28); }
+      window._jimmieCache[cacheKey]=offC;
+    }
+    mctx.drawImage(window._jimmieCache[cacheKey],sx-28,sy+bobY-30);
     // CP label
     mctx.font='bold 11px '+(getComputedStyle?getComputedStyle(document.body).fontFamily:'Arial');
     mctx.textAlign='center';
@@ -1038,10 +1117,9 @@ function drawMap(){
     mctx.beginPath();mctx.moveTo(rx+rr,ry);mctx.lineTo(rx+rw-rr,ry);mctx.arcTo(rx+rw,ry,rx+rw,ry+rr,rr);mctx.lineTo(rx+rw,ry+rh-rr);mctx.arcTo(rx+rw,ry+rh,rx+rw-rr,ry+rh,rr);mctx.lineTo(rx+rr,ry+rh);mctx.arcTo(rx,ry+rh,rx,ry+rh-rr,rr);mctx.lineTo(rx,ry+rr);mctx.arcTo(rx,ry,rx+rr,ry,rr);mctx.closePath();mctx.fill();
     mctx.fillStyle='white';mctx.textBaseline='middle';
     mctx.fillText(cpTxt,sx,sy+bobY-29);
-    // Rarity dot
-    mctx.beginPath();mctx.arc(sx+12,sy+bobY-12,5,0,Math.PI*2);
-    mctx.fillStyle=RC[w.j.rarity];mctx.fill();
-    mctx.strokeStyle='white';mctx.lineWidth=1.5;mctx.stroke();
+    // Rarity pip — small square tag, no circle
+    mctx.fillStyle=RC[w.j.rarity];
+    mctx.fillRect(sx+14,sy+bobY-16,8,4);
 
     if(dist<110)nearbyArr.push({w,dist});
   }
@@ -1143,8 +1221,8 @@ function spinStop(idx) {
   // Reward: balls + candy
   const roll = Math.random();
   let reward = '';
-  if(roll < 0.30) { G.balls[0]+=3; reward='⚪ +3 SD-Bollar'; }
-  else if(roll < 0.55) { G.balls[0]+=2; G.balls[1]+=1; reward='⚪+2 🔵+1 Bollar'; }
+  if(roll < 0.30) { G.balls[0]=Math.min(G.balls[0]+3,20); reward='⚪ +3 SD-Bollar'; }
+  else if(roll < 0.55) { G.balls[0]=Math.min(G.balls[0]+2,20); G.balls[1]+=1; reward='⚪+2 🔵+1 Bollar'; }
   else if(roll < 0.75) { G.balls[1]+=3; reward='🔵 +3 Super-Bollar'; }
   else if(roll < 0.90) { const rc2=JIMMIES[Math.floor(Math.random()*JIMMIES.length)].rarity; if(!G.candy[rc2])G.candy[rc2]=0; G.candy[rc2]+=3; G.balls[1]+=1; reward='🔵+1 Super + 🍬×3'; }
   else if(roll < 0.97) { G.balls[2]+=1; G.balls[1]+=1; reward='🟡+1 Jimmie-Boll + 🔵+1!'; }
@@ -1189,13 +1267,14 @@ function updateSightings(){
 window.triggerEnc=function(i){activeEnc={w:wJs[i],idx:i};startCatch();};
 
 // ── JOYSTICK ─────────────────────────────────────────────────────
-const jz=document.getElementById('joystick-zone');
-const jk=document.getElementById('j-knob');
+// Joystick removed — use touch-drag on map canvas
 let jo={a:false,bx:0,by:0,dx:0,dy:0};
 const JR=44;
-jz.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0];const r=jz.getBoundingClientRect();jo.a=true;jo.bx=t.clientX-r.left;jo.by=t.clientY-r.top;},{passive:false});
-jz.addEventListener('touchmove',e=>{e.preventDefault();if(!jo.a)return;const t=e.touches[0];const r=jz.getBoundingClientRect();let dx=t.clientX-r.left-jo.bx,dy=t.clientY-r.top-jo.by;const d=Math.sqrt(dx*dx+dy*dy);if(d>JR){dx=dx/d*JR;dy=dy/d*JR;}jo.dx=dx;jo.dy=dy;jk.style.left=(54+dx)+'px';jk.style.top=(54+dy)+'px';},{passive:false});
-jz.addEventListener('touchend',e=>{e.preventDefault();jo.a=false;jo.dx=0;jo.dy=0;jk.style.left='54px';jk.style.top='54px';},{passive:false});
+// Touch drag anywhere on map to move
+const mapCanvas=document.getElementById('map-canvas');
+mapCanvas.addEventListener('touchstart',e=>{if(e.touches.length!==1)return;jo.a=true;jo.bx=e.touches[0].clientX;jo.by=e.touches[0].clientY;jo.dx=0;jo.dy=0;},{passive:true});
+mapCanvas.addEventListener('touchmove',e=>{e.preventDefault();if(!jo.a)return;const dx=e.touches[0].clientX-jo.bx,dy=e.touches[0].clientY-jo.by;const d=Math.sqrt(dx*dx+dy*dy);if(d>JR){jo.dx=dx/d*JR;jo.dy=dy/d*JR;}else{jo.dx=dx;jo.dy=dy;}},{passive:false});
+mapCanvas.addEventListener('touchend',()=>{jo.a=false;jo.dx=0;jo.dy=0;},{passive:true});
 const ks={};
 document.addEventListener('keydown',e=>{
   ks[e.key]=true;
@@ -1234,9 +1313,12 @@ function loop(t){
 requestAnimationFrame(loop);
 
 function updateHUD(){
-  const tot=G.balls.reduce((a,b)=>a+b,0);
   document.getElementById('hud-lv').textContent=G.lv;
-  document.getElementById('hud-balls').textContent=tot;
+  const hudAv=document.getElementById('hud-avatar'); if(hudAv)hudAv.textContent=G.trainerAvatar||'🕵️';
+  const b0=document.getElementById('hud-b0'),b1=document.getElementById('hud-b1'),b2=document.getElementById('hud-b2');
+  if(b0)b0.textContent=G.balls[0];
+  if(b1)b1.textContent=G.balls[1];
+  if(b2)b2.textContent=G.balls[2];
   const xpPct=(G.xp/G.xpMax*100).toFixed(1);
   document.getElementById('top-xp-fill').style.width=xpPct+'%';
   document.getElementById('prof-lv').textContent=G.lv;
@@ -1865,10 +1947,39 @@ function addXP(n) {
   if (G.xp >= G.xpMax) {
     G.xp -= G.xpMax; G.lv++;
     G.xpMax = Math.floor(G.xpMax * 1.3);
-    G.balls[0] += 10;
-    if (G.lv%5===0) G.balls[1] += 3;
-    if (G.lv%10===0) G.balls[2] += 1;
-    document.getElementById('lvl-sub-txt').textContent = 'Du är nu nivå ' + G.lv + '!';
+
+    // Scale rewards with level
+    const lv = G.lv;
+    let b0=0, b1=0, b2=0, rewardTxt='';
+
+    if (lv <= 3) {
+      // Early levels — small intro rewards
+      b0=5; b1=2;
+      rewardTxt = '⚪×5  🔵×2';
+    } else if (lv <= 7) {
+      b0=3; b1=3;
+      rewardTxt = '⚪×3  🔵×3';
+    } else if (lv <= 12) {
+      b1=4; b2=1;
+      rewardTxt = '🔵×4  🟡×1';
+    } else if (lv <= 19) {
+      b1=3; b2=2;
+      rewardTxt = '🔵×3  🟡×2';
+    } else {
+      b1=2; b2=3;
+      rewardTxt = '🔵×2  🟡×3';
+    }
+    // Every 5 levels: bonus Jimmie-boll
+    if (lv % 5 === 0) { b2 += 2; rewardTxt += '  🟡×2 BONUS!'; }
+    // Every 10 levels: rare drop
+    if (lv % 10 === 0) { b2 += 3; b1 += 3; rewardTxt = '🎉 MEGA REWARD: 🔵×'+(b1)+'  🟡×'+(b2); }
+
+    G.balls[0] = Math.min(G.balls[0] + b0, 30); // cap SD-bollar at 30
+    G.balls[1] += b1;
+    G.balls[2] += b2;
+
+    document.getElementById('lvl-sub-txt').textContent = 'Du är nu nivå ' + lv + '!';
+    document.getElementById('lvl-reward-txt').textContent = rewardTxt;
     playSound('levelup');
     document.getElementById('lvl-splash').classList.add('show');
   }
@@ -2278,16 +2389,60 @@ function toggleSetting(key, el) {
   ST[key] = !ST[key];
   el.classList.toggle('on', ST[key]);
 }
-function changeName() {
-  const name = prompt('Ange ditt tränarnamn:', G.trainerName || 'Jimmie-Tränare');
-  if (name && name.trim()) {
-    G.trainerName = name.trim().substring(0, 20);
-    document.getElementById('st-name-val').textContent = G.trainerName;
-    document.getElementById('prof-trainer-name').textContent = G.trainerName.toUpperCase();
-    save();
-    toast('✅ Namn sparat!');
-  }
+function openTrainerPanel() {
+  const panel = document.getElementById('trainer-panel');
+  // Populate with current values
+  const av = G.trainerAvatar || '🕵️';
+  const nm = G.trainerName || 'Jimmie-Tränare';
+  document.getElementById('tp-avatar-big').textContent = av;
+  document.getElementById('tp-name-display').textContent = nm.toUpperCase();
+  document.getElementById('tp-level-display').textContent = 'Nivå ' + G.lv;
+  document.getElementById('tp-name-input').value = nm;
+  // Mark selected avatar
+  document.querySelectorAll('.tp-av').forEach(el => {
+    el.classList.toggle('selected', el.textContent === av);
+  });
+  panel.classList.add('open');
 }
+
+function closeTrainerPanel() {
+  document.getElementById('trainer-panel').classList.remove('open');
+}
+
+function focusAvatarPicker() {
+  document.getElementById('tp-avatar-grid').scrollIntoView({behavior:'smooth'});
+}
+
+function selectAvatar(emoji) {
+  document.querySelectorAll('.tp-av').forEach(el => el.classList.remove('selected'));
+  event.target.classList.add('selected');
+  document.getElementById('tp-avatar-big').textContent = emoji;
+}
+
+function saveTrainerProfile() {
+  const av = document.getElementById('tp-avatar-big').textContent;
+  const nm = document.getElementById('tp-name-input').value.trim().substring(0,20) || 'Jimmie-Tränare';
+  G.trainerAvatar = av;
+  G.trainerName = nm;
+  // Update all displays
+  document.getElementById('hud-avatar').textContent = av;
+  const ta = document.querySelector('.trainer-avatar');
+  if(ta) ta.style.background = 'linear-gradient(135deg,var(--b),#6c3fc7)';
+  document.getElementById('tp-name-display').textContent = nm.toUpperCase();
+  const hn = document.querySelector('.trainer-name');
+  if(hn) hn.textContent = nm.toUpperCase();
+  const ptn = document.getElementById('prof-trainer-name');
+  if(ptn) ptn.textContent = nm.toUpperCase();
+  const stn = document.getElementById('st-name-val');
+  if(stn) stn.textContent = nm;
+  const pab = document.getElementById('prof-avatar-big');
+  if(pab) pab.textContent = av;
+  save();
+  closeTrainerPanel();
+  toast('✅ Profil sparad!');
+}
+
+function changeName() { openTrainerPanel(); }
 function refillBalls() {
   G.balls[0] += 20; G.balls[1] += 5; G.balls[2] += 1;
   updateHUD(); save();
@@ -2379,7 +2534,7 @@ const STEPS = [
   // Step 1: Move
   { title:'🕹️ Flytta dig',
     text:'Drag joysticken nere till vänster för att röra dig. Prova nu!',
-    pos:'above-joystick', btn:null, anchor:'joystick-zone', waitFn:()=>Math.abs(px)>30||Math.abs(py)>30 },
+    pos:'top', btn:null, anchor:null, waitFn:()=>Math.abs(px)>30||Math.abs(py)>30 },
   // Step 2: Stops
   { title:'📍 Jimmie Stops',
     text:'Gul-streckade discar är Jimmie Stops. Gå nära en för att snurra den och få bollar! De lyser när de är redo.',
@@ -2594,6 +2749,17 @@ function playSound(type) {
 
 // ── INIT ────────────────────────────────────────────────────────
 load();buildW();setTimeout(initBallCanvases,100);
+// Apply saved trainer profile
+if(G.trainerAvatar){
+  const ha=document.getElementById('hud-avatar'); if(ha)ha.textContent=G.trainerAvatar;
+  const pab=document.getElementById('prof-avatar-big'); if(pab)pab.textContent=G.trainerAvatar;
+}
+if(G.trainerName){
+  const hn=document.querySelector('.trainer-name'); if(hn)hn.textContent=G.trainerName.toUpperCase();
+  const ptn=document.getElementById('prof-trainer-name'); if(ptn)ptn.textContent=G.trainerName.toUpperCase();
+  const stn=document.getElementById('st-name-val'); if(stn)stn.textContent=G.trainerName;
+}
+window._jimmieCache={}; // fresh cache
 setTimeout(startTutorial, 800);
 // Chunk system spawns automatically on first frame
 // Spawn Jimmie Stops around start
@@ -2628,7 +2794,7 @@ const STOP_DEFS=[
 STOP_DEFS.forEach(def=>{
   stops.push({...def,cooldown:0,maxCd:25,spinning:false,spinAngle:0});
 });
-setInterval(()=>{if(G.balls.reduce((a,b)=>a+b,0)<4){G.balls[0]+=5;toast('SD-Bollar påfyllda! ⚪');updateHUD();}},120000);
+setInterval(()=>{const tot=G.balls.reduce((a,b)=>a+b,0);if(tot<3){G.balls[1]+=3;G.balls[0]+=2;toast('Akut påfyllning! 🔵×3 ⚪×2');updateHUD();}},120000);
 updateHUD();renderDex();
 </script>
 </body>
