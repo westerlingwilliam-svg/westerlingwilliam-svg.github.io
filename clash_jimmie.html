@@ -1,1 +1,1684 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Clash of Jimmie</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
+:root{
+  --gold:#FFD700;--elixir:#cc44ff;--dark:#4a0080;--jimmie:#005293;
+  --bg:#1a2e1a;--panel:#0d1f0d;--card:rgba(255,255,255,0.08);
+  --border:rgba(255,255,255,0.12);--font:'Nunito',sans-serif;--title:'Cinzel',serif;
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:white;font-family:var(--font)}
 
+/* ── TOP HUD ── */
+#hud{position:fixed;top:0;left:0;right:0;z-index:100;background:linear-gradient(180deg,rgba(0,0,0,0.85),rgba(0,0,0,0.5),transparent);padding:8px 10px 20px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.res-pill{background:rgba(0,0,0,0.6);border:1.5px solid rgba(255,255,255,0.15);border-radius:50px;padding:5px 10px 5px 6px;display:flex;align-items:center;gap:5px;font-size:0.72rem;font-weight:800;cursor:pointer;transition:.2s;backdrop-filter:blur(6px)}
+.res-pill:active{transform:scale(0.94)}
+.res-icon{font-size:1.1rem}
+.res-val{min-width:36px;text-align:right}
+.res-max{font-size:0.55rem;color:rgba(255,255,255,0.4);font-weight:600}
+#menu-btn{margin-left:auto;background:rgba(0,0,0,0.6);border:1.5px solid rgba(255,255,255,0.2);border-radius:50px;padding:6px 14px;font-size:0.75rem;font-weight:900;color:white;cursor:pointer;font-family:var(--font);backdrop-filter:blur(6px);text-decoration:none;display:flex;align-items:center;gap:5px}
+#jhall-badge{background:linear-gradient(135deg,var(--gold),#cc9900);color:#1a0a00;border-radius:50px;padding:5px 12px;font-size:0.7rem;font-weight:900;font-family:var(--title);display:flex;align-items:center;gap:5px}
+
+/* ── GAME CANVAS ── */
+#game-wrap{position:fixed;inset:0;overflow:hidden;touch-action:none}
+#base-canvas{display:block;cursor:crosshair}
+
+/* ── BOTTOM NAV ── */
+#bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:linear-gradient(0deg,rgba(0,0,0,0.9),rgba(0,0,0,0.6),transparent);padding:12px 8px 8px;display:flex;justify-content:space-around;align-items:flex-end}
+.nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 10px;border-radius:16px;transition:.15s;min-width:56px}
+.nav-btn:active{transform:scale(0.88)}
+.nav-btn.active{background:rgba(255,255,255,0.12)}
+.nav-icon{font-size:1.6rem;line-height:1}
+.nav-lbl{font-size:0.58rem;font-weight:800;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:.5px}
+.nav-btn.active .nav-lbl{color:var(--gold)}
+
+/* ── PANELS ── */
+.panel{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(180deg,#1a2e10,#0d1a08);border-radius:28px 28px 0 0;border-top:1.5px solid rgba(255,255,255,0.1);z-index:90;transform:translateY(100%);transition:transform .4s cubic-bezier(.34,1.56,.64,1);max-height:75vh;display:flex;flex-direction:column;box-shadow:0 -8px 40px rgba(0,0,0,0.5)}
+.panel.open{transform:translateY(0)}
+.panel-handle{width:40px;height:5px;background:rgba(255,255,255,0.2);border-radius:3px;margin:10px auto 0;flex-shrink:0}
+.panel-title{font-family:var(--title);font-size:1.1rem;color:var(--gold);text-align:center;padding:10px 16px 6px;flex-shrink:0;letter-spacing:1px}
+.panel-scroll{flex:1;overflow-y:auto;padding:10px 14px 100px}
+
+/* ── SECTION HEADERS ── */
+.section-hdr{font-size:0.65rem;font-weight:800;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:2px;margin:14px 0 8px;display:flex;align-items:center;gap:8px}
+.section-hdr::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.08)}
+
+/* ── BUILDING CARDS ── */
+.build-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}
+.build-card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:12px 8px;text-align:center;cursor:pointer;transition:.2s}
+.build-card:active{transform:scale(0.92)}
+.build-card.locked{opacity:0.35;cursor:not-allowed}
+.build-card.maxed{border-color:var(--gold);background:rgba(255,215,0,0.06)}
+.bc-icon{font-size:2.2rem;margin-bottom:4px}
+.bc-name{font-size:0.65rem;font-weight:800;color:white;line-height:1.3}
+.bc-cost{font-size:0.58rem;color:var(--gold);margin-top:3px;font-weight:700}
+.bc-count{font-size:0.55rem;color:rgba(255,255,255,0.4);margin-top:2px}
+
+/* ── BUILDER QUEUE ── */
+#builder-area{padding:10px 14px 6px;background:rgba(0,0,0,0.3);border-top:1px solid var(--border);flex-shrink:0}
+.builder-row{display:flex;gap:8px}
+.builder-slot{flex:1;background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:8px 10px;display:flex;align-items:center;gap:8px}
+.builder-icon{font-size:1.4rem}
+.builder-info{flex:1;min-width:0}
+.builder-name{font-size:0.65rem;font-weight:800;color:rgba(255,255,255,0.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.builder-timer{font-size:0.72rem;font-weight:900;color:var(--gold)}
+.builder-idle{color:rgba(255,255,255,0.35);font-size:0.65rem}
+
+/* ── TROOP CARDS ── */
+.troop-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.troop-card{background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:10px 6px;text-align:center;cursor:pointer;transition:.2s;position:relative}
+.troop-card:active{transform:scale(0.9)}
+.troop-card.selected{border-color:var(--gold);background:rgba(255,215,0,0.08)}
+.tc-canvas{display:block;margin:0 auto 4px}
+.tc-name{font-size:0.58rem;font-weight:800;color:white}
+.tc-level{position:absolute;top:5px;right:5px;background:var(--gold);color:#1a0a00;font-size:0.5rem;font-weight:900;padding:1px 5px;border-radius:50px}
+.tc-count{font-size:0.62rem;font-weight:900;color:var(--gold);margin-top:2px}
+.tc-train-btn{font-size:0.55rem;background:rgba(255,255,255,0.1);border-radius:50px;padding:2px 8px;margin-top:3px;cursor:pointer;display:inline-block}
+.troop-queue-bar{background:rgba(0,0,0,0.4);border-radius:50px;height:5px;margin-top:4px;overflow:hidden}
+.troop-queue-fill{height:100%;background:linear-gradient(90deg,var(--elixir),#ff88ff);border-radius:50px;transition:width .5s}
+
+/* ── RESEARCH ── */
+.research-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.research-card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:12px;display:flex;gap:10px;align-items:center;cursor:pointer;transition:.2s}
+.research-card:active{transform:scale(0.96)}
+.research-card.upgrading{border-color:var(--elixir)}
+.rc-icon{font-size:2rem;flex-shrink:0}
+.rc-info{flex:1}
+.rc-name{font-size:0.75rem;font-weight:800;color:white}
+.rc-lv{font-size:0.6rem;color:rgba(255,255,255,0.5);margin-top:1px}
+.rc-cost{font-size:0.62rem;color:var(--elixir);margin-top:3px;font-weight:700}
+.rc-timer{font-size:0.65rem;color:var(--gold);font-weight:800}
+
+/* ── HERO PANEL ── */
+.hero-card{background:linear-gradient(135deg,rgba(255,215,0,0.1),rgba(0,82,147,0.2));border:2px solid var(--gold);border-radius:20px;padding:16px;margin-bottom:12px;display:flex;gap:14px;align-items:center}
+.hero-canvas{border-radius:12px;background:rgba(0,0,0,0.3);flex-shrink:0}
+.hero-info{flex:1}
+.hero-name{font-family:var(--title);font-size:1rem;color:var(--gold);letter-spacing:1px}
+.hero-lv{font-size:0.7rem;color:rgba(255,255,255,0.6);margin-top:2px}
+.hero-stat{font-size:0.75rem;font-weight:700;margin-top:4px}
+.hero-ability{font-size:0.62rem;color:rgba(255,255,255,0.5);margin-top:4px;line-height:1.5}
+.hero-lvup-btn{background:linear-gradient(135deg,var(--dark),#7700cc);color:white;border:none;border-radius:50px;padding:8px 16px;font-size:0.72rem;font-weight:900;cursor:pointer;font-family:var(--font);margin-top:8px;width:100%;transition:.15s}
+.hero-lvup-btn:active{transform:scale(0.96)}
+
+/* ── ATTACK MODE ── */
+#attack-wrap{position:fixed;inset:0;z-index:200;display:none;flex-direction:column;background:#1a2e1a}
+#attack-wrap.show{display:flex}
+#attack-hud{padding:10px 14px;background:rgba(0,0,0,0.7);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;backdrop-filter:blur(8px)}
+#attack-timer-circle{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,0.1);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;font-family:var(--title);color:var(--gold)}
+#attack-canvas{display:block;flex:1;cursor:crosshair}
+#attack-troops-bar{background:rgba(0,0,0,0.75);padding:10px 14px 8px;backdrop-filter:blur(8px);flex-shrink:0}
+.at-troops-row{display:flex;gap:8px;justify-content:center;margin-bottom:8px}
+.at-troop{width:56px;height:56px;background:var(--card);border:2px solid var(--border);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:.15s;position:relative}
+.at-troop.selected{border-color:var(--gold);background:rgba(255,215,0,0.1)}
+.at-troop:active{transform:scale(0.88)}
+.at-troop-count{font-size:0.6rem;font-weight:900;color:var(--gold)}
+#attack-btns{display:flex;gap:10px;justify-content:center}
+.atk-btn{background:rgba(255,255,255,0.1);border:1.5px solid rgba(255,255,255,0.2);color:white;padding:8px 20px;border-radius:50px;font-size:0.78rem;font-weight:900;cursor:pointer;font-family:var(--font);transition:.15s}
+.atk-btn:active{transform:scale(0.94)}
+.atk-btn.red{background:rgba(255,50,50,0.2);border-color:rgba(255,50,50,0.4);color:#ff8888}
+.atk-btn.green{background:rgba(50,255,100,0.15);border-color:rgba(50,255,100,0.4);color:#80ff80}
+
+/* ── MODALS ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);z-index:300;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal-card{background:linear-gradient(160deg,#1a2e10,#0d1a08);border:1.5px solid var(--border);border-radius:24px;padding:0;width:100%;max-width:340px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.5);animation:modal-in .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes modal-in{from{transform:scale(0.8);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-header{background:rgba(0,0,0,0.4);padding:16px 18px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.modal-title{font-family:var(--title);font-size:1rem;color:var(--gold);letter-spacing:1px}
+.modal-body{padding:16px 18px}
+.modal-stat{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:0.78rem}
+.modal-stat-lbl{color:rgba(255,255,255,0.5);font-weight:600}
+.modal-stat-val{font-weight:800;color:white}
+.modal-prog-wrap{background:rgba(255,255,255,0.08);border-radius:50px;height:8px;margin:10px 0;overflow:hidden}
+.modal-prog-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--gold),#ff9900)}
+.modal-footer{padding:14px 18px;display:flex;gap:8px;border-top:1px solid var(--border)}
+.modal-btn{flex:1;padding:12px;border-radius:50px;border:none;font-size:0.82rem;font-weight:900;cursor:pointer;font-family:var(--font);transition:.15s}
+.modal-btn:active{transform:scale(0.96)}
+.modal-btn.cancel{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6)}
+.modal-btn.primary{background:linear-gradient(135deg,var(--gold),#cc8800);color:#1a0a00}
+.modal-btn.elixir{background:linear-gradient(135deg,var(--elixir),#8800cc);color:white}
+
+/* ── LEVEL UP ── */
+#levelup-splash{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.85);display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;backdrop-filter:blur(8px)}
+#levelup-splash.show{display:flex}
+.lu-star{font-size:4rem;animation:lu-spin 1s ease-in-out}
+@keyframes lu-spin{from{transform:rotate(-30deg) scale(0.5)}to{transform:rotate(0) scale(1)}}
+.lu-title{font-family:var(--title);font-size:2rem;color:var(--gold);text-shadow:0 0 30px rgba(255,215,0,0.6)}
+.lu-sub{color:rgba(255,255,255,0.7);font-size:0.9rem}
+.lu-btn{background:linear-gradient(135deg,var(--gold),#cc8800);color:#1a0a00;border:none;padding:14px 40px;border-radius:50px;font-size:1rem;font-weight:900;cursor:pointer;font-family:var(--font);margin-top:8px}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.88);backdrop-filter:blur(8px);color:white;padding:10px 22px;border-radius:50px;font-size:0.82rem;font-weight:700;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap;border:1px solid rgba(255,255,255,0.1)}
+#toast.show{opacity:1}
+
+/* ── ATTACK RESULT ── */
+#result-overlay{position:fixed;inset:0;z-index:350;background:rgba(0,0,0,0.85);display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;backdrop-filter:blur(8px);padding:20px}
+#result-overlay.show{display:flex}
+.result-stars{font-size:2.5rem;letter-spacing:8px}
+.result-title{font-family:var(--title);font-size:2rem;color:var(--gold);text-align:center}
+.result-sub{color:rgba(255,255,255,0.6);font-size:0.88rem;text-align:center}
+.result-loot{display:flex;gap:16px;margin:6px 0}
+.result-loot-item{text-align:center;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:10px 16px}
+.result-loot-val{font-size:1.2rem;font-weight:900;color:var(--gold)}
+.result-btn{background:linear-gradient(135deg,var(--gold),#cc8800);color:#1a0a00;border:none;padding:14px 40px;border-radius:50px;font-size:1rem;font-weight:900;cursor:pointer;font-family:var(--font)}
+</style>
+</head>
+<body>
+
+<!-- ── TOP HUD ── -->
+<div id="hud">
+  <div class="res-pill" title="Riksdaler">
+    <div class="res-icon">🪙</div>
+    <div><div class="res-val" id="gold-val">0</div><div class="res-max" id="gold-max">/500</div></div>
+  </div>
+  <div class="res-pill" title="SD-Saft">
+    <div class="res-icon" style="color:var(--elixir)">🧪</div>
+    <div><div class="res-val" id="elixir-val">0</div><div class="res-max" id="elixir-max">/500</div></div>
+  </div>
+  <div class="res-pill" title="Jimmie-Kraft">
+    <div class="res-icon" style="color:#aa00ff">💜</div>
+    <div><div class="res-val" id="dark-val">0</div><div class="res-max">/500</div></div>
+  </div>
+  <div id="jhall-badge">🏛️ JH <span id="jh-level">1</span></div>
+  <a href="games.html" id="menu-btn">🏠 Meny</a>
+</div>
+
+<!-- ── GAME CANVAS ── -->
+<div id="game-wrap">
+  <canvas id="base-canvas"></canvas>
+</div>
+
+<!-- ── ATTACK MODE ── -->
+<div id="attack-wrap">
+  <div id="attack-hud">
+    <div id="attack-timer-circle" id="attack-timer">180</div>
+    <div style="text-align:center">
+      <div style="font-family:var(--title);font-size:0.8rem;color:var(--gold);letter-spacing:1px">ANGREPP</div>
+      <div id="attack-stars" style="font-size:1.2rem">☆☆☆</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:0.65rem;color:rgba(255,255,255,0.5)">Destruktion</div>
+      <div id="attack-pct" style="font-size:1rem;font-weight:900;color:var(--gold)">0%</div>
+    </div>
+  </div>
+  <canvas id="attack-canvas"></canvas>
+  <div id="attack-troops-bar">
+    <div class="at-troops-row" id="at-troops-row"></div>
+    <div id="attack-btns">
+      <button class="atk-btn red" onclick="surrenderAttack()">🏳️ Ge upp</button>
+      <button class="atk-btn" id="spell-btn" onclick="deploySpell()">⚡ Rage-Besvärjelse</button>
+      <button class="atk-btn green" id="hero-attack-btn" onclick="deployHero()">👑 Jimmie!</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── RESULT OVERLAY ── -->
+<div id="result-overlay">
+  <div class="result-stars" id="result-stars">⭐⭐⭐</div>
+  <div class="result-title" id="result-title">SEGER!</div>
+  <div class="result-sub" id="result-sub">Jimmie leder till framgång!</div>
+  <div class="result-loot">
+    <div class="result-loot-item"><div class="result-loot-val" id="r-gold">0</div><div style="font-size:0.65rem;color:rgba(255,255,255,0.5)">Riksdaler</div></div>
+    <div class="result-loot-item"><div class="result-loot-val" id="r-elixir" style="color:var(--elixir)">0</div><div style="font-size:0.65rem;color:rgba(255,255,255,0.5)">SD-Saft</div></div>
+    <div class="result-loot-item"><div class="result-loot-val" id="r-dark" style="color:#aa00ff">0</div><div style="font-size:0.65rem;color:rgba(255,255,255,0.5)">J-Kraft</div></div>
+  </div>
+  <button class="result-btn" onclick="closeAttackResult()">Tillbaka till byn</button>
+</div>
+
+<!-- ── BOTTOM NAV ── -->
+<div id="bottom-nav">
+  <div class="nav-btn active" id="nav-by" onclick="switchNav('by')"><div class="nav-icon">🏘️</div><div class="nav-lbl">Byn</div></div>
+  <div class="nav-btn" id="nav-army" onclick="switchNav('army')"><div class="nav-icon">⚔️</div><div class="nav-lbl">Armé</div></div>
+  <div class="nav-btn" id="nav-research" onclick="switchNav('research')"><div class="nav-icon">🔬</div><div class="nav-lbl">Forskning</div></div>
+  <div class="nav-btn" id="nav-heroes" onclick="switchNav('heroes')"><div class="nav-icon">👑</div><div class="nav-lbl">Hjältar</div></div>
+  <div class="nav-btn" id="nav-attack" onclick="startAttackMode()"><div class="nav-icon">🗡️</div><div class="nav-lbl">Attack</div></div>
+</div>
+
+<!-- ── BY PANEL ── -->
+<div class="panel" id="panel-by">
+  <div class="panel-handle"></div>
+  <div class="panel-title">🏘️ JIMMIE HALL — BYGGNADER</div>
+  <div id="builder-area">
+    <div style="font-size:0.62rem;color:rgba(255,255,255,0.4);font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">🔨 SD-Byggare</div>
+    <div class="builder-row" id="builder-row"></div>
+  </div>
+  <div class="panel-scroll" id="panel-by-scroll"></div>
+</div>
+
+<!-- ── ARMY PANEL ── -->
+<div class="panel" id="panel-army">
+  <div class="panel-handle"></div>
+  <div class="panel-title">⚔️ JIMMIE-ARMÉN</div>
+  <div class="panel-scroll" id="panel-army-scroll"></div>
+</div>
+
+<!-- ── RESEARCH PANEL ── -->
+<div class="panel" id="panel-research">
+  <div class="panel-handle"></div>
+  <div class="panel-title">🔬 LABORATORIUM</div>
+  <div class="panel-scroll" id="panel-research-scroll"></div>
+</div>
+
+<!-- ── HEROES PANEL ── -->
+<div class="panel" id="panel-heroes">
+  <div class="panel-handle"></div>
+  <div class="panel-title">👑 JIMMIE-HJÄLTAR</div>
+  <div class="panel-scroll" id="panel-heroes-scroll"></div>
+</div>
+
+<!-- ── BUILD MODAL ── -->
+<div class="modal-overlay" id="build-modal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div style="font-size:2rem" id="bm-icon">🏰</div>
+      <div>
+        <div class="modal-title" id="bm-title">Byggnad</div>
+        <div style="font-size:0.65rem;color:rgba(255,255,255,0.4)" id="bm-sub">Nivå 1</div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div id="bm-stats"></div>
+      <div class="modal-prog-wrap"><div class="modal-prog-fill" id="bm-prog" style="width:0%"></div></div>
+      <div style="font-size:0.7rem;color:rgba(255,255,255,0.4);text-align:center" id="bm-prog-lbl"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn cancel" onclick="closeModal('build-modal')">Stäng</button>
+      <button class="modal-btn primary" id="bm-action-btn" onclick="doBuildAction()">Bygg</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── LEVEL UP SPLASH ── -->
+<div id="levelup-splash">
+  <div class="lu-star">⭐</div>
+  <div class="lu-title" id="lu-title">JIMMIE HALL UPPGRADERAD!</div>
+  <div class="lu-sub" id="lu-sub">Nivå 2 upplåst!</div>
+  <div style="font-size:0.85rem;color:var(--gold);font-weight:800" id="lu-unlocks"></div>
+  <button class="lu-btn" onclick="closeLevelUp()">OKEJ!</button>
+</div>
+
+<div id="toast"></div>
+
+<script>
+'use strict';
+const SAVE_KEY='coj_v2';
+
+// ── GAME DATA ─────────────────────────────────────────────────────
+const JH_MAX=8;
+const JH_DATA=[
+  {lv:1,upgCostGold:0,        upgTime:0,    maxBuilders:1,unlocks:['Jimmie Hall','Riksdaler-Gruva','SD-Saft-Samlare','Kasern','Kanon','Mur']},
+  {lv:2,upgCostGold:1000,     upgTime:60,   maxBuilders:1,unlocks:['Pilbåge-Torn','Riksdaler-Förråd','SD-Saft-Tank']},
+  {lv:3,upgCostGold:5000,     upgTime:300,  maxBuilders:2,unlocks:['Mörsare','Luftförsvar','Laboratorium']},
+  {lv:4,upgCostGold:20000,    upgTime:1200, maxBuilders:2,unlocks:['X-Pil','Bomb-Fälla','Jimmie Åkesson (hjälte)']},
+  {lv:5,upgCostGold:75000,    upgTime:3600, maxBuilders:3,unlocks:['Tesla-Torn','Ebba-Hjälte','Mördar-Jimmie','Dark Elixir-Bohrare']},
+  {lv:6,upgCostGold:200000,   upgTime:7200, maxBuilders:3,unlocks:['Inferno-Torn','Eagle-Artilleri','SD-Maskin']},
+  {lv:7,upgCostGold:600000,   upgTime:14400,maxBuilders:4,unlocks:['Grand Warden-Jimmie','Scattershot','Workshop']},
+  {lv:8,upgCostGold:1500000,  upgTime:28800,maxBuilders:4,unlocks:['MAX NIVÅ','Alla byggnader upplåsta']},
+];
+
+const BUILDING_TYPES={
+  'jimmie_hall':{name:'Jimmie Hall',icon:'🏛️',desc:'Hjärtat i byn. Uppgradera för att låsa upp fler byggnader.',size:4,maxLv:8,costGold:[0,1000,5000,20000,75000,200000,600000,1500000],costElixir:[0,0,0,0,0,0,0,0],buildTime:[0,60,300,1200,3600,7200,14400,28800],hp:[1000,1500,2200,3100,4200,5500,7200,9000],limit:1,category:'special',
+   stats:lv=>`HP: ${[1000,1500,2200,3100,4200,5500,7200,9000][lv-1]}`},
+  'kanon':{name:'Kanon',icon:'💣',desc:'Kraftfullt försvar. Siktar på marktrupper.',size:2,maxLv:8,costGold:[250,500,1000,2000,4000,8000,15000,30000],buildTime:[30,60,120,300,600,1200,3600,7200],hp:[400,450,500,570,650,750,870,1000],dps:[9,11,13,15,17,20,24,28],limit:3,category:'defense',
+   stats:lv=>`DPS: ${[9,11,13,15,17,20,24,28][lv-1]} | HP: ${[400,450,500,570,650,750,870,1000][lv-1]}`},
+  'pilbage_torn':{name:'Pilbåge-Torn',icon:'🏹',desc:'Träffar både mark- och lufttrupper.',size:2,maxLv:8,costGold:[300,600,1200,2400,4800,9600,19200,38400],buildTime:[45,90,180,360,720,1440,4320,8640],hp:[380,420,480,560,650,760,890,1050],dps:[11,15,19,25,30,35,42,50],limit:3,category:'defense',
+   stats:lv=>`DPS: ${[11,15,19,25,30,35,42,50][lv-1]} | HP: ${[380,420,480,560,650,760,890,1050][lv-1]}`},
+  'morsare':{name:'Mörsare',icon:'🎯',desc:'Splash-skada på marktrupper. Låg räckvidd men kraftfull.',size:2,maxLv:8,costGold:[400,800,1600,3200,6400,12800,25600,51200],buildTime:[60,120,240,480,960,1920,5760,11520],hp:[400,450,500,550,600,700,800,900],dps:[4,5,6,7,8.5,10,12,14],splash:true,limit:2,category:'defense',
+   stats:lv=>`DPS: ${[4,5,6,7,8.5,10,12,14][lv-1]} (Splash!) | HP: ${[400,450,500,550,600,700,800,900][lv-1]}`},
+  'luftforsvar':{name:'Luftförsvar',icon:'🚀',desc:'Förstör flygande Jimmie-enheter.',size:2,maxLv:8,costGold:[500,1000,2000,4000,8000,16000,32000,64000],buildTime:[90,180,360,720,1440,2880,8640,17280],hp:[900,950,1000,1050,1100,1150,1200,1300],dps:[80,108,130,160,192,224,280,320],limit:2,category:'defense',
+   stats:lv=>`DPS: ${[80,108,130,160,192,224,280,320][lv-1]} (Luft) | HP: ${[900,950,1000,1050,1100,1150,1200,1300][lv-1]}`},
+  'tesla_torn':{name:'Tesla-Torn',icon:'⚡',desc:'Gömd tills fienden är nära. Elektrisk skada.',size:2,maxLv:6,costGold:[1000,2000,4000,8000,16000,32000],buildTime:[300,600,1200,2400,4800,9600],hp:[600,700,800,900,1000,1100],dps:[17,21,26,33,41,51],limit:2,category:'defense',unlockJH:5,
+   stats:lv=>`DPS: ${[17,21,26,33,41,51][lv-1]} (Dold) | HP: ${[600,700,800,900,1000,1100][lv-1]}`},
+  'riksdaler_gruva':{name:'Riksdaler-Gruva',icon:'⛏️',desc:'Producerar Riksdaler automatiskt.',size:2,maxLv:8,costGold:[150,300,600,1200,2400,4800,9600,19200],buildTime:[20,40,80,160,320,640,1920,3840],goldPerHour:[120,180,240,360,480,600,780,960],limit:3,category:'resource',
+   stats:lv=>`${[120,180,240,360,480,600,780,960][lv-1]} Riksdaler/tim`},
+  'riksdaler_forrad':{name:'Riksdaler-Förråd',icon:'💰',desc:'Lagrar Riksdaler.',size:3,maxLv:8,costGold:[200,400,800,1600,3200,6400,12800,25600],buildTime:[30,60,120,240,480,960,2880,5760],capacity:[1500,3000,6000,12000,25000,50000,100000,200000],limit:2,category:'resource',unlockJH:2,
+   stats:lv=>`Kapacitet: ${[1500,3000,6000,12000,25000,50000,100000,200000][lv-1].toLocaleString()}`},
+  'saft_samlare':{name:'SD-Saft-Samlare',icon:'🧫',desc:'Producerar SD-Saft automatiskt.',size:2,maxLv:8,costElixir:[150,300,600,1200,2400,4800,9600,19200],buildTime:[20,40,80,160,320,640,1920,3840],elixirPerHour:[120,180,240,360,480,600,780,960],limit:3,category:'resource',
+   stats:lv=>`${[120,180,240,360,480,600,780,960][lv-1]} Saft/tim`},
+  'saft_tank':{name:'SD-Saft-Tank',icon:'🫙',desc:'Lagrar SD-Saft.',size:3,maxLv:8,costGold:[200,400,800,1600,3200,6400,12800,25600],buildTime:[30,60,120,240,480,960,2880,5760],capacity:[1500,3000,6000,12000,25000,50000,100000,200000],limit:2,category:'resource',unlockJH:2,
+   stats:lv=>`Kapacitet: ${[1500,3000,6000,12000,25000,50000,100000,200000][lv-1].toLocaleString()}`},
+  'kasern':{name:'Kasern',icon:'⚔️',desc:'Tränar Jimmie-trupper.',size:3,maxLv:8,costElixir:[200,400,800,1600,3200,6400,12800,25600],buildTime:[45,90,180,360,720,1440,4320,8640],trainingBoost:[1,1.1,1.2,1.3,1.5,1.7,2,2.5],limit:2,category:'military',
+   stats:lv=>`Träningsboost: ${[1,1.1,1.2,1.3,1.5,1.7,2,2.5][lv-1]}x`},
+  'laboratorium':{name:'Laboratorium',icon:'🔬',desc:'Forskar uppgraderingar för trupper och besvärjelser.',size:3,maxLv:8,costGold:[500,1000,2000,4000,8000,16000,32000,64000],buildTime:[120,240,480,960,1920,3840,11520,23040],limit:1,category:'military',unlockJH:3,
+   stats:_=>`Möjliggör truppforskning`},
+  'arme_lager':{name:'Armélager',icon:'🏕️',desc:'Ökar kapaciteten för trupper.',size:3,maxLv:8,costElixir:[150,300,600,1200,2400,4800,9600,19200],buildTime:[20,40,80,160,320,640,1920,3840],capacity:[20,30,40,60,80,100,120,150],limit:2,category:'military',
+   stats:lv=>`Armé-kapacitet: ${[20,30,40,60,80,100,120,150][lv-1]}`},
+  'dark_bohrare':{name:'Dark Elixir-Borr',icon:'🖤',desc:'Utvinner Jimmie-Kraft djupt under marken.',size:2,maxLv:6,costGold:[3000,6000,12000,24000,48000,96000],buildTime:[360,720,1440,2880,5760,11520],darkPerHour:[20,40,60,80,100,120],limit:1,category:'resource',unlockJH:5,
+   stats:lv=>`${[20,40,60,80,100,120][lv-1]} J-Kraft/tim`},
+  'mur':{name:'Mur',icon:'🧱',desc:'Blockerar angripare. Uppgradera för starkare murar.',size:1,maxLv:8,costGold:[50,100,300,1000,2000,5000,10000,30000],buildTime:[0,5,10,30,60,120,300,600],hp:[300,500,700,1000,1500,2500,4000,7000],limit:40,category:'wall',
+   stats:lv=>`HP: ${[300,500,700,1000,1500,2500,4000,7000][lv-1]}`},
+  'bomb_falla':{name:'Bomb-Fälla',icon:'💥',desc:'Exploderar när fienden trampar på den.',size:1,maxLv:6,costGold:[200,400,800,1600,3200,6400],buildTime:[10,20,40,80,160,320],damage:[10,15,20,35,45,60],limit:4,category:'trap',unlockJH:4,
+   stats:lv=>`Skada: ${[10,15,20,35,45,60][lv-1]}`},
+};
+
+const TROOP_TYPES={
+  'lill_jimmie':{name:'Lill-Jimmie',icon:'👤',col:'#9e9e9e',trainCost:25,trainTime:20,space:1,hp:[45,50,60,75,90,110],dps:[8,10,12,14,17,21],speed:16,target:'both',desc:'Snabb markenhet. Angriper närmaste byggnad.',maxLv:6,costToResearch:[0,10000,25000,50000,100000,200000]},
+  'jimmie_bagare':{name:'Jimmie-Bågare',icon:'🏹',col:'#34d399',trainCost:50,trainTime:25,space:1,hp:[20,22,25,30,35,42],dps:[7,9,11,13,15,18],speed:24,target:'both',desc:'Ranged-enhet. Stannar utanför murar.',maxLv:6,costToResearch:[0,15000,35000,70000,140000,280000]},
+  'sd_jatte':{name:'SD-Jätte',icon:'💪',col:'#60a5fa',trainCost:150,trainTime:120,space:5,hp:[300,360,440,530,640,770],dps:[12,15,18,21,25,29],speed:12,target:'defense',desc:'Tankar skada. Fokuserar på försvar.',maxLv:6,costToResearch:[0,20000,50000,100000,200000,400000]},
+  'jimmie_trollkarl':{name:'SD-Trollkarl',icon:'🧙',col:'#a855f7',trainCostElixir:300,trainCost:0,trainTime:180,space:4,hp:[75,80,90,105,120,140],dps:[24,28,32,38,44,52],speed:16,target:'both',splash:true,desc:'Splash-skada. Dödar grupper av fiender.',maxLv:6,costToResearch:[0,50000,100000,200000,400000,800000]},
+  'jimmie_ballong':{name:'Jimmie-Ballong',icon:'🎈',col:'#f87171',trainCostElixir:2000,trainCost:0,trainTime:500,space:5,hp:[150,180,216,259,311,373],dps:[56,72,90,112,140,175],speed:8,target:'defense',air:true,desc:'Flyger! Fokuserar på försvar. Långsam men stark.',maxLv:6,costToResearch:[0,75000,150000,300000,600000,1200000]},
+  'jimmie_helare':{name:'Jimmie-Helare',icon:'💊',col:'#4ade80',trainCostElixir:2000,trainCost:0,trainTime:480,space:14,hp:[200,240,288,346,415,498],healPerSec:[30,36,43,52,62,74],speed:22,target:'friendly',air:true,desc:'Helar egna trupper. Kan inte attackera.',maxLv:6,costToResearch:[0,100000,200000,400000,800000,1600000]},
+  'minar_jimmie':{name:'Minar-Jimmie',icon:'⛏️',col:'#fb923c',trainCostElixir:3500,trainCost:0,trainTime:600,space:6,hp:[200,240,288,346,415,498],dps:[60,75,93,116,145,181],speed:28,target:'both',underground:true,desc:'Gräver under murar! Fokuserar på resurser.',maxLv:6,costToResearch:[0,200000,400000,800000,1600000,3200000]},
+  'pekka_jimmie':{name:'P.E.K.K.A-Jimmie',icon:'🤖',col:'#1a1a4a',trainCostElixir:6000,trainCost:0,trainTime:1800,space:25,hp:[2000,2400,2900,3500,4200,5000],dps:[240,300,375,469,586,733],speed:16,target:'both',desc:'Massiv pansrad enhet. Extremt kraftfull.',maxLv:6,costToResearch:[0,500000,1000000,2000000,4000000,8000000]},
+};
+
+const SPELL_TYPES={
+  'rage':{name:'Rage-Besvärjelse',icon:'⚡',costElixir:2000,desc:'Ökar truppernas hastighet och skada med 2x i 10 sek.',effect:{speedMult:1.5,dpsMult:2,duration:10}},
+  'frys':{name:'Frys-Besvärjelse',icon:'❄️',costElixir:2500,desc:'Fryser fienders byggnader i 4 sek.',effect:{freeze:4}},
+  'hopp':{name:'Hopp-Besvärjelse',icon:'💨',costElixir:1800,desc:'Trupper ignorerar murar i 40 sek.',effect:{jump:40}},
+  'haling':{name:'Hälso-Besvärjelse',icon:'💚',costElixir:2200,desc:'Helar alla trupper i zonen.',effect:{heal:500}},
+};
+
+const HERO_TYPES={
+  'jimmie_akesson':{name:'Jimmie Åkesson',title:'Barbar-Kungen',icon:'👑',col:'#005293',maxLv:30,costDark:lv=>Math.floor(20+lv*8),upgTime:lv=>lv*60,hp:lv=>200+lv*25,dps:lv=>50+lv*6,ability:'Iron Fist - Kallar 6 Barbar-Jimmies och boostar dem',abilityCD:30,unlockJH:4},
+  'ebba_buschen':{name:'Ebba Buschen',title:'Pilbåge-Drottningen',icon:'🏹',col:'#ff4488',maxLv:30,costDark:lv=>Math.floor(30+lv*10),upgTime:lv=>lv*80,hp:lv=>300+lv*20,dps:lv=>75+lv*8,ability:'Royal Cloak - Osynlig i 5 sek + helar',abilityCD:40,unlockJH:5},
+  'oscar_sjostedt':{name:'Oscar Sjöstedt',title:'Grand Warden',icon:'💰',col:'#FFCB05',maxLv:20,costDark:lv=>Math.floor(50+lv*15),upgTime:lv=>lv*100,hp:lv=>400+lv*15,dps:lv=>20+lv*3,ability:'Eternal Tome - Alla trupper odödliga i 6 sek',abilityCD:60,unlockJH:7},
+};
+
+const RESEARCH_TYPES=[
+  {id:'l_jimmie_1',troopId:'lill_jimmie',name:'Lill-Jimmie Lv2',icon:'👤',costElixir:10000,time:120,effect:'Lill-Jimmie: +12 HP, +2 DPS',unlock:3},
+  {id:'l_jimmie_2',troopId:'lill_jimmie',name:'Lill-Jimmie Lv3',icon:'👤',costElixir:25000,time:300,effect:'Lill-Jimmie: +22 HP, +2 DPS',unlock:3},
+  {id:'l_jimmie_3',troopId:'lill_jimmie',name:'Lill-Jimmie Lv4',icon:'👤',costElixir:50000,time:600,effect:'Lill-Jimmie: +15 HP, +2 DPS',unlock:4},
+  {id:'bagare_1',troopId:'jimmie_bagare',name:'Bågare Lv2',icon:'🏹',costElixir:15000,time:180,effect:'Bågare: +5 HP, +2 DPS',unlock:3},
+  {id:'bagare_2',troopId:'jimmie_bagare',name:'Bågare Lv3',icon:'🏹',costElixir:35000,time:360,effect:'Bågare: +8 HP, +2 DPS',unlock:4},
+  {id:'jatte_1',troopId:'sd_jatte',name:'SD-Jätte Lv2',icon:'💪',costElixir:20000,time:240,effect:'Jätte: +60 HP, +3 DPS',unlock:3},
+  {id:'jatte_2',troopId:'sd_jatte',name:'SD-Jätte Lv3',icon:'💪',costElixir:50000,time:480,effect:'Jätte: +80 HP, +3 DPS',unlock:4},
+  {id:'jatte_3',troopId:'sd_jatte',name:'SD-Jätte Lv4',icon:'💪',costElixir:100000,time:960,effect:'Jätte: +90 HP, +4 DPS',unlock:5},
+  {id:'troll_1',troopId:'jimmie_trollkarl',name:'Trollkarl Lv2',icon:'🧙',costElixir:50000,time:600,effect:'Trollkarl: +5 HP, +4 DPS',unlock:4},
+  {id:'ballong_1',troopId:'jimmie_ballong',name:'Ballong Lv2',icon:'🎈',costElixir:75000,time:900,effect:'Ballong: +30 HP, +16 DPS',unlock:5},
+  {id:'minar_1',troopId:'minar_jimmie',name:'Minar-Jimmie Lv2',icon:'⛏️',costElixir:200000,time:1800,effect:'Minar: +40 HP, +15 DPS',unlock:5},
+  {id:'pekka_1',troopId:'pekka_jimmie',name:'P.E.K.K.A Lv2',icon:'🤖',costElixir:500000,time:3600,effect:'P.E.K.K.A: +400 HP, +60 DPS',unlock:6},
+  {id:'rage_1',id:'rage_upg',name:'Rage Lv2',icon:'⚡',costElixir:100000,time:1200,effect:'Rage: Varar 15 sek istället för 10',unlock:5},
+];
+
+// ── GAME STATE ─────────────────────────────────────────────────────
+const DEFAULT_STATE={
+  jh_level:1,
+  gold:250, elixir:250, dark:0,
+  gold_cap:500, elixir_cap:500, dark_cap:100,
+  buildings:[], // {id,type,lv,x,y,upgrading:false,upgradeEnd:0}
+  builders:[{id:0,name:'Björn',busy:false,task:null,endTime:0},{id:1,name:'Sven',busy:false,task:null,endTime:0},{id:2,name:'Karin',busy:false,task:null,endTime:0},{id:3,name:'Lars',busy:false,task:null,endTime:0}],
+  troops:{}, // {troopId: count}
+  troopLevels:{}, // {troopId: level}
+  troopTraining:[], // [{troopId,endTime,count}]
+  spells:{}, // {spellId: count}
+  research:{done:[],active:null,endTime:0}, // done=[researchId], active=researchId
+  heroes:{
+    jimmie_akesson:{lv:0,hp:0,maxHp:0,upgrading:false,upgradeEnd:0},
+    ebba_buschen:{lv:0,hp:0,maxHp:0,upgrading:false,upgradeEnd:0},
+    oscar_sjostedt:{lv:0,hp:0,maxHp:0,upgrading:false,upgradeEnd:0},
+  },
+  lastTick:Date.now(),
+  totalGoldEarned:0,
+  attacksWon:0,
+  nextBuildingId:100,
+};
+let G=JSON.parse(JSON.stringify(DEFAULT_STATE));
+
+function saveGame(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(G));}catch(e){}}
+function loadGame(){try{const s=localStorage.getItem(SAVE_KEY);if(s){G={...DEFAULT_STATE,...JSON.parse(s)};}}catch(e){}}
+
+// ── BASE LAYOUT ───────────────────────────────────────────────────
+const CELL=36, GRID=34;
+let camX=0,camY=0,dragging=false,dragStart={x:0,y:0},camStart={x:0,y:0};
+let selectedBuilding=null;
+let placingBuilding=null; // type being placed
+
+function defaultBase(){
+  G.buildings=[
+    {id:1,type:'jimmie_hall',lv:1,gx:14,gy:13,upgrading:false,upgradeEnd:0},
+    {id:2,type:'riksdaler_gruva',lv:1,gx:9,gy:10,upgrading:false,upgradeEnd:0},
+    {id:3,type:'saft_samlare',lv:1,gx:9,gy:14,upgrading:false,upgradeEnd:0},
+    {id:4,type:'kasern',lv:1,gx:21,gy:11,upgrading:false,upgradeEnd:0},
+    {id:5,type:'kanon',lv:1,gx:12,gy:10,upgrading:false,upgradeEnd:0},
+    {id:6,type:'arme_lager',lv:1,gx:21,gy:15,upgrading:false,upgradeEnd:0},
+    // Mur ring
+    ...(() => {
+      const walls=[];let wid=50;
+      const ring=[
+        [12,12],[13,12],[14,12],[15,12],[16,12],[17,12],[18,12],
+        [12,13],[18,13],[12,14],[18,14],[12,15],[18,15],[12,16],[18,16],
+        [12,17],[13,17],[14,17],[15,17],[16,17],[17,17],[18,17],
+      ];
+      ring.forEach(([x,y])=>walls.push({id:wid++,type:'mur',lv:1,gx:x,gy:y,upgrading:false,upgradeEnd:0}));
+      return walls;
+    })(),
+  ];
+  G.nextBuildingId=200;
+}
+
+// ── CANVAS DRAWING ────────────────────────────────────────────────
+const canvas=document.getElementById('base-canvas');
+const ctx=canvas.getContext('2d');
+let W,H;
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+window.addEventListener('resize',resize);resize();
+
+// Center camera on jimmie hall
+function centerCamera(){
+  const jh=G.buildings.find(b=>b.type==='jimmie_hall');
+  if(jh){camX=W/2-(jh.gx+2)*CELL;camY=H/2-(jh.gy+2)*CELL;}
+}
+
+const GRASS_COLS=['#2d5a1b','#306620','#2a5218','#346824'];
+const GRASS_PAT=[];
+function initGrass(){
+  for(let y=0;y<GRID;y++){GRASS_PAT[y]=[];for(let x=0;x<GRID;x++) GRASS_PAT[y][x]=GRASS_COLS[Math.abs((x*374761393+y*668265263)^(x>>3)^(y>>5))%4];}
+}
+initGrass();
+
+function drawBase(){
+  ctx.clearRect(0,0,W,H);
+  // Grass tiles
+  for(let gy=0;gy<GRID;gy++){
+    for(let gx=0;gx<GRID;gx++){
+      const sx=gx*CELL+camX,sy=gy*CELL+camY;
+      if(sx<-CELL||sx>W||sy<-CELL||sy>H)continue;
+      ctx.fillStyle=GRASS_PAT[gy][gx];ctx.fillRect(sx,sy,CELL,CELL);
+      ctx.strokeStyle='rgba(0,0,0,0.05)';ctx.lineWidth=0.5;ctx.strokeRect(sx,sy,CELL,CELL);
+    }
+  }
+  // River decoration
+  ctx.fillStyle='rgba(50,120,200,0.3)';
+  ctx.fillRect(0*CELL+camX,30*CELL+camY,GRID*CELL,CELL*2);
+  // Path
+  ctx.fillStyle='rgba(180,140,80,0.3)';
+  ctx.fillRect(0*CELL+camX,14*CELL+camY,8*CELL,CELL);
+
+  // Buildings
+  const sorted=[...G.buildings].sort((a,b)=>{const as=BUILDING_TYPES[a.type]?.size||1,bs=BUILDING_TYPES[b.type]?.size||1;return bs-as;});
+  sorted.forEach(b=>drawBuilding(b));
+
+  // Decorations
+  drawDecorations();
+
+  // Placing ghost
+  if(placingBuilding){
+    const bt=BUILDING_TYPES[placingBuilding];
+    if(bt&&ghostPos){
+      const sx=ghostPos.gx*CELL+camX,sy=ghostPos.gy*CELL+camY;
+      ctx.fillStyle='rgba(0,255,100,0.25)';ctx.fillRect(sx,sy,bt.size*CELL,bt.size*CELL);
+      ctx.strokeStyle='rgba(0,255,100,0.7)';ctx.lineWidth=2;ctx.strokeRect(sx,sy,bt.size*CELL,bt.size*CELL);
+    }
+  }
+}
+
+let ghostPos=null;
+
+function drawDecorations(){
+  // Trees around border
+  const treePositions=[[2,2],[3,5],[5,3],[28,4],[30,6],[29,3],[2,26],[4,28],[28,28],[30,25],[6,30],[25,31]];
+  ctx.font='22px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  treePositions.forEach(([x,y])=>{
+    const sx=x*CELL+camX+CELL/2,sy=y*CELL+camY+CELL/2;
+    if(sx<-30||sx>W+30||sy<-30||sy>H+30)return;
+    ctx.fillText('🌲',sx,sy);
+  });
+  // Rocks
+  [[7,7],[26,8],[8,23],[25,22]].forEach(([x,y])=>{
+    ctx.fillText('🪨',(x+0.5)*CELL+camX,(y+0.5)*CELL+camY);
+  });
+}
+
+function drawBuilding(b){
+  const bt=BUILDING_TYPES[b.type];if(!bt)return;
+  const s=bt.size,sx=b.gx*CELL+camX,sy=b.gy*CELL+camY;
+  if(sx<-s*CELL||sx>W||sy<-s*CELL||sy>H)return;
+  const bw=s*CELL,bh=s*CELL;
+  const isSelected=selectedBuilding&&selectedBuilding.id===b.id;
+
+  // Ground shadow
+  ctx.fillStyle='rgba(0,0,0,0.2)';
+  ctx.beginPath();ctx.ellipse(sx+bw/2,sy+bh-4,bw*0.45,bh*0.15,0,0,Math.PI*2);ctx.fill();
+
+  // Draw building based on type
+  drawBuildingGraphic(ctx,b.type,b.lv,sx,sy,bw,bh);
+
+  // Selection ring
+  if(isSelected){
+    ctx.beginPath();ctx.arc(sx+bw/2,sy+bh/2,bw*0.55,0,Math.PI*2);
+    ctx.strokeStyle='rgba(255,215,0,0.8)';ctx.lineWidth=2.5;
+    ctx.setLineDash([6,4]);ctx.stroke();ctx.setLineDash([]);
+  }
+
+  // Level badge
+  if(b.type!=='mur'&&b.lv>1){
+    ctx.fillStyle='rgba(0,0,0,0.7)';
+    ctx.beginPath();ctx.arc(sx+bw-6,sy+7,8,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#FFD700';ctx.font='bold 8px Nunito';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(b.lv,sx+bw-6,sy+7);
+  }
+
+  // Upgrade indicator
+  if(b.upgrading){
+    const now=Date.now()/1000;
+    const total=(b.upgradeEnd-(b.upgradeStart||0));
+    const rem=b.upgradeEnd-now;
+    const pct=Math.max(0,Math.min(1,1-rem/total));
+    ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fillRect(sx+2,sy+bh-8,bw-4,6);
+    ctx.fillStyle='rgba(255,215,0,0.9)';ctx.fillRect(sx+2,sy+bh-8,(bw-4)*pct,6);
+    ctx.font='7px Nunito';ctx.fillStyle='white';ctx.textAlign='center';
+    ctx.fillText('↑',sx+bw/2,sy+bh-5);
+  }
+}
+
+function drawBuildingGraphic(ctx,type,lv,sx,sy,bw,bh){
+  const cx=sx+bw/2,cy=sy+bh/2;
+  const col=getBuildingColor(type,lv);
+
+  if(type==='jimmie_hall'){
+    // Grand hall with columns
+    ctx.fillStyle=col;
+    ctx.beginPath();ctx.roundRect(sx+bw*0.1,sy+bh*0.2,bw*0.8,bh*0.7,6);ctx.fill();
+    // Roof
+    ctx.fillStyle='#8B4513';
+    ctx.beginPath();ctx.moveTo(sx+bw*0.05,sy+bh*0.25);ctx.lineTo(cx,sy+bh*0.05);ctx.lineTo(sx+bw*0.95,sy+bh*0.25);ctx.closePath();ctx.fill();
+    // Columns
+    for(let i=0;i<3;i++){ctx.fillStyle='#ddd';ctx.fillRect(sx+bw*0.15+i*bw*0.25,sy+bh*0.35,bw*0.06,bh*0.5);}
+    // Flag
+    ctx.fillStyle='#005293';ctx.fillRect(cx-2,sy+2,3,bh*0.2);
+    ctx.fillStyle='#FFCB05';ctx.fillRect(cx+1,sy+2,bw*0.12,bh*0.1);
+    // Level text
+    ctx.fillStyle='#FFD700';ctx.font=`bold ${bw*0.12}px Cinzel`;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('JH'+lv,cx,cy+bh*0.1);
+  } else if(type==='kanon'){
+    // Cannon base
+    ctx.fillStyle='#666';
+    ctx.beginPath();ctx.arc(cx,cy+4,bw*0.35,0,Math.PI*2);ctx.fill();
+    // Cannon barrel
+    ctx.fillStyle='#333';ctx.fillRect(cx-bw*0.08,cy-bh*0.35,bw*0.16,bh*0.4);
+    ctx.fillStyle='#555';ctx.fillRect(cx-bw*0.12,cy-bh*0.4,bw*0.24,bh*0.1);
+    // Wheels
+    ctx.fillStyle='#4a3000';ctx.beginPath();ctx.arc(sx+bw*0.25,cy+bh*0.2,bw*0.18,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(sx+bw*0.75,cy+bh*0.2,bw*0.18,0,Math.PI*2);ctx.fill();
+  } else if(type==='pilbage_torn'){
+    // Tower base
+    ctx.fillStyle='#808080';ctx.fillRect(sx+bw*0.2,sy+bh*0.3,bw*0.6,bh*0.65);
+    // Battlements
+    for(let i=0;i<3;i++){ctx.fillStyle='#999';ctx.fillRect(sx+bw*0.2+i*bw*0.2,sy+bh*0.2,bw*0.12,bh*0.15);}
+    // Archer
+    ctx.font=`${bw*0.4}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🏹',cx,cy);
+  } else if(type==='morsare'){
+    ctx.fillStyle='#555';ctx.beginPath();ctx.arc(cx,cy,bw*0.38,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#333';ctx.fillRect(cx-bw*0.12,cy-bh*0.3,bw*0.24,bh*0.35);
+    ctx.fillStyle='#777';ctx.beginPath();ctx.arc(cx,cy-bh*0.3,bw*0.15,0,Math.PI*2);ctx.fill();
+  } else if(type==='luftforsvar'){
+    ctx.fillStyle='#2a4a8a';ctx.fillRect(sx+bw*0.15,sy+bh*0.35,bw*0.7,bh*0.55);
+    ctx.fillStyle='#3a5a9a';
+    for(let i=0;i<3;i++){ctx.save();ctx.translate(cx,cy-bh*0.05);ctx.rotate((-1+i)*Math.PI/4);ctx.fillRect(-bw*0.05,-bh*0.35,bw*0.1,bh*0.3);ctx.restore();}
+    ctx.fillStyle='#66aaff';ctx.beginPath();ctx.arc(cx,cy-bh*0.05,bw*0.1,0,Math.PI*2);ctx.fill();
+  } else if(type==='tesla_torn'){
+    ctx.fillStyle='#1a1a3a';ctx.fillRect(sx+bw*0.3,sy+bh*0.4,bw*0.4,bh*0.55);
+    ctx.fillStyle='#4488ff';
+    ctx.beginPath();ctx.moveTo(cx,sy+bh*0.1);ctx.lineTo(cx-bw*0.2,sy+bh*0.4);ctx.lineTo(cx+bw*0.2,sy+bh*0.4);ctx.closePath();ctx.fill();
+    ctx.strokeStyle='#88aaff';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(cx-bw*0.15,sy+bh*0.25);ctx.lineTo(cx,sy+bh*0.15);ctx.lineTo(cx+bw*0.15,sy+bh*0.25);ctx.stroke();
+  } else if(type==='riksdaler_gruva'){
+    ctx.fillStyle='#8B4513';ctx.fillRect(sx+bw*0.1,sy+bh*0.4,bw*0.8,bh*0.5);
+    ctx.font=`${bw*0.4}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('⛏️',cx,cy+bh*0.05);
+    ctx.fillStyle='#FFD700';ctx.fillRect(sx+bw*0.3,sy+bh*0.35,bw*0.4,bh*0.08);
+  } else if(type==='riksdaler_forrad'){
+    ctx.fillStyle='#DAA520';ctx.fillRect(sx+bw*0.1,sy+bh*0.25,bw*0.8,bh*0.65);
+    ctx.fillStyle='#B8860B';ctx.fillRect(sx+bw*0.1,sy+bh*0.25,bw*0.8,bh*0.12);
+    ctx.fillStyle='#FFD700';
+    for(let i=1;i<4;i++){ctx.fillRect(sx+bw*0.1,sy+bh*0.25+i*bh*0.16,bw*0.8,bh*0.03);}
+    ctx.font=`${bw*0.3}px serif`;ctx.textAlign='center';ctx.fillText('🪙',cx,cy+bh*0.15);
+  } else if(type==='saft_samlare'){
+    ctx.fillStyle='#6600aa';ctx.fillRect(sx+bw*0.2,sy+bh*0.3,bw*0.6,bh*0.6);
+    ctx.fillStyle='rgba(200,100,255,0.6)';ctx.fillRect(sx+bw*0.25,sy+bh*0.35,bw*0.5,bh*0.5);
+    ctx.fillStyle='#aa44ee';ctx.fillRect(sx+bw*0.35,sy+bh*0.2,bw*0.3,bh*0.15);
+    ctx.font=`${bw*0.35}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🧪',cx,cy+bh*0.1);
+  } else if(type==='saft_tank'){
+    ctx.fillStyle='#8800cc';ctx.beginPath();ctx.arc(cx,cy+bh*0.1,bw*0.4,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='rgba(180,80,255,0.4)';ctx.beginPath();ctx.arc(cx-bw*0.1,cy-bh*0.05,bw*0.15,0,Math.PI*2);ctx.fill();
+    ctx.font=`${bw*0.35}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🧫',cx,cy+bh*0.1);
+  } else if(type==='kasern'){
+    ctx.fillStyle='#5a3a1a';ctx.fillRect(sx+bw*0.1,sy+bh*0.25,bw*0.8,bh*0.65);
+    ctx.fillStyle='#7a5a3a';ctx.fillRect(sx+bw*0.1,sy+bh*0.15,bw*0.8,bh*0.15);
+    // Battle flags
+    ctx.fillStyle='#005293';ctx.fillRect(sx+bw*0.2,sy+bh*0.05,bw*0.05,bh*0.15);ctx.fillStyle='#FFCB05';ctx.fillRect(sx+bw*0.25,sy+bh*0.05,bw*0.1,bh*0.08);
+    ctx.fillStyle='#005293';ctx.fillRect(sx+bw*0.7,sy+bh*0.05,bw*0.05,bh*0.15);ctx.fillStyle='#FFCB05';ctx.fillRect(sx+bw*0.75,sy+bh*0.05,bw*0.1,bh*0.08);
+    ctx.font=`${bw*0.28}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('⚔️',cx,cy+bh*0.15);
+  } else if(type==='laboratorium'){
+    ctx.fillStyle='#1a3a5a';ctx.fillRect(sx+bw*0.1,sy+bh*0.2,bw*0.8,bh*0.7);
+    ctx.fillStyle='#2a5a8a';ctx.fillRect(sx+bw*0.3,sy+bh*0.1,bw*0.4,bh*0.15);
+    ctx.font=`${bw*0.3}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🔬',cx,cy+bh*0.1);
+    // Bubbles
+    ctx.fillStyle='rgba(100,200,255,0.3)';
+    [[0.3,0.4],[0.6,0.55],[0.45,0.65]].forEach(([dx,dy])=>{ctx.beginPath();ctx.arc(sx+bw*dx,sy+bh*dy,bw*0.06,0,Math.PI*2);ctx.fill();});
+  } else if(type==='arme_lager'){
+    ctx.fillStyle='#3a2a1a';ctx.fillRect(sx+bw*0.05,sy+bh*0.3,bw*0.9,bh*0.6);
+    for(let i=0;i<3;i++){ctx.fillStyle=['#cc4444','#4488cc','#44cc44'][i];ctx.fillRect(sx+bw*(0.15+i*0.28),sy+bh*0.4,bw*0.2,bh*0.4);}
+    ctx.font=`${bw*0.25}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🏕️',cx,sy+bh*0.18);
+  } else if(type==='mur'){
+    const lvCol=['#888','#aaa','#cc8844','#aa4444','#884488','#4488aa','#44aa44','#aaaa44'][Math.min(lv-1,7)];
+    ctx.fillStyle=lvCol;ctx.fillRect(sx+1,sy+1,bw-2,bh-2);
+    ctx.fillStyle='rgba(0,0,0,0.3)';ctx.fillRect(sx+1,sy+1,bw-2,4);
+    ctx.fillStyle='rgba(255,255,255,0.1)';ctx.fillRect(sx+1,sy+bh-5,bw-2,4);
+  } else if(type==='dark_bohrare'){
+    ctx.fillStyle='#1a0a2a';ctx.fillRect(sx+bw*0.2,sy+bh*0.2,bw*0.6,bh*0.7);
+    ctx.fillStyle='#4a00aa';ctx.beginPath();ctx.arc(cx,cy,bw*0.25,0,Math.PI*2);ctx.fill();
+    ctx.font=`${bw*0.35}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🖤',cx,cy);
+  } else if(type==='bomb_falla'){
+    ctx.fillStyle='#333';ctx.beginPath();ctx.arc(cx,cy,bw*0.35,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#cc0000';ctx.beginPath();ctx.arc(cx,cy,bw*0.25,0,Math.PI*2);ctx.fill();
+    ctx.font=`${bw*0.32}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('💥',cx,cy);
+  } else {
+    // Generic fallback
+    ctx.fillStyle=col;ctx.fillRect(sx+4,sy+4,bw-8,bh-8);
+    const bt=BUILDING_TYPES[type];
+    ctx.font=`${Math.min(bw,bh)*0.45}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(bt?.icon||'🏠',cx,cy);
+  }
+}
+
+function getBuildingColor(type,lv){
+  const colors={jimmie_hall:'#4a3000',kanon:'#555',pilbage_torn:'#777',morsare:'#445',luftforsvar:'#223',tesla_torn:'#112',riksdaler_gruva:'#6b3a1f',riksdaler_forrad:'#b8860b',saft_samlare:'#5500aa',saft_tank:'#7700cc',kasern:'#4a3000',laboratorium:'#1a3a5a',arme_lager:'#2a1a0a',mur:'#777',dark_bohrare:'#1a0a2a',bomb_falla:'#333'};
+  return colors[type]||'#444';
+}
+
+// ── GAME LOOP ─────────────────────────────────────────────────────
+let lastRAF=0;
+function gameLoop(t){
+  requestAnimationFrame(gameLoop);
+  const dt=(t-lastRAF)/1000;lastRAF=t;
+  tick(dt);
+  drawBase();
+  updateHUD();
+}
+
+function tick(dt){
+  const now=Date.now()/1000;
+  // Resource generation from buildings
+  G.buildings.forEach(b=>{
+    const bt=BUILDING_TYPES[b.type];if(!bt||b.upgrading)return;
+    const lv=b.lv-1;
+    if(bt.goldPerHour&&bt.goldPerHour[lv]){G.gold=Math.min(G.gold_cap,G.gold+bt.goldPerHour[lv]/3600*dt);}
+    if(bt.elixirPerHour&&bt.elixirPerHour[lv]){G.elixir=Math.min(G.elixir_cap,G.elixir+bt.elixirPerHour[lv]/3600*dt);}
+    if(bt.darkPerHour&&bt.darkPerHour[lv]){G.dark=Math.min(G.dark_cap,G.dark+bt.darkPerHour[lv]/3600*dt);}
+  });
+  // Builder completion
+  G.builders.forEach(builder=>{
+    if(builder.busy&&now>=builder.endTime){
+      completeBuilder(builder);
+    }
+  });
+  // Training completion
+  G.troopTraining=G.troopTraining.filter(t=>{
+    if(now>=t.endTime){
+      G.troops[t.troopId]=(G.troops[t.troopId]||0)+1;
+      toast(`${TROOP_TYPES[t.troopId]?.name} tränad!`);
+      return false;
+    }
+    return true;
+  });
+  // Research completion
+  if(G.research.active&&now>=G.research.endTime){
+    const res=RESEARCH_TYPES.find(r=>r.id===G.research.active);
+    if(res){
+      G.research.done.push(res.id);
+      if(res.troopId&&G.troopLevels){G.troopLevels[res.troopId]=(G.troopLevels[res.troopId]||1)+1;}
+      toast(`Forskning klar: ${res.name}!`);
+    }
+    G.research.active=null;
+  }
+  // Hero recovery
+  Object.keys(G.heroes).forEach(hid=>{
+    const h=G.heroes[hid];
+    const hdef=HERO_TYPES[hid];
+    if(!hdef||h.lv===0)return;
+    if(h.upgrading&&now>=h.upgradeEnd){h.upgrading=false;h.lv++;h.maxHp=hdef.hp(h.lv);h.hp=h.maxHp;toast(`${hdef.name} uppgraderad till Lv${h.lv}!`);}
+    if(h.hp<h.maxHp&&!h.upgrading){h.hp=Math.min(h.maxHp,h.hp+h.maxHp/300*dt);}
+  });
+  // Cap resources
+  G.gold=Math.min(G.gold_cap,Math.max(0,G.gold));
+  G.elixir=Math.min(G.elixir_cap,Math.max(0,G.elixir));
+  G.dark=Math.min(G.dark_cap,Math.max(0,G.dark));
+  // Autosave
+  if(Math.floor(now)%10===0)saveGame();
+}
+
+function completeBuilder(builder){
+  if(!builder.task)return;
+  const {bId,action,newLv}=builder.task;
+  const b=G.buildings.find(x=>x.id===bId);
+  if(b){
+    b.upgrading=false;b.lv=newLv||b.lv;
+    toast(`${BUILDING_TYPES[b.type]?.name||'Byggnad'} klar! Lv${b.lv}`);
+    // Check JH level up
+    if(b.type==='jimmie_hall'){levelUpJH(b.lv);}
+  }
+  builder.busy=false;builder.task=null;builder.endTime=0;
+  renderByPanel();saveGame();
+}
+
+function levelUpJH(newLv){
+  G.jh_level=newLv;
+  const data=JH_DATA[newLv-1];
+  // Update caps
+  G.gold_cap=500*Math.pow(3,newLv-1);
+  G.elixir_cap=500*Math.pow(3,newLv-1);
+  G.dark_cap=Math.max(100,50*Math.pow(2,newLv-4));
+  document.getElementById('lu-title').textContent=`JIMMIE HALL NIVÅ ${newLv}!`;
+  document.getElementById('lu-sub').textContent='Nya byggnader upplåsta!';
+  document.getElementById('lu-unlocks').textContent='✅ '+data.unlocks.join('  ✅ ');
+  document.getElementById('levelup-splash').classList.add('show');
+}
+
+function closeLevelUp(){document.getElementById('levelup-splash').classList.remove('show');}
+
+// ── HUD UPDATE ────────────────────────────────────────────────────
+function fmt(n){n=Math.floor(n);if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return n.toString();}
+function updateHUD(){
+  document.getElementById('gold-val').textContent=fmt(G.gold);
+  document.getElementById('elixir-val').textContent=fmt(G.elixir);
+  document.getElementById('dark-val').textContent=fmt(G.dark);
+  document.getElementById('gold-max').textContent='/'+fmt(G.gold_cap);
+  document.getElementById('elixir-max').textContent='/'+fmt(G.elixir_cap);
+  document.getElementById('jh-level').textContent=G.jh_level;
+  updateBuilderRow();
+}
+
+function updateBuilderRow(){
+  const row=document.getElementById('builder-row');if(!row)return;
+  const maxBuilders=JH_DATA[G.jh_level-1]?.maxBuilders||1;
+  row.innerHTML=G.builders.slice(0,maxBuilders).map(b=>{
+    const now=Date.now()/1000;
+    const rem=Math.max(0,Math.ceil(b.endTime-now));
+    return `<div class="builder-slot">
+      <div class="builder-icon">${b.busy?'🔨':'😴'}</div>
+      <div class="builder-info">
+        <div class="builder-name">${b.name}</div>
+        ${b.busy?`<div class="builder-timer">${fmtTime(rem)}</div>`:
+        `<div class="builder-idle">Ledig</div>`}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function fmtTime(secs){
+  if(secs<=0)return'Klar!';
+  if(secs<60)return secs+'s';
+  if(secs<3600)return Math.floor(secs/60)+'m '+Math.floor(secs%60)+'s';
+  if(secs<86400)return Math.floor(secs/3600)+'h '+Math.floor((secs%3600)/60)+'m';
+  return Math.floor(secs/86400)+'d '+Math.floor((secs%86400)/3600)+'h';
+}
+
+// ── NAV SWITCHING ─────────────────────────────────────────────────
+let activeNav='by';
+function switchNav(tab){
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('nav-'+tab)?.classList.add('active');
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('open'));
+  if(tab!=='by')document.getElementById('panel-'+tab)?.classList.add('open');
+  activeNav=tab;
+  if(tab==='by')renderByPanel();
+  if(tab==='army')renderArmyPanel();
+  if(tab==='research')renderResearchPanel();
+  if(tab==='heroes')renderHeroesPanel();
+}
+
+// ── BY PANEL ──────────────────────────────────────────────────────
+function renderByPanel(){
+  updateBuilderRow();
+  const scroll=document.getElementById('panel-by-scroll');if(!scroll)return;
+  const jhlv=G.jh_level;
+  const cats=[
+    {key:'special',label:'🏛️ Jimmie Hall'},
+    {key:'defense',label:'🛡️ Försvar'},
+    {key:'resource',label:'💰 Resurser'},
+    {key:'military',label:'⚔️ Militär'},
+    {key:'trap',label:'💣 Fällor'},
+    {key:'wall',label:'🧱 Murar'},
+  ];
+  let html='';
+  cats.forEach(cat=>{
+    const types=Object.entries(BUILDING_TYPES).filter(([k,v])=>v.category===cat.key&&(!v.unlockJH||v.unlockJH<=jhlv));
+    if(!types.length)return;
+    html+=`<div class="section-hdr">${cat.label}</div><div class="build-grid">`;
+    types.forEach(([k,bt])=>{
+      const existing=G.buildings.filter(b=>b.type===k);
+      const count=existing.length;
+      const maxed=count>0&&existing.every(b=>b.lv>=bt.maxLv);
+      const locked=(bt.limit&&count>=bt.limit&&!maxed)||false;
+      const currentLv=existing[0]?.lv||0;
+      const nextLv=currentLv+1;
+      const upgCost=bt.costGold?bt.costGold[Math.min(nextLv-1,bt.maxLv-1)]:0;
+      const upgCostE=bt.costElixir?bt.costElixir[Math.min(nextLv-1,bt.maxLv-1)]:0;
+      const canBuild=count<(bt.limit||99);
+      html+=`<div class="build-card ${locked&&!maxed?'locked':''} ${maxed?'maxed':''}"
+        onclick="openBuildMenu('${k}')">
+        <div class="bc-icon">${bt.icon}</div>
+        <div class="bc-name">${bt.name}</div>
+        <div class="bc-cost">${canBuild?`${upgCost?'🪙'+fmt(upgCost):''}${upgCostE?'🧪'+fmt(upgCostE):''}`:maxed?'MAX':count+'/'+bt.limit}</div>
+        <div class="bc-count">Har: ${count}${bt.limit?'/'+bt.limit:''}</div>
+      </div>`;
+    });
+    html+='</div>';
+  });
+  scroll.innerHTML=html;
+}
+
+// ── BUILD MENU ────────────────────────────────────────────────────
+let currentBuildType=null;
+function openBuildMenu(type){
+  const bt=BUILDING_TYPES[type];if(!bt)return;
+  currentBuildType=type;
+  const existing=G.buildings.filter(b=>b.type===type);
+  const count=existing.length;
+  const canBuild=count<(bt.limit||99);
+  const currentLv=existing[0]?.lv||0;
+  const nextLv=Math.min(currentLv+1,bt.maxLv);
+  const upgCostG=bt.costGold?bt.costGold[Math.min(nextLv-1,bt.maxLv-1)]:0;
+  const upgCostE=bt.costElixir?bt.costElixir[Math.min(nextLv-1,bt.maxLv-1)]:0;
+  const buildTime=bt.buildTime?bt.buildTime[Math.min(nextLv-1,bt.maxLv-1)]:0;
+  document.getElementById('bm-icon').textContent=bt.icon;
+  document.getElementById('bm-title').textContent=bt.name;
+  document.getElementById('bm-sub').textContent=count>0?`Nivå ${currentLv} → ${nextLv}`:'Ny byggnad';
+  let statsHtml=`<div class="modal-stat"><span class="modal-stat-lbl">Kategori</span><span class="modal-stat-val">${bt.desc}</span></div>`;
+  statsHtml+=`<div class="modal-stat"><span class="modal-stat-lbl">Stats Lv${Math.max(1,nextLv)}</span><span class="modal-stat-val">${bt.stats?bt.stats(Math.max(1,nextLv)):'-'}</span></div>`;
+  statsHtml+=`<div class="modal-stat"><span class="modal-stat-lbl">Kostnad</span><span class="modal-stat-val">${upgCostG?'🪙'+fmt(upgCostG)+' ':''} ${upgCostE?'🧪'+fmt(upgCostE):''}</span></div>`;
+  statsHtml+=`<div class="modal-stat"><span class="modal-stat-lbl">Byggtid</span><span class="modal-stat-val">${fmtTime(buildTime)}</span></div>`;
+  if(bt.limit)statsHtml+=`<div class="modal-stat"><span class="modal-stat-lbl">Byggt</span><span class="modal-stat-val">${count}/${bt.limit}</span></div>`;
+  document.getElementById('bm-stats').innerHTML=statsHtml;
+  document.getElementById('bm-prog').style.width=(currentLv/bt.maxLv*100)+'%';
+  document.getElementById('bm-prog-lbl').textContent=`Lv ${currentLv}/${bt.maxLv}`;
+  const actionBtn=document.getElementById('bm-action-btn');
+  if(currentLv>=bt.maxLv){actionBtn.textContent='MAX NIVÅ';actionBtn.disabled=true;}
+  else if(!canBuild&&currentLv===0){actionBtn.textContent='Max antal';actionBtn.disabled=true;}
+  else{actionBtn.textContent=count===0?'🔨 Bygg':'⬆️ Uppgradera';actionBtn.disabled=false;}
+  openModal('build-modal');
+}
+
+function doBuildAction(){
+  const type=currentBuildType;if(!type)return;
+  const bt=BUILDING_TYPES[type];if(!bt)return;
+  const existing=G.buildings.filter(b=>b.type===type);
+  const count=existing.length;
+  const currentLv=count>0?existing[0].lv:0;
+  const nextLv=currentLv+1;
+  if(nextLv>bt.maxLv){toast('Max nivå!');return;}
+  const costG=bt.costGold?bt.costGold[Math.min(nextLv-1,bt.maxLv-1)]:0;
+  const costE=bt.costElixir?bt.costElixir[Math.min(nextLv-1,bt.maxLv-1)]:0;
+  const buildTime=bt.buildTime?bt.buildTime[Math.min(nextLv-1,bt.maxLv-1)]:0;
+  if(G.gold<costG){toast('Inte tillräckligt med Riksdaler! 🪙');return;}
+  if(G.elixir<costE){toast('Inte tillräckligt med SD-Saft! 🧪');return;}
+  // Find free builder
+  const maxBuilders=JH_DATA[G.jh_level-1]?.maxBuilders||1;
+  const freeBuilder=G.builders.slice(0,maxBuilders).find(b=>!b.busy);
+  if(!freeBuilder){toast('Alla byggare är upptagna!');return;}
+  G.gold-=costG;G.elixir-=costE;
+  const now=Date.now()/1000;
+  let targetBuilding;
+  if(count===0){
+    // Place new building at a good spot
+    const pos=findGoodSpot(bt.size);
+    const newId=G.nextBuildingId++;
+    targetBuilding={id:newId,type,lv:0,gx:pos.x,gy:pos.y,upgrading:true,upgradeEnd:now+buildTime,upgradeStart:now};
+    G.buildings.push(targetBuilding);
+    if(buildTime===0){targetBuilding.upgrading=false;targetBuilding.lv=1;toast(`${bt.name} byggt!`);}
+  } else {
+    targetBuilding=existing[0];
+    targetBuilding.upgrading=true;targetBuilding.upgradeEnd=now+buildTime;targetBuilding.upgradeStart=now;
+    if(buildTime===0){targetBuilding.upgrading=false;targetBuilding.lv=nextLv;toast(`${bt.name} uppgraderad!`);}
+  }
+  if(buildTime>0){
+    freeBuilder.busy=true;freeBuilder.endTime=now+buildTime;
+    freeBuilder.task={bId:targetBuilding.id,newLv:nextLv};
+    toast(`${freeBuilder.name} börjar bygga!`);
+  }
+  closeModal('build-modal');renderByPanel();saveGame();
+}
+
+function findGoodSpot(size){
+  // Try to find an empty spot not overlapping existing buildings
+  for(let gy=5;gy<GRID-size-5;gy++){
+    for(let gx=5;gx<GRID-size-5;gx++){
+      if(!isOccupied(gx,gy,size))return{x:gx,y:gy};
+    }
+  }
+  return{x:5,y:5};
+}
+
+function isOccupied(gx,gy,size){
+  return G.buildings.some(b=>{
+    const bt=BUILDING_TYPES[b.type];
+    const bs=bt?.size||1;
+    return gx<b.gx+bs&&gx+size>b.gx&&gy<b.gy+bs&&gy+size>b.gy;
+  });
+}
+
+// ── ARMY PANEL ────────────────────────────────────────────────────
+function renderArmyPanel(){
+  const scroll=document.getElementById('panel-army-scroll');if(!scroll)return;
+  const armyCap=getTotalArmyCap();
+  const armyUsed=Object.entries(G.troops).reduce((acc,[id,cnt])=>{
+    const sp=(TROOP_TYPES[id]?.space||1);return acc+cnt*sp;},0);
+  let html=`<div style="font-size:0.72rem;color:rgba(255,255,255,0.5);margin-bottom:12px;text-align:center">Armé: ${armyUsed}/${armyCap} platser</div>`;
+  // Current army
+  html+=`<div class="section-hdr">Din armé</div>`;
+  const hasArmy=Object.entries(G.troops).some(([_,c])=>c>0);
+  if(!hasArmy)html+='<div style="color:rgba(255,255,255,0.3);font-size:0.78rem;text-align:center;padding:10px">Inga trupper. Träna nedan!</div>';
+  else{
+    html+='<div class="troop-grid">';
+    Object.entries(G.troops).forEach(([id,count])=>{
+      if(!count)return;
+      const tt=TROOP_TYPES[id];if(!tt)return;
+      const lv=G.troopLevels?.[id]||1;
+      html+=`<div class="troop-card">
+        <div class="tc-level">Lv${lv}</div>
+        <canvas class="tc-canvas" id="tc-${id}-show" width="48" height="48"></canvas>
+        <div class="tc-name">${tt.name}</div>
+        <div class="tc-count">×${count}</div>
+      </div>`;
+    });
+    html+='</div>';
+  }
+
+  // Spell inventory
+  html+=`<div class="section-hdr">⚡ Besvärjelser</div>`;
+  html+=`<div class="troop-grid">`;
+  Object.entries(SPELL_TYPES).forEach(([id,sp])=>{
+    const count=G.spells?.[id]||0;
+    const canBuy=G.elixir>=(sp.costElixir||0);
+    html+=`<div class="troop-card${count>0?' selected':''}" onclick="brewSpell('${id}')">
+      <div style="font-size:2rem;margin-bottom:4px">${sp.icon}</div>
+      <div class="tc-name">${sp.name}</div>
+      <div class="tc-count" style="color:var(--elixir)">🧪${fmt(sp.costElixir)}</div>
+      <div class="tc-count">×${count}</div>
+    </div>`;
+  });
+  html+='</div>';
+
+  // Train troops
+  html+=`<div class="section-hdr">🏋️ Träna Trupper</div>`;
+  const hasKasern=G.buildings.some(b=>b.type==='kasern');
+  if(!hasKasern){html+='<div style="color:rgba(255,255,255,0.3);font-size:0.78rem;padding:10px">Bygg en Kasern först!</div>';}
+  else{
+    html+='<div class="troop-grid">';
+    Object.entries(TROOP_TYPES).forEach(([id,tt])=>{
+      const lv=G.troopLevels?.[id]||1;
+      const cost=tt.trainCost||0;const costE=tt.trainCostElixir||0;
+      const inQueue=G.troopTraining.filter(t=>t.troopId===id).length;
+      html+=`<div class="troop-card" onclick="trainTroop('${id}')">
+        <div class="tc-level">Lv${lv}</div>
+        <canvas class="tc-canvas" id="tc-${id}-train" width="44" height="44"></canvas>
+        <div class="tc-name">${tt.name}</div>
+        <div class="tc-count" style="color:var(--elixir);font-size:0.55rem">${cost?'🪙'+fmt(cost):''}${costE?'🧪'+fmt(costE):''}</div>
+        ${inQueue>0?`<div style="font-size:0.55rem;color:var(--gold)">Kö: ${inQueue}</div>`:''}
+        <div class="tc-train-btn">+ Träna</div>
+      </div>`;
+    });
+    html+='</div>';
+  }
+  scroll.innerHTML=html;
+  // Draw troop mini characters
+  setTimeout(()=>{
+    Object.keys(TROOP_TYPES).forEach(id=>{
+      ['show','train'].forEach(suf=>{
+        const c=document.getElementById(`tc-${id}-${suf}`);
+        if(c)drawTroopIcon(c.getContext('2d'),id,c.width);
+      });
+    });
+  },50);
+}
+
+function drawTroopIcon(ctx,id,size){
+  const tt=TROOP_TYPES[id];if(!tt)return;
+  ctx.clearRect(0,0,size,size);
+  const cx=size/2,cy=size/2;
+  // Background circle
+  ctx.beginPath();ctx.arc(cx,cy,size*0.45,0,Math.PI*2);
+  const g=ctx.createRadialGradient(cx,cy,0,cx,cy,size*0.45);
+  g.addColorStop(0,tt.col+'88');g.addColorStop(1,tt.col+'22');
+  ctx.fillStyle=g;ctx.fill();
+  // Draw simple body
+  ctx.fillStyle=tt.col;
+  // Head
+  ctx.beginPath();ctx.arc(cx,cy-size*0.12,size*0.18,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#ffe0c0';ctx.beginPath();ctx.arc(cx,cy-size*0.14,size*0.14,0,Math.PI*2);ctx.fill();
+  // Body
+  ctx.fillStyle=tt.col;ctx.fillRect(cx-size*0.14,cy+size*0.05,size*0.28,size*0.22);
+  // Arms
+  ctx.fillRect(cx-size*0.25,cy+size*0.08,size*0.1,size*0.14);
+  ctx.fillRect(cx+size*0.15,cy+size*0.08,size*0.1,size*0.14);
+  // Hair
+  ctx.fillStyle='#2a1a0a';ctx.beginPath();ctx.arc(cx,cy-size*0.24,size*0.15,Math.PI,2*Math.PI);ctx.fill();
+  // Special indicators
+  if(tt.air){ctx.font=`${size*0.2}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🎈',cx+size*0.2,cy-size*0.25);}
+  if(tt.underground){ctx.fillStyle='rgba(100,50,0,0.4)';ctx.fillRect(cx-size*0.35,cy+size*0.3,size*0.7,size*0.12);}
+}
+
+function trainTroop(id){
+  const tt=TROOP_TYPES[id];if(!tt)return;
+  const costG=tt.trainCost||0;const costE=tt.trainCostElixir||0;
+  if(G.gold<costG){toast('Inte tillräckligt Riksdaler!');return;}
+  if(G.elixir<costE){toast('Inte tillräckligt SD-Saft!');return;}
+  const armyCap=getTotalArmyCap();
+  const armyUsed=Object.entries(G.troops).reduce((acc,[i,c])=>acc+(TROOP_TYPES[i]?.space||1)*c,0);
+  const inQueue=G.troopTraining.reduce((acc,t)=>acc+(TROOP_TYPES[t.troopId]?.space||1),0);
+  if(armyUsed+inQueue+(tt.space||1)>armyCap){toast('Armélager fullt!');return;}
+  G.gold-=costG;G.elixir-=costE;
+  const kasernBoost=getKasernBoost();
+  const trainSecs=Math.floor(tt.trainTime/kasernBoost);
+  const now=Date.now()/1000;
+  const prevEnd=G.troopTraining.reduce((m,t)=>Math.max(m,t.endTime),now);
+  G.troopTraining.push({troopId:id,endTime:prevEnd+trainSecs,count:1});
+  toast(`${tt.name} tränas! (${fmtTime(trainSecs)})`);
+  renderArmyPanel();saveGame();
+}
+
+function getTotalArmyCap(){
+  return G.buildings.filter(b=>b.type==='arme_lager').reduce((acc,b)=>{
+    const cap=BUILDING_TYPES.arme_lager.capacity;
+    return acc+(cap[Math.min(b.lv-1,cap.length-1)]||20);
+  },0)||20;
+}
+
+function getKasernBoost(){
+  const kaserns=G.buildings.filter(b=>b.type==='kasern');
+  if(!kaserns.length)return 1;
+  const best=Math.max(...kaserns.map(b=>b.lv));
+  return BUILDING_TYPES.kasern.trainingBoost[Math.min(best-1,7)]||1;
+}
+
+function brewSpell(id){
+  const sp=SPELL_TYPES[id];if(!sp)return;
+  if(G.elixir<sp.costElixir){toast('Inte tillräckligt SD-Saft!');return;}
+  G.elixir-=sp.costElixir;
+  G.spells=G.spells||{};
+  G.spells[id]=(G.spells[id]||0)+1;
+  toast(`${sp.name} bryggd! ✨`);
+  renderArmyPanel();saveGame();
+}
+
+// ── RESEARCH PANEL ────────────────────────────────────────────────
+function renderResearchPanel(){
+  const scroll=document.getElementById('panel-research-scroll');if(!scroll)return;
+  const hasLab=G.buildings.some(b=>b.type==='laboratorium');
+  if(!hasLab){scroll.innerHTML='<div style="text-align:center;color:rgba(255,255,255,0.3);padding:30px"><div style="font-size:3rem">🔬</div><div>Bygg ett Laboratorium (JH3) för att forska.</div></div>';return;}
+  const now=Date.now()/1000;
+  let html='';
+  // Active research
+  if(G.research.active){
+    const res=RESEARCH_TYPES.find(r=>r.id===G.research.active);
+    const rem=Math.max(0,Math.ceil(G.research.endTime-now));
+    html+=`<div style="background:rgba(200,100,255,0.1);border:1.5px solid var(--elixir);border-radius:16px;padding:12px;margin-bottom:14px;text-align:center">
+      <div style="font-size:0.65rem;color:var(--elixir);font-weight:800;letter-spacing:1px;text-transform:uppercase">Aktiv forskning</div>
+      <div style="font-size:1.1rem;margin:6px 0">${res?.icon||'🔬'} ${res?.name||''}</div>
+      <div style="font-size:0.85rem;color:var(--gold);font-weight:900">${fmtTime(rem)} kvar</div>
+    </div>`;
+  }
+  // Available research
+  html+='<div class="section-hdr">Tillgänglig forskning</div><div class="research-grid">';
+  RESEARCH_TYPES.forEach(res=>{
+    if(res.unlock&&res.unlock>G.jh_level)return;
+    const done=G.research.done.includes(res.id);
+    const active=G.research.active===res.id;
+    const canAfford=G.elixir>=res.costElixir;
+    html+=`<div class="research-card${active?' upgrading':''}" onclick="${done?'':active?'':canAfford?`startResearch('${res.id}')`:''} ">
+      <div class="rc-icon">${res.icon}</div>
+      <div class="rc-info">
+        <div class="rc-name">${res.name}</div>
+        <div class="rc-lv">${res.effect}</div>
+        ${done?'<div style="color:#4ade80;font-size:0.65rem;font-weight:800">✅ Klar</div>':
+        active?`<div class="rc-timer">${fmtTime(Math.max(0,Math.ceil(G.research.endTime-now)))}</div>`:
+        `<div class="rc-cost">🧪 ${fmt(res.costElixir)}</div>`}
+      </div>
+    </div>`;
+  });
+  html+='</div>';
+  scroll.innerHTML=html;
+}
+
+function startResearch(id){
+  if(G.research.active){toast('Laboratoriet är redan aktivt!');return;}
+  const res=RESEARCH_TYPES.find(r=>r.id===id);if(!res)return;
+  if(G.research.done.includes(id)){toast('Redan forskat!');return;}
+  if(G.elixir<res.costElixir){toast('Inte tillräckligt SD-Saft!');return;}
+  G.elixir-=res.costElixir;
+  const now=Date.now()/1000;
+  G.research.active=id;G.research.endTime=now+res.time;
+  toast(`Forskning startad: ${res.name}! (${fmtTime(res.time)})`);
+  renderResearchPanel();saveGame();
+}
+
+// ── HEROES PANEL ──────────────────────────────────────────────────
+function renderHeroesPanel(){
+  const scroll=document.getElementById('panel-heroes-scroll');if(!scroll)return;
+  let html='';
+  Object.entries(HERO_TYPES).forEach(([hid,hdef])=>{
+    if(hdef.unlockJH&&hdef.unlockJH>G.jh_level){
+      html+=`<div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:14px;margin-bottom:10px;opacity:0.4;text-align:center">
+        <div style="font-size:2rem">${hdef.icon}</div>
+        <div style="font-family:var(--title);color:var(--gold)">${hdef.name}</div>
+        <div style="font-size:0.7rem;color:rgba(255,255,255,0.4)">Kräver Jimmie Hall ${hdef.unlockJH}</div>
+      </div>`;return;
+    }
+    const h=G.heroes[hid];
+    const lv=h?.lv||0;
+    const maxHp=hdef.hp(Math.max(1,lv));
+    const dps=hdef.dps(Math.max(1,lv));
+    const costDark=hdef.costDark(lv);
+    const upgTime=hdef.upgTime(lv);
+    const now=Date.now()/1000;
+    const isUpgrading=h?.upgrading&&now<h.upgradeEnd;
+    const rem=Math.max(0,Math.ceil((h?.upgradeEnd||0)-now));
+    html+=`<div class="hero-card">
+      <canvas class="hero-canvas" id="hero-canvas-${hid}" width="80" height="80"></canvas>
+      <div class="hero-info">
+        <div class="hero-name">${hdef.name}</div>
+        <div class="hero-lv">${lv===0?'Ej upplåst':'Nivå '+lv+' — '+hdef.title}</div>
+        ${lv>0?`<div class="hero-stat">❤️ ${hdef.hp(lv)} HP  |  ⚔️ ${hdef.dps(lv)} DPS</div>
+        <div class="hero-ability">${hdef.ability}</div>
+        ${isUpgrading?`<div class="rc-timer">Uppgraderar... ${fmtTime(rem)}</div>`:`
+        <button class="hero-lvup-btn" onclick="upgradeHero('${hid}')" ${G.dark<costDark?'disabled':''}>
+          ⬆️ Uppgradera Lv${lv+1} — 💜 ${fmt(costDark)}
+        </button>`}`:`
+        <button class="hero-lvup-btn" onclick="unlockHero('${hid}')" ${G.dark<costDark?'disabled':''}>
+          🔓 Lås upp — 💜 ${fmt(hdef.costDark(0))}
+        </button>`}
+      </div>
+    </div>`;
+  });
+  scroll.innerHTML=html;
+  setTimeout(()=>{
+    Object.entries(HERO_TYPES).forEach(([hid,hdef])=>{
+      const c=document.getElementById(`hero-canvas-${hid}`);
+      if(c)drawHeroIcon(c.getContext('2d'),hid,80,G.heroes[hid]?.lv||0);
+    });
+  },50);
+}
+
+function drawHeroIcon(ctx,hid,size,lv){
+  const hdef=HERO_TYPES[hid];if(!hdef)return;
+  ctx.clearRect(0,0,size,size);
+  const cx=size/2,cy=size/2;
+  // Background glow
+  const g=ctx.createRadialGradient(cx,cy,0,cx,cy,size*0.48);
+  g.addColorStop(0,hdef.col+'55');g.addColorStop(1,'transparent');
+  ctx.fillStyle=g;ctx.fillRect(0,0,size,size);
+  // Draw hero - larger more detailed version
+  ctx.fillStyle=hdef.col;
+  // Shadow
+  ctx.beginPath();ctx.ellipse(cx,size*0.88,size*0.25,size*0.06,0,0,Math.PI*2);ctx.fillStyle='rgba(0,0,0,0.3)';ctx.fill();
+  // Body
+  ctx.fillStyle=hdef.col;ctx.fillRect(cx-size*0.18,cy,size*0.36,size*0.3);
+  // Head
+  ctx.fillStyle='#ffe0c0';ctx.beginPath();ctx.arc(cx,cy-size*0.1,size*0.2,0,Math.PI*2);ctx.fill();
+  // Hair
+  ctx.fillStyle='#2a1a0a';ctx.beginPath();ctx.arc(cx,cy-size*0.22,size*0.17,Math.PI,2*Math.PI);ctx.fill();
+  // Eyes
+  ctx.fillStyle='#1a1a1a';ctx.beginPath();ctx.arc(cx-size*0.06,cy-size*0.1,size*0.03,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(cx+size*0.06,cy-size*0.1,size*0.03,0,Math.PI*2);ctx.fill();
+  // Crown / accessory
+  if(hdef.icon==='👑'){
+    ctx.fillStyle='#FFD700';
+    ctx.beginPath();ctx.moveTo(cx-size*0.14,cy-size*0.28);ctx.lineTo(cx-size*0.14,cy-size*0.42);ctx.lineTo(cx-size*0.05,cy-size*0.34);ctx.lineTo(cx,cy-size*0.44);ctx.lineTo(cx+size*0.05,cy-size*0.34);ctx.lineTo(cx+size*0.14,cy-size*0.42);ctx.lineTo(cx+size*0.14,cy-size*0.28);ctx.closePath();ctx.fill();
+  } else if(hdef.icon==='🏹'){
+    ctx.fillStyle='#228B22';ctx.fillRect(cx+size*0.1,cy-size*0.35,size*0.06,size*0.35);
+    ctx.strokeStyle='#8B4513';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(cx+size*0.25,cy-size*0.3);ctx.lineTo(cx+size*0.1,cy);ctx.stroke();
+  } else {
+    ctx.fillStyle='#FFD700';ctx.font=`${size*0.22}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(hdef.icon,cx+size*0.2,cy-size*0.28);
+  }
+  if(lv===0){ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fillRect(0,0,size,size);ctx.font=`${size*0.3}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🔒',cx,cy);}
+}
+
+function unlockHero(hid){
+  const hdef=HERO_TYPES[hid];if(!hdef)return;
+  const cost=hdef.costDark(0);
+  if(G.dark<cost){toast('Inte tillräckligt Jimmie-Kraft! 💜');return;}
+  G.dark-=cost;
+  G.heroes[hid].lv=1;G.heroes[hid].maxHp=hdef.hp(1);G.heroes[hid].hp=hdef.hp(1);
+  toast(`${hdef.name} upplåst! ⭐`);
+  renderHeroesPanel();saveGame();
+}
+
+function upgradeHero(hid){
+  const hdef=HERO_TYPES[hid];if(!hdef)return;
+  const h=G.heroes[hid];if(!h||h.lv===0)return;
+  if(h.upgrading){toast('Hjälten uppgraderas redan!');return;}
+  if(h.lv>=hdef.maxLv){toast('Max nivå!');return;}
+  const cost=hdef.costDark(h.lv);
+  if(G.dark<cost){toast('Inte tillräckligt Jimmie-Kraft! 💜');return;}
+  G.dark-=cost;
+  const now=Date.now()/1000;
+  h.upgrading=true;h.upgradeEnd=now+hdef.upgTime(h.lv);
+  toast(`${hdef.name} uppgraderas... (${fmtTime(hdef.upgTime(h.lv))})`);
+  renderHeroesPanel();saveGame();
+}
+
+// ── ATTACK MODE ───────────────────────────────────────────────────
+const AC=32,AGRID=26;
+let atkCanvas,atkCtx,atkW,atkH;
+let atkBuildings=[],atkUnits=[],atkParticles=[];
+let atkTimer=180,atkStarted=false,atkRaf=null;
+let selectedAtkTroop=null,atkSpellActive=false,atkRageEnd=0;
+let atkTroopPool={};
+let atkDestroyed=0,atkTotalHP=0;
+let heroDeployed=false;
+
+function startAttackMode(){
+  const hasArmy=Object.entries(G.troops).some(([_,c])=>c>0);
+  if(!hasArmy){toast('Du har inga trupper! Träna dem i Armé-fliken.');return;}
+  // Build enemy base
+  generateEnemyBase();
+  // Setup attack troop pool from player's army
+  atkTroopPool={};
+  Object.entries(G.troops).forEach(([id,cnt])=>{if(cnt>0)atkTroopPool[id]=cnt;});
+  atkTimer=180;atkStarted=true;atkUnits=[];atkParticles=[];
+  atkDestroyed=0;atkRageEnd=0;heroDeployed=false;
+  atkTotalHP=atkBuildings.reduce((s,b)=>s+b.hp,0);
+  // Init canvas
+  atkCanvas=document.getElementById('attack-canvas');
+  atkCtx=atkCanvas.getContext('2d');
+  atkW=atkCanvas.width=window.innerWidth;
+  atkH=atkCanvas.height=window.innerHeight-130-80;
+  // Show attack wrap
+  document.getElementById('attack-wrap').classList.add('show');
+  renderAtkTroopsBar();
+  document.getElementById('attack-stars').textContent='☆☆☆';
+  // Stars check: hero available?
+  document.getElementById('hero-attack-btn').style.display=
+    G.heroes.jimmie_akesson.lv>0?'block':'none';
+  // Start loop
+  if(atkRaf)cancelAnimationFrame(atkRaf);
+  let lastT=0;
+  function atkLoop(t){
+    const dt=Math.min((t-lastT)/1000,0.1);lastT=t;
+    if(atkStarted){
+      atkTimer-=dt;
+      if(atkTimer<=0)endAttack(false);
+      updateAttack(dt);
+      drawAttack();
+      atkRaf=requestAnimationFrame(atkLoop);
+    }
+  }
+  atkRaf=requestAnimationFrame(atkLoop);
+}
+
+function generateEnemyBase(){
+  // Generate a sample enemy base scaled to player JH level
+  const jh=G.jh_level;
+  atkBuildings=[];
+  let bid=0;
+  const place=(type,gx,gy,lv)=>{
+    const bt=BUILDING_TYPES[type];if(!bt)return;
+    const hp=(bt.hp?bt.hp[Math.min(lv-1,bt.hp.length-1)]:500)*1.2;// Enemy slightly stronger
+    const dps=bt.dps?bt.dps[Math.min(lv-1,bt.dps.length-1)]:0;
+    atkBuildings.push({id:bid++,type,lv,gx,gy,hp,maxHp:hp,dps,size:bt.size,alive:true,
+      icon:bt.icon,name:bt.name,fireTimer:0,fireRate:bt.splash?3:1.5,range:bt.category==='defense'?5:2,
+      air:type==='luftforsvar',splash:bt.splash||false});
+    atkTotalHP+=hp;
+  };
+  atkTotalHP=0;
+  // Core
+  place('jimmie_hall',11,9,Math.max(1,jh-1));
+  // Defenses
+  place('kanon',7,7,Math.max(1,jh-1));place('kanon',15,7,Math.max(1,jh-1));
+  place('pilbage_torn',7,13,Math.max(1,jh-1));place('pilbage_torn',15,13,Math.max(1,jh-1));
+  if(jh>=3)place('morsare',11,6,Math.max(1,jh-2));
+  if(jh>=3)place('luftforsvar',5,10,Math.max(1,jh-2));
+  if(jh>=5)place('tesla_torn',9,11,Math.max(1,jh-3));
+  // Resources
+  place('riksdaler_gruva',3,5,jh);place('riksdaler_gruva',18,5,jh);
+  place('saft_samlare',3,14,jh);place('saft_samlare',18,14,jh);
+  place('riksdaler_forrad',3,9,jh);place('saft_tank',18,9,jh);
+  // Walls
+  const wallPos=[[9,8],[10,8],[11,8],[12,8],[13,8],[9,14],[10,14],[11,14],[12,14],[13,14],[9,9],[9,10],[9,11],[9,12],[9,13],[13,9],[13,10],[13,11],[13,12],[13,13]];
+  wallPos.forEach(([gx,gy])=>place('mur',gx,gy,Math.max(1,jh-1)));
+}
+
+function renderAtkTroopsBar(){
+  const row=document.getElementById('at-troops-row');if(!row)return;
+  row.innerHTML=Object.entries(atkTroopPool).map(([id,cnt])=>{
+    if(!cnt)return'';
+    const tt=TROOP_TYPES[id];if(!tt)return'';
+    return`<div class="at-troop${selectedAtkTroop===id?' selected':''}" onclick="selectAtkTroop('${id}')">
+      <canvas id="atc-${id}" width="36" height="36"></canvas>
+      <div class="at-troop-count">×${cnt}</div>
+    </div>`;
+  }).join('');
+  setTimeout(()=>{
+    Object.keys(atkTroopPool).forEach(id=>{
+      const c=document.getElementById(`atc-${id}`);
+      if(c)drawTroopIcon(c.getContext('2d'),id,36);
+    });
+  },50);
+}
+
+function selectAtkTroop(id){
+  selectedAtkTroop=id;
+  document.querySelectorAll('.at-troop').forEach(t=>t.classList.remove('selected'));
+  document.querySelector(`.at-troop[onclick="selectAtkTroop('${id}')"]`)?.classList.add('selected');
+}
+
+const ATK_CAM_X=20,ATK_CAM_Y=20;
+function gridToScreen(gx,gy){return{x:gx*AC+ATK_CAM_X,y:gy*AC+ATK_CAM_Y};}
+
+function drawAttack(){
+  const ctx=atkCtx;
+  ctx.clearRect(0,0,atkW,atkH);
+  // Ground
+  for(let y=0;y<AGRID;y++){for(let x=0;x<AGRID;x++){
+    ctx.fillStyle=GRASS_PAT[y%GRID][x%GRID];
+    ctx.fillRect(x*AC+ATK_CAM_X,y*AC+ATK_CAM_Y,AC,AC);
+  }}
+  // Grid lines
+  ctx.strokeStyle='rgba(0,0,0,0.06)';ctx.lineWidth=0.5;
+  for(let y=0;y<=AGRID;y++){ctx.beginPath();ctx.moveTo(ATK_CAM_X,y*AC+ATK_CAM_Y);ctx.lineTo(AGRID*AC+ATK_CAM_X,y*AC+ATK_CAM_Y);ctx.stroke();}
+  for(let x=0;x<=AGRID;x++){ctx.beginPath();ctx.moveTo(x*AC+ATK_CAM_X,ATK_CAM_Y);ctx.lineTo(x*AC+ATK_CAM_X,AGRID*AC+ATK_CAM_Y);ctx.stroke();}
+
+  // Rage effect
+  if(atkRageEnd>Date.now()/1000){
+    ctx.fillStyle='rgba(255,50,0,0.08)';ctx.fillRect(0,0,atkW,atkH);
+  }
+
+  // Buildings
+  atkBuildings.filter(b=>b.alive).forEach(b=>{
+    const sx=b.gx*AC+ATK_CAM_X,sy=b.gy*AC+ATK_CAM_Y;
+    const bw=b.size*AC,bh=b.size*AC;
+    drawBuildingGraphic(ctx,b.type,b.lv,sx,sy,bw,bh);
+    // HP bar
+    const pct=b.hp/b.maxHp;
+    ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fillRect(sx,sy-8,bw,6);
+    ctx.fillStyle=pct>0.5?'#4ade80':pct>0.25?'#facc15':'#ef4444';
+    ctx.fillRect(sx,sy-8,bw*pct,6);
+    // Fire rate indicator
+    if(b.dps>0){
+      ctx.strokeStyle='rgba(255,100,0,0.3)';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+      ctx.beginPath();ctx.arc(sx+bw/2,sy+bh/2,b.range*AC,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
+    }
+  });
+
+  // Rubble for destroyed
+  atkBuildings.filter(b=>!b.alive).forEach(b=>{
+    const sx=b.gx*AC+ATK_CAM_X,sy=b.gy*AC+ATK_CAM_Y;
+    ctx.fillStyle='rgba(80,40,0,0.6)';ctx.fillRect(sx+2,sy+2,b.size*AC-4,b.size*AC-4);
+    ctx.font='12px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('💨',sx+b.size*AC/2,sy+b.size*AC/2);
+  });
+
+  // Units
+  atkUnits.forEach(u=>{
+    if(!u.alive)return;
+    const rage=atkRageEnd>Date.now()/1000;
+    const col=TROOP_TYPES[u.troopId]?.col||'#fff';
+    // Shadow
+    ctx.beginPath();ctx.ellipse(u.x,u.y+14,10,4,0,0,Math.PI*2);ctx.fillStyle='rgba(0,0,0,0.2)';ctx.fill();
+    // Body
+    ctx.fillStyle=rage?'rgba(255,100,0,0.9)':col;
+    ctx.beginPath();ctx.arc(u.x,u.y,12,0,Math.PI*2);ctx.fill();
+    // Face
+    ctx.fillStyle='#ffe0c0';ctx.beginPath();ctx.arc(u.x,u.y-2,8,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#2a1a0a';ctx.beginPath();ctx.arc(u.x,u.y-5,7,Math.PI,2*Math.PI);ctx.fill();
+    // HP bar
+    const pct=u.hp/u.maxHp;
+    ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fillRect(u.x-12,u.y-22,24,4);
+    ctx.fillStyle=pct>0.5?'#4ade80':'#facc15';ctx.fillRect(u.x-12,u.y-22,24*pct,4);
+    if(u.isHero){ctx.font='10px serif';ctx.textAlign='center';ctx.fillText('👑',u.x,u.y-26);}
+    if(rage){ctx.strokeStyle='rgba(255,100,0,0.6)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(u.x,u.y,14,0,Math.PI*2);ctx.stroke();}
+  });
+
+  // Particles
+  atkParticles.forEach((p,i)=>{
+    ctx.globalAlpha=p.life;
+    ctx.fillStyle=p.col;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+  });
+  ctx.globalAlpha=1;
+
+  // Timer & stars
+  document.getElementById('attack-timer-circle').textContent=Math.ceil(Math.max(0,atkTimer));
+  // Stars
+  const pctDest=atkDestroyed/atkBuildings.length;
+  let stars='☆☆☆';
+  if(pctDest>=0.33)stars='⭐☆☆';
+  if(pctDest>=0.66)stars='⭐⭐☆';
+  if(pctDest>=1.0)stars='⭐⭐⭐';
+  document.getElementById('attack-stars').textContent=stars;
+  document.getElementById('attack-pct').textContent=Math.floor(pctDest*100)+'%';
+}
+
+function updateAttack(dt){
+  const now=Date.now()/1000;
+  const rage=atkRageEnd>now;
+  // Move units toward targets
+  atkUnits.forEach(u=>{
+    if(!u.alive)return;
+    // Find target
+    if(!u.target||!u.target.alive){
+      u.target=findTarget(u);
+    }
+    if(!u.target){return;}
+    const tx=u.target.gx*AC+u.target.size*AC/2+ATK_CAM_X;
+    const ty=u.target.gy*AC+u.target.size*AC/2+ATK_CAM_Y;
+    const dx=tx-u.x,dy=ty-u.y;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    const attackRange=(u.troopId==='jimmie_bagare'||u.troopId==='jimmie_helare')?AC*2.5:AC*1.2;
+    if(dist>attackRange){
+      const spd=(TROOP_TYPES[u.troopId]?.speed||16)*AC/12*(rage?1.5:1);
+      u.x+=dx/dist*spd*dt;u.y+=dy/dist*spd*dt;
+    } else {
+      // Attack
+      u.attackTimer=(u.attackTimer||0)-dt;
+      if(u.attackTimer<=0){
+        const dps=(TROOP_TYPES[u.troopId]?.dps?.[u.lv-1]||10)*(rage?2:1);
+        if(u.troopId==='jimmie_helare'){
+          // Heal nearby units
+          atkUnits.filter(o=>o.alive&&Math.hypot(o.x-u.x,o.y-u.y)<AC*3).forEach(o=>{
+            o.hp=Math.min(o.maxHp,o.hp+(TROOP_TYPES.jimmie_helare.healPerSec?.[u.lv-1]||30)*0.8);
+          });
+        } else {
+          u.target.hp-=dps*0.8;
+          if(BUILDING_TYPES[u.target.type]?.splash){
+            atkBuildings.filter(b=>b.alive&&b!==u.target&&Math.hypot((b.gx+b.size/2)*AC-(u.target.gx+u.target.size/2)*AC,(b.gy+b.size/2)*AC-(u.target.gy+u.target.size/2)*AC)<AC*2).forEach(b=>{b.hp-=dps*0.3;});
+          }
+          spawnParticle(tx,ty,'rgba(255,200,0,0.8)',4);
+        }
+        u.attackTimer=0.8;
+        if(u.target.hp<=0){u.target.alive=false;atkDestroyed++;spawnExplosion(tx,ty);if(atkDestroyed>=atkBuildings.length)endAttack(true);}
+      }
+    }
+  });
+  // Defense fire at units
+  atkBuildings.filter(b=>b.alive&&b.dps>0).forEach(b=>{
+    b.fireTimer=(b.fireTimer||0)-dt;
+    if(b.fireTimer>0)return;
+    const bx=(b.gx+b.size/2)*AC+ATK_CAM_X,by=(b.gy+b.size/2)*AC+ATK_CAM_Y;
+    const validTargets=atkUnits.filter(u=>u.alive&&(b.air||!TROOP_TYPES[u.troopId]?.air)&&Math.hypot(u.x-bx,u.y-by)<b.range*AC);
+    if(!validTargets.length)return;
+    // Sort by closest
+    validTargets.sort((a,c2)=>Math.hypot(a.x-bx,a.y-by)-Math.hypot(c2.x-bx,c2.y-by));
+    const target=validTargets[0];
+    target.hp-=b.dps*0.5*dt*b.fireRate;
+    if(b.splash){validTargets.slice(1,4).forEach(t=>t.hp-=b.dps*0.2*dt*b.fireRate);}
+    spawnParticle(target.x,target.y,'rgba(255,80,0,0.6)',3);
+    b.fireTimer=1/b.fireRate;
+    if(target.hp<=0){target.alive=false;spawnParticle(target.x,target.y,'rgba(200,200,200,0.9)',6);}
+  });
+  // Update particles
+  atkParticles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=0.2;p.life-=0.04;});
+  atkParticles=atkParticles.filter(p=>p.life>0);
+  // Remove dead units
+  atkUnits=atkUnits.filter(u=>u.alive);
+}
+
+function findTarget(u){
+  const tt=TROOP_TYPES[u.troopId];
+  if(tt?.target==='friendly')return null;
+  let candidates=atkBuildings.filter(b=>b.alive);
+  if(tt?.target==='defense')candidates=candidates.filter(b=>BUILDING_TYPES[b.type]?.category==='defense')||candidates;
+  if(tt?.target==='resources')candidates=candidates.filter(b=>BUILDING_TYPES[b.type]?.category==='resource')||candidates;
+  if(!candidates.length)candidates=atkBuildings.filter(b=>b.alive);
+  if(!candidates.length)return null;
+  // Find closest
+  return candidates.reduce((a,b)=>{
+    const da=Math.hypot((a.gx+a.size/2)*AC-(u.x-ATK_CAM_X),(a.gy+a.size/2)*AC-(u.y-ATK_CAM_Y));
+    const db=Math.hypot((b.gx+b.size/2)*AC-(u.x-ATK_CAM_X),(b.gy+b.size/2)*AC-(u.y-ATK_CAM_Y));
+    return da<db?a:b;
+  });
+}
+
+function spawnParticle(x,y,col,r){
+  for(let i=0;i<3;i++){
+    atkParticles.push({x,y,vx:(Math.random()-0.5)*3,vy:(Math.random()-2)*2,col,r:r*Math.random(),life:1});
+  }
+}
+
+function spawnExplosion(x,y){
+  for(let i=0;i<12;i++){
+    const angle=Math.random()*Math.PI*2;
+    const spd=2+Math.random()*4;
+    atkParticles.push({x,y,vx:Math.cos(angle)*spd,vy:Math.sin(angle)*spd,col:['rgba(255,200,0,0.9)','rgba(255,100,0,0.8)','rgba(255,50,0,0.7)'][Math.floor(Math.random()*3)],r:3+Math.random()*5,life:1});
+  }
+}
+
+// Touch to place troops
+atkCanvas?.addEventListener('click',placeAtkTroop);
+document.getElementById('attack-canvas').addEventListener('click',e=>{
+  if(!selectedAtkTroop)return;
+  if(atkTroopPool[selectedAtkTroop]<=0){toast('Inga fler trupper!');return;}
+  const rect=e.target.getBoundingClientRect();
+  const x=e.clientX-rect.left,y=e.clientY-rect.top;
+  deployTroop(selectedAtkTroop,x,y);
+  atkTroopPool[selectedAtkTroop]--;
+  if(atkTroopPool[selectedAtkTroop]<=0)delete atkTroopPool[selectedAtkTroop];
+  renderAtkTroopsBar();
+  // Auto-select next available
+  if(!atkTroopPool[selectedAtkTroop]){
+    const next=Object.keys(atkTroopPool)[0];
+    if(next)selectAtkTroop(next);
+    else selectedAtkTroop=null;
+  }
+});
+
+function placeAtkTroop(){}
+
+function deployTroop(id,x,y,isHero=false){
+  const tt=TROOP_TYPES[id];if(!tt)return;
+  const lv=G.troopLevels?.[id]||1;
+  const hp=(tt.hp?tt.hp[Math.min(lv-1,tt.hp.length-1)]:100);
+  atkUnits.push({id:Date.now()+Math.random(),troopId:id,x,y,hp,maxHp:hp,lv,alive:true,target:null,attackTimer:0,isHero});
+  for(let i=0;i<4;i++)spawnParticle(x,y,'rgba(255,215,0,0.8)',3);
+}
+
+function deployHero(){
+  if(heroDeployed){toast('Jimmie är redan utplacerad!');return;}
+  const h=G.heroes.jimmie_akesson;if(!h||h.lv===0){toast('Jimmie är inte upplåst!');return;}
+  const x=AGRID/2*AC+ATK_CAM_X,y=AGRID-2)*AC+ATK_CAM_Y;
+  deployTroop('lill_jimmie',x,y,true);
+  // Add 6 summoned barbarians
+  for(let i=0;i<6;i++){
+    const angle=Math.random()*Math.PI*2;
+    deployTroop('lill_jimmie',x+Math.cos(angle)*40,y+Math.sin(angle)*40,false);
+  }
+  heroDeployed=true;toast('JIMMIE ÅR KAISER! 👑');
+  document.getElementById('hero-attack-btn').style.opacity='0.5';
+  document.getElementById('hero-attack-btn').disabled=true;
+}
+
+function deploySpell(){
+  const hasRage=G.spells?.rage||0;
+  if(!hasRage){toast('Inga Rage-besvärjelser!');return;}
+  G.spells.rage--;
+  atkRageEnd=Date.now()/1000+15;
+  toast('⚡ RAGE AKTIVERAT! 2x skada i 15 sek!');
+  document.getElementById('spell-btn').style.opacity='0.5';
+  document.getElementById('spell-btn').disabled=true;
+}
+
+function surrenderAttack(){endAttack(false);}
+
+function endAttack(allDestroyed){
+  atkStarted=false;
+  if(atkRaf)cancelAnimationFrame(atkRaf);
+  const pct=atkBuildings.length?atkDestroyed/atkBuildings.length:0;
+  let stars=0;
+  if(pct>=0.33)stars=1;if(pct>=0.66)stars=2;if(pct>=1.0)stars=3;
+  // Calculate loot
+  const lootMult=Math.max(0.1,pct)*stars*0.5;
+  const goldLoot=Math.floor(G.gold_cap*0.05*lootMult*(1+G.jh_level*0.3));
+  const elixirLoot=Math.floor(G.elixir_cap*0.05*lootMult*(1+G.jh_level*0.3));
+  const darkLoot=Math.floor(20*lootMult*G.jh_level);
+  G.gold=Math.min(G.gold_cap,G.gold+goldLoot);
+  G.elixir=Math.min(G.elixir_cap,G.elixir+elixirLoot);
+  G.dark=Math.min(G.dark_cap,G.dark+darkLoot);
+  if(stars>0)G.attacksWon++;
+  // Update troops (surviving ones returned)
+  const survivingCounts={};
+  atkUnits.filter(u=>u.alive&&!u.isHero).forEach(u=>{
+    survivingCounts[u.troopId]=(survivingCounts[u.troopId]||0)+1;
+  });
+  G.troops={};
+  Object.entries(survivingCounts).forEach(([id,cnt])=>{G.troops[id]=cnt;});
+  document.getElementById('result-stars').textContent=['','⭐','⭐⭐','⭐⭐⭐'][stars]||'☆';
+  document.getElementById('result-title').textContent=stars>=2?'SEGER! 🎉':stars===1?'Delseger':'Nederlag 💀';
+  document.getElementById('result-sub').textContent=`${Math.floor(pct*100)}% förstört · ${stars} stjärnor`;
+  document.getElementById('r-gold').textContent='+'+fmt(goldLoot);
+  document.getElementById('r-elixir').textContent='+'+fmt(elixirLoot);
+  document.getElementById('r-dark').textContent='+'+fmt(darkLoot);
+  document.getElementById('result-overlay').classList.add('show');
+  document.getElementById('attack-wrap').classList.remove('show');
+  saveGame();
+}
+
+function closeAttackResult(){
+  document.getElementById('result-overlay').classList.remove('show');
+  switchNav('by');
+}
+
+// ── TOUCH/MOUSE CAMERA ────────────────────────────────────────────
+let touchStart=null;
+canvas.addEventListener('mousedown',e=>{if(activeNav!=='by'&&activeNav!=='attack')return;dragging=false;dragStart={x:e.clientX,y:e.clientY};camStart={x:camX,y:camY};});
+canvas.addEventListener('mousemove',e=>{
+  if(e.buttons!==1)return;
+  const dx=e.clientX-dragStart.x,dy=e.clientY-dragStart.y;
+  if(Math.abs(dx)>5||Math.abs(dy)>5)dragging=true;
+  if(dragging){camX=camStart.x+dx;camY=camStart.y+dy;}
+});
+canvas.addEventListener('mouseup',e=>{
+  if(!dragging){handleCanvasClick(e.clientX,e.clientY);}
+  dragging=false;
+});
+canvas.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0];dragStart={x:t.clientX,y:t.clientY};camStart={x:camX,y:camY};dragging=false;},{passive:false});
+canvas.addEventListener('touchmove',e=>{e.preventDefault();const t=e.touches[0];const dx=t.clientX-dragStart.x,dy=t.clientY-dragStart.y;if(Math.abs(dx)>8||Math.abs(dy)>8)dragging=true;if(dragging){camX=camStart.x+dx;camY=camStart.y+dy;}},{passive:false});
+canvas.addEventListener('touchend',e=>{e.preventDefault();if(!dragging){const t=e.changedTouches[0];handleCanvasClick(t.clientX,t.clientY);}dragging=false;},{passive:false});
+
+function handleCanvasClick(cx,cy){
+  const gx=Math.floor((cx-camX)/CELL),gy=Math.floor((cy-camY)/CELL);
+  const hit=G.buildings.find(b=>{const s=BUILDING_TYPES[b.type]?.size||1;return gx>=b.gx&&gx<b.gx+s&&gy>=b.gy&&gy<b.gy+s;});
+  if(hit){selectedBuilding=hit;openBuildMenu(hit.type);}
+  else{selectedBuilding=null;closeModal('build-modal');}
+}
+
+// ── MODALS ────────────────────────────────────────────────────────
+function openModal(id){document.getElementById(id).classList.add('show');}
+function closeModal(id){document.getElementById(id).classList.remove('show');}
+
+// ── TOAST ─────────────────────────────────────────────────────────
+let toastTimer;
+function toast(msg){
+  const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2800);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────
+loadGame();
+if(!G.buildings||G.buildings.length===0)defaultBase();
+if(!G.troopLevels)G.troopLevels={};
+if(!G.spells)G.spells={};
+centerCamera();
+renderByPanel();
+// Start game loop
+requestAnimationFrame(gameLoop);
+// Switch to default view
+switchNav('by');
+</script>
+</body>
+</html>
