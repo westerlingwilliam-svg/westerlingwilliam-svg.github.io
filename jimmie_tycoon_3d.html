@@ -243,7 +243,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 }
 /* Side nav buttons */
 .nb{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;
-  width:80px;transition:transform .15s;-webkit-tap-highlight-color:transparent;
+  flex:1;min-width:0;transition:transform .15s;-webkit-tap-highlight-color:transparent;
   padding:6px 0;border:none;background:none;}
 .nb:active{transform:scale(0.85)}
 .nb-icon{font-size:2.2rem;line-height:1;transition:transform .2s cubic-bezier(.34,1.56,.64,1),filter .2s}
@@ -251,7 +251,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 .nb.active .nb-lbl{color:var(--b)}
 .nb.active .nb-icon{transform:scale(1.12);filter:drop-shadow(0 2px 8px rgba(59,76,202,0.5))}
 /* Center Jimmie button — floats above nav */
-#nb-center{display:flex;flex-direction:column;align-items:center;cursor:pointer;position:relative;width:76px}
+#nb-center{display:flex;flex-direction:column;align-items:center;cursor:pointer;position:absolute;left:50%;transform:translateX(-50%);bottom:0;z-index:2}
 #nb-center-btn{
   width:83px;height:83px;border-radius:50%;
   background:white;border:none;cursor:pointer;
@@ -743,19 +743,28 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 
 <!-- ── NAV ── -->
 <div id="nav">
+  <!-- Left half: just Karta -->
   <div class="nb active" id="nb-map" onclick="showScreenWithTut('map-screen')">
     <div class="nb-icon">🗺️</div><div class="nb-lbl">Karta</div>
   </div>
+  <!-- Spacer fills left half -->
   <div style="flex:1"></div>
+
+  <!-- Jimmie: absolute center of nav -->
   <div id="nb-center">
     <button id="nb-center-btn" onclick="toggleSubmenu()">🌸</button>
     <div class="nb-center-lbl" id="nb-center-lbl">JIMMIE</div>
   </div>
+
+  <!-- Spacer fills right half -->
   <div style="flex:1"></div>
-  <div class="nb" id="nb-quest" onclick="openQuestPanel()" style="position:relative">
-    <div class="nb-icon">📋</div>
+  <!-- Right half: Uppdrag + Inställningar -->
+  <div class="nb" id="nb-quest" onclick="openQuestPanel()">
+    <div style="position:relative;display:inline-block">
+      <div class="nb-icon">📋</div>
+      <div id="quest-badge" style="display:none;position:absolute;top:-2px;right:-4px;width:12px;height:12px;background:#ef4444;border-radius:50%;border:2px solid white"></div>
+    </div>
     <div class="nb-lbl">Uppdrag</div>
-    <div id="quest-badge" style="display:none;position:absolute;top:2px;right:8px;min-width:18px;height:18px;background:#ef4444;border-radius:50%;border:2px solid white;font-size:0.6rem;font-weight:900;color:white;align-items:center;justify-content:center;line-height:1;padding:0 2px">!</div>
   </div>
   <div class="nb" id="nb-settings" onclick="showScreenWithTut('settings-screen')">
     <div class="nb-icon">⚙️</div><div class="nb-lbl">Inställningar</div>
@@ -2914,7 +2923,7 @@ function updateQuestBadge() {
       sq.tasks.some(t => t.progress >= t.target && !t.claimed) ||
       (sq.completed && !sq.claimed)
     );
-  badge.style.display = hasClaimable ? 'flex' : 'none';
+  badge.style.display = hasClaimable ? 'block' : 'none';
 }
 function openQuestPanel() {
   const el = document.getElementById('quest-panel');
@@ -3144,7 +3153,7 @@ setTimeout(startTutorial, 800);
 // Spawn Jimmie Stops around start
 const STOP_DEFS=[
   // Inner ring
-  {x:0,    y:0,    col:'#FFCB05',label:'Riksdagen'},
+  {x:180,  y:-140, col:'#FFCB05',label:'Riksdagen'},
   {x:280,  y:-120, col:'#3B4CCA',label:'SD-Kontor'},
   {x:-300, y:80,   col:'#22c55e',label:'Folkhemmet'},
   {x:120,  y:320,  col:'#F7544B',label:'Sölvesborg Torg'},
