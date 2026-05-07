@@ -381,6 +381,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 #garage-screen{background:#f2f2f7}
 #garage-grid{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 8px 100px;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,160px));justify-content:start;gap:8px;align-content:start}
 .gc:hover{transform:scale(1.03);z-index:2}
+.sort-opt:hover{background:#f7f7f7}.sort-opt.active{color:var(--b);background:#f0f4ff}
 .gc{background:white;border-radius:16px;overflow:hidden;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;display:flex;flex-direction:column;align-items:stretch}
 .gc:active{transform:scale(0.93)}
 
@@ -667,10 +668,29 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
     <button class="back-fab" onclick="showScreenWithTut('map-screen')">←</button>
     <h2>🏠 Jimmie Garage</h2>
   </div>
-  <div style="padding:10px 16px 0;display:flex;justify-content:space-between;align-items:center">
+  <div style="padding:10px 16px 6px;display:flex;justify-content:space-between;align-items:center">
     <div style="font-size:0.85rem;color:#888;font-weight:800"><span id="garage-count">0</span> Jimmies</div>
-    <div id="garage-candy-row" style="display:flex;gap:6px;flex-wrap:wrap;padding:0 14px 10px;margin-top:4px"></div>
+    <div style="position:relative">
+      <button id="sort-btn" onclick="toggleSortMenu()" style="display:flex;align-items:center;gap:6px;background:white;border:1.5px solid #ddd;border-radius:50px;padding:6px 14px;font-size:0.72rem;font-weight:800;color:#333;cursor:pointer;font-family:var(--font);box-shadow:0 2px 8px rgba(0,0,0,0.08)">
+        <span id="sort-icon">↓</span> <span id="sort-label">Högst CP</span> ▾
+      </button>
+      <div id="sort-menu" style="display:none;position:absolute;right:0;top:calc(100% + 6px);background:white;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.15);overflow:hidden;min-width:180px;z-index:50;border:1px solid #eee">
+        <div class="sort-opt" onclick="setSort('cp-desc')" id="sopt-cp-desc" style="padding:13px 16px;font-size:0.82rem;font-weight:800;color:#333;cursor:pointer;display:flex;align-items:center;gap:8px;border-bottom:1px solid #f5f5f5">
+          <span style="font-size:1rem">↓</span> Högst CP överst
+        </div>
+        <div class="sort-opt" onclick="setSort('cp-asc')" id="sopt-cp-asc" style="padding:13px 16px;font-size:0.82rem;font-weight:800;color:#333;cursor:pointer;display:flex;align-items:center;gap:8px;border-bottom:1px solid #f5f5f5">
+          <span style="font-size:1rem">↑</span> Lägst CP överst
+        </div>
+        <div class="sort-opt" onclick="setSort('rarity-desc')" id="sopt-rarity-desc" style="padding:13px 16px;font-size:0.82rem;font-weight:800;color:#333;cursor:pointer;display:flex;align-items:center;gap:8px;border-bottom:1px solid #f5f5f5">
+          <span style="font-size:1rem">⭐</span> Sällsyntast överst
+        </div>
+        <div class="sort-opt" onclick="setSort('rarity-asc')" id="sopt-rarity-asc" style="padding:13px 16px;font-size:0.82rem;font-weight:800;color:#333;cursor:pointer;display:flex;align-items:center;gap:8px">
+          <span style="font-size:1rem">⚪</span> Vanligast överst
+        </div>
+      </div>
+    </div>
   </div>
+  <div id="garage-candy-row" style="display:flex;gap:6px;flex-wrap:wrap;padding:4px 14px 8px"></div>
   <div id="garage-grid"></div>
 </div>
 
@@ -713,11 +733,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
         <div class="settings-icon">📊</div>
         <div class="settings-body"><div class="settings-name">Version</div><div class="settings-desc">Jimmie GO! v2.0</div></div>
       </div>
-      <div class="settings-row" onclick="refillBalls()">
-        <div class="settings-icon">⚪</div>
-        <div class="settings-body"><div class="settings-name">Fyll på bollar</div><div class="settings-desc">Gratis påfyllning om du kört slut</div></div>
-        <div class="settings-arrow">›</div>
-      </div>
+
       <div class="settings-row" style="color:#F7544B" onclick="confirmReset()">
         <div class="settings-icon">🗑️</div>
         <div class="settings-body"><div class="settings-name" style="color:#F7544B">Återställ data</div><div class="settings-desc">Tar bort all sparad data</div></div>
@@ -1127,11 +1143,14 @@ function spinStop(idx) {
   // Reward: balls + candy
   const roll = Math.random();
   let reward = '';
-  if(roll < 0.5) { G.balls[0]+=3; reward='⚪ +3 SD-Bollar'; }
-  else if(roll < 0.8) { G.balls[0]+=2; G.balls[1]+=1; reward='⚪+2 🔵+1 Bollar'; }
-  else if(roll < 0.95) { G.balls[1]+=2; const rc2=JIMMIES[Math.floor(Math.random()*JIMMIES.length)].rarity; if(!G.candy[rc2])G.candy[rc2]=0; G.candy[rc2]+=2; reward='🔵+2 Super-Bollar + 🍬×2'; }
-  else { G.balls[2]+=1; reward='+1 Jimmie-Boll! Sallsynt!'; }
+  if(roll < 0.30) { G.balls[0]+=3; reward='⚪ +3 SD-Bollar'; }
+  else if(roll < 0.55) { G.balls[0]+=2; G.balls[1]+=1; reward='⚪+2 🔵+1 Bollar'; }
+  else if(roll < 0.75) { G.balls[1]+=3; reward='🔵 +3 Super-Bollar'; }
+  else if(roll < 0.90) { const rc2=JIMMIES[Math.floor(Math.random()*JIMMIES.length)].rarity; if(!G.candy[rc2])G.candy[rc2]=0; G.candy[rc2]+=3; G.balls[1]+=1; reward='🔵+1 Super + 🍬×3'; }
+  else if(roll < 0.97) { G.balls[2]+=1; G.balls[1]+=1; reward='🟡+1 Jimmie-Boll + 🔵+1!'; }
+  else { G.balls[2]+=2; reward='🟡🟡 +2 Jimmie-Bollar! Jackpot!'; }
   // stop gives random candy
+  playSound('stop');
   toast('Stop: ' + s.label + ' · ' + reward);
   addXP(80);
   updateHUD(); save();
@@ -1758,6 +1777,7 @@ function onBallHit() {
 }
 
 function onCaught() {
+  playSound('catch');
   lastCatchWasSuccess = true;
   const j = curCatch.j;
   if (!G.caught[j.id]) G.caught[j.id] = 0;
@@ -1799,6 +1819,7 @@ function onCaught() {
 }
 
 function onEscaped() {
+  playSound('escape');
   lastCatchWasSuccess = false;
   G.stats.esc++;
   spawnParticles(catchW/2, catchH*0.35, '#ff4444', 15, 'burst');
@@ -1848,6 +1869,7 @@ function addXP(n) {
     if (G.lv%5===0) G.balls[1] += 3;
     if (G.lv%10===0) G.balls[2] += 1;
     document.getElementById('lvl-sub-txt').textContent = 'Du är nu nivå ' + G.lv + '!';
+    playSound('levelup');
     document.getElementById('lvl-splash').classList.add('show');
   }
 }
@@ -2126,6 +2148,56 @@ function getCardGlow(rarity) {
   return `0 0 ${spread} ${c1}, 0 0 ${parseInt(spread)*2}px ${c2}, inset 0 0 0 1.5px ${c1}`;
 }
 
+
+// ── GARAGE SORT ──────────────────────────────────────────────────
+let currentSort = 'cp-desc';
+const SORT_LABELS = {
+  'cp-desc':     ['↓', 'Högst CP'],
+  'cp-asc':      ['↑', 'Lägst CP'],
+  'rarity-desc': ['⭐', 'Sällsyntast'],
+  'rarity-asc':  ['⚪', 'Vanligast'],
+};
+const RARITY_ORDER = ['Common','Uncommon','Rare','Epic','Legendary','Mythic'];
+
+function toggleSortMenu() {
+  const m = document.getElementById('sort-menu');
+  m.style.display = m.style.display === 'none' ? 'block' : 'none';
+}
+// Close sort menu on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('#sort-btn') && !e.target.closest('#sort-menu')) {
+    const m = document.getElementById('sort-menu');
+    if (m) m.style.display = 'none';
+  }
+});
+function setSort(key) {
+  currentSort = key;
+  const [icon, label] = SORT_LABELS[key];
+  document.getElementById('sort-icon').textContent = icon;
+  document.getElementById('sort-label').textContent = label;
+  document.getElementById('sort-menu').style.display = 'none';
+  // Highlight active option
+  document.querySelectorAll('.sort-opt').forEach(o => o.classList.remove('active'));
+  const el = document.getElementById('sopt-'+key);
+  if (el) el.classList.add('active');
+  renderGarage();
+}
+
+function sortCards(cards) {
+  return cards.slice().sort((a, b) => {
+    const cpA = Math.floor(a.j.cp*(0.9+G.lv*0.02)) + ((G.jimmieCP&&G.jimmieCP[a.j.id]&&a.instance===0)?G.jimmieCP[a.j.id]:0);
+    const cpB = Math.floor(b.j.cp*(0.9+G.lv*0.02)) + ((G.jimmieCP&&G.jimmieCP[b.j.id]&&b.instance===0)?G.jimmieCP[b.j.id]:0);
+    const riA = RARITY_ORDER.indexOf(a.j.rarity);
+    const riB = RARITY_ORDER.indexOf(b.j.rarity);
+    if (currentSort === 'cp-desc') return cpB - cpA;
+    if (currentSort === 'cp-asc')  return cpA - cpB;
+    if (currentSort === 'rarity-desc') return riB !== riA ? riB - riA : cpB - cpA;
+    if (currentSort === 'rarity-asc')  return riA !== riB ? riA - riB : cpA - cpB;
+    return 0;
+  });
+}
+
+
 // ── GARAGE ───────────────────────────────────────────────────────
 function renderGarage() {
   const grid = document.getElementById('garage-grid');
@@ -2160,6 +2232,8 @@ function renderGarage() {
     const n = G.caught[j.id] || 1;
     for (let i = 0; i < n; i++) cards.push({j, instance: i});
   });
+  sortCards(cards).forEach((card,idx)=>cards[idx]=card); // apply sort in place
+  cards.splice(0,cards.length,...sortCards(cards));
   const canvasIds = [];
   grid.innerHTML = cards.map(({j, instance}) => {
     const rarityBg = RC[j.rarity];
@@ -2260,6 +2334,7 @@ function renderDex(){
 // ── SCREENS ──────────────────────────────────────────────────────
 const NAV_MAP={'map-screen':'nb-map','settings-screen':'nb-settings','profile-screen':'nb-map'};
 function showScreen(id){
+  playSound('click');
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
@@ -2444,27 +2519,111 @@ function startTutorial() {
   setTimeout(showTutStep, 900);
 }
 
+
+// ── SOUNDS ───────────────────────────────────────────────────────
+let audioCtx = null;
+function getAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playSound(type) {
+  // Check settings toggle
+  const toggle = document.getElementById('st-sound');
+  if (toggle && !toggle.classList.contains('on')) return;
+  try {
+    const ctx = getAudio();
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+
+    if (type === 'catch') {
+      // Happy rising arpeggio
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(440, now);
+      osc.frequency.setValueAtTime(554, now+0.1);
+      osc.frequency.setValueAtTime(659, now+0.2);
+      osc.frequency.setValueAtTime(880, now+0.3);
+      gain.gain.setValueAtTime(0.18, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now+0.6);
+      osc.start(now); osc.stop(now+0.6);
+    } else if (type === 'miss') {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(220, now);
+      osc.frequency.exponentialRampToValueAtTime(110, now+0.2);
+      gain.gain.setValueAtTime(0.1, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now+0.25);
+      osc.start(now); osc.stop(now+0.25);
+    } else if (type === 'stop') {
+      // Sparkly chime
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(784, now);
+      osc.frequency.setValueAtTime(1047, now+0.1);
+      gain.gain.setValueAtTime(0.14, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now+0.4);
+      osc.start(now); osc.stop(now+0.4);
+    } else if (type === 'levelup') {
+      // Triumphant fanfare
+      const freqs = [523,659,784,1047];
+      freqs.forEach((f,i) => {
+        const o2=ctx.createOscillator(), g2=ctx.createGain();
+        o2.connect(g2); g2.connect(ctx.destination);
+        o2.type='sine'; o2.frequency.setValueAtTime(f,now+i*0.12);
+        g2.gain.setValueAtTime(0.16,now+i*0.12);
+        g2.gain.exponentialRampToValueAtTime(0.001,now+i*0.12+0.3);
+        o2.start(now+i*0.12); o2.stop(now+i*0.12+0.3);
+      });
+    } else if (type === 'click') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(600, now);
+      gain.gain.setValueAtTime(0.06, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now+0.08);
+      osc.start(now); osc.stop(now+0.08);
+    } else if (type === 'escape') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(330, now);
+      osc.frequency.exponentialRampToValueAtTime(200, now+0.35);
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now+0.4);
+      osc.start(now); osc.stop(now+0.4);
+    }
+  } catch(e) {}
+}
+
+
 // ── INIT ────────────────────────────────────────────────────────
 load();buildW();setTimeout(initBallCanvases,100);
 setTimeout(startTutorial, 800);
 // Chunk system spawns automatically on first frame
 // Spawn Jimmie Stops around start
 const STOP_DEFS=[
+  // Inner ring
   {x:0,    y:0,    col:'#FFCB05',label:'Riksdagen'},
   {x:280,  y:-120, col:'#3B4CCA',label:'SD-Kontor'},
   {x:-300, y:80,   col:'#22c55e',label:'Folkhemmet'},
   {x:120,  y:320,  col:'#F7544B',label:'Sölvesborg Torg'},
   {x:-180, y:-280, col:'#a855f7',label:'Jimmie Staty'},
+  // Mid ring
   {x:500,  y:200,  col:'#3B4CCA',label:'Partihuset'},
   {x:-500, y:-100, col:'#22c55e',label:'SD-Arena'},
   {x:200,  y:-500, col:'#FFCB05',label:'Vallokal'},
   {x:-200, y:500,  col:'#F7544B',label:'Tryckeri'},
-  {x:650,  y:-350, col:'#a855f7',label:'SD-Valstuga'},
-  {x:-650, y:350,  col:'#3B4CCA',label:'Ungdomsförbundet'},
-  {x:800,  y:100,  col:'#22c55e',label:'Debattsalen'},
-  {x:-800, y:-200, col:'#FFCB05',label:'Mottagningen'},
-  {x:100,  y:800,  col:'#F7544B',label:'Valstugan'},
-  {x:-100, y:-800, col:'#a855f7',label:'Kampanjhuset'},
+  {x:550,  y:-400, col:'#a855f7',label:'SD-Valstuga'},
+  {x:-550, y:420,  col:'#3B4CCA',label:'Ungdomsförbundet'},
+  {x:420,  y:550,  col:'#22c55e',label:'Debattsalen'},
+  {x:-420, y:-550, col:'#FFCB05',label:'Mottagningen'},
+  // Outer ring — further away
+  {x:900,  y:100,  col:'#F7544B',label:'Valstugan'},
+  {x:-900, y:-100, col:'#a855f7',label:'Kampanjhuset'},
+  {x:100,  y:900,  col:'#FFCB05',label:'Riksdagsbiblioteket'},
+  {x:-100, y:-900, col:'#3B4CCA',label:'Partimuseet'},
+  {x:700,  y:-650, col:'#22c55e',label:'SD-Sommarläger'},
+  {x:-700, y:650,  col:'#F7544B',label:'Jimmies Villa'},
+  {x:-900, y:400,  col:'#a855f7',label:'Sölvesborg Slott'},
+  {x:900,  y:-400, col:'#FFCB05',label:'Sverigehummet'},
+  {x:400,  y:-950, col:'#3B4CCA',label:'Norra Valdistrikt'},
+  {x:-400, y:950,  col:'#22c55e',label:'Södra Kampanjcenter'},
 ];
 STOP_DEFS.forEach(def=>{
   stops.push({...def,cooldown:0,maxCd:25,spinning:false,spinAngle:0});
