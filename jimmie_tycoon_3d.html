@@ -391,6 +391,62 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 .screen{transition:opacity .2s}
 .screen-exit{opacity:0;pointer-events:none}
 
+
+/* ── QUESTS ── */
+#quest-panel{position:fixed;inset:0;z-index:260;pointer-events:none}
+#quest-panel.open{pointer-events:all}
+#quest-backdrop{position:absolute;inset:0;background:rgba(0,0,0,0);transition:background .3s;cursor:pointer}
+#quest-panel.open #quest-backdrop{background:rgba(0,0,0,0.6);backdrop-filter:blur(4px)}
+#quest-sheet{
+  position:absolute;bottom:0;left:0;right:0;
+  background:#0d1117;border-radius:28px 28px 0 0;
+  transform:translateY(100%);transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+  height:85vh;display:flex;flex-direction:column;
+  border-top:1px solid rgba(255,255,255,0.08);
+}
+#quest-panel.open #quest-sheet{transform:translateY(0)}
+#quest-handle{width:40px;height:5px;background:rgba(255,255,255,0.2);border-radius:3px;margin:12px auto 0;flex-shrink:0}
+#quest-header{padding:14px 20px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+#quest-header h2{font-size:1.2rem;font-weight:900;color:white}
+#quest-header-right{display:flex;align-items:center;gap:10px}
+.quest-berry-badge{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:50px;padding:6px 12px;font-size:0.82rem;font-weight:800;color:white}
+#quest-tabs{display:flex;padding:0 20px 10px;gap:8px;flex-shrink:0}
+.qt{flex:1;padding:8px;border-radius:12px;text-align:center;font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;transition:.2s;color:rgba(255,255,255,0.4);border:1.5px solid transparent}
+.qt.active{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.25);color:white}
+#quest-list{flex:1;overflow-y:auto;padding:8px 14px 40px}
+/* Quest card */
+.qcard{background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.08);border-radius:18px;padding:14px;margin-bottom:10px;transition:.2s}
+.qcard.completed{opacity:0.5;border-color:rgba(255,255,255,0.04)}
+.qcard-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.qcard-icon{font-size:1.8rem;flex-shrink:0}
+.qcard-info{flex:1}
+.qcard-title{font-size:0.85rem;font-weight:800;color:white;line-height:1.3}
+.qcard-reward{font-size:0.7rem;color:rgba(255,255,255,0.5);margin-top:3px;display:flex;align-items:center;gap:4px}
+.qcard-claim{background:linear-gradient(135deg,#FFCB05,#e8a800);color:#1a1a1a;border:none;border-radius:50px;padding:7px 16px;font-size:0.72rem;font-weight:900;cursor:pointer;font-family:var(--font);flex-shrink:0;transition:.15s}
+.qcard-claim:active{transform:scale(0.94)}
+/* Progress bar */
+.qprog-wrap{background:rgba(255,255,255,0.08);border-radius:50px;height:6px;overflow:hidden;margin-top:2px}
+.qprog-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,#3B4CCA,#7c6fd6);transition:width .4s}
+.qprog-fill.done{background:linear-gradient(90deg,#22c55e,#4ade80)}
+.qprog-txt{font-size:0.65rem;color:rgba(255,255,255,0.4);margin-top:3px;font-weight:700}
+/* Special quest card */
+.sqcard{background:linear-gradient(160deg,rgba(255,203,5,0.08),rgba(59,76,202,0.06));border:1.5px solid rgba(255,203,5,0.25);border-radius:20px;padding:16px;margin-bottom:12px}
+.sqcard-title{font-size:0.95rem;font-weight:900;color:#FFCB05;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.sqtask{padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06)}
+.sqtask:last-child{border-bottom:none}
+.sqtask-top{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.sqtask-done{font-size:1rem}
+.sqtask-text{font-size:0.78rem;font-weight:700;color:rgba(255,255,255,0.8)}
+.sqtask-reward{font-size:0.65rem;color:rgba(255,203,5,0.7);margin-left:auto;font-weight:700}
+.sqcard-final{margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,203,5,0.2);display:flex;align-items:center;justify-content:space-between}
+.sqcard-final-lbl{font-size:0.72rem;color:rgba(255,255,255,0.5);font-weight:700}
+.sqcard-final-val{font-size:0.78rem;color:#FFCB05;font-weight:900}
+.sqcard-claim-all{background:linear-gradient(135deg,#FFCB05,#ff9900);color:#1a1a1a;border:none;border-radius:50px;padding:8px 18px;font-size:0.78rem;font-weight:900;cursor:pointer;font-family:var(--font);transition:.15s}
+/* Berry in catch */
+#catch-berry-btn{background:rgba(255,255,255,0.08);border:1.5px solid rgba(255,255,255,0.2);border-radius:50px;padding:7px 16px;font-size:0.78rem;font-weight:800;color:white;cursor:pointer;font-family:var(--font);transition:.2s;display:none}
+#catch-berry-btn.show{display:block}
+#catch-berry-btn.used{background:rgba(74,222,128,0.15);border-color:rgba(74,222,128,0.5);color:#4ade80}
+
 /* Trainer profile panel */
 #trainer-panel{position:fixed;inset:0;z-index:260;pointer-events:none}
 #trainer-panel.open{pointer-events:all}
@@ -576,6 +632,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
     </div>
     <canvas id="ball-display-canvas" width="110" height="110" style="display:none"></canvas>
     <!-- Ball selector -->
+    <button id="catch-berry-btn" onclick="useBerry()">🍓 Jimmie-Bär (boost)</button>
     <div id="ball-selector">
       <div class="bsel active" id="bsel-0" onclick="selectBall(0)">
         <canvas class="bsel-canvas" id="bsel-c-0" width="44" height="44"></canvas>
@@ -639,6 +696,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
     <div class="bag-card"><div class="bag-icon">🔵</div><div class="bag-body"><div class="bag-name">Super-Boll</div><div class="bag-desc">Bättre fångstchans. Riksdagsvald kvalitet.</div></div><div class="bag-qty" id="bag-q1">5</div></div>
     <div class="bag-card"><div class="bag-icon">🟡</div><div class="bag-body"><div class="bag-name">Jimmie-Boll</div><div class="bag-desc">Nästan garanterad. Signerad av Jimmie själv.</div></div><div class="bag-qty" id="bag-q2">1</div></div>
     <div class="bag-section-title" style="margin-top:6px">Övrigt</div>
+    <div class="bag-card"><div class="bag-icon">🍓</div><div class="bag-body"><div class="bag-name">Jimmie-Bär</div><div class="bag-desc">Boosta fångstchansen med 1.5x under nästa kast.</div></div><div class="bag-qty" id="bag-berry">0</div></div>
     <div class="bag-card"><div class="bag-icon">🍬</div><div class="bag-body"><div class="bag-name">Jimmie-Godis</div><div class="bag-desc">Ges till Jimmie för att stärka honom.</div></div><div class="bag-qty" id="bag-candy">0</div></div>
   </div>
 </div>
@@ -676,6 +734,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
     <div class="smenu-icon-wrap" style="background:linear-gradient(135deg,var(--b),#4a5ed4)">📖</div>
     <div class="smenu-lbl">Jimmie-Dex</div>
   </div>
+
   <div class="smenu-btn" onclick="closeSubmenu();showScreen('bag-screen')" style="animation-delay:.15s">
     <div class="smenu-icon-wrap" style="background:linear-gradient(135deg,#F7544B,#cc2200)">🎒</div>
     <div class="smenu-lbl">Väska</div>
@@ -687,9 +746,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
   <div class="nb active" id="nb-map" onclick="showScreenWithTut('map-screen')">
     <div class="nb-icon">🗺️</div><div class="nb-lbl">Karta</div>
   </div>
+  <div style="flex:1"></div>
   <div id="nb-center">
     <button id="nb-center-btn" onclick="toggleSubmenu()">🌸</button>
     <div class="nb-center-lbl" id="nb-center-lbl">JIMMIE</div>
+  </div>
+  <div style="flex:1"></div>
+  <div class="nb" id="nb-quest" onclick="openQuestPanel()" style="position:relative">
+    <div class="nb-icon">📋</div>
+    <div class="nb-lbl">Uppdrag</div>
+    <div id="quest-badge" style="display:none;position:absolute;top:2px;right:8px;min-width:18px;height:18px;background:#ef4444;border-radius:50%;border:2px solid white;font-size:0.6rem;font-weight:900;color:white;align-items:center;justify-content:center;line-height:1;padding:0 2px">!</div>
   </div>
   <div class="nb" id="nb-settings" onclick="showScreenWithTut('settings-screen')">
     <div class="nb-icon">⚙️</div><div class="nb-lbl">Inställningar</div>
@@ -814,6 +880,17 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
   </div>
 </div>
 
+<!-- ── RESET CONFIRM ── -->
+<div id="reset-confirm" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px">
+  <div style="background:white;border-radius:24px;padding:28px 24px;width:100%;max-width:320px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);animation:co-card-in .3s cubic-bezier(.34,1.56,.64,1)">
+    <div style="font-size:3rem;margin-bottom:8px">🗑️</div>
+    <div style="font-size:1.2rem;font-weight:900;color:#1a1a1a;margin-bottom:8px">Återställ all data?</div>
+    <div style="font-size:0.85rem;color:#888;line-height:1.5;margin-bottom:20px">All din progress, Jimmies och bollar raderas permanent. Det går inte att ångra.</div>
+    <button onclick="closeResetConfirm()" style="background:#f2f2f7;color:#1a1a1a;border:none;padding:14px;border-radius:50px;font-weight:900;font-size:0.9rem;cursor:pointer;font-family:var(--font);width:100%;margin-bottom:8px">Avbryt</button>
+    <button onclick="executeReset()" style="background:#ef4444;color:white;border:none;padding:14px;border-radius:50px;font-weight:900;font-size:0.9rem;cursor:pointer;font-family:var(--font);width:100%">Ja, återställ allt</button>
+  </div>
+</div>
+
 <!-- ── DELETE CONFIRM ── -->
 <div id="delete-confirm">
   <div id="delete-confirm-card">
@@ -822,6 +899,26 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
     <p id="dc-text">Vill du verkligen ta bort <b></b>? Det går inte att ångra.</p>
     <button class="dc-cancel" onclick="closeDeleteConfirm()">Avbryt</button>
     <button class="dc-delete" onclick="executeDelete()">Ta bort</button>
+  </div>
+</div>
+
+<!-- ── QUEST PANEL ── -->
+<div id="quest-panel">
+  <div id="quest-backdrop" onclick="closeQuestPanel()"></div>
+  <div id="quest-sheet">
+    <div id="quest-handle"></div>
+    <div id="quest-header">
+      <h2>📋 Uppdrag</h2>
+      <div id="quest-header-right">
+        <div class="quest-berry-badge">🍓 <span id="berry-count-hdr">0</span> Bär</div>
+        <button onclick="closeQuestPanel()" style="background:rgba(255,255,255,0.08);border:none;color:white;border-radius:50%;width:32px;height:32px;font-size:1.1rem;cursor:pointer;font-family:var(--font)">✕</button>
+      </div>
+    </div>
+    <div id="quest-tabs">
+      <div class="qt active" id="qt-regular" onclick="switchQuestTab('regular')">Uppdrag</div>
+      <div class="qt" id="qt-special" onclick="switchQuestTab('special')">⭐ Special</div>
+    </div>
+    <div id="quest-list"></div>
   </div>
 </div>
 
@@ -891,7 +988,7 @@ const RC={Common:'#9e9e9e',Uncommon:'#4ade80',Rare:'#60a5fa',Epic:'#c084fc',Lege
 const RW={Common:50,Uncommon:28,Rare:14,Epic:5,Legendary:2,Mythic:1};
 
 const SAVE='jgo_v4';
-let G={lv:1,xp:0,xpMax:200,tutorialDone:false,balls:[20,5,1],candy:{Common:0,Uncommon:0,Rare:0,Epic:0,Legendary:0,Mythic:0},jimmieCP:{},trainerAvatar:'🕵️',seen:{},caught:{},trainerName:'Jimmie-Tränare',stats:{km:0,throws:0,esc:0,total:0,best:''}};
+let G={lv:1,xp:0,xpMax:200,tutorialDone:false,balls:[20,5,1],candy:{Common:0,Uncommon:0,Rare:0,Epic:0,Legendary:0,Mythic:0},jimmieCP:{},trainerAvatar:'🕵️',berries:0,quests:[],specialQuests:[],seen:{},caught:{},trainerName:'Jimmie-Tränare',stats:{km:0,throws:0,esc:0,total:0,best:''}};
 function save(){try{localStorage.setItem(SAVE,JSON.stringify(G));}catch(e){}}
 function load(){try{const s=localStorage.getItem(SAVE);if(s){G={...G,...JSON.parse(s)};if(typeof G.candy!=='object')G.candy={Common:0,Uncommon:0,Rare:0,Epic:0,Legendary:0,Mythic:0};if(!G.jimmieCP)G.jimmieCP={};}}catch(e){}}
 
@@ -1230,7 +1327,10 @@ function spinStop(idx) {
   else { G.balls[2]+=2; reward='🟡🟡 +2 Jimmie-Bollar! Jackpot!'; }
   // stop gives random candy
   playSound('stop');
+  updateQuests('spin', {});
   toast('Stop: ' + s.label + ' · ' + reward);
+  // 20% chance to give a quest from stop
+  if(Math.random()<0.20 && (G.quests||[]).length<6){ G.quests.push(generateRegularQuest()); toast('📋 Nytt uppdrag från stoppen!'); }
   addXP(80);
   updateHUD(); save();
 }
@@ -1842,7 +1942,9 @@ function onBallHit() {
     if (i >= shakes.length) {
       // Check catch
       const bonus = [1.0, 1.8, 3.5][selBall];
-      const accuracyBonus = 0.5 + lastAccuracy * 1.5;
+      const berryBonus = berryActive ? 1.5 : 1.0;
+      if(berryActive){ berryActive=false; const bb=document.getElementById('catch-berry-btn'); if(bb){bb.classList.remove('used');bb.textContent='🍓 Jimmie-Bär (boost)';} }
+      const accuracyBonus = (0.5 + lastAccuracy * 1.5) * berryBonus;
       const chance = Math.min(0.97, curCatch.j.cr * bonus * accuracyBonus);
       if (Math.random() < chance) onCaught();
       else if (Math.random() < 0.10) onEscaped();
@@ -1863,6 +1965,7 @@ function onCaught() {
   playSound('catch');
   lastCatchWasSuccess = true;
   const j = curCatch.j;
+  updateQuests('catch', {rarity: j.rarity});
   if (!G.caught[j.id]) G.caught[j.id] = 0;
   G.caught[j.id]++;
   G.stats.total++;
@@ -1979,6 +2082,11 @@ function addXP(n) {
     G.balls[1] += b1;
     G.balls[2] += b2;
 
+    // Give regular quest + special quest on level up
+    if(!G.quests)G.quests=[];
+    if(G.quests.length<6) G.quests.push(generateRegularQuest());
+    if(!G.specialQuests)G.specialQuests=[];
+    if(G.specialQuests.filter(q=>!q.claimed).length<3) G.specialQuests.push(generateSpecialQuest());
     document.getElementById('lvl-sub-txt').textContent = 'Du är nu nivå ' + lv + '!';
     document.getElementById('lvl-reward-txt').textContent = rewardTxt;
     playSound('levelup');
@@ -2218,6 +2326,7 @@ function powerUpJimmie() {
   document.getElementById('jp-candy-count').textContent = newCandy + ' ' + j.rarity + '-godis';
   document.getElementById('jp-powerup').disabled = newCandy < cost;
 
+  updateQuests('powerup', {});
   toast('⚡ ' + j.name + ' starkare! CP ' + newCP);
   save();
   renderGarage();
@@ -2450,9 +2559,15 @@ function refillBalls() {
   toast('⚪ +20 SD-Bollar, 🔵 +5 Super, 🟡 +1 Jimmie-Boll!');
 }
 function confirmReset() {
-  if (confirm('Är du säker? All data raderas!')) {
-    localStorage.removeItem(SAVE); location.reload();
-  }
+  const el = document.getElementById('reset-confirm');
+  el.style.display = 'flex';
+}
+function closeResetConfirm() {
+  document.getElementById('reset-confirm').style.display = 'none';
+}
+function executeReset() {
+  localStorage.removeItem(SAVE);
+  location.reload();
 }
 
 // ── DEX ──────────────────────────────────────────────────────────
@@ -2748,8 +2863,271 @@ function playSound(type) {
 }
 
 
+
+// ── QUEST SYSTEM ─────────────────────────────────────────────────
+const QUEST_TEMPLATES = [
+  // Regular quests
+  {id:'catch_any',   icon:'⚽', title:'Fånga {n} Jimmies',          type:'catch_any',    targets:[1,3,5,10], rewards:[{type:'berry',n:1},{type:'berry',n:2},{type:'candy',n:3},{type:'super',n:2}]},
+  {id:'catch_rare',  icon:'🔵', title:'Fånga en Rare Jimmie',        type:'catch_rarity', rarity:'Rare',      rewards:[{type:'berry',n:2},{type:'candy',n:5}]},
+  {id:'catch_epic',  icon:'💜', title:'Fånga en Epic Jimmie',        type:'catch_rarity', rarity:'Epic',      rewards:[{type:'super',n:3},{type:'berry',n:3}]},
+  {id:'catch_leg',   icon:'⭐', title:'Fånga en Legendary Jimmie',   type:'catch_rarity', rarity:'Legendary', rewards:[{type:'jimmie',n:1},{type:'berry',n:5}]},
+  {id:'powerup',     icon:'⚡', title:'Stärk upp en Jimmie {n} gång',type:'powerup',      targets:[1,2,3,5],  rewards:[{type:'candy',n:3},{type:'berry',n:2},{type:'candy',n:5},{type:'super',n:2}]},
+  {id:'spin',        icon:'📍', title:'Snurra {n} Jimmie Stops',     type:'spin',         targets:[2,5,10],   rewards:[{type:'berry',n:1},{type:'super',n:2},{type:'super',n:3}]},
+  {id:'walk',        icon:'🚶', title:'Promenera {n} km',            type:'walk',         targets:[1,2,5],    rewards:[{type:'berry',n:2},{type:'candy',n:4},{type:'super',n:3}]},
+  {id:'catch_common',icon:'⚪', title:'Fånga {n} Common Jimmies',    type:'catch_rarity', rarity:'Common',   targets:[3,5,10],   rewards:[{type:'berry',n:1},{type:'berry',n:2},{type:'candy',n:3}]},
+];
+
+const SPECIAL_TEMPLATES = [
+  {title:'Novis-Jägaren 🌱', tasks:[
+    {text:'Fånga 5 Jimmies',        type:'catch_any',  target:5,  reward:{type:'berry',n:1}},
+    {text:'Snurra 3 Stops',         type:'spin',       target:3,  reward:{type:'super',n:1}},
+    {text:'Promenera 1 km',         type:'walk',       target:1,  reward:{type:'berry',n:1}},
+  ], finalReward:{type:'epic_encounter', label:'🎯 En Epic Jimmie dyker upp!'}},
+  {title:'Stop-Mästaren 📍', tasks:[
+    {text:'Snurra 5 Stops',         type:'spin',       target:5,  reward:{type:'berry',n:2}},
+    {text:'Fånga 3 Rare+',          type:'catch_rarity_min', rarity:'Rare', target:3, reward:{type:'super',n:2}},
+    {text:'Stärk upp 2 Jimmies',    type:'powerup',    target:2,  reward:{type:'candy',n:5}},
+  ], finalReward:{type:'balls', b0:0, b1:5, b2:2, label:'🔵×5 + 🟡×2'}},
+  {title:'Elit-Tränaren ⭐', tasks:[
+    {text:'Fånga en Epic Jimmie',   type:'catch_rarity', rarity:'Epic', target:1, reward:{type:'berry',n:3}},
+    {text:'Promenera 3 km',         type:'walk',       target:3,  reward:{type:'super',n:2}},
+    {text:'Snurra 10 Stops',        type:'spin',       target:10, reward:{type:'berry',n:3}},
+  ], finalReward:{type:'legendary_encounter', label:'⭐ En Legendary Jimmie dyker upp!'}},
+  {title:'Samlaren 💎', tasks:[
+    {text:'Fånga 10 Jimmies',       type:'catch_any',  target:10, reward:{type:'candy',n:5}},
+    {text:'Stärk upp 5 gånger',     type:'powerup',    target:5,  reward:{type:'berry',n:3}},
+    {text:'Fånga en Legendary',     type:'catch_rarity', rarity:'Legendary', target:1, reward:{type:'super',n:3}},
+  ], finalReward:{type:'mythic_boost', label:'🔥 Mythic-chansen ökar i 30 min!'}},
+];
+
+let questTab = 'regular';
+let berryActive = false;
+let walkQuestBase = 0; // km at quest assignment
+
+
+function updateQuestBadge() {
+  const badge = document.getElementById('quest-badge');
+  if (!badge) return;
+  const hasClaimable = 
+    (G.quests||[]).some(q => q.completed && !q.claimed) ||
+    (G.specialQuests||[]).some(sq => 
+      sq.tasks.some(t => t.progress >= t.target && !t.claimed) ||
+      (sq.completed && !sq.claimed)
+    );
+  badge.style.display = hasClaimable ? 'flex' : 'none';
+}
+function openQuestPanel() {
+  const el = document.getElementById('quest-panel');
+  el.classList.add('open');
+  document.getElementById('berry-count-hdr').textContent = G.berries || 0;
+  renderQuestList();
+}
+function closeQuestPanel() { document.getElementById('quest-panel').classList.remove('open'); }
+function switchQuestTab(tab) {
+  questTab = tab;
+  document.querySelectorAll('.qt').forEach(t => t.classList.remove('active'));
+  document.getElementById('qt-' + tab).classList.add('active');
+  renderQuestList();
+}
+
+function generateRegularQuest() {
+  const tpl = QUEST_TEMPLATES[Math.floor(Math.random() * QUEST_TEMPLATES.length)];
+  const tidx = Math.floor(Math.random() * (tpl.targets ? tpl.targets.length : 1));
+  const target = tpl.targets ? tpl.targets[tidx] : 1;
+  const reward = tpl.rewards[Math.min(tidx, tpl.rewards.length - 1)];
+  const title = tpl.title.replace('{n}', target);
+  return {
+    id: Date.now() + Math.random(),
+    type: tpl.type, rarity: tpl.rarity || null,
+    icon: tpl.icon, title, target, progress: 0,
+    reward, completed: false, claimed: false,
+    walkBase: tpl.type === 'walk' ? (G.stats.km || 0) : 0,
+  };
+}
+
+function generateSpecialQuest() {
+  const used = (G.specialQuests || []).map(q => q.title);
+  const avail = SPECIAL_TEMPLATES.filter(t => !used.includes(t.title));
+  const tpl = avail.length > 0 ? avail[Math.floor(Math.random() * avail.length)] : SPECIAL_TEMPLATES[Math.floor(Math.random() * SPECIAL_TEMPLATES.length)];
+  return {
+    id: Date.now() + Math.random(),
+    title: tpl.title,
+    tasks: tpl.tasks.map(t => ({...t, progress: 0, claimed: false, walkBase: t.type === 'walk' ? (G.stats.km || 0) : 0})),
+    finalReward: tpl.finalReward,
+    completed: false, claimed: false,
+  };
+}
+
+function giveReward(reward, silent) {
+  if (!reward) return;
+  let msg = '';
+  if (reward.type === 'berry')   { G.berries = (G.berries||0) + reward.n; msg = '🍓×' + reward.n + ' Jimmie-Bär'; }
+  if (reward.type === 'candy')   { const r2 = JIMMIES[Math.floor(Math.random()*JIMMIES.length)].rarity; if(!G.candy[r2])G.candy[r2]=0; G.candy[r2]+=reward.n; msg = '🍬×' + reward.n + ' Godis'; }
+  if (reward.type === 'super')   { G.balls[1] += reward.n; msg = '🔵×' + reward.n + ' Super-Bollar'; }
+  if (reward.type === 'jimmie')  { G.balls[2] += reward.n; msg = '🟡×' + reward.n + ' Jimmie-Boll'; }
+  if (reward.type === 'balls')   { G.balls[0]+=reward.b0||0; G.balls[1]+=reward.b1||0; G.balls[2]+=reward.b2||0; msg = reward.label; }
+  if (reward.type === 'epic_encounter') { spawnRarityNear('Epic'); msg = reward.label; }
+  if (reward.type === 'legendary_encounter') { spawnRarityNear('Legendary'); msg = reward.label; }
+  if (reward.type === 'mythic_boost') { window._mythicBoost = Date.now() + 1800000; msg = reward.label; }
+  if (!silent && msg) toast('🎁 ' + msg);
+  updateHUD(); save();
+  document.getElementById('berry-count-hdr').textContent = G.berries || 0;
+}
+
+function spawnRarityNear(rarity) {
+  const candidates = JIMMIES.filter(j => j.rarity === rarity);
+  if (!candidates.length) return;
+  const j = candidates[Math.floor(Math.random() * candidates.length)];
+  const cp = Math.floor(j.cp * (0.8 + Math.random() * 0.4));
+  const angle = Math.random() * Math.PI * 2;
+  wJs.unshift({x: px + Math.cos(angle)*60, y: py + Math.sin(angle)*60, j, cp, w:0, chunk:null, life:300});
+  toast('✨ ' + j.name + ' dök upp nära dig!');
+}
+
+function claimQuest(id) {
+  const q = (G.quests || []).find(q => q.id === id);
+  if (!q || q.claimed || !q.completed) return;
+  q.claimed = true;
+  giveReward(q.reward);
+  renderQuestList(); save(); updateQuestBadge();
+}
+
+function claimSQTask(sqId, tidx) {
+  const sq = (G.specialQuests || []).find(q => q.id === sqId);
+  if (!sq) return;
+  const task = sq.tasks[tidx];
+  if (!task || task.claimed || task.progress < task.target) return;
+  task.claimed = true;
+  giveReward(task.reward);
+  if (sq.tasks.every(t => t.progress >= t.target)) sq.completed = true;
+  renderQuestList(); save(); updateQuestBadge();
+}
+
+function claimSpecialQuest(sqId) {
+  const sq = (G.specialQuests || []).find(q => q.id === sqId);
+  if (!sq || sq.claimed || !sq.completed) return;
+  sq.claimed = true;
+  giveReward(sq.finalReward);
+  renderQuestList(); save(); updateQuestBadge();
+}
+
+function renderQuestList() {
+  const list = document.getElementById('quest-list');
+  if (!list) return;
+  if (questTab === 'regular') {
+    const quests = G.quests || [];
+    if (quests.length === 0) {
+      list.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,0.3);padding:40px 20px;font-size:0.85rem">Inga aktiva uppdrag.<br>Snurra Pokestops eller levla upp!</div>';
+      return;
+    }
+    list.innerHTML = quests.map(q => {
+      const pct = Math.min(100, (q.progress / q.target) * 100);
+      const done = q.progress >= q.target;
+      const rLabel = q.reward.type==='berry'?'🍓×'+q.reward.n:q.reward.type==='super'?'🔵×'+q.reward.n:q.reward.type==='candy'?'🍬×'+q.reward.n:'🟡×'+q.reward.n;
+      return `<div class="qcard${q.claimed?' completed':''}">
+        <div class="qcard-top">
+          <div class="qcard-icon">${q.icon}</div>
+          <div class="qcard-info">
+            <div class="qcard-title">${q.title}</div>
+            <div class="qcard-reward">Belöning: ${rLabel}</div>
+            <div class="qprog-wrap"><div class="qprog-fill${done?' done':''}" style="width:${pct}%"></div></div>
+            <div class="qprog-txt">${q.progress} / ${q.target}${q.claimed?' ✅':''}</div>
+          </div>
+          ${done && !q.claimed ? `<button class="qcard-claim" onclick="claimQuest(${q.id})">Hämta</button>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+  } else {
+    const sqs = G.specialQuests || [];
+    if (sqs.length === 0) {
+      list.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,0.3);padding:40px 20px;font-size:0.85rem">Inga special-uppdrag.<br>Levla upp för att få ett!</div>';
+      return;
+    }
+    list.innerHTML = sqs.map(sq => {
+      const allDone = sq.tasks.every(t => t.progress >= t.target);
+      return `<div class="sqcard">
+        <div class="sqcard-title">⭐ ${sq.title}</div>
+        ${sq.tasks.map((t,i) => {
+          const tp = Math.min(100, (t.progress/t.target)*100);
+          const td = t.progress >= t.target;
+          const tr = t.reward.type==='berry'?'🍓×'+t.reward.n:t.reward.type==='super'?'🔵×'+t.reward.n:'🍬×'+t.reward.n;
+          return `<div class="sqtask">
+            <div class="sqtask-top">
+              <div class="sqtask-done">${td ? '✅' : '⬜'}</div>
+              <div class="sqtask-text">${t.text}</div>
+              <div class="sqtask-reward">${tr}</div>
+              ${td && !t.claimed ? `<button class="qcard-claim" onclick="claimSQTask(${sq.id},${i})" style="margin-left:4px;padding:5px 10px;font-size:0.65rem">Hämta</button>` : ''}
+            </div>
+            <div class="qprog-wrap"><div class="qprog-fill${td?' done':''}" style="width:${tp}%"></div></div>
+            <div class="qprog-txt">${t.progress} / ${t.target}</div>
+          </div>`;
+        }).join('')}
+        <div class="sqcard-final">
+          <div>
+            <div class="sqcard-final-lbl">Final belöning</div>
+            <div class="sqcard-final-val">${sq.finalReward.label}</div>
+          </div>
+          ${allDone && !sq.claimed ? `<button class="sqcard-claim-all" onclick="claimSpecialQuest(${sq.id})">🎁 Hämta allt</button>` : ''}
+          ${sq.claimed ? '<span style="color:#22c55e;font-size:0.8rem;font-weight:800">✅ Klar!</span>' : ''}
+        </div>
+      </div>`;
+    }).join('');
+  }
+}
+
+// Update quest progress
+function updateQuests(type, data) {
+  let changed = false;
+  (G.quests || []).forEach(q => {
+    if (q.claimed) return;
+    if (q.type === 'catch_any' && type === 'catch') { q.progress++; changed=true; }
+    if (q.type === 'catch_rarity' && type === 'catch' && data.rarity === q.rarity) { q.progress++; changed=true; }
+    if (q.type === 'catch_rarity_min' && type === 'catch') {
+      const ORDER = ['Common','Uncommon','Rare','Epic','Legendary','Mythic'];
+      if (ORDER.indexOf(data.rarity) >= ORDER.indexOf(q.rarity)) { q.progress++; changed=true; }
+    }
+    if (q.type === 'powerup' && type === 'powerup') { q.progress++; changed=true; }
+    if (q.type === 'spin' && type === 'spin') { q.progress++; changed=true; }
+    if (q.type === 'walk') { q.progress = Math.floor(Math.max(0, (G.stats.km||0) - q.walkBase)); changed=true; }
+    q.completed = q.progress >= q.target;
+  });
+  (G.specialQuests || []).forEach(sq => {
+    sq.tasks.forEach(t => {
+      if (t.claimed) return;
+      if (t.type === 'catch_any' && type === 'catch') { t.progress++; changed=true; }
+      if (t.type === 'catch_rarity' && type === 'catch' && data && data.rarity === t.rarity) { t.progress++; changed=true; }
+      if (t.type === 'catch_rarity_min' && type === 'catch') {
+        const ORDER2 = ['Common','Uncommon','Rare','Epic','Legendary','Mythic'];
+        if (data && ORDER2.indexOf(data.rarity) >= ORDER2.indexOf(t.rarity)) { t.progress++; changed=true; }
+      }
+      if (t.type === 'powerup' && type === 'powerup') { t.progress++; changed=true; }
+      if (t.type === 'spin' && type === 'spin') { t.progress++; changed=true; }
+      if (t.type === 'walk') { t.progress = Math.floor(Math.max(0, (G.stats.km||0) - t.walkBase)); changed=true; }
+    });
+    if (sq.tasks.every(t => t.progress >= t.target)) sq.completed = true;
+  });
+  if (changed) { save(); if (document.getElementById('quest-panel').classList.contains('open')) renderQuestList(); }
+}
+
+// Berry in catch
+function useBerry() {
+  if ((G.berries||0) <= 0) { toast('Inga Jimmie-Bär kvar!'); return; }
+  if (berryActive) { toast('Bär redan aktivt!'); return; }
+  G.berries--; berryActive = true;
+  const btn = document.getElementById('catch-berry-btn');
+  if (btn) { btn.textContent = '🍓 Bär aktivt! (+50% chans)'; btn.classList.add('used'); }
+  updateHUD(); save();
+  toast('🍓 Jimmie-Bär aktiverat! Fångstchansen boostad!');
+}
+
 // ── INIT ────────────────────────────────────────────────────────
 load();buildW();setTimeout(initBallCanvases,100);
+if(!G.quests)G.quests=[];
+if(!G.specialQuests)G.specialQuests=[];
+if(!G.berries)G.berries=0;
+// Give first quest if new player
+if(G.quests.length===0){G.quests.push(generateRegularQuest());G.specialQuests.push(generateSpecialQuest());}
+setTimeout(updateQuestBadge, 200);
 // Apply saved trainer profile
 if(G.trainerAvatar){
   const ha=document.getElementById('hud-avatar'); if(ha)ha.textContent=G.trainerAvatar;
