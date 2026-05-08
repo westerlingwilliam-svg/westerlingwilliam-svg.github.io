@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Clash Of Jimmie</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#101010;
+    color:white;
+    font-family:Arial;
+}
+
+header{
+    background:#1c1c1c;
+    padding:20px;
+    text-align:center;
+    border-bottom:3px solid orange;
+}
+
+header h1{
+    color:orange;
+    margin-bottom:20px;
+    font-size:42px;
+}
+
+#resources{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:15px;
+}
+
+.resource{
+    background:#2a2a2a;
+    padding:10px 20px;
+    border-radius:10px;
+    min-width:150px;
+    text-align:center;
+}
+
+.gold{
+    border:2px solid gold;
+}
+
+.elixir{
+    border:2px solid violet;
+}
+
+.dark{
+    border:2px solid crimson;
+}
+
+.gems{
+    border:2px solid lime;
+}
+
+nav{
+    background:#181818;
+    padding:15px;
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+button{
+    background:#333;
+    color:white;
+    border:none;
+    padding:12px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    transition:0.2s;
+    font-size:15px;
+}
+
+button:hover{
+    transform:scale(1.05);
+    background:#555;
+}
+
+main{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:20px;
+    padding:20px;
+}
+
+.panel{
+    background:#1d1d1d;
+    border:2px solid #2f2f2f;
+    border-radius:15px;
+    padding:20px;
+}
+
+.panel h2{
+    color:orange;
+    margin-bottom:15px;
+}
+
+.info{
+    margin-top:15px;
+    line-height:1.7;
+}
+
+#battleLog{
+    background:#111;
+    padding:15px;
+    min-height:150px;
+    border-radius:10px;
+    margin-top:15px;
+}
+
+</style>
+</head>
+<body>
+
+<header>
+
+<h1>CLASH OF JIMMIE</h1>
+
+<div id="resources">
+
+<div class="resource gold">
+Gold<br>
+<span id="gold">0</span>
+</div>
+
+<div class="resource elixir">
+Elixir<br>
+<span id="elixir">0</span>
+</div>
+
+<div class="resource dark">
+Dark Elixir<br>
+<span id="dark">0</span>
+</div>
+
+<div class="resource gems">
+Gems<br>
+<span id="gems">0</span>
+</div>
+
+</div>
+
+</header>
+
+<nav>
+
+<button onclick="saveGame()">Save</button>
+
+<button onclick="loadGame()">Load</button>
+
+<button onclick="resetGame()">Reset</button>
+
+<button onclick="goMenu()">Menu</button>
+
+</nav>
+
+<main>
+
+<section class="panel">
+
+<h2>Town Hall</h2>
+
+<p>
+Town Hall Level:
+<span id="townHallLevel">1</span>
+</p>
+
+<br>
+
+<button onclick="upgradeTownHall()">
+Upgrade Town Hall
+</button>
+
+<div class="info" id="townInfo"></div>
+
+</section>
+
+<section class="panel">
+
+<h2>Economy</h2>
+
+<button onclick="upgradeGoldMine()">
+Upgrade Gold Mine
+</button>
+
+<button onclick="upgradeElixirPump()">
+Upgrade Elixir Pump
+</button>
+
+<button onclick="upgradeDarkDrill()">
+Upgrade Dark Drill
+</button>
+
+<div class="info" id="economyInfo"></div>
+
+</section>
+
+<section class="panel">
+
+<h2>Army Training</h2>
+
+<button onclick="trainWarrior()">
+Train Jimmie Warrior
+</button>
+
+<button onclick="trainSniper()">
+Train Speech Sniper
+</button>
+
+<button onclick="trainMega()">
+Train Mega Jimmie
+</button>
+
+<button onclick="trainAngry()">
+Train Angry Jimmie
+</button>
+
+<button onclick="trainBalloon()">
+Train Balloon Jimmie
+</button>
+
+<button onclick="trainElectro()">
+Train Electro Jimmie
+</button>
+
+<div class="info" id="armyInfo"></div>
+
+</section>
+
+<section class="panel">
+
+<h2>Heroes</h2>
+
+<button onclick="upgradeKing()">
+Upgrade King Jimmie
+</button>
+
+<button onclick="upgradeQueen()">
+Upgrade Queen Jimmie
+</button>
+
+<button onclick="upgradeWarden()">
+Upgrade Warden Jimmie
+</button>
+
+<button onclick="upgradeChampion()">
+Upgrade Champion Jimmie
+</button>
+
+<div class="info" id="heroInfo"></div>
+
+</section>
+
+<section class="panel">
+
+<h2>Defenses</h2>
+
+<button onclick="upgradeCannon()">
+Upgrade Cannon
+</button>
+
+<button onclick="upgradeTower()">
+Upgrade Speech Tower
+</button>
+
+<button onclick="upgradeInferno()">
+Upgrade Debate Inferno
+</button>
+
+<button onclick="upgradeXbow()">
+Upgrade X-Bow
+</button>
+
+<div class="info" id="defenseInfo"></div>
+
+</section>
+
+<section class="panel">
+
+<h2>Laboratory</h2>
+
+<button onclick="researchWarrior()">
+Research Warrior
+</button>
+
+<button onclick="researchElectro()">
+Research Electro
+</button>
+
+<button onclick="researchSpells()">
+Research Spells
+</button>
+
+<div class="info" id="researchInfo"></div>
+
+</section>
+
+<section class="panel">
+
+<h2>Battle Simulator</h2>
+
+<button onclick="attackVillage()">
+Attack Enemy Village
+</button>
+
+<button onclick="simulateWar()">
+Simulate Clan War
+</button>
+
+<div id="battleLog"></div>
+
+</section>
+
+<section class="panel">
+
+<h2>Statistics</h2>
+
+<div class="info" id="stats"></div>
+
+</section>
+
+</main>
+
+<script>
+
+const game = {
+
+gold:25000,
+elixir:25000,
+dark:5000,
+gems:500,
+
+townHall:1,
+
+goldMine:1,
+elixirPump:1,
+darkDrill:1,
+
+cannon:1,
+tower:1,
+inferno:0,
+xbow:0,
+
+warriorResearch:1,
+electroResearch:1,
+spellResearch:1,
+
+king:1,
+queen:0,
+warden:0,
+champion:0,
+
+totalAttacks:0,
+wins:0,
+goldLooted:0,
+
+army:{
+    warrior:0,
+    sniper:0,
+    mega:0,
+    angry:0,
+    balloon:0,
+    electro:0
+}
+
+};
+
+function updateUI(){
+
+document.getElementById("gold").innerText=Math.floor(game.gold);
+document.getElementById("elixir").innerText=Math.floor(game.elixir);
+document.getElementById("dark").innerText=Math.floor(game.dark);
+document.getElementById("gems").innerText=game.gems;
+
+document.getElementById("townHallLevel").innerText=game.townHall;
+
+document.getElementById("townInfo").innerHTML=`
+Town Hall unlocks stronger units,
+better defenses and bigger progression.
+`;
+
+document.getElementById("economyInfo").innerHTML=`
+
+Gold Mine Level: ${game.goldMine}<br>
+Elixir Pump Level: ${game.elixirPump}<br>
+Dark Drill Level: ${game.darkDrill}
+
+`;
+
+document.getElementById("armyInfo").innerHTML=`
+
+Warriors: ${game.army.warrior}<br>
+Speech Snipers: ${game.army.sniper}<br>
+Mega Jimmies: ${game.army.mega}<br>
+Angry Jimmies: ${game.army.angry}<br>
+Balloon Jimmies: ${game.army.balloon}<br>
+Electro Jimmies: ${game.army.electro}
+
+`;
+
+document.getElementById("heroInfo").innerHTML=`
+
+King Jimmie: ${game.king}<br>
+Queen Jimmie: ${game.queen}<br>
+Warden Jimmie: ${game.warden}<br>
+Champion Jimmie: ${game.champion}
+
+`;
+
+document.getElementById("defenseInfo").innerHTML=`
+
+Cannons: ${game.cannon}<br>
+Speech Towers: ${game.tower}<br>
+Debate Infernos: ${game.inferno}<br>
+X-Bows: ${game.xbow}
+
+`;
+
+document.getElementById("researchInfo").innerHTML=`
+
+Warrior Research: ${game.warriorResearch}<br>
+Electro Research: ${game.electroResearch}<br>
+Spell Research: ${game.spellResearch}
+
+`;
+
+document.getElementById("stats").innerHTML=`
+
+Total Attacks: ${game.totalAttacks}<br>
+Victories: ${game.wins}<br>
+Gold Looted: ${game.goldLooted}
+
+`;
+
+}
+
+function saveGame(){
+
+localStorage.setItem(
+"clashOfJimmie",
+JSON.stringify(game)
+);
+
+alert("Game Saved");
+
+}
+
+function loadGame(){
+
+const save=localStorage.getItem("clashOfJimmie");
+
+if(save){
+
+Object.assign(game,JSON.parse(save));
+
+updateUI();
+
+alert("Game Loaded");
+
+}
+
+}
+
+function resetGame(){
+
+localStorage.removeItem("clashOfJimmie");
+
+location.reload();
+
+}
+
+function goMenu(){
+
+window.location.href="games.html";
+
+}
+
+function upgradeTownHall(){
+
+const cost=game.townHall*25000;
+
+if(game.gold>=cost){
+
+game.gold-=cost;
+game.townHall++;
+
+updateUI();
+
+}
+
+}
+
+function upgradeGoldMine(){
+
+const cost=game.goldMine*2000;
+
+if(game.gold>=cost){
+
+game.gold-=cost;
+game.goldMine++;
+
+updateUI();
+
+}
+
+}
+
+function upgradeElixirPump(){
+
+const cost=game.elixirPump*2000;
+
+if(game.elixir>=cost){
+
+game.elixir-=cost;
+game.elixirPump++;
+
+updateUI();
+
+}
+
+}
+
+function upgradeDarkDrill(){
+
+const cost=game.darkDrill*4000;
+
+if(game.elixir>=cost){
+
+game.elixir-=cost;
+game.darkDrill++;
+
+updateUI();
+
+}
+
+}
+
+function trainWarrior(){
+
+if(game.elixir>=100){
+
+game.elixir-=100;
+game.army.warrior++;
+
+updateUI();
+
+}
+
+}
+
+function trainSniper(){
+
+if(game.elixir>=200){
+
+game.elixir-=200;
+game.army.sniper++;
+
+updateUI();
+
+}
+
+}
+
+function trainMega(){
+
+if(game.elixir>=1000){
+
+game.elixir-=1000;
+game.army.mega++;
+
+updateUI();
+
+}
+
+}
+
+function trainAngry(){
+
+if(game.elixir>=600){
+
+game.elixir-=600;
+game.army.angry++;
+
+updateUI();
+
+}
+
+}
+
+function trainBalloon(){
+
+if(game.elixir>=900){
+
+game.elixir-=900;
+game.army.balloon++;
+
+updateUI();
+
+}
+
+}
+
+function trainElectro(){
+
+if(game.elixir>=5000){
+
+game.elixir-=5000;
+game.army.electro++;
+
+updateUI();
+
+}
+
+}
+
+function upgradeKing(){
+
+if(game.dark>=1000){
+
+game.dark-=1000;
+game.king++;
+
+updateUI();
+
+}
+
+}
+
+function upgradeQueen(){
+
+if(game.dark>=2000){
+
+game.dark-=2000;
+game.queen++;
+
+updateUI();
+
+}
+
+}
+
+function upgradeWarden(){
+
+if(game.elixir>=5000){
+
+game.elixir-=5000;
+game.warden++;
+
+updateUI();
+
+}
+
+}
+
+function upgradeChampion(){
+
+if(game.dark>=7000){
+
+game.dark-=7000;
+game.champion++;
+
+updateUI();
+
+}
+
+}
+
+function upgradeCannon(){
+
+if(game.gold>=2000){
+
+game.gold-=2000;
+game.cannon++;
+
+updateUI();
+
+}
+
+}
+
+function upgradeTower(){
+
+if(game.gold>=3000){
+
+game.gold-=3000;
+game.tower++;
+
+updateUI();
+
+}
+
+}
+
+function upgradeInferno(){
+
+if(game.gold>=10000){
+
+game.gold-=10000;
+game.inferno++;
+
+updateUI();
+
+}
+
+}
+
+function upgradeXbow(){
+
+if(game.gold>=8000){
+
+game.gold-=8000;
+game.xbow++;
+
+updateUI();
+
+}
+
+}
+
+function researchWarrior(){
+
+if(game.elixir>=5000){
+
+game.elixir-=5000;
+game.warriorResearch++;
+
+updateUI();
+
+}
+
+}
+
+function researchElectro(){
+
+if(game.elixir>=15000){
+
+game.elixir-=15000;
+game.electroResearch++;
+
+updateUI();
+
+}
+
+}
+
+function researchSpells(){
+
+if(game.elixir>=10000){
+
+game.elixir-=10000;
+game.spellResearch++;
+
+updateUI();
+
+}
+
+}
+
+function calculateArmyPower(){
+
+let power=0;
+
+power+=game.army.warrior*5*game.warriorResearch;
+power+=game.army.sniper*10;
+power+=game.army.mega*30;
+power+=game.army.angry*20;
+power+=game.army.balloon*40;
+power+=game.army.electro*120*game.electroResearch;
+
+power+=game.king*30;
+power+=game.queen*40;
+power+=game.warden*50;
+power+=game.champion*60;
+
+return power;
+
+}
+
+function attackVillage(){
+
+game.totalAttacks++;
+
+const power=calculateArmyPower();
+
+const enemy=Math.floor(Math.random()*1500)+200;
+
+const log=document.getElementById("battleLog");
+
+if(power>enemy){
+
+game.wins++;
+
+const goldLoot=Math.floor(Math.random()*30000);
+const elixirLoot=Math.floor(Math.random()*30000);
+const darkLoot=Math.floor(Math.random()*3000);
+
+game.gold+=goldLoot;
+game.elixir+=elixirLoot;
+game.dark+=darkLoot;
+
+game.goldLooted+=goldLoot;
+
+log.innerHTML=`
+
+<h3>VICTORY</h3>
+
+Enemy Defense: ${enemy}<br>
+Your Power: ${power}<br><br>
+
+Gold Looted: ${goldLoot}<br>
+Elixir Looted: ${elixirLoot}<br>
+Dark Elixir Looted: ${darkLoot}
+
+`;
+
+}else{
+
+log.innerHTML=`
+
+<h3>DEFEAT</h3>
+
+Enemy Defense: ${enemy}<br>
+Your Power: ${power}
+
+`;
+
+}
+
+updateUI();
+
+}
+
+function simulateWar(){
+
+const yourClan=Math.floor(Math.random()*calculateArmyPower()*10);
+
+const enemyClan=Math.floor(Math.random()*12000);
+
+const log=document.getElementById("battleLog");
+
+if(yourClan>enemyClan){
+
+game.gold+=50000;
+game.elixir+=50000;
+
+log.innerHTML=`
+
+<h3>CLAN WAR WIN</h3>
+
+Your Clan Score: ${yourClan}<br>
+Enemy Clan Score: ${enemyClan}<br><br>
+
+War Bonus:
+50000 Gold
++
+50000 Elixir
+
+`;
+
+}else{
+
+log.innerHTML=`
+
+<h3>CLAN WAR LOSS</h3>
+
+Your Clan Score: ${yourClan}<br>
+Enemy Clan Score: ${enemyClan}
+
+`;
+
+}
+
+updateUI();
+
+}
+
+setInterval(()=>{
+
+game.gold+=game.goldMine*20;
+game.elixir+=game.elixirPump*20;
+game.dark+=game.darkDrill*2;
+
+updateUI();
+
+},1000);
+
+updateUI();
+
+</script>
+
+</body>
+</html>
