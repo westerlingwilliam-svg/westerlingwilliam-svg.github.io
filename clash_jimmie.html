@@ -156,6 +156,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
 #toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.88);backdrop-filter:blur(8px);color:white;padding:10px 22px;border-radius:50px;font-size:0.82rem;font-weight:700;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap;border:1px solid rgba(255,255,255,0.1)}
 #toast.show{opacity:1}
 
+/* Deploy hint */
+#deploy-hint{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:rgba(0,0,0,0.8);color:white;padding:10px 20px;border-radius:50px;
+  font-size:0.85rem;font-weight:800;pointer-events:none;z-index:210;
+  opacity:0;transition:opacity .3s;white-space:nowrap}
+#deploy-hint.show{opacity:1}
 /* ── ATTACK RESULT ── */
 #result-overlay{position:fixed;inset:0;z-index:350;background:rgba(0,0,0,0.85);display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;backdrop-filter:blur(8px);padding:20px}
 #result-overlay.show{display:flex}
@@ -185,6 +191,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
     <div><div class="res-val" id="dark-val">0</div><div class="res-max">/500</div></div>
   </div>
   <div id="jhall-badge">🏛️ JH <span id="jh-level">1</span></div>
+  <div class="res-pill" title="Gems" style="background:rgba(0,100,0,0.6)"><div class="res-icon">💎</div><div><div class="res-val" id="gem-val">50</div></div></div>
   <a href="games.html" id="menu-btn">🏠 Meny</a>
 </div>
 
@@ -196,7 +203,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
 <!-- ── ATTACK MODE ── -->
 <div id="attack-wrap">
   <div id="attack-hud">
-    <div id="attack-timer-circle" id="attack-timer">180</div>
+    <div id="attack-timer-circle">180</div>
     <div style="text-align:center">
       <div style="font-family:var(--title);font-size:0.8rem;color:var(--gold);letter-spacing:1px">ANGREPP</div>
       <div id="attack-stars" style="font-size:1.2rem">☆☆☆</div>
@@ -288,6 +295,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
     </div>
     <div class="modal-footer">
       <button class="modal-btn cancel" onclick="closeModal('build-modal')">Stäng</button>
+      <button class="modal-btn" id="bm-move-btn" onclick="startMoveBuilding()" style="background:rgba(100,200,255,0.15);color:#88ccff;flex:0.6">✥ Flytta</button>
       <button class="modal-btn primary" id="bm-action-btn" onclick="doBuildAction()">Bygg</button>
     </div>
   </div>
@@ -302,10 +310,20 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
   <button class="lu-btn" onclick="closeLevelUp()">OKEJ!</button>
 </div>
 
+<div id="deploy-hint">👆 Tap kartan för att placera trupper</div>
 <div id="toast"></div>
 
 <script>
 'use strict';
+// roundRect polyfill
+if(!CanvasRenderingContext2D.prototype.roundRect){
+  CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){
+    if(w<2*r)r=w/2;if(h<2*r)r=h/2;
+    this.beginPath();this.moveTo(x+r,y);this.arcTo(x+w,y,x+w,y+h,r);
+    this.arcTo(x+w,y+h,x,y+h,r);this.arcTo(x,y+h,x,y,r);this.arcTo(x,y,x+w,y,r);this.closePath();
+    return this;
+  };
+}
 const SAVE_KEY='coj_v2';
 
 // ── GAME DATA ─────────────────────────────────────────────────────
@@ -393,7 +411,7 @@ const RESEARCH_TYPES=[
   {id:'ballong_1',troopId:'jimmie_ballong',name:'Ballong Lv2',icon:'🎈',costElixir:75000,time:900,effect:'Ballong: +30 HP, +16 DPS',unlock:5},
   {id:'minar_1',troopId:'minar_jimmie',name:'Minar-Jimmie Lv2',icon:'⛏️',costElixir:200000,time:1800,effect:'Minar: +40 HP, +15 DPS',unlock:5},
   {id:'pekka_1',troopId:'pekka_jimmie',name:'P.E.K.K.A Lv2',icon:'🤖',costElixir:500000,time:3600,effect:'P.E.K.K.A: +400 HP, +60 DPS',unlock:6},
-  {id:'rage_1',id:'rage_upg',name:'Rage Lv2',icon:'⚡',costElixir:100000,time:1200,effect:'Rage: Varar 15 sek istället för 10',unlock:5},
+  {id:'rage_upg',name:'Rage Lv2',icon:'⚡',costElixir:100000,time:1200,effect:'Rage: Varar 15 sek istället för 10',unlock:5},
 ];
 
 // ── GAME STATE ─────────────────────────────────────────────────────
@@ -417,17 +435,28 @@ const DEFAULT_STATE={
   totalGoldEarned:0,
   attacksWon:0,
   nextBuildingId:100,
+  gems:50,
 };
 let G=JSON.parse(JSON.stringify(DEFAULT_STATE));
 
 function saveGame(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(G));}catch(e){}}
-function loadGame(){try{const s=localStorage.getItem(SAVE_KEY);if(s){G={...DEFAULT_STATE,...JSON.parse(s)};}}catch(e){}}
+function loadGame(){try{const s=localStorage.getItem(SAVE_KEY);if(s){
+    const saved=JSON.parse(s);
+    G={...DEFAULT_STATE,...saved};
+    if(!G.troopLevels)G.troopLevels={};
+    if(!G.spells)G.spells={};
+    if(!G.heroes)G.heroes=DEFAULT_STATE.heroes;
+    if(!G.research)G.research=DEFAULT_STATE.research;
+    if(!G.gems)G.gems=50;
+    if(!G.builders||G.builders.length<4)G.builders=DEFAULT_STATE.builders;
+  }}catch(e){console.warn('Load failed',e);}}
 
 // ── BASE LAYOUT ───────────────────────────────────────────────────
 const CELL=36, GRID=34;
 let camX=0,camY=0,dragging=false,dragStart={x:0,y:0},camStart={x:0,y:0};
 let selectedBuilding=null;
-let placingBuilding=null; // type being placed
+let placingBuilding=null;
+let movingBuilding=null; // being repositioned
 
 function defaultBase(){
   G.buildings=[
@@ -772,6 +801,20 @@ function levelUpJH(newLv){
 
 function closeLevelUp(){document.getElementById('levelup-splash').classList.remove('show');}
 
+function boostBuilder(bid){
+  const b=G.builders.find(x=>x.id===bid);
+  if(!b||!b.busy)return;
+  const now=Date.now()/1000;
+  const rem=Math.max(0,b.endTime-now);
+  const gemCost=Math.max(1,Math.ceil(rem/60));
+  if((G.gems||0)<gemCost){toast('Inte tillräckligt 💎! Behövs: '+gemCost);return;}
+  G.gems-=gemCost;
+  // Complete immediately
+  b.endTime=now;
+  toast('💎 ×'+gemCost+' använd — Byggaren klar!');
+  renderByPanel();saveGame();
+}
+
 // ── HUD UPDATE ────────────────────────────────────────────────────
 function fmt(n){n=Math.floor(n);if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return n.toString();}
 function updateHUD(){
@@ -781,6 +824,7 @@ function updateHUD(){
   document.getElementById('gold-max').textContent='/'+fmt(G.gold_cap);
   document.getElementById('elixir-max').textContent='/'+fmt(G.elixir_cap);
   document.getElementById('jh-level').textContent=G.jh_level;
+  const gv=document.getElementById('gem-val');if(gv)gv.textContent=G.gems||0;
   updateBuilderRow();
 }
 
@@ -794,7 +838,7 @@ function updateBuilderRow(){
       <div class="builder-icon">${b.busy?'🔨':'😴'}</div>
       <div class="builder-info">
         <div class="builder-name">${b.name}</div>
-        ${b.busy?`<div class="builder-timer">${fmtTime(rem)}</div>`:
+        ${b.busy?`<div class="builder-timer">${fmtTime(rem)}</div><div onclick="boostBuilder(${b.id})" style="font-size:0.55rem;color:#88ff88;cursor:pointer;margin-top:2px">💎 Boost</div>`:
         `<div class="builder-idle">Ledig</div>`}
       </div>
     </div>`;
@@ -1283,6 +1327,9 @@ function startAttackMode(){
   document.getElementById('attack-wrap').classList.add('show');
   renderAtkTroopsBar();
   document.getElementById('attack-stars').textContent='☆☆☆';
+  // Auto-select first troop
+  const firstTroop=Object.keys(atkTroopPool)[0];
+  if(firstTroop){setTimeout(()=>selectAtkTroop(firstTroop),100);}
   // Stars check: hero available?
   document.getElementById('hero-attack-btn').style.display=
     G.heroes.jimmie_akesson.lv>0?'block':'none';
@@ -1354,6 +1401,8 @@ function renderAtkTroopsBar(){
 
 function selectAtkTroop(id){
   selectedAtkTroop=id;
+  const hint=document.getElementById('deploy-hint');
+  if(hint){hint.classList.add('show');setTimeout(()=>hint.classList.remove('show'),2000);}
   document.querySelectorAll('.at-troop').forEach(t=>t.classList.remove('selected'));
   document.querySelector(`.at-troop[onclick="selectAtkTroop('${id}')"]`)?.classList.add('selected');
 }
@@ -1541,6 +1590,20 @@ function spawnExplosion(x,y){
 
 // Touch to place troops
 atkCanvas?.addEventListener('click',placeAtkTroop);
+document.getElementById('attack-canvas').addEventListener('touchstart',e=>{
+  e.preventDefault();
+  if(!selectedAtkTroop)return;
+  if(!atkTroopPool[selectedAtkTroop]||atkTroopPool[selectedAtkTroop]<=0){toast('Inga fler trupper!');return;}
+  const rect=e.target.getBoundingClientRect();
+  const t=e.touches[0];
+  const x=t.clientX-rect.left,y=t.clientY-rect.top;
+  deployTroop(selectedAtkTroop,x,y);
+  atkTroopPool[selectedAtkTroop]--;
+  if(atkTroopPool[selectedAtkTroop]<=0)delete atkTroopPool[selectedAtkTroop];
+  renderAtkTroopsBar();
+  if(!atkTroopPool[selectedAtkTroop]){const next=Object.keys(atkTroopPool)[0];if(next)selectAtkTroop(next);else selectedAtkTroop=null;}
+},{passive:false});
+
 document.getElementById('attack-canvas').addEventListener('click',e=>{
   if(!selectedAtkTroop)return;
   if(atkTroopPool[selectedAtkTroop]<=0){toast('Inga fler trupper!');return;}
@@ -1571,7 +1634,7 @@ function deployTroop(id,x,y,isHero=false){
 function deployHero(){
   if(heroDeployed){toast('Jimmie är redan utplacerad!');return;}
   const h=G.heroes.jimmie_akesson;if(!h||h.lv===0){toast('Jimmie är inte upplåst!');return;}
-  const x=AGRID/2*AC+ATK_CAM_X,y=AGRID-2)*AC+ATK_CAM_Y;
+  const x=AGRID/2*AC+ATK_CAM_X,y=(AGRID-2)*AC+ATK_CAM_Y;
   deployTroop('lill_jimmie',x,y,true);
   // Add 6 summoned barbarians
   for(let i=0;i<6;i++){
@@ -1610,13 +1673,13 @@ function endAttack(allDestroyed){
   G.elixir=Math.min(G.elixir_cap,G.elixir+elixirLoot);
   G.dark=Math.min(G.dark_cap,G.dark+darkLoot);
   if(stars>0)G.attacksWon++;
-  // Update troops (surviving ones returned)
+  // Troops lost in battle — only alive ones return
   const survivingCounts={};
   atkUnits.filter(u=>u.alive&&!u.isHero).forEach(u=>{
     survivingCounts[u.troopId]=(survivingCounts[u.troopId]||0)+1;
   });
   G.troops={};
-  Object.entries(survivingCounts).forEach(([id,cnt])=>{G.troops[id]=cnt;});
+  Object.entries(survivingCounts).forEach(([id,cnt])=>{if(cnt>0)G.troops[id]=cnt;});
   document.getElementById('result-stars').textContent=['','⭐','⭐⭐','⭐⭐⭐'][stars]||'☆';
   document.getElementById('result-title').textContent=stars>=2?'SEGER! 🎉':stars===1?'Delseger':'Nederlag 💀';
   document.getElementById('result-sub').textContent=`${Math.floor(pct*100)}% förstört · ${stars} stjärnor`;
@@ -1652,12 +1715,28 @@ canvas.addEventListener('touchend',e=>{e.preventDefault();if(!dragging){const t=
 
 function handleCanvasClick(cx,cy){
   const gx=Math.floor((cx-camX)/CELL),gy=Math.floor((cy-camY)/CELL);
+  if(movingBuilding){
+    // Place at new location
+    const bt=BUILDING_TYPES[movingBuilding.type];
+    const s=bt?.size||1;
+    if(!isOccupied(gx,gy,s)||movingBuilding===G.buildings.find(b=>b.gx===gx&&b.gy===gy)){
+      movingBuilding.gx=gx;movingBuilding.gy=gy;
+      movingBuilding=null;ghostPos=null;toast('Byggnad flytt!');saveGame();return;
+    }
+  }
   const hit=G.buildings.find(b=>{const s=BUILDING_TYPES[b.type]?.size||1;return gx>=b.gx&&gx<b.gx+s&&gy>=b.gy&&gy<b.gy+s;});
   if(hit){selectedBuilding=hit;openBuildMenu(hit.type);}
   else{selectedBuilding=null;closeModal('build-modal');}
 }
 
 // ── MODALS ────────────────────────────────────────────────────────
+function startMoveBuilding(){
+  if(!selectedBuilding)return;
+  movingBuilding=selectedBuilding;
+  closeModal('build-modal');
+  toast('Tryck ny plats för att flytta byggnaden');
+}
+
 function openModal(id){document.getElementById(id).classList.add('show');}
 function closeModal(id){document.getElementById(id).classList.remove('show');}
 
@@ -1668,6 +1747,23 @@ function toast(msg){
   clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2800);
 }
 
+// ── TIPS SYSTEM ─────────────────────────────────────────────────────
+const TIPS=[
+  '💡 Uppgradera Jimmie Hall för att låsa upp nya byggnader!',
+  '💡 Håll Byggare sysselsatta hela tiden för snabbare progress.',
+  '💡 SD-Jätten tankar skada — skicka den in först!',
+  '💡 Rage-Besvärjelse gör dina trupper 2x starkare i 15 sek.',
+  '💡 Forska i Laboratoriet för starkare trupper.',
+  '💡 Jimmie Åkesson är starkaste hjälten — lås upp honom med Jimmie-Kraft.',
+  '💡 Använd 💎 Gems för att boosta builders!',
+  '💡 Jimmie-Ballong flyger och ignorerar murar!',
+  '💡 SD-Trollkarlen gör splash-skada — dödlig mot grupper.',
+];
+let tipIdx=0;
+setInterval(()=>{
+  if(Math.random()<0.3){toast(TIPS[tipIdx++%TIPS.length]);}
+},30000);
+
 // ── INIT ──────────────────────────────────────────────────────────
 loadGame();
 if(!G.buildings||G.buildings.length===0)defaultBase();
@@ -1675,10 +1771,12 @@ if(!G.troopLevels)G.troopLevels={};
 if(!G.spells)G.spells={};
 centerCamera();
 renderByPanel();
-// Start game loop
 requestAnimationFrame(gameLoop);
-// Switch to default view
 switchNav('by');
+// Welcome message
+setTimeout(()=>{
+  toast('👑 Välkommen till Clash of Jimmie! Tryck på Byn för att börja bygga.');
+},1500);
 </script>
 </body>
 </html>
