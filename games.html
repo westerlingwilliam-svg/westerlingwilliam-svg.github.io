@@ -218,5 +218,17 @@
         <a href="index.html" class="back-btn">Tillbaka till start</a>
     </center>
 
-</body>
+<script>
+// Add Clash of Jimmie if not present
+document.addEventListener("DOMContentLoaded",function(){
+  const grid=document.querySelector(".games-grid,.game-grid,#games-grid,[class*=grid]");
+  if(grid&&!document.querySelector("[href*=clash_jimmie]")){
+    const btn=document.createElement("a");
+    btn.href="clash_jimmie.html";
+    btn.className=grid.children[0]?.className||"game-card";
+    btn.innerHTML='<div style="font-size:3rem">⚔️</div><div>Clash of Jimmie</div>';
+    grid.appendChild(btn);
+  }
+});
+</script></body>
 </html>
