@@ -996,6 +996,7 @@ const JIMMIES=[
   {id:15,name:'Super-SD-Jimmie',    icon:'🌟',rarity:'Legendary',col:'#ffd700',cp:750, cr:0.06,xp:600, acc:'crown'},
   {id:16,name:'Jimmie Åkesson',     icon:'⭐',rarity:'Legendary',col:'#FFCB05',cp:900, cr:0.05,xp:800, acc:'crown'},
   {id:17,name:'JIMMIE ETERNAL',     icon:'🔥',rarity:'Mythic',   col:'#ff2244',cp:9999,cr:0.01,xp:1500,acc:'crown'},
+  {id:18,name:'Gabbe Golem',           icon:'🪨',rarity:'Legendary',col:'#7a8a6a',cp:1200,cr:0.04,xp:700, acc:'crown',golem:true},
 ];
 const RC={Common:'#9e9e9e',Uncommon:'#4ade80',Rare:'#60a5fa',Epic:'#c084fc',Legendary:'#FFCB05',Mythic:'#ff2244'};
 const RW={Common:50,Uncommon:28,Rare:14,Epic:5,Legendary:2,Mythic:1};
@@ -2132,8 +2133,98 @@ function closeSubmenu() {
 
 
 // ── MINI JIMMIE DRAWING ──────────────────────────────────────────
+function drawGolem(ctx, size, jdef) {
+  ctx.clearRect(0,0,size,size);
+  const cx=size/2, cy=size/2;
+  const col=jdef.col; // mossy stone green-grey
+  const rc=RC[jdef.rarity];
+
+  // Background legendary glow
+  const g=ctx.createRadialGradient(cx,cy,0,cx,cy,size*0.5);
+  g.addColorStop(0,rc+'44');g.addColorStop(1,'transparent');
+  ctx.fillStyle=g;ctx.fillRect(0,0,size,size);
+
+  // Shadow
+  ctx.beginPath();ctx.ellipse(cx,size*0.92,size*0.35,size*0.07,0,0,Math.PI*2);
+  ctx.fillStyle='rgba(0,0,0,0.35)';ctx.fill();
+
+  // ── Body — massive stone rectangle ──
+  ctx.fillStyle=col;
+  // Main body block
+  ctx.beginPath();ctx.roundRect(cx-size*0.3,cy-size*0.05,size*0.6,size*0.42,size*0.06);ctx.fill();
+  // Stone texture lines
+  ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=size*0.02;
+  ctx.beginPath();ctx.moveTo(cx-size*0.28,cy+size*0.08);ctx.lineTo(cx+size*0.28,cy+size*0.08);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx-size*0.1,cy+size*0.2);ctx.lineTo(cx+size*0.1,cy+size*0.2);ctx.stroke();
+  // Highlight
+  ctx.fillStyle='rgba(255,255,255,0.08)';
+  ctx.fillRect(cx-size*0.28,cy-size*0.03,size*0.56,size*0.08);
+
+  // ── Massive head ──
+  ctx.fillStyle=col;
+  ctx.beginPath();ctx.roundRect(cx-size*0.28,cy-size*0.52,size*0.56,size*0.5,size*0.08);ctx.fill();
+  // Mossy patches on head
+  ctx.fillStyle='rgba(80,140,60,0.5)';
+  ctx.beginPath();ctx.ellipse(cx-size*0.1,cy-size*0.48,size*0.08,size*0.04,0.3,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(cx+size*0.12,cy-size*0.44,size*0.06,size*0.03,-0.2,0,Math.PI*2);ctx.fill();
+  // Cracks
+  ctx.strokeStyle='rgba(0,0,0,0.25)';ctx.lineWidth=size*0.015;
+  ctx.beginPath();ctx.moveTo(cx-size*0.05,cy-size*0.5);ctx.lineTo(cx-size*0.08,cy-size*0.38);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx+size*0.08,cy-size*0.46);ctx.lineTo(cx+size*0.12,cy-size*0.36);ctx.stroke();
+
+  // ── Glowing eyes ──
+  const eyeGlow=ctx.createRadialGradient(cx-size*0.1,cy-size*0.3,0,cx-size*0.1,cy-size*0.3,size*0.07);
+  eyeGlow.addColorStop(0,'#FFCB05');eyeGlow.addColorStop(1,'transparent');
+  ctx.fillStyle=eyeGlow;ctx.beginPath();ctx.arc(cx-size*0.1,cy-size*0.3,size*0.07,0,Math.PI*2);ctx.fill();
+  const eyeGlow2=ctx.createRadialGradient(cx+size*0.1,cy-size*0.3,0,cx+size*0.1,cy-size*0.3,size*0.07);
+  eyeGlow2.addColorStop(0,'#FFCB05');eyeGlow2.addColorStop(1,'transparent');
+  ctx.fillStyle=eyeGlow2;ctx.beginPath();ctx.arc(cx+size*0.1,cy-size*0.3,size*0.07,0,Math.PI*2);ctx.fill();
+  // Eye pupils
+  ctx.fillStyle='#FFD700';
+  ctx.beginPath();ctx.ellipse(cx-size*0.1,cy-size*0.3,size*0.045,size*0.035,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(cx+size*0.1,cy-size*0.3,size*0.045,size*0.035,0,0,Math.PI*2);ctx.fill();
+  // Dark iris
+  ctx.fillStyle='rgba(0,0,0,0.7)';
+  ctx.beginPath();ctx.arc(cx-size*0.1,cy-size*0.3,size*0.022,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(cx+size*0.1,cy-size*0.3,size*0.022,0,Math.PI*2);ctx.fill();
+
+  // ── Stone arms ──
+  ctx.fillStyle=col;
+  // Left arm — huge slab
+  ctx.beginPath();ctx.roundRect(cx-size*0.48,cy-size*0.05,size*0.2,size*0.36,size*0.04);ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=size*0.015;
+  ctx.beginPath();ctx.moveTo(cx-size*0.46,cy+size*0.08);ctx.lineTo(cx-size*0.3,cy+size*0.08);ctx.stroke();
+  // Right arm
+  ctx.fillStyle=col;
+  ctx.beginPath();ctx.roundRect(cx+size*0.28,cy-size*0.05,size*0.2,size*0.36,size*0.04);ctx.fill();
+  ctx.beginPath();ctx.moveTo(cx+size*0.3,cy+size*0.08);ctx.lineTo(cx+size*0.46,cy+size*0.08);ctx.stroke();
+
+  // ── Legs ──
+  ctx.fillStyle=col;
+  ctx.beginPath();ctx.roundRect(cx-size*0.25,cy+size*0.36,size*0.2,size*0.28,size*0.04);ctx.fill();
+  ctx.beginPath();ctx.roundRect(cx+size*0.05,cy+size*0.36,size*0.2,size*0.28,size*0.04);ctx.fill();
+
+  // ── Crown (Legendary) ──
+  ctx.fillStyle='#FFD700';
+  const crownPts=[[cx-size*0.14,cy-size*0.52],[cx-size*0.14,cy-size*0.62],[cx-size*0.05,cy-size*0.56],[cx,cy-size*0.65],[cx+size*0.05,cy-size*0.56],[cx+size*0.14,cy-size*0.62],[cx+size*0.14,cy-size*0.52]];
+  ctx.beginPath();ctx.moveTo(crownPts[0][0],crownPts[0][1]);
+  crownPts.forEach(p=>ctx.lineTo(p[0],p[1]));ctx.closePath();ctx.fill();
+  // Crown gems
+  ctx.fillStyle='#ff4488';ctx.beginPath();ctx.arc(cx,cy-size*0.64,size*0.025,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#4488ff';ctx.beginPath();ctx.arc(cx-size*0.14,cy-size*0.6,size*0.018,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(cx+size*0.14,cy-size*0.6,size*0.018,0,Math.PI*2);ctx.fill();
+
+  // Gold nameplate
+  ctx.fillStyle='rgba(255,203,5,0.9)';
+  ctx.beginPath();ctx.roundRect(cx-size*0.22,cy+size*0.62,size*0.44,size*0.15,size*0.03);ctx.fill();
+  ctx.fillStyle='#1a0a00';ctx.font=`bold ${size*0.085}px Nunito`;ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('GABBE',cx,cy+size*0.695);
+}
+
 function drawMiniJimmie(ctx, size, jdef) {
   ctx.clearRect(0,0,size,size);
+  // Special golem drawing for Gabbe
+  if(jdef.golem){drawGolem(ctx,size,jdef);return;}
   // Scale to 72% so full body is visible with padding
   ctx.save();
   const scale = 0.72;
@@ -3151,7 +3242,7 @@ if(G.trainerName){
   const ptn=document.getElementById('prof-trainer-name'); if(ptn)ptn.textContent=G.trainerName.toUpperCase();
   const stn=document.getElementById('st-name-val'); if(stn)stn.textContent=G.trainerName;
 }
-window._jimmieCache={}; // fresh cache
+window._jimmieCache={}; // fresh cache — includes Gabbe
 setTimeout(startTutorial, 800);
 // Chunk system spawns automatically on first frame
 // Spawn Jimmie Stops around start
