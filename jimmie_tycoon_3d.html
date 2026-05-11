@@ -106,6 +106,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
 
 /* Jimmie emoji with glow */
 #catch-emoji{font-size:10rem;line-height:1;position:relative;z-index:2;will-change:transform;filter:drop-shadow(0 12px 36px rgba(0,0,0,0.5))}
+#catch-jimmie-canvas{will-change:transform;position:relative;z-index:2}
 #catch-glow-ring{position:absolute;inset:-20px;border-radius:50%;opacity:0;transition:opacity .4s;pointer-events:none}
 
 /* Animations */
@@ -584,7 +585,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
   <!-- Encounter popup -->
   <div id="enc-popup" onclick="startCatch()">
     <div class="enc-rarity-bar" id="enc-rarity-bar"></div>
-    <div class="enc-emoji" id="enc-emoji">🟡</div>
+    <canvas id="enc-jimmie-canvas" width="80" height="80" class="enc-emoji" style="filter:drop-shadow(0 4px 18px rgba(0,0,0,0.2))"></canvas>
     <div class="enc-name" id="enc-name-popup">Jimmie</div>
     <div class="enc-sub" id="enc-sub-popup">Common · CP 12</div>
     <div class="enc-tap-btn">TRYCK FÖR ATT FÅNGA</div>
@@ -616,7 +617,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#e8f5e8;font-family:
           <circle id="catch-ring-circle" cx="100" cy="100" r="80" fill="rgba(255,255,255,0.03)" stroke="url(#ring-grad)" stroke-width="4" stroke-linecap="round"/>
         </svg>
         <div id="catch-platform"></div>
-        <div id="catch-emoji">👶</div>
+        <canvas id="catch-jimmie-canvas" width="160" height="160" style="position:relative;z-index:2;filter:drop-shadow(0 12px 36px rgba(0,0,0,0.5))"></canvas>
+        <div id="catch-emoji" style="display:none">👶</div>
       </div>
     </div>
     <div id="catch-rarity-label">COMMON</div>
@@ -1002,9 +1004,9 @@ const RC={Common:'#9e9e9e',Uncommon:'#4ade80',Rare:'#60a5fa',Epic:'#c084fc',Lege
 const RW={Common:50,Uncommon:28,Rare:14,Epic:5,Legendary:2,Mythic:1};
 
 const SAVE='jgo_v4';
-let G={lv:1,xp:0,xpMax:200,tutorialDone:false,balls:[20,5,1],candy:{Common:0,Uncommon:0,Rare:0,Epic:0,Legendary:0,Mythic:0},jimmieCP:{},trainerAvatar:'🕵️',berries:0,quests:[],specialQuests:[],seen:{},caught:{},trainerName:'Jimmie-Tränare',stats:{km:0,throws:0,esc:0,total:0,best:''}};
+let G={lv:1,xp:0,xpMax:200,tutorialDone:false,balls:[20,5,1],candy:0,jimmieCP:{},trainerAvatar:'🕵️',berries:0,quests:[],specialQuests:[],seen:{},caught:{},trainerName:'Jimmie-Tränare',stats:{km:0,throws:0,esc:0,total:0,best:''}};
 function save(){try{localStorage.setItem(SAVE,JSON.stringify(G));}catch(e){}}
-function load(){try{const s=localStorage.getItem(SAVE);if(s){G={...G,...JSON.parse(s)};if(typeof G.candy!=='object')G.candy={Common:0,Uncommon:0,Rare:0,Epic:0,Legendary:0,Mythic:0};if(!G.jimmieCP)G.jimmieCP={};}}catch(e){}}
+function load(){try{const s=localStorage.getItem(SAVE);if(s){G={...G,...JSON.parse(s)};if(typeof G.candy==='object')G.candy=Object.values(G.candy).reduce((a,b)=>a+b,0);if(!G.jimmieCP)G.jimmieCP={};}}catch(e){}}
 
 let weights=[];
 function buildW(){weights=[];JIMMIES.forEach((j,i)=>{const w=RW[j.rarity]||1;for(let k=0;k<w;k++)weights.push(i);});}
@@ -1336,7 +1338,7 @@ function spinStop(idx) {
   if(roll < 0.30) { G.balls[0]=Math.min(G.balls[0]+3,20); reward='⚪ +3 SD-Bollar'; }
   else if(roll < 0.55) { G.balls[0]=Math.min(G.balls[0]+2,20); G.balls[1]+=1; reward='⚪+2 🔵+1 Bollar'; }
   else if(roll < 0.75) { G.balls[1]+=3; reward='🔵 +3 Super-Bollar'; }
-  else if(roll < 0.90) { const rc2=JIMMIES[Math.floor(Math.random()*JIMMIES.length)].rarity; if(!G.candy[rc2])G.candy[rc2]=0; G.candy[rc2]+=3; G.balls[1]+=1; reward='🔵+1 Super + 🍬×3'; }
+  else if(roll < 0.90) { G.candy=(G.candy||0)+3; G.balls[1]+=1; reward='🔵+1 Super + 🍬×3'; }
   else if(roll < 0.97) { G.balls[2]+=1; G.balls[1]+=1; reward='🟡+1 Jimmie-Boll + 🔵+1!'; }
   else { G.balls[2]+=2; reward='🟡🟡 +2 Jimmie-Bollar! Jackpot!'; }
   // stop gives random candy
@@ -1366,7 +1368,9 @@ function updateSightings(){
   const cl=nearbyArr[0];
   if(cl.dist<80){
     const w=cl.w;
-    document.getElementById('enc-emoji').textContent=w.j.icon;
+    // Draw on encounter canvas
+    const encC=document.getElementById('enc-jimmie-canvas');
+    if(encC){encC.width=80;encC.height=80;try{drawMiniJimmie(encC.getContext('2d'),80,w.j);}catch(e){encC.getContext('2d').font='50px serif';encC.getContext('2d').textAlign='center';encC.getContext('2d').textBaseline='middle';encC.getContext('2d').fillText(w.j.icon,40,40);}}
     document.getElementById('enc-name-popup').textContent=w.j.name;
     document.getElementById('enc-sub-popup').textContent=w.j.rarity+' · CP '+w.cp;
     document.getElementById('enc-sub-popup').style.color=RC[w.j.rarity];
@@ -1453,7 +1457,7 @@ function updateHUD(){
     const ct=document.getElementById('c-tot-'+i);
     if(ct) ct.textContent=G.balls[i];
   });
-  const totalCandy=typeof G.candy==='object'?Object.values(G.candy).reduce((a,b)=>a+b,0):G.candy; document.getElementById('bag-candy').textContent=totalCandy;
+  document.getElementById('bag-candy').textContent=G.candy||0;
 }
 
 
@@ -1769,7 +1773,9 @@ function startCatch() {
   }, 800);
 
   // Update UI
-  document.getElementById('catch-emoji').textContent = w.j.icon;
+  // Draw Jimmie on catch canvas
+  const catchC = document.getElementById('catch-jimmie-canvas');
+  if(catchC){catchC.width=160;catchC.height=160;try{drawMiniJimmie(catchC.getContext('2d'),160,w.j);}catch(e){catchC.getContext('2d').font='100px serif';catchC.getContext('2d').textAlign='center';catchC.getContext('2d').textBaseline='middle';catchC.getContext('2d').fillText(w.j.icon,80,80);}}
   document.getElementById('catch-emoji').style.filter = `drop-shadow(0 12px 40px ${w.j.col}cc)`;
   document.getElementById('catch-name-top').textContent = w.j.name;
   document.getElementById('catch-cp-top').textContent = 'CP ' + w.cp;
@@ -1952,6 +1958,7 @@ function onBallHit() {
   let i = 0;
   function nextShake() {
     emo.classList.remove('catch-shake','catch-wobble');
+    document.getElementById('catch-jimmie-canvas')?.classList.remove('catch-shake','catch-wobble');
     void emo.offsetWidth;
     if (i >= shakes.length) {
       // Check catch
@@ -1970,6 +1977,7 @@ function onBallHit() {
       return;
     }
     emo.classList.add(shakes[i++]);
+    document.getElementById('catch-jimmie-canvas')?.classList.add(shakes[i-1]);
     setTimeout(nextShake, i===1?500:550);
   }
   nextShake();
@@ -1983,9 +1991,8 @@ function onCaught() {
   if (!G.caught[j.id]) G.caught[j.id] = 0;
   G.caught[j.id]++;
   G.stats.total++;
-  const candyGain = {Common:1,Uncommon:2,Rare:3,Epic:5,Legendary:10,Mythic:20}[j.rarity]||1;
-  if(!G.candy[j.rarity]) G.candy[j.rarity]=0;
-  G.candy[j.rarity] += candyGain;
+  const candyGain = {Common:1,Uncommon:2,Rare:5,Epic:10,Legendary:25,Mythic:50}[j.rarity]||1;
+  G.candy = (G.candy||0) + candyGain;
   addXP(j.xp);
   const rarO = ['Common','Uncommon','Rare','Epic','Legendary','Mythic'];
   if (!G.stats.best || rarO.indexOf(j.rarity) > rarO.indexOf(G.stats.best)) G.stats.best = j.rarity;
@@ -2000,7 +2007,7 @@ function onCaught() {
   cotitle.style.color = RC[j.rarity];
   document.getElementById('co-jimmie-name').textContent = j.name;
   document.getElementById('co-rewards').innerHTML =
-    '<div class="co-reward-pill">+'+j.xp+' XP</div><div class="co-reward-pill">CP '+cpVal+'</div><div class="co-reward-pill">+'+candyAmt+' 🍬</div>';
+    '<div class="co-reward-pill">+'+j.xp+' XP</div><div class="co-reward-pill">CP '+cpVal+'</div><div class="co-reward-pill" style="color:#ff66aa">+'+candyAmt+' 🍬</div>';
   try {
     const coC = document.getElementById('co-jimmie-canvas');
     if(coC){ coC.width=120;coC.height=120;drawMiniJimmie(coC.getContext('2d'),120,j); }
@@ -2136,90 +2143,183 @@ function closeSubmenu() {
 function drawGolem(ctx, size, jdef) {
   ctx.clearRect(0,0,size,size);
   const cx=size/2, cy=size/2;
-  const col=jdef.col; // mossy stone green-grey
-  const rc=RC[jdef.rarity];
+  const t=Date.now()/1000;
 
-  // Background legendary glow
-  const g=ctx.createRadialGradient(cx,cy,0,cx,cy,size*0.5);
-  g.addColorStop(0,rc+'44');g.addColorStop(1,'transparent');
-  ctx.fillStyle=g;ctx.fillRect(0,0,size,size);
+  // ── Legendary aura — pulsing outer glow ──
+  const pulse=0.6+Math.sin(t*2)*0.4;
+  const aura=ctx.createRadialGradient(cx,cy,size*0.1,cx,cy,size*0.56);
+  aura.addColorStop(0,`rgba(255,203,5,${pulse*0.3})`);
+  aura.addColorStop(0.5,`rgba(120,200,80,${pulse*0.15})`);
+  aura.addColorStop(1,'transparent');
+  ctx.fillStyle=aura;ctx.fillRect(0,0,size,size);
 
-  // Shadow
-  ctx.beginPath();ctx.ellipse(cx,size*0.92,size*0.35,size*0.07,0,0,Math.PI*2);
-  ctx.fillStyle='rgba(0,0,0,0.35)';ctx.fill();
+  // ── Floating rocks (orbiting) ──
+  for(let i=0;i<3;i++){
+    const angle=t*0.8+i*(Math.PI*2/3);
+    const rx=cx+Math.cos(angle)*size*0.44;
+    const ry=cy+Math.sin(angle)*size*0.18-size*0.05;
+    const rs=size*(0.055+i*0.012);
+    ctx.save();ctx.translate(rx,ry);ctx.rotate(angle*1.3);
+    // Stone with glow
+    const stoneG=ctx.createRadialGradient(0,0,0,0,0,rs);
+    stoneG.addColorStop(0,'#a0b890');stoneG.addColorStop(0.6,'#7a8a6a');stoneG.addColorStop(1,'#556048');
+    ctx.fillStyle=stoneG;
+    ctx.beginPath();ctx.roundRect(-rs,-rs*0.75,rs*2,rs*1.5,rs*0.25);ctx.fill();
+    // Rune glow on rock
+    ctx.fillStyle=`rgba(255,203,5,${0.4+Math.sin(t*3+i)*0.3})`;
+    ctx.font=`${rs*1.2}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(['᚛','ᚐ','ᚑ'][i],0,0);
+    ctx.restore();
+  }
 
-  // ── Body — massive stone rectangle ──
-  ctx.fillStyle=col;
-  // Main body block
-  ctx.beginPath();ctx.roundRect(cx-size*0.3,cy-size*0.05,size*0.6,size*0.42,size*0.06);ctx.fill();
-  // Stone texture lines
-  ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=size*0.02;
-  ctx.beginPath();ctx.moveTo(cx-size*0.28,cy+size*0.08);ctx.lineTo(cx+size*0.28,cy+size*0.08);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(cx-size*0.1,cy+size*0.2);ctx.lineTo(cx+size*0.1,cy+size*0.2);ctx.stroke();
-  // Highlight
-  ctx.fillStyle='rgba(255,255,255,0.08)';
-  ctx.fillRect(cx-size*0.28,cy-size*0.03,size*0.56,size*0.08);
-
-  // ── Massive head ──
-  ctx.fillStyle=col;
-  ctx.beginPath();ctx.roundRect(cx-size*0.28,cy-size*0.52,size*0.56,size*0.5,size*0.08);ctx.fill();
-  // Mossy patches on head
-  ctx.fillStyle='rgba(80,140,60,0.5)';
-  ctx.beginPath();ctx.ellipse(cx-size*0.1,cy-size*0.48,size*0.08,size*0.04,0.3,0,Math.PI*2);ctx.fill();
-  ctx.beginPath();ctx.ellipse(cx+size*0.12,cy-size*0.44,size*0.06,size*0.03,-0.2,0,Math.PI*2);ctx.fill();
-  // Cracks
-  ctx.strokeStyle='rgba(0,0,0,0.25)';ctx.lineWidth=size*0.015;
-  ctx.beginPath();ctx.moveTo(cx-size*0.05,cy-size*0.5);ctx.lineTo(cx-size*0.08,cy-size*0.38);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(cx+size*0.08,cy-size*0.46);ctx.lineTo(cx+size*0.12,cy-size*0.36);ctx.stroke();
-
-  // ── Glowing eyes ──
-  const eyeGlow=ctx.createRadialGradient(cx-size*0.1,cy-size*0.3,0,cx-size*0.1,cy-size*0.3,size*0.07);
-  eyeGlow.addColorStop(0,'#FFCB05');eyeGlow.addColorStop(1,'transparent');
-  ctx.fillStyle=eyeGlow;ctx.beginPath();ctx.arc(cx-size*0.1,cy-size*0.3,size*0.07,0,Math.PI*2);ctx.fill();
-  const eyeGlow2=ctx.createRadialGradient(cx+size*0.1,cy-size*0.3,0,cx+size*0.1,cy-size*0.3,size*0.07);
-  eyeGlow2.addColorStop(0,'#FFCB05');eyeGlow2.addColorStop(1,'transparent');
-  ctx.fillStyle=eyeGlow2;ctx.beginPath();ctx.arc(cx+size*0.1,cy-size*0.3,size*0.07,0,Math.PI*2);ctx.fill();
-  // Eye pupils
-  ctx.fillStyle='#FFD700';
-  ctx.beginPath();ctx.ellipse(cx-size*0.1,cy-size*0.3,size*0.045,size*0.035,0,0,Math.PI*2);ctx.fill();
-  ctx.beginPath();ctx.ellipse(cx+size*0.1,cy-size*0.3,size*0.045,size*0.035,0,0,Math.PI*2);ctx.fill();
-  // Dark iris
-  ctx.fillStyle='rgba(0,0,0,0.7)';
-  ctx.beginPath();ctx.arc(cx-size*0.1,cy-size*0.3,size*0.022,0,Math.PI*2);ctx.fill();
-  ctx.beginPath();ctx.arc(cx+size*0.1,cy-size*0.3,size*0.022,0,Math.PI*2);ctx.fill();
-
-  // ── Stone arms ──
-  ctx.fillStyle=col;
-  // Left arm — huge slab
-  ctx.beginPath();ctx.roundRect(cx-size*0.48,cy-size*0.05,size*0.2,size*0.36,size*0.04);ctx.fill();
-  ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=size*0.015;
-  ctx.beginPath();ctx.moveTo(cx-size*0.46,cy+size*0.08);ctx.lineTo(cx-size*0.3,cy+size*0.08);ctx.stroke();
-  // Right arm
-  ctx.fillStyle=col;
-  ctx.beginPath();ctx.roundRect(cx+size*0.28,cy-size*0.05,size*0.2,size*0.36,size*0.04);ctx.fill();
-  ctx.beginPath();ctx.moveTo(cx+size*0.3,cy+size*0.08);ctx.lineTo(cx+size*0.46,cy+size*0.08);ctx.stroke();
+  // ── Shadow ──
+  ctx.beginPath();ctx.ellipse(cx,size*0.94,size*0.32,size*0.06,0,0,Math.PI*2);
+  ctx.fillStyle='rgba(0,0,0,0.4)';ctx.fill();
 
   // ── Legs ──
-  ctx.fillStyle=col;
-  ctx.beginPath();ctx.roundRect(cx-size*0.25,cy+size*0.36,size*0.2,size*0.28,size*0.04);ctx.fill();
-  ctx.beginPath();ctx.roundRect(cx+size*0.05,cy+size*0.36,size*0.2,size*0.28,size*0.04);ctx.fill();
+  const legCol=ctx.createLinearGradient(0,cy+size*0.38,0,cy+size*0.72);
+  legCol.addColorStop(0,'#8a9a78');legCol.addColorStop(1,'#556048');
+  ctx.fillStyle=legCol;
+  ctx.beginPath();ctx.roundRect(cx-size*0.26,cy+size*0.37,size*0.21,size*0.32,size*0.04);ctx.fill();
+  ctx.beginPath();ctx.roundRect(cx+size*0.05,cy+size*0.37,size*0.21,size*0.32,size*0.04);ctx.fill();
+  // Leg cracks
+  ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=size*0.012;
+  ctx.beginPath();ctx.moveTo(cx-size*0.18,cy+size*0.47);ctx.lineTo(cx-size*0.12,cy+size*0.58);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx+size*0.12,cy+size*0.45);ctx.lineTo(cx+size*0.17,cy+size*0.57);ctx.stroke();
 
-  // ── Crown (Legendary) ──
+  // ── Main body ──
+  const bodyG=ctx.createLinearGradient(cx-size*0.32,cy-size*0.05,cx+size*0.32,cy+size*0.4);
+  bodyG.addColorStop(0,'#9aaa86');bodyG.addColorStop(0.4,'#7a8a6a');bodyG.addColorStop(1,'#556048');
+  ctx.fillStyle=bodyG;
+  ctx.beginPath();ctx.roundRect(cx-size*0.32,cy-size*0.06,size*0.64,size*0.46,size*0.07);ctx.fill();
+  // Chest rune — glowing
+  const runeAlpha=0.7+Math.sin(t*2.5)*0.3;
+  ctx.strokeStyle=`rgba(255,203,5,${runeAlpha})`;ctx.lineWidth=size*0.022;
+  ctx.beginPath();ctx.moveTo(cx,cy+size*0.05);ctx.lineTo(cx,cy+size*0.25);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx-size*0.1,cy+size*0.12);ctx.lineTo(cx+size*0.1,cy+size*0.12);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx-size*0.08,cy+size*0.2);ctx.lineTo(cx+size*0.08,cy+size*0.2);ctx.stroke();
+  // Mossy patches on body
+  ctx.fillStyle='rgba(80,160,60,0.45)';
+  ctx.beginPath();ctx.ellipse(cx-size*0.16,cy+size*0.3,size*0.1,size*0.05,-0.3,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(cx+size*0.18,cy+size*0.15,size*0.07,size*0.04,0.4,0,Math.PI*2);ctx.fill();
+  // Body cracks
+  ctx.strokeStyle='rgba(0,0,0,0.25)';ctx.lineWidth=size*0.014;
+  ctx.beginPath();ctx.moveTo(cx-size*0.2,cy+size*0.04);ctx.lineTo(cx-size*0.12,cy+size*0.22);ctx.lineTo(cx-size*0.16,cy+size*0.32);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx+size*0.18,cy+size*0.08);ctx.lineTo(cx+size*0.1,cy+size*0.28);ctx.stroke();
+
+  // ── Arms — massive stone slabs ──
+  const armG=ctx.createLinearGradient(0,cy-size*0.06,0,cy+size*0.38);
+  armG.addColorStop(0,'#8a9a78');armG.addColorStop(1,'#556048');
+  ctx.fillStyle=armG;
+  // Left
+  ctx.beginPath();ctx.roundRect(cx-size*0.52,cy-size*0.06,size*0.22,size*0.42,size*0.05);ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,0.18)';ctx.lineWidth=size*0.012;
+  ctx.beginPath();ctx.moveTo(cx-size*0.5,cy+size*0.1);ctx.lineTo(cx-size*0.32,cy+size*0.1);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx-size*0.48,cy+size*0.24);ctx.lineTo(cx-size*0.34,cy+size*0.24);ctx.stroke();
+  // Left fist glow
+  ctx.fillStyle=`rgba(255,203,5,${0.3+Math.sin(t*2)*0.2})`;
+  ctx.beginPath();ctx.arc(cx-size*0.41,cy+size*0.38,size*0.08,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#FFD700';ctx.beginPath();ctx.arc(cx-size*0.41,cy+size*0.38,size*0.05,0,Math.PI*2);ctx.fill();
+  // Right
+  ctx.fillStyle=armG;
+  ctx.beginPath();ctx.roundRect(cx+size*0.3,cy-size*0.06,size*0.22,size*0.42,size*0.05);ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,0.18)';ctx.lineWidth=size*0.012;
+  ctx.beginPath();ctx.moveTo(cx+size*0.32,cy+size*0.1);ctx.lineTo(cx+size*0.5,cy+size*0.1);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx+size*0.34,cy+size*0.24);ctx.lineTo(cx+size*0.5,cy+size*0.24);ctx.stroke();
+  // Right fist glow
+  ctx.fillStyle=`rgba(255,203,5,${0.3+Math.sin(t*2+1)*0.2})`;
+  ctx.beginPath();ctx.arc(cx+size*0.41,cy+size*0.38,size*0.08,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#FFD700';ctx.beginPath();ctx.arc(cx+size*0.41,cy+size*0.38,size*0.05,0,Math.PI*2);ctx.fill();
+
+  // ── Head — massive with crystal embedded ──
+  const headG=ctx.createLinearGradient(cx-size*0.3,cy-size*0.56,cx+size*0.3,cy-size*0.06);
+  headG.addColorStop(0,'#a0b088');headG.addColorStop(0.5,'#8a9a78');headG.addColorStop(1,'#6a7a5a');
+  ctx.fillStyle=headG;
+  ctx.beginPath();ctx.roundRect(cx-size*0.3,cy-size*0.58,size*0.6,size*0.55,size*0.09);ctx.fill();
+  // Head moss
+  ctx.fillStyle='rgba(80,160,60,0.5)';
+  ctx.beginPath();ctx.ellipse(cx-size*0.08,cy-size*0.56,size*0.09,size*0.04,0.2,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(cx+size*0.15,cy-size*0.52,size*0.07,size*0.03,-0.3,0,Math.PI*2);ctx.fill();
+  // Head cracks
+  ctx.strokeStyle='rgba(0,0,0,0.22)';ctx.lineWidth=size*0.015;
+  ctx.beginPath();ctx.moveTo(cx-size*0.06,cy-size*0.56);ctx.lineTo(cx-size*0.1,cy-size*0.42);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx+size*0.1,cy-size*0.54);ctx.lineTo(cx+size*0.15,cy-size*0.4);ctx.stroke();
+
+  // Crystal in forehead
+  const crystalPulse=0.8+Math.sin(t*3)*0.2;
+  const crystalG=ctx.createRadialGradient(cx,cy-size*0.44,0,cx,cy-size*0.44,size*0.1);
+  crystalG.addColorStop(0,`rgba(255,220,100,${crystalPulse})`);
+  crystalG.addColorStop(0.5,`rgba(255,180,50,${crystalPulse*0.8})`);
+  crystalG.addColorStop(1,'transparent');
+  ctx.fillStyle=crystalG;ctx.beginPath();ctx.arc(cx,cy-size*0.44,size*0.1,0,Math.PI*2);ctx.fill();
+  // Crystal shape
+  ctx.fillStyle=`rgba(255,220,100,${crystalPulse})`;
+  ctx.beginPath();ctx.moveTo(cx,cy-size*0.54);ctx.lineTo(cx-size*0.07,cy-size*0.44);ctx.lineTo(cx,cy-size*0.36);ctx.lineTo(cx+size*0.07,cy-size*0.44);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='rgba(255,255,200,0.8)';ctx.lineWidth=size*0.01;ctx.stroke();
+  // Crystal inner shine
+  ctx.fillStyle=`rgba(255,255,220,${crystalPulse*0.9})`;
+  ctx.beginPath();ctx.moveTo(cx-size*0.01,cy-size*0.52);ctx.lineTo(cx-size*0.04,cy-size*0.45);ctx.lineTo(cx,cy-size*0.47);ctx.closePath();ctx.fill();
+
+  // ── Glowing eyes ──
+  for(let ei=0;ei<2;ei++){
+    const ex=cx+(ei===0?-1:1)*size*0.12;
+    const ey=cy-size*0.32;
+    // Outer glow
+    const eg=ctx.createRadialGradient(ex,ey,0,ex,ey,size*0.1);
+    eg.addColorStop(0,`rgba(255,203,5,${0.9+Math.sin(t*2+ei)*0.1})`);
+    eg.addColorStop(0.5,`rgba(255,150,0,0.4)`);
+    eg.addColorStop(1,'transparent');
+    ctx.fillStyle=eg;ctx.beginPath();ctx.arc(ex,ey,size*0.1,0,Math.PI*2);ctx.fill();
+    // Eye socket (dark recess)
+    ctx.fillStyle='rgba(0,0,0,0.5)';
+    ctx.beginPath();ctx.ellipse(ex,ey,size*0.06,size*0.048,0,0,Math.PI*2);ctx.fill();
+    // Glowing iris
+    ctx.fillStyle=`rgba(255,200,0,${0.95+Math.sin(t*3+ei)*0.05})`;
+    ctx.beginPath();ctx.ellipse(ex,ey,size*0.048,size*0.038,0,0,Math.PI*2);ctx.fill();
+    // Slit pupil
+    ctx.fillStyle='rgba(0,0,0,0.8)';
+    ctx.beginPath();ctx.ellipse(ex,ey,size*0.014,size*0.032,0,0,Math.PI*2);ctx.fill();
+    // Eye shine
+    ctx.fillStyle='rgba(255,255,200,0.9)';
+    ctx.beginPath();ctx.arc(ex-size*0.018,ey-size*0.015,size*0.01,0,Math.PI*2);ctx.fill();
+  }
+
+  // ── Frown / stoic mouth ──
+  ctx.strokeStyle='rgba(0,0,0,0.5)';ctx.lineWidth=size*0.018;
+  ctx.beginPath();ctx.moveTo(cx-size*0.1,cy-size*0.18);ctx.lineTo(cx+size*0.1,cy-size*0.18);ctx.stroke();
+  // Stone teeth
+  ctx.fillStyle='rgba(200,190,170,0.8)';
+  for(let ti=0;ti<4;ti++){ctx.fillRect(cx-size*0.08+ti*size*0.045,cy-size*0.2,size*0.03,size*0.025);}
+
+  // ── Crown — epic gold crown with gems ──
   ctx.fillStyle='#FFD700';
-  const crownPts=[[cx-size*0.14,cy-size*0.52],[cx-size*0.14,cy-size*0.62],[cx-size*0.05,cy-size*0.56],[cx,cy-size*0.65],[cx+size*0.05,cy-size*0.56],[cx+size*0.14,cy-size*0.62],[cx+size*0.14,cy-size*0.52]];
-  ctx.beginPath();ctx.moveTo(crownPts[0][0],crownPts[0][1]);
-  crownPts.forEach(p=>ctx.lineTo(p[0],p[1]));ctx.closePath();ctx.fill();
+  const crownBase=cy-size*0.58;
+  ctx.beginPath();
+  ctx.moveTo(cx-size*0.2,crownBase);
+  ctx.lineTo(cx-size*0.2,crownBase-size*0.1);
+  ctx.lineTo(cx-size*0.12,crownBase-size*0.06);
+  ctx.lineTo(cx-size*0.06,crownBase-size*0.14);
+  ctx.lineTo(cx,crownBase-size*0.08);
+  ctx.lineTo(cx+size*0.06,crownBase-size*0.14);
+  ctx.lineTo(cx+size*0.12,crownBase-size*0.06);
+  ctx.lineTo(cx+size*0.2,crownBase-size*0.1);
+  ctx.lineTo(cx+size*0.2,crownBase);
+  ctx.closePath();ctx.fill();
+  // Crown inner
+  ctx.fillStyle='rgba(200,150,0,0.5)';ctx.fillRect(cx-size*0.18,crownBase-size*0.06,size*0.36,size*0.06);
   // Crown gems
-  ctx.fillStyle='#ff4488';ctx.beginPath();ctx.arc(cx,cy-size*0.64,size*0.025,0,Math.PI*2);ctx.fill();
-  ctx.fillStyle='#4488ff';ctx.beginPath();ctx.arc(cx-size*0.14,cy-size*0.6,size*0.018,0,Math.PI*2);ctx.fill();
-  ctx.beginPath();ctx.arc(cx+size*0.14,cy-size*0.6,size*0.018,0,Math.PI*2);ctx.fill();
+  [['#ff2244',cx,crownBase-size*0.12,size*0.03],['#4488ff',cx-size*0.13,crownBase-size*0.08,size*0.022],['#44ff88',cx+size*0.13,crownBase-size*0.08,size*0.022]].forEach(([col,gx,gy,gr])=>{
+    const gg=ctx.createRadialGradient(gx,gy,0,gx,gy,gr);
+    gg.addColorStop(0,'white');gg.addColorStop(0.3,col);gg.addColorStop(1,col+'88');
+    ctx.fillStyle=gg;ctx.beginPath();ctx.arc(gx,gy,gr,0,Math.PI*2);ctx.fill();
+  });
 
-  // Gold nameplate
-  ctx.fillStyle='rgba(255,203,5,0.9)';
-  ctx.beginPath();ctx.roundRect(cx-size*0.22,cy+size*0.62,size*0.44,size*0.15,size*0.03);ctx.fill();
-  ctx.fillStyle='#1a0a00';ctx.font=`bold ${size*0.085}px Nunito`;ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText('GABBE',cx,cy+size*0.695);
+  // ── Ground rumble cracks ──
+  ctx.strokeStyle=`rgba(255,203,5,${0.15+Math.sin(t*2)*0.1})`;ctx.lineWidth=size*0.012;
+  ctx.beginPath();ctx.moveTo(cx-size*0.3,size*0.96);ctx.lineTo(cx-size*0.15,size*0.92);ctx.lineTo(cx-size*0.05,size*0.95);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx+size*0.1,size*0.94);ctx.lineTo(cx+size*0.22,size*0.97);ctx.stroke();
 }
+
 
 function drawMiniJimmie(ctx, size, jdef) {
   ctx.clearRect(0,0,size,size);
@@ -2394,9 +2494,9 @@ window.openJimmiePanel = function(jimmieId) {
   document.getElementById('jp-cp').textContent = totalCP;
 
   // Candy
-  const candy = (typeof G.candy === 'object' ? G.candy[j.rarity] : G.candy) || 0;
+  const candy = G.candy || 0;
   const cost = candyCost(j.rarity);
-  document.getElementById('jp-candy-count').textContent = candy + ' ' + j.rarity + '-godis';
+  document.getElementById('jp-candy-count').textContent = candy + ' godis';
   document.getElementById('jp-cost').textContent = cost + ' 🍬';
   document.getElementById('jp-powerup').disabled = candy < cost;
 
@@ -2409,25 +2509,26 @@ function closeJimmiePanel() {
 }
 
 function candyCost(rarity) {
-  return {Common:3,Uncommon:5,Rare:8,Epic:12,Legendary:20,Mythic:50}[rarity] || 3;
+  // Flat cost — same candy for all
+  return {Common:3,Uncommon:5,Rare:8,Epic:15,Legendary:30,Mythic:80}[rarity] || 3;
 }
 
 function powerUpJimmie() {
   if (!panelJimmie) return;
   const j = panelJimmie.j;
   const cost = candyCost(j.rarity);
-  const candy = (typeof G.candy === 'object' ? G.candy[j.rarity] : 0) || 0;
+  const candy = G.candy || 0;
   if (candy < cost) { toast('Inte tillräckligt med godis!'); return; }
 
-  G.candy[j.rarity] = candy - cost;
+  G.candy = candy - cost;
   if (!G.jimmieCP) G.jimmieCP = {};
   G.jimmieCP[panelJimmie.id] = (G.jimmieCP[panelJimmie.id] || 0) + Math.round(j.cp * 0.15);
 
   // Update display
   const newCP = Math.floor(j.cp * (0.9 + G.lv * 0.02)) + G.jimmieCP[panelJimmie.id];
   document.getElementById('jp-cp').textContent = newCP;
-  const newCandy = G.candy[j.rarity];
-  document.getElementById('jp-candy-count').textContent = newCandy + ' ' + j.rarity + '-godis';
+  const newCandy = G.candy;
+  document.getElementById('jp-candy-count').textContent = newCandy + ' godis';
   document.getElementById('jp-powerup').disabled = newCandy < cost;
 
   updateQuests('powerup', {});
@@ -2528,20 +2629,13 @@ function renderGarage() {
   const grid = document.getElementById('garage-grid');
   const entries = JIMMIES.filter(j => G.caught[j.id] > 0);
   document.getElementById('garage-count').textContent = entries.reduce((a,j) => a+(G.caught[j.id]||0), 0);
-  // Per-rarity candy display
+  // Candy display — single total
   const candyRow = document.getElementById('garage-candy-row');
   if (candyRow) {
-    const RARITY_ORDER = ['Common','Uncommon','Rare','Epic','Legendary','Mythic'];
-    candyRow.innerHTML = RARITY_ORDER.map(r => {
-      const amt = (typeof G.candy==='object' ? G.candy[r] : 0) || 0;
-      const col = RC[r];
-      return `<div style="display:flex;align-items:center;gap:3px;background:${col}18;border:1px solid ${col}44;border-radius:50px;padding:3px 8px;font-size:0.65rem;font-weight:800;color:${col==='#9e9e9e'?'#666':col}">
-        <span>🍬</span><span style="color:#555;margin:0 1px">${r.substring(0,3)}:</span><span>${amt}</span>
-      </div>`;
-    }).filter((_,i) => {
-      const r = RARITY_ORDER[i];
-      return ((typeof G.candy==='object' ? G.candy[r] : 0)||0) > 0;
-    }).join('') || '<span style="font-size:0.72rem;color:#bbb;font-weight:600">Inga godisar ännu</span>';
+    const total = G.candy || 0;
+    candyRow.innerHTML = total > 0
+      ? `<div style="display:flex;align-items:center;gap:5px;background:#ff66aa18;border:1px solid #ff66aa44;border-radius:50px;padding:4px 12px;font-size:0.72rem;font-weight:800;color:#cc4488">🍬 ${total} Godis</div>`
+      : '<span style="font-size:0.72rem;color:#bbb;font-weight:600">Inga godisar ännu</span>';
   }
   if (entries.length === 0) {
     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:80px 20px;color:#bbb">
