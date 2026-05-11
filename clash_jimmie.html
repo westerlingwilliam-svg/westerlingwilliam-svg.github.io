@@ -12,13 +12,14 @@
   --bg:#1a2e1a;--panel:#0d1f0d;--card:rgba(255,255,255,0.08);
   --border:rgba(255,255,255,0.12);--font:'Nunito',sans-serif;--title:'Cinzel',serif;
 }
+html{font-size:clamp(14px,2.2vw,20px)}
 html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:white;font-family:var(--font)}
 
 /* ── TOP HUD ── */
 #hud{position:fixed;top:0;left:0;right:0;z-index:100;background:linear-gradient(180deg,rgba(0,0,0,0.85),rgba(0,0,0,0.5),transparent);padding:8px 10px 20px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.res-pill{background:rgba(0,0,0,0.6);border:1.5px solid rgba(255,255,255,0.15);border-radius:50px;padding:5px 10px 5px 6px;display:flex;align-items:center;gap:5px;font-size:0.72rem;font-weight:800;cursor:pointer;transition:.2s;backdrop-filter:blur(6px)}
+.res-pill{background:rgba(0,0,0,0.7);border:1.5px solid rgba(255,255,255,0.2);border-radius:50px;padding:6px 12px 6px 8px;display:flex;align-items:center;gap:6px;font-size:0.85rem;font-weight:800;cursor:pointer;transition:.2s;backdrop-filter:blur(6px)}
 .res-pill:active{transform:scale(0.94)}
-.res-icon{font-size:1.1rem}
+.res-icon{font-size:1.3rem}
 .res-val{min-width:36px;text-align:right}
 .res-max{font-size:0.55rem;color:rgba(255,255,255,0.4);font-weight:600}
 #menu-btn{margin-left:auto;background:rgba(0,0,0,0.6);border:1.5px solid rgba(255,255,255,0.2);border-radius:50px;padding:6px 14px;font-size:0.75rem;font-weight:900;color:white;cursor:pointer;font-family:var(--font);backdrop-filter:blur(6px);text-decoration:none;display:flex;align-items:center;gap:5px}
@@ -29,23 +30,23 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
 #base-canvas{display:block;cursor:crosshair}
 
 /* ── BOTTOM NAV ── */
-#bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:linear-gradient(0deg,rgba(0,0,0,0.9),rgba(0,0,0,0.6),transparent);padding:12px 8px 8px;display:flex;justify-content:space-around;align-items:flex-end}
-.nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 10px;border-radius:16px;transition:.15s;min-width:56px}
+#bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(10,20,10,0.97);border-top:1.5px solid rgba(255,215,0,0.2);padding:10px 8px 10px;display:flex;justify-content:space-around;align-items:center;box-shadow:0 -4px 20px rgba(0,0,0,0.5)}
+.nav-btn{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:8px 12px;border-radius:16px;transition:.15s;min-width:4rem}
 .nav-btn:active{transform:scale(0.88)}
 .nav-btn.active{background:rgba(255,255,255,0.12)}
-.nav-icon{font-size:1.6rem;line-height:1}
-.nav-lbl{font-size:0.58rem;font-weight:800;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:.5px}
+.nav-icon{font-size:2rem;line-height:1}
+.nav-lbl{font-size:0.7rem;font-weight:800;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:.5px}
 .nav-btn.active .nav-lbl{color:var(--gold)}
 
 /* ── PANELS ── */
-.panel{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(180deg,#1a2e10,#0d1a08);border-radius:28px 28px 0 0;border-top:1.5px solid rgba(255,255,255,0.1);z-index:90;transform:translateY(100%);transition:transform .4s cubic-bezier(.34,1.56,.64,1);max-height:75vh;display:flex;flex-direction:column;box-shadow:0 -8px 40px rgba(0,0,0,0.5)}
-.panel.open{transform:translateY(0)}
+.panel{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(180deg,#1c3010,#0d1a08);border-radius:28px 28px 0 0;border-top:1.5px solid rgba(255,215,0,0.2);z-index:95;transform:translateY(calc(100% + 80px));transition:transform .4s cubic-bezier(.34,1.56,.64,1);max-height:82vh;display:flex;flex-direction:column;box-shadow:0 -8px 40px rgba(0,0,0,0.6)}
+.panel.open{transform:translateY(0);padding-bottom:80px}
 .panel-handle{width:40px;height:5px;background:rgba(255,255,255,0.2);border-radius:3px;margin:10px auto 0;flex-shrink:0}
-.panel-title{font-family:var(--title);font-size:1.1rem;color:var(--gold);text-align:center;padding:10px 16px 6px;flex-shrink:0;letter-spacing:1px}
+.panel-title{font-family:var(--title);font-size:1.3rem;color:var(--gold);text-align:center;padding:12px 16px 8px;flex-shrink:0;letter-spacing:1.5px}
 .panel-scroll{flex:1;overflow-y:auto;padding:10px 14px 100px}
 
 /* ── SECTION HEADERS ── */
-.section-hdr{font-size:0.65rem;font-weight:800;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:2px;margin:14px 0 8px;display:flex;align-items:center;gap:8px}
+.section-hdr{font-size:0.78rem;font-weight:800;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:2px;margin:16px 0 10px;display:flex;align-items:center;gap:8px}
 .section-hdr::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.08)}
 
 /* ── BUILDING CARDS ── */
@@ -54,19 +55,19 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
 .build-card:active{transform:scale(0.92)}
 .build-card.locked{opacity:0.35;cursor:not-allowed}
 .build-card.maxed{border-color:var(--gold);background:rgba(255,215,0,0.06)}
-.bc-icon{font-size:2.2rem;margin-bottom:4px}
-.bc-name{font-size:0.65rem;font-weight:800;color:white;line-height:1.3}
-.bc-cost{font-size:0.58rem;color:var(--gold);margin-top:3px;font-weight:700}
+.bc-icon{font-size:2.6rem;margin-bottom:6px}
+.bc-name{font-size:0.78rem;font-weight:800;color:white;line-height:1.3}
+.bc-cost{font-size:0.72rem;color:var(--gold);margin-top:4px;font-weight:700}
 .bc-count{font-size:0.55rem;color:rgba(255,255,255,0.4);margin-top:2px}
 
 /* ── BUILDER QUEUE ── */
 #builder-area{padding:10px 14px 6px;background:rgba(0,0,0,0.3);border-top:1px solid var(--border);flex-shrink:0}
 .builder-row{display:flex;gap:8px}
 .builder-slot{flex:1;background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:8px 10px;display:flex;align-items:center;gap:8px}
-.builder-icon{font-size:1.4rem}
+.builder-icon{font-size:1.8rem}
 .builder-info{flex:1;min-width:0}
-.builder-name{font-size:0.65rem;font-weight:800;color:rgba(255,255,255,0.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.builder-timer{font-size:0.72rem;font-weight:900;color:var(--gold)}
+.builder-name{font-size:0.82rem;font-weight:800;color:rgba(255,255,255,0.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.builder-timer{font-size:0.85rem;font-weight:900;color:var(--gold)}
 .builder-idle{color:rgba(255,255,255,0.35);font-size:0.65rem}
 
 /* ── TROOP CARDS ── */
@@ -156,6 +157,156 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
 #toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.88);backdrop-filter:blur(8px);color:white;padding:10px 22px;border-radius:50px;font-size:0.82rem;font-weight:700;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap;border:1px solid rgba(255,255,255,0.1)}
 #toast.show{opacity:1}
 
+
+
+/* ── SHOP PANEL ── */
+#shop-panel{position:fixed;bottom:0;left:0;right:0;z-index:96;background:linear-gradient(180deg,#141e10,#0a110a);border-radius:28px 28px 0 0;border-top:2px solid rgba(255,215,0,0.3);transform:translateY(calc(100% + 80px));transition:transform .4s cubic-bezier(.34,1.56,.64,1);max-height:82vh;display:flex;flex-direction:column;box-shadow:0 -8px 40px rgba(0,0,0,0.7);padding-bottom:80px}
+#shop-panel.open{transform:translateY(0)}
+#shop-handle{width:44px;height:5px;background:rgba(255,215,0,0.3);border-radius:3px;margin:12px auto 0;flex-shrink:0}
+#shop-header{padding:10px 16px 6px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+#shop-title{font-family:var(--title);font-size:1.2rem;color:var(--gold);letter-spacing:1.5px}
+#shop-close{background:rgba(255,255,255,0.08);border:none;color:rgba(255,255,255,0.6);width:32px;height:32px;border-radius:50%;font-size:1rem;cursor:pointer;font-family:var(--font)}
+#shop-tabs{display:flex;gap:6px;padding:0 14px 10px;flex-shrink:0}
+.shop-tab{flex:1;padding:7px 4px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.08);border-radius:10px;font-size:0.65rem;font-weight:800;color:rgba(255,255,255,0.4);cursor:pointer;text-align:center;text-transform:uppercase;letter-spacing:.5px;transition:.2s}
+.shop-tab.active{background:rgba(255,215,0,0.1);border-color:rgba(255,215,0,0.4);color:var(--gold)}
+#shop-scroll{flex:1;overflow-y:auto;padding:8px 14px 20px}
+#shop-scroll::-webkit-scrollbar{width:3px}
+#shop-scroll::-webkit-scrollbar-thumb{background:rgba(255,215,0,0.3);border-radius:2px}
+
+/* Shop building card */
+.shop-card{background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.08);border-radius:18px;padding:14px;margin-bottom:10px;display:flex;gap:12px;align-items:center;transition:.2s}
+.shop-card.can-build{border-color:rgba(255,215,0,0.25);background:rgba(255,215,0,0.04)}
+.shop-card.locked{opacity:0.45}
+.shop-card.maxed{border-color:rgba(100,200,100,0.3);background:rgba(100,200,100,0.04)}
+.shop-icon{font-size:2.4rem;width:52px;height:52px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);border-radius:14px;flex-shrink:0}
+.shop-info{flex:1;min-width:0}
+.shop-name{font-size:0.88rem;font-weight:900;color:white;margin-bottom:2px}
+.shop-desc{font-size:0.62rem;color:rgba(255,255,255,0.45);line-height:1.4;margin-bottom:5px}
+.shop-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.shop-pill{font-size:0.6rem;font-weight:700;padding:2px 8px;border-radius:50px}
+.shop-pill.count{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6)}
+.shop-pill.cost{background:rgba(255,215,0,0.1);color:var(--gold);border:1px solid rgba(255,215,0,0.2)}
+.shop-pill.time{background:rgba(100,150,255,0.1);color:#aabbff}
+.shop-pill.unlock{background:rgba(255,100,0,0.1);color:#ffaa66}
+.shop-pill.maxed{background:rgba(100,255,100,0.1);color:#88ff88}
+.shop-build-btn{background:linear-gradient(135deg,var(--gold),#cc8800);color:#1a0a00;border:none;padding:10px 16px;border-radius:12px;font-size:0.78rem;font-weight:900;cursor:pointer;font-family:var(--font);flex-shrink:0;white-space:nowrap;box-shadow:0 3px 12px rgba(255,215,0,0.3);transition:.15s}
+.shop-build-btn:active{transform:scale(0.92)}
+.shop-build-btn:disabled{background:#444;color:#888;box-shadow:none;cursor:not-allowed}
+
+/* Placement mode overlay */
+#place-overlay{position:fixed;inset:0;z-index:200;pointer-events:none;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:90px}
+#place-banner{
+  background:linear-gradient(160deg,rgba(10,30,10,0.97),rgba(0,15,5,0.98));
+  border:2px solid rgba(255,215,0,0.5);
+  border-radius:24px;
+  padding:16px 20px;
+  display:flex;align-items:center;gap:14px;
+  box-shadow:0 -4px 40px rgba(0,0,0,0.6),0 0 0 1px rgba(255,255,255,0.05);
+  pointer-events:all;
+  width:calc(100% - 28px);max-width:480px;
+  backdrop-filter:blur(16px);
+  animation:place-in .35s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes place-in{from{transform:translateY(30px) scale(0.95);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+#place-icon{font-size:2.4rem;flex-shrink:0;width:52px;height:52px;background:rgba(255,215,0,0.12);border-radius:14px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,215,0,0.25)}
+#place-info{flex:1;min-width:0}
+#place-title{font-family:var(--title);font-size:0.92rem;color:var(--gold);letter-spacing:.8px;line-height:1.2}
+#place-sub{font-size:0.68rem;color:rgba(255,255,255,0.5);margin-top:3px;line-height:1.4}
+#place-cancel{background:rgba(255,80,80,0.15);border:1.5px solid rgba(255,80,80,0.35);color:#ff8888;padding:10px 18px;border-radius:50px;font-size:0.75rem;font-weight:900;cursor:pointer;font-family:var(--font);pointer-events:all;white-space:nowrap}
+/* Green grid flash on buildable cells */
+.place-valid{background:rgba(0,255,100,0.18)!important}
+#place-cancel{background:rgba(255,80,80,0.15);border:1.5px solid rgba(255,80,80,0.4);color:#ff8888;padding:8px 14px;border-radius:50px;font-size:0.72rem;font-weight:900;cursor:pointer;font-family:var(--font);pointer-events:all}
+
+/* ── IMPROVED VISUALS ── */
+
+/* Animated resource pulse */
+@keyframes res-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,215,0,0.4)}50%{box-shadow:0 0 0 6px rgba(255,215,0,0)}}
+.res-pill.full{animation:res-pulse 2s infinite}
+
+/* Building tooltip */
+#btooltip{position:fixed;background:rgba(0,0,0,0.92);border:1px solid rgba(255,215,0,0.3);border-radius:12px;padding:8px 14px;font-size:0.72rem;color:white;pointer-events:none;z-index:200;transform:translateY(-110%);max-width:200px;line-height:1.6;backdrop-filter:blur(8px);box-shadow:0 4px 20px rgba(0,0,0,0.5)}
+#btooltip-name{font-weight:900;color:var(--gold);font-family:var(--title);font-size:0.78rem;margin-bottom:3px}
+#btooltip-stat{color:rgba(255,255,255,0.6);font-size:0.65rem}
+
+/* Tutorial overlay */
+#tutorial-overlay{position:fixed;inset:0;z-index:500;pointer-events:none}
+.tut-card{position:absolute;background:rgba(0,0,0,0.92);border:2px solid var(--gold);border-radius:20px;padding:16px;max-width:280px;pointer-events:all;animation:tut-in .4s cubic-bezier(.34,1.56,.64,1);box-shadow:0 8px 32px rgba(0,0,0,0.6)}
+@keyframes tut-in{from{transform:scale(0.8) translateY(20px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+.tut-card h3{font-family:var(--title);color:var(--gold);font-size:0.95rem;margin-bottom:6px}
+.tut-card p{color:rgba(255,255,255,0.8);font-size:0.78rem;line-height:1.6}
+.tut-card .tut-btn{background:linear-gradient(135deg,var(--gold),#cc8800);color:#1a0a00;border:none;padding:9px 22px;border-radius:50px;font-weight:900;cursor:pointer;font-family:var(--font);font-size:0.78rem;margin-top:10px;width:100%}
+.tut-card .tut-skip{background:none;border:none;color:rgba(255,255,255,0.3);font-size:0.65rem;cursor:pointer;margin-top:6px;display:block;width:100%;text-align:center;font-family:var(--font)}
+.tut-arrow{font-size:2rem;text-align:center;margin:4px 0;animation:tut-bounce .8s ease-in-out infinite alternate}
+@keyframes tut-bounce{from{transform:translateY(0)}to{transform:translateY(-8px)}}
+#tut-dim{position:absolute;inset:0;background:rgba(0,0,0,0.55)}
+
+/* Floating resource text */
+.float-text{position:fixed;pointer-events:none;font-weight:900;font-size:0.9rem;z-index:150;animation:float-up 1.8s forwards}
+@keyframes float-up{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-60px)}}
+
+/* Attack projectiles */
+.projectile{position:fixed;width:8px;height:8px;border-radius:50%;pointer-events:none;z-index:205}
+
+/* Builder busy pulse */
+@keyframes builder-busy{0%,100%{background:rgba(255,215,0,0.06)}50%{background:rgba(255,215,0,0.15)}}
+.builder-slot.busy{animation:builder-busy 1.5s infinite;border-color:rgba(255,215,0,0.4)!important}
+
+/* Section divider with glow */
+.section-hdr{text-shadow:0 0 10px rgba(255,215,0,0.3)}
+
+/* Panel scroll improved */
+.panel-scroll::-webkit-scrollbar{width:4px}
+.panel-scroll::-webkit-scrollbar-track{background:rgba(255,255,255,0.04)}
+.panel-scroll::-webkit-scrollbar-thumb{background:rgba(255,215,0,0.3);border-radius:2px}
+
+/* Map compass */
+#map-compass{position:fixed;top:80px;right:14px;width:44px;height:44px;background:rgba(0,0,0,0.6);border:1.5px solid rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;cursor:pointer;z-index:101;backdrop-filter:blur(6px)}
+
+/* Village name banner */
+#village-banner{position:fixed;top:72px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,rgba(0,0,0,0.8),rgba(0,40,0,0.8));border:1px solid rgba(255,215,0,0.3);border-radius:50px;padding:4px 14px;font-family:var(--title);font-size:0.7rem;color:var(--gold);letter-spacing:1px;z-index:101;backdrop-filter:blur(6px)}
+
+/* Resource bar at bottom of buildings panel */
+#resources-summary{background:rgba(0,0,0,0.4);border-radius:16px;padding:10px 14px;margin-bottom:10px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.res-sum-item{text-align:center}
+.res-sum-icon{font-size:1.4rem;margin-bottom:2px}
+.res-sum-val{font-size:0.75rem;font-weight:900;color:var(--gold)}
+.res-sum-label{font-size:0.55rem;color:rgba(255,255,255,0.4);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.res-bar{background:rgba(255,255,255,0.08);border-radius:50px;height:4px;margin-top:3px;overflow:hidden}
+.res-bar-fill{height:100%;border-radius:50px;transition:width .5s}
+
+/* Production rate badges */
+.prod-badge{display:inline-block;background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);border-radius:50px;padding:2px 8px;font-size:0.6rem;color:rgba(255,215,0,0.9);margin-top:4px}
+
+/* Attack tutorial hint */
+#attack-hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:rgba(255,255,255,0.6);pointer-events:none;z-index:1}
+#attack-hint h3{font-family:var(--title);color:var(--gold);font-size:1.2rem;margin-bottom:8px}
+#attack-hint p{font-size:0.82rem;line-height:1.6}
+
+/* Troop type badges */
+.troop-tag{font-size:0.52rem;background:rgba(255,255,255,0.08);border-radius:50px;padding:2px 6px;color:rgba(255,255,255,0.5);display:inline-block;margin-top:2px}
+.troop-tag.air{background:rgba(100,200,255,0.1);color:#66ccff}
+.troop-tag.splash{background:rgba(200,100,255,0.1);color:#cc66ff}
+.troop-tag.underground{background:rgba(150,100,50,0.2);color:#cc9966}
+
+/* Building upgrade progress ring */
+.upg-ring{position:absolute;top:2px;right:2px;width:18px;height:18px}
+
+/* Better nav styling */
+.nav-btn.active{background:rgba(255,215,0,0.1);border-radius:16px}
+.nav-btn.active .nav-icon{filter:drop-shadow(0 0 8px rgba(255,215,0,0.6))}
+
+/* Attack damage numbers */
+@keyframes dmg-float{0%{opacity:1;transform:translateY(0) scale(1)}50%{transform:translateY(-20px) scale(1.1)}100%{opacity:0;transform:translateY(-40px) scale(0.8)}}
+.dmg-num{position:fixed;pointer-events:none;font-weight:900;z-index:220;animation:dmg-float 1s forwards;font-family:var(--title)}
+
+/* Improved panel header */
+.panel-title{background:linear-gradient(180deg,rgba(255,215,0,0.05),transparent);border-bottom:1px solid rgba(255,255,255,0.05);padding-bottom:10px}
+
+/* Army capacity bar */
+#army-cap-bar{background:rgba(0,0,0,0.4);border-radius:50px;padding:8px 14px;display:flex;align-items:center;gap:10px;margin-bottom:10px}
+#army-cap-fill-wrap{flex:1;background:rgba(255,255,255,0.08);border-radius:50px;height:8px;overflow:hidden}
+#army-cap-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,#4ade80,#22c55e);transition:width .5s}
+
 /* Deploy hint */
 #deploy-hint{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
   background:rgba(0,0,0,0.8);color:white;padding:10px 20px;border-radius:50px;
@@ -172,6 +323,123 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
 .result-loot-item{text-align:center;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:10px 16px}
 .result-loot-val{font-size:1.2rem;font-weight:900;color:var(--gold)}
 .result-btn{background:linear-gradient(135deg,var(--gold),#cc8800);color:#1a0a00;border:none;padding:14px 40px;border-radius:50px;font-size:1rem;font-weight:900;cursor:pointer;font-family:var(--font)}
+
+/* ══ VISUAL OVERHAUL ══ */
+:root{--radius:20px;--radius-sm:12px;--radius-lg:28px}
+
+/* Nicer panels */
+.panel{border-radius:var(--radius-lg) var(--radius-lg) 0 0;border-top:2px solid rgba(255,215,0,0.15)}
+.panel-scroll{padding:12px 16px 100px}
+
+/* Better nav */
+#bottom-nav{background:linear-gradient(0deg,rgba(0,0,0,0.97),rgba(5,15,5,0.95));border-top:1px solid rgba(255,215,0,0.15);box-shadow:0 -4px 24px rgba(0,0,0,0.5)}
+.nav-btn{border-radius:14px;padding:8px 10px}
+.nav-btn.active{background:linear-gradient(180deg,rgba(255,215,0,0.12),rgba(255,215,0,0.06))}
+
+/* Better cards */
+.build-card{border-radius:var(--radius);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:14px 10px}
+.build-card.can-build{border-color:rgba(255,215,0,0.35);background:rgba(255,215,0,0.06)}
+.build-card:hover{border-color:rgba(255,215,0,0.25);transform:translateY(-1px)}
+.shop-card{border-radius:var(--radius)}
+.shop-card.can-build{background:rgba(255,215,0,0.05)}
+
+/* Modals */
+.modal-card{border-radius:var(--radius-lg)}
+.modal-header{border-radius:var(--radius-lg) var(--radius-lg) 0 0;background:linear-gradient(135deg,rgba(255,215,0,0.08),rgba(0,0,0,0.3))}
+
+/* Buttons */
+.modal-btn.primary{background:linear-gradient(135deg,#FFD700,#cc8800);border-radius:50px;font-size:0.88rem;letter-spacing:.3px}
+.modal-btn.cancel{border-radius:50px;border:1px solid rgba(255,255,255,0.1)}
+.shop-build-btn{border-radius:14px;padding:10px 18px;font-size:0.8rem}
+.hero-lvup-btn{letter-spacing:.3px}
+
+/* Builder slots */
+.builder-slot{border-radius:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)}
+.builder-slot.busy{border-color:rgba(255,215,0,0.3);background:rgba(255,215,0,0.06)}
+
+/* Research cards */
+.research-card{border-radius:var(--radius);padding:14px}
+
+/* Hero cards */
+.hero-card{border-radius:var(--radius-lg);padding:18px}
+
+/* Level up */
+#levelup-splash{background:radial-gradient(ellipse at 50% 35%,rgba(40,80,20,0.5),rgba(0,0,0,0.95))}
+.lu-title{font-size:1.8rem;letter-spacing:2px}
+.lu-btn{border-radius:50px;letter-spacing:.5px;padding:14px 44px;font-size:1rem}
+
+/* Troop cards */
+.troop-card{border-radius:var(--radius-sm)}
+.troop-card.selected{box-shadow:0 0 0 2px var(--gold)}
+.at-troop{border-radius:var(--radius-sm)}
+.at-troop.selected{box-shadow:0 0 0 2px var(--gold)}
+
+/* Attack HUD */
+#attack-hud{border-bottom:1px solid rgba(255,255,255,0.06)}
+#attack-timer-circle{font-size:1.2rem;font-weight:900}
+
+/* Result overlay */
+#result-overlay{background:radial-gradient(ellipse at 50% 40%,rgba(20,50,10,0.6),rgba(0,0,0,0.9))}
+.result-loot-item{border-radius:var(--radius-sm);padding:12px 18px}
+.result-btn{border-radius:50px;letter-spacing:.5px}
+
+/* HUD resource pills */
+.res-pill{border-radius:50px;border:1.5px solid rgba(255,255,255,0.15)}
+.res-pill.full{border-color:rgba(255,100,0,0.5)!important;animation:res-pulse 1.5s infinite}
+
+/* Shop tabs */
+.shop-tab{border-radius:10px;font-size:0.66rem}
+.shop-tab.active{box-shadow:0 2px 8px rgba(255,215,0,0.2)}
+
+/* Place banner */
+#place-banner{border-radius:var(--radius);border-color:rgba(255,215,0,0.6);box-shadow:0 8px 32px rgba(0,0,0,0.5)}
+#place-cancel{border-radius:50px}
+
+/* Army capacity bar */
+#army-cap-bar{border-radius:12px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.06)}
+
+/* Toast */
+#toast{border-radius:var(--radius);padding:11px 22px;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+
+/* Onboarding hint */
+#onboard-hint{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px)
+#onboard-inner{transform:none;background:rgba(0,0,0,0.92);border:2px solid var(--gold);border-radius:var(--radius-lg);padding:24px;max-width:300px;text-align:center;z-index:500;box-shadow:0 24px 60px rgba(0,0,0,0.6)}
+#onboard-hint h2{font-family:var(--title);color:var(--gold);font-size:1.1rem;margin-bottom:10px}
+#onboard-hint p{color:rgba(255,255,255,0.75);font-size:0.82rem;line-height:1.6;margin-bottom:14px}
+#onboard-hint button{background:linear-gradient(135deg,var(--gold),#cc8800);color:#1a0a00;border:none;border-radius:50px;padding:12px 28px;font-weight:900;font-size:0.88rem;cursor:pointer;font-family:var(--font);width:100%}
+
+
+/* Settings panel */
+
+#settings-overlay{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px}
+#settings-overlay.show{display:flex}
+#settings-card{background:linear-gradient(160deg,#1a2e10,#0d1a08);border:1.5px solid rgba(255,215,0,0.2);border-radius:28px;width:100%;max-width:340px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.6);animation:modal-in .3s cubic-bezier(.34,1.56,.64,1)}
+#settings-header{background:rgba(0,0,0,0.3);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.06)}
+#settings-header h2{font-family:var(--title);color:var(--gold);font-size:1rem;letter-spacing:1px}
+#settings-close{background:rgba(255,255,255,0.06);border:none;color:rgba(255,255,255,0.5);width:32px;height:32px;border-radius:50%;font-size:1rem;cursor:pointer;font-family:var(--font)}
+#settings-body{padding:16px 20px 24px;display:flex;flex-direction:column;gap:10px}
+.settings-item{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:.2s}
+.settings-item:active{background:rgba(255,255,255,0.08)}
+.settings-item-icon{font-size:1.4rem;width:36px;text-align:center}
+.settings-item-info{flex:1}
+.settings-item-title{font-size:0.85rem;font-weight:800;color:white}
+.settings-item-desc{font-size:0.65rem;color:rgba(255,255,255,0.4);margin-top:2px}
+.settings-item.danger{border-color:rgba(255,80,80,0.2);background:rgba(255,80,80,0.04)}
+.settings-item.danger .settings-item-title{color:#ff8888}
+.settings-item.danger:active{background:rgba(255,80,80,0.1)}
+/* Reset confirm */
+#reset-confirm-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px}
+#reset-confirm-overlay.show{display:flex}
+#reset-confirm-card{background:linear-gradient(160deg,#2a0a0a,#1a0505);border:2px solid rgba(255,80,80,0.3);border-radius:28px;padding:0;width:100%;max-width:320px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.7);animation:modal-in .3s cubic-bezier(.34,1.56,.64,1)}
+#reset-confirm-top{padding:28px 24px 20px;text-align:center}
+#reset-confirm-top .rc-emoji{font-size:3rem;margin-bottom:10px}
+#reset-confirm-top h3{font-family:var(--title);color:#ff6666;font-size:1.1rem;margin-bottom:8px}
+#reset-confirm-top p{color:rgba(255,255,255,0.6);font-size:0.8rem;line-height:1.6}
+#reset-confirm-btns{display:flex;gap:0;border-top:1px solid rgba(255,255,255,0.06)}
+#reset-confirm-btns button{flex:1;padding:16px;border:none;font-weight:900;font-size:0.88rem;cursor:pointer;font-family:var(--font)}
+#rc-cancel{background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.6);border-right:1px solid rgba(255,255,255,0.06)!important}
+#rc-confirm{background:linear-gradient(135deg,rgba(255,60,60,0.8),rgba(200,20,20,0.9));color:white}
+
 </style>
 </head>
 <body>
@@ -192,7 +460,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
   </div>
   <div id="jhall-badge">🏛️ JH <span id="jh-level">1</span></div>
   <div class="res-pill" title="Gems" style="background:rgba(0,100,0,0.6)"><div class="res-icon">💎</div><div><div class="res-val" id="gem-val">50</div></div></div>
-  <a href="games.html" id="menu-btn">🏠 Meny</a>
+  <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+    <a href="games.html" style="background:rgba(0,0,0,0.6);border:1.5px solid rgba(255,255,255,0.2);border-radius:50px;padding:7px 14px;font-size:0.75rem;font-weight:900;color:white;text-decoration:none;display:flex;align-items:center;gap:5px;white-space:nowrap">🏠 Meny</a>
+    <button onclick="openSettings()" style="background:rgba(0,0,0,0.6);border:1.5px solid rgba(255,255,255,0.2);border-radius:50%;width:36px;height:36px;font-size:1.1rem;cursor:pointer;color:white;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:sans-serif">⚙️</button>
+  </div>
 </div>
 
 <!-- ── GAME CANVAS ── -->
@@ -310,7 +581,125 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
   <button class="lu-btn" onclick="closeLevelUp()">OKEJ!</button>
 </div>
 
+<!-- Building tooltip -->
+<div id="btooltip" style="display:none">
+  <div id="btooltip-name">Jimmie Hall</div>
+  <div id="btooltip-stat">Klicka för info</div>
+</div>
+
+<!-- Shop / Build panel -->
+<div id="shop-panel">
+  <div id="shop-handle"></div>
+  <div id="shop-header">
+    <div id="shop-title">🏗️ BYGG BYGGNADER</div>
+    <button id="shop-close" onclick="closeShopPanel()">✕</button>
+  </div>
+  <div id="shop-tabs">
+    <div class="shop-tab" id="stab-defense" onclick="switchShopTab('defense')">🛡️ Försvar</div>
+    <div class="shop-tab active" id="stab-resource" onclick="switchShopTab('resource')">💰 Resurser</div>
+    <div class="shop-tab" id="stab-military" onclick="switchShopTab('military')">⚔️ Militär</div>
+    <div class="shop-tab" id="stab-wall" onclick="switchShopTab('wall')">🧱 Murar</div>
+  </div>
+  <div id="shop-scroll"></div>
+</div>
+
+<!-- Placement mode banner -->
+<div id="place-overlay" style="display:none">
+  <div id="place-banner">
+    <div id="place-icon">🏗️</div>
+    <div id="place-info">
+      <div id="place-title">Placerar byggnad</div>
+      <div id="place-sub">Tryck på en grön ruta på kartan</div>
+    </div>
+    <button id="place-cancel" onclick="cancelPlacement()">✕ Avbryt</button>
+  </div>
+</div>
+
+<!-- Build button on map -->
+<button id="build-fab" onclick="openShopPanel()" style="position:fixed;bottom:90px;right:16px;z-index:101;background:linear-gradient(135deg,var(--gold),#cc8800);color:#1a0a00;border:none;border-radius:50px;padding:12px 20px;font-size:0.92rem;font-weight:900;cursor:pointer;font-family:var(--font);box-shadow:0 4px 24px rgba(255,215,0,0.5);display:flex;align-items:center;gap:7px;animation:build-pulse 2s ease-in-out infinite">🏗️ Bygg</button>
+<style>@keyframes build-pulse{0%,100%{box-shadow:0 4px 24px rgba(255,215,0,0.5)}50%{box-shadow:0 4px 32px rgba(255,215,0,0.9)}}</style>
+
+<!-- Map compass -->
+<div id="map-compass" onclick="centerCamera();toast('Centrerar på Jimmie Hall 🏛️')" title="Centrera kameran">🧭</div>
+
+<!-- Village name -->
+<div id="village-banner">👑 JIMMIE-RIKET</div>
+
+<!-- Tutorial overlay -->
+<div id="tutorial-overlay">
+  <div id="tut-dim" style="display:none"></div>
+</div>
+
+<!-- Attack hint (shown before first troop placed) -->
 <div id="deploy-hint">👆 Tap kartan för att placera trupper</div>
+<div id="onboard-hint" style="display:none">
+  <div style="font-size:3rem;margin-bottom:8px">🏗️</div>
+  <h2>Välkommen till Jimmie-Riket!</h2>
+  <p>Du har <strong>300 Riksdaler 🪙</strong> och <strong>300 SD-Saft 🧪</strong>.<br><br>
+  Tryck på <strong>🏗️ Bygg</strong>-knappen och köp en <strong>Riksdaler-Gruva</strong> och <strong>SD-Saft-Samlare</strong> för att börja producera resurser!</p>
+  <p style="font-size:0.72rem;color:rgba(255,255,255,0.4);margin-bottom:12px">Klicka på byggnaden för att samla in resurser när ikonen visas</p>
+  <button onclick="document.getElementById('onboard-hint').style.display='none';openShopPanel()">🏗️ Börja bygga!</button>
+</div>
+<!-- Settings panel -->
+<div id="settings-overlay">
+  <div id="settings-card">
+    <div id="settings-header">
+      <h2>⚙️ INSTÄLLNINGAR</h2>
+      <button id="settings-close" onclick="closeSettings()">✕</button>
+    </div>
+    <div id="settings-body">
+      <div class="settings-item" onclick="closeSettings();window.location.href='games.html'">
+        <div class="settings-item-icon">🏠</div>
+        <div class="settings-item-info">
+          <div class="settings-item-title">Tillbaka till menyn</div>
+          <div class="settings-item-desc">Gå tillbaka till games.html</div>
+        </div>
+        <div style="color:rgba(255,255,255,0.25);font-size:1.1rem">›</div>
+      </div>
+      <div class="settings-item" onclick="closeSettings();openShopPanel()">
+        <div class="settings-item-icon">🏗️</div>
+        <div class="settings-item-info">
+          <div class="settings-item-title">Bygg byggnader</div>
+          <div class="settings-item-desc">Öppna byggnadsmenyn</div>
+        </div>
+        <div style="color:rgba(255,255,255,0.25);font-size:1.1rem">›</div>
+      </div>
+      <div class="settings-item" onclick="centerCamera();closeSettings()">
+        <div class="settings-item-icon">🧭</div>
+        <div class="settings-item-info">
+          <div class="settings-item-title">Centrera kameran</div>
+          <div class="settings-item-desc">Gå tillbaka till Jimmie Hall</div>
+        </div>
+        <div style="color:rgba(255,255,255,0.25);font-size:1.1rem">›</div>
+      </div>
+      <div style="font-size:0.62rem;color:rgba(255,255,255,0.2);text-align:center;padding:4px 0">VERSION — DEMO</div>
+      <div class="settings-item danger" onclick="showResetConfirm()">
+        <div class="settings-item-icon">🗑️</div>
+        <div class="settings-item-info">
+          <div class="settings-item-title">Återställ progress</div>
+          <div class="settings-item-desc">Tar bort all sparad data permanent</div>
+        </div>
+        <div style="color:rgba(255,80,80,0.5);font-size:1.1rem">›</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Reset confirm -->
+<div id="reset-confirm-overlay">
+  <div id="reset-confirm-card">
+    <div id="reset-confirm-top">
+      <div class="rc-emoji">💥</div>
+      <h3>Återställ allt?</h3>
+      <p>Din by, alla byggnader, trupper och resurser raderas permanent. Det går inte att ångra.</p>
+    </div>
+    <div id="reset-confirm-btns">
+      <button id="rc-cancel" onclick="closeResetConfirm()">Avbryt</button>
+      <button id="rc-confirm" onclick="executeReset()">Ja, radera allt</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
@@ -352,11 +741,11 @@ const BUILDING_TYPES={
    stats:lv=>`DPS: ${[80,108,130,160,192,224,280,320][lv-1]} (Luft) | HP: ${[900,950,1000,1050,1100,1150,1200,1300][lv-1]}`},
   'tesla_torn':{name:'Tesla-Torn',icon:'⚡',desc:'Gömd tills fienden är nära. Elektrisk skada.',size:2,maxLv:6,costGold:[1000,2000,4000,8000,16000,32000],buildTime:[300,600,1200,2400,4800,9600],hp:[600,700,800,900,1000,1100],dps:[17,21,26,33,41,51],limit:2,category:'defense',unlockJH:5,
    stats:lv=>`DPS: ${[17,21,26,33,41,51][lv-1]} (Dold) | HP: ${[600,700,800,900,1000,1100][lv-1]}`},
-  'riksdaler_gruva':{name:'Riksdaler-Gruva',icon:'⛏️',desc:'Producerar Riksdaler automatiskt.',size:2,maxLv:8,costGold:[150,300,600,1200,2400,4800,9600,19200],buildTime:[20,40,80,160,320,640,1920,3840],goldPerHour:[120,180,240,360,480,600,780,960],limit:3,category:'resource',
+  'riksdaler_gruva':{name:'Riksdaler-Gruva',icon:'⛏️',desc:'Producerar Riksdaler automatiskt.',size:2,maxLv:8,costGold:[150,300,600,1200,2400,4800,9600,19200],buildTime:[20,40,80,160,320,640,1920,3840],goldPerHour:[120,180,240,360,480,600,780,960],buildingCap:[500,750,1000,1500,2000,3000,4000,5000],limit:3,category:'resource',
    stats:lv=>`${[120,180,240,360,480,600,780,960][lv-1]} Riksdaler/tim`},
   'riksdaler_forrad':{name:'Riksdaler-Förråd',icon:'💰',desc:'Lagrar Riksdaler.',size:3,maxLv:8,costGold:[200,400,800,1600,3200,6400,12800,25600],buildTime:[30,60,120,240,480,960,2880,5760],capacity:[1500,3000,6000,12000,25000,50000,100000,200000],limit:2,category:'resource',unlockJH:2,
    stats:lv=>`Kapacitet: ${[1500,3000,6000,12000,25000,50000,100000,200000][lv-1].toLocaleString()}`},
-  'saft_samlare':{name:'SD-Saft-Samlare',icon:'🧫',desc:'Producerar SD-Saft automatiskt.',size:2,maxLv:8,costElixir:[150,300,600,1200,2400,4800,9600,19200],buildTime:[20,40,80,160,320,640,1920,3840],elixirPerHour:[120,180,240,360,480,600,780,960],limit:3,category:'resource',
+  'saft_samlare':{name:'SD-Saft-Samlare',icon:'🧫',desc:'Producerar SD-Saft automatiskt.',size:2,maxLv:8,costElixir:[150,300,600,1200,2400,4800,9600,19200],buildTime:[20,40,80,160,320,640,1920,3840],elixirPerHour:[120,180,240,360,480,600,780,960],buildingCap:[500,750,1000,1500,2000,3000,4000,5000],limit:3,category:'resource',
    stats:lv=>`${[120,180,240,360,480,600,780,960][lv-1]} Saft/tim`},
   'saft_tank':{name:'SD-Saft-Tank',icon:'🫙',desc:'Lagrar SD-Saft.',size:3,maxLv:8,costGold:[200,400,800,1600,3200,6400,12800,25600],buildTime:[30,60,120,240,480,960,2880,5760],capacity:[1500,3000,6000,12000,25000,50000,100000,200000],limit:2,category:'resource',unlockJH:2,
    stats:lv=>`Kapacitet: ${[1500,3000,6000,12000,25000,50000,100000,200000][lv-1].toLocaleString()}`},
@@ -366,7 +755,7 @@ const BUILDING_TYPES={
    stats:_=>`Möjliggör truppforskning`},
   'arme_lager':{name:'Armélager',icon:'🏕️',desc:'Ökar kapaciteten för trupper.',size:3,maxLv:8,costElixir:[150,300,600,1200,2400,4800,9600,19200],buildTime:[20,40,80,160,320,640,1920,3840],capacity:[20,30,40,60,80,100,120,150],limit:2,category:'military',
    stats:lv=>`Armé-kapacitet: ${[20,30,40,60,80,100,120,150][lv-1]}`},
-  'dark_bohrare':{name:'Dark Elixir-Borr',icon:'🖤',desc:'Utvinner Jimmie-Kraft djupt under marken.',size:2,maxLv:6,costGold:[3000,6000,12000,24000,48000,96000],buildTime:[360,720,1440,2880,5760,11520],darkPerHour:[20,40,60,80,100,120],limit:1,category:'resource',unlockJH:5,
+  'dark_bohrare':{name:'Dark Elixir-Borr',icon:'🖤',desc:'Utvinner Jimmie-Kraft djupt under marken.',size:2,maxLv:6,costGold:[3000,6000,12000,24000,48000,96000],buildTime:[360,720,1440,2880,5760,11520],darkPerHour:[20,40,60,80,100,120],buildingCap:[100,200,300,400,500,600],limit:1,category:'resource',unlockJH:5,
    stats:lv=>`${[20,40,60,80,100,120][lv-1]} J-Kraft/tim`},
   'mur':{name:'Mur',icon:'🧱',desc:'Blockerar angripare. Uppgradera för starkare murar.',size:1,maxLv:8,costGold:[50,100,300,1000,2000,5000,10000,30000],buildTime:[0,5,10,30,60,120,300,600],hp:[300,500,700,1000,1500,2500,4000,7000],limit:40,category:'wall',
    stats:lv=>`HP: ${[300,500,700,1000,1500,2500,4000,7000][lv-1]}`},
@@ -417,7 +806,7 @@ const RESEARCH_TYPES=[
 // ── GAME STATE ─────────────────────────────────────────────────────
 const DEFAULT_STATE={
   jh_level:1,
-  gold:250, elixir:250, dark:0,
+  gold:300, elixir:300, dark:0,
   gold_cap:500, elixir_cap:500, dark_cap:100,
   buildings:[], // {id,type,lv,x,y,upgrading:false,upgradeEnd:0}
   builders:[{id:0,name:'Björn',busy:false,task:null,endTime:0},{id:1,name:'Sven',busy:false,task:null,endTime:0},{id:2,name:'Karin',busy:false,task:null,endTime:0},{id:3,name:'Lars',busy:false,task:null,endTime:0}],
@@ -439,10 +828,24 @@ const DEFAULT_STATE={
 };
 let G=JSON.parse(JSON.stringify(DEFAULT_STATE));
 
-function saveGame(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(G));}catch(e){}}
+function saveGame(){try{G.lastSaveSec=Date.now()/1000;localStorage.setItem(SAVE_KEY,JSON.stringify(G));}catch(e){}}
 function loadGame(){try{const s=localStorage.getItem(SAVE_KEY);if(s){
     const saved=JSON.parse(s);
     G={...DEFAULT_STATE,...saved};
+    // ── Offline earnings ──
+    const nowSec=Date.now()/1000;
+    const offlineSec=Math.min(nowSec-(saved.lastSaveSec||nowSec), 8*3600); // max 8h offline
+    if(offlineSec>60){
+      G.buildings.forEach(b=>{
+        const bt=BUILDING_TYPES[b.type];if(!bt||b.upgrading)return;
+        const lv=b.lv-1;
+        if(bt.goldPerHour){const cap=bt.buildingCap?bt.buildingCap[Math.min(lv,bt.buildingCap.length-1)]:500;b.stored=Math.min((b.stored||0)+bt.goldPerHour[lv]/3600*offlineSec,cap);b.storeType='gold';}
+        if(bt.elixirPerHour){const cap=bt.buildingCap?bt.buildingCap[Math.min(lv,bt.buildingCap.length-1)]:500;b.stored=Math.min((b.stored||0)+bt.elixirPerHour[lv]/3600*offlineSec,cap);b.storeType='elixir';}
+        if(bt.darkPerHour){const cap=bt.buildingCap?bt.buildingCap[Math.min(lv,bt.buildingCap.length-1)]:100;b.stored=Math.min((b.stored||0)+bt.darkPerHour[lv]/3600*offlineSec,cap);b.storeType='dark';}
+      });
+      const mins=Math.floor(offlineSec/60);
+      setTimeout(()=>toast('⏰ Du var borta '+mins+' min. Resurser insamlade!'),2000);
+    }
     if(!G.troopLevels)G.troopLevels={};
     if(!G.spells)G.spells={};
     if(!G.heroes)G.heroes=DEFAULT_STATE.heroes;
@@ -461,23 +864,8 @@ let movingBuilding=null; // being repositioned
 function defaultBase(){
   G.buildings=[
     {id:1,type:'jimmie_hall',lv:1,gx:14,gy:13,upgrading:false,upgradeEnd:0},
-    {id:2,type:'riksdaler_gruva',lv:1,gx:9,gy:10,upgrading:false,upgradeEnd:0},
-    {id:3,type:'saft_samlare',lv:1,gx:9,gy:14,upgrading:false,upgradeEnd:0},
-    {id:4,type:'kasern',lv:1,gx:21,gy:11,upgrading:false,upgradeEnd:0},
-    {id:5,type:'kanon',lv:1,gx:12,gy:10,upgrading:false,upgradeEnd:0},
-    {id:6,type:'arme_lager',lv:1,gx:21,gy:15,upgrading:false,upgradeEnd:0},
-    // Mur ring
-    ...(() => {
-      const walls=[];let wid=50;
-      const ring=[
-        [12,12],[13,12],[14,12],[15,12],[16,12],[17,12],[18,12],
-        [12,13],[18,13],[12,14],[18,14],[12,15],[18,15],[12,16],[18,16],
-        [12,17],[13,17],[14,17],[15,17],[16,17],[17,17],[18,17],
-      ];
-      ring.forEach(([x,y])=>walls.push({id:wid++,type:'mur',lv:1,gx:x,gy:y,upgrading:false,upgradeEnd:0}));
-      return walls;
-    })(),
   ];
+  G.gold=300; G.elixir=300;
   G.nextBuildingId=200;
 }
 
@@ -503,28 +891,59 @@ initGrass();
 
 function drawBase(){
   ctx.clearRect(0,0,W,H);
-  // Grass tiles
+
+  // Sky gradient background (subtle)
+  const skyG=ctx.createLinearGradient(0,0,0,H);
+  skyG.addColorStop(0,'#1a3a1a');skyG.addColorStop(1,'#0d1a0d');
+  ctx.fillStyle=skyG;ctx.fillRect(0,0,W,H);
+
+  // Grass tiles with variation
   for(let gy=0;gy<GRID;gy++){
     for(let gx=0;gx<GRID;gx++){
       const sx=gx*CELL+camX,sy=gy*CELL+camY;
       if(sx<-CELL||sx>W||sy<-CELL||sy>H)continue;
       ctx.fillStyle=GRASS_PAT[gy][gx];ctx.fillRect(sx,sy,CELL,CELL);
-      ctx.strokeStyle='rgba(0,0,0,0.05)';ctx.lineWidth=0.5;ctx.strokeRect(sx,sy,CELL,CELL);
+      // Subtle inner shading for depth
+      if((gx+gy)%5===0){ctx.fillStyle='rgba(0,0,0,0.04)';ctx.fillRect(sx,sy,CELL,CELL);}
     }
   }
-  // River decoration
-  ctx.fillStyle='rgba(50,120,200,0.3)';
-  ctx.fillRect(0*CELL+camX,30*CELL+camY,GRID*CELL,CELL*2);
-  // Path
-  ctx.fillStyle='rgba(180,140,80,0.3)';
-  ctx.fillRect(0*CELL+camX,14*CELL+camY,8*CELL,CELL);
 
-  // Buildings
-  const sorted=[...G.buildings].sort((a,b)=>{const as=BUILDING_TYPES[a.type]?.size||1,bs=BUILDING_TYPES[b.type]?.size||1;return bs-as;});
+  // Grid lines (faint)
+  ctx.strokeStyle='rgba(0,0,0,0.06)';ctx.lineWidth=0.5;
+  for(let gy=0;gy<=GRID;gy++){ctx.beginPath();ctx.moveTo(camX,gy*CELL+camY);ctx.lineTo(GRID*CELL+camX,gy*CELL+camY);ctx.stroke();}
+  for(let gx=0;gx<=GRID;gx++){ctx.beginPath();ctx.moveTo(gx*CELL+camX,camY);ctx.lineTo(gx*CELL+camX,GRID*CELL+camY);ctx.stroke();}
+
+
+
+
+
+
+
+  // Buildings (sorted large-to-small for overlap)
+  const sorted=[...G.buildings].sort((a,b)=>{
+    const as=BUILDING_TYPES[a.type]?.size||1,bs=BUILDING_TYPES[b.type]?.size||1;
+    return bs-as;
+  });
   sorted.forEach(b=>drawBuilding(b));
 
-  // Decorations
+  // Wall connections
+  drawWallConnections();
+
+  // Decorations on top
   drawDecorations();
+
+  // Building smoke
+  drawBuildingSmoke();
+
+  // Ambient effects
+  drawAmbientEffects();
+
+  // Resource orbs
+  drawResourceOrbs();
+  // Collect particles
+  drawCollectParticles();
+  // Build mode highlights
+  drawBuildSpots();
 
   // Placing ghost
   if(placingBuilding){
@@ -539,18 +958,28 @@ function drawBase(){
 
 let ghostPos=null;
 
+// Decoration positions (computed once)
+const DECOS=[
+  {x:1,y:1,e:'🌲',s:26},{x:2,y:4,e:'🌲',s:22},{x:4,y:2,e:'🌲',s:24},
+  {x:29,y:3,e:'🌲',s:22},{x:31,y:6,e:'🌲',s:26},{x:30,y:2,e:'🌲',s:20},
+  {x:1,y:27,e:'🌲',s:24},{x:3,y:29,e:'🌲',s:22},{x:0,y:32,e:'🌲',s:26},
+  {x:29,y:29,e:'🌲',s:22},{x:31,y:26,e:'🌲',s:26},{x:5,y:31,e:'🌲',s:20},
+  {x:26,y:32,e:'🌲',s:22},{x:33,y:16,e:'🌲',s:26},{x:0,y:16,e:'🌲',s:24},
+  {x:7,y:7,e:'🪨',s:20},{x:26,y:8,e:'🪨',s:18},{x:8,y:23,e:'🪨',s:16},
+  {x:25,y:22,e:'🪨',s:20},{x:4,y:18,e:'🌿',s:18},{x:29,y:20,e:'🌿',s:18},
+  {x:3,y:12,e:'🍄',s:14},{x:30,y:10,e:'🍄',s:12},
+  {x:5,y:25,e:'🦋',s:14},{x:28,y:24,e:'🌸',s:14},
+];
 function drawDecorations(){
-  // Trees around border
-  const treePositions=[[2,2],[3,5],[5,3],[28,4],[30,6],[29,3],[2,26],[4,28],[28,28],[30,25],[6,30],[25,31]];
-  ctx.font='22px serif';ctx.textAlign='center';ctx.textBaseline='middle';
-  treePositions.forEach(([x,y])=>{
-    const sx=x*CELL+camX+CELL/2,sy=y*CELL+camY+CELL/2;
-    if(sx<-30||sx>W+30||sy<-30||sy>H+30)return;
-    ctx.fillText('🌲',sx,sy);
-  });
-  // Rocks
-  [[7,7],[26,8],[8,23],[25,22]].forEach(([x,y])=>{
-    ctx.fillText('🪨',(x+0.5)*CELL+camX,(y+0.5)*CELL+camY);
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  const t=Date.now()/1000;
+  DECOS.forEach(d=>{
+    const sx=(d.x+0.5)*CELL+camX,sy=(d.y+0.5)*CELL+camY;
+    if(sx<-40||sx>W+40||sy<-40||sy>H+40)return;
+    ctx.font=d.s+'px serif';
+    // Butterflies and flowers bob gently
+    const bob=(d.e==='🦋'||d.e==='🌸')?Math.sin(t*1.5+d.x)*3:0;
+    ctx.fillText(d.e,sx,sy+bob);
   });
 }
 
@@ -561,39 +990,81 @@ function drawBuilding(b){
   const bw=s*CELL,bh=s*CELL;
   const isSelected=selectedBuilding&&selectedBuilding.id===b.id;
 
-  // Ground shadow
-  ctx.fillStyle='rgba(0,0,0,0.2)';
-  ctx.beginPath();ctx.ellipse(sx+bw/2,sy+bh-4,bw*0.45,bh*0.15,0,0,Math.PI*2);ctx.fill();
+  // Ground shadow with rarity-based size
+  const shadowScale=BUILDING_TYPES[b.type]?.size>=3?0.42:0.38;
+  ctx.fillStyle='rgba(0,0,0,0.25)';
+  ctx.beginPath();ctx.ellipse(sx+bw/2,sy+bh-2,bw*shadowScale,bh*0.12,0,0,Math.PI*2);ctx.fill();
 
-  // Draw building based on type
+  // Draw building
   drawBuildingGraphic(ctx,b.type,b.lv,sx,sy,bw,bh);
 
-  // Selection ring
+  // Selection ring (pulsing)
   if(isSelected){
-    ctx.beginPath();ctx.arc(sx+bw/2,sy+bh/2,bw*0.55,0,Math.PI*2);
-    ctx.strokeStyle='rgba(255,215,0,0.8)';ctx.lineWidth=2.5;
+    const pulse=0.7+Math.sin(Date.now()/200)*0.3;
+    ctx.beginPath();ctx.arc(sx+bw/2,sy+bh/2,bw*0.58,0,Math.PI*2);
+    ctx.strokeStyle=`rgba(255,215,0,${pulse})`;ctx.lineWidth=2.5;
     ctx.setLineDash([6,4]);ctx.stroke();ctx.setLineDash([]);
+    // Outer glow
+    ctx.beginPath();ctx.arc(sx+bw/2,sy+bh/2,bw*0.65,0,Math.PI*2);
+    ctx.strokeStyle=`rgba(255,215,0,${pulse*0.25})`;ctx.lineWidth=6;ctx.stroke();
   }
 
-  // Level badge
-  if(b.type!=='mur'&&b.lv>1){
-    ctx.fillStyle='rgba(0,0,0,0.7)';
-    ctx.beginPath();ctx.arc(sx+bw-6,sy+7,8,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#FFD700';ctx.font='bold 8px Nunito';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(b.lv,sx+bw-6,sy+7);
+  // Level badge (gold pill)
+  if(b.type!=='mur'&&b.lv>0){
+    const lbx=sx+bw-4,lby=sy+5;
+    ctx.fillStyle='rgba(0,0,0,0.75)';
+    ctx.beginPath();ctx.arc(lbx,lby,9,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=b.lv>=6?'#ff9900':b.lv>=4?'#66ccff':'#FFD700';
+    ctx.font='bold 8.5px Nunito';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(b.lv,lbx,lby);
   }
 
-  // Upgrade indicator
+  // Upgrade progress bar (bottom of building)
   if(b.upgrading){
     const now=Date.now()/1000;
-    const total=(b.upgradeEnd-(b.upgradeStart||0));
+    const total=Math.max(1,(b.upgradeEnd-(b.upgradeStart||0)));
     const rem=b.upgradeEnd-now;
     const pct=Math.max(0,Math.min(1,1-rem/total));
-    ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fillRect(sx+2,sy+bh-8,bw-4,6);
-    ctx.fillStyle='rgba(255,215,0,0.9)';ctx.fillRect(sx+2,sy+bh-8,(bw-4)*pct,6);
-    ctx.font='7px Nunito';ctx.fillStyle='white';ctx.textAlign='center';
-    ctx.fillText('↑',sx+bw/2,sy+bh-5);
+    // Background
+    ctx.fillStyle='rgba(0,0,0,0.6)';ctx.fillRect(sx+1,sy+bh-9,bw-2,7);
+    // Fill
+    const upG=ctx.createLinearGradient(sx,0,sx+bw,0);
+    upG.addColorStop(0,'#FFD700');upG.addColorStop(1,'#ff9900');
+    ctx.fillStyle=upG;ctx.fillRect(sx+1,sy+bh-9,(bw-2)*pct,7);
+    // Hammer icon
+    ctx.font='8px serif';ctx.textAlign='center';ctx.fillText('🔨',sx+bw/2,sy+bh-12);
   }
+
+  // Collection icon — shown when stored resources await pickup
+  const stored=b.stored||0;
+  if(stored>=10&&bt2&&(bt2.goldPerHour||bt2.elixirPerHour||bt2.darkPerHour)&&!b.upgrading){
+    const bt2cap=bt2.buildingCap?bt2.buildingCap[Math.min(b.lv-1,bt2.buildingCap.length-1)]:500;
+    const pct=stored/bt2cap;
+    // Bob animation
+    const bob=Math.sin(Date.now()/400)*4;
+    const iconX=sx+bw/2, iconY=sy-14+bob;
+    // Shadow
+    ctx.fillStyle='rgba(0,0,0,0.2)';
+    ctx.beginPath();ctx.ellipse(iconX,sy-4,16,5,0,0,Math.PI*2);ctx.fill();
+    // Bag/coin icon background
+    const bgCol=b.storeType==='elixir'?'#8800cc':b.storeType==='dark'?'#440066':'#cc8800';
+    const grd=ctx.createRadialGradient(iconX,iconY,0,iconX,iconY,18);
+    grd.addColorStop(0,bgCol+'ff');grd.addColorStop(1,bgCol+'88');
+    ctx.fillStyle=grd;
+    ctx.beginPath();ctx.arc(iconX,iconY,17,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,0.5)';ctx.lineWidth=1.5;ctx.stroke();
+    // Fill ring showing how full it is
+    ctx.beginPath();ctx.arc(iconX,iconY,17,-.5*Math.PI,(-0.5+pct*2)*Math.PI);
+    ctx.strokeStyle='rgba(255,255,255,0.9)';ctx.lineWidth=3;ctx.stroke();
+    // Icon
+    ctx.font='16px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(b.storeType==='elixir'?'🧪':b.storeType==='dark'?'💜':'🪙',iconX,iconY);
+    // Amount text
+    ctx.font='bold 9px Arial';ctx.fillStyle='white';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('+'+Math.floor(stored),iconX,iconY+22);
+  }
+
 }
 
 function drawBuildingGraphic(ctx,type,lv,sx,sy,bw,bh){
@@ -722,14 +1193,32 @@ function gameLoop(t){
 }
 
 function tick(dt){
+  ambientTime+=dt;
+  tickResourceOrbs(dt);tickCollectParticles(dt);updateHUDPulse();
   const now=Date.now()/1000;
   // Resource generation from buildings
   G.buildings.forEach(b=>{
     const bt=BUILDING_TYPES[b.type];if(!bt||b.upgrading)return;
     const lv=b.lv-1;
-    if(bt.goldPerHour&&bt.goldPerHour[lv]){G.gold=Math.min(G.gold_cap,G.gold+bt.goldPerHour[lv]/3600*dt);}
-    if(bt.elixirPerHour&&bt.elixirPerHour[lv]){G.elixir=Math.min(G.elixir_cap,G.elixir+bt.elixirPerHour[lv]/3600*dt);}
-    if(bt.darkPerHour&&bt.darkPerHour[lv]){G.dark=Math.min(G.dark_cap,G.dark+bt.darkPerHour[lv]/3600*dt);}
+    // Fill building's own storage — player must click to collect
+    if(bt.goldPerHour&&bt.goldPerHour[lv]){
+      const cap=bt.buildingCap?bt.buildingCap[Math.min(lv,bt.buildingCap.length-1)]:500;
+      b.stored=(b.stored||0)+bt.goldPerHour[lv]/3600*dt;
+      b.stored=Math.min(b.stored,cap);
+      b.storeType='gold';
+    }
+    if(bt.elixirPerHour&&bt.elixirPerHour[lv]){
+      const cap=bt.buildingCap?bt.buildingCap[Math.min(lv,bt.buildingCap.length-1)]:500;
+      b.stored=(b.stored||0)+bt.elixirPerHour[lv]/3600*dt;
+      b.stored=Math.min(b.stored,cap);
+      b.storeType='elixir';
+    }
+    if(bt.darkPerHour&&bt.darkPerHour[lv]){
+      const cap=bt.buildingCap?bt.buildingCap[Math.min(lv,bt.buildingCap.length-1)]:100;
+      b.stored=(b.stored||0)+bt.darkPerHour[lv]/3600*dt;
+      b.stored=Math.min(b.stored,cap);
+      b.storeType='dark';
+    }
   });
   // Builder completion
   G.builders.forEach(builder=>{
@@ -860,6 +1349,8 @@ function switchNav(tab){
   document.getElementById('nav-'+tab)?.classList.add('active');
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('open'));
   if(tab!=='by')document.getElementById('panel-'+tab)?.classList.add('open');
+  const fab3=document.getElementById('build-fab');if(fab3)fab3.style.display=tab==='attack'?'none':'';
+  if(tab!=='by')buildModeActive=false;
   activeNav=tab;
   if(tab==='by')renderByPanel();
   if(tab==='army')renderArmyPanel();
@@ -871,7 +1362,37 @@ function switchNav(tab){
 function renderByPanel(){
   updateBuilderRow();
   const scroll=document.getElementById('panel-by-scroll');if(!scroll)return;
+  // Resource summary at top
+  const goldPct=Math.min(100,G.gold/G.gold_cap*100);
+  const elixirPct=Math.min(100,G.elixir/G.elixir_cap*100);
+  const darkPct=Math.min(100,G.dark/G.dark_cap*100);
+  // Production rates
+  let goldRate=0,elixirRate=0,darkRate=0;
+  G.buildings.forEach(b=>{const bt=BUILDING_TYPES[b.type];if(!bt||b.upgrading)return;const lv=b.lv-1;if(bt.goldPerHour)goldRate+=bt.goldPerHour[lv]||0;if(bt.elixirPerHour)elixirRate+=bt.elixirPerHour[lv]||0;if(bt.darkPerHour)darkRate+=bt.darkPerHour[lv]||0;});
   const jhlv=G.jh_level;
+  let html=`<div id="resources-summary">
+    <div class="res-sum-item">
+      <div class="res-sum-icon">🪙</div>
+      <div class="res-sum-val">${fmt(G.gold)}</div>
+      <div class="res-sum-label">Riksdaler</div>
+      <div class="res-bar"><div class="res-bar-fill" style="width:${goldPct}%;background:linear-gradient(90deg,#FFD700,#cc8800)"></div></div>
+      <div class="prod-badge">+${fmt(goldRate)}/tim</div>
+    </div>
+    <div class="res-sum-item">
+      <div class="res-sum-icon">🧪</div>
+      <div class="res-sum-val">${fmt(G.elixir)}</div>
+      <div class="res-sum-label">SD-Saft</div>
+      <div class="res-bar"><div class="res-bar-fill" style="width:${elixirPct}%;background:linear-gradient(90deg,#cc44ff,#8800cc)"></div></div>
+      <div class="prod-badge">+${fmt(elixirRate)}/tim</div>
+    </div>
+    <div class="res-sum-item">
+      <div class="res-sum-icon">💜</div>
+      <div class="res-sum-val">${fmt(G.dark)}</div>
+      <div class="res-sum-label">J-Kraft</div>
+      <div class="res-bar"><div class="res-bar-fill" style="width:${darkPct}%;background:linear-gradient(90deg,#aa00ff,#550088)"></div></div>
+      <div class="prod-badge">+${fmt(darkRate)}/tim</div>
+    </div>
+  </div>`;
   const cats=[
     {key:'special',label:'🏛️ Jimmie Hall'},
     {key:'defense',label:'🛡️ Försvar'},
@@ -880,7 +1401,6 @@ function renderByPanel(){
     {key:'trap',label:'💣 Fällor'},
     {key:'wall',label:'🧱 Murar'},
   ];
-  let html='';
   cats.forEach(cat=>{
     const types=Object.entries(BUILDING_TYPES).filter(([k,v])=>v.category===cat.key&&(!v.unlockJH||v.unlockJH<=jhlv));
     if(!types.length)return;
@@ -976,6 +1496,7 @@ function doBuildAction(){
     freeBuilder.task={bId:targetBuilding.id,newLv:nextLv};
     toast(`${freeBuilder.name} börjar bygga!`);
   }
+  buildModeActive=false;
   closeModal('build-modal');renderByPanel();saveGame();
 }
 
@@ -1003,7 +1524,13 @@ function renderArmyPanel(){
   const armyCap=getTotalArmyCap();
   const armyUsed=Object.entries(G.troops).reduce((acc,[id,cnt])=>{
     const sp=(TROOP_TYPES[id]?.space||1);return acc+cnt*sp;},0);
-  let html=`<div style="font-size:0.72rem;color:rgba(255,255,255,0.5);margin-bottom:12px;text-align:center">Armé: ${armyUsed}/${armyCap} platser</div>`;
+  const capPct=Math.min(100,armyUsed/Math.max(1,armyCap)*100);
+  const capCol=capPct>90?'#ef4444':capPct>70?'#facc15':'#4ade80';
+  let html=`<div id="army-cap-bar">
+    <div style="font-size:0.72rem;font-weight:800;color:rgba(255,255,255,0.6)">⚔️ Armé</div>
+    <div id="army-cap-fill-wrap"><div id="army-cap-fill" style="width:${capPct}%;background:linear-gradient(90deg,${capCol},${capCol}99)"></div></div>
+    <div style="font-size:0.7rem;font-weight:900;color:${capCol}">${armyUsed}/${armyCap}</div>
+  </div>`;
   // Current army
   html+=`<div class="section-hdr">Din armé</div>`;
   const hasArmy=Object.entries(G.troops).some(([_,c])=>c>0);
@@ -1049,10 +1576,12 @@ function renderArmyPanel(){
       const lv=G.troopLevels?.[id]||1;
       const cost=tt.trainCost||0;const costE=tt.trainCostElixir||0;
       const inQueue=G.troopTraining.filter(t=>t.troopId===id).length;
+      const tags=(tt.air?'<span class="troop-tag air">✈ Flyger</span>':'')+(tt.splash?'<span class="troop-tag splash">💫 Splash</span>':'')+(tt.underground?'<span class="troop-tag underground">⛏ Under</span>':'');
       html+=`<div class="troop-card" onclick="trainTroop('${id}')">
         <div class="tc-level">Lv${lv}</div>
         <canvas class="tc-canvas" id="tc-${id}-train" width="44" height="44"></canvas>
         <div class="tc-name">${tt.name}</div>
+        ${tags}
         <div class="tc-count" style="color:var(--elixir);font-size:0.55rem">${cost?'🪙'+fmt(cost):''}${costE?'🧪'+fmt(costE):''}</div>
         ${inQueue>0?`<div style="font-size:0.55rem;color:var(--gold)">Kö: ${inQueue}</div>`:''}
         <div class="tc-train-btn">+ Träna</div>
@@ -1323,8 +1852,11 @@ function startAttackMode(){
   atkCtx=atkCanvas.getContext('2d');
   atkW=atkCanvas.width=window.innerWidth;
   atkH=atkCanvas.height=window.innerHeight-130-80;
+  centerAtkCamera();
   // Show attack wrap
   document.getElementById('attack-wrap').classList.add('show');
+  const fab=document.getElementById('build-fab');if(fab)fab.style.display='none';
+  cancelPlacement();closeShopPanel();
   renderAtkTroopsBar();
   document.getElementById('attack-stars').textContent='☆☆☆';
   // Auto-select first troop
@@ -1358,9 +1890,12 @@ function generateEnemyBase(){
     const bt=BUILDING_TYPES[type];if(!bt)return;
     const hp=(bt.hp?bt.hp[Math.min(lv-1,bt.hp.length-1)]:500)*1.2;// Enemy slightly stronger
     const dps=bt.dps?bt.dps[Math.min(lv-1,bt.dps.length-1)]:0;
+    const fireRate=bt.splash?0.4:0.7; // seconds between shots (lower=faster)
+    const range=type==='morsare'?4:type==='luftforsvar'?7:type==='tesla_torn'?4:5;
     atkBuildings.push({id:bid++,type,lv,gx,gy,hp,maxHp:hp,dps,size:bt.size,alive:true,
-      icon:bt.icon,name:bt.name,fireTimer:0,fireRate:bt.splash?3:1.5,range:bt.category==='defense'?5:2,
-      air:type==='luftforsvar',splash:bt.splash||false});
+      icon:bt.icon,name:bt.name,fireTimer:Math.random(),fireRate,range,
+      air:type==='luftforsvar',splash:bt.splash||false,
+      category:bt.category});
     atkTotalHP+=hp;
   };
   atkTotalHP=0;
@@ -1407,17 +1942,41 @@ function selectAtkTroop(id){
   document.querySelector(`.at-troop[onclick="selectAtkTroop('${id}')"]`)?.classList.add('selected');
 }
 
-const ATK_CAM_X=20,ATK_CAM_Y=20;
+let ATK_CAM_X=20,ATK_CAM_Y=20;
+function centerAtkCamera(){
+  if(!atkCanvas)return;
+  // Center the enemy base grid in the available canvas
+  const totalW=AGRID*AC, totalH=AGRID*AC;
+  ATK_CAM_X=Math.max(10,(atkW-totalW)/2);
+  ATK_CAM_Y=Math.max(10,(atkH-totalH)/2);
+}
 function gridToScreen(gx,gy){return{x:gx*AC+ATK_CAM_X,y:gy*AC+ATK_CAM_Y};}
 
 function drawAttack(){
   const ctx=atkCtx;
   ctx.clearRect(0,0,atkW,atkH);
-  // Ground
+  // Ground with improved rendering
   for(let y=0;y<AGRID;y++){for(let x=0;x<AGRID;x++){
     ctx.fillStyle=GRASS_PAT[y%GRID][x%GRID];
     ctx.fillRect(x*AC+ATK_CAM_X,y*AC+ATK_CAM_Y,AC,AC);
+    if((x+y)%6===0){ctx.fillStyle='rgba(0,0,0,0.04)';ctx.fillRect(x*AC+ATK_CAM_X,y*AC+ATK_CAM_Y,AC,AC);}
   }}
+  // Entry zone (bottom glow — where you drop troops)
+  const entryY=(AGRID-2)*AC+ATK_CAM_Y;
+  const entryG=ctx.createLinearGradient(0,entryY,0,entryY+AC*2);
+  entryG.addColorStop(0,'rgba(255,215,0,0.12)');entryG.addColorStop(1,'transparent');
+  ctx.fillStyle=entryG;ctx.fillRect(ATK_CAM_X,entryY,AGRID*AC,AC*2);
+  ctx.strokeStyle='rgba(255,215,0,0.3)';ctx.lineWidth=2;ctx.setLineDash([6,6]);
+  ctx.beginPath();ctx.moveTo(ATK_CAM_X,entryY);ctx.lineTo(AGRID*AC+ATK_CAM_X,entryY);ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.font='11px Nunito';ctx.fillStyle='rgba(255,215,0,0.6)';ctx.textAlign='center';
+  ctx.fillText('👆 TRYCK HÄR FÖR ATT PLACERA TRUPPER',AGRID/2*AC+ATK_CAM_X,entryY+14);
+  // Show hint if no units deployed
+  if(atkUnits.length===0&&selectedAtkTroop){
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillStyle='rgba(255,215,0,0.4)';ctx.font='bold 14px Nunito';
+    ctx.fillText('Välj trupp nedan → Tryck kartan för att placera',AGRID/2*AC+ATK_CAM_X,AGRID/2*AC+ATK_CAM_Y);
+  }
   // Grid lines
   ctx.strokeStyle='rgba(0,0,0,0.06)';ctx.lineWidth=0.5;
   for(let y=0;y<=AGRID;y++){ctx.beginPath();ctx.moveTo(ATK_CAM_X,y*AC+ATK_CAM_Y);ctx.lineTo(AGRID*AC+ATK_CAM_X,y*AC+ATK_CAM_Y);ctx.stroke();}
@@ -1474,6 +2033,11 @@ function drawAttack(){
     if(rage){ctx.strokeStyle='rgba(255,100,0,0.6)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(u.x,u.y,14,0,Math.PI*2);ctx.stroke();}
   });
 
+  // Defense fire lines
+  drawDefenseFireLines();
+  // Projectiles
+  drawProjectiles();
+
   // Particles
   atkParticles.forEach((p,i)=>{
     ctx.globalAlpha=p.life;
@@ -1481,6 +2045,9 @@ function drawAttack(){
     ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
   });
   ctx.globalAlpha=1;
+
+  // Damage numbers
+  drawFloatNums();
 
   // Timer & stars
   document.getElementById('attack-timer-circle').textContent=Math.ceil(Math.max(0,atkTimer));
@@ -1537,23 +2104,39 @@ function updateAttack(dt){
   });
   // Defense fire at units
   atkBuildings.filter(b=>b.alive&&b.dps>0).forEach(b=>{
-    b.fireTimer=(b.fireTimer||0)-dt;
+    b.fireTimer-=dt;
     if(b.fireTimer>0)return;
     const bx=(b.gx+b.size/2)*AC+ATK_CAM_X,by=(b.gy+b.size/2)*AC+ATK_CAM_Y;
-    const validTargets=atkUnits.filter(u=>u.alive&&(b.air||!TROOP_TYPES[u.troopId]?.air)&&Math.hypot(u.x-bx,u.y-by)<b.range*AC);
+    const validTargets=atkUnits.filter(u=>{
+      if(!u.alive)return false;
+      const isAirUnit=TROOP_TYPES[u.troopId]?.air||false;
+      if(b.type==='luftforsvar'&&!isAirUnit)return false; // air defense only hits air
+      const dist=Math.hypot(u.x-bx,u.y-by);
+      return dist<b.range*AC;
+    });
     if(!validTargets.length)return;
     // Sort by closest
     validTargets.sort((a,c2)=>Math.hypot(a.x-bx,a.y-by)-Math.hypot(c2.x-bx,c2.y-by));
     const target=validTargets[0];
-    target.hp-=b.dps*0.5*dt*b.fireRate;
-    if(b.splash){validTargets.slice(1,4).forEach(t=>t.hp-=b.dps*0.2*dt*b.fireRate);}
+    // Spawn visual projectile
+    defFireLines.push({fx:bx,fy:by,tx:target.x,ty:target.y,col:b.type==='tesla_torn'?'rgb(100,150,255)':b.type==='luftforsvar'?'rgb(100,200,255)':'rgb(255,180,50)',life:0.4});
+    spawnProjectile(bx,by,target.x,target.y,
+      b.type==='luftforsvar'?'rgba(100,200,255,0.9)':b.type==='tesla_torn'?'rgba(100,150,255,0.9)':'rgba(255,180,50,0.9)',
+      250, b.splash?5:3);
+    spawnDmgNum(target.x,target.y,b.dps*0.3,'#ff8844');
+    const shotDmg=b.dps*b.fireRate*0.7; // damage per shot
+    target.hp-=shotDmg;
+    spawnDmgNum(target.x,target.y,shotDmg,'#ff4444');
+    if(b.splash){validTargets.slice(1,4).forEach(t=>t.hp-=shotDmg*0.4);}
     spawnParticle(target.x,target.y,'rgba(255,80,0,0.6)',3);
-    b.fireTimer=1/b.fireRate;
+    b.fireTimer=b.fireRate; // reset to seconds between shots
     if(target.hp<=0){target.alive=false;spawnParticle(target.x,target.y,'rgba(200,200,200,0.9)',6);}
   });
   // Update particles
   atkParticles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=0.2;p.life-=0.04;});
   atkParticles=atkParticles.filter(p=>p.life>0);
+  // Projectiles + float nums
+  tickProjectiles(dt);tickFloatNums(dt);tickDefFireLines(dt);
   // Remove dead units
   atkUnits=atkUnits.filter(u=>u.alive);
 }
@@ -1680,7 +2263,7 @@ function endAttack(allDestroyed){
   });
   G.troops={};
   Object.entries(survivingCounts).forEach(([id,cnt])=>{if(cnt>0)G.troops[id]=cnt;});
-  document.getElementById('result-stars').textContent=['','⭐','⭐⭐','⭐⭐⭐'][stars]||'☆';
+  drawVictoryStars(stars);
   document.getElementById('result-title').textContent=stars>=2?'SEGER! 🎉':stars===1?'Delseger':'Nederlag 💀';
   document.getElementById('result-sub').textContent=`${Math.floor(pct*100)}% förstört · ${stars} stjärnor`;
   document.getElementById('r-gold').textContent='+'+fmt(goldLoot);
@@ -1693,7 +2276,9 @@ function endAttack(allDestroyed){
 
 function closeAttackResult(){
   document.getElementById('result-overlay').classList.remove('show');
+  const fab2=document.getElementById('build-fab');if(fab2)fab2.style.display='';
   switchNav('by');
+  document.getElementById('place-overlay').style.display='none';
 }
 
 // ── TOUCH/MOUSE CAMERA ────────────────────────────────────────────
@@ -1703,14 +2288,26 @@ canvas.addEventListener('mousemove',e=>{
   if(e.buttons!==1)return;
   const dx=e.clientX-dragStart.x,dy=e.clientY-dragStart.y;
   if(Math.abs(dx)>5||Math.abs(dy)>5)dragging=true;
-  if(dragging){camX=camStart.x+dx;camY=camStart.y+dy;}
+  if(dragging){
+    const nx=camStart.x+dx, ny=camStart.y+dy;
+    const minX=W-GRID*CELL-200, maxX=200;
+    const minY=H-GRID*CELL-200, maxY=200;
+    camX=Math.max(minX,Math.min(maxX,nx));
+    camY=Math.max(minY,Math.min(maxY,ny));
+  }
 });
 canvas.addEventListener('mouseup',e=>{
   if(!dragging){handleCanvasClick(e.clientX,e.clientY);}
   dragging=false;
 });
 canvas.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0];dragStart={x:t.clientX,y:t.clientY};camStart={x:camX,y:camY};dragging=false;},{passive:false});
-canvas.addEventListener('touchmove',e=>{e.preventDefault();const t=e.touches[0];const dx=t.clientX-dragStart.x,dy=t.clientY-dragStart.y;if(Math.abs(dx)>8||Math.abs(dy)>8)dragging=true;if(dragging){camX=camStart.x+dx;camY=camStart.y+dy;}},{passive:false});
+canvas.addEventListener('touchmove',e=>{e.preventDefault();const t=e.touches[0];const dx=t.clientX-dragStart.x,dy=t.clientY-dragStart.y;if(Math.abs(dx)>8||Math.abs(dy)>8)dragging=true;if(dragging){
+    const nx=camStart.x+dx, ny=camStart.y+dy;
+    const minX=W-GRID*CELL-200, maxX=200;
+    const minY=H-GRID*CELL-200, maxY=200;
+    camX=Math.max(minX,Math.min(maxX,nx));
+    camY=Math.max(minY,Math.min(maxY,ny));
+  }},{passive:false});
 canvas.addEventListener('touchend',e=>{e.preventDefault();if(!dragging){const t=e.changedTouches[0];handleCanvasClick(t.clientX,t.clientY);}dragging=false;},{passive:false});
 
 function handleCanvasClick(cx,cy){
@@ -1726,10 +2323,43 @@ function handleCanvasClick(cx,cy){
   }
   const hit=G.buildings.find(b=>{const s=BUILDING_TYPES[b.type]?.size||1;return gx>=b.gx&&gx<b.gx+s&&gy>=b.gy&&gy<b.gy+s;});
   if(hit){selectedBuilding=hit;openBuildMenu(hit.type);}
-  else{selectedBuilding=null;closeModal('build-modal');}
+  else{selectedBuilding=null;closeModal('build-modal');if(buildModeActive){buildModeActive=false;toast('Byggläge avbrutet');}}
 }
 
 // ── MODALS ────────────────────────────────────────────────────────
+function openBuildMode(){
+  // Highlight available build spots on map
+  buildModeActive=true;
+  switchNav('by');
+  toast('🏗️ Välj en byggnad nedan — gröna rutor visar lediga platser!');
+}
+
+let buildModeActive=false;
+
+// Draw available build spots when in build mode
+function drawBuildSpots(){
+  if(!buildModeActive||!placingType)return;
+  const bt=BUILDING_TYPES[placingType];if(!bt)return;
+  const size=bt.size||1;
+  const pulse=0.5+Math.sin(Date.now()/300)*0.25;
+  // Highlight valid placement cells
+  for(let gy=2;gy<GRID-size-2;gy++){
+    for(let gx=2;gx<GRID-size-2;gx++){
+      const occupied=isOccupied(gx,gy,size);
+      const sx=gx*CELL+camX,sy=gy*CELL+camY;
+      const sw=size*CELL,sh=size*CELL;
+      if(sx<-sw||sx>W||sy<-sh||sy>H)continue;
+      if(!occupied){
+        // Valid — green pulsing
+        ctx.fillStyle=`rgba(80,255,120,${0.12+pulse*0.08})`;
+        ctx.fillRect(sx,sy,sw,sh);
+        ctx.strokeStyle=`rgba(80,255,120,${0.25+pulse*0.15})`;
+        ctx.lineWidth=1;ctx.strokeRect(sx+0.5,sy+0.5,sw-1,sh-1);
+      }
+    }
+  }
+}
+
 function startMoveBuilding(){
   if(!selectedBuilding)return;
   movingBuilding=selectedBuilding;
@@ -1746,6 +2376,494 @@ function toast(msg){
   const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');
   clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2800);
 }
+
+
+// ── RESOURCE ORB ANIMATIONS ──────────────────────────────────────
+const resourceOrbs=[]; // {x,y,type,vx,vy,life}
+
+function spawnResourceOrb(wx,wy,type){
+  const sx=wx*CELL+camX+CELL/2, sy=wy*CELL+camY+CELL/2;
+  resourceOrbs.push({sx,sy,type,vx:(Math.random()-0.5)*30,vy:-40-Math.random()*20,life:1,age:0});
+}
+
+function drawResourceOrbs(){
+  const now=Date.now()/1000;
+  resourceOrbs.forEach((o,i)=>{
+    ctx.globalAlpha=o.life;
+    ctx.font='16px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    const icon=o.type==='gold'?'🪙':o.type==='elixir'?'🧪':'💜';
+    ctx.fillText(icon,o.sx,o.sy);
+    ctx.globalAlpha=1;
+  });
+}
+
+function tickResourceOrbs(dt){
+  for(let i=resourceOrbs.length-1;i>=0;i--){
+    const o=resourceOrbs[i];
+    o.sy+=o.vy*dt;o.sx+=o.vx*dt*0.3;o.life-=dt*1.2;
+    if(o.life<=0)resourceOrbs.splice(i,1);
+  }
+}
+
+// ── FLOATING DAMAGE NUMBERS IN ATTACK ────────────────────────────
+const floatNums=[];
+
+function spawnDmgNum(x,y,dmg,col){
+  if(Math.random()>0.2)return; // Only show 20% to avoid clutter
+  floatNums.push({x,y,text:Math.floor(dmg).toString(),col:col||'#ff6644',life:1});
+}
+
+function tickFloatNums(dt){
+  for(let i=floatNums.length-1;i>=0;i--){
+    floatNums[i].y-=40*dt;floatNums[i].life-=dt*1.5;
+    if(floatNums[i].life<=0)floatNums.splice(i,1);
+  }
+}
+
+function drawFloatNums(){
+  floatNums.forEach(n=>{
+    atkCtx.globalAlpha=n.life;
+    atkCtx.font='bold 13px Cinzel';atkCtx.fillStyle=n.col;
+    atkCtx.textAlign='center';atkCtx.textBaseline='middle';
+    atkCtx.fillText(n.text,n.x,n.y);
+    atkCtx.globalAlpha=1;
+  });
+}
+
+// ── PROJECTILE SYSTEM FOR ATTACK ─────────────────────────────────
+const projectiles=[]; // {x,y,tx,ty,speed,col,r,done}
+
+function spawnProjectile(fx,fy,tx,ty,col,speed,r){
+  projectiles.push({x:fx,y:fy,tx,ty,col,speed:speed||200,r:r||4,done:false});
+}
+
+function tickProjectiles(dt){
+  for(let i=projectiles.length-1;i>=0;i--){
+    const p=projectiles[i];
+    if(p.done){projectiles.splice(i,1);continue;}
+    const dx=p.tx-p.x,dy=p.ty-p.y;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<8){p.done=true;spawnExplosion(p.tx,p.ty);continue;}
+    const spd=p.speed*dt;
+    p.x+=dx/dist*spd;p.y+=dy/dist*spd;
+  }
+}
+
+function drawProjectiles(){
+  projectiles.forEach(p=>{
+    atkCtx.beginPath();atkCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    atkCtx.fillStyle=p.col;atkCtx.fill();
+    // Trail
+    atkCtx.beginPath();atkCtx.arc(p.x-4,p.y-4,p.r*0.5,0,Math.PI*2);
+    atkCtx.fillStyle=p.col.replace(')',',0.4)').replace('rgb','rgba');atkCtx.fill();
+  });
+}
+
+// ── TUTORIAL SYSTEM ───────────────────────────────────────────────
+const TUT_STEPS=[
+  {title:'⚔️ Välkommen till Clash of Jimmie!',text:'Bygg en mäktig by under Jimmies ledarskap! Börja med att uppgradera Jimmie Hall.',pos:'center',btn:'Kom igång →'},
+  {title:'🏘️ Byn — Byggnader',text:'Tryck på "Byn"-fliken för att se alla byggnader. Tryck på en byggnad på kartan eller välj från listan för att uppgradera den.',pos:'bottom',btn:'Förstår!'},
+  {title:'💰 Resurser',text:'Riksdaler 🪙 och SD-Saft 🧪 produceras automatiskt av gruvorna. Uppgradera dem för mer produktion!',pos:'top',btn:'Bra!'},
+  {title:'⚔️ Armé',text:'Gå till Armé-fliken för att träna trupper. Lill-Jimmies är billiga, P.E.K.K.A-Jimmie är starka men dyra!',pos:'bottom',btn:'Okej!'},
+  {title:'🗡️ Angrepp!',text:'Träna trupper och tryck sedan på Attack-knappen. Placera trupper på slagfältet och förstör fiendens by!',pos:'bottom',btn:'Förstår — LÅT OSS GÅ!',last:true},
+];
+let tutStep=-1;
+let tutEl=null;
+
+function startTutorial(){
+  const done=localStorage.getItem('coj_tut');
+  if(done)return;
+  tutStep=0;showTutStep();
+}
+
+function showTutStep(){
+  const ov=document.getElementById('tutorial-overlay');
+  const dim=document.getElementById('tut-dim');
+  if(tutEl){tutEl.remove();tutEl=null;}
+  if(tutStep>=TUT_STEPS.length){endTutorial();return;}
+  const step=TUT_STEPS[tutStep];
+  dim.style.display='block';
+  const div=document.createElement('div');
+  div.className='tut-card';
+  div.innerHTML=`<h3>${step.title}</h3><p>${step.text}</p><div class="tut-arrow">👇</div>
+    <button class="tut-btn" onclick="nextTutStep()">${step.btn}</button>
+    <button class="tut-skip" onclick="endTutorial()">Hoppa över</button>`;
+  if(step.pos==='center'){div.style.cssText='left:50%;top:50%;transform:translate(-50%,-50%)';}
+  else if(step.pos==='bottom'){div.style.cssText='left:50%;bottom:160px;transform:translateX(-50%)';}
+  else if(step.pos==='top'){div.style.cssText='left:50%;top:80px;transform:translateX(-50%)';}
+  ov.appendChild(div);tutEl=div;
+}
+
+function nextTutStep(){tutStep++;showTutStep();}
+
+function endTutorial(){
+  const ov=document.getElementById('tutorial-overlay');
+  const dim=document.getElementById('tut-dim');
+  dim.style.display='none';
+  if(tutEl){tutEl.remove();tutEl=null;}
+  localStorage.setItem('coj_tut','done');
+  tutStep=-1;
+}
+
+
+// ── AMBIENT ANIMATIONS ────────────────────────────────────────────
+let ambientTime=0;
+
+function drawAmbientEffects(){
+  const t=ambientTime;
+  // Cloud shadows drifting
+  for(let ci=0;ci<3;ci++){
+    const cx2=((t*12+ci*400)%(GRID*CELL+400))+camX-200;
+    const cy2=(ci*150)+camY+50;
+    if(cx2>-200&&cx2<W+200){
+      ctx.fillStyle='rgba(0,0,0,0.04)';
+      ctx.beginPath();ctx.ellipse(cx2,cy2,120,60,0,0,Math.PI*2);ctx.fill();
+    }
+  }
+}
+
+// ── BUILDING INFO TOOLTIP ON HOVER ───────────────────────────────
+canvas.addEventListener('mousemove',e=>{
+  const gx=Math.floor((e.clientX-camX)/CELL),gy=Math.floor((e.clientY-camY)/CELL);
+  const hit=G.buildings.find(b=>{const s=BUILDING_TYPES[b.type]?.size||1;return gx>=b.gx&&gx<b.gx+s&&gy>=b.gy&&gy<b.gy+s;});
+  const tip=document.getElementById('btooltip');
+  if(hit&&tip){
+    const bt=BUILDING_TYPES[hit.type];
+    document.getElementById('btooltip-name').textContent=bt.icon+' '+bt.name+' Lv'+hit.lv;
+    let stat=bt.stats?bt.stats(hit.lv):'';
+    if(hit.upgrading){const rem=Math.max(0,Math.ceil(hit.upgradeEnd-Date.now()/1000));stat+=' | ⬆️ '+fmtTime(rem);}
+    document.getElementById('btooltip-stat').textContent=stat;
+    tip.style.display='block';
+    tip.style.left=Math.min(e.clientX+12,window.innerWidth-220)+'px';
+    tip.style.top=(e.clientY-10)+'px';
+  } else if(tip){tip.style.display='none';}
+});
+canvas.addEventListener('mouseleave',()=>{const tip=document.getElementById('btooltip');if(tip)tip.style.display='none';});
+
+// ── IDLE BUILDING ANIMATIONS ─────────────────────────────────────
+// Tracked smoke particles per resource building
+const buildingSmoke={}; // id -> particles
+
+function drawBuildingSmoke(){
+  const t=ambientTime;
+  G.buildings.forEach(b=>{
+    const bt=BUILDING_TYPES[b.type];
+    if(!bt||b.upgrading)return;
+    if(!bt.goldPerHour&&!bt.elixirPerHour&&!bt.darkPerHour)return;
+    const sx=b.gx*CELL+camX,sy=b.gy*CELL+camY;
+    const bw=bt.size*CELL;
+    // Smoke puffs
+    if(!buildingSmoke[b.id])buildingSmoke[b.id]=[];
+    const smoke=buildingSmoke[b.id];
+    if(Math.random()<0.04){
+      smoke.push({x:sx+bw/2+(Math.random()-0.5)*8,y:sy+4,r:3+Math.random()*4,life:1,vx:(Math.random()-0.5)*8,vy:-12-Math.random()*8});
+    }
+    for(let i=smoke.length-1;i>=0;i--){
+      const s2=smoke[i];
+      s2.x+=s2.vx*0.016;s2.y+=s2.vy*0.016;s2.r+=0.3;s2.life-=0.02;
+      if(s2.life<=0){smoke.splice(i,1);continue;}
+      ctx.beginPath();ctx.arc(s2.x,s2.y,s2.r,0,Math.PI*2);
+      const sCol=bt.goldPerHour?'rgba(200,180,120,':bt.elixirPerHour?'rgba(200,100,255,':'rgba(80,0,150,';
+      ctx.fillStyle=sCol+s2.life*0.4+')';
+      ctx.fill();
+    }
+  });
+}
+
+// ── ATTACK FIRE LINES (laser-style from defenses) ────────────────
+const defFireLines=[]; // {fx,fy,tx,ty,col,life}
+
+function drawDefenseFireLines(){
+  defFireLines.forEach(f=>{
+    atkCtx.beginPath();atkCtx.moveTo(f.fx,f.fy);atkCtx.lineTo(f.tx,f.ty);
+    atkCtx.strokeStyle=f.col.replace(')',','+f.life+')').replace('rgb','rgba');
+    atkCtx.lineWidth=2*f.life;atkCtx.stroke();
+  });
+}
+
+function tickDefFireLines(dt){
+  for(let i=defFireLines.length-1;i>=0;i--){
+    defFireLines[i].life-=dt*4;
+    if(defFireLines[i].life<=0)defFireLines.splice(i,1);
+  }
+}
+
+// ── IMPROVED STAR SYSTEM (victory celebration) ────────────────────
+function drawVictoryStars(stars){
+  if(stars===0)return;
+  const container=document.getElementById('result-stars');
+  if(!container)return;
+  const starIcons=['☆','⭐','⭐⭐','⭐⭐⭐'];
+  container.textContent=starIcons[stars];
+  container.style.textShadow=stars>=3?'0 0 20px rgba(255,215,0,0.8)':stars>=2?'0 0 12px rgba(255,215,0,0.5)':'none';
+}
+
+// ── WALL DRAWING IMPROVED ─────────────────────────────────────────
+function drawWallConnections(){
+  // Draw connections between adjacent walls for a more solid look
+  const walls=G.buildings.filter(b=>b.type==='mur');
+  const wallSet=new Set(walls.map(w=>w.gx+','+w.gy));
+  walls.forEach(w=>{
+    const sx=w.gx*CELL+camX,sy=w.gy*CELL+camY;
+    const lvColors=['#888','#aaa','#cc8844','#aa4444','#884488','#4488aa','#44aa44','#aaaa44'];
+    const col=lvColors[Math.min(w.lv-1,7)];
+    // Check neighbors and draw connecting beams
+    if(wallSet.has((w.gx+1)+','+w.gy)){
+      ctx.fillStyle=col;ctx.fillRect(sx+CELL-2,sy+4,6,CELL-8);
+    }
+    if(wallSet.has(w.gx+','+(w.gy+1))){
+      ctx.fillStyle=col;ctx.fillRect(sx+4,sy+CELL-2,CELL-8,6);
+    }
+  });
+}
+
+// Hook drawWallConnections before buildings draw
+// ── BETTER HUD UPDATE ─────────────────────────────────────────────
+function updateHUDPulse(){
+  // Pulse gold pill when near full
+  const goldPill=document.querySelector('.res-pill');
+  if(goldPill){goldPill.classList.toggle('full',G.gold>=G.gold_cap*0.9);}
+}
+
+
+// ── SHOP PANEL ───────────────────────────────────────────────────
+let shopTab='resource';
+let placingType=null; // building type being placed on map
+
+function openShopPanel(){
+  document.getElementById('shop-panel').classList.add('open');
+  renderShopPanel();
+  // Close main by panel if open
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('open'));
+}
+
+function closeShopPanel(){
+  document.getElementById('shop-panel').classList.remove('open');
+}
+
+function switchShopTab(tab){
+  shopTab=tab;
+  document.querySelectorAll('.shop-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('stab-'+tab)?.classList.add('active');
+  renderShopPanel();
+}
+
+function renderShopPanel(){
+  const scroll=document.getElementById('shop-scroll');if(!scroll)return;
+  const cats={defense:'defense',resource:'resource',military:'military',wall:'wall',trap:'trap'};
+  // wall tab shows wall + trap
+  const catFilter=shopTab==='wall'?['wall','trap']:[shopTab];
+  const jhlv=G.jh_level;
+
+  const types=Object.entries(BUILDING_TYPES).filter(([k,v])=>catFilter.includes(v.category));
+  if(!types.length){scroll.innerHTML='<div style="text-align:center;color:rgba(255,255,255,0.3);padding:30px">Inga byggnader i denna kategori ännu.</div>';return;}
+
+  let html='';
+  types.forEach(([typeId,bt])=>{
+    const existing=G.buildings.filter(b=>b.type===typeId);
+    const count=existing.length;
+    const limit=bt.limit||99;
+    const canAdd=count<limit;
+    const hasGoldMine=G.buildings.some(b=>b.type==='riksdaler_gruva'&&b.lv>=1);
+    const hasSaftCollector=G.buildings.some(b=>b.type==='saft_samlare'&&b.lv>=1);
+    const needsCollectors=(bt.category==='defense'||bt.category==='military'||bt.category==='trap')&&(!hasGoldMine||!hasSaftCollector);
+    const isLocked=(bt.unlockJH&&bt.unlockJH>jhlv)||needsCollectors;
+    const lockReason=needsCollectors
+      ? (!hasGoldMine&&!hasSaftCollector?'Bygg Gruva + Samlare':!hasGoldMine?'Bygg Riksdaler-Gruva':'Bygg SD-Saft-Samlare')
+      : (bt.unlockJH?'JH '+bt.unlockJH:'');
+    const isMaxCount=count>=limit;
+    const costG=bt.costGold?bt.costGold[0]:0;
+    const costE=bt.costElixir?bt.costElixir[0]:0;
+    const canAfford=G.gold>=costG&&G.elixir>=costE;
+    const buildTime=bt.buildTime?bt.buildTime[0]:0;
+    const maxBuilders=JH_DATA[G.jh_level-1]?.maxBuilders||1;
+    const freeBuilder=G.builders.slice(0,maxBuilders).find(b=>!b.busy);
+
+    // What unlocks more (which JH level gives +1)
+    let unlockMoreAt=null;
+    for(let jh=jhlv+1;jh<=8;jh++){
+      // Check if this building becomes available or gets more slots at this JH level
+      if(bt.unlockJH===jh){unlockMoreAt=jh;break;}
+    }
+
+    let statusClass='';
+    if(isLocked)statusClass='locked';
+    else if(isMaxCount)statusClass='maxed';
+    else if(canAfford&&freeBuilder)statusClass='can-build';
+
+    let btnHtml='';
+    if(isLocked){
+      btnHtml=`<div class="shop-build-btn" style="background:rgba(255,100,0,0.15);color:#ff9944;border:none;padding:10px 14px;border-radius:12px;font-size:0.72rem;font-weight:800;cursor:default">🔒 ${lockReason}</div>`;
+    } else if(isMaxCount){
+      btnHtml=`<div class="shop-build-btn" style="background:rgba(100,255,100,0.1);color:#88ff88;border:none;padding:10px 14px;border-radius:12px;font-size:0.72rem;font-weight:800;cursor:default">✅ Max</div>`;
+    } else if(!canAfford){
+      btnHtml=`<button class="shop-build-btn" disabled>💸 Råd ej</button>`;
+    } else if(!freeBuilder){
+      btnHtml=`<button class="shop-build-btn" disabled>🔨 Upptagn</button>`;
+    } else {
+      btnHtml=`<button class="shop-build-btn" onclick="startPlacement('${typeId}')">🏗️ Bygg</button>`;
+    }
+
+    const statLine=bt.stats?bt.stats(1):'';
+
+    html+=`<div class="shop-card ${statusClass}">
+      <div class="shop-icon">${bt.icon}</div>
+      <div class="shop-info">
+        <div class="shop-name">${bt.name}</div>
+        <div class="shop-desc">${bt.desc}</div>
+        <div class="shop-meta">
+          <span class="shop-pill count">Byggda: ${count}/${limit}</span>
+          ${costG?`<span class="shop-pill cost">🪙 ${fmt(costG)}</span>`:''}
+          ${costE?`<span class="shop-pill cost">🧪 ${fmt(costE)}</span>`:''}
+          ${buildTime>0?`<span class="shop-pill time">⏱ ${fmtTime(buildTime)}</span>`:''}
+          ${isLocked&&bt.unlockJH?`<span class="shop-pill unlock">🔒 Kräver JH ${bt.unlockJH}</span>`:''}
+          ${needsCollectors?`<span class="shop-pill unlock">⚠️ ${lockReason} först</span>`:''}
+        </div>
+        ${statLine?`<div style="font-size:0.62rem;color:rgba(255,215,0,0.6)">${statLine}</div>`:''}
+      </div>
+      ${btnHtml}
+    </div>`;
+  });
+
+  scroll.innerHTML=html;
+}
+
+// ── BUILDING PLACEMENT ────────────────────────────────────────────
+function startPlacement(typeId){
+  const bt=BUILDING_TYPES[typeId];if(!bt)return;
+  placingType=typeId;
+  closeShopPanel();
+  // Show placement banner
+  const ov=document.getElementById('place-overlay');
+  document.getElementById('place-icon').textContent=bt.icon;
+  document.getElementById('place-title').textContent=bt.name;
+  document.getElementById('place-sub').textContent='Tryck en grön ruta på kartan  •  Kostnad: '+
+    (bt.costGold&&bt.costGold[0]?'🪙'+fmt(bt.costGold[0])+' ':'')+
+    (bt.costElixir&&bt.costElixir[0]?'🧪'+fmt(bt.costElixir[0]):'');
+  ov.style.display='block';
+  buildModeActive=true;
+  toast('Tryck på kartan för att placera '+bt.name);
+}
+
+function cancelPlacement(){
+  placingType=null;buildModeActive=false;
+  document.getElementById('place-overlay').style.display='none';
+  toast('Placering avbruten');
+}
+
+// Override handleCanvasClick to support placement
+const _origHandleClick=handleCanvasClick;
+window.handleCanvasClick=function(cx,cy){
+  // Check collect click first — resource buildings with stored amount
+  const gx0=Math.floor((cx-camX)/CELL),gy0=Math.floor((cy-camY)/CELL);
+  const resHit=G.buildings.find(b=>{
+    if(!(b.stored>=10))return false;
+    const s=BUILDING_TYPES[b.type]?.size||1;
+    return gx0>=b.gx&&gx0<b.gx+s&&gy0>=b.gy&&gy0<b.gy+s;
+  });
+  if(resHit&&tryCollect(resHit))return;
+  if(placingType){
+    const bt=BUILDING_TYPES[placingType];if(!bt)return;
+    const gx=Math.floor((cx-camX)/CELL),gy=Math.floor((cy-camY)/CELL);
+    if(gx<0||gx>=GRID-bt.size||gy<0||gy>=GRID-bt.size){toast('Utanför kartan!');return;}
+    if(isOccupied(gx,gy,bt.size)){toast('Platsen är upptagen! Tryck på en grön ruta.');return;}
+    // Do the actual build
+    const costG=bt.costGold?bt.costGold[0]:0;const costE=bt.costElixir?bt.costElixir[0]:0;
+    if(G.gold<costG){toast('Inte tillräckligt Riksdaler!');cancelPlacement();return;}
+    if(G.elixir<costE){toast('Inte tillräckligt SD-Saft!');cancelPlacement();return;}
+    const maxBuilders=JH_DATA[G.jh_level-1]?.maxBuilders||1;
+    const freeBuilder=G.builders.slice(0,maxBuilders).find(b=>!b.busy);
+    if(!freeBuilder){toast('Alla byggare är upptagna!');cancelPlacement();return;}
+    G.gold-=costG;G.elixir-=costE;
+    const now=Date.now()/1000;
+    const buildTime=bt.buildTime?bt.buildTime[0]:0;
+    const newId=G.nextBuildingId++;
+    const nb={id:newId,type:placingType,lv:buildTime>0?0:1,gx,gy,upgrading:buildTime>0,upgradeEnd:now+buildTime,upgradeStart:now};
+    G.buildings.push(nb);
+    if(buildTime>0){
+      freeBuilder.busy=true;freeBuilder.endTime=now+buildTime;
+      freeBuilder.task={bId:newId,newLv:1};
+      toast(`${freeBuilder.name} bygger ${bt.name}! (${fmtTime(buildTime)})`);
+    } else {
+      toast(`${bt.name} placerad! ✅`);
+    }
+    cancelPlacement();saveGame();renderByPanel();
+    return;
+  }
+  _origHandleClick(cx,cy);
+};
+
+
+// ── RESOURCE COLLECTION ──────────────────────────────────────────
+const collectParticles=[]; // {x,y,vx,vy,life,col,txt}
+
+function tryCollect(b){
+  const stored=b.stored||0;
+  if(stored<1)return false;
+  const amount=Math.floor(stored);
+  b.stored=0;
+  const sx=b.gx*CELL+camX+BUILDING_TYPES[b.type].size*CELL/2;
+  const sy=b.gy*CELL+camY;
+  if(b.storeType==='gold'){
+    G.gold=Math.min(G.gold_cap,G.gold+amount);
+    spawnCollectBurst(sx,sy,'#FFD700','+'+amount+' 🪙');
+  } else if(b.storeType==='elixir'){
+    G.elixir=Math.min(G.elixir_cap,G.elixir+amount);
+    spawnCollectBurst(sx,sy,'#cc44ff','+'+amount+' 🧪');
+  } else if(b.storeType==='dark'){
+    G.dark=Math.min(G.dark_cap,G.dark+amount);
+    spawnCollectBurst(sx,sy,'#8800cc','+'+amount+' 💜');
+  }
+  saveGame();
+  return true;
+}
+
+function spawnCollectBurst(x,y,col,txt){
+  // Central text float
+  collectParticles.push({x,y:y-10,vx:0,vy:-60,life:1.4,col,txt,size:15,isText:true});
+  // Coin/droplet burst
+  for(let i=0;i<12;i++){
+    const angle=(i/12)*Math.PI*2;
+    const spd=40+Math.random()*60;
+    collectParticles.push({x,y:y-10,vx:Math.cos(angle)*spd,vy:Math.sin(angle)*spd-30,life:1,col,txt:'',size:5+Math.random()*4,isText:false});
+  }
+}
+
+function tickCollectParticles(dt){
+  for(let i=collectParticles.length-1;i>=0;i--){
+    const p=collectParticles[i];
+    p.x+=p.vx*dt; p.y+=p.vy*dt; p.vy+=80*dt;
+    p.life-=dt*(p.isText?0.7:1.4);
+    if(p.life<=0)collectParticles.splice(i,1);
+  }
+}
+
+function drawCollectParticles(){
+  collectParticles.forEach(p=>{
+    ctx.globalAlpha=Math.max(0,p.life);
+    if(p.isText){
+      ctx.font=`bold ${p.size}px Cinzel`;ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillStyle=p.col;
+      // Shadow
+      ctx.shadowColor='rgba(0,0,0,0.5)';ctx.shadowBlur=4;
+      ctx.fillText(p.txt,p.x,p.y);
+      ctx.shadowBlur=0;
+    } else {
+      ctx.fillStyle=p.col;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.size/2,0,Math.PI*2);ctx.fill();
+    }
+  });
+  ctx.globalAlpha=1;
+}
+
+
+
+// ── SETTINGS ─────────────────────────────────────────────────────
+function openSettings(){document.getElementById('settings-overlay').classList.add('show');}
+function closeSettings(){document.getElementById('settings-overlay').classList.remove('show');}
+function showResetConfirm(){closeSettings();document.getElementById('reset-confirm-overlay').classList.add('show');}
+function closeResetConfirm(){document.getElementById('reset-confirm-overlay').classList.remove('show');}
+function executeReset(){localStorage.removeItem('coj_v2');localStorage.removeItem('coj_tut');location.reload();}
 
 // ── TIPS SYSTEM ─────────────────────────────────────────────────────
 const TIPS=[
@@ -1774,9 +2892,8 @@ renderByPanel();
 requestAnimationFrame(gameLoop);
 switchNav('by');
 // Welcome message
-setTimeout(()=>{
-  toast('👑 Välkommen till Clash of Jimmie! Tryck på Byn för att börja bygga.');
-},1500);
+setTimeout(startTutorial,1000);
+if(!localStorage.getItem('coj_tut'))setTimeout(()=>document.getElementById('onboard-hint').style.display='flex',600);
 </script>
 </body>
 </html>
