@@ -12,11 +12,11 @@
   --bg:#1a2e1a;--panel:#0d1f0d;--card:rgba(255,255,255,0.08);
   --border:rgba(255,255,255,0.12);--font:'Nunito',sans-serif;--title:'Cinzel',serif;
 }
-html{font-size:clamp(14px,2.2vw,20px)}
+html{font-size:clamp(14px,1.6vw,22px)}
 html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:white;font-family:var(--font)}
 
 /* ── TOP HUD ── */
-#hud{position:fixed;top:10px;left:50%;transform:translateX(-50%);right:auto;width:calc(100% - 20px);max-width:540px;z-index:200;display:flex;gap:8px;align-items:center;flex-wrap:nowrap}
+#hud{position:fixed;top:10px;left:50%;transform:translateX(-50%);right:auto;width:calc(100% - 20px);max-width:min(98vw,780px);z-index:200;display:flex;gap:8px;align-items:center;flex-wrap:nowrap}
 .res-pill{background:linear-gradient(135deg,rgba(30,20,5,0.95),rgba(20,15,3,0.98));border:1.5px solid rgba(255,215,0,0.25);border-radius:50px;padding:6px 12px 6px 8px;display:flex;align-items:center;gap:6px;font-size:0.85rem;font-weight:800;cursor:pointer;transition:.2s;backdrop-filter:blur(12px);box-shadow:0 2px 12px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.06)}
 .res-pill:active{transform:scale(0.94)}
 .res-icon{font-size:1.3rem}
@@ -31,7 +31,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
 #base-canvas{display:block;cursor:crosshair}
 
 /* ── BOTTOM NAV ── */
-#bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);right:auto;width:100%;max-width:560px;z-index:100;background:rgba(10,20,10,0.97);border-top:1.5px solid rgba(255,215,0,0.2);padding:10px 8px 10px;display:flex;justify-content:space-around;align-items:center;box-shadow:0 -4px 20px rgba(0,0,0,0.5)}
+#bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);right:auto;width:100%;max-width:min(98vw,780px);z-index:100;background:rgba(10,20,10,0.97);border-top:1.5px solid rgba(255,215,0,0.2);padding:10px 8px 10px;display:flex;justify-content:space-around;align-items:center;box-shadow:0 -4px 20px rgba(0,0,0,0.5)}
 .nav-btn{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:8px 12px;border-radius:16px;transition:.15s;min-width:4rem}
 .nav-btn:active{transform:scale(0.88)}
 .nav-btn.active{background:rgba(255,255,255,0.12)}
@@ -40,14 +40,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
 .nav-btn.active .nav-lbl{color:var(--gold)}
 
 /* ── PANELS ── */
-.panel{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(calc(100% + 80px));right:auto;width:100%;max-width:560px;background:linear-gradient(180deg,#1c3010,#0d1a08);border-radius:28px 28px 0 0;border-top:1.5px solid rgba(255,215,0,0.2);z-index:95;transform:translateY(calc(100% + 80px));transition:transform .4s cubic-bezier(.34,1.56,.64,1);max-height:82vh;display:flex;flex-direction:column;box-shadow:0 -8px 40px rgba(0,0,0,0.6)}
+.panel{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(calc(100% + 80px));right:auto;width:100%;max-width:min(98vw,700px);background:linear-gradient(180deg,#1c3010,#0d1a08);border-radius:28px 28px 0 0;border-top:1.5px solid rgba(255,215,0,0.2);z-index:95;transform:translateY(calc(100% + 80px));transition:transform .4s cubic-bezier(.34,1.56,.64,1);max-height:82vh;display:flex;flex-direction:column;box-shadow:0 -8px 40px rgba(0,0,0,0.6)}
 .panel.open{transform:translateX(-50%) translateY(0);padding-bottom:80px}
 .panel-handle{width:40px;height:5px;background:rgba(255,255,255,0.2);border-radius:3px;margin:10px auto 0;flex-shrink:0}
 .panel-title{font-family:var(--title);font-size:1.3rem;color:var(--gold);text-align:center;padding:12px 16px 8px;flex-shrink:0;letter-spacing:1.5px}
-.panel-scroll{flex:1;overflow-y:auto;padding:10px 14px 100px}
+.panel-scroll{flex:1;overflow-y:auto;padding:12px 16px 120px}
 
 /* ── SECTION HEADERS ── */
-.section-hdr{font-size:0.78rem;font-weight:800;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:2px;margin:16px 0 10px;display:flex;align-items:center;gap:8px}
+.section-hdr{font-size:0.72rem;font-weight:900;color:rgba(255,200,80,0.55);text-transform:uppercase;letter-spacing:2.5px;margin:16px 0 10px;display:flex;align-items:center;gap:8px}
 .section-hdr::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.08)}
 
 /* ── BUILDING CARDS ── */
@@ -62,7 +62,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
 .bc-count{font-size:0.55rem;color:rgba(255,255,255,0.4);margin-top:2px}
 
 /* ── BUILDER QUEUE ── */
-#builder-area{padding:10px 14px 6px;background:rgba(0,0,0,0.3);border-top:1px solid var(--border);flex-shrink:0}
+#builder-area{padding:10px 14px 8px;background:rgba(0,0,0,0.25);border-top:1px solid rgba(255,200,80,0.1);flex-shrink:0}
 .builder-row{display:flex;gap:8px}
 .builder-slot{flex:1;background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:8px 10px;display:flex;align-items:center;gap:8px}
 .builder-icon{font-size:1.8rem}
@@ -88,7 +88,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
 .research-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 .research-card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:12px;display:flex;gap:10px;align-items:center;cursor:pointer;transition:.2s}
 .research-card:active{transform:scale(0.96)}
-.research-card.upgrading{border-color:var(--elixir)}
+.research-card.upgrading{border-color:var(--elixir)!important;box-shadow:0 0 12px rgba(200,80,255,0.2)}
 .rc-icon{font-size:2rem;flex-shrink:0}
 .rc-info{flex:1}
 .rc-name{font-size:0.75rem;font-weight:800;color:white}
@@ -111,16 +111,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
 #attack-wrap{position:fixed;inset:0;z-index:200;display:none;flex-direction:column;background:#1a2e1a}
 #attack-wrap.show{display:flex}
 #attack-hud{padding:8px 14px;background:linear-gradient(180deg,rgba(5,10,5,0.97),rgba(10,20,8,0.92));display:flex;justify-content:space-between;align-items:center;flex-shrink:0;backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,215,0,0.15);box-shadow:0 2px 16px rgba(0,0,0,0.5)}
-#attack-timer-circle{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,rgba(60,40,0,0.8),rgba(30,20,0,0.9));border:2px solid rgba(255,215,0,0.6);display:flex;align-items:center;justify-content:center;font-size:0.95rem;font-weight:900;font-family:var(--title);color:var(--gold);box-shadow:0 0 12px rgba(255,215,0,0.3)}
+#attack-timer-circle{width:clamp(40px,6vw,60px);height:clamp(40px,6vw,60px);border-radius:50%;background:linear-gradient(135deg,rgba(60,40,0,0.8),rgba(30,20,0,0.9));border:2px solid rgba(255,215,0,0.6);display:flex;align-items:center;justify-content:center;font-size:0.95rem;font-weight:900;font-family:var(--title);color:var(--gold);box-shadow:0 0 12px rgba(255,215,0,0.3)}
 #attack-canvas{display:block;flex:1;cursor:crosshair}
 #attack-troops-bar{background:linear-gradient(0deg,rgba(5,10,5,0.98),rgba(10,20,8,0.93));padding:8px 14px 10px;backdrop-filter:blur(12px);flex-shrink:0;border-top:1px solid rgba(255,215,0,0.15);box-shadow:0 -2px 16px rgba(0,0,0,0.5)}
 .at-troops-row{display:flex;gap:8px;justify-content:center;margin-bottom:8px}
-.at-troop{width:54px;height:54px;background:linear-gradient(135deg,rgba(30,22,5,0.9),rgba(15,10,2,0.95));border:1.5px solid rgba(255,200,80,0.2);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:.15s;position:relative;box-shadow:0 2px 8px rgba(0,0,0,0.4)}
+.at-troop{width:clamp(48px,7vw,72px);height:clamp(48px,7vw,72px);background:linear-gradient(135deg,rgba(30,22,5,0.9),rgba(15,10,2,0.95));border:1.5px solid rgba(255,200,80,0.2);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:.15s;position:relative;box-shadow:0 2px 8px rgba(0,0,0,0.4)}
 .at-troop.selected{border-color:rgba(255,215,0,0.8);background:rgba(255,215,0,0.12);box-shadow:0 0 12px rgba(255,215,0,0.3)}
 .at-troop:active{transform:scale(0.88)}
-.at-troop-count{font-size:0.6rem;font-weight:900;color:var(--gold)}
+.at-troop-count{font-size:clamp(0.6rem,1.2vw,0.85rem);font-weight:900;color:var(--gold)}
 #attack-btns{display:flex;gap:10px;justify-content:center}
-.atk-btn{background:linear-gradient(135deg,rgba(30,22,5,0.85),rgba(15,10,2,0.9));border:1.5px solid rgba(255,200,80,0.25);color:rgba(255,230,150,0.9);padding:8px 16px;border-radius:50px;font-size:0.75rem;font-weight:900;cursor:pointer;font-family:var(--font);transition:.15s;box-shadow:0 2px 8px rgba(0,0,0,0.4)}
+.atk-btn{background:linear-gradient(135deg,rgba(30,22,5,0.85),rgba(15,10,2,0.9));border:1.5px solid rgba(255,200,80,0.25);color:rgba(255,230,150,0.9);padding:clamp(7px,1.2vw,12px) clamp(12px,2vw,22px);border-radius:50px;font-size:clamp(0.72rem,1.3vw,0.95rem);font-weight:900;cursor:pointer;font-family:var(--font);transition:.15s;box-shadow:0 2px 8px rgba(0,0,0,0.4)}
 .atk-btn:active{transform:scale(0.94)}
 .atk-btn.red{background:linear-gradient(135deg,rgba(120,20,20,0.7),rgba(80,10,10,0.8));border-color:rgba(255,80,80,0.4);color:#ffaaaa}
 .atk-btn.green{background:linear-gradient(135deg,rgba(20,80,30,0.7),rgba(10,50,15,0.8));border-color:rgba(80,255,120,0.4);color:#aaffbb}
@@ -146,7 +146,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
 .modal-btn.elixir{background:linear-gradient(135deg,var(--elixir),#8800cc);color:white}
 
 /* ── LEVEL UP ── */
-#levelup-splash{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.85);display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;backdrop-filter:blur(8px)}
+#levelup-splash{position:fixed;inset:0;z-index:400;background:radial-gradient(ellipse at 50% 30%,rgba(80,60,0,0.6),rgba(0,0,0,0.95));display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;backdrop-filter:blur(12px)}
 #levelup-splash.show{display:flex}
 .lu-star{font-size:4rem;animation:lu-spin 1s ease-in-out}
 @keyframes lu-spin{from{transform:rotate(-30deg) scale(0.5)}to{transform:rotate(0) scale(1)}}
@@ -155,13 +155,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
 .lu-btn{background:linear-gradient(135deg,var(--gold),#cc8800);color:#1a0a00;border:none;padding:14px 40px;border-radius:50px;font-size:1rem;font-weight:900;cursor:pointer;font-family:var(--font);margin-top:8px}
 
 /* ── TOAST ── */
-#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.88);backdrop-filter:blur(8px);color:white;padding:10px 22px;border-radius:50px;font-size:0.82rem;font-weight:700;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap;border:1px solid rgba(255,255,255,0.1)}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,rgba(20,35,10,0.97),rgba(10,20,5,0.98));backdrop-filter:blur(12px);color:white;padding:11px 24px;border-radius:50px;font-size:0.82rem;font-weight:700;opacity:0;transition:opacity .35s;pointer-events:none;z-index:999;white-space:nowrap;border:1px solid rgba(255,215,0,0.2);box-shadow:0 4px 20px rgba(0,0,0,0.4)}
 #toast.show{opacity:1}
 
 
 
 /* ── SHOP PANEL ── */
-#shop-panel{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(calc(100% + 80px));right:auto;width:100%;max-width:560px;z-index:96;background:linear-gradient(180deg,#141e10,#0a110a);border-radius:28px 28px 0 0;border-top:2px solid rgba(255,215,0,0.3);transform:translateY(calc(100% + 80px));transition:transform .4s cubic-bezier(.34,1.56,.64,1);max-height:82vh;display:flex;flex-direction:column;box-shadow:0 -8px 40px rgba(0,0,0,0.7);padding-bottom:80px}
+#shop-panel{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(calc(100% + 80px));right:auto;width:100%;max-width:min(98vw,700px);z-index:96;background:linear-gradient(180deg,#141e10,#0a110a);border-radius:28px 28px 0 0;border-top:2px solid rgba(255,215,0,0.3);transform:translateY(calc(100% + 80px));transition:transform .4s cubic-bezier(.34,1.56,.64,1);max-height:82vh;display:flex;flex-direction:column;box-shadow:0 -8px 40px rgba(0,0,0,0.7);padding-bottom:80px}
 #shop-panel.open{transform:translateX(-50%) translateY(0)}
 #shop-handle{width:44px;height:5px;background:rgba(255,215,0,0.3);border-radius:3px;margin:12px auto 0;flex-shrink:0}
 #shop-header{padding:10px 16px 6px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
@@ -316,14 +316,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
   opacity:0;transition:opacity .3s;white-space:nowrap}
 #deploy-hint.show{opacity:1}
 /* ── ATTACK RESULT ── */
-#result-overlay{position:fixed;inset:0;z-index:350;background:rgba(0,0,0,0.85);display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;backdrop-filter:blur(8px);padding:20px}
+#result-overlay{position:fixed;inset:0;z-index:350;background:radial-gradient(ellipse at 50% 30%,rgba(20,40,10,0.7),rgba(0,0,0,0.95));display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;backdrop-filter:blur(12px);padding:20px}
 #result-overlay.show{display:flex}
-.result-stars{font-size:2.5rem;letter-spacing:8px}
-.result-title{font-family:var(--title);font-size:2rem;color:var(--gold);text-align:center}
+.result-stars{font-size:3rem;letter-spacing:10px;filter:drop-shadow(0 0 16px rgba(255,215,0,0.5))}
+.result-title{font-family:var(--title);font-size:2.2rem;color:var(--gold);text-align:center;text-shadow:0 0 30px rgba(255,215,0,0.4)}
 .result-sub{color:rgba(255,255,255,0.6);font-size:0.88rem;text-align:center}
 .result-loot{display:flex;gap:16px;margin:6px 0}
-.result-loot-item{text-align:center;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:10px 16px}
-.result-loot-val{font-size:1.2rem;font-weight:900;color:var(--gold)}
+.result-loot-item{text-align:center;background:rgba(30,22,5,0.8);border:1px solid rgba(255,200,80,0.2);border-radius:16px;padding:12px 20px}
+.result-loot-val{font-size:1.4rem;font-weight:900;color:var(--gold);font-family:var(--title)}
 .result-btn{background:linear-gradient(135deg,var(--gold),#cc8800);color:#1a0a00;border:none;padding:14px 40px;border-radius:50px;font-size:1rem;font-weight:900;cursor:pointer;font-family:var(--font)}
 
 
@@ -376,17 +376,17 @@ body{background:#1a2e10}
 
 /* Shop warm */
 #shop-panel{background:linear-gradient(180deg,#141e0a,#0a1108)!important}
-.shop-card{background:rgba(30,22,5,0.7)!important;border-color:rgba(255,200,80,0.1)!important}
+.shop-card{background:rgba(20,15,3,0.85)!important;border-color:rgba(255,200,80,0.1)!important;border-radius:16px!important;transition:border-color .2s,box-shadow .2s}
 .shop-card.can-build{background:rgba(50,38,5,0.8)!important;border-color:rgba(255,215,0,0.35)!important}
 
 /* Research warm */
-.research-card{background:rgba(30,22,5,0.7)!important;border-color:rgba(255,200,80,0.1)!important}
+.research-card{background:rgba(25,18,4,0.85)!important;border:1px solid rgba(255,200,80,0.15)!important;border-radius:16px!important;transition:border-color .2s}
 
 /* Hero card */
-.hero-card{background:linear-gradient(135deg,rgba(50,40,5,0.5),rgba(0,40,80,0.2))!important}
+.hero-card{background:linear-gradient(135deg,rgba(40,30,5,0.7),rgba(0,30,60,0.3))!important;border:1.5px solid rgba(255,215,0,0.15)!important;border-radius:20px!important}
 
 /* Troop cards */
-.troop-card{background:rgba(30,22,5,0.7)!important;border-color:rgba(255,200,80,0.08)!important}
+.troop-card{background:rgba(20,15,3,0.85)!important;border-color:rgba(255,200,80,0.12)!important;border-radius:14px!important}
 .at-troop{background:rgba(30,22,5,0.9)!important;border-color:rgba(255,200,80,0.15)!important}
 
 /* Level up warm */
@@ -421,7 +421,7 @@ body{background:#1a2e10}
 .modal-header{border-radius:var(--radius-lg) var(--radius-lg) 0 0;background:linear-gradient(135deg,rgba(255,215,0,0.08),rgba(0,0,0,0.3))}
 
 /* Buttons */
-.modal-btn.primary{background:linear-gradient(135deg,#FFD700,#cc8800);border-radius:50px;font-size:0.88rem;letter-spacing:.3px;line-height:1.4;padding:10px}
+.modal-btn.primary{background:linear-gradient(135deg,#FFD700,#bb7700);border-radius:50px;font-size:0.88rem;letter-spacing:.3px;line-height:1.4;padding:10px;box-shadow:0 3px 12px rgba(255,215,0,0.3)}
 .modal-btn.cancel{border-radius:50px;border:1px solid rgba(255,255,255,0.1)}
 .shop-build-btn{border-radius:14px;padding:10px 18px;font-size:0.8rem}
 .hero-lvup-btn{letter-spacing:.3px}
@@ -443,7 +443,7 @@ body{background:#1a2e10}
 
 /* Troop cards */
 .troop-card{border-radius:var(--radius-sm)}
-.troop-card.selected{box-shadow:0 0 0 2px var(--gold)}
+.troop-card.selected{box-shadow:0 0 0 2px rgba(255,215,0,0.8),0 0 12px rgba(255,215,0,0.2)}
 .at-troop{border-radius:var(--radius-sm)}
 .at-troop.selected{box-shadow:0 0 0 2px var(--gold)}
 
@@ -621,7 +621,6 @@ body{background:#1a2e10}
 <div id="bottom-nav">
   <div class="nav-btn active" id="nav-by" onclick="switchNav('by')"><div class="nav-icon">🏘️</div><div class="nav-lbl">Byn</div></div>
   <div class="nav-btn" id="nav-army" onclick="switchNav('army')"><div class="nav-icon">⚔️</div><div class="nav-lbl">Armé</div></div>
-  <div class="nav-btn" id="nav-research" onclick="switchNav('research')"><div class="nav-icon">🔬</div><div class="nav-lbl">Forskning</div></div>
   <div class="nav-btn" id="nav-heroes" onclick="switchNav('heroes')"><div class="nav-icon">👑</div><div class="nav-lbl">Hjältar</div></div>
   <div class="nav-btn" id="nav-attack" onclick="startAttackMode()"><div class="nav-icon">🗡️</div><div class="nav-lbl">Attack</div></div>
 </div>
@@ -834,37 +833,37 @@ const JH_DATA=[
 ];
 
 const BUILDING_TYPES={
-  'jimmie_hall':{name:'Jimmie Hall',icon:'🏛️',desc:'Hjärtat i byn. Uppgradera för att låsa upp fler byggnader.',size:4,maxLv:8,costGold:[0,1000,5000,20000,75000,200000,600000,1500000],costElixir:[0,0,0,0,0,0,0,0],buildTime:[0,60,300,1200,3600,7200,14400,28800],hp:[1000,1500,2200,3100,4200,5500,7200,9000],limit:1,category:'special',
+  'jimmie_hall':{unlockJH:1,name:'Jimmie Hall',icon:'🏛️',desc:'Hjärtat i byn. Uppgradera för att låsa upp fler byggnader.',size:4,maxLv:8,costGold:[0,1000,5000,20000,75000,200000,600000,1500000],costElixir:[0,0,0,0,0,0,0,0],buildTime:[0,60,300,1200,3600,7200,14400,28800],hp:[1000,1500,2200,3100,4200,5500,7200,9000],limit:1,category:'special',
    stats:lv=>`HP: ${[1000,1500,2200,3100,4200,5500,7200,9000][lv-1]}`},
-  'kanon':{name:'Kanon',icon:'💣',desc:'Kraftfullt försvar. Siktar på marktrupper.',size:2,maxLv:8,costGold:[250,500,1000,2000,4000,8000,15000,30000],buildTime:[5,60,120,300,600,1200,3600,7200],hp:[400,450,500,570,650,750,870,1000],dps:[9,11,13,15,17,20,24,28],limitByJH:[1,1,2,2,3,3,3,3],category:'defense',
+  'kanon':{unlockJH:1,name:'Kanon',icon:'💣',desc:'Kraftfullt försvar. Siktar på marktrupper.',size:2,maxLv:8,costGold:[250,500,1000,2000,4000,8000,15000,30000],buildTime:[5,60,120,300,600,1200,3600,7200],hp:[400,450,500,570,650,750,870,1000],dps:[9,11,13,15,17,20,24,28],limitByJH:[1,1,2,2,3,3,3,3],category:'defense',
    stats:lv=>`DPS: ${[9,11,13,15,17,20,24,28][lv-1]} | HP: ${[400,450,500,570,650,750,870,1000][lv-1]}`},
-  'pilbage_torn':{name:'Pilbåge-Torn',icon:'🏹',desc:'Träffar både mark- och lufttrupper.',size:2,maxLv:8,costGold:[300,600,1200,2400,4800,9600,19200,38400],buildTime:[5,90,180,360,720,1440,4320,8640],hp:[380,420,480,560,650,760,890,1050],dps:[11,15,19,25,30,35,42,50],limitByJH:[0,1,1,2,2,3,3,3],category:'defense',
+  'pilbage_torn':{unlockJH:2,name:'Pilbåge-Torn',icon:'🏹',desc:'Träffar både mark- och lufttrupper.',size:2,maxLv:8,costGold:[300,600,1200,2400,4800,9600,19200,38400],buildTime:[5,90,180,360,720,1440,4320,8640],hp:[380,420,480,560,650,760,890,1050],dps:[11,15,19,25,30,35,42,50],limitByJH:[0,1,1,2,2,3,3,3],category:'defense',
    stats:lv=>`DPS: ${[11,15,19,25,30,35,42,50][lv-1]} | HP: ${[380,420,480,560,650,760,890,1050][lv-1]}`},
-  'morsare':{name:'Mörsare',icon:'🎯',desc:'Splash-skada på marktrupper. Låg räckvidd men kraftfull.',size:2,maxLv:8,costGold:[400,800,1600,3200,6400,12800,25600,51200],buildTime:[60,120,240,480,960,1920,5760,11520],hp:[400,450,500,550,600,700,800,900],dps:[4,5,6,7,8.5,10,12,14],splash:true,limitByJH:[0,0,1,1,2,2,2,2],category:'defense',
+  'morsare':{unlockJH:3,name:'Mörsare',icon:'🎯',desc:'Splash-skada på marktrupper. Låg räckvidd men kraftfull.',size:2,maxLv:8,costGold:[400,800,1600,3200,6400,12800,25600,51200],buildTime:[60,120,240,480,960,1920,5760,11520],hp:[400,450,500,550,600,700,800,900],dps:[4,5,6,7,8.5,10,12,14],splash:true,limitByJH:[0,0,1,1,2,2,2,2],category:'defense',
    stats:lv=>`DPS: ${[4,5,6,7,8.5,10,12,14][lv-1]} (Splash!) | HP: ${[400,450,500,550,600,700,800,900][lv-1]}`},
-  'luftforsvar':{name:'Luftförsvar',icon:'🚀',desc:'Förstör flygande Jimmie-enheter.',size:2,maxLv:8,costGold:[500,1000,2000,4000,8000,16000,32000,64000],buildTime:[90,180,360,720,1440,2880,8640,17280],hp:[900,950,1000,1050,1100,1150,1200,1300],dps:[80,108,130,160,192,224,280,320],limitByJH:[0,0,1,1,1,2,2,2],category:'defense',
+  'luftforsvar':{unlockJH:3,name:'Luftförsvar',icon:'🚀',desc:'Förstör flygande Jimmie-enheter.',size:2,maxLv:8,costGold:[500,1000,2000,4000,8000,16000,32000,64000],buildTime:[90,180,360,720,1440,2880,8640,17280],hp:[900,950,1000,1050,1100,1150,1200,1300],dps:[80,108,130,160,192,224,280,320],limitByJH:[0,0,1,1,1,2,2,2],category:'defense',
    stats:lv=>`DPS: ${[80,108,130,160,192,224,280,320][lv-1]} (Luft) | HP: ${[900,950,1000,1050,1100,1150,1200,1300][lv-1]}`},
-  'tesla_torn':{name:'Tesla-Torn',icon:'⚡',desc:'Gömd tills fienden är nära. Elektrisk skada.',size:2,maxLv:6,costGold:[1000,2000,4000,8000,16000,32000],buildTime:[300,600,1200,2400,4800,9600],hp:[600,700,800,900,1000,1100],dps:[17,21,26,33,41,51],limitByJH:[0,0,0,0,1,1,2,2],category:'defense',unlockJH:5,
+  'tesla_torn':{unlockJH:5,name:'Tesla-Torn',icon:'⚡',desc:'Gömd tills fienden är nära. Elektrisk skada.',size:2,maxLv:6,costGold:[1000,2000,4000,8000,16000,32000],buildTime:[300,600,1200,2400,4800,9600],hp:[600,700,800,900,1000,1100],dps:[17,21,26,33,41,51],limitByJH:[0,0,0,0,1,1,2,2],category:'defense',unlockJH:5,
    stats:lv=>`DPS: ${[17,21,26,33,41,51][lv-1]} (Dold) | HP: ${[600,700,800,900,1000,1100][lv-1]}`},
-  'riksdaler_gruva':{name:'Riksdaler-Gruva',icon:'⛏️',desc:'Producerar Riksdaler automatiskt.',size:2,maxLv:8,costGold:[150,300,600,1200,2400,4800,9600,19200],buildTime:[5,40,80,160,320,640,1920,3840],goldPerHour:[200,400,600,800,1000,1300,1600,2000],buildingCap:[3000,5000,10000,20000,40000,75000,150000,300000],limitByJH:[1,2,3,4,5,6,6,6],category:'resource',
+  'riksdaler_gruva':{unlockJH:1,name:'Riksdaler-Gruva',icon:'⛏️',desc:'Producerar Riksdaler automatiskt.',size:2,maxLv:8,costGold:[150,300,600,1200,2400,4800,9600,19200],buildTime:[5,40,80,160,320,640,1920,3840],goldPerHour:[200,400,600,800,1000,1300,1600,2000],buildingCap:[3000,5000,10000,20000,40000,75000,150000,300000],limitByJH:[1,2,3,4,5,6,6,6],category:'resource',
    stats:lv=>`${[120,180,240,360,480,600,780,960][lv-1]} Riksdaler/tim`},
-  'riksdaler_forrad':{name:'Riksdaler-Förråd',icon:'💰',desc:'Lagrar Riksdaler.',size:3,maxLv:8,costGold:[200,400,800,1600,3200,6400,12800,25600],buildTime:[5,60,120,240,480,960,2880,5760],capacity:[1500,3000,6000,12000,25000,45000,100000,250000,500000,1000000],limitByJH:[1,1,2,2,2,2,2,3],category:'resource',
+  'riksdaler_forrad':{unlockJH:1,name:'Riksdaler-Förråd',icon:'💰',desc:'Lagrar Riksdaler.',size:3,maxLv:8,costGold:[200,400,800,1600,3200,6400,12800,25600],buildTime:[5,60,120,240,480,960,2880,5760],capacity:[1500,3000,6000,12000,25000,45000,100000,250000,500000,1000000],limitByJH:[1,1,2,2,2,2,2,3],category:'resource',
    stats:lv=>{const cap=[1500,3000,6000,12000,25000,45000,100000,250000,500000,1000000][Math.max(0,lv-1)];return`Kapacitet: ${cap?cap.toLocaleString():'-'}`}},
-  'saft_samlare':{name:'SD-Saft-Samlare',icon:'🧫',desc:'Producerar SD-Saft automatiskt.',size:2,maxLv:8,costElixir:[150,300,600,1200,2400,4800,9600,19200],buildTime:[5,40,80,160,320,640,1920,3840],elixirPerHour:[200,400,600,800,1000,1300,1600,2000],buildingCap:[3000,5000,10000,20000,40000,75000,150000,300000],limitByJH:[1,2,3,4,5,6,6,6],category:'resource',
+  'saft_samlare':{unlockJH:1,name:'SD-Saft-Samlare',icon:'🧫',desc:'Producerar SD-Saft automatiskt.',size:2,maxLv:8,costElixir:[150,300,600,1200,2400,4800,9600,19200],buildTime:[5,40,80,160,320,640,1920,3840],elixirPerHour:[200,400,600,800,1000,1300,1600,2000],buildingCap:[3000,5000,10000,20000,40000,75000,150000,300000],limitByJH:[1,2,3,4,5,6,6,6],category:'resource',
    stats:lv=>`${[120,180,240,360,480,600,780,960][lv-1]} Saft/tim`},
-  'saft_tank':{name:'SD-Saft-Tank',icon:'🫙',desc:'Lagrar SD-Saft.',size:3,maxLv:8,costGold:[200,400,800,1600,3200,6400,12800,25600],buildTime:[5,60,120,240,480,960,2880,5760],capacity:[1500,3000,6000,12000,25000,45000,100000,250000,500000,1000000],limitByJH:[1,1,2,2,2,2,2,3],category:'resource',
+  'saft_tank':{unlockJH:1,name:'SD-Saft-Tank',icon:'🫙',desc:'Lagrar SD-Saft.',size:3,maxLv:8,costGold:[200,400,800,1600,3200,6400,12800,25600],buildTime:[5,60,120,240,480,960,2880,5760],capacity:[1500,3000,6000,12000,25000,45000,100000,250000,500000,1000000],limitByJH:[1,1,2,2,2,2,2,3],category:'resource',
    stats:lv=>{const cap=[1500,3000,6000,12000,25000,45000,100000,250000,500000,1000000][Math.max(0,lv-1)];return`Kapacitet: ${cap?cap.toLocaleString():'-'}`}},
-  'kasern':{name:'Kasern',icon:'⚔️',desc:'Tränar Jimmie-trupper.',size:3,maxLv:8,costElixir:[200,400,800,1600,3200,6400,12800,25600],buildTime:[45,90,180,360,720,1440,4320,8640],trainingBoost:[1,1.1,1.2,1.3,1.5,1.7,2,2.5],limitByJH:[1,1,1,2,2,2,2,2],category:'military',
+  'kasern':{unlockJH:1,name:'Kasern',icon:'⚔️',desc:'Tränar Jimmie-trupper.',size:3,maxLv:8,costElixir:[200,400,800,1600,3200,6400,12800,25600],buildTime:[45,90,180,360,720,1440,4320,8640],trainingBoost:[1,1.1,1.2,1.3,1.5,1.7,2,2.5],limitByJH:[1,1,1,2,2,2,2,2],category:'military',
    stats:lv=>`Träningsboost: ${[1,1.1,1.2,1.3,1.5,1.7,2,2.5][lv-1]}x`},
-  'laboratorium':{name:'Laboratorium',icon:'🔬',desc:'Forskar uppgraderingar för trupper och besvärjelser.',size:3,maxLv:8,costGold:[500,1000,2000,4000,8000,16000,32000,64000],buildTime:[120,240,480,960,1920,3840,11520,23040],limitByJH:[0,0,1,1,1,1,1,1],category:'military',unlockJH:3,
+  'laboratorium':{unlockJH:3,name:'Laboratorium',icon:'🔬',desc:'Forskar uppgraderingar för trupper och besvärjelser.',size:3,maxLv:8,costGold:[500,1000,2000,4000,8000,16000,32000,64000],buildTime:[120,240,480,960,1920,3840,11520,23040],limitByJH:[0,0,1,1,1,1,1,1],category:'military',unlockJH:3,
    stats:_=>`Möjliggör truppforskning`},
-  'arme_lager':{name:'Armélager',icon:'🏕️',desc:'Ökar kapaciteten för trupper.',size:3,maxLv:8,costElixir:[150,300,600,1200,2400,4800,9600,19200],buildTime:[5,40,80,160,320,640,1920,3840],capacity:[50,70,90,120,160,200,240,300],limitByJH:[1,1,2,2,3,3,4,4],category:'military',
+  'arme_lager':{unlockJH:1,name:'Armélager',icon:'🏕️',desc:'Ökar kapaciteten för trupper.',size:3,maxLv:8,costElixir:[150,300,600,1200,2400,4800,9600,19200],buildTime:[5,40,80,160,320,640,1920,3840],capacity:[50,70,90,120,160,200,240,300],limitByJH:[1,1,2,2,3,3,4,4],category:'military',
    stats:lv=>`Armé-kapacitet: ${[20,30,40,60,80,100,120,150][lv-1]}`},
-  'dark_bohrare':{name:'Dark Elixir-Borr',icon:'🖤',desc:'Utvinner Jimmie-Kraft djupt under marken.',size:2,maxLv:6,costGold:[3000,6000,12000,24000,48000,96000],buildTime:[360,720,1440,2880,5760,11520],darkPerHour:[20,30,45,60,80,100,120,140],buildingCap:[200,400,800,1600,3000,5000,8000,12000],limitByJH:[0,0,0,0,0,0,1,2],category:'resource',unlockJH:5,
+  'dark_bohrare':{unlockJH:7,name:'Dark Elixir-Borr',icon:'🖤',desc:'Utvinner Jimmie-Kraft djupt under marken.',size:2,maxLv:6,costGold:[3000,6000,12000,24000,48000,96000],buildTime:[360,720,1440,2880,5760,11520],darkPerHour:[20,30,45,60,80,100,120,140],buildingCap:[200,400,800,1600,3000,5000,8000,12000],limitByJH:[0,0,0,0,0,0,1,2],category:'resource',unlockJH:5,
    stats:lv=>`${[20,40,60,80,100,120][lv-1]} J-Kraft/tim`},
-  'mur':{name:'Mur',icon:'🧱',desc:'Blockerar angripare. Uppgradera för starkare murar.',size:1,maxLv:8,costGold:[50,100,300,1000,2000,5000,10000,30000],buildTime:[0,5,10,30,60,120,300,600],hp:[300,500,700,1000,1500,2500,4000,7000],limitByJH:[10,15,20,25,30,35,40,40],category:'wall',
+  'mur':{unlockJH:1,name:'Mur',icon:'🧱',desc:'Blockerar angripare. Uppgradera för starkare murar.',size:1,maxLv:8,costGold:[50,100,300,1000,2000,5000,10000,30000],buildTime:[0,5,10,30,60,120,300,600],hp:[300,500,700,1000,1500,2500,4000,7000],limitByJH:[10,15,20,25,30,35,40,40],category:'wall',
    stats:lv=>`HP: ${[300,500,700,1000,1500,2500,4000,7000][lv-1]}`},
-  'bomb_falla':{name:'Bomb-Fälla',icon:'💥',desc:'Exploderar när fienden trampar på den.',size:1,maxLv:6,costGold:[200,400,800,1600,3200,6400],buildTime:[10,20,40,80,160,320],damage:[10,15,20,35,45,60],limitByJH:[0,0,0,2,3,4,4,4],category:'trap',unlockJH:4,
+  'bomb_falla':{unlockJH:4,name:'Bomb-Fälla',icon:'💥',desc:'Exploderar när fienden trampar på den.',size:1,maxLv:6,costGold:[200,400,800,1600,3200,6400],buildTime:[10,20,40,80,160,320],damage:[10,15,20,35,45,60],limitByJH:[0,0,0,2,3,4,4,4],category:'trap',unlockJH:4,
    stats:lv=>`Skada: ${[10,15,20,35,45,60][lv-1]}`},
 };
 
@@ -933,6 +932,8 @@ const DEFAULT_STATE={
   gems:50,
 };
 let G=JSON.parse(JSON.stringify(DEFAULT_STATE));
+
+function enforceMaxLevels(){} // no-op — never downgrade buildings
 
 function saveGame(){try{G.lastSaveSec=Date.now()/1000;localStorage.setItem(SAVE_KEY,JSON.stringify(G));}catch(e){}}
 function loadGame(){try{const s=localStorage.getItem(SAVE_KEY);if(s){
@@ -1107,6 +1108,7 @@ function drawBase(){
 }
 
 let ghostPos=null;
+const suppressedCollect=new Set(); // building ids with collect icon hidden
 
 // Decoration positions (computed once)
 const DECOS=[
@@ -1201,7 +1203,7 @@ function drawBuilding(b){
   // Collection icon — shown when stored resources await pickup
   const stored=b.stored||0;
   const _bt=BUILDING_TYPES[b.type];
-  if(stored>=10&&_bt&&(_bt.goldPerHour||_bt.elixirPerHour||_bt.darkPerHour)&&!b.upgrading){
+  if(stored>=10&&_bt&&(_bt.goldPerHour||_bt.elixirPerHour||_bt.darkPerHour)&&!b.upgrading&&!suppressedCollect.has(b.id)){
     const bt2cap=_bt.buildingCap?_bt.buildingCap[Math.min(b.lv-1,_bt.buildingCap.length-1)]:500;
     const pct=stored/bt2cap;
     // Bob animation
@@ -1842,13 +1844,33 @@ function completeBuilder(builder){
     toast(`${BUILDING_TYPES[b.type]?.name||'Byggnad'} klar! Lv${b.lv}`);
     // Check JH level up
     if(b.type==='jimmie_hall'){levelUpJH(b.lv);}
+    // Kasern level-up — announce new troop unlock
+    if(b.type==='kasern'){
+      const kasernLvUnlocks={
+        2:{id:'sd_jatte',name:'SD-Jätte',icon:'💪'},
+        3:{id:'jimmie_trollkarl',name:'SD-Trollkarl',icon:'🧙'},
+        4:{id:'jimmie_ballong',name:'Jimmie-Ballong',icon:'🎈'},
+        5:{id:'jimmie_helare',name:'Jimmie-Helare',icon:'💊'},
+        6:{id:'minar_jimmie',name:'Minar-Jimmie',icon:'⛏️'},
+        7:{id:'pekka_jimmie',name:'P.E.K.K.A-Jimmie',icon:'🤖'},
+      };
+      const unlocked=kasernLvUnlocks[b.lv];
+      if(unlocked){
+        // Show unlock splash
+        setTimeout(()=>{
+          document.getElementById('lu-title').textContent=`${unlocked.icon} Ny trupp upplåst!`;
+          document.getElementById('lu-sub').textContent=unlocked.name+' kan nu tränas i Armén!';
+          document.getElementById('lu-unlocks').textContent='Gå till ⚔️ Armé för att träna';
+          document.getElementById('levelup-splash').classList.add('show');
+        },500);
+      }
+    }
   }
   builder.busy=false;builder.task=null;builder.endTime=0;
   recalcCaps();renderByPanel();saveGame();
 }
 
-function levelUpJH(newLv){
-  G.jh_level=newLv;
+function levelUpJH(newLv){  G.jh_level=newLv;
   const data=JH_DATA[newLv-1];
   // Update caps to real CoC values
   const GOLD_CAPS=[1000,2500,10000,50000,100000,300000,500000,750000];
@@ -2028,7 +2050,9 @@ function openBuildMenu(type){
   const existing=G.buildings.filter(b=>b.type===type);
   const count=existing.length;
   const canBuild=count<(bt.limit||99);
-  const currentLv=existing[0]?.lv||0;
+  // Pick lowest level building to upgrade (or selected)
+  const target0=selectedBuilding&&selectedBuilding.type===type?selectedBuilding:(existing.sort((a,b)=>a.lv-b.lv)[0]);
+  const currentLv=target0?.lv||0;
   const nextLv=Math.min(currentLv+1,bt.maxLv);
   const upgCostG=bt.costGold?bt.costGold[Math.min(nextLv-1,bt.maxLv-1)]:0;
   const upgCostE=bt.costElixir?bt.costElixir[Math.min(nextLv-1,bt.maxLv-1)]:0;
@@ -2042,10 +2066,12 @@ function openBuildMenu(type){
   statsHtml+=`<div class="modal-stat"><span class="modal-stat-lbl">Byggtid</span><span class="modal-stat-val">${fmtTime(buildTime)}</span></div>`;
   if(bt.limit)statsHtml+=`<div class="modal-stat"><span class="modal-stat-lbl">Byggt</span><span class="modal-stat-val">${count}/${bt.limit}</span></div>`;
   document.getElementById('bm-stats').innerHTML=statsHtml;
-  document.getElementById('bm-prog').style.width=(currentLv/bt.maxLv*100)+'%';
-  document.getElementById('bm-prog-lbl').textContent=`Lv ${currentLv}/${bt.maxLv}`;
+  const maxAlw=getMaxBuildingLv(bt);
+  document.getElementById('bm-prog').style.width=(currentLv/maxAlw*100)+'%';
+  document.getElementById('bm-prog-lbl').textContent=`Lv ${currentLv}/${maxAlw} (max för JH${G.jh_level})`;
   const actionBtn=document.getElementById('bm-action-btn');
-  if(currentLv>=bt.maxLv){actionBtn.innerHTML='MAX NIVÅ';actionBtn.disabled=true;}
+  const maxAlwBtn=getMaxBuildingLv(bt);
+  if(currentLv>=maxAlwBtn){actionBtn.innerHTML=currentLv>=bt.maxLv?'MAX NIVÅ':'🔒 Max för JH'+G.jh_level;actionBtn.disabled=true;}
   else if(!canBuild&&currentLv===0){actionBtn.innerHTML='Max antal';actionBtn.disabled=true;}
   else{
     const btnCostG=bt.costGold?bt.costGold[Math.min(nextLv-1,bt.maxLv-1)]:0;
@@ -2064,9 +2090,12 @@ function doBuildAction(){
   const bt=BUILDING_TYPES[type];if(!bt)return;
   const existing=G.buildings.filter(b=>b.type===type);
   const count=existing.length;
-  const currentLv=count>0?existing[0].lv:0;
+  const targetB=selectedBuilding&&selectedBuilding.type===type?selectedBuilding:(existing.sort((a,b)=>a.lv-b.lv)[0]);
+  const currentLv=count>0?(targetB?.lv||existing[0].lv):0;
   const nextLv=currentLv+1;
-  if(nextLv>bt.maxLv){toast('Max nivå!');return;}
+  const maxAllowed=getMaxBuildingLv(bt);
+  if(nextLv>maxAllowed){toast('Max nivå för JH'+G.jh_level+'! Uppgradera Jimmie Hall för mer.');return;}
+  if(nextLv>bt.maxLv){toast('Absolut max nivå!');return;}
   const costG=bt.costGold?bt.costGold[Math.min(nextLv-1,bt.maxLv-1)]:0;
   const costE=bt.costElixir?bt.costElixir[Math.min(nextLv-1,bt.maxLv-1)]:0;
   const buildTime=bt.buildTime?bt.buildTime[Math.min(nextLv-1,bt.maxLv-1)]:0;
@@ -2087,7 +2116,7 @@ function doBuildAction(){
     G.buildings.push(targetBuilding);
     if(buildTime===0){targetBuilding.upgrading=false;targetBuilding.lv=1;toast(`${bt.name} byggt!`);}
   } else {
-    targetBuilding=existing[0];
+    targetBuilding=targetB||existing[0];
     targetBuilding.upgrading=true;targetBuilding.upgradeEnd=now+buildTime;targetBuilding.upgradeStart=now;
     if(buildTime===0){targetBuilding.upgrading=false;targetBuilding.lv=nextLv;toast(`${bt.name} uppgraderad!`);}
   }
@@ -2600,8 +2629,8 @@ function startAttackMode(){
   // Setup attack troop pool from player's army
   atkTroopPool={};
   Object.entries(G.troops).forEach(([id,cnt])=>{if(cnt>0)atkTroopPool[id]=cnt;});
-  // Save composition for quick retrain
   if(Object.keys(atkTroopPool).length>0)G.lastTrained={...atkTroopPool};
+  buildWallGrid();
   atkTimer=180;atkStarted=true;atkUnits=[];atkParticles=[];
   atkDestroyed=0;atkRageEnd=0;heroDeployed=false;
   atkTotalHP=atkBuildings.reduce((s,b)=>s+b.hp,0);
@@ -2887,7 +2916,6 @@ function drawAttack(){
     if((x+y)%6===0){ctx.fillStyle='rgba(0,0,0,0.04)';ctx.fillRect(x*ATK_C+ATK_CAM_X,y*ATK_C+ATK_CAM_Y,ATK_C,ATK_C);}
   }}
   // Entry zone (bottom glow — where you drop troops)
-  const deployStartY=(AGRID-4)*ATK_C+ATK_CAM_Y;
 
   // Show hint if no units deployed
   if(atkUnits.length===0&&selectedAtkTroop){
@@ -3011,6 +3039,18 @@ function drawAttack(){
   document.getElementById('attack-pct').textContent=Math.floor(pctDest*100)+'%';
 }
 
+// Wall grid for collision detection
+let wallGrid=null;
+function buildWallGrid(){
+  wallGrid=new Set();
+  atkBuildings.forEach(b=>{
+    if(b.type==='mur'&&b.alive){
+      wallGrid.add(b.gx+','+b.gy);
+    }
+  });
+}
+function isWallAt(gx,gy){return wallGrid&&wallGrid.has(Math.floor(gx)+','+Math.floor(gy));}
+
 function updateAttack(dt){
   const now=Date.now()/1000;
   const rage=atkRageEnd>now;
@@ -3029,7 +3069,19 @@ function updateAttack(dt){
     const attackRange=(u.troopId==='jimmie_bagare'||u.troopId==='jimmie_helare')?ATK_C*2.5:ATK_C*1.2;
     if(dist>attackRange){
       const spd=(TROOP_TYPES[u.troopId]?.speed||16)*AC/12*(rage?1.5:1);
-      u.x+=dx/dist*spd*dt;u.y+=dy/dist*spd*dt;
+      const stepX=dx/dist*spd*dt, stepY=dy/dist*spd*dt;
+      // Check if next step crosses an ALIVE wall — check directly, no stale grid
+      const nextGX=(u.x+stepX-ATK_CAM_X)/ATK_C;
+      const nextGY=(u.y+stepY-ATK_CAM_Y)/ATK_C;
+      const wgx=Math.floor(nextGX), wgy=Math.floor(nextGY);
+      const wallB=atkBuildings.find(b=>b.type==='mur'&&b.alive&&b.gx===wgx&&b.gy===wgy);
+      if(wallB){
+        // Wall is alive — redirect to attack it
+        if(u.target!==wallB)u.target=wallB;
+      } else {
+        // No alive wall — move freely
+        u.x+=stepX;u.y+=stepY;
+      }
     } else {
       // Attack
       u.attackTimer=(u.attackTimer||0)-dt;
@@ -3150,14 +3202,10 @@ document.getElementById('attack-canvas').addEventListener('touchstart',e=>{
 
   const gx=Math.floor((x-ATK_CAM_X)/ATK_C);
   const gy=Math.floor((y-ATK_CAM_Y)/ATK_C);
-  // Only bottom 4 rows
-  if(gy<AGRID-4){toast('Placera trupper i den gula zonen längst ner!');return;}
   if(gx<0||gx>=AGRID||gy<0||gy>=AGRID)return;
-  // Block if any building occupies or is within 1 cell of this spot
-  const blocked=atkBuildings.some(b=>{
-    return gx>=b.gx-1&&gx<b.gx+b.size+1&&gy>=b.gy-1&&gy<b.gy+b.size+1;
-  });
-  if(blocked){toast('Platsen är blockerad av en byggnad!');return;}
+  // Only block if directly on a building or wall cell
+  const onBuilding=atkBuildings.some(b=>gx>=b.gx&&gx<b.gx+b.size&&gy>=b.gy&&gy<b.gy+b.size);
+  if(onBuilding){toast('Kan inte placera på en byggnad!');return;}
   deployTroop(selectedAtkTroop,x,y);
   atkTroopPool[selectedAtkTroop]--;
   if(atkTroopPool[selectedAtkTroop]<=0)delete atkTroopPool[selectedAtkTroop];
@@ -3172,8 +3220,8 @@ document.getElementById('attack-canvas').addEventListener('click',e=>{
   const x=e.clientX-rect.left,y=e.clientY-rect.top;
   const gx2=Math.floor((x-ATK_CAM_X)/ATK_C);
   const gy2=Math.floor((y-ATK_CAM_Y)/ATK_C);
-  if(gy2<AGRID-4){toast('Placera trupper i den gula zonen längst ner!');return;}
-  if(atkBuildings.some(b=>gx2>=b.gx-1&&gx2<b.gx+b.size+1&&gy2>=b.gy-1&&gy2<b.gy+b.size+1)){toast('Platsen är blockerad!');return;}
+  if(gx2<0||gx2>=AGRID||gy2<0||gy2>=AGRID)return;
+  if(atkBuildings.some(b=>gx2>=b.gx&&gx2<b.gx+b.size&&gy2>=b.gy&&gy2<b.gy+b.size)){toast('Kan inte placera på en byggnad!');return;}
   deployTroop(selectedAtkTroop,x,y);
   atkTroopPool[selectedAtkTroop]--;
   if(atkTroopPool[selectedAtkTroop]<=0)delete atkTroopPool[selectedAtkTroop];
@@ -3230,10 +3278,11 @@ function endAttack(allDestroyed){
   let stars=0;
   if(pct>=0.33)stars=1;if(pct>=0.66)stars=2;if(pct>=1.0)stars=3;
   // Calculate loot
-  const lootMult=Math.max(0.1,pct)*stars*0.5;
-  const goldLoot=Math.floor(G.gold_cap*0.05*lootMult*(1+G.jh_level*0.3));
-  const elixirLoot=Math.floor(G.elixir_cap*0.05*lootMult*(1+G.jh_level*0.3));
-  const darkLoot=Math.floor(20*lootMult*G.jh_level);
+  const baseLoot=500*Math.pow(2,G.jh_level-1); // JH1=500, JH2=1000, JH3=2000...
+  const lootMult=Math.max(0.2,pct)*(stars>0?1:0.3);
+  const goldLoot=Math.floor(baseLoot*lootMult);
+  const elixirLoot=Math.floor(baseLoot*lootMult);
+  const darkLoot=Math.floor(50*G.jh_level*lootMult);
   G.gold=Math.min(G.gold_cap,G.gold+goldLoot);
   G.elixir=Math.min(G.elixir_cap,G.elixir+elixirLoot);
   G.dark=Math.min(G.dark_cap,G.dark+darkLoot);
@@ -3361,7 +3410,7 @@ function handleCanvasClick(cx,cy){
     return;
   }
   const hit=G.buildings.find(b=>{const s=BUILDING_TYPES[b.type]?.size||1;return gx>=b.gx&&gx<b.gx+s&&gy>=b.gy&&gy<b.gy+s;});
-  if(hit){selectedBuilding=hit;if(hit.type==='laboratorium'){openLabResearch();}else{openBuildMenu(hit.type);}}
+  if(hit){selectedBuilding=hit;if(hit.type==='laboratorium'&&hit.lv>=1){openLabResearch();}else{openBuildMenu(hit.type);}}
   else{selectedBuilding=null;closeModal('build-modal');if(buildModeActive){buildModeActive=false;toast('Byggläge avbrutet');}}
 }
 
@@ -3722,6 +3771,13 @@ function switchShopTab(tab){
 }
 
 
+function getMaxBuildingLv(bt){
+  // Max level = currentJH - unlockJH + 1, but never more than bt.maxLv
+  const uj=bt.unlockJH||1;
+  const calculated=G.jh_level-uj+2; // +1 per TH it's been available, plus 1 base
+  return Math.min(Math.max(1,calculated),bt.maxLv||8);
+}
+
 function getLimit(bt){
   if(bt.limitByJH){return bt.limitByJH[Math.min(G.jh_level-1,bt.limitByJH.length-1)]||0;}
   return bt.limit||99;
@@ -3814,9 +3870,8 @@ function startPlacement(typeId){
   const ov=document.getElementById('place-overlay');
   document.getElementById('place-icon').textContent=bt.icon;
   document.getElementById('place-title').textContent=bt.name;
-  document.getElementById('place-sub').textContent='Tryck en grön ruta på kartan  •  Kostnad: '+
-    (bt.costGold&&bt.costGold[0]?'🪙'+fmt(bt.costGold[0])+' ':'')+
-    (bt.costElixir&&bt.costElixir[0]?'🧪'+fmt(bt.costElixir[0]):'');
+  if(typeId==='mur'){document.getElementById('place-sub').textContent='Klicka eller dra för att lägga murar · 🪙'+fmt(costG)+' styck';}
+  else{document.getElementById('place-sub').textContent='Tryck en grön ruta på kartan  •  Kostnad: '+(bt.costGold&&bt.costGold[0]?'🪙'+fmt(bt.costGold[0])+' ':'')+(bt.costElixir&&bt.costElixir[0]?'🧪'+fmt(bt.costElixir[0]):'');}
   ov.style.display='block';
   buildModeActive=true;
   toast('Tryck på kartan för att placera '+bt.name);
@@ -3834,6 +3889,7 @@ window.handleCanvasClick=function(cx,cy){
   // Check collect click first — resource buildings with stored amount
   const gx0=Math.floor((cx-camX)/CELL),gy0=Math.floor((cy-camY)/CELL);
   const resHit=G.buildings.find(b=>{
+    if(suppressedCollect.has(b.id))return false;
     if(!(b.stored>=10))return false;
     const s=BUILDING_TYPES[b.type]?.size||1;
     return gx0>=b.gx&&gx0<b.gx+s&&gy0>=b.gy&&gy0<b.gy+s;
@@ -3866,12 +3922,67 @@ window.handleCanvasClick=function(cx,cy){
     } else {
       toast(`${bt.name} placerad! ✅`);
     }
-    cancelPlacement();saveGame();renderByPanel();
+    // For walls: stay in placement mode, deduct cost but keep going
+    if(placingType==='mur'){
+      renderByPanel();saveGame();
+      // Update banner with remaining gold
+      const costGrem=bt.costGold?bt.costGold[0]:0;
+      document.getElementById('place-sub').textContent='Klicka eller dra för fler murar · 🪙'+fmt(G.gold)+' kvar';
+    } else {
+      cancelPlacement();saveGame();renderByPanel();
+    }
     return;
   }
   _origHandleClick(cx,cy);
 };
 
+
+
+// ── WALL DRAG PLACEMENT ───────────────────────────────────────────
+let isDraggingWalls=false;
+let lastWallCell={gx:-1,gy:-1};
+
+canvas.addEventListener('mousedown',e=>{
+  if(placingType==='mur')isDraggingWalls=true;
+});
+canvas.addEventListener('mouseup',()=>{isDraggingWalls=false;lastWallCell={gx:-1,gy:-1};});
+
+canvas.addEventListener('mousemove',e=>{
+  if(!isDraggingWalls||placingType!=='mur')return;
+  const rect=canvas.getBoundingClientRect();
+  const cx=e.clientX-rect.left, cy=e.clientY-rect.top;
+  const gx=Math.floor((cx-camX)/CELL), gy=Math.floor((cy-camY)/CELL);
+  if(gx===lastWallCell.gx&&gy===lastWallCell.gy)return; // same cell
+  lastWallCell={gx,gy};
+  placeWallAt(gx,gy);
+});
+
+canvas.addEventListener('touchmove',e=>{
+  if(placingType!=='mur')return;
+  e.preventDefault();
+  const rect=canvas.getBoundingClientRect();
+  const t=e.touches[0];
+  const cx=t.clientX-rect.left, cy=t.clientY-rect.top;
+  const gx=Math.floor((cx-camX)/CELL), gy=Math.floor((cy-camY)/CELL);
+  if(gx===lastWallCell.gx&&gy===lastWallCell.gy)return;
+  lastWallCell={gx,gy};
+  placeWallAt(gx,gy);
+},{passive:false});
+
+function placeWallAt(gx,gy){
+  const bt=BUILDING_TYPES['mur'];if(!bt)return;
+  if(gx<0||gx>=GRID-1||gy<0||gy>=GRID-1)return;
+  if(isOccupied(gx,gy,1))return; // silently skip occupied
+  const existing2=G.buildings.filter(b=>b.type==='mur');
+  if(existing2.length>=getLimit(bt)){toast('Max antal murar!');cancelPlacement();return;}
+  const costG=bt.costGold?bt.costGold[0]:0;
+  if(G.gold<costG){toast('Inte tillräckligt Riksdaler!');cancelPlacement();return;}
+  G.gold-=costG;
+  const newId=G.nextBuildingId++;
+  G.buildings.push({id:newId,type:'mur',lv:1,gx,gy,upgrading:false,upgradeEnd:0});
+  document.getElementById('place-sub').textContent='Klicka eller dra för fler murar · 🪙'+fmt(G.gold)+' kvar';
+  saveGame();
+}
 
 // ── RESOURCE COLLECTION ──────────────────────────────────────────
 const collectParticles=[]; // {x,y,vx,vy,life,col,txt}
@@ -3890,7 +4001,11 @@ function tryCollect(b){
     G.gold=Math.min(G.gold_cap,G.gold+collected);
     b.stored=overflow; // keep overflow in collector
     spawnCollectBurst(sx,sy,'#FFD700','+'+(collected>0?collected:0)+' 🪙');
-    if(overflow>0)toast('Förrådet fullt! '+fmt(overflow)+' stannar i gruvan.');
+    if(overflow>0){
+      toast('Förrådet fullt! '+fmt(overflow)+' stannar i gruvan. Byggnaden låst i 4s.');
+      suppressedCollect.add(b.id);
+      setTimeout(()=>suppressedCollect.delete(b.id),4000);
+    }
   } else if(b.storeType==='elixir'){
     const space=Math.max(0,G.elixir_cap-G.elixir);
     const collected=Math.min(amount,space);
@@ -3898,13 +4013,18 @@ function tryCollect(b){
     G.elixir=Math.min(G.elixir_cap,G.elixir+collected);
     b.stored=overflow;
     spawnCollectBurst(sx,sy,'#cc44ff','+'+(collected>0?collected:0)+' 🧪');
-    if(overflow>0)toast('Tanken full! '+fmt(overflow)+' stannar i samlaren.');
+    if(overflow>0){
+      toast('Tanken full! '+fmt(overflow)+' stannar i samlaren. Byggnaden låst i 4s.');
+      suppressedCollect.add(b.id);
+      setTimeout(()=>suppressedCollect.delete(b.id),4000);
+    }
   } else if(b.storeType==='dark'){
     const space=Math.max(0,G.dark_cap-G.dark);
     const collected=Math.min(amount,space);
     const overflow=amount-collected;
     G.dark=Math.min(G.dark_cap,G.dark+collected);
     b.stored=overflow;
+    if(overflow>0){suppressedCollect.add(b.id);setTimeout(()=>suppressedCollect.delete(b.id),4000);}
     spawnCollectBurst(sx,sy,'#8800cc','+'+(collected>0?collected:0)+' 💜');
   }
   saveGame();
