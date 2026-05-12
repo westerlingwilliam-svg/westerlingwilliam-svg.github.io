@@ -16,7 +16,7 @@ html{font-size:clamp(14px,2.2vw,20px)}
 html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:white;font-family:var(--font)}
 
 /* ── TOP HUD ── */
-#hud{position:fixed;top:10px;left:10px;right:10px;z-index:200;display:flex;gap:8px;align-items:center;flex-wrap:nowrap}
+#hud{position:fixed;top:10px;left:50%;transform:translateX(-50%);right:auto;width:calc(100% - 20px);max-width:540px;z-index:200;display:flex;gap:8px;align-items:center;flex-wrap:nowrap}
 .res-pill{background:linear-gradient(135deg,rgba(30,20,5,0.95),rgba(20,15,3,0.98));border:1.5px solid rgba(255,215,0,0.25);border-radius:50px;padding:6px 12px 6px 8px;display:flex;align-items:center;gap:6px;font-size:0.85rem;font-weight:800;cursor:pointer;transition:.2s;backdrop-filter:blur(12px);box-shadow:0 2px 12px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.06)}
 .res-pill:active{transform:scale(0.94)}
 .res-icon{font-size:1.3rem}
@@ -31,7 +31,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
 #base-canvas{display:block;cursor:crosshair}
 
 /* ── BOTTOM NAV ── */
-#bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(10,20,10,0.97);border-top:1.5px solid rgba(255,215,0,0.2);padding:10px 8px 10px;display:flex;justify-content:space-around;align-items:center;box-shadow:0 -4px 20px rgba(0,0,0,0.5)}
+#bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);right:auto;width:100%;max-width:560px;z-index:100;background:rgba(10,20,10,0.97);border-top:1.5px solid rgba(255,215,0,0.2);padding:10px 8px 10px;display:flex;justify-content:space-around;align-items:center;box-shadow:0 -4px 20px rgba(0,0,0,0.5)}
 .nav-btn{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:8px 12px;border-radius:16px;transition:.15s;min-width:4rem}
 .nav-btn:active{transform:scale(0.88)}
 .nav-btn.active{background:rgba(255,255,255,0.12)}
@@ -40,8 +40,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
 .nav-btn.active .nav-lbl{color:var(--gold)}
 
 /* ── PANELS ── */
-.panel{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(180deg,#1c3010,#0d1a08);border-radius:28px 28px 0 0;border-top:1.5px solid rgba(255,215,0,0.2);z-index:95;transform:translateY(calc(100% + 80px));transition:transform .4s cubic-bezier(.34,1.56,.64,1);max-height:82vh;display:flex;flex-direction:column;box-shadow:0 -8px 40px rgba(0,0,0,0.6)}
-.panel.open{transform:translateY(0);padding-bottom:80px}
+.panel{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(calc(100% + 80px));right:auto;width:100%;max-width:560px;background:linear-gradient(180deg,#1c3010,#0d1a08);border-radius:28px 28px 0 0;border-top:1.5px solid rgba(255,215,0,0.2);z-index:95;transform:translateY(calc(100% + 80px));transition:transform .4s cubic-bezier(.34,1.56,.64,1);max-height:82vh;display:flex;flex-direction:column;box-shadow:0 -8px 40px rgba(0,0,0,0.6)}
+.panel.open{transform:translateX(-50%) translateY(0);padding-bottom:80px}
 .panel-handle{width:40px;height:5px;background:rgba(255,255,255,0.2);border-radius:3px;margin:10px auto 0;flex-shrink:0}
 .panel-title{font-family:var(--title);font-size:1.3rem;color:var(--gold);text-align:center;padding:12px 16px 8px;flex-shrink:0;letter-spacing:1.5px}
 .panel-scroll{flex:1;overflow-y:auto;padding:10px 14px 100px}
@@ -110,20 +110,20 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
 /* ── ATTACK MODE ── */
 #attack-wrap{position:fixed;inset:0;z-index:200;display:none;flex-direction:column;background:#1a2e1a}
 #attack-wrap.show{display:flex}
-#attack-hud{padding:10px 14px;background:rgba(0,0,0,0.7);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;backdrop-filter:blur(8px)}
-#attack-timer-circle{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,0.1);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;font-family:var(--title);color:var(--gold)}
+#attack-hud{padding:8px 14px;background:linear-gradient(180deg,rgba(5,10,5,0.97),rgba(10,20,8,0.92));display:flex;justify-content:space-between;align-items:center;flex-shrink:0;backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,215,0,0.15);box-shadow:0 2px 16px rgba(0,0,0,0.5)}
+#attack-timer-circle{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,rgba(60,40,0,0.8),rgba(30,20,0,0.9));border:2px solid rgba(255,215,0,0.6);display:flex;align-items:center;justify-content:center;font-size:0.95rem;font-weight:900;font-family:var(--title);color:var(--gold);box-shadow:0 0 12px rgba(255,215,0,0.3)}
 #attack-canvas{display:block;flex:1;cursor:crosshair}
-#attack-troops-bar{background:rgba(0,0,0,0.75);padding:10px 14px 8px;backdrop-filter:blur(8px);flex-shrink:0}
+#attack-troops-bar{background:linear-gradient(0deg,rgba(5,10,5,0.98),rgba(10,20,8,0.93));padding:8px 14px 10px;backdrop-filter:blur(12px);flex-shrink:0;border-top:1px solid rgba(255,215,0,0.15);box-shadow:0 -2px 16px rgba(0,0,0,0.5)}
 .at-troops-row{display:flex;gap:8px;justify-content:center;margin-bottom:8px}
-.at-troop{width:56px;height:56px;background:var(--card);border:2px solid var(--border);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:.15s;position:relative}
-.at-troop.selected{border-color:var(--gold);background:rgba(255,215,0,0.1)}
+.at-troop{width:54px;height:54px;background:linear-gradient(135deg,rgba(30,22,5,0.9),rgba(15,10,2,0.95));border:1.5px solid rgba(255,200,80,0.2);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:.15s;position:relative;box-shadow:0 2px 8px rgba(0,0,0,0.4)}
+.at-troop.selected{border-color:rgba(255,215,0,0.8);background:rgba(255,215,0,0.12);box-shadow:0 0 12px rgba(255,215,0,0.3)}
 .at-troop:active{transform:scale(0.88)}
 .at-troop-count{font-size:0.6rem;font-weight:900;color:var(--gold)}
 #attack-btns{display:flex;gap:10px;justify-content:center}
-.atk-btn{background:rgba(255,255,255,0.1);border:1.5px solid rgba(255,255,255,0.2);color:white;padding:8px 20px;border-radius:50px;font-size:0.78rem;font-weight:900;cursor:pointer;font-family:var(--font);transition:.15s}
+.atk-btn{background:linear-gradient(135deg,rgba(30,22,5,0.85),rgba(15,10,2,0.9));border:1.5px solid rgba(255,200,80,0.25);color:rgba(255,230,150,0.9);padding:8px 16px;border-radius:50px;font-size:0.75rem;font-weight:900;cursor:pointer;font-family:var(--font);transition:.15s;box-shadow:0 2px 8px rgba(0,0,0,0.4)}
 .atk-btn:active{transform:scale(0.94)}
-.atk-btn.red{background:rgba(255,50,50,0.2);border-color:rgba(255,50,50,0.4);color:#ff8888}
-.atk-btn.green{background:rgba(50,255,100,0.15);border-color:rgba(50,255,100,0.4);color:#80ff80}
+.atk-btn.red{background:linear-gradient(135deg,rgba(120,20,20,0.7),rgba(80,10,10,0.8));border-color:rgba(255,80,80,0.4);color:#ffaaaa}
+.atk-btn.green{background:linear-gradient(135deg,rgba(20,80,30,0.7),rgba(10,50,15,0.8));border-color:rgba(80,255,120,0.4);color:#aaffbb}
 
 /* ── MODALS ── */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);z-index:300;display:none;align-items:center;justify-content:center;padding:20px}
@@ -161,8 +161,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
 
 
 /* ── SHOP PANEL ── */
-#shop-panel{position:fixed;bottom:0;left:0;right:0;z-index:96;background:linear-gradient(180deg,#141e10,#0a110a);border-radius:28px 28px 0 0;border-top:2px solid rgba(255,215,0,0.3);transform:translateY(calc(100% + 80px));transition:transform .4s cubic-bezier(.34,1.56,.64,1);max-height:82vh;display:flex;flex-direction:column;box-shadow:0 -8px 40px rgba(0,0,0,0.7);padding-bottom:80px}
-#shop-panel.open{transform:translateY(0)}
+#shop-panel{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(calc(100% + 80px));right:auto;width:100%;max-width:560px;z-index:96;background:linear-gradient(180deg,#141e10,#0a110a);border-radius:28px 28px 0 0;border-top:2px solid rgba(255,215,0,0.3);transform:translateY(calc(100% + 80px));transition:transform .4s cubic-bezier(.34,1.56,.64,1);max-height:82vh;display:flex;flex-direction:column;box-shadow:0 -8px 40px rgba(0,0,0,0.7);padding-bottom:80px}
+#shop-panel.open{transform:translateX(-50%) translateY(0)}
 #shop-handle{width:44px;height:5px;background:rgba(255,215,0,0.3);border-radius:3px;margin:12px auto 0;flex-shrink:0}
 #shop-header{padding:10px 16px 6px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 #shop-title{font-family:var(--title);font-size:1.2rem;color:var(--gold);letter-spacing:1.5px}
@@ -262,10 +262,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
 .panel-scroll::-webkit-scrollbar-thumb{background:rgba(255,215,0,0.3);border-radius:2px}
 
 /* Map compass */
-#map-compass{position:fixed;top:80px;right:14px;width:44px;height:44px;background:rgba(0,0,0,0.6);border:1.5px solid rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;cursor:pointer;z-index:101;backdrop-filter:blur(6px)}
+#map-compass{position:fixed;top:80px;right:max(14px,calc(50% - 294px));width:44px;height:44px;background:rgba(0,0,0,0.6);border:1.5px solid rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;cursor:pointer;z-index:101;backdrop-filter:blur(6px)}
 
 /* Village name banner */
-#village-banner{position:fixed;top:72px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,rgba(0,0,0,0.8),rgba(0,40,0,0.8));border:1px solid rgba(255,215,0,0.3);border-radius:50px;padding:4px 14px;font-family:var(--title);font-size:0.7rem;color:var(--gold);letter-spacing:1px;z-index:101;backdrop-filter:blur(6px)}
+#village-banner{position:fixed;top:72px;left:50%;transform:translateX(-50%);display:none;background:linear-gradient(135deg,rgba(0,0,0,0.8),rgba(0,40,0,0.8));border:1px solid rgba(255,215,0,0.3);border-radius:50px;padding:4px 14px;font-family:var(--title);font-size:0.7rem;color:var(--gold);letter-spacing:1px;z-index:101;backdrop-filter:blur(6px)}
 
 /* Resource bar at bottom of buildings panel */
 #resources-summary{background:rgba(0,0,0,0.4);border-radius:16px;padding:10px 14px;margin-bottom:10px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
@@ -525,21 +525,21 @@ body{background:#1a2e10}
 </style>
 </head>
 <body>
-<div id="trm" onclick="if(event.target===this)trmClose()" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:24px">
-  <div style="background:linear-gradient(160deg,#1a2c0e,#0d1a08);border:2px solid rgba(255,215,0,0.3);border-radius:24px;width:100%;max-width:300px;box-shadow:0 24px 60px rgba(0,0,0,0.7)">
+<div id="trm" onclick="if(event.target===this){this.style.display='none';window._trmId=null}" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:24px">
+  <div style="background:linear-gradient(160deg,#1a2c0e,#0d1a08);border:2px solid rgba(255,215,0,0.3);border-radius:24px;width:100%;max-width:300px;box-shadow:0 24px 60px rgba(0,0,0,0.7);animation:tut-in .35s ease forwards">
     <div style="padding:16px 18px;border-bottom:1px solid rgba(255,255,255,0.07)">
       <div id="trm-ttname" style="font-family:'Cinzel',serif;color:#FFD700;font-size:0.95rem">Trupp</div>
       <div style="font-size:0.65rem;color:rgba(255,255,255,0.4);margin-top:3px">Hur många vill du ta bort?</div>
     </div>
     <div style="padding:16px 18px">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-        <button onclick="trmAdj(-1)" style="background:rgba(255,255,255,0.1);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.4rem;cursor:pointer">−</button>
+        <button onclick="(function(){var inp=document.getElementById('trm-num');var G2=window._G?window._G():null;var id=window._trmId;var max=G2&&id?(G2.troops[id]||1):1;inp.value=Math.max(1,Math.min(max,(parseInt(inp.value)||1)-1))})()" style="background:rgba(255,255,255,0.1);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.4rem;cursor:pointer">−</button>
         <input id="trm-num" type="number" min="1" value="1" style="flex:1;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:12px;color:white;font-size:1.2rem;font-weight:900;text-align:center;padding:10px">
-        <button onclick="trmAdj(1)" style="background:rgba(255,255,255,0.1);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.4rem;cursor:pointer">+</button>
+        <button onclick="(function(){var inp=document.getElementById('trm-num');var G2=window._G?window._G():null;var id=window._trmId;var max=G2&&id?(G2.troops[id]||1):1;inp.value=Math.max(1,Math.min(max,(parseInt(inp.value)||1)+1))})()" style="background:rgba(255,255,255,0.1);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.4rem;cursor:pointer">+</button>
       </div>
       <div style="display:flex;gap:8px">
-        <button onclick="trmClose()" style="flex:1;background:rgba(255,255,255,0.07);border:none;color:rgba(255,255,255,0.6);padding:12px;border-radius:50px;font-size:0.85rem;font-weight:900;cursor:pointer">Avbryt</button>
-        <button onclick="trmConfirm()" style="flex:1;background:rgba(200,40,40,0.85);border:none;color:white;padding:12px;border-radius:50px;font-size:0.85rem;font-weight:900;cursor:pointer">🗑️ Ta bort</button>
+        <button onclick="document.getElementById('trm').style.display='none';window._trmId=null" style="flex:1;background:rgba(255,255,255,0.07);border:none;color:rgba(255,255,255,0.6);padding:12px;border-radius:50px;font-size:0.85rem;font-weight:900;cursor:pointer">Avbryt</button>
+        <button onclick="(function(){var id=window._trmId;if(!id)return;var G2=window._G?window._G():null;if(!G2)return;var n=Math.max(1,parseInt(document.getElementById('trm-num').value)||1);G2.troops[id]=Math.max(0,(G2.troops[id]||0)-n);if(G2.troops[id]===0)delete G2.troops[id];document.getElementById('trm').style.display='none';window._trmId=null;if(window._renderArmy)window._renderArmy();if(window._save)window._save();if(window._toast)window._toast(n+' trupper borttagna');})()" style="flex:1;background:rgba(200,40,40,0.85);border:none;color:white;padding:12px;border-radius:50px;font-size:0.85rem;font-weight:900;cursor:pointer">🗑️ Ta bort</button>
       </div>
     </div>
   </div>
@@ -585,11 +585,11 @@ body{background:#1a2e10}
     <div id="attack-timer-circle">180</div>
     <div style="text-align:center">
       <div style="font-family:var(--title);font-size:0.8rem;color:var(--gold);letter-spacing:1px">ANGREPP</div>
-      <div id="attack-stars" style="font-size:1.2rem">☆☆☆</div>
+      <div id="attack-stars" style="font-size:1.4rem;letter-spacing:3px;filter:drop-shadow(0 1px 4px rgba(255,215,0,0.4))">☆☆☆</div>
     </div>
     <div style="text-align:right">
-      <div style="font-size:0.65rem;color:rgba(255,255,255,0.5)">Destruktion</div>
-      <div id="attack-pct" style="font-size:1rem;font-weight:900;color:var(--gold)">0%</div>
+      <div style="font-size:0.6rem;color:rgba(255,215,0,0.5);text-transform:uppercase;letter-spacing:1px">Förstört</div>
+      <div id="attack-pct" style="font-size:1.1rem;font-weight:900;color:var(--gold);font-family:var(--title)">0%</div>
     </div>
   </div>
   <canvas id="attack-canvas"></canvas>
@@ -724,7 +724,7 @@ body{background:#1a2e10}
 </div>
 
 <!-- Build button on map -->
-<button id="build-fab" onclick="openShopPanel()" style="position:fixed;bottom:90px;right:16px;z-index:101;background:linear-gradient(135deg,var(--gold),#cc8800);color:#1a0a00;border:none;border-radius:50px;padding:12px 20px;font-size:0.92rem;font-weight:900;cursor:pointer;font-family:var(--font);box-shadow:0 4px 24px rgba(255,215,0,0.5);display:flex;align-items:center;gap:7px;animation:build-pulse 2s ease-in-out infinite">🏗️ Bygg</button>
+<button id="build-fab" onclick="openShopPanel()" style="position:fixed;bottom:90px;right:max(16px,calc(50% - 294px));z-index:101;background:linear-gradient(135deg,var(--gold),#cc8800);color:#1a0a00;border:none;border-radius:50px;padding:12px 20px;font-size:0.92rem;font-weight:900;cursor:pointer;font-family:var(--font);box-shadow:0 4px 24px rgba(255,215,0,0.5);display:flex;align-items:center;gap:7px;animation:build-pulse 2s ease-in-out infinite">🏗️ Bygg</button>
 <style>@keyframes build-pulse{0%,100%{box-shadow:0 4px 24px rgba(255,215,0,0.5)}50%{box-shadow:0 4px 32px rgba(255,215,0,0.9)}}</style>
 
 <!-- Map compass -->
@@ -2035,11 +2035,18 @@ function renderArmyPanel(){
       if(!count)return;
       const tt=TROOP_TYPES[id];if(!tt)return;
       const lv=G.troopLevels?.[id]||1;
-      html+=`<div class="troop-card">
+      html+=`<div class="troop-card" onclick="
+        var m=document.getElementById('trm');m.style.display='flex';m.querySelector('div').style.animation='none';void m.querySelector('div').offsetWidth;m.querySelector('div').style.animation='tut-in .35s ease forwards';
+        document.getElementById('trm-ttname').textContent='${tt.name} — Har: ${count}';
+        document.getElementById('trm-num').value=1;
+        document.getElementById('trm-num').max=${count};
+        window._trmId='${id}';
+      " style="cursor:pointer">
         <div class="tc-level">Lv${lv}</div>
         <canvas class="tc-canvas" id="tc-${id}-show" width="48" height="48"></canvas>
         <div class="tc-name">${tt.name}</div>
         <div class="tc-count">×${count}</div>
+        <div style="font-size:0.52rem;color:rgba(255,100,100,0.6);margin-top:2px">🗑 ta bort</div>
       </div>`;
     });
     html+='</div>';
@@ -2371,7 +2378,7 @@ function startAttackMode(){
   atkCanvas=document.getElementById('attack-canvas');
   atkCtx=atkCanvas.getContext('2d');
   atkW=atkCanvas.width=window.innerWidth;
-  atkH=atkCanvas.height=window.innerHeight-130-80;
+  atkH=atkCanvas.height=window.innerHeight-52-88;
   centerAtkCamera();
   // Show attack wrap
   document.getElementById('attack-wrap').classList.add('show');
@@ -2625,8 +2632,10 @@ let ATK_C=28; // cell size in attack mode
 function centerAtkCamera(){
   if(!atkCanvas)return;
   // Pick cell size so grid fits comfortably
-  ATK_C=Math.floor(Math.min(atkW,atkH*1.1)/(AGRID+2));
-  ATK_C=Math.max(16,Math.min(ATK_C,32));
+  // Use most of screen, divide by visible area (not full AGRID)
+  const VIEW=20; // zoom into 20x20 area instead of full 26x26
+  ATK_C=Math.floor(Math.min(atkW*0.99, atkH*0.99) / VIEW);
+  ATK_C=Math.max(18, ATK_C);
   ATK_CAM_X=Math.floor((atkW-AGRID*ATK_C)/2);
   ATK_CAM_Y=Math.max(4,Math.floor((atkH-AGRID*ATK_C)/2));
 }
