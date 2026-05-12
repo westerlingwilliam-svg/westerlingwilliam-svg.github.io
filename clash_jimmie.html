@@ -421,7 +421,7 @@ body{background:#1a2e10}
 .modal-header{border-radius:var(--radius-lg) var(--radius-lg) 0 0;background:linear-gradient(135deg,rgba(255,215,0,0.08),rgba(0,0,0,0.3))}
 
 /* Buttons */
-.modal-btn.primary{background:linear-gradient(135deg,#FFD700,#cc8800);border-radius:50px;font-size:0.88rem;letter-spacing:.3px}
+.modal-btn.primary{background:linear-gradient(135deg,#FFD700,#cc8800);border-radius:50px;font-size:0.88rem;letter-spacing:.3px;line-height:1.4;padding:10px}
 .modal-btn.cancel{border-radius:50px;border:1px solid rgba(255,255,255,0.1)}
 .shop-build-btn{border-radius:14px;padding:10px 18px;font-size:0.8rem}
 .hero-lvup-btn{letter-spacing:.3px}
@@ -514,12 +514,13 @@ body{background:#1a2e10}
 #rc-confirm{background:linear-gradient(135deg,rgba(255,60,60,0.8),rgba(200,20,20,0.9));color:white}
 
 
-/* Resource bar pills */
-.res-pill-bar{padding:5px 10px 5px 8px!important;min-width:100px}
-.res-bar-wrap{display:flex;flex-direction:column;gap:2px;min-width:70px}
-.res-bar-top{display:flex;justify-content:space-between;align-items:baseline}
-.res-bar-track{background:rgba(255,255,255,0.1);border-radius:50px;height:5px;overflow:hidden;border:1px solid rgba(255,255,255,0.06)}
-.res-bar-fill{height:100%;border-radius:50px;transition:width .6s ease;min-width:3px}
+/* Resource bar pills — CoC style fill background */
+.res-pill-bar{padding:0!important;overflow:hidden;min-width:110px;position:relative;height:34px;align-items:stretch!important}
+.res-bar-bg{position:absolute;inset:0;width:0%;transition:width .7s ease;border-radius:50px}
+.res-bar-content{position:relative;z-index:1;display:flex;align-items:center;gap:6px;padding:0 10px 0 8px;height:100%;width:100%}
+.res-val{font-size:0.85rem;font-weight:900;color:white;text-shadow:0 1px 3px rgba(0,0,0,0.6)}
+.res-max{font-size:0.58rem;color:rgba(255,255,255,0.55);font-weight:600}
+.res-icon{font-size:1.2rem;flex-shrink:0}
 
 </style>
 </head>
@@ -528,27 +529,25 @@ body{background:#1a2e10}
 <!-- ── TOP HUD ── -->
 <div id="hud">
   <div class="res-pill res-pill-bar" title="Riksdaler">
-    <div class="res-icon">🪙</div>
-    <div class="res-bar-wrap">
-      <div class="res-bar-top"><span class="res-val" id="gold-val">0</span><span class="res-max" id="gold-max">/1K</span></div>
-      <div class="res-bar-track"><div class="res-bar-fill" id="gold-bar" style="background:linear-gradient(90deg,#FFD700,#cc8800)"></div></div>
-    </div>
+    <div class="res-bar-bg" id="gold-bar" style="background:linear-gradient(90deg,rgba(200,140,0,0.5),rgba(255,180,0,0.35))"></div>
+    <div class="res-bar-content"><span class="res-icon">🪙</span><span class="res-val" id="gold-val">0</span><span class="res-max" id="gold-max">/1K</span></div>
   </div>
   <div class="res-pill res-pill-bar" title="SD-Saft">
-    <div class="res-icon">🧪</div>
-    <div class="res-bar-wrap">
-      <div class="res-bar-top"><span class="res-val" id="elixir-val">0</span><span class="res-max" id="elixir-max">/1K</span></div>
-      <div class="res-bar-track"><div class="res-bar-fill" id="elixir-bar" style="background:linear-gradient(90deg,#cc44ff,#8800cc)"></div></div>
-    </div>
+    <div class="res-bar-bg" id="elixir-bar" style="background:linear-gradient(90deg,rgba(150,0,220,0.5),rgba(180,50,255,0.35))"></div>
+    <div class="res-bar-content"><span class="res-icon">🧪</span><span class="res-val" id="elixir-val">0</span><span class="res-max" id="elixir-max">/1K</span></div>
+  </div>
+  <div id="builder-pill" style="background:linear-gradient(135deg,rgba(30,20,5,0.95),rgba(20,15,3,0.98));border:1.5px solid rgba(255,215,0,0.25);border-radius:50px;padding:6px 12px 6px 8px;display:flex;align-items:center;gap:6px;font-size:0.85rem;font-weight:800;backdrop-filter:blur(12px);box-shadow:0 2px 12px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.06);cursor:pointer" onclick="switchNav('by')" title="Byggare">
+    <span style="font-size:1.2rem">🔨</span>
+    <span id="builder-pill-text" style="color:white;font-size:0.85rem;font-weight:900">2/2</span>
   </div>
   <div class="res-pill res-pill-bar" title="Jimmie-Kraft" id="dark-pill">
-    <div class="res-icon">💜</div>
-    <div class="res-bar-wrap">
-      <div class="res-bar-top"><span class="res-val" id="dark-val">0</span><span class="res-max">/0</span></div>
-      <div class="res-bar-track"><div class="res-bar-fill" id="dark-bar" style="background:linear-gradient(90deg,#aa00ff,#660099)"></div></div>
-    </div>
+    <div class="res-bar-bg" id="dark-bar" style="background:linear-gradient(90deg,rgba(100,0,180,0.5),rgba(140,0,220,0.35))"></div>
+    <div class="res-bar-content"><span class="res-icon">💜</span><span class="res-val" id="dark-val">0</span><span class="res-max">/0</span></div>
   </div>
   <div id="jhall-badge">🏛️ JH <span id="jh-level">1</span></div>
+  <div id="train-hud" style="display:none;background:linear-gradient(135deg,rgba(100,0,180,0.7),rgba(60,0,120,0.8));border:1.5px solid rgba(180,80,255,0.4);border-radius:50px;padding:5px 10px;font-size:0.72rem;font-weight:800;color:#dd88ff;gap:5px;align-items:center;cursor:pointer" onclick="switchNav('army')">
+    <span>⚔️</span><span id="train-hud-text">Tränar...</span><div style="background:rgba(255,255,255,0.1);border-radius:50px;height:4px;width:60px;overflow:hidden;margin-left:2px"><div id="train-hud-bar" style="height:100%;background:#cc44ff;border-radius:50px;transition:width .5s"></div></div>
+  </div>
   <div class="res-pill" title="Gems" style="background:rgba(0,100,0,0.6)"><div class="res-icon">💎</div><div><div class="res-val" id="gem-val">50</div></div></div>
   <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
     <a href="games.html" style="background:rgba(0,0,0,0.6);border:1.5px solid rgba(255,255,255,0.2);border-radius:50px;padding:7px 14px;font-size:0.75rem;font-weight:900;color:white;text-decoration:none;display:flex;align-items:center;gap:5px;white-space:nowrap">🏠 Meny</a>
@@ -804,7 +803,7 @@ const SAVE_KEY='coj_v2';
 // ── GAME DATA ─────────────────────────────────────────────────────
 const JH_MAX=8;
 const JH_DATA=[
-  {lv:1,upgCostGold:0,        upgTime:0,    maxBuilders:1,unlocks:['Jimmie Hall','Riksdaler-Gruva','SD-Saft-Samlare','Riksdaler-Förråd','SD-Saft-Tank','Kasern','Kanon','Armélager']},
+  {lv:1,upgCostGold:0,        upgTime:0,    maxBuilders:2,unlocks:['Jimmie Hall','Riksdaler-Gruva','SD-Saft-Samlare','Riksdaler-Förråd','SD-Saft-Tank','Kasern','Kanon','Armélager']},
   {lv:2,upgCostGold:1000,     upgTime:60,   maxBuilders:1,unlocks:['+1 Riksdaler-Gruva','+1 SD-Saft-Samlare','Pilbåge-Torn']},
   {lv:3,upgCostGold:5000,     upgTime:300,  maxBuilders:2,unlocks:['+1 Gruva & Samlare','+1 Förråd & Tank','Mörsare','Laboratorium','+1 Armélager']},
   {lv:4,upgCostGold:20000,    upgTime:1200, maxBuilders:2,unlocks:['+1 Gruva & Samlare','Bomb-Fälla','Jimmie Åkesson (hjälte)']},
@@ -817,9 +816,9 @@ const JH_DATA=[
 const BUILDING_TYPES={
   'jimmie_hall':{name:'Jimmie Hall',icon:'🏛️',desc:'Hjärtat i byn. Uppgradera för att låsa upp fler byggnader.',size:4,maxLv:8,costGold:[0,1000,5000,20000,75000,200000,600000,1500000],costElixir:[0,0,0,0,0,0,0,0],buildTime:[0,60,300,1200,3600,7200,14400,28800],hp:[1000,1500,2200,3100,4200,5500,7200,9000],limit:1,category:'special',
    stats:lv=>`HP: ${[1000,1500,2200,3100,4200,5500,7200,9000][lv-1]}`},
-  'kanon':{name:'Kanon',icon:'💣',desc:'Kraftfullt försvar. Siktar på marktrupper.',size:2,maxLv:8,costGold:[250,500,1000,2000,4000,8000,15000,30000],buildTime:[30,60,120,300,600,1200,3600,7200],hp:[400,450,500,570,650,750,870,1000],dps:[9,11,13,15,17,20,24,28],limitByJH:[1,1,2,2,3,3,3,3],category:'defense',
+  'kanon':{name:'Kanon',icon:'💣',desc:'Kraftfullt försvar. Siktar på marktrupper.',size:2,maxLv:8,costGold:[250,500,1000,2000,4000,8000,15000,30000],buildTime:[5,60,120,300,600,1200,3600,7200],hp:[400,450,500,570,650,750,870,1000],dps:[9,11,13,15,17,20,24,28],limitByJH:[1,1,2,2,3,3,3,3],category:'defense',
    stats:lv=>`DPS: ${[9,11,13,15,17,20,24,28][lv-1]} | HP: ${[400,450,500,570,650,750,870,1000][lv-1]}`},
-  'pilbage_torn':{name:'Pilbåge-Torn',icon:'🏹',desc:'Träffar både mark- och lufttrupper.',size:2,maxLv:8,costGold:[300,600,1200,2400,4800,9600,19200,38400],buildTime:[45,90,180,360,720,1440,4320,8640],hp:[380,420,480,560,650,760,890,1050],dps:[11,15,19,25,30,35,42,50],limitByJH:[0,1,1,2,2,3,3,3],category:'defense',
+  'pilbage_torn':{name:'Pilbåge-Torn',icon:'🏹',desc:'Träffar både mark- och lufttrupper.',size:2,maxLv:8,costGold:[300,600,1200,2400,4800,9600,19200,38400],buildTime:[5,90,180,360,720,1440,4320,8640],hp:[380,420,480,560,650,760,890,1050],dps:[11,15,19,25,30,35,42,50],limitByJH:[0,1,1,2,2,3,3,3],category:'defense',
    stats:lv=>`DPS: ${[11,15,19,25,30,35,42,50][lv-1]} | HP: ${[380,420,480,560,650,760,890,1050][lv-1]}`},
   'morsare':{name:'Mörsare',icon:'🎯',desc:'Splash-skada på marktrupper. Låg räckvidd men kraftfull.',size:2,maxLv:8,costGold:[400,800,1600,3200,6400,12800,25600,51200],buildTime:[60,120,240,480,960,1920,5760,11520],hp:[400,450,500,550,600,700,800,900],dps:[4,5,6,7,8.5,10,12,14],splash:true,limitByJH:[0,0,1,1,2,2,2,2],category:'defense',
    stats:lv=>`DPS: ${[4,5,6,7,8.5,10,12,14][lv-1]} (Splash!) | HP: ${[400,450,500,550,600,700,800,900][lv-1]}`},
@@ -827,19 +826,19 @@ const BUILDING_TYPES={
    stats:lv=>`DPS: ${[80,108,130,160,192,224,280,320][lv-1]} (Luft) | HP: ${[900,950,1000,1050,1100,1150,1200,1300][lv-1]}`},
   'tesla_torn':{name:'Tesla-Torn',icon:'⚡',desc:'Gömd tills fienden är nära. Elektrisk skada.',size:2,maxLv:6,costGold:[1000,2000,4000,8000,16000,32000],buildTime:[300,600,1200,2400,4800,9600],hp:[600,700,800,900,1000,1100],dps:[17,21,26,33,41,51],limitByJH:[0,0,0,0,1,1,2,2],category:'defense',unlockJH:5,
    stats:lv=>`DPS: ${[17,21,26,33,41,51][lv-1]} (Dold) | HP: ${[600,700,800,900,1000,1100][lv-1]}`},
-  'riksdaler_gruva':{name:'Riksdaler-Gruva',icon:'⛏️',desc:'Producerar Riksdaler automatiskt.',size:2,maxLv:8,costGold:[150,300,600,1200,2400,4800,9600,19200],buildTime:[20,40,80,160,320,640,1920,3840],goldPerHour:[200,400,600,800,1000,1300,1600,2000],buildingCap:[3000,5000,10000,20000,40000,75000,150000,300000],limitByJH:[1,2,3,4,5,6,6,6],category:'resource',
+  'riksdaler_gruva':{name:'Riksdaler-Gruva',icon:'⛏️',desc:'Producerar Riksdaler automatiskt.',size:2,maxLv:8,costGold:[150,300,600,1200,2400,4800,9600,19200],buildTime:[5,40,80,160,320,640,1920,3840],goldPerHour:[200,400,600,800,1000,1300,1600,2000],buildingCap:[3000,5000,10000,20000,40000,75000,150000,300000],limitByJH:[1,2,3,4,5,6,6,6],category:'resource',
    stats:lv=>`${[120,180,240,360,480,600,780,960][lv-1]} Riksdaler/tim`},
-  'riksdaler_forrad':{name:'Riksdaler-Förråd',icon:'💰',desc:'Lagrar Riksdaler.',size:3,maxLv:8,costGold:[200,400,800,1600,3200,6400,12800,25600],buildTime:[30,60,120,240,480,960,2880,5760],capacity:[1500,3000,6000,12000,25000,45000,100000,250000,500000,1000000],limitByJH:[1,1,2,2,2,2,2,3],category:'resource',
-   stats:lv=>`Kapacitet: ${[1500,3000,6000,12000,25000,50000,100000,200000][lv-1].toLocaleString()}`},
-  'saft_samlare':{name:'SD-Saft-Samlare',icon:'🧫',desc:'Producerar SD-Saft automatiskt.',size:2,maxLv:8,costElixir:[150,300,600,1200,2400,4800,9600,19200],buildTime:[20,40,80,160,320,640,1920,3840],elixirPerHour:[200,400,600,800,1000,1300,1600,2000],buildingCap:[3000,5000,10000,20000,40000,75000,150000,300000],limitByJH:[1,2,3,4,5,6,6,6],category:'resource',
+  'riksdaler_forrad':{name:'Riksdaler-Förråd',icon:'💰',desc:'Lagrar Riksdaler.',size:3,maxLv:8,costGold:[200,400,800,1600,3200,6400,12800,25600],buildTime:[5,60,120,240,480,960,2880,5760],capacity:[1500,3000,6000,12000,25000,45000,100000,250000,500000,1000000],limitByJH:[1,1,2,2,2,2,2,3],category:'resource',
+   stats:lv=>{const cap=[1500,3000,6000,12000,25000,45000,100000,250000,500000,1000000][Math.max(0,lv-1)];return`Kapacitet: ${cap?cap.toLocaleString():'-'}`}},
+  'saft_samlare':{name:'SD-Saft-Samlare',icon:'🧫',desc:'Producerar SD-Saft automatiskt.',size:2,maxLv:8,costElixir:[150,300,600,1200,2400,4800,9600,19200],buildTime:[5,40,80,160,320,640,1920,3840],elixirPerHour:[200,400,600,800,1000,1300,1600,2000],buildingCap:[3000,5000,10000,20000,40000,75000,150000,300000],limitByJH:[1,2,3,4,5,6,6,6],category:'resource',
    stats:lv=>`${[120,180,240,360,480,600,780,960][lv-1]} Saft/tim`},
-  'saft_tank':{name:'SD-Saft-Tank',icon:'🫙',desc:'Lagrar SD-Saft.',size:3,maxLv:8,costGold:[200,400,800,1600,3200,6400,12800,25600],buildTime:[30,60,120,240,480,960,2880,5760],capacity:[1500,3000,6000,12000,25000,45000,100000,250000,500000,1000000],limitByJH:[1,1,2,2,2,2,2,3],category:'resource',
-   stats:lv=>`Kapacitet: ${[1500,3000,6000,12000,25000,50000,100000,200000][lv-1].toLocaleString()}`},
+  'saft_tank':{name:'SD-Saft-Tank',icon:'🫙',desc:'Lagrar SD-Saft.',size:3,maxLv:8,costGold:[200,400,800,1600,3200,6400,12800,25600],buildTime:[5,60,120,240,480,960,2880,5760],capacity:[1500,3000,6000,12000,25000,45000,100000,250000,500000,1000000],limitByJH:[1,1,2,2,2,2,2,3],category:'resource',
+   stats:lv=>{const cap=[1500,3000,6000,12000,25000,45000,100000,250000,500000,1000000][Math.max(0,lv-1)];return`Kapacitet: ${cap?cap.toLocaleString():'-'}`}},
   'kasern':{name:'Kasern',icon:'⚔️',desc:'Tränar Jimmie-trupper.',size:3,maxLv:8,costElixir:[200,400,800,1600,3200,6400,12800,25600],buildTime:[45,90,180,360,720,1440,4320,8640],trainingBoost:[1,1.1,1.2,1.3,1.5,1.7,2,2.5],limitByJH:[1,1,1,2,2,2,2,2],category:'military',
    stats:lv=>`Träningsboost: ${[1,1.1,1.2,1.3,1.5,1.7,2,2.5][lv-1]}x`},
   'laboratorium':{name:'Laboratorium',icon:'🔬',desc:'Forskar uppgraderingar för trupper och besvärjelser.',size:3,maxLv:8,costGold:[500,1000,2000,4000,8000,16000,32000,64000],buildTime:[120,240,480,960,1920,3840,11520,23040],limitByJH:[0,0,1,1,1,1,1,1],category:'military',unlockJH:3,
    stats:_=>`Möjliggör truppforskning`},
-  'arme_lager':{name:'Armélager',icon:'🏕️',desc:'Ökar kapaciteten för trupper.',size:3,maxLv:8,costElixir:[150,300,600,1200,2400,4800,9600,19200],buildTime:[20,40,80,160,320,640,1920,3840],capacity:[20,30,40,60,80,100,120,150],limitByJH:[1,1,2,2,3,3,4,4],category:'military',
+  'arme_lager':{name:'Armélager',icon:'🏕️',desc:'Ökar kapaciteten för trupper.',size:3,maxLv:8,costElixir:[150,300,600,1200,2400,4800,9600,19200],buildTime:[5,40,80,160,320,640,1920,3840],capacity:[50,70,90,120,160,200,240,300],limitByJH:[1,1,2,2,3,3,4,4],category:'military',
    stats:lv=>`Armé-kapacitet: ${[20,30,40,60,80,100,120,150][lv-1]}`},
   'dark_bohrare':{name:'Dark Elixir-Borr',icon:'🖤',desc:'Utvinner Jimmie-Kraft djupt under marken.',size:2,maxLv:6,costGold:[3000,6000,12000,24000,48000,96000],buildTime:[360,720,1440,2880,5760,11520],darkPerHour:[20,30,45,60,80,100,120,140],buildingCap:[200,400,800,1600,3000,5000,8000,12000],limitByJH:[0,0,0,0,0,0,1,2],category:'resource',unlockJH:5,
    stats:lv=>`${[20,40,60,80,100,120][lv-1]} J-Kraft/tim`},
@@ -850,14 +849,14 @@ const BUILDING_TYPES={
 };
 
 const TROOP_TYPES={
-  'lill_jimmie':{name:'Lill-Jimmie',icon:'👤',col:'#9e9e9e',trainCost:25,trainTime:20,space:1,hp:[45,50,60,75,90,110],dps:[8,10,12,14,17,21],speed:16,target:'both',desc:'Snabb markenhet. Angriper närmaste byggnad.',maxLv:6,costToResearch:[0,10000,25000,50000,100000,200000]},
-  'jimmie_bagare':{name:'Jimmie-Bågare',icon:'🏹',col:'#34d399',trainCost:50,trainTime:25,space:1,hp:[20,22,25,30,35,42],dps:[7,9,11,13,15,18],speed:24,target:'both',desc:'Ranged-enhet. Stannar utanför murar.',maxLv:6,costToResearch:[0,15000,35000,70000,140000,280000]},
-  'sd_jatte':{name:'SD-Jätte',icon:'💪',col:'#60a5fa',trainCost:150,trainTime:120,space:5,hp:[300,360,440,530,640,770],dps:[12,15,18,21,25,29],speed:12,target:'defense',desc:'Tankar skada. Fokuserar på försvar.',maxLv:6,costToResearch:[0,20000,50000,100000,200000,400000]},
-  'jimmie_trollkarl':{name:'SD-Trollkarl',icon:'🧙',col:'#a855f7',trainCostElixir:300,trainCost:0,trainTime:180,space:4,hp:[75,80,90,105,120,140],dps:[24,28,32,38,44,52],speed:16,target:'both',splash:true,desc:'Splash-skada. Dödar grupper av fiender.',maxLv:6,costToResearch:[0,50000,100000,200000,400000,800000]},
-  'jimmie_ballong':{name:'Jimmie-Ballong',icon:'🎈',col:'#f87171',trainCostElixir:2000,trainCost:0,trainTime:500,space:5,hp:[150,180,216,259,311,373],dps:[56,72,90,112,140,175],speed:8,target:'defense',air:true,desc:'Flyger! Fokuserar på försvar. Långsam men stark.',maxLv:6,costToResearch:[0,75000,150000,300000,600000,1200000]},
-  'jimmie_helare':{name:'Jimmie-Helare',icon:'💊',col:'#4ade80',trainCostElixir:2000,trainCost:0,trainTime:480,space:14,hp:[200,240,288,346,415,498],healPerSec:[30,36,43,52,62,74],speed:22,target:'friendly',air:true,desc:'Helar egna trupper. Kan inte attackera.',maxLv:6,costToResearch:[0,100000,200000,400000,800000,1600000]},
-  'minar_jimmie':{name:'Minar-Jimmie',icon:'⛏️',col:'#fb923c',trainCostElixir:3500,trainCost:0,trainTime:600,space:6,hp:[200,240,288,346,415,498],dps:[60,75,93,116,145,181],speed:28,target:'both',underground:true,desc:'Gräver under murar! Fokuserar på resurser.',maxLv:6,costToResearch:[0,200000,400000,800000,1600000,3200000]},
-  'pekka_jimmie':{name:'P.E.K.K.A-Jimmie',icon:'🤖',col:'#1a1a4a',trainCostElixir:6000,trainCost:0,trainTime:1800,space:25,hp:[2000,2400,2900,3500,4200,5000],dps:[240,300,375,469,586,733],speed:16,target:'both',desc:'Massiv pansrad enhet. Extremt kraftfull.',maxLv:6,costToResearch:[0,500000,1000000,2000000,4000000,8000000]},
+  'lill_jimmie':{name:'Lill-Jimmie',icon:'👤',col:'#9e9e9e',trainCost:0,trainTime:0,kasernLv:1,space:1,hp:[75,90,110,135,165,200],dps:[12,15,18,22,27,33],speed:16,target:'both',desc:'Snabb markenhet. Angriper närmaste byggnad.',maxLv:6,costToResearch:[0,10000,25000,50000,100000,200000]},
+  'jimmie_bagare':{name:'Jimmie-Bågare',icon:'🏹',col:'#34d399',trainCost:0,trainTime:0,kasernLv:1,space:1,hp:[36,40,45,54,63,75],dps:[10,13,16,19,22,27],speed:24,target:'both',desc:'Ranged-enhet. Stannar utanför murar.',maxLv:6,costToResearch:[0,15000,35000,70000,140000,280000]},
+  'sd_jatte':{name:'SD-Jätte',icon:'💪',col:'#60a5fa',trainCost:0,trainTime:0,kasernLv:2,space:5,hp:[300,360,440,530,640,770],dps:[16,20,24,28,33,39],speed:12,target:'defense',desc:'Tankar skada. Fokuserar på försvar.',maxLv:6,costToResearch:[0,20000,50000,100000,200000,400000]},
+  'jimmie_trollkarl':{name:'SD-Trollkarl',icon:'🧙',col:'#a855f7',trainCost:0,trainTime:0,kasernLv:3,space:4,hp:[100,110,125,145,170,200],dps:[30,35,41,48,56,66],speed:16,target:'both',splash:true,desc:'Splash-skada. Dödar grupper av fiender.',maxLv:6,costToResearch:[0,50000,100000,200000,400000,800000]},
+  'jimmie_ballong':{name:'Jimmie-Ballong',icon:'🎈',col:'#f87171',trainCost:0,trainTime:0,kasernLv:4,space:5,hp:[150,180,216,259,311,373],dps:[56,72,90,112,140,175],speed:8,target:'defense',air:true,desc:'Flyger! Fokuserar på försvar. Långsam men stark.',maxLv:6,costToResearch:[0,75000,150000,300000,600000,1200000]},
+  'jimmie_helare':{name:'Jimmie-Helare',icon:'💊',col:'#4ade80',trainCost:0,trainTime:0,kasernLv:5,space:14,hp:[200,240,288,346,415,498],healPerSec:[30,36,43,52,62,74],speed:22,target:'friendly',air:true,desc:'Helar egna trupper. Kan inte attackera.',maxLv:6,costToResearch:[0,100000,200000,400000,800000,1600000]},
+  'minar_jimmie':{name:'Minar-Jimmie',icon:'⛏️',col:'#fb923c',trainCost:0,trainTime:0,kasernLv:6,space:6,hp:[200,240,288,346,415,498],dps:[60,75,93,116,145,181],speed:28,target:'both',underground:true,desc:'Gräver under murar! Fokuserar på resurser.',maxLv:6,costToResearch:[0,200000,400000,800000,1600000,3200000]},
+  'pekka_jimmie':{name:'P.E.K.K.A-Jimmie',icon:'🤖',col:'#1a1a4a',trainCost:0,trainTime:0,kasernLv:7,space:25,hp:[1500,1800,2200,2650,3150,3750],dps:[280,350,438,547,683,854],speed:16,target:'both',desc:'Massiv pansrad enhet. Extremt kraftfull.',maxLv:6,costToResearch:[0,500000,1000000,2000000,4000000,8000000]},
 };
 
 const SPELL_TYPES={
@@ -1268,27 +1267,149 @@ function drawBuildingGraphic(ctx,type,lv,sx,sy,bw,bh){
     // Cannonball in barrel hint
     ctx.fillStyle='#2a2a2a';ctx.beginPath();ctx.arc(cx,sy+bh*0.11,bw*0.06,0,Math.PI*2);ctx.fill();
   } else if(type==='pilbage_torn'){
-    // Tower base
-    ctx.fillStyle='#808080';ctx.fillRect(sx+bw*0.2,sy+bh*0.3,bw*0.6,bh*0.65);
-    // Battlements
-    for(let i=0;i<3;i++){ctx.fillStyle='#999';ctx.fillRect(sx+bw*0.2+i*bw*0.2,sy+bh*0.2,bw*0.12,bh*0.15);}
-    // Archer
-    ctx.font=`${bw*0.4}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🏹',cx,cy);
+    const t_at=Date.now()/1000;
+    // Shadow
+    ctx.fillStyle='rgba(0,0,0,0.25)';ctx.beginPath();ctx.ellipse(cx,sy+bh*0.95,bw*0.3,bh*0.06,0,0,Math.PI*2);ctx.fill();
+    // Tower body
+    const atG=ctx.createLinearGradient(sx+bw*0.2,sy+bh*0.2,sx+bw*0.8,sy+bh*0.9);
+    atG.addColorStop(0,'#909090');atG.addColorStop(1,'#505050');
+    ctx.fillStyle=atG;ctx.beginPath();ctx.roundRect(sx+bw*0.22,sy+bh*0.35,bw*0.56,bh*0.55,4);ctx.fill();
+    // Stone rows
+    ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=1;
+    [0.48,0.6,0.72].forEach(ry=>{ctx.beginPath();ctx.moveTo(sx+bw*0.22,sy+bh*ry);ctx.lineTo(sx+bw*0.78,sy+bh*ry);ctx.stroke();});
+    // Arrow slit window
+    ctx.fillStyle='rgba(0,0,0,0.6)';ctx.fillRect(cx-bw*0.04,sy+bh*0.5,bw*0.08,bh*0.16);
+    ctx.fillRect(cx-bw*0.1,sy+bh*0.57,bw*0.2,bh*0.04);
+    // Battlements (merlons)
+    ctx.fillStyle='#888';
+    for(let i=0;i<4;i++){ctx.beginPath();ctx.roundRect(sx+bw*(0.16+i*0.2),sy+bh*0.22,bw*0.14,bh*0.16,3);ctx.fill();}
+    // Platform top
+    ctx.fillStyle='#777';ctx.fillRect(sx+bw*0.18,sy+bh*0.34,bw*0.64,bh*0.06);
+    // Rotating archer on top
+    const aimAngle_at=t_at*0.7;
+    ctx.save();ctx.translate(cx,sy+bh*0.28);ctx.rotate(aimAngle_at);
+    // Archer body
+    ctx.fillStyle='#4a3000';ctx.beginPath();ctx.arc(0,0,bw*0.16,0,Math.PI*2);ctx.fill();
+    // Bow pointing outward
+    ctx.strokeStyle='#8B6914';ctx.lineWidth=bw*0.04;
+    ctx.beginPath();ctx.arc(0,0,bw*0.12,-0.8,0.8);ctx.stroke();
+    // Arrow
+    ctx.strokeStyle='#aaa';ctx.lineWidth=bw*0.025;
+    ctx.beginPath();ctx.moveTo(-bw*0.12,0);ctx.lineTo(bw*0.18,0);ctx.stroke();
+    ctx.fillStyle='#888';ctx.beginPath();ctx.moveTo(bw*0.18,0);ctx.lineTo(bw*0.12,-bw*0.04);ctx.lineTo(bw*0.12,bw*0.04);ctx.fill();
+    ctx.restore();
+    // Level tag
+    if(lv>1){ctx.fillStyle='rgba(0,0,0,0.6)';ctx.beginPath();ctx.arc(sx+bw*0.82,sy+bh*0.25,bw*0.14,0,Math.PI*2);ctx.fill();ctx.fillStyle='#FFD700';ctx.font=`bold ${bw*0.12}px Arial`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(lv,sx+bw*0.82,sy+bh*0.25);}
   } else if(type==='morsare'){
-    ctx.fillStyle='#555';ctx.beginPath();ctx.arc(cx,cy,bw*0.38,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#333';ctx.fillRect(cx-bw*0.12,cy-bh*0.3,bw*0.24,bh*0.35);
-    ctx.fillStyle='#777';ctx.beginPath();ctx.arc(cx,cy-bh*0.3,bw*0.15,0,Math.PI*2);ctx.fill();
+    const t_mo=Date.now()/1000;
+    // Shadow
+    ctx.fillStyle='rgba(0,0,0,0.25)';ctx.beginPath();ctx.ellipse(cx,sy+bh*0.92,bw*0.38,bh*0.08,0,0,Math.PI*2);ctx.fill();
+    // Stone base platform
+    const moBase=ctx.createLinearGradient(sx,sy+bh*0.5,sx,sy+bh*0.9);
+    moBase.addColorStop(0,'#666');moBase.addColorStop(1,'#3a3a3a');
+    ctx.fillStyle=moBase;ctx.beginPath();ctx.roundRect(sx+bw*0.1,sy+bh*0.5,bw*0.8,bh*0.4,bw*0.1);ctx.fill();
+    // Stone texture
+    ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(sx+bw*0.12,sy+bh*0.65);ctx.lineTo(sx+bw*0.88,sy+bh*0.65);ctx.stroke();
+    // Rotating mount
+    const moAngle=t_mo*0.5;
+    ctx.save();ctx.translate(cx,cy+bh*0.06);ctx.rotate(moAngle);
+    // Mount disc
+    const mountG=ctx.createRadialGradient(0,0,0,0,0,bw*0.28);
+    mountG.addColorStop(0,'#777');mountG.addColorStop(1,'#444');
+    ctx.fillStyle=mountG;ctx.beginPath();ctx.arc(0,0,bw*0.28,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(0,0,0,0.3)';ctx.lineWidth=bw*0.04;ctx.beginPath();ctx.arc(0,0,bw*0.22,0,Math.PI*2);ctx.stroke();
+    // Barrel angled up-right
+    ctx.rotate(-Math.PI/4);
+    const barG2=ctx.createLinearGradient(-bw*0.1,0,bw*0.1,0);
+    barG2.addColorStop(0,'#555');barG2.addColorStop(0.5,'#888');barG2.addColorStop(1,'#444');
+    ctx.fillStyle=barG2;
+    ctx.beginPath();ctx.roundRect(-bw*0.1,-bh*0.38,bw*0.2,bh*0.38,bw*0.05);ctx.fill();
+    // Barrel ring
+    ctx.fillStyle='rgba(0,0,0,0.4)';ctx.fillRect(-bw*0.1,-bh*0.15,bw*0.2,bh*0.04);
+    // Muzzle
+    ctx.fillStyle='#333';ctx.beginPath();ctx.roundRect(-bw*0.13,-bh*0.42,bw*0.26,bh*0.08,3);ctx.fill();
+    ctx.restore();
   } else if(type==='luftforsvar'){
-    ctx.fillStyle='#2a4a8a';ctx.fillRect(sx+bw*0.15,sy+bh*0.35,bw*0.7,bh*0.55);
-    ctx.fillStyle='#3a5a9a';
-    for(let i=0;i<3;i++){ctx.save();ctx.translate(cx,cy-bh*0.05);ctx.rotate((-1+i)*Math.PI/4);ctx.fillRect(-bw*0.05,-bh*0.35,bw*0.1,bh*0.3);ctx.restore();}
-    ctx.fillStyle='#66aaff';ctx.beginPath();ctx.arc(cx,cy-bh*0.05,bw*0.1,0,Math.PI*2);ctx.fill();
+    const t_ad=Date.now()/1000;
+    // Shadow
+    ctx.fillStyle='rgba(0,0,0,0.25)';ctx.beginPath();ctx.ellipse(cx,sy+bh*0.93,bw*0.35,bh*0.07,0,0,Math.PI*2);ctx.fill();
+    // Base tower
+    const adBase=ctx.createLinearGradient(sx,sy+bh*0.3,sx,sy+bh*0.88);
+    adBase.addColorStop(0,'#3a5a9a');adBase.addColorStop(1,'#1a2a5a');
+    ctx.fillStyle=adBase;ctx.beginPath();ctx.roundRect(sx+bw*0.2,sy+bh*0.36,bw*0.6,bh*0.52,6);ctx.fill();
+    // Blue stripe
+    ctx.fillStyle='rgba(100,160,255,0.3)';ctx.fillRect(sx+bw*0.22,sy+bh*0.48,bw*0.56,bh*0.08);
+    // Rotating gun platform
+    const adAngle=t_ad*1.2;
+    ctx.save();ctx.translate(cx,cy-bh*0.02);ctx.rotate(adAngle);
+    // Platform disc
+    ctx.fillStyle='#2a4a8a';ctx.beginPath();ctx.arc(0,0,bw*0.3,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(100,160,255,0.4)';ctx.lineWidth=bw*0.04;ctx.beginPath();ctx.arc(0,0,bw*0.24,0,Math.PI*2);ctx.stroke();
+    // 3 barrels pointing outward
+    for(let i=0;i<3;i++){
+      ctx.save();ctx.rotate(i*Math.PI*2/3);
+      const bG=ctx.createLinearGradient(-bw*0.06,0,bw*0.06,0);
+      bG.addColorStop(0,'#1a2a5a');bG.addColorStop(0.5,'#4466aa');bG.addColorStop(1,'#1a2a5a');
+      ctx.fillStyle=bG;
+      ctx.beginPath();ctx.roundRect(-bw*0.06,-bh*0.34,bw*0.12,bh*0.34,bw*0.03);ctx.fill();
+      // Muzzle flash hint
+      ctx.fillStyle='rgba(100,200,255,0.4)';
+      ctx.beginPath();ctx.arc(0,-bh*0.34,bw*0.05,0,Math.PI*2);ctx.fill();
+      ctx.restore();
+    }
+    ctx.restore();
+    // Center globe
+    const globeG=ctx.createRadialGradient(cx,cy-bh*0.02,0,cx,cy-bh*0.02,bw*0.12);
+    globeG.addColorStop(0,'#88aaff');globeG.addColorStop(1,'#2244aa');
+    ctx.fillStyle=globeG;ctx.beginPath();ctx.arc(cx,cy-bh*0.02,bw*0.12,0,Math.PI*2);ctx.fill();
+    // Radar ring pulse
+    const pulse=(Math.sin(t_ad*3)+1)/2;
+    ctx.strokeStyle=`rgba(100,200,255,${pulse*0.6})`;ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.arc(cx,cy-bh*0.02,bw*(0.2+pulse*0.1),0,Math.PI*2);ctx.stroke();
   } else if(type==='tesla_torn'){
-    ctx.fillStyle='#1a1a3a';ctx.fillRect(sx+bw*0.3,sy+bh*0.4,bw*0.4,bh*0.55);
-    ctx.fillStyle='#4488ff';
-    ctx.beginPath();ctx.moveTo(cx,sy+bh*0.1);ctx.lineTo(cx-bw*0.2,sy+bh*0.4);ctx.lineTo(cx+bw*0.2,sy+bh*0.4);ctx.closePath();ctx.fill();
-    ctx.strokeStyle='#88aaff';ctx.lineWidth=1.5;
-    ctx.beginPath();ctx.moveTo(cx-bw*0.15,sy+bh*0.25);ctx.lineTo(cx,sy+bh*0.15);ctx.lineTo(cx+bw*0.15,sy+bh*0.25);ctx.stroke();
+    const t_te=Date.now()/1000;
+    // Shadow
+    ctx.fillStyle='rgba(0,0,0,0.3)';ctx.beginPath();ctx.ellipse(cx,sy+bh*0.94,bw*0.25,bh*0.05,0,0,Math.PI*2);ctx.fill();
+    // Base
+    const teBase=ctx.createLinearGradient(sx,sy+bh*0.55,sx,sy+bh*0.9);
+    teBase.addColorStop(0,'#2a2a4a');teBase.addColorStop(1,'#0a0a1a');
+    ctx.fillStyle=teBase;ctx.beginPath();ctx.roundRect(sx+bw*0.28,sy+bh*0.52,bw*0.44,bh*0.4,6);ctx.fill();
+    // Insulator rings on pole
+    const poleG=ctx.createLinearGradient(cx-bw*0.06,0,cx+bw*0.06,0);
+    poleG.addColorStop(0,'#1a1a3a');poleG.addColorStop(0.5,'#3a3a6a');poleG.addColorStop(1,'#1a1a3a');
+    ctx.fillStyle=poleG;ctx.fillRect(cx-bw*0.06,sy+bh*0.15,bw*0.12,bh*0.42);
+    [0.22,0.32,0.42].forEach(ry=>{
+      ctx.fillStyle='#555588';ctx.beginPath();ctx.roundRect(cx-bw*0.1,sy+bh*ry,bw*0.2,bh*0.05,2);ctx.fill();
+    });
+    // Electric coil top — rotating sparks
+    ctx.save();ctx.translate(cx,sy+bh*0.14);
+    // Coil disc
+    const coilG=ctx.createRadialGradient(0,0,0,0,0,bw*0.2);
+    coilG.addColorStop(0,`rgba(150,180,255,${0.8+Math.sin(t_te*8)*0.2})`);
+    coilG.addColorStop(0.5,'#4466ff');coilG.addColorStop(1,'#1a1a4a');
+    ctx.fillStyle=coilG;ctx.beginPath();ctx.arc(0,0,bw*0.2,0,Math.PI*2);ctx.fill();
+    // Lightning bolts radiating out
+    const numBolts=4;
+    for(let b2=0;b2<numBolts;b2++){
+      const ba=t_te*4+b2*Math.PI/2;
+      const len=bw*(0.18+Math.sin(t_te*7+b2)*0.06);
+      ctx.strokeStyle=`rgba(180,220,255,${0.6+Math.sin(t_te*6+b2)*0.4})`;
+      ctx.lineWidth=bw*0.025;
+      ctx.beginPath();ctx.moveTo(0,0);
+      // Zigzag bolt
+      const mx=Math.cos(ba)*len*0.5+Math.cos(ba+0.5)*len*0.15;
+      const my=Math.sin(ba)*len*0.5+Math.sin(ba+0.5)*len*0.15;
+      ctx.lineTo(mx,my);ctx.lineTo(Math.cos(ba)*len,Math.sin(ba)*len);ctx.stroke();
+    }
+    // Center glow
+    ctx.fillStyle=`rgba(255,255,255,${0.7+Math.sin(t_te*10)*0.3})`;
+    ctx.beginPath();ctx.arc(0,0,bw*0.07,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+    // Electric glow around tower
+    const glowR=bw*(0.25+Math.sin(t_te*5)*0.05);
+    ctx.strokeStyle=`rgba(100,150,255,${0.15+Math.sin(t_te*4)*0.1})`;
+    ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,sy+bh*0.14,glowR,0,Math.PI*2);ctx.stroke();
   } else if(type==='riksdaler_gruva'){
     // Base platform
     ctx.fillStyle='rgba(60,40,10,0.7)';
@@ -1324,11 +1445,41 @@ function drawBuildingGraphic(ctx,type,lv,sx,sy,bw,bh){
     ctx.font=`${bw*0.28}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillText('⛏️',cx,sy+bh*0.18);
   } else if(type==='riksdaler_forrad'){
-    ctx.fillStyle='#DAA520';ctx.fillRect(sx+bw*0.1,sy+bh*0.25,bw*0.8,bh*0.65);
-    ctx.fillStyle='#B8860B';ctx.fillRect(sx+bw*0.1,sy+bh*0.25,bw*0.8,bh*0.12);
-    ctx.fillStyle='#FFD700';
-    for(let i=1;i<4;i++){ctx.fillRect(sx+bw*0.1,sy+bh*0.25+i*bh*0.16,bw*0.8,bh*0.03);}
-    ctx.font=`${bw*0.3}px serif`;ctx.textAlign='center';ctx.fillText('🪙',cx,cy+bh*0.15);
+    // Base shadow
+    ctx.fillStyle='rgba(50,35,0,0.6)';
+    ctx.beginPath();ctx.roundRect(sx+bw*0.06,sy+bh*0.8,bw*0.88,bh*0.16,4);ctx.fill();
+    // Main body — rounded chest/vault shape
+    const gsG=ctx.createLinearGradient(sx,sy+bh*0.18,sx+bw,sy+bh*0.88);
+    gsG.addColorStop(0,'#c8920a');gsG.addColorStop(0.4,'#a87000');gsG.addColorStop(1,'#7a5000');
+    ctx.fillStyle=gsG;
+    ctx.beginPath();ctx.roundRect(sx+bw*0.08,sy+bh*0.22,bw*0.84,bh*0.6,bw*0.1);ctx.fill();
+    // Chest lid
+    const lidG=ctx.createLinearGradient(sx,sy+bh*0.18,sx,sy+bh*0.38);
+    lidG.addColorStop(0,'#e8a800');lidG.addColorStop(1,'#c07800');
+    ctx.fillStyle=lidG;
+    ctx.beginPath();ctx.roundRect(sx+bw*0.08,sy+bh*0.18,bw*0.84,bh*0.22,bw*0.1);ctx.fill();
+    // Metal band across lid
+    ctx.fillStyle='rgba(180,130,0,0.8)';
+    ctx.fillRect(sx+bw*0.1,sy+bh*0.34,bw*0.8,bh*0.04);
+    // Metal hinges
+    [[0.2,0.28],[0.75,0.28]].forEach(([hx,hy])=>{
+      ctx.fillStyle='#996600';ctx.beginPath();ctx.roundRect(sx+bw*hx,sy+bh*hy,bw*0.08,bh*0.08,2);ctx.fill();
+      ctx.fillStyle='#cc9900';ctx.beginPath();ctx.arc(sx+bw*(hx+0.04),sy+bh*(hy+0.04),bw*0.025,0,Math.PI*2);ctx.fill();
+    });
+    // Lock
+    ctx.fillStyle='#cc9900';ctx.beginPath();ctx.roundRect(cx-bw*0.06,sy+bh*0.35,bw*0.12,bh*0.1,bw*0.03);ctx.fill();
+    ctx.fillStyle='#aa7700';ctx.beginPath();ctx.arc(cx,sy+bh*0.36,bw*0.035,0,Math.PI*2);ctx.fill();
+    // Gold coins spilling out (animated sparkle)
+    const t4=Date.now()/1000;
+    const coinPositions=[[cx-bw*0.18,cy+bh*0.08],[cx,cy+bh*0.05],[cx+bw*0.16,cy+bh*0.1]];
+    coinPositions.forEach(([coinX,coinY],ci)=>{
+      const bob=Math.sin(t4*2+ci)*2;
+      ctx.fillStyle='#FFD700';ctx.beginPath();ctx.arc(coinX,coinY+bob,bw*0.065,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='rgba(255,255,150,0.8)';ctx.beginPath();ctx.arc(coinX-bw*0.02,coinY+bob-bw*0.02,bw*0.025,0,Math.PI*2);ctx.fill();
+    });
+    // Level coin stack indicator
+    ctx.font=`${bw*0.2}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('🪙',cx,sy+bh*0.1);
   } else if(type==='saft_samlare'){
     // Base
     ctx.fillStyle='rgba(40,10,60,0.7)';
@@ -1365,9 +1516,44 @@ function drawBuildingGraphic(ctx,type,lv,sx,sy,bw,bh){
     ctx.font=`${bw*0.28}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillText('🧪',cx,sy+bh*0.1);
   } else if(type==='saft_tank'){
-    ctx.fillStyle='#8800cc';ctx.beginPath();ctx.arc(cx,cy+bh*0.1,bw*0.4,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='rgba(180,80,255,0.4)';ctx.beginPath();ctx.arc(cx-bw*0.1,cy-bh*0.05,bw*0.15,0,Math.PI*2);ctx.fill();
-    ctx.font=`${bw*0.35}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🧫',cx,cy+bh*0.1);
+    // Base/platform
+    ctx.fillStyle='rgba(40,0,70,0.6)';
+    ctx.beginPath();ctx.roundRect(sx+bw*0.06,sy+bh*0.8,bw*0.88,bh*0.16,4);ctx.fill();
+    // Main tank — large rounded cylinder
+    const stG=ctx.createLinearGradient(sx+bw*0.1,sy+bh*0.15,sx+bw*0.9,sy+bh*0.85);
+    stG.addColorStop(0,'#aa00ee');stG.addColorStop(0.5,'#7700bb');stG.addColorStop(1,'#440088');
+    ctx.fillStyle=stG;
+    ctx.beginPath();ctx.roundRect(sx+bw*0.1,sy+bh*0.25,bw*0.8,bh*0.56,bw*0.18);ctx.fill();
+    // Elixir level (fill from bottom, animated)
+    const fillLvl=0.55+Math.sin(Date.now()/1400)*0.06;
+    ctx.save();
+    ctx.beginPath();ctx.roundRect(sx+bw*0.1,sy+bh*0.25,bw*0.8,bh*0.56,bw*0.18);ctx.clip();
+    const lG=ctx.createLinearGradient(0,sy+bh*(0.81-fillLvl*0.56),0,sy+bh*0.81);
+    lG.addColorStop(0,'rgba(220,100,255,0.85)');lG.addColorStop(1,'rgba(140,0,220,0.95)');
+    ctx.fillStyle=lG;ctx.fillRect(sx+bw*0.1,sy+bh*(0.81-fillLvl*0.56),bw*0.8,bh*fillLvl*0.56);
+    // Surface shimmer
+    ctx.fillStyle='rgba(255,180,255,0.2)';
+    ctx.beginPath();ctx.ellipse(cx,sy+bh*(0.81-fillLvl*0.56),bw*0.32,bh*0.03,0,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+    // Glass highlight on tank
+    ctx.fillStyle='rgba(255,255,255,0.1)';
+    ctx.beginPath();ctx.roundRect(sx+bw*0.15,sy+bh*0.28,bw*0.18,bh*0.35,bw*0.06);ctx.fill();
+    // Tank band/rings
+    ctx.strokeStyle='rgba(180,80,255,0.5)';ctx.lineWidth=bw*0.03;
+    [0.38,0.55,0.7].forEach(ry=>{
+      ctx.beginPath();ctx.moveTo(sx+bw*0.12,sy+bh*ry);ctx.lineTo(sx+bw*0.88,sy+bh*ry);ctx.stroke();
+    });
+    // Top dome
+    const domeG=ctx.createLinearGradient(cx,sy+bh*0.12,cx,sy+bh*0.28);
+    domeG.addColorStop(0,'#cc44ff');domeG.addColorStop(1,'#9900cc');
+    ctx.fillStyle=domeG;
+    ctx.beginPath();ctx.roundRect(cx-bw*0.25,sy+bh*0.12,bw*0.5,bh*0.16,bw*0.08);ctx.fill();
+    // Pipe/valve on dome
+    ctx.fillStyle='#aa44cc';ctx.beginPath();ctx.roundRect(cx-bw*0.04,sy+bh*0.06,bw*0.08,bh*0.1,bw*0.02);ctx.fill();
+    ctx.fillStyle='#cc66ff';ctx.beginPath();ctx.roundRect(cx-bw*0.07,sy+bh*0.05,bw*0.14,bh*0.04,bw*0.02);ctx.fill();
+    // Icon
+    ctx.font=`${bw*0.22}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('🧪',cx,sy+bh*0.09);
   } else if(type==='kasern'){
     ctx.fillStyle='#5a3a1a';ctx.fillRect(sx+bw*0.1,sy+bh*0.25,bw*0.8,bh*0.65);
     ctx.fillStyle='#7a5a3a';ctx.fillRect(sx+bw*0.1,sy+bh*0.15,bw*0.8,bh*0.15);
@@ -1453,6 +1639,7 @@ function gameLoop(t){
 
 function tick(dt){
   ambientTime+=dt;
+  recalcCaps();
   tickResourceOrbs(dt);tickCollectParticles(dt);updateHUDPulse();
   const now=Date.now()/1000;
   // Resource generation from buildings
@@ -1531,7 +1718,7 @@ function completeBuilder(builder){
     if(b.type==='jimmie_hall'){levelUpJH(b.lv);}
   }
   builder.busy=false;builder.task=null;builder.endTime=0;
-  renderByPanel();saveGame();
+  recalcCaps();renderByPanel();saveGame();
 }
 
 function levelUpJH(newLv){
@@ -1584,6 +1771,15 @@ function updateHUD(){
   const db=document.getElementById('dark-bar');if(db)db.style.width=dPct+'%';
   // Hide dark pill if no dark elixir capacity yet
   const dp=document.getElementById('dark-pill');if(dp)dp.style.display=G.dark_cap>0?'flex':'none';
+  // Builder pill
+  const bpill=document.getElementById('builder-pill-text');
+  if(bpill){
+    const maxB=JH_DATA[G.jh_level-1]?.maxBuilders||2;
+    const freeB=G.builders.slice(0,maxB).filter(b=>!b.busy).length;
+    bpill.textContent=freeB+'/'+maxB;
+    bpill.style.color=freeB===0?'#ff8888':freeB<maxB?'#ffcc44':'#88ff88';
+  }
+  // Training is instant — no HUD needed
   updateBuilderRow();
 }
 
@@ -1624,7 +1820,7 @@ function switchNav(tab){
   activeNav=tab;
   if(tab==='by')renderByPanel();
   if(tab==='army')renderArmyPanel();
-  if(tab==='research')renderResearchPanel();
+  if(tab==='research'){const rs=document.getElementById('panel-research-scroll');if(rs)rs.innerHTML='<div style="text-align:center;padding:40px 20px"><div style="font-size:3rem;margin-bottom:12px">🔬</div><div style="font-family:var(--title);color:var(--gold);font-size:1rem;margin-bottom:8px">Laboratoriet</div><div style="color:rgba(255,255,255,0.5);font-size:0.82rem;line-height:1.6">Tryck på Laboratorium-byggnaden på kartan för att forska uppgraderingar.</div></div>';}
   if(tab==='heroes')renderHeroesPanel();
 }
 
@@ -1723,9 +1919,17 @@ function openBuildMenu(type){
   document.getElementById('bm-prog').style.width=(currentLv/bt.maxLv*100)+'%';
   document.getElementById('bm-prog-lbl').textContent=`Lv ${currentLv}/${bt.maxLv}`;
   const actionBtn=document.getElementById('bm-action-btn');
-  if(currentLv>=bt.maxLv){actionBtn.textContent='MAX NIVÅ';actionBtn.disabled=true;}
-  else if(!canBuild&&currentLv===0){actionBtn.textContent='Max antal';actionBtn.disabled=true;}
-  else{actionBtn.textContent=count===0?'🔨 Bygg':'⬆️ Uppgradera';actionBtn.disabled=false;}
+  if(currentLv>=bt.maxLv){actionBtn.innerHTML='MAX NIVÅ';actionBtn.disabled=true;}
+  else if(!canBuild&&currentLv===0){actionBtn.innerHTML='Max antal';actionBtn.disabled=true;}
+  else{
+    const btnCostG=bt.costGold?bt.costGold[Math.min(nextLv-1,bt.maxLv-1)]:0;
+    const btnCostE=bt.costElixir?bt.costElixir[Math.min(nextLv-1,bt.maxLv-1)]:0;
+    const btnTime=bt.buildTime?bt.buildTime[Math.min(nextLv-1,bt.maxLv-1)]:0;
+    const costStr=(btnCostG?`🪙${fmt(btnCostG)} `:'')+( btnCostE?`🧪${fmt(btnCostE)} `:'');
+    const timeStr=btnTime>0?`· ⏱${fmtTime(btnTime)}`:'Direkt';
+    actionBtn.innerHTML=count===0?`🔨 Bygg<br><span style="font-size:0.72rem;opacity:0.8">${costStr}${timeStr}</span>`:`⬆️ Uppgradera<br><span style="font-size:0.72rem;opacity:0.8">${costStr}${timeStr}</span>`;
+    actionBtn.disabled=false;
+  }
   openModal('build-modal');
 }
 
@@ -1838,24 +2042,32 @@ function renderArmyPanel(){
 
   // Train troops
   html+=`<div class="section-hdr">🏋️ Träna Trupper</div>`;
-  const hasKasern=G.buildings.some(b=>b.type==='kasern');
-  if(!hasKasern){html+='<div style="color:rgba(255,255,255,0.3);font-size:0.78rem;padding:10px">Bygg en Kasern först!</div>';}
-  else{
+  const hasKasern=G.buildings.some(b=>b.type==='kasern'&&b.lv>=1);
+  const bestKasernLv2=getBestKasernLv();
+  if(!hasKasern){
+    html+='<div style="text-align:center;color:rgba(255,255,255,0.35);font-size:0.82rem;padding:16px">Bygg en Kasern (Lv1) för att träna trupper!</div>';
+  } else {
     html+='<div class="troop-grid">';
     Object.entries(TROOP_TYPES).forEach(([id,tt])=>{
       const lv=G.troopLevels?.[id]||1;
-      const cost=tt.trainCost||0;const costE=tt.trainCostElixir||0;
-      const inQueue=G.troopTraining.filter(t=>t.troopId===id).length;
+      const reqLv=tt.kasernLv||1;
+      const unlocked=bestKasernLv2>=reqLv;
       const tags=(tt.air?'<span class="troop-tag air">✈ Flyger</span>':'')+(tt.splash?'<span class="troop-tag splash">💫 Splash</span>':'')+(tt.underground?'<span class="troop-tag underground">⛏ Under</span>':'');
-      html+=`<div class="troop-card" onclick="trainTroop('${id}')">
-        <div class="tc-level">Lv${lv}</div>
-        <canvas class="tc-canvas" id="tc-${id}-train" width="44" height="44"></canvas>
-        <div class="tc-name">${tt.name}</div>
-        ${tags}
-        <div class="tc-count" style="color:var(--elixir);font-size:0.55rem">${cost?'🪙'+fmt(cost):''}${costE?'🧪'+fmt(costE):''}</div>
-        ${inQueue>0?`<div style="font-size:0.55rem;color:var(--gold)">Kö: ${inQueue}</div>`:''}
-        <div class="tc-train-btn">+ Träna</div>
-      </div>`;
+      if(!unlocked){
+        html+=`<div class="troop-card" style="opacity:0.35;cursor:not-allowed">
+          <canvas class="tc-canvas" id="tc-${id}-train" width="44" height="44"></canvas>
+          <div class="tc-name">${tt.name}</div>
+          <div style="font-size:0.58rem;color:#ffaa44;font-weight:800;margin-top:3px">🔒 Kasern Lv${reqLv}</div>
+        </div>`;
+      } else {
+        html+=`<div class="troop-card" onclick="trainTroop('${id}')">
+          <div class="tc-level">Lv${lv}</div>
+          <canvas class="tc-canvas" id="tc-${id}-train" width="44" height="44"></canvas>
+          <div class="tc-name">${tt.name}</div>
+          ${tags}
+          <div class="tc-train-btn">+ Träna</div>
+        </div>`;
+      }
     });
     html+='</div>';
   }
@@ -1899,9 +2111,8 @@ function drawTroopIcon(ctx,id,size){
 
 function trainTroop(id){
   const tt=TROOP_TYPES[id];if(!tt)return;
-  const costG=tt.trainCost||0;const costE=tt.trainCostElixir||0;
-  if(G.gold<costG){toast('Inte tillräckligt Riksdaler!');return;}
-  if(G.elixir<costE){toast('Inte tillräckligt SD-Saft!');return;}
+  if(getBestKasernLv()<(tt.kasernLv||1)){toast('Uppgradera Kasernen till Lv'+(tt.kasernLv||1)+'!');return;}
+  const costG=0;const costE=0; // Gratis träning
   const armyCap=getTotalArmyCap();
   const armyUsed=Object.entries(G.troops).reduce((acc,[i,c])=>acc+(TROOP_TYPES[i]?.space||1)*c,0);
   const inQueue=G.troopTraining.reduce((acc,t)=>acc+(TROOP_TYPES[t.troopId]?.space||1),0);
@@ -1928,6 +2139,10 @@ function getKasernBoost(){
   if(!kaserns.length)return 1;
   const best=Math.max(...kaserns.map(b=>b.lv));
   return BUILDING_TYPES.kasern.trainingBoost[Math.min(best-1,7)]||1;
+}
+function getBestKasernLv(){
+  const kaserns=G.buildings.filter(b=>b.type==='kasern'&&b.lv>=1);
+  return kaserns.length?Math.max(...kaserns.map(b=>b.lv)):0;
 }
 
 function brewSpell(id){
@@ -2212,15 +2427,19 @@ function selectAtkTroop(id){
   document.querySelector(`.at-troop[onclick="selectAtkTroop('${id}')"]`)?.classList.add('selected');
 }
 
-let ATK_CAM_X=20,ATK_CAM_Y=20;
+let ATK_CAM_X=0,ATK_CAM_Y=0;
+const ATK_SCALE=1; // always 1 — we use ATK_C for cell size
+let ATK_C=28; // cell size in attack mode
 function centerAtkCamera(){
   if(!atkCanvas)return;
-  // Center the enemy base grid in the available canvas
-  const totalW=AGRID*AC, totalH=AGRID*AC;
-  ATK_CAM_X=Math.max(10,(atkW-totalW)/2);
-  ATK_CAM_Y=Math.max(10,(atkH-totalH)/2);
+  // Pick cell size so grid fits comfortably
+  ATK_C=Math.floor(Math.min(atkW,atkH*1.1)/(AGRID+2));
+  ATK_C=Math.max(16,Math.min(ATK_C,32));
+  ATK_CAM_X=Math.floor((atkW-AGRID*ATK_C)/2);
+  ATK_CAM_Y=Math.max(4,Math.floor((atkH-AGRID*ATK_C)/2));
 }
-function gridToScreen(gx,gy){return{x:gx*AC+ATK_CAM_X,y:gy*AC+ATK_CAM_Y};}
+function gridToScreen(gx,gy){return{x:gx*ATK_C+ATK_CAM_X,y:gy*ATK_C+ATK_CAM_Y};}
+function screenToGrid(sx,sy){return{gx:(sx-ATK_CAM_X)/ATK_C,gy:(sy-ATK_CAM_Y)/ATK_C};}
 
 function drawAttack(){
   const ctx=atkCtx;
@@ -2228,29 +2447,29 @@ function drawAttack(){
   // Ground with improved rendering
   for(let y=0;y<AGRID;y++){for(let x=0;x<AGRID;x++){
     ctx.fillStyle=GRASS_PAT[y%GRID][x%GRID];
-    ctx.fillRect(x*AC+ATK_CAM_X,y*AC+ATK_CAM_Y,AC,AC);
-    if((x+y)%6===0){ctx.fillStyle='rgba(0,0,0,0.04)';ctx.fillRect(x*AC+ATK_CAM_X,y*AC+ATK_CAM_Y,AC,AC);}
+    ctx.fillRect(x*ATK_C+ATK_CAM_X,y*ATK_C+ATK_CAM_Y,ATK_C,ATK_C);
+    if((x+y)%6===0){ctx.fillStyle='rgba(0,0,0,0.04)';ctx.fillRect(x*ATK_C+ATK_CAM_X,y*ATK_C+ATK_CAM_Y,ATK_C,ATK_C);}
   }}
   // Entry zone (bottom glow — where you drop troops)
-  const entryY=(AGRID-2)*AC+ATK_CAM_Y;
+  const entryY=(AGRID-2)*ATK_C+ATK_CAM_Y;
   const entryG=ctx.createLinearGradient(0,entryY,0,entryY+AC*2);
   entryG.addColorStop(0,'rgba(255,215,0,0.12)');entryG.addColorStop(1,'transparent');
   ctx.fillStyle=entryG;ctx.fillRect(ATK_CAM_X,entryY,AGRID*AC,AC*2);
   ctx.strokeStyle='rgba(255,215,0,0.3)';ctx.lineWidth=2;ctx.setLineDash([6,6]);
-  ctx.beginPath();ctx.moveTo(ATK_CAM_X,entryY);ctx.lineTo(AGRID*AC+ATK_CAM_X,entryY);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ATK_CAM_X,entryY);ctx.lineTo(AGRID*ATK_C+ATK_CAM_X,entryY);ctx.stroke();
   ctx.setLineDash([]);
   ctx.font='11px Nunito';ctx.fillStyle='rgba(255,215,0,0.6)';ctx.textAlign='center';
-  ctx.fillText('👆 TRYCK HÄR FÖR ATT PLACERA TRUPPER',AGRID/2*AC+ATK_CAM_X,entryY+14);
+  ctx.fillText('👆 Tryck kartan för att placera trupper',atkW/2,entryY+14);
   // Show hint if no units deployed
   if(atkUnits.length===0&&selectedAtkTroop){
     ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillStyle='rgba(255,215,0,0.4)';ctx.font='bold 14px Nunito';
-    ctx.fillText('Välj trupp nedan → Tryck kartan för att placera',AGRID/2*AC+ATK_CAM_X,AGRID/2*AC+ATK_CAM_Y);
+    ctx.fillText('Välj trupp nedan → Tryck kartan',atkW/2,atkH/2);
   }
   // Grid lines
   ctx.strokeStyle='rgba(0,0,0,0.06)';ctx.lineWidth=0.5;
-  for(let y=0;y<=AGRID;y++){ctx.beginPath();ctx.moveTo(ATK_CAM_X,y*AC+ATK_CAM_Y);ctx.lineTo(AGRID*AC+ATK_CAM_X,y*AC+ATK_CAM_Y);ctx.stroke();}
-  for(let x=0;x<=AGRID;x++){ctx.beginPath();ctx.moveTo(x*AC+ATK_CAM_X,ATK_CAM_Y);ctx.lineTo(x*AC+ATK_CAM_X,AGRID*AC+ATK_CAM_Y);ctx.stroke();}
+  for(let y=0;y<=AGRID;y++){ctx.beginPath();ctx.moveTo(ATK_CAM_X,y*ATK_C+ATK_CAM_Y);ctx.lineTo(AGRID*ATK_C+ATK_CAM_X,y*ATK_C+ATK_CAM_Y);ctx.stroke();}
+  for(let x=0;x<=AGRID;x++){ctx.beginPath();ctx.moveTo(x*ATK_C+ATK_CAM_X,ATK_CAM_Y);ctx.lineTo(x*ATK_C+ATK_CAM_X,AGRID*ATK_C+ATK_CAM_Y);ctx.stroke();}
 
   // Rage effect
   if(atkRageEnd>Date.now()/1000){
@@ -2259,8 +2478,8 @@ function drawAttack(){
 
   // Buildings
   atkBuildings.filter(b=>b.alive).forEach(b=>{
-    const sx=b.gx*AC+ATK_CAM_X,sy=b.gy*AC+ATK_CAM_Y;
-    const bw=b.size*AC,bh=b.size*AC;
+    const sx=b.gx*ATK_C+ATK_CAM_X,sy=b.gy*ATK_C+ATK_CAM_Y;
+    const bw=b.size*ATK_C,bh=b.size*ATK_C;
     drawBuildingGraphic(ctx,b.type,b.lv,sx,sy,bw,bh);
     // HP bar
     const pct=b.hp/b.maxHp;
@@ -2276,8 +2495,8 @@ function drawAttack(){
 
   // Rubble for destroyed
   atkBuildings.filter(b=>!b.alive).forEach(b=>{
-    const sx=b.gx*AC+ATK_CAM_X,sy=b.gy*AC+ATK_CAM_Y;
-    ctx.fillStyle='rgba(80,40,0,0.6)';ctx.fillRect(sx+2,sy+2,b.size*AC-4,b.size*AC-4);
+    const sx=b.gx*ATK_C+ATK_CAM_X,sy=b.gy*ATK_C+ATK_CAM_Y;
+    ctx.fillStyle='rgba(80,40,0,0.6)';ctx.fillRect(sx+2,sy+2,b.size*ATK_C-4,b.size*ATK_C-4);
     ctx.font='12px serif';ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillText('💨',sx+b.size*AC/2,sy+b.size*AC/2);
   });
@@ -2291,15 +2510,15 @@ function drawAttack(){
     ctx.beginPath();ctx.ellipse(u.x,u.y+14,10,4,0,0,Math.PI*2);ctx.fillStyle='rgba(0,0,0,0.2)';ctx.fill();
     // Body
     ctx.fillStyle=rage?'rgba(255,100,0,0.9)':col;
-    ctx.beginPath();ctx.arc(u.x,u.y,12,0,Math.PI*2);ctx.fill();
-    // Face
-    ctx.fillStyle='#ffe0c0';ctx.beginPath();ctx.arc(u.x,u.y-2,8,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#2a1a0a';ctx.beginPath();ctx.arc(u.x,u.y-5,7,Math.PI,2*Math.PI);ctx.fill();
+    const tr=Math.max(8,ATK_C*0.42);
+    ctx.beginPath();ctx.arc(u.x,u.y,tr,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#ffe0c0';ctx.beginPath();ctx.arc(u.x,u.y-tr*0.17,tr*0.67,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#2a1a0a';ctx.beginPath();ctx.arc(u.x,u.y-tr*0.42,tr*0.58,Math.PI,2*Math.PI);ctx.fill();
     // HP bar
-    const pct=u.hp/u.maxHp;
-    ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fillRect(u.x-12,u.y-22,24,4);
-    ctx.fillStyle=pct>0.5?'#4ade80':'#facc15';ctx.fillRect(u.x-12,u.y-22,24*pct,4);
-    if(u.isHero){ctx.font='10px serif';ctx.textAlign='center';ctx.fillText('👑',u.x,u.y-26);}
+    const pct=u.hp/u.maxHp;const hbw=tr*2;
+    ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fillRect(u.x-hbw/2,u.y-tr-8,hbw,4);
+    ctx.fillStyle=pct>0.5?'#4ade80':'#facc15';ctx.fillRect(u.x-hbw/2,u.y-tr-8,hbw*pct,4);
+    if(u.isHero){ctx.font='10px serif';ctx.textAlign='center';ctx.fillText('👑',u.x,u.y-tr-12);}
     if(rage){ctx.strokeStyle='rgba(255,100,0,0.6)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(u.x,u.y,14,0,Math.PI*2);ctx.stroke();}
   });
 
@@ -2342,11 +2561,11 @@ function updateAttack(dt){
       u.target=findTarget(u);
     }
     if(!u.target){return;}
-    const tx=u.target.gx*AC+u.target.size*AC/2+ATK_CAM_X;
-    const ty=u.target.gy*AC+u.target.size*AC/2+ATK_CAM_Y;
+    const tx=u.target.gx*ATK_C+u.target.size*ATK_C/2+ATK_CAM_X;
+    const ty=u.target.gy*ATK_C+u.target.size*ATK_C/2+ATK_CAM_Y;
     const dx=tx-u.x,dy=ty-u.y;
     const dist=Math.sqrt(dx*dx+dy*dy);
-    const attackRange=(u.troopId==='jimmie_bagare'||u.troopId==='jimmie_helare')?AC*2.5:AC*1.2;
+    const attackRange=(u.troopId==='jimmie_bagare'||u.troopId==='jimmie_helare')?ATK_C*2.5:ATK_C*1.2;
     if(dist>attackRange){
       const spd=(TROOP_TYPES[u.troopId]?.speed||16)*AC/12*(rage?1.5:1);
       u.x+=dx/dist*spd*dt;u.y+=dy/dist*spd*dt;
@@ -2376,13 +2595,13 @@ function updateAttack(dt){
   atkBuildings.filter(b=>b.alive&&b.dps>0).forEach(b=>{
     b.fireTimer-=dt;
     if(b.fireTimer>0)return;
-    const bx=(b.gx+b.size/2)*AC+ATK_CAM_X,by=(b.gy+b.size/2)*AC+ATK_CAM_Y;
+    const bx=(b.gx+b.size/2)*ATK_C+ATK_CAM_X,by=(b.gy+b.size/2)*ATK_C+ATK_CAM_Y;
     const validTargets=atkUnits.filter(u=>{
       if(!u.alive)return false;
       const isAirUnit=TROOP_TYPES[u.troopId]?.air||false;
-      if(b.type==='luftforsvar'&&!isAirUnit)return false; // air defense only hits air
+      if(b.type==='luftforsvar'&&!isAirUnit)return false;
       const dist=Math.hypot(u.x-bx,u.y-by);
-      return dist<b.range*AC;
+      return dist<b.range*ATK_C;
     });
     if(!validTargets.length)return;
     // Sort by closest
@@ -2414,17 +2633,34 @@ function updateAttack(dt){
 function findTarget(u){
   const tt=TROOP_TYPES[u.troopId];
   if(tt?.target==='friendly')return null;
-  let candidates=atkBuildings.filter(b=>b.alive);
-  if(tt?.target==='defense')candidates=candidates.filter(b=>BUILDING_TYPES[b.type]?.category==='defense')||candidates;
-  if(tt?.target==='resources')candidates=candidates.filter(b=>BUILDING_TYPES[b.type]?.category==='resource')||candidates;
-  if(!candidates.length)candidates=atkBuildings.filter(b=>b.alive);
+  // Prefer non-wall buildings
+  let candidates=atkBuildings.filter(b=>b.alive&&b.type!=='mur');
+  if(tt?.target==='defense'){const def=candidates.filter(b=>BUILDING_TYPES[b.type]?.category==='defense');if(def.length)candidates=def;}
+  if(tt?.target==='resources'){const res=candidates.filter(b=>BUILDING_TYPES[b.type]?.category==='resource');if(res.length)candidates=res;}
+  if(!candidates.length)candidates=atkBuildings.filter(b=>b.alive); // fallback including walls
   if(!candidates.length)return null;
-  // Find closest
-  return candidates.reduce((a,b)=>{
-    const da=Math.hypot((a.gx+a.size/2)*AC-(u.x-ATK_CAM_X),(a.gy+a.size/2)*AC-(u.y-ATK_CAM_Y));
-    const db=Math.hypot((b.gx+b.size/2)*AC-(u.x-ATK_CAM_X),(b.gy+b.size/2)*AC-(u.y-ATK_CAM_Y));
+  // Find closest non-wall target
+  const ux=u.x-ATK_CAM_X, uy=u.y-ATK_CAM_Y;
+  const nearest=candidates.reduce((a,b)=>{
+    const da=Math.hypot((a.gx+a.size/2)*AC*ATK_SCALE-ux,(a.gy+a.size/2)*AC*ATK_SCALE-uy);
+    const db=Math.hypot((b.gx+b.size/2)*AC*ATK_SCALE-ux,(b.gy+b.size/2)*AC*ATK_SCALE-uy);
     return da<db?a:b;
   });
+  // Check if a wall is blocking the direct path to nearest — if so, attack wall instead
+  const tx=(nearest.gx+nearest.size/2)*AC*ATK_SCALE, ty=(nearest.gy+nearest.size/2)*AC*ATK_SCALE;
+  const walls=atkBuildings.filter(b=>b.alive&&b.type==='mur');
+  const blockingWall=walls.find(w=>{
+    const wx=(w.gx+0.5)*ATK_C, wy=(w.gy+0.5)*ATK_C;
+    const distToPath=pointToSegmentDist(wx,wy,ux,uy,tx,ty);
+    const distToUnit=Math.hypot(wx-ux,wy-uy);
+    return distToPath<ATK_C*0.7&&distToUnit<ATK_C*4;
+  });
+  return blockingWall||nearest;
+}
+function pointToSegmentDist(px,py,ax,ay,bx,by){
+  const dx=bx-ax,dy=by-ay;const len2=dx*dx+dy*dy;if(len2===0)return Math.hypot(px-ax,py-ay);
+  const t=Math.max(0,Math.min(1,((px-ax)*dx+(py-ay)*dy)/len2));
+  return Math.hypot(px-(ax+t*dx),py-(ay+t*dy));
 }
 
 function spawnParticle(x,y,col,r){
@@ -2487,7 +2723,7 @@ function deployTroop(id,x,y,isHero=false){
 function deployHero(){
   if(heroDeployed){toast('Jimmie är redan utplacerad!');return;}
   const h=G.heroes.jimmie_akesson;if(!h||h.lv===0){toast('Jimmie är inte upplåst!');return;}
-  const x=AGRID/2*AC+ATK_CAM_X,y=(AGRID-2)*AC+ATK_CAM_Y;
+  const x=AGRID/2*AC*ATK_SCALE+ATK_CAM_X,y=(AGRID-2)*ATK_C+ATK_CAM_Y;
   deployTroop('lill_jimmie',x,y,true);
   // Add 6 summoned barbarians
   for(let i=0;i<6;i++){
@@ -2592,11 +2828,41 @@ function handleCanvasClick(cx,cy){
     }
   }
   const hit=G.buildings.find(b=>{const s=BUILDING_TYPES[b.type]?.size||1;return gx>=b.gx&&gx<b.gx+s&&gy>=b.gy&&gy<b.gy+s;});
-  if(hit){selectedBuilding=hit;openBuildMenu(hit.type);}
+  if(hit){selectedBuilding=hit;if(hit.type==='laboratorium'){openLabResearch();}else{openBuildMenu(hit.type);}}
   else{selectedBuilding=null;closeModal('build-modal');if(buildModeActive){buildModeActive=false;toast('Byggläge avbrutet');}}
 }
 
 // ── MODALS ────────────────────────────────────────────────────────
+
+function openLabResearch(){
+  // Open a research modal
+  const hasLab=G.buildings.some(b=>b.type==='laboratorium'&&b.lv>=1);
+  if(!hasLab){toast('Bygg ett Laboratorium först! (Kräver JH3)');return;}
+  // Reuse the research panel
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('open'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('nav-research')?.classList.add('active');
+  renderResearchPanel();
+  document.getElementById('panel-research')?.classList.add('open');
+}
+
+
+function recalcCaps(){
+  // TH base cap
+  const GOLD_CAPS=[1000,2500,10000,50000,100000,300000,500000,750000];
+  const DARK_CAPS=[0,0,0,0,0,0,2500,5000];
+  let gCap=GOLD_CAPS[Math.min(G.jh_level-1,GOLD_CAPS.length-1)];
+  let eCap=gCap;
+  let dCap=DARK_CAPS[Math.min(G.jh_level-1,DARK_CAPS.length-1)];
+  // Add storage building capacities
+  const SCAPS=[1500,3000,6000,12000,25000,45000,100000,250000,500000,1000000];
+  G.buildings.forEach(b=>{
+    if((b.type==='riksdaler_forrad')&&b.lv>=1) gCap+=SCAPS[Math.min(b.lv-1,SCAPS.length-1)];
+    if((b.type==='saft_tank')&&b.lv>=1) eCap+=SCAPS[Math.min(b.lv-1,SCAPS.length-1)];
+  });
+  G.gold_cap=gCap; G.elixir_cap=eCap; G.dark_cap=dCap;
+}
+
 function openBuildMode(){
   // Highlight available build spots on map
   buildModeActive=true;
@@ -2731,11 +2997,13 @@ function drawProjectiles(){
 
 // ── TUTORIAL SYSTEM ───────────────────────────────────────────────
 const TUT_STEPS=[
-  {title:'⚔️ Välkommen till Clash of Jimmie!',text:'Bygg en mäktig by under Jimmies ledarskap! Börja med att uppgradera Jimmie Hall.',pos:'center',btn:'Kom igång →'},
-  {title:'🏘️ Byn — Byggnader',text:'Tryck på "Byn"-fliken för att se alla byggnader. Tryck på en byggnad på kartan eller välj från listan för att uppgradera den.',pos:'bottom',btn:'Förstår!'},
-  {title:'💰 Resurser',text:'Riksdaler 🪙 och SD-Saft 🧪 produceras automatiskt av gruvorna. Uppgradera dem för mer produktion!',pos:'top',btn:'Bra!'},
-  {title:'⚔️ Armé',text:'Gå till Armé-fliken för att träna trupper. Lill-Jimmies är billiga, P.E.K.K.A-Jimmie är starka men dyra!',pos:'bottom',btn:'Okej!'},
-  {title:'🗡️ Angrepp!',text:'Träna trupper och tryck sedan på Attack-knappen. Placera trupper på slagfältet och förstör fiendens by!',pos:'bottom',btn:'Förstår — LÅT OSS GÅ!',last:true},
+  {title:'⚔️ Välkommen till Clash of Jimmie!',text:'Bygg ett mäktigt rike under Jimmies ledarskap! Du har 950 Riksdaler och SD-Saft att börja med.',pos:'center',btn:'Kom igång! →'},
+  {title:'🏗️ Bygg Riksdaler-Gruva',text:'Tryck på den gula 🏗️ Bygg-knappen nere till höger. Välj Resurser-fliken och bygg en Riksdaler-Gruva för 150 🪙.',pos:'bottom',btn:'OK, ska göra!'},
+  {title:'🧪 Bygg SD-Saft-Samlare',text:'Bygg nu en SD-Saft-Samlare. Den producerar Saft som du behöver för att bygga militärbyggnader.',pos:'bottom',btn:'Klart →'},
+  {title:'💰 Samla resurser!',text:'Klicka på 🪙 eller 🧪 ikonen som visas ovanför en byggnad för att samla in resurserna!',pos:'top',btn:'Förstår →'},
+  {title:'🛡️ Bygg ett försvar',text:'Gå till Försvar i byggnadsmenyn och bygg en Kanon för 250 🪙. Skydda din by!',pos:'bottom',btn:'Ska göra →'},
+  {title:'⚔️ Träna Jimmie-trupper',text:'Tryck på ⚔️ Armé-knappen i navbaren. Tryck på en trupp och sedan "+ Träna" för att lägga till i kön. Gratis!',pos:'bottom',btn:'Coolt! →'},
+  {title:'🗡️ Dags att anfalla!',text:'Du har fått 10 Lill-Jimmies att börja med! Tryck på 🗡️ Attack i navbaren, välj en trupp och tryck på kartan för att placera dem.',pos:'bottom',btn:'LÅT OSS GÅ! 🎉',last:true},
 ];
 let tutStep=-1;
 let tutEl=null;
@@ -2773,6 +3041,8 @@ function endTutorial(){
   if(tutEl){tutEl.remove();tutEl=null;}
   localStorage.setItem('coj_tut','done');
   tutStep=-1;
+  // Starter troops
+  if(!G.troops['lill_jimmie']||G.troops['lill_jimmie']<10){G.troops['lill_jimmie']=10;saveGame();toast('10 Lill-Jimmies redo för attack! ⚔️');}
 }
 
 
@@ -2926,87 +3196,79 @@ function getLimit(bt){
 
 function renderShopPanel(){
   const scroll=document.getElementById('shop-scroll');if(!scroll)return;
-  const cats={defense:'defense',resource:'resource',military:'military',wall:'wall',trap:'trap'};
-  // wall tab shows wall + trap
   const catFilter=shopTab==='wall'?['wall','trap']:[shopTab];
   const jhlv=G.jh_level;
-
+  const hasGoldMine=G.buildings.some(b=>b.type==='riksdaler_gruva'&&b.lv>=1);
+  const hasSaftCollector=G.buildings.some(b=>b.type==='saft_samlare'&&b.lv>=1);
   const types=Object.entries(BUILDING_TYPES).filter(([k,v])=>catFilter.includes(v.category));
-  if(!types.length){scroll.innerHTML='<div style="text-align:center;color:rgba(255,255,255,0.3);padding:30px">Inga byggnader i denna kategori ännu.</div>';return;}
-
+  if(!types.length){scroll.innerHTML='<div style="text-align:center;color:rgba(255,255,255,0.3);padding:30px">Inga byggnader.</div>';return;}
   let html='';
   types.forEach(([typeId,bt])=>{
     const existing=G.buildings.filter(b=>b.type===typeId);
     const count=existing.length;
-    const limit=bt.limit||99;
+    const limit=getLimit(bt); // ← use JH-scaled limit
     const canAdd=count<limit;
-    const hasGoldMine=G.buildings.some(b=>b.type==='riksdaler_gruva'&&b.lv>=1);
-    const hasSaftCollector=G.buildings.some(b=>b.type==='saft_samlare'&&b.lv>=1);
+    const isAllMaxLv=count>0&&existing.every(b=>b.lv>=bt.maxLv);
     const needsCollectors=(bt.category==='defense'||bt.category==='military'||bt.category==='trap')&&(!hasGoldMine||!hasSaftCollector);
-    const isLocked=(bt.unlockJH&&bt.unlockJH>jhlv)||needsCollectors;
-    const lockReason=needsCollectors
-      ? (!hasGoldMine&&!hasSaftCollector?'Bygg Gruva + Samlare':!hasGoldMine?'Bygg Riksdaler-Gruva':'Bygg SD-Saft-Samlare')
-      : (bt.unlockJH?'JH '+bt.unlockJH:'');
-    const isMaxCount=count>=limit;
+    const isJHLocked=(bt.unlockJH&&bt.unlockJH>jhlv)||limit===0;
+    const isCountMaxed=!canAdd&&!isJHLocked; // built max for this JH
+    const isLocked=isJHLocked||needsCollectors;
     const costG=bt.costGold?bt.costGold[0]:0;
     const costE=bt.costElixir?bt.costElixir[0]:0;
-    const canAfford=G.gold>=costG&&G.elixir>=costE;
     const buildTime=bt.buildTime?bt.buildTime[0]:0;
+    const canAfford=G.gold>=costG&&G.elixir>=costE;
     const maxBuilders=JH_DATA[G.jh_level-1]?.maxBuilders||1;
     const freeBuilder=G.builders.slice(0,maxBuilders).find(b=>!b.busy);
+    // Find next JH that gives more of this building
+    const nextJH=bt.limitByJH?bt.limitByJH.findIndex((v,i2)=>i2>=jhlv&&v>limit):-1;
+    const nextJHLabel=nextJH>=0?`JH${nextJH+1}`:null;
 
-    // What unlocks more (which JH level gives +1)
-    let unlockMoreAt=null;
-    for(let jh=jhlv+1;jh<=8;jh++){
-      // Check if this building becomes available or gets more slots at this JH level
-      if(bt.unlockJH===jh){unlockMoreAt=jh;break;}
-    }
+    // Card style
+    let cardClass='shop-card';
+    if(isLocked||isCountMaxed) cardClass+=' locked';
+    else if(isAllMaxLv) cardClass+=' maxed';
+    else if(canAfford&&freeBuilder) cardClass+=' can-build';
 
-    let statusClass='';
-    if(isLocked)statusClass='locked';
-    else if(isMaxCount)statusClass='maxed';
-    else if(canAfford&&freeBuilder)statusClass='can-build';
-
+    // Button
     let btnHtml='';
     if(isLocked){
-      btnHtml=`<div class="shop-build-btn" style="background:rgba(255,100,0,0.15);color:#ff9944;border:none;padding:10px 14px;border-radius:12px;font-size:0.72rem;font-weight:800;cursor:default">🔒 ${lockReason}</div>`;
-    } else if(isMaxCount){
-      btnHtml=`<div class="shop-build-btn" style="background:rgba(100,255,100,0.1);color:#88ff88;border:none;padding:10px 14px;border-radius:12px;font-size:0.72rem;font-weight:800;cursor:default">✅ Max</div>`;
+      const msg=needsCollectors?(!hasGoldMine?'Bygg Riksdaler-Gruva':!hasSaftCollector?'Bygg SD-Saft-Samlare':'Bygg Gruva + Samlare'):(bt.unlockJH?`Kräver JH${bt.unlockJH}`:nextJHLabel?`Kräver JH${nextJH+1}`:'Låst');
+      btnHtml=`<div style="text-align:center;min-width:72px"><div style="font-size:1.3rem">🔒</div><div style="font-size:0.6rem;color:#ffaa44;font-weight:800;margin-top:2px;line-height:1.3">${msg}</div></div>`;
+    } else if(isCountMaxed){
+      const msg=nextJHLabel?`Fler vid ${nextJHLabel}`:'Max antal';
+      btnHtml=`<div style="text-align:center;min-width:72px"><div style="font-size:1.3rem">🔒</div><div style="font-size:0.6rem;color:#ffaa44;font-weight:800;margin-top:2px;line-height:1.3">${msg}</div></div>`;
+    } else if(isAllMaxLv){
+      btnHtml=`<div style="text-align:center;min-width:72px"><div style="font-size:1.2rem">✅</div><div style="font-size:0.6rem;color:#88ff88;font-weight:800;margin-top:2px">Max nivå</div></div>`;
     } else if(!canAfford){
-      btnHtml=`<button class="shop-build-btn" disabled>💸 Råd ej</button>`;
+      const missingG=costG>G.gold?fmt(costG-Math.floor(G.gold)):'';
+      const missingE=costE>G.elixir?fmt(costE-Math.floor(G.elixir)):'';
+      btnHtml=`<div style="text-align:center;min-width:80px"><div style="font-size:0.7rem;font-weight:900;color:#ff9944;margin-bottom:3px">Råd ej</div>${costG?`<div style="font-size:0.65rem;color:${G.gold>=costG?'#88ff88':'#ff7744'};font-weight:800">🪙 ${fmt(costG)}</div>`:''}${costE?`<div style="font-size:0.65rem;color:${G.elixir>=costE?'#88ff88':'#cc88ff'};font-weight:800">🧪 ${fmt(costE)}</div>`:''}</div>`;
     } else if(!freeBuilder){
-      btnHtml=`<button class="shop-build-btn" disabled>🔨 Upptagn</button>`;
+      btnHtml=`<div style="text-align:center;min-width:80px"><div style="font-size:0.7rem;font-weight:900;color:#aaaaff;margin-bottom:3px">🔨 Upptagn</div>${costG?`<div style="font-size:0.65rem;color:#FFD700;font-weight:800">🪙 ${fmt(costG)}</div>`:''}${costE?`<div style="font-size:0.65rem;color:#cc88ff;font-weight:800">🧪 ${fmt(costE)}</div>`:''}</div>`;
     } else {
-      btnHtml=`<button class="shop-build-btn" onclick="startPlacement('${typeId}')">🏗️ Bygg</button>`;
+      const costStr=(costG?`🪙${fmt(costG)} `:'')+( costE?`🧪${fmt(costE)}`:'');
+      const timeStr=buildTime>0?`⏱${fmtTime(buildTime)}`:'';
+      btnHtml=`<button class="shop-build-btn" onclick="startPlacement('${typeId}')" style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 14px"><span style="font-size:0.8rem;font-weight:900">🏗️ Bygg</span>${costStr?`<span style="font-size:0.62rem;opacity:0.85">${costStr}</span>`:''}${timeStr?`<span style="font-size:0.58rem;opacity:0.65">${timeStr}</span>`:''}</button>`;
     }
 
     const statLine=bt.stats?bt.stats(1):'';
-    // Find next JH level that increases limit
-    let nextUnlock=null;
-    if(bt.limitByJH&&limit<Math.max(...bt.limitByJH)){
-      for(let jh=G.jh_level+1;jh<=8;jh++){const nl=bt.limitByJH[jh-1];if(nl>limit){nextUnlock=`JH${jh}: +${nl-limit} till`;break;}}
-    }
-
-    html+=`<div class="shop-card ${statusClass}">
+    html+=`<div class="${cardClass}">
       <div class="shop-icon">${bt.icon}</div>
       <div class="shop-info">
         <div class="shop-name">${bt.name}</div>
         <div class="shop-desc">${bt.desc}</div>
         <div class="shop-meta">
-          <span class="shop-pill count">Byggda: ${count}/${limit===99?'∞':limit}</span>
+          <span class="shop-pill count">${count}/${limit>0?limit:'?'} byggda</span>
           ${costG?`<span class="shop-pill cost">🪙 ${fmt(costG)}</span>`:''}
           ${costE?`<span class="shop-pill cost">🧪 ${fmt(costE)}</span>`:''}
           ${buildTime>0?`<span class="shop-pill time">⏱ ${fmtTime(buildTime)}</span>`:''}
-          ${isLocked&&bt.unlockJH?`<span class="shop-pill unlock">🔒 Kräver JH ${bt.unlockJH}</span>`:''}
-          ${needsCollectors?`<span class="shop-pill unlock">⚠️ ${lockReason} först`:''}
-          ${nextUnlock&&!isLocked?`<span class="shop-pill" style="background:rgba(100,200,100,0.1);color:#88ff88">📈 ${nextUnlock}</span>`:''}
+          ${nextJHLabel&&!isLocked&&!isAllMaxLv?`<span class="shop-pill" style="background:rgba(100,200,100,0.1);color:#88ff88">📈 ${nextJHLabel}: +${(bt.limitByJH?bt.limitByJH[nextJH]:0)-limit} till</span>`:''}
         </div>
-        ${statLine?`<div style="font-size:0.62rem;color:rgba(255,215,0,0.6)">${statLine}</div>`:''}
+        ${statLine?`<div style="font-size:0.62rem;color:rgba(255,215,0,0.6);margin-top:2px">${statLine}</div>`:''}
       </div>
       ${btnHtml}
     </div>`;
   });
-
   scroll.innerHTML=html;
 }
 
@@ -3089,14 +3351,28 @@ function tryCollect(b){
   const sx=b.gx*CELL+camX+BUILDING_TYPES[b.type].size*CELL/2;
   const sy=b.gy*CELL+camY;
   if(b.storeType==='gold'){
-    G.gold=Math.min(G.gold_cap,G.gold+amount);
-    spawnCollectBurst(sx,sy,'#FFD700','+'+amount+' 🪙');
+    const space=Math.max(0,G.gold_cap-G.gold);
+    const collected=Math.min(amount,space);
+    const overflow=amount-collected;
+    G.gold=Math.min(G.gold_cap,G.gold+collected);
+    b.stored=overflow; // keep overflow in collector
+    spawnCollectBurst(sx,sy,'#FFD700','+'+(collected>0?collected:0)+' 🪙');
+    if(overflow>0)toast('Förrådet fullt! '+fmt(overflow)+' stannar i gruvan.');
   } else if(b.storeType==='elixir'){
-    G.elixir=Math.min(G.elixir_cap,G.elixir+amount);
-    spawnCollectBurst(sx,sy,'#cc44ff','+'+amount+' 🧪');
+    const space=Math.max(0,G.elixir_cap-G.elixir);
+    const collected=Math.min(amount,space);
+    const overflow=amount-collected;
+    G.elixir=Math.min(G.elixir_cap,G.elixir+collected);
+    b.stored=overflow;
+    spawnCollectBurst(sx,sy,'#cc44ff','+'+(collected>0?collected:0)+' 🧪');
+    if(overflow>0)toast('Tanken full! '+fmt(overflow)+' stannar i samlaren.');
   } else if(b.storeType==='dark'){
-    G.dark=Math.min(G.dark_cap,G.dark+amount);
-    spawnCollectBurst(sx,sy,'#8800cc','+'+amount+' 💜');
+    const space=Math.max(0,G.dark_cap-G.dark);
+    const collected=Math.min(amount,space);
+    const overflow=amount-collected;
+    G.dark=Math.min(G.dark_cap,G.dark+collected);
+    b.stored=overflow;
+    spawnCollectBurst(sx,sy,'#8800cc','+'+(collected>0?collected:0)+' 💜');
   }
   saveGame();
   return true;
