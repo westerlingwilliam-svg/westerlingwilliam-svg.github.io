@@ -849,14 +849,14 @@ const BUILDING_TYPES={
 };
 
 const TROOP_TYPES={
-  'lill_jimmie':{name:'Lill-Jimmie',icon:'👤',col:'#9e9e9e',trainCost:0,trainTime:0,kasernLv:1,space:1,hp:[75,90,110,135,165,200],dps:[12,15,18,22,27,33],speed:16,target:'both',desc:'Snabb markenhet. Angriper närmaste byggnad.',maxLv:6,costToResearch:[0,10000,25000,50000,100000,200000]},
-  'jimmie_bagare':{name:'Jimmie-Bågare',icon:'🏹',col:'#34d399',trainCost:0,trainTime:0,kasernLv:1,space:1,hp:[36,40,45,54,63,75],dps:[10,13,16,19,22,27],speed:24,target:'both',desc:'Ranged-enhet. Stannar utanför murar.',maxLv:6,costToResearch:[0,15000,35000,70000,140000,280000]},
-  'sd_jatte':{name:'SD-Jätte',icon:'💪',col:'#60a5fa',trainCost:0,trainTime:0,kasernLv:2,space:5,hp:[300,360,440,530,640,770],dps:[16,20,24,28,33,39],speed:12,target:'defense',desc:'Tankar skada. Fokuserar på försvar.',maxLv:6,costToResearch:[0,20000,50000,100000,200000,400000]},
-  'jimmie_trollkarl':{name:'SD-Trollkarl',icon:'🧙',col:'#a855f7',trainCost:0,trainTime:0,kasernLv:3,space:4,hp:[100,110,125,145,170,200],dps:[30,35,41,48,56,66],speed:16,target:'both',splash:true,desc:'Splash-skada. Dödar grupper av fiender.',maxLv:6,costToResearch:[0,50000,100000,200000,400000,800000]},
+  'lill_jimmie':{name:'Lill-Jimmie',icon:'👤',col:'#9e9e9e',trainCost:0,trainTime:0,kasernLv:1,space:1,hp:[120,145,180,220,265,320],dps:[18,22,27,33,40,49],speed:16,target:'both',desc:'Snabb markenhet. Angriper närmaste byggnad.',maxLv:6,costToResearch:[0,10000,25000,50000,100000,200000]},
+  'jimmie_bagare':{name:'Jimmie-Bågare',icon:'🏹',col:'#34d399',trainCost:0,trainTime:0,kasernLv:1,space:1,hp:[58,65,75,90,105,126],dps:[15,19,24,29,33,40],speed:24,target:'both',desc:'Ranged-enhet. Stannar utanför murar.',maxLv:6,costToResearch:[0,15000,35000,70000,140000,280000]},
+  'sd_jatte':{name:'SD-Jätte',icon:'💪',col:'#60a5fa',trainCost:0,trainTime:0,kasernLv:2,space:5,hp:[450,540,660,795,960,1155],dps:[20,25,30,35,41,49],speed:12,target:'defense',desc:'Tankar skada. Fokuserar på försvar.',maxLv:6,costToResearch:[0,20000,50000,100000,200000,400000]},
+  'jimmie_trollkarl':{name:'SD-Trollkarl',icon:'🧙',col:'#a855f7',trainCost:0,trainTime:0,kasernLv:3,space:4,hp:[160,175,200,232,272,320],dps:[40,47,55,64,75,88],speed:16,target:'both',splash:true,desc:'Splash-skada. Dödar grupper av fiender.',maxLv:6,costToResearch:[0,50000,100000,200000,400000,800000]},
   'jimmie_ballong':{name:'Jimmie-Ballong',icon:'🎈',col:'#f87171',trainCost:0,trainTime:0,kasernLv:4,space:5,hp:[150,180,216,259,311,373],dps:[56,72,90,112,140,175],speed:8,target:'defense',air:true,desc:'Flyger! Fokuserar på försvar. Långsam men stark.',maxLv:6,costToResearch:[0,75000,150000,300000,600000,1200000]},
   'jimmie_helare':{name:'Jimmie-Helare',icon:'💊',col:'#4ade80',trainCost:0,trainTime:0,kasernLv:5,space:14,hp:[200,240,288,346,415,498],healPerSec:[30,36,43,52,62,74],speed:22,target:'friendly',air:true,desc:'Helar egna trupper. Kan inte attackera.',maxLv:6,costToResearch:[0,100000,200000,400000,800000,1600000]},
   'minar_jimmie':{name:'Minar-Jimmie',icon:'⛏️',col:'#fb923c',trainCost:0,trainTime:0,kasernLv:6,space:6,hp:[200,240,288,346,415,498],dps:[60,75,93,116,145,181],speed:28,target:'both',underground:true,desc:'Gräver under murar! Fokuserar på resurser.',maxLv:6,costToResearch:[0,200000,400000,800000,1600000,3200000]},
-  'pekka_jimmie':{name:'P.E.K.K.A-Jimmie',icon:'🤖',col:'#1a1a4a',trainCost:0,trainTime:0,kasernLv:7,space:25,hp:[1500,1800,2200,2650,3150,3750],dps:[280,350,438,547,683,854],speed:16,target:'both',desc:'Massiv pansrad enhet. Extremt kraftfull.',maxLv:6,costToResearch:[0,500000,1000000,2000000,4000000,8000000]},
+  'pekka_jimmie':{name:'P.E.K.K.A-Jimmie',icon:'🤖',col:'#1a1a4a',trainCost:0,trainTime:0,kasernLv:7,space:25,hp:[2200,2640,3200,3860,4640,5580],dps:[320,400,500,625,781,977],speed:16,target:'both',desc:'Massiv pansrad enhet. Extremt kraftfull.',maxLv:6,costToResearch:[0,500000,1000000,2000000,4000000,8000000]},
 };
 
 const SPELL_TYPES={
@@ -2367,39 +2367,195 @@ function startAttackMode(){
 }
 
 function generateEnemyBase(){
-  // Generate a sample enemy base scaled to player JH level
   const jh=G.jh_level;
   atkBuildings=[];
   let bid=0;
+  atkTotalHP=0;
+
   const place=(type,gx,gy,lv)=>{
     const bt=BUILDING_TYPES[type];if(!bt)return;
-    const hp=(bt.hp?bt.hp[Math.min(lv-1,bt.hp.length-1)]:500)*1.2;// Enemy slightly stronger
-    const dps=bt.dps?bt.dps[Math.min(lv-1,bt.dps.length-1)]:0;
-    const fireRate=bt.splash?0.4:0.7; // seconds between shots (lower=faster)
-    const range=type==='morsare'?4:type==='luftforsvar'?7:type==='tesla_torn'?4:5;
+    const hpArr=bt.hp||[500];
+    const hp=hpArr[Math.min(lv-1,hpArr.length-1)]*1.3;
+    const dpsArr=bt.dps||[0];
+    const dps=dpsArr[Math.min(lv-1,dpsArr.length-1)];
+    const fireRate=bt.splash?0.5:0.8;
+    const range=type==='morsare'?5:type==='luftforsvar'?8:type==='tesla_torn'?5:6;
     atkBuildings.push({id:bid++,type,lv,gx,gy,hp,maxHp:hp,dps,size:bt.size,alive:true,
-      icon:bt.icon,name:bt.name,fireTimer:Math.random(),fireRate,range,
-      air:type==='luftforsvar',splash:bt.splash||false,
-      category:bt.category});
+      icon:bt.icon,name:bt.name,fireTimer:Math.random()*0.5,fireRate,range,
+      air:type==='luftforsvar',splash:bt.splash||false,category:bt.category});
     atkTotalHP+=hp;
   };
-  atkTotalHP=0;
-  // Core
-  place('jimmie_hall',11,9,Math.max(1,jh-1));
-  // Defenses
-  place('kanon',7,7,Math.max(1,jh-1));place('kanon',15,7,Math.max(1,jh-1));
-  place('pilbage_torn',7,13,Math.max(1,jh-1));place('pilbage_torn',15,13,Math.max(1,jh-1));
-  if(jh>=3)place('morsare',11,6,Math.max(1,jh-2));
-  if(jh>=3)place('luftforsvar',5,10,Math.max(1,jh-2));
-  if(jh>=5)place('tesla_torn',9,11,Math.max(1,jh-3));
-  // Resources
-  place('riksdaler_gruva',3,5,jh);place('riksdaler_gruva',18,5,jh);
-  place('saft_samlare',3,14,jh);place('saft_samlare',18,14,jh);
-  place('riksdaler_forrad',3,9,jh);place('saft_tank',18,9,jh);
-  // Walls
-  const wallPos=[[9,8],[10,8],[11,8],[12,8],[13,8],[9,14],[10,14],[11,14],[12,14],[13,14],[9,9],[9,10],[9,11],[9,12],[9,13],[13,9],[13,10],[13,11],[13,12],[13,13]];
-  wallPos.forEach(([gx,gy])=>place('mur',gx,gy,Math.max(1,jh-1)));
+
+  // Helper: place walls avoiding building footprints
+  const occupied=new Set();
+  const markOccupied=(gx,gy,size)=>{for(let dy=0;dy<size;dy++)for(let dx=0;dx<size;dx++)occupied.add((gx+dx)+','+(gy+dy));};
+  const placeWalls=(coords,lv)=>coords.forEach(([gx,gy])=>{if(!occupied.has(gx+','+gy)){place('mur',gx,gy,lv);}});
+
+  // BASE LAYOUTS per JH level
+  const BASES={
+    1:{
+      buildings:[
+        ['jimmie_hall',11,10,1],
+        ['kanon',8,8,1],['kanon',16,8,1],
+        ['riksdaler_gruva',5,14,1],['saft_samlare',18,14,1],
+        ['riksdaler_forrad',5,10,1],['saft_tank',19,10,1],
+        ['kasern',7,17,1],['arme_lager',17,17,1],
+      ],
+      walls:[[9,9],[10,9],[11,9],[12,9],[13,9],[14,9],[15,9],
+             [9,14],[10,14],[11,14],[12,14],[13,14],[14,14],[15,14],
+             [9,10],[9,11],[9,12],[9,13],[15,10],[15,11],[15,12],[15,13]],
+    },
+    2:{
+      buildings:[
+        ['jimmie_hall',11,10,2],
+        ['kanon',7,7,2],['kanon',17,7,2],
+        ['pilbage_torn',7,15,1],
+        ['riksdaler_gruva',4,12,2],['riksdaler_gruva',20,12,2],
+        ['saft_samlare',4,16,2],['saft_samlare',20,16,2],
+        ['riksdaler_forrad',4,8,1],['saft_tank',20,8,1],
+        ['kasern',8,18,1],['arme_lager',16,18,1],
+      ],
+      walls:[[9,9],[10,9],[11,9],[12,9],[13,9],[14,9],[15,9],
+             [9,15],[10,15],[11,15],[12,15],[13,15],[14,15],[15,15],
+             [9,10],[9,11],[9,12],[9,13],[9,14],[15,10],[15,11],[15,12],[15,13],[15,14]],
+    },
+    3:{
+      buildings:[
+        ['jimmie_hall',11,10,3],
+        ['kanon',6,7,3],['kanon',18,7,3],
+        ['pilbage_torn',6,14,2],['pilbage_torn',18,14,2],
+        ['morsare',13,6,1],
+        ['riksdaler_gruva',3,5,3],['riksdaler_gruva',21,5,3],
+        ['saft_samlare',3,15,3],['saft_samlare',21,15,3],
+        ['riksdaler_forrad',3,10,2],['saft_tank',21,10,2],
+        ['kasern',7,19,1],['laboratorium',13,19,1],['arme_lager',17,18,1],
+      ],
+      walls:[[8,8],[9,8],[10,8],[11,8],[12,8],[13,8],[14,8],[15,8],[16,8],
+             [8,15],[9,15],[10,15],[11,15],[12,15],[13,15],[14,15],[15,15],[16,15],
+             [8,9],[8,10],[8,11],[8,12],[8,13],[8,14],[16,9],[16,10],[16,11],[16,12],[16,13],[16,14]],
+    },
+    4:{
+      buildings:[
+        ['jimmie_hall',11,10,4],
+        ['kanon',6,6,4],['kanon',18,6,4],['kanon',12,17,3],
+        ['pilbage_torn',6,15,3],['pilbage_torn',18,15,3],
+        ['morsare',8,6,2],
+        ['riksdaler_gruva',3,4,4],['riksdaler_gruva',21,4,4],['riksdaler_gruva',3,18,4],
+        ['saft_samlare',21,18,4],['saft_samlare',3,12,4],['saft_samlare',21,12,4],
+        ['riksdaler_forrad',3,8,2],['saft_tank',22,8,2],
+        ['kasern',7,20,2],['laboratorium',14,20,1],
+      ],
+      walls:[[8,8],[9,8],[10,8],[11,8],[12,8],[13,8],[14,8],[15,8],[16,8],
+             [8,16],[9,16],[10,16],[11,16],[12,16],[13,16],[14,16],[15,16],[16,16],
+             [8,9],[8,10],[8,11],[8,12],[8,13],[8,14],[8,15],
+             [16,9],[16,10],[16,11],[16,12],[16,13],[16,14],[16,15]],
+    },
+    5:{
+      buildings:[
+        ['jimmie_hall',11,10,5],
+        ['kanon',5,6,5],['kanon',19,6,5],['kanon',12,18,4],
+        ['pilbage_torn',5,14,4],['pilbage_torn',19,14,4],
+        ['morsare',7,6,3],['morsare',16,6,3],
+        ['luftforsvar',4,10,2],
+        ['riksdaler_gruva',2,4,5],['riksdaler_gruva',22,4,5],['riksdaler_gruva',2,17,5],
+        ['riksdaler_gruva',22,17,5],['riksdaler_gruva',12,20,5],
+        ['saft_samlare',2,10,5],['saft_samlare',22,10,5],['saft_samlare',12,22,5],
+        ['riksdaler_forrad',2,7,3],['saft_tank',22,7,3],
+        ['kasern',6,20,3],['arme_lager',16,20,3],['laboratorium',12,19,2],
+      ],
+      walls:[[8,8],[9,8],[10,8],[11,8],[12,8],[13,8],[14,8],[15,8],[16,8],
+             [8,16],[9,16],[10,16],[11,16],[12,16],[13,16],[14,16],[15,16],[16,16],
+             [8,9],[8,10],[8,11],[8,12],[8,13],[8,14],[8,15],
+             [16,9],[16,10],[16,11],[16,12],[16,13],[16,14],[16,15],
+             [10,7],[11,7],[12,7],[13,7],[14,7]],
+    },
+    6:{
+      buildings:[
+        ['jimmie_hall',11,10,6],
+        ['kanon',5,5,6],['kanon',19,5,6],['kanon',5,17,5],
+        ['pilbage_torn',19,17,5],['pilbage_torn',12,4,4],
+        ['morsare',7,5,4],['morsare',16,5,4],
+        ['luftforsvar',4,10,3],['luftforsvar',20,10,3],
+        ['riksdaler_gruva',2,3,6],['riksdaler_gruva',22,3,6],['riksdaler_gruva',2,16,6],
+        ['riksdaler_gruva',22,16,6],['riksdaler_gruva',2,10,6],['riksdaler_gruva',22,10,6],
+        ['saft_samlare',2,7,6],['saft_samlare',22,7,6],['saft_samlare',2,13,6],
+        ['riksdaler_forrad',2,19,3],['riksdaler_forrad',22,19,3],
+        ['saft_tank',12,21,3],['saft_tank',8,21,3],
+        ['kasern',6,21,4],['laboratorium',13,21,3],
+      ],
+      walls:[[8,8],[9,8],[10,8],[11,8],[12,8],[13,8],[14,8],[15,8],[16,8],
+             [8,16],[9,16],[10,16],[11,16],[12,16],[13,16],[14,16],[15,16],[16,16],
+             [8,9],[8,10],[8,11],[8,12],[8,13],[8,14],[8,15],
+             [16,9],[16,10],[16,11],[16,12],[16,13],[16,14],[16,15],
+             [10,7],[11,7],[12,7],[13,7],[14,7],[10,17],[11,17],[12,17],[13,17],[14,17]],
+    },
+    7:{
+      buildings:[
+        ['jimmie_hall',11,10,7],
+        ['kanon',5,5,6],['kanon',19,5,6],['kanon',5,17,6],['kanon',19,17,6],
+        ['pilbage_torn',12,4,6],['pilbage_torn',12,19,5],
+        ['morsare',6,4,5],['morsare',18,4,5],
+        ['luftforsvar',3,10,4],['luftforsvar',21,10,4],
+        ['tesla_torn',9,9,2],['tesla_torn',15,9,2],
+        ['riksdaler_gruva',2,3,7],['riksdaler_gruva',22,3,7],['riksdaler_gruva',2,10,7],
+        ['riksdaler_gruva',22,10,7],['riksdaler_gruva',2,17,7],['riksdaler_gruva',22,17,7],
+        ['saft_samlare',2,7,7],['saft_samlare',22,7,7],['saft_samlare',2,14,7],
+        ['riksdaler_forrad',2,20,4],['riksdaler_forrad',22,20,4],
+        ['saft_tank',8,22,4],['saft_tank',16,22,4],
+        ['dark_bohrare',12,22,1],
+        ['kasern',6,22,5],['laboratorium',13,22,4],
+      ],
+      walls:[[8,8],[9,8],[10,8],[11,8],[12,8],[13,8],[14,8],[15,8],[16,8],
+             [8,16],[9,16],[10,16],[11,16],[12,16],[13,16],[14,16],[15,16],[16,16],
+             [8,9],[8,10],[8,11],[8,12],[8,13],[8,14],[8,15],
+             [16,9],[16,10],[16,11],[16,12],[16,13],[16,14],[16,15],
+             [9,7],[10,7],[11,7],[12,7],[13,7],[14,7],[15,7],
+             [9,17],[10,17],[11,17],[12,17],[13,17],[14,17],[15,17]],
+    },
+    8:{
+      buildings:[
+        ['jimmie_hall',11,10,8],
+        ['kanon',4,4,8],['kanon',20,4,8],['kanon',4,18,7],['kanon',20,18,7],
+        ['pilbage_torn',12,3,7],['pilbage_torn',12,20,7],['pilbage_torn',3,11,6],
+        ['morsare',6,3,6],['morsare',18,3,6],['morsare',6,20,5],
+        ['luftforsvar',3,8,6],['luftforsvar',21,8,6],
+        ['tesla_torn',9,9,4],['tesla_torn',15,9,4],
+        ['riksdaler_gruva',2,2,8],['riksdaler_gruva',22,2,8],['riksdaler_gruva',2,10,8],
+        ['riksdaler_gruva',22,10,8],['riksdaler_gruva',2,18,8],['riksdaler_gruva',22,18,8],
+        ['saft_samlare',2,6,8],['saft_samlare',22,6,8],['saft_samlare',2,14,8],
+        ['riksdaler_forrad',2,21,6],['riksdaler_forrad',22,21,6],['riksdaler_forrad',12,22,5],
+        ['saft_tank',7,22,6],['saft_tank',17,22,6],
+        ['dark_bohrare',4,22,4],['dark_bohrare',20,22,4],
+        ['kasern',5,22,7],['laboratorium',13,22,6],
+      ],
+      walls:[[8,8],[9,8],[10,8],[11,8],[12,8],[13,8],[14,8],[15,8],[16,8],
+             [8,16],[9,16],[10,16],[11,16],[12,16],[13,16],[14,16],[15,16],[16,16],
+             [8,9],[8,10],[8,11],[8,12],[8,13],[8,14],[8,15],
+             [16,9],[16,10],[16,11],[16,12],[16,13],[16,14],[16,15],
+             [9,7],[10,7],[11,7],[12,7],[13,7],[14,7],[15,7],
+             [9,17],[10,17],[11,17],[12,17],[13,17],[14,17],[15,17],
+             [7,8],[7,9],[7,10],[7,11],[7,12],[7,13],[7,14],[7,15],[7,16],
+             [17,8],[17,9],[17,10],[17,11],[17,12],[17,13],[17,14],[17,15],[17,16]],
+    },
+  };
+
+  const base=BASES[Math.min(jh,8)]||BASES[8];
+
+  // Mark JH footprint (4x4)
+  const jhBuilding=base.buildings.find(b=>b[0]==='jimmie_hall');
+  if(jhBuilding){markOccupied(jhBuilding[1],jhBuilding[2],4);}
+
+  // Place all buildings and mark occupied
+  base.buildings.forEach(([type,gx,gy,lv])=>{
+    const bt=BUILDING_TYPES[type];if(!bt)return;
+    markOccupied(gx,gy,bt.size||1);
+    place(type,gx,gy,lv);
+  });
+
+  // Place walls avoiding building footprints
+  placeWalls(base.walls, Math.max(1,jh-1));
 }
+
 
 function renderAtkTroopsBar(){
   const row=document.getElementById('at-troops-row');if(!row)return;
@@ -2510,7 +2666,7 @@ function drawAttack(){
     ctx.beginPath();ctx.ellipse(u.x,u.y+14,10,4,0,0,Math.PI*2);ctx.fillStyle='rgba(0,0,0,0.2)';ctx.fill();
     // Body
     ctx.fillStyle=rage?'rgba(255,100,0,0.9)':col;
-    const tr=Math.max(8,ATK_C*0.42);
+    const tr=Math.max(10,ATK_C*0.55);
     ctx.beginPath();ctx.arc(u.x,u.y,tr,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='#ffe0c0';ctx.beginPath();ctx.arc(u.x,u.y-tr*0.17,tr*0.67,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='#2a1a0a';ctx.beginPath();ctx.arc(u.x,u.y-tr*0.42,tr*0.58,Math.PI,2*Math.PI);ctx.fill();
