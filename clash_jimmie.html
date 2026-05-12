@@ -525,6 +525,25 @@ body{background:#1a2e10}
 </style>
 </head>
 <body>
+<div id="trm" onclick="if(event.target===this)trmClose()" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:24px">
+  <div style="background:linear-gradient(160deg,#1a2c0e,#0d1a08);border:2px solid rgba(255,215,0,0.3);border-radius:24px;width:100%;max-width:300px;box-shadow:0 24px 60px rgba(0,0,0,0.7)">
+    <div style="padding:16px 18px;border-bottom:1px solid rgba(255,255,255,0.07)">
+      <div id="trm-ttname" style="font-family:'Cinzel',serif;color:#FFD700;font-size:0.95rem">Trupp</div>
+      <div style="font-size:0.65rem;color:rgba(255,255,255,0.4);margin-top:3px">Hur många vill du ta bort?</div>
+    </div>
+    <div style="padding:16px 18px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <button onclick="trmAdj(-1)" style="background:rgba(255,255,255,0.1);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.4rem;cursor:pointer">−</button>
+        <input id="trm-num" type="number" min="1" value="1" style="flex:1;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:12px;color:white;font-size:1.2rem;font-weight:900;text-align:center;padding:10px">
+        <button onclick="trmAdj(1)" style="background:rgba(255,255,255,0.1);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.4rem;cursor:pointer">+</button>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button onclick="trmClose()" style="flex:1;background:rgba(255,255,255,0.07);border:none;color:rgba(255,255,255,0.6);padding:12px;border-radius:50px;font-size:0.85rem;font-weight:900;cursor:pointer">Avbryt</button>
+        <button onclick="trmConfirm()" style="flex:1;background:rgba(200,40,40,0.85);border:none;color:white;padding:12px;border-radius:50px;font-size:0.85rem;font-weight:900;cursor:pointer">🗑️ Ta bort</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ── TOP HUD ── -->
 <div id="hud">
@@ -896,6 +915,7 @@ const DEFAULT_STATE={
   buildings:[], // {id,type,lv,x,y,upgrading:false,upgradeEnd:0}
   builders:[{id:0,name:'Björn',busy:false,task:null,endTime:0},{id:1,name:'Sven',busy:false,task:null,endTime:0},{id:2,name:'Karin',busy:false,task:null,endTime:0},{id:3,name:'Lars',busy:false,task:null,endTime:0}],
   troops:{}, // {troopId: count}
+  lastTrained:{}, // {troopId: count} — last battle composition
   troopLevels:{}, // {troopId: level}
   troopTraining:[], // [{troopId,endTime,count}]
   spells:{}, // {spellId: count}
@@ -2041,7 +2061,20 @@ function renderArmyPanel(){
   html+='</div>';
 
   // Train troops
+  // Quick retrain button
+  const lastT=G.lastTrained||{};
+  const hasLast=Object.keys(lastT).length>0;
+  const lastSummary=hasLast?Object.entries(lastT).map(([id,n])=>(TROOP_TYPES[id]?.icon||'?')+'×'+n).join(' '):'';
   html+=`<div class="section-hdr">🏋️ Träna Trupper</div>`;
+  if(hasLast){
+    html+=`<div style="background:rgba(255,215,0,0.08);border:1.5px solid rgba(255,215,0,0.25);border-radius:14px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:10px;cursor:pointer" onclick="retrainLast()">
+      <div style="flex:1">
+        <div style="font-size:0.72rem;font-weight:900;color:var(--gold)">⚡ Träna om senaste</div>
+        <div style="font-size:0.65rem;color:rgba(255,255,255,0.5);margin-top:2px">${lastSummary}</div>
+      </div>
+      <button style="background:linear-gradient(135deg,var(--gold),#cc8800);border:none;color:#1a0a00;padding:8px 16px;border-radius:50px;font-weight:900;font-size:0.78rem;cursor:pointer;font-family:var(--font)" onclick="event.stopPropagation();retrainLast()">Träna</button>
+    </div>`;
+  }
   const hasKasern=G.buildings.some(b=>b.type==='kasern'&&b.lv>=1);
   const bestKasernLv2=getBestKasernLv();
   if(!hasKasern){
@@ -2329,6 +2362,8 @@ function startAttackMode(){
   // Setup attack troop pool from player's army
   atkTroopPool={};
   Object.entries(G.troops).forEach(([id,cnt])=>{if(cnt>0)atkTroopPool[id]=cnt;});
+  // Save composition for quick retrain
+  if(Object.keys(atkTroopPool).length>0)G.lastTrained={...atkTroopPool};
   atkTimer=180;atkStarted=true;atkUnits=[];atkParticles=[];
   atkDestroyed=0;atkRageEnd=0;heroDeployed=false;
   atkTotalHP=atkBuildings.reduce((s,b)=>s+b.hp,0);
@@ -2380,9 +2415,10 @@ function generateEnemyBase(){
     const dps=dpsArr[Math.min(lv-1,dpsArr.length-1)];
     const fireRate=bt.splash?0.5:0.8;
     const range=type==='morsare'?5:type==='luftforsvar'?8:type==='tesla_torn'?5:6;
+    const bcat=bt.category||(type==='kanon'||type==='pilbage_torn'||type==='morsare'||type==='luftforsvar'||type==='tesla_torn'?'defense':'other');
     atkBuildings.push({id:bid++,type,lv,gx,gy,hp,maxHp:hp,dps,size:bt.size,alive:true,
       icon:bt.icon,name:bt.name,fireTimer:Math.random()*0.5,fireRate,range,
-      air:type==='luftforsvar',splash:bt.splash||false,category:bt.category});
+      air:type==='luftforsvar',splash:bt.splash||false,category:bcat});
     atkTotalHP+=hp;
   };
 
@@ -3581,6 +3617,62 @@ function drawCollectParticles(){
 
 
 
+
+// ── TROOP REMOVE MODAL ────────────────────────────────────────────
+let removeTroopId=null;
+
+function retrainLast(){
+  const lastT=G.lastTrained||{};
+  if(!Object.keys(lastT).length){toast('Ingen senaste komposition!');return;}
+  const armyCap=getTotalArmyCap();
+  let added=0;
+  Object.entries(lastT).forEach(([id,n])=>{
+    const tt=TROOP_TYPES[id];if(!tt)return;
+    const bestKasernLv3=getBestKasernLv();
+    if(bestKasernLv3<(tt.kasernLv||1))return;
+    for(let i=0;i<n;i++){
+      const used=Object.entries(G.troops).reduce((acc,[tid,cnt])=>acc+(TROOP_TYPES[tid]?.space||1)*cnt,0);
+      if(used+(tt.space||1)>armyCap)break;
+      G.troops[id]=(G.troops[id]||0)+1;added++;
+    }
+  });
+  if(added>0){toast('⚡ '+added+' trupper tränade!');renderArmyPanel();saveGame();}
+  else toast('Armélager fullt eller trupper låsta!');
+}
+
+function openTroopRemove(id){
+  const tt=TROOP_TYPES[id];if(!tt)return;
+  const count=G.troops[id]||0;if(count===0)return;
+  removeTroopId=id;
+  document.getElementById('trm-icon').textContent=tt.icon;
+  document.getElementById('trm-name').textContent=tt.name;
+  document.getElementById('trm-count').textContent='Har: '+count+' stycken';
+  const inp=document.getElementById('trm-input');inp.value=1;inp.max=count;
+  document.getElementById('troop-remove-modal').style.display='flex';
+}
+
+function closeTroopRemove(){
+  document.getElementById('troop-remove-modal').style.display='none';
+  removeTroopId=null;
+}
+
+function troopRemoveAdj(delta){
+  const inp=document.getElementById('trm-input');
+  const max=G.troops[removeTroopId]||1;
+  inp.value=Math.max(1,Math.min(max,parseInt(inp.value||1)+delta));
+}
+
+function confirmTroopRemove(){
+  if(!removeTroopId)return;
+  const n=Math.max(1,parseInt(document.getElementById('trm-input').value)||1);
+  const cur=G.troops[removeTroopId]||0;
+  G.troops[removeTroopId]=Math.max(0,cur-n);
+  if(G.troops[removeTroopId]===0)delete G.troops[removeTroopId];
+  toast(`${n}× ${TROOP_TYPES[removeTroopId]?.name||'trupp'} borttagna`);
+  closeTroopRemove();
+  renderArmyPanel();saveGame();
+}
+
 // ── TIPS SYSTEM ─────────────────────────────────────────────────────
 const TIPS=[
   '💡 Uppgradera Jimmie Hall för att låsa upp nya byggnader!',
@@ -3610,6 +3702,12 @@ switchNav('by');
 // Welcome message
 setTimeout(startTutorial,1000);
 if(!localStorage.getItem('coj_tut'))setTimeout(()=>document.getElementById('onboard-hint').style.display='flex',600);
+// Expose globals for inline handlers
+window._G=()=>G;
+window._TROOPS=()=>TROOP_TYPES;
+window._renderArmy=()=>renderArmyPanel();
+window._save=()=>saveGame();
+window._toast=(m)=>toast(m);
 </script>
 </body>
 </html>
