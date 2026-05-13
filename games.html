@@ -195,10 +195,9 @@
             <p style="opacity: 0.7; font-weight: normal;">Ta över makten med strategi!</p>
         </a>
 <a href="jimmie_tycoon_3d.html" class="game-card">
-            <span class="new-badge" style="background:#333;color:#aaa;border:1px solid #555">⚠ EJ KLAR</span>
-            <div class="card-icon">🏰</div>
-            <h3>Jimmie Vandring 3D</h3>
-            <p style="opacity: 0.7; font-weight: normal;">Utforska en svensk stad i first person och hitta alla gömda SD-symboler!</p>
+            <div class="card-icon">🗺️</div>
+            <h3>Jimmie GO!</h3>
+            <p style="opacity: 0.7; font-weight: normal;">Fånga Jimmie-karaktärer i verkligheten! Utforska din omgivning och bli den bästa Jimmie-tränaren.</p>
         </a>
 <a href="steal_jimmie.html" class="game-card featured">
             <span class="new-badge" style="background:linear-gradient(135deg,#005293,#003d6e);color:#fecc00;border:1px solid #fecc00">🎮 DEMO</span>
@@ -207,10 +206,15 @@
             <p style="opacity: 0.7; font-weight: normal;">Rekrytera Jimmie-karaktärer som vandrar längs vägen! First person 3D.</p>
         </a>
         <a href="jimmies_secret.html" class="game-card featured">
-            <span class="new-badge" style="background:linear-gradient(135deg,#ff2244,#aa0022);color:#fff">✨ NYTT</span>
             <div class="card-icon">🔴</div>
             <h3>Jimmie's Secret</h3>
             <p style="opacity: 0.7; font-weight: normal;">Tryck på knappen och se vad som händer. Om du vågar.</p>
+        </a>
+        <a href="clash_jimmie.html" class="game-card" style="border-bottom-color:#FFD700;">
+            <span class="new-badge" style="background:linear-gradient(135deg,#b38f00,#FFD700);color:#1a0a00">🏆 SPELA</span>
+            <div class="card-icon">⚔️</div>
+            <h3>Clash of Jimmie</h3>
+            <p style="opacity:0.7;font-weight:normal;">Bygg din SD-by, träna Jimmie-trupper och anfalla motståndarens bas! Clash of Clans-inspirerat strategispel med svenska politiker.</p>
         </a>
 </div>
 
@@ -218,17 +222,5 @@
         <a href="index.html" class="back-btn">Tillbaka till start</a>
     </center>
 
-<script>
-// Add Clash of Jimmie if not present
-document.addEventListener("DOMContentLoaded",function(){
-  const grid=document.querySelector(".games-grid,.game-grid,#games-grid,[class*=grid]");
-  if(grid&&!document.querySelector("[href*=clash_jimmie]")){
-    const btn=document.createElement("a");
-    btn.href="clash_jimmie.html";
-    btn.className=grid.children[0]?.className||"game-card";
-    btn.innerHTML='<div style="font-size:3rem">⚔️</div><div>Clash of Jimmie</div>';
-    grid.appendChild(btn);
-  }
-});
-</script></body>
+</body>
 </html>
