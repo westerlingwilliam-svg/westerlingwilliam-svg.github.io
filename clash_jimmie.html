@@ -1783,7 +1783,8 @@ function tick(dt){
   // Camera momentum (coast after release)
   if(!dragging&&(Math.abs(camVX)>0.5||Math.abs(camVY)>0.5)){
     camX+=camVX;camY+=camVY;
-    camVX*=0.88;camVY*=0.88;
+    camVX*=0.85;camVY*=0.85;
+    if(Math.abs(camVX)<0.1&&Math.abs(camVY)<0.1){camVX=0;camVY=0;}
     clampCamera();
   }
   tickResourceOrbs(dt);tickCollectParticles(dt);updateHUDPulse();
@@ -3376,7 +3377,8 @@ canvas.addEventListener('touchmove',e=>{
     const dist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
     const delta=(dist-lastPinchDist)*0.004;
     const oldZoom2=zoom;
-    zoom=Math.max(0.45,Math.min(1.5,zoom+delta));
+    const minZoom2=Math.max(0.3,Math.min(W,H)/(GRID*BASE_CELL));
+    zoom=Math.max(minZoom2,Math.min(2.0,zoom+delta));
     const oldCell2=Math.round(BASE_CELL*oldZoom2);
     CELL=Math.round(BASE_CELL*zoom);
     // Zoom toward pinch center
@@ -3392,10 +3394,18 @@ canvas.addEventListener('touchmove',e=>{
 
 function clampCamera(){
   const mapW=GRID*CELL, mapH=GRID*CELL;
-  const minX=W-mapW-200, maxX=200;
-  const minY=H-mapH-200, maxY=200;
-  camX=Math.max(minX,Math.min(maxX,camX));
-  camY=Math.max(minY,Math.min(maxY,camY));
+  if(mapW<=W){
+    // Map fits horizontally — center it
+    camX=(W-mapW)/2;
+  } else {
+    camX=Math.max(W-mapW,Math.min(0,camX));
+  }
+  if(mapH<=H){
+    // Map fits vertically — center it
+    camY=(H-mapH)/2;
+  } else {
+    camY=Math.max(H-mapH,Math.min(0,camY));
+  }
 }
 
 function rebuildGrass(){
