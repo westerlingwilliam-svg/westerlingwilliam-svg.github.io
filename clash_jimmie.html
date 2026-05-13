@@ -110,17 +110,17 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
 /* ── ATTACK MODE ── */
 #attack-wrap{position:fixed;inset:0;z-index:200;display:none;flex-direction:column;background:#1a2e1a}
 #attack-wrap.show{display:flex}
-#attack-hud{padding:8px 14px;background:linear-gradient(180deg,rgba(5,10,5,0.97),rgba(10,20,8,0.92));display:flex;justify-content:space-between;align-items:center;flex-shrink:0;backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,215,0,0.15);box-shadow:0 2px 16px rgba(0,0,0,0.5)}
-#attack-timer-circle{width:clamp(40px,6vw,60px);height:clamp(40px,6vw,60px);border-radius:50%;background:linear-gradient(135deg,rgba(60,40,0,0.8),rgba(30,20,0,0.9));border:2px solid rgba(255,215,0,0.6);display:flex;align-items:center;justify-content:center;font-size:0.95rem;font-weight:900;font-family:var(--title);color:var(--gold);box-shadow:0 0 12px rgba(255,215,0,0.3)}
+#attack-hud{padding:12px 18px;background:linear-gradient(180deg,rgba(5,10,5,0.97),rgba(10,20,8,0.92));display:flex;justify-content:space-between;align-items:center;flex-shrink:0;backdrop-filter:blur(12px);border-bottom:2px solid rgba(255,215,0,0.2);box-shadow:0 3px 20px rgba(0,0,0,0.6)}
+#attack-timer-circle{width:clamp(52px,7vw,72px);height:clamp(52px,7vw,72px);font-size:clamp(1rem,1.8vw,1.4rem)!important;border-radius:50%;background:linear-gradient(135deg,rgba(60,40,0,0.8),rgba(30,20,0,0.9));border:2px solid rgba(255,215,0,0.6);display:flex;align-items:center;justify-content:center;font-size:0.95rem;font-weight:900;font-family:var(--title);color:var(--gold);box-shadow:0 0 12px rgba(255,215,0,0.3)}
 #attack-canvas{display:block;flex:1;cursor:crosshair}
-#attack-troops-bar{background:linear-gradient(0deg,rgba(5,10,5,0.98),rgba(10,20,8,0.93));padding:8px 14px 10px;backdrop-filter:blur(12px);flex-shrink:0;border-top:1px solid rgba(255,215,0,0.15);box-shadow:0 -2px 16px rgba(0,0,0,0.5)}
+#attack-troops-bar{background:linear-gradient(0deg,rgba(5,10,5,0.98),rgba(10,20,8,0.93));padding:10px 16px 12px;backdrop-filter:blur(12px);flex-shrink:0;border-top:2px solid rgba(255,215,0,0.2);box-shadow:0 -3px 20px rgba(0,0,0,0.6)}
 .at-troops-row{display:flex;gap:8px;justify-content:center;margin-bottom:8px}
-.at-troop{width:clamp(48px,7vw,72px);height:clamp(48px,7vw,72px);background:linear-gradient(135deg,rgba(30,22,5,0.9),rgba(15,10,2,0.95));border:1.5px solid rgba(255,200,80,0.2);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:.15s;position:relative;box-shadow:0 2px 8px rgba(0,0,0,0.4)}
+.at-troop{width:clamp(58px,9vw,88px);height:clamp(58px,9vw,88px);background:linear-gradient(135deg,rgba(30,22,5,0.9),rgba(15,10,2,0.95));border:1.5px solid rgba(255,200,80,0.2);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:.15s;position:relative;box-shadow:0 2px 8px rgba(0,0,0,0.4)}
 .at-troop.selected{border-color:rgba(255,215,0,0.8);background:rgba(255,215,0,0.12);box-shadow:0 0 12px rgba(255,215,0,0.3)}
 .at-troop:active{transform:scale(0.88)}
-.at-troop-count{font-size:clamp(0.6rem,1.2vw,0.85rem);font-weight:900;color:var(--gold)}
+.at-troop-count{font-size:clamp(0.72rem,1.5vw,1rem);font-weight:900;color:var(--gold)}
 #attack-btns{display:flex;gap:10px;justify-content:center}
-.atk-btn{background:linear-gradient(135deg,rgba(30,22,5,0.85),rgba(15,10,2,0.9));border:1.5px solid rgba(255,200,80,0.25);color:rgba(255,230,150,0.9);padding:clamp(7px,1.2vw,12px) clamp(12px,2vw,22px);border-radius:50px;font-size:clamp(0.72rem,1.3vw,0.95rem);font-weight:900;cursor:pointer;font-family:var(--font);transition:.15s;box-shadow:0 2px 8px rgba(0,0,0,0.4)}
+.atk-btn{background:linear-gradient(135deg,rgba(30,22,5,0.85),rgba(15,10,2,0.9));border:1.5px solid rgba(255,200,80,0.25);color:rgba(255,230,150,0.9);padding:clamp(10px,1.5vw,16px) clamp(16px,2.5vw,28px);border-radius:50px;font-size:clamp(0.82rem,1.5vw,1.05rem);font-weight:900;cursor:pointer;font-family:var(--font);transition:.15s;box-shadow:0 2px 8px rgba(0,0,0,0.4)}
 .atk-btn:active{transform:scale(0.94)}
 .atk-btn.red{background:linear-gradient(135deg,rgba(120,20,20,0.7),rgba(80,10,10,0.8));border-color:rgba(255,80,80,0.4);color:#ffaaaa}
 .atk-btn.green{background:linear-gradient(135deg,rgba(20,80,30,0.7),rgba(10,50,15,0.8));border-color:rgba(80,255,120,0.4);color:#aaffbb}
@@ -522,6 +522,14 @@ body{background:#1a2e10}
 .res-max{font-size:0.58rem;color:rgba(255,255,255,0.55);font-weight:600}
 .res-icon{font-size:1.2rem;flex-shrink:0}
 
+
+/* Side troop counter in attack */
+#atk-side-panel{position:absolute;right:6px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:6px;z-index:10;pointer-events:none}
+.atk-side-troop{background:linear-gradient(135deg,rgba(20,15,3,0.92),rgba(10,8,1,0.95));border:1.5px solid rgba(255,200,80,0.3);border-radius:12px;padding:6px 8px;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:44px;box-shadow:0 2px 10px rgba(0,0,0,0.5)}
+.atk-side-troop.selected{border-color:rgba(255,215,0,0.8);box-shadow:0 0 12px rgba(255,215,0,0.4)}
+.atk-side-icon{font-size:1.3rem;line-height:1}
+.atk-side-count{font-size:0.72rem;font-weight:900;color:var(--gold);font-family:var(--title)}
+
 </style>
 </head>
 <body>
@@ -585,14 +593,17 @@ body{background:#1a2e10}
     <div id="attack-timer-circle">180</div>
     <div style="text-align:center">
       <div style="font-family:var(--title);font-size:0.8rem;color:var(--gold);letter-spacing:1px">ANGREPP</div>
-      <div id="attack-stars" style="font-size:1.4rem;letter-spacing:3px;filter:drop-shadow(0 1px 4px rgba(255,215,0,0.4))">☆☆☆</div>
+      <div id="attack-stars" style="font-size:clamp(1.6rem,3vw,2.2rem);letter-spacing:4px;filter:drop-shadow(0 2px 8px rgba(255,215,0,0.5))">☆☆☆</div>
     </div>
     <div style="text-align:right">
-      <div style="font-size:0.6rem;color:rgba(255,215,0,0.5);text-transform:uppercase;letter-spacing:1px">Förstört</div>
-      <div id="attack-pct" style="font-size:1.1rem;font-weight:900;color:var(--gold);font-family:var(--title)">0%</div>
+      <div style="font-size:clamp(0.6rem,1.1vw,0.8rem);color:rgba(255,215,0,0.5);text-transform:uppercase;letter-spacing:1px">Förstört</div>
+      <div id="attack-pct" style="font-size:clamp(1.2rem,2.2vw,1.6rem);font-weight:900;color:var(--gold);font-family:var(--title)">0%</div>
     </div>
   </div>
-  <canvas id="attack-canvas"></canvas>
+  <div style="position:relative;flex:1;overflow:hidden">
+    <canvas id="attack-canvas" style="display:block;width:100%;height:100%"></canvas>
+    <div id="atk-side-panel"></div>
+  </div>
   <div id="attack-troops-bar">
     <div class="at-troops-row" id="at-troops-row"></div>
     <div id="attack-btns">
@@ -966,6 +977,7 @@ const BASE_CELL=36, GRID=34;
 let zoom=1.0; // 0.5 to 1.5
 let CELL=36; // dynamic
 let camX=0,camY=0,dragging=false,dragStart={x:0,y:0},camStart={x:0,y:0};
+let camVX=0,camVY=0,lastDragTime=0,lastDragX=0,lastDragY=0;
 let selectedBuilding=null;
 let placingBuilding=null;
 let movingBuilding=null;
@@ -1768,6 +1780,12 @@ function gameLoop(t){
 function tick(dt){
   ambientTime+=dt;
   recalcCaps();
+  // Camera momentum (coast after release)
+  if(!dragging&&(Math.abs(camVX)>0.5||Math.abs(camVY)>0.5)){
+    camX+=camVX;camY+=camVY;
+    camVX*=0.88;camVY*=0.88;
+    clampCamera();
+  }
   tickResourceOrbs(dt);tickCollectParticles(dt);updateHUDPulse();
   const now=Date.now()/1000;
   // Resource generation from buildings
@@ -2639,7 +2657,7 @@ function startAttackMode(){
   atkCtx=atkCanvas.getContext('2d');
   const dpr2=window.devicePixelRatio||1;
   atkW=window.innerWidth;
-  atkH=window.innerHeight-52-88;
+  atkH=window.innerHeight-52-88; // approximate — canvas fills flex container
   atkCanvas.width=atkW*dpr2; atkCanvas.height=atkH*dpr2;
   atkCanvas.style.width=atkW+'px'; atkCanvas.style.height=atkH+'px';
   atkCtx.setTransform(dpr2,0,0,dpr2,0,0);
@@ -2867,6 +2885,17 @@ function generateEnemyBase(){
 
 function renderAtkTroopsBar(){
   const row=document.getElementById('at-troops-row');if(!row)return;
+  // Update side panel
+  const side=document.getElementById('atk-side-panel');
+  if(side){
+    side.innerHTML=Object.entries(atkTroopPool).filter(([_,c])=>c>0).map(([id,cnt])=>{
+      const tt=TROOP_TYPES[id];if(!tt)return'';
+      return `<div class="atk-side-troop${selectedAtkTroop===id?' selected':''}" style="pointer-events:all;cursor:pointer" onclick="selectAtkTroop('${id}')">
+        <span class="atk-side-icon">${tt.icon||'⚔️'}</span>
+        <span class="atk-side-count">×${cnt}</span>
+      </div>`;
+    }).join('');
+  }
   row.innerHTML=Object.entries(atkTroopPool).map(([id,cnt])=>{
     if(!cnt)return'';
     const tt=TROOP_TYPES[id];if(!tt)return'';
@@ -3346,12 +3375,18 @@ canvas.addEventListener('touchmove',e=>{
     e.preventDefault();
     const dist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
     const delta=(dist-lastPinchDist)*0.004;
-    const oldZoom=zoom;
+    const oldZoom2=zoom;
     zoom=Math.max(0.45,Math.min(1.5,zoom+delta));
+    const oldCell2=Math.round(BASE_CELL*oldZoom2);
     CELL=Math.round(BASE_CELL*zoom);
+    // Zoom toward pinch center
+    const pcx=(e.touches[0].clientX+e.touches[1].clientX)/2;
+    const pcy=(e.touches[0].clientY+e.touches[1].clientY)/2;
+    const ratio2=CELL/oldCell2;
+    camX=pcx-(pcx-camX)*ratio2;
+    camY=pcy-(pcy-camY)*ratio2;
     lastPinchDist=dist;
     clampCamera();
-    rebuildGrass();
   }
 },{passive:false});
 
@@ -3379,12 +3414,17 @@ function rebuildGrass(){
   }catch(e){}
 }
 
-canvas.addEventListener('mousedown',e=>{if(activeNav!=='by'&&activeNav!=='attack')return;dragging=false;dragStart={x:e.clientX,y:e.clientY};camStart={x:camX,y:camY};});
+canvas.addEventListener('mousedown',e=>{if(activeNav!=='by'&&activeNav!=='attack')return;dragging=false;dragStart={x:e.clientX,y:e.clientY};camStart={x:camX,y:camY};camVX=0;camVY=0;lastDragX=e.clientX;lastDragY=e.clientY;lastDragTime=performance.now();});
 canvas.addEventListener('mousemove',e=>{
-  // Track grid position for ghost
   mouseGridX=Math.floor((e.clientX-camX)/CELL);
   mouseGridY=Math.floor((e.clientY-camY)/CELL);
   if(e.buttons!==1)return;
+  // Track velocity for momentum
+  const now=performance.now();
+  const dt=Math.max(1,now-lastDragTime);
+  camVX=(e.clientX-lastDragX)/dt*16;
+  camVY=(e.clientY-lastDragY)/dt*16;
+  lastDragX=e.clientX;lastDragY=e.clientY;lastDragTime=now;
   const dx=e.clientX-dragStart.x,dy=e.clientY-dragStart.y;
   if(Math.abs(dx)>5||Math.abs(dy)>5)dragging=true;
   if(dragging){camX=camStart.x+dx;camY=camStart.y+dy;clampCamera();}
@@ -3392,6 +3432,8 @@ canvas.addEventListener('mousemove',e=>{
 canvas.addEventListener('mouseup',e=>{
   if(!dragging){handleCanvasClick(e.clientX,e.clientY);}
   dragging=false;
+  // Keep velocity for coasting
+  // (camVX/camVY already set during drag)
 });
 canvas.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0];dragStart={x:t.clientX,y:t.clientY};camStart={x:camX,y:camY};dragging=false;},{passive:false});
 canvas.addEventListener('touchmove',e=>{e.preventDefault();const t=e.touches[0];const dx=t.clientX-dragStart.x,dy=t.clientY-dragStart.y;if(Math.abs(dx)>8||Math.abs(dy)>8)dragging=true;if(dragging){
