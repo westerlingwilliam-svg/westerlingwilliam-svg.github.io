@@ -376,7 +376,7 @@ body{background:#1a2e10}
 
 /* Shop warm */
 #shop-panel{background:linear-gradient(180deg,#141e0a,#0a1108)!important}
-.shop-card{background:rgba(20,15,3,0.85)!important;border-color:rgba(255,200,80,0.1)!important;border-radius:16px!important;transition:border-color .2s,box-shadow .2s}
+.shop-card{background:linear-gradient(160deg,rgba(25,18,4,0.95),rgba(15,10,2,0.98))!important;border:1.5px solid rgba(255,200,80,0.15)!important;border-radius:18px!important;transition:border-color .2s,box-shadow .2s,transform .15s;padding:10px 12px!important}
 .shop-card.can-build{background:rgba(50,38,5,0.8)!important;border-color:rgba(255,215,0,0.35)!important}
 
 /* Research warm */
@@ -386,7 +386,7 @@ body{background:#1a2e10}
 .hero-card{background:linear-gradient(135deg,rgba(40,30,5,0.7),rgba(0,30,60,0.3))!important;border:1.5px solid rgba(255,215,0,0.15)!important;border-radius:20px!important}
 
 /* Troop cards */
-.troop-card{background:rgba(20,15,3,0.85)!important;border-color:rgba(255,200,80,0.12)!important;border-radius:14px!important}
+.troop-card{background:linear-gradient(160deg,rgba(28,18,4,0.96),rgba(18,10,2,0.99))!important;border:1.5px solid rgba(255,200,80,0.14)!important;border-radius:16px!important;transition:border-color .2s,transform .15s}
 .at-troop{background:rgba(30,22,5,0.9)!important;border-color:rgba(255,200,80,0.15)!important}
 
 /* Level up warm */
@@ -936,10 +936,17 @@ const BUILDING_TYPES={
    stats:_=>`Möjliggör truppforskning`},
   'arme_lager':{unlockJH:1,name:'Armélager',icon:'🏕️',desc:'Ökar kapaciteten för trupper.',size:3,maxLv:8,costElixir:[150,300,600,1200,2400,4800,9600,19200],buildTime:[5,40,80,160,320,640,1920,3840],capacity:[50,70,90,120,160,200,240,300],limitByJH:[1,1,2,2,3,3,4,4],category:'military',
    stats:lv=>`Armé-kapacitet: ${[20,30,40,60,80,100,120,150][lv-1]}`},
-  'dark_bohrare':{unlockJH:7,name:'Dark Elixir-Borr',icon:'🖤',desc:'Utvinner Jimmie-Kraft djupt under marken.',size:2,maxLv:6,costGold:[3000,6000,12000,24000,48000,96000],buildTime:[360,720,1440,2880,5760,11520],darkPerHour:[20,30,45,60,80,100,120,140],buildingCap:[200,400,800,1600,3000,5000,8000,12000],limitByJH:[0,0,0,0,0,0,1,2],category:'resource',unlockJH:5,
+  'dark_bohrare':{unlockJH:7,name:'Jimmie-Kraft Borr',icon:'🖤',desc:'Utvinner Jimmie-Kraft djupt under marken.',size:2,maxLv:6,costGold:[3000,6000,12000,24000,48000,96000],buildTime:[360,720,1440,2880,5760,11520],darkPerHour:[20,30,45,60,80,100,120,140],buildingCap:[200,400,800,1600,3000,5000,8000,12000],limitByJH:[0,0,0,0,1,1,2,2],category:'resource',unlockJH:5,
    stats:lv=>`${[20,40,60,80,100,120][lv-1]} J-Kraft/tim`},
   'mur':{unlockJH:1,name:'Mur',icon:'🧱',desc:'Blockerar angripare. Uppgradera för starkare murar.',size:1,maxLv:8,costGold:[50,100,300,1000,2000,5000,10000,30000],buildTime:[0,5,10,30,60,120,300,600],hp:[300,500,700,1000,1500,2500,4000,7000],limitByJH:[25,50,75,100,125,150,175,200],category:'wall',
    stats:lv=>`HP: ${[300,500,700,1000,1500,2500,4000,7000][lv-1]}`},
+  'dark_forrad':{unlockJH:5,name:'Jimmie-Kraft-Tank',icon:'🖤',desc:'Lagrar Jimmie-Kraft.',size:3,maxLv:6,
+    costGold:[2000,4000,8000,16000,32000,64000],
+    buildTime:[300,600,1200,2400,4800,9600],
+    capacity:[1000,2000,4000,8000,15000,25000],
+    limitByJH:[0,0,0,0,1,1,2,2],category:'resource',
+    stats:(lv)=>{const cap=[1000,2000,4000,8000,15000,25000][Math.min(Math.max(0,lv-1),5)];return`Kapacitet: ${cap?cap.toLocaleString():1000} 💜`;}
+  },
   'bomb_falla':{unlockJH:4,name:'Bomb-Fälla',icon:'💥',desc:'Exploderar när fienden trampar på den.',size:1,maxLv:6,costGold:[200,400,800,1600,3200,6400],buildTime:[10,20,40,80,160,320],damage:[10,15,20,35,45,60],limitByJH:[0,0,0,2,3,4,4,4],category:'trap',unlockJH:4,
    stats:lv=>`Skada: ${[10,15,20,35,45,60][lv-1]}`},
 };
@@ -1147,6 +1154,43 @@ function drawBase(){
   // Build mode highlights
   drawBuildSpots();
 
+  // ── SECOND PASS: level badges + collect icons always on top ─────
+  G.buildings.forEach(b=>{
+    if(b.gx===undefined)return;
+    const _size=(BUILDING_TYPES[b.type]?.size||1);
+    const bw2=_size*CELL,bh2=_size*CELL;
+    const sx2=b.gx*CELL+camX,sy2=b.gy*CELL+camY;
+    if(sx2+bw2<0||sx2>W||sy2+bh2<0||sy2>H)return;
+    // Level badge
+    if(b.type!=='mur'&&b.lv>0){
+      const lbx=sx2+bw2-4,lby=sy2+5;
+      ctx.fillStyle='rgba(0,0,0,0.85)';ctx.beginPath();ctx.arc(lbx,lby,10,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle=b.lv>=7?'#FFD700':b.lv>=5?'#ff9900':b.lv>=3?'#66ccff':'rgba(255,255,255,0.9)';
+      ctx.font='bold 9px Nunito';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(b.lv,lbx,lby);
+    }
+    // Collect icon
+    const _bt2=BUILDING_TYPES[b.type];
+    const stored2=b.stored||0;
+    if(stored2>=10&&_bt2&&(_bt2.goldPerHour||_bt2.elixirPerHour||_bt2.darkPerHour)&&!b.upgrading&&!suppressedCollect.has(b.id)){
+      const cap2=_bt2.buildingCap?_bt2.buildingCap[Math.min(b.lv-1,_bt2.buildingCap.length-1)]:500;
+      const pct2=Math.min(1,stored2/cap2);
+      const bob2=Math.sin(Date.now()/600)*5;
+      const ix=sx2+bw2/2,iy=sy2-14+bob2;
+      ctx.fillStyle='rgba(0,0,0,0.25)';ctx.beginPath();ctx.ellipse(ix,sy2-4,16,5,0,0,Math.PI*2);ctx.fill();
+      const bgCol2=b.storeType==='dark'?'#440066':b.storeType==='elixir'?'#8800cc':'#cc8800';
+      const grd2=ctx.createRadialGradient(ix,iy,0,ix,iy,18);
+      grd2.addColorStop(0,bgCol2+'ff');grd2.addColorStop(1,bgCol2+'88');
+      ctx.fillStyle='rgba(0,0,0,0.3)';ctx.beginPath();ctx.arc(ix,iy+2,19,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle=grd2;ctx.beginPath();ctx.arc(ix,iy,19,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle='rgba(255,255,255,0.5)';ctx.lineWidth=1.5;ctx.stroke();
+      ctx.beginPath();ctx.arc(ix,iy,17,-Math.PI/2,-Math.PI/2+pct2*Math.PI*2);
+      ctx.strokeStyle='rgba(255,255,255,0.9)';ctx.lineWidth=3;ctx.stroke();
+      ctx.font='16px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(b.storeType==='dark'?'💜':b.storeType==='elixir'?'🧪':'🪙',ix,iy);
+    }
+  });
+
   // Ghost for building being MOVED
   if(movingBuilding&&mouseGridX>=0){
     const bt=BUILDING_TYPES[movingBuilding.type];
@@ -1219,13 +1263,49 @@ function drawBuilding(b){
   const bw=s*CELL,bh=s*CELL;
   const isSelected=selectedBuilding&&selectedBuilding.id===b.id;
 
-  // Ground shadow with rarity-based size
-  const shadowScale=BUILDING_TYPES[b.type]?.size>=3?0.42:0.38;
-  ctx.fillStyle='rgba(0,0,0,0.25)';
-  ctx.beginPath();ctx.ellipse(sx+bw/2,sy+bh-2,bw*shadowScale,bh*0.12,0,0,Math.PI*2);ctx.fill();
+  // ── DEPTH SYSTEM ─────────────────────────────────────────────────
+  // 1. Soft ground shadow (offset south-east for sun from top-left)
+  const shadowS=b.type==='mur'?0.32:bt.size>=3?0.48:0.42;
+  ctx.fillStyle='rgba(0,0,0,0.22)';
+  ctx.beginPath();ctx.ellipse(sx+bw*0.55,sy+bh*0.94,bw*shadowS,bh*0.1,0,0,Math.PI*2);ctx.fill();
+  // 2. Ambient occlusion — darker where building meets ground
+  const aoG=ctx.createLinearGradient(sx,sy+bh*0.75,sx,sy+bh);
+  aoG.addColorStop(0,'transparent');aoG.addColorStop(1,'rgba(0,0,0,0.18)');
+  ctx.fillStyle=aoG;ctx.fillRect(sx,sy+bh*0.75,bw,bh*0.25);
 
   // Draw building
   drawBuildingGraphic(ctx,b.type,b.lv,sx,sy,bw,bh);
+
+  // 3. Right-side depth panel (east wall, slightly darker than front)
+  if(b.type!=='mur'&&b.type!=='bomb_falla'){
+    const depthSize=Math.max(3,CELL*0.13);
+    const wallG=ctx.createLinearGradient(sx+bw,sy,sx+bw+depthSize,sy+bh);
+    wallG.addColorStop(0,'rgba(0,0,0,0.28)');wallG.addColorStop(1,'rgba(0,0,0,0.12)');
+    ctx.fillStyle=wallG;
+    ctx.beginPath();
+    ctx.moveTo(sx+bw,sy+CELL*0.15);
+    ctx.lineTo(sx+bw+depthSize,sy+CELL*0.08);
+    ctx.lineTo(sx+bw+depthSize,sy+bh+CELL*0.06);
+    ctx.lineTo(sx+bw,sy+bh);
+    ctx.closePath();ctx.fill();
+    // Bottom depth panel (south wall)
+    const botG=ctx.createLinearGradient(sx,sy+bh,sx,sy+bh+depthSize);
+    botG.addColorStop(0,'rgba(0,0,0,0.25)');botG.addColorStop(1,'rgba(0,0,0,0.05)');
+    ctx.fillStyle=botG;
+    ctx.beginPath();
+    ctx.moveTo(sx,sy+bh);
+    ctx.lineTo(sx+bw,sy+bh);
+    ctx.lineTo(sx+bw+depthSize,sy+bh+CELL*0.06);
+    ctx.lineTo(sx+depthSize,sy+bh+CELL*0.06);
+    ctx.closePath();ctx.fill();
+  }
+
+  // 4. Top-left highlight — light coming from top-left
+  if(b.type!=='mur'){
+    const hlG=ctx.createLinearGradient(sx,sy,sx+bw*0.5,sy+bh*0.5);
+    hlG.addColorStop(0,'rgba(255,255,255,0.07)');hlG.addColorStop(1,'transparent');
+    ctx.fillStyle=hlG;ctx.fillRect(sx,sy,bw,bh);
+  }
 
   // Selection ring (pulsing)
   if(isSelected){
@@ -1238,15 +1318,7 @@ function drawBuilding(b){
     ctx.strokeStyle=`rgba(255,215,0,${pulse*0.25})`;ctx.lineWidth=6;ctx.stroke();
   }
 
-  // Level badge (gold pill)
-  if(b.type!=='mur'&&b.lv>0){
-    const lbx=sx+bw-4,lby=sy+5;
-    ctx.fillStyle='rgba(0,0,0,0.75)';
-    ctx.beginPath();ctx.arc(lbx,lby,9,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle=b.lv>=6?'#ff9900':b.lv>=4?'#66ccff':'#FFD700';
-    ctx.font='bold 8.5px Nunito';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(b.lv,lbx,lby);
-  }
+  // [Level badge drawn in second pass]
 
   // Build timer overlay
   if(b.upgrading){
@@ -1844,10 +1916,92 @@ function drawBuildingGraphic(ctx,type,lv,sx,sy,bw,bh){
       ctx.fillStyle=`rgba(${lv>=8?'255,200,0':lv>=7?'100,255,100':lv>=6?'100,180,255':'200,100,255'},0.12)`;
       ctx.fillRect(sx+2,sy+2,bw-4,bh-4);
     }
+  } else if(type==='dark_forrad'){
+    const t_df=Date.now()/1000;
+    // Shadow
+    ctx.fillStyle='rgba(0,0,0,0.3)';ctx.beginPath();ctx.ellipse(cx,sy+bh*0.95,bw*0.4,bh*0.06,0,0,Math.PI*2);ctx.fill();
+    // Main tank — dark crystal/obsidian look
+    const dfG=ctx.createLinearGradient(sx+bw*0.1,sy+bh*0.15,sx+bw*0.9,sy+bh*0.85);
+    dfG.addColorStop(0,'#2a0a3a');dfG.addColorStop(0.5,'#1a0528');dfG.addColorStop(1,'#0a0215');
+    ctx.fillStyle=dfG;ctx.beginPath();ctx.roundRect(sx+bw*0.1,sy+bh*0.22,bw*0.8,bh*0.62,bw*0.12);ctx.fill();
+    // Dark elixir liquid fill (animated)
+    const dfFill=0.5+Math.sin(t_df*1.2)*0.04;
+    ctx.save();ctx.beginPath();ctx.roundRect(sx+bw*0.1,sy+bh*0.22,bw*0.8,bh*0.62,bw*0.12);ctx.clip();
+    const liqG=ctx.createLinearGradient(0,sy+bh*(0.84-dfFill*0.62),0,sy+bh*0.84);
+    liqG.addColorStop(0,'rgba(120,0,180,0.7)');liqG.addColorStop(1,'rgba(60,0,100,0.9)');
+    ctx.fillStyle=liqG;ctx.fillRect(sx+bw*0.1,sy+bh*(0.84-dfFill*0.62),bw*0.8,bh*dfFill*0.62);
+    // Surface shimmer
+    ctx.fillStyle='rgba(180,80,255,0.2)';ctx.beginPath();ctx.ellipse(cx,sy+bh*(0.84-dfFill*0.62),bw*0.3,bh*0.025,0,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+    // Crystal facets on tank body
+    ctx.strokeStyle='rgba(150,50,220,0.35)';ctx.lineWidth=bw*0.025;
+    [[0.18,0.3,0.38,0.55],[0.38,0.28,0.62,0.52],[0.62,0.3,0.82,0.58]].forEach(([x1,y1,x2,y2])=>{
+      ctx.beginPath();ctx.moveTo(sx+bw*x1,sy+bh*y1);ctx.lineTo(sx+bw*x2,sy+bh*y2);ctx.stroke();
+    });
+    // Dark crystal spikes on top
+    [[0.3,0.16],[0.5,0.1],[0.7,0.16]].forEach(([spx,spy],si)=>{
+      const sG=ctx.createLinearGradient(sx+bw*spx,sy+bh*spy,sx+bw*spx,sy+bh*0.26);
+      sG.addColorStop(0,'#9922cc');sG.addColorStop(1,'#330066');
+      ctx.fillStyle=sG;
+      ctx.beginPath();ctx.moveTo(sx+bw*spx,sy+bh*spy);
+      ctx.lineTo(sx+bw*(spx-0.06),sy+bh*0.26);ctx.lineTo(sx+bw*(spx+0.06),sy+bh*0.26);ctx.fill();
+      // Crystal glow
+      const glow2=Math.sin(t_df*3+si)*0.3+0.7;
+      ctx.fillStyle=`rgba(180,80,255,${glow2*0.4})`;ctx.beginPath();ctx.arc(sx+bw*spx,sy+bh*(spy+0.02),bw*0.04,0,Math.PI*2);ctx.fill();
+    });
+    // Top dome cap
+    const domeG=ctx.createLinearGradient(sx+bw*0.25,sy+bh*0.18,sx+bw*0.75,sy+bh*0.26);
+    domeG.addColorStop(0,'#3a0850');domeG.addColorStop(1,'#1a0328');
+    ctx.fillStyle=domeG;ctx.beginPath();ctx.roundRect(sx+bw*0.2,sy+bh*0.18,bw*0.6,bh*0.1,bw*0.06);ctx.fill();
+    // Rune/symbol glow
+    ctx.fillStyle=`rgba(180,60,255,${0.4+Math.sin(t_df*2)*0.2})`;
+    ctx.font=`${bw*0.28}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('💜',cx,sy+bh*0.11);
+    // Glass highlight
+    ctx.fillStyle='rgba(255,255,255,0.06)';ctx.beginPath();ctx.roundRect(sx+bw*0.14,sy+bh*0.26,bw*0.15,bh*0.3,bw*0.04);ctx.fill();
   } else if(type==='dark_bohrare'){
-    ctx.fillStyle='#1a0a2a';ctx.fillRect(sx+bw*0.2,sy+bh*0.2,bw*0.6,bh*0.7);
-    ctx.fillStyle='#4a00aa';ctx.beginPath();ctx.arc(cx,cy,bw*0.25,0,Math.PI*2);ctx.fill();
-    ctx.font=`${bw*0.35}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🖤',cx,cy);
+    const tDb=Date.now()/1000;
+    // Shadow
+    ctx.fillStyle='rgba(0,0,0,0.35)';ctx.beginPath();ctx.ellipse(cx,sy+bh*0.96,bw*0.38,bh*0.05,0,0,Math.PI*2);ctx.fill();
+    // Stone base
+    const dbB=ctx.createLinearGradient(sx,sy+bh*0.6,sx,sy+bh*0.9);
+    dbB.addColorStop(0,'#2a0840');dbB.addColorStop(1,'#0e0218');
+    ctx.fillStyle=dbB;ctx.beginPath();ctx.roundRect(sx+bw*0.12,sy+bh*0.6,bw*0.76,bh*0.32,bw*0.08);ctx.fill();
+    // Rune circle on base
+    ctx.strokeStyle=`rgba(160,50,240,${0.5+Math.sin(tDb*2)*0.25})`;ctx.lineWidth=bw*0.03;
+    ctx.beginPath();ctx.arc(cx,sy+bh*0.75,bw*0.2,0,Math.PI*2);ctx.stroke();
+    // Dark liquid pool
+    ctx.fillStyle='rgba(120,0,200,0.3)';ctx.beginPath();ctx.ellipse(cx,sy+bh*0.76,bw*0.17,bh*0.055,0,0,Math.PI*2);ctx.fill();
+    // Central shaft
+    const shG=ctx.createLinearGradient(cx-bw*0.07,0,cx+bw*0.07,0);
+    shG.addColorStop(0,'#180430');shG.addColorStop(0.5,'#380870');shG.addColorStop(1,'#180430');
+    ctx.fillStyle=shG;ctx.fillRect(cx-bw*0.07,sy+bh*0.18,bw*0.14,bh*0.44);
+    // Animated energy rings moving up shaft
+    for(let ri=0;ri<4;ri++){
+      const ry=((tDb*0.5+ri*0.25)%1);
+      ctx.strokeStyle=`rgba(180,60,255,${Math.sin(ry*Math.PI)*0.7})`;ctx.lineWidth=bw*0.02;
+      ctx.beginPath();ctx.ellipse(cx,sy+bh*(0.62-ry*0.44),bw*0.07,bh*0.018,0,0,Math.PI*2);ctx.stroke();
+    }
+    // Rotating 4-blade drill head
+    ctx.save();ctx.translate(cx,sy+bh*0.64);ctx.rotate(tDb*3.5);
+    for(let bi=0;bi<4;bi++){
+      ctx.rotate(Math.PI/2);
+      const bG=ctx.createLinearGradient(0,-bh*0.01,bw*0.26,bh*0.01);
+      bG.addColorStop(0,'#aa33ee');bG.addColorStop(0.6,'#7700cc');bG.addColorStop(1,'transparent');
+      ctx.fillStyle=bG;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(bw*0.26,bh*0.07);ctx.lineTo(bw*0.26,-bh*0.07);ctx.fill();
+    }
+    ctx.restore();
+    // Three crystal spikes on top
+    [[cx-bw*0.16,sy+bh*0.07],[cx,sy+bh*0.01],[cx+bw*0.16,sy+bh*0.07]].forEach(([spx,spy],si)=>{
+      const sG=ctx.createLinearGradient(spx,spy,spx,sy+bh*0.2);
+      sG.addColorStop(0,'#dd55ff');sG.addColorStop(1,'#440088');
+      ctx.fillStyle=sG;ctx.beginPath();ctx.moveTo(spx,spy);ctx.lineTo(spx-bw*0.055,sy+bh*0.2);ctx.lineTo(spx+bw*0.055,sy+bh*0.2);ctx.fill();
+      const gp=Math.sin(tDb*3+si*1.3)*0.3+0.7;
+      ctx.fillStyle=`rgba(220,130,255,${gp*0.6})`;ctx.beginPath();ctx.arc(spx,spy+bh*0.015,bw*0.04,0,Math.PI*2);ctx.fill();
+    });
+    // Collar
+    const colG=ctx.createLinearGradient(cx-bw*0.13,sy+bh*0.18,cx+bw*0.13,sy+bh*0.2);
+    colG.addColorStop(0,'#28065a');colG.addColorStop(0.5,'#5510aa');colG.addColorStop(1,'#28065a');
+    ctx.fillStyle=colG;ctx.beginPath();ctx.roundRect(cx-bw*0.13,sy+bh*0.18,bw*0.26,bh*0.055,3);ctx.fill();
   } else if(type==='bomb_falla'){
     ctx.fillStyle='#333';ctx.beginPath();ctx.arc(cx,cy,bw*0.35,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='#cc0000';ctx.beginPath();ctx.arc(cx,cy,bw*0.25,0,Math.PI*2);ctx.fill();
@@ -1991,7 +2145,17 @@ function levelUpJH(newLv){G.jh_level=newLv;
   const DARK_CAPS=[0,0,0,0,0,0,2500,5000];
   G.gold_cap=GOLD_CAPS[Math.min(newLv-1,GOLD_CAPS.length-1)];
   G.elixir_cap=GOLD_CAPS[Math.min(newLv-1,GOLD_CAPS.length-1)];
-  G.dark_cap=DARK_CAPS[Math.min(newLv-1,DARK_CAPS.length-1)];
+  G.dark_cap=DARK_CAPS[Math.min(G.jh_level-1,DARK_CAPS.length-1)];
+  // Add dark_forrad storage capacity on top
+  const darkForradCaps=[1000,2000,4000,8000,15000,25000];
+  G.buildings.filter(b=>b.type==='dark_forrad'&&b.lv>=1).forEach(b=>{
+    G.dark_cap+=darkForradCaps[Math.min(b.lv-1,darkForradCaps.length-1)];
+  });
+  // Add dark_bohrare base capacity too
+  G.buildings.filter(b=>b.type==='dark_bohrare'&&b.lv>=1).forEach(b=>{
+    const bc=[200,400,800,1600,3000,5000];
+    G.dark_cap+=bc[Math.min(b.lv-1,bc.length-1)];
+  });
   document.getElementById('lu-title').textContent=`JIMMIE HALL NIVÅ ${newLv}!`;
   document.getElementById('lu-sub').textContent='Nya byggnader upplåsta!';
   document.getElementById('lu-unlocks').textContent='✅ '+data.unlocks.join('  ✅ ');
@@ -2028,11 +2192,19 @@ function updateHUD(){
   const gPct=Math.min(100,G.gold/Math.max(1,G.gold_cap)*100);
   const ePct=Math.min(100,G.elixir/Math.max(1,G.elixir_cap)*100);
   const dPct=Math.min(100,G.dark/Math.max(1,G.dark_cap||1)*100);
+  const dmx=document.getElementById('dark-max');if(dmx)dmx.textContent='/'+fmt(G.dark_cap);
   const gb=document.getElementById('gold-bar');if(gb)gb.style.width=gPct+'%';
   const eb=document.getElementById('elixir-bar');if(eb)eb.style.width=ePct+'%';
   const db=document.getElementById('dark-bar');if(db)db.style.width=dPct+'%';
   // Hide dark pill if no dark elixir capacity yet
-  const dp=document.getElementById('dark-pill');if(dp)dp.style.display=G.dark_cap>0?'flex':'none';
+  const dp=document.getElementById('dark-pill');
+  if(dp){
+    dp.style.display=(G.dark_cap>0||G.jh_level>=5)?'flex':'none';
+    const dv=document.getElementById('dark-val');
+    const dpb=document.getElementById('dark-bar-fill');
+    if(dv)dv.textContent=fmt(Math.floor(G.dark));
+    if(dpb)dpb.style.width=Math.min(100,G.dark/Math.max(1,G.dark_cap)*100)+'%';
+  }
   // Builder pill
   const bpill=document.getElementById('builder-pill-text');
   if(bpill){
@@ -2573,7 +2745,40 @@ function renderResearchPanel(){
   const hasLab=G.buildings.some(b=>b.type==='laboratorium');
   if(!hasLab){scroll.innerHTML='<div style="text-align:center;color:rgba(255,255,255,0.3);padding:30px"><div style="font-size:3rem">🔬</div><div>Bygg ett Laboratorium (JH3) för att forska.</div></div>';return;}
   const now=Date.now()/1000;
+  const lab=G.buildings.find(b=>b.type==='laboratorium'&&b.lv>=1);
+  const bt_lab=BUILDING_TYPES['laboratorium'];
   let html='';
+  // Lab upgrade card
+  if(lab&&bt_lab){
+    const maxAllowedLab=getMaxBuildingLv(bt_lab);
+    const nextLv=lab.lv+1;
+    if(lab.upgrading){
+      const rem2=Math.max(0,lab.upgradeEnd-now);
+      html+=`<div style="background:rgba(0,100,200,0.12);border:1.5px solid rgba(100,180,255,0.3);border-radius:16px;padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px">
+        <span style="font-size:2rem">🔬</span>
+        <div style="flex:1"><div style="font-size:0.8rem;color:#60aaff;font-weight:900">Lv${lab.lv} → Lv${nextLv}</div>
+        <div style="font-size:0.7rem;color:rgba(255,255,255,0.5);margin-top:2px">⏳ ${fmtTime(Math.ceil(rem2))} kvar</div></div>
+        <button onclick="selectedBuilding=G.buildings.find(b=>b.type==='laboratorium');openUpgModal(selectedBuilding)" style="background:linear-gradient(135deg,#6600cc,#4400aa);border:none;color:white;padding:8px 14px;border-radius:50px;font-size:0.75rem;font-weight:900;cursor:pointer">💎 Skippa</button>
+      </div>`;
+    } else if(nextLv<=maxAllowedLab&&nextLv<=bt_lab.maxLv){
+      const cost2=bt_lab.costGold?bt_lab.costGold[Math.min(nextLv-1,7)]:0;
+      const time2=bt_lab.buildTime?bt_lab.buildTime[Math.min(nextLv-1,7)]:0;
+      const canAfford2=G.gold>=cost2;
+      const freeB2=G.builders.slice(0,JH_DATA[G.jh_level-1]?.maxBuilders||2).find(b=>!b.busy);
+      html+=`<div style="background:rgba(0,80,160,0.1);border:1.5px solid rgba(100,160,255,0.22);border-radius:16px;padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px">
+        <span style="font-size:2rem">🔬</span>
+        <div style="flex:1"><div style="font-size:0.82rem;color:#60aaff;font-weight:900">Uppgradera Labb → Lv${nextLv}</div>
+        <div style="font-size:0.68rem;color:rgba(255,255,255,0.4);margin-top:2px">🪙 ${fmt(cost2)} · ⏱ ${fmtTime(time2)}</div></div>
+        <button onclick="upgradeLabFromPanel()" style="background:${canAfford2&&freeB2?'linear-gradient(135deg,#0088ff,#0055cc)':'rgba(60,60,60,0.5)'};border:none;color:white;padding:9px 16px;border-radius:50px;font-size:0.78rem;font-weight:900;cursor:pointer;opacity:${canAfford2&&freeB2?1:0.5}">⬆️ Uppgradera</button>
+      </div>`;
+    } else {
+      html+=`<div style="background:rgba(255,215,0,0.05);border:1px solid rgba(255,215,0,0.12);border-radius:16px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px">
+        <span style="font-size:1.8rem">🔬</span>
+        <div><div style="font-size:0.8rem;color:var(--gold);font-weight:800">Laboratorium Lv${lab.lv}</div>
+        <div style="font-size:0.68rem;color:rgba(255,255,255,0.35);margin-top:2px">${nextLv>bt_lab.maxLv?'Absolut max nivå!':'Max för JH'+G.jh_level+' — uppgradera Jimmie Hall'}</div></div>
+      </div>`;
+    }
+  }
   // Active research
   if(G.research.active){
     const res=RESEARCH_TYPES.find(r=>r.id===G.research.active);
@@ -2611,8 +2816,8 @@ function upgradeLabFromPanel(){
   const lab=G.buildings.find(b=>b.type==='laboratorium'&&!b.upgrading);
   if(!lab){toast('Inget labb att uppgradera!');return;}
   selectedBuilding=lab;
-  closePanel();
   doBuildAction();
+  renderResearchPanel();
 }
 
 function startResearch(id){
@@ -3635,7 +3840,7 @@ function openLabResearch(){
 function recalcCaps(){
   // TH base cap
   const GOLD_CAPS=[1000,2500,10000,50000,100000,300000,500000,750000];
-  const DARK_CAPS=[0,0,0,0,0,0,2500,5000];
+  const DARK_CAPS=[0,0,0,0,500,1000,2500,5000]; // JH5+ base dark cap
   let gCap=GOLD_CAPS[Math.min(G.jh_level-1,GOLD_CAPS.length-1)];
   let eCap=gCap;
   let dCap=DARK_CAPS[Math.min(G.jh_level-1,DARK_CAPS.length-1)];
