@@ -1192,6 +1192,9 @@ function drawBase(){
       ctx.strokeStyle='rgba(255,255,255,0.9)';ctx.lineWidth=2.5;ctx.stroke();
       ctx.font='16px serif';ctx.textAlign='center';ctx.textBaseline='middle';
       ctx.fillText(b.storeType==='dark'?'💜':b.storeType==='elixir'?'🧪':'🪙',ix,iy);
+      // Amount text
+      ctx.font='bold 9px Arial';ctx.fillStyle='white';ctx.textBaseline='top';
+      ctx.fillText(fmt(Math.floor(stored2)),ix,iy+15);
     }
   });
 
@@ -1357,35 +1360,6 @@ function drawBuilding(b){
   const stored=b.stored||0;
   const _bt=BUILDING_TYPES[b.type];
   if(stored>=10&&_bt&&(_bt.goldPerHour||_bt.elixirPerHour||_bt.darkPerHour)&&!b.upgrading&&!suppressedCollect.has(b.id)){
-    const bt2cap=_bt.buildingCap?_bt.buildingCap[Math.min(b.lv-1,_bt.buildingCap.length-1)]:500;
-    const pct=stored/bt2cap;
-    // Bob animation
-    const bob=Math.sin(Date.now()/600)*5;
-    const iconX=sx+bw/2, iconY=sy-14+bob;
-    // Shadow
-    ctx.fillStyle='rgba(0,0,0,0.2)';
-    ctx.beginPath();ctx.ellipse(iconX,sy-4,16,5,0,0,Math.PI*2);ctx.fill();
-    // Bag/coin icon background
-    const bgCol=b.storeType==='elixir'?'#8800cc':b.storeType==='dark'?'#440066':'#cc8800';
-    const grd=ctx.createRadialGradient(iconX,iconY,0,iconX,iconY,18);
-    grd.addColorStop(0,bgCol+'ff');grd.addColorStop(1,bgCol+'88');
-    ctx.fillStyle=grd;
-    // Shadow
-    ctx.fillStyle='rgba(0,0,0,0.3)';
-    ctx.beginPath();ctx.arc(iconX,iconY+2,19,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle=grd;
-    ctx.beginPath();ctx.arc(iconX,iconY,19,0,Math.PI*2);ctx.fill();
-    ctx.strokeStyle='rgba(255,255,255,0.5)';ctx.lineWidth=1.5;ctx.stroke();
-    // Fill ring showing how full it is
-    ctx.beginPath();ctx.arc(iconX,iconY,17,-.5*Math.PI,(-0.5+pct*2)*Math.PI);
-    ctx.strokeStyle='rgba(255,255,255,0.9)';ctx.lineWidth=3;ctx.stroke();
-    // Icon
-    ctx.font='16px serif';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(b.storeType==='elixir'?'🧪':b.storeType==='dark'?'💜':'🪙',iconX,iconY);
-    // Amount text
-    ctx.font='bold 9px Arial';ctx.fillStyle='white';
-    ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText('+'+Math.floor(stored),iconX,iconY+22);
   }
 
 }
@@ -2212,8 +2186,10 @@ function updateHUD(){
     dp.style.display=(G.dark_cap>0||G.jh_level>=5)?'flex':'none';
     const dv=document.getElementById('dark-val');
     const dpb=document.getElementById('dark-bar-fill');
-    if(dv)dv.textContent=fmt(Math.floor(G.dark));
-    if(dpb)dpb.style.width=Math.min(100,G.dark/Math.max(1,G.dark_cap)*100)+'%';
+    const dmxEl=document.getElementById('dark-max');
+    if(dv)dv.textContent=fmt(Math.floor(G.dark||0));
+    if(dmxEl)dmxEl.textContent='/'+fmt(G.dark_cap||0);
+    if(dpb)dpb.style.width=Math.min(100,(G.dark||0)/Math.max(1,G.dark_cap)*100)+'%';
   }
   // Builder pill
   const bpill=document.getElementById('builder-pill-text');
@@ -4319,9 +4295,10 @@ window.handleCanvasClick=function(cx,cy){
   // Check collect click first — resource buildings with stored amount
   const gx0=Math.floor((cx-camX)/CELL),gy0=Math.floor((cy-camY)/CELL);
   const resHit=G.buildings.find(b=>{
-    if(suppressedCollect.has(b.id))return false;
-    if(!(b.stored>=10))return false;
-    const s=BUILDING_TYPES[b.type]?.size||1;
+    if(!(b.stored>=1))return false;
+    const _bt=BUILDING_TYPES[b.type];
+    if(!_bt||(!_bt.goldPerHour&&!_bt.elixirPerHour&&!_bt.darkPerHour))return false;
+    const s=_bt.size||1;
     return gx0>=b.gx&&gx0<b.gx+s&&gy0>=b.gy&&gy0<b.gy+s;
   });
   if(resHit){collectAllOfType(resHit.type);return;}
@@ -4416,6 +4393,18 @@ function placeWallAt(gx,gy){
 
 // ── RESOURCE COLLECTION ──────────────────────────────────────────
 const collectParticles=[]; // {x,y,vx,vy,life,col,txt}
+
+function collectAllOfType(type){
+  // Find the clicked building's storeType from an instance
+  const clickedB=G.buildings.find(b=>b.type===type);
+  const storeType=clickedB?.storeType;
+  if(!storeType){
+    // Fallback: just collect all of same building type
+    G.buildings.filter(b=>b.type===type&&(b.stored||0)>=1).forEach(b=>tryCollect(b));
+    return;
+  }
+  G.buildings.filter(b=>b.storeType===storeType&&(b.stored||0)>=1).forEach(b=>tryCollect(b));
+}
 
 function tryCollect(b){
   const stored=b.stored||0;
