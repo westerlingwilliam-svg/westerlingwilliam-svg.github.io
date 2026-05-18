@@ -947,6 +947,10 @@ const BUILDING_TYPES={
     limitByJH:[0,0,0,0,1,1,2,2],category:'resource',
     stats:(lv)=>{const cap=[1000,2000,4000,8000,15000,25000][Math.min(Math.max(0,lv-1),5)];return`Kapacitet: ${cap?cap.toLocaleString():1000} 💜`;}
   },
+  'hero_jimmie':{unlockJH:4,name:'Jimmie Åkessons Staty',icon:'👑',desc:'Hjältens staty. Placera var du vill!',size:2,maxLv:1,
+    costGold:[0],buildTime:[0],hp:[1500],category:'hero',limitByJH:[0,0,0,1,1,1,1,1],
+    stats:(lv)=>'Dekorativ hjältestaty'
+  },
   'bomb_falla':{unlockJH:4,name:'Bomb-Fälla',icon:'💥',desc:'Exploderar när fienden trampar på den.',size:1,maxLv:6,costGold:[200,400,800,1600,3200,6400],buildTime:[10,20,40,80,160,320],damage:[10,15,20,35,45,60],limitByJH:[0,0,0,2,3,4,4,4],category:'trap',unlockJH:4,
    stats:lv=>`Skada: ${[10,15,20,35,45,60][lv-1]}`},
 };
@@ -1177,15 +1181,15 @@ function drawBase(){
       const pct2=Math.min(1,stored2/cap2);
       const bob2=Math.sin(Date.now()/600)*5;
       const ix=sx2+bw2/2,iy=sy2-14+bob2;
-      ctx.fillStyle='rgba(0,0,0,0.25)';ctx.beginPath();ctx.ellipse(ix,sy2-4,16,5,0,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='rgba(0,0,0,0.2)';ctx.beginPath();ctx.ellipse(ix,sy2-3,12,4,0,0,Math.PI*2);ctx.fill();
       const bgCol2=b.storeType==='dark'?'#440066':b.storeType==='elixir'?'#8800cc':'#cc8800';
-      const grd2=ctx.createRadialGradient(ix,iy,0,ix,iy,18);
+      const grd2=ctx.createRadialGradient(ix,iy,0,ix,iy,13);
       grd2.addColorStop(0,bgCol2+'ff');grd2.addColorStop(1,bgCol2+'88');
-      ctx.fillStyle='rgba(0,0,0,0.3)';ctx.beginPath();ctx.arc(ix,iy+2,19,0,Math.PI*2);ctx.fill();
-      ctx.fillStyle=grd2;ctx.beginPath();ctx.arc(ix,iy,19,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='rgba(0,0,0,0.3)';ctx.beginPath();ctx.arc(ix,iy+1,13,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle=grd2;ctx.beginPath();ctx.arc(ix,iy,13,0,Math.PI*2);ctx.fill();
       ctx.strokeStyle='rgba(255,255,255,0.5)';ctx.lineWidth=1.5;ctx.stroke();
-      ctx.beginPath();ctx.arc(ix,iy,17,-Math.PI/2,-Math.PI/2+pct2*Math.PI*2);
-      ctx.strokeStyle='rgba(255,255,255,0.9)';ctx.lineWidth=3;ctx.stroke();
+      ctx.beginPath();ctx.arc(ix,iy,11,-Math.PI/2,-Math.PI/2+pct2*Math.PI*2);
+      ctx.strokeStyle='rgba(255,255,255,0.9)';ctx.lineWidth=2.5;ctx.stroke();
       ctx.font='16px serif';ctx.textAlign='center';ctx.textBaseline='middle';
       ctx.fillText(b.storeType==='dark'?'💜':b.storeType==='elixir'?'🧪':'🪙',ix,iy);
     }
@@ -1909,8 +1913,14 @@ function drawBuildingGraphic(ctx,type,lv,sx,sy,bw,bh){
     ctx.fillStyle=lightCol;ctx.fillRect(sx,sy,bw,bh*0.12);
     // Shadow/depth
     ctx.fillStyle='rgba(0,0,0,0.25)';ctx.fillRect(sx,sy+bh*0.88,bw,bh*0.12);
-    // Edge highlight
-    ctx.fillStyle='rgba(255,255,255,0.15)';ctx.fillRect(sx,sy,bw*0.08,bh);
+    // Edge highlight top
+    ctx.fillStyle='rgba(255,255,255,0.2)';ctx.fillRect(sx,sy,bw,bh*0.1);
+    // Edge highlight left
+    ctx.fillStyle='rgba(255,255,255,0.12)';ctx.fillRect(sx,sy,bw*0.1,bh);
+    // Bottom shadow
+    ctx.fillStyle='rgba(0,0,0,0.3)';ctx.fillRect(sx,sy+bh*0.85,bw,bh*0.15);
+    // Right shadow
+    ctx.fillStyle='rgba(0,0,0,0.2)';ctx.fillRect(sx+bw*0.85,sy,bw*0.15,bh);
     // Inner glow for higher levels
     if(lv>=5){
       ctx.fillStyle=`rgba(${lv>=8?'255,200,0':lv>=7?'100,255,100':lv>=6?'100,180,255':'200,100,255'},0.12)`;
@@ -2141,7 +2151,7 @@ function levelUpJH(newLv){G.jh_level=newLv;
   if(gemReward>0){G.gems=(G.gems||0)+gemReward;toast('👑 JH'+newLv+' klar! +'+gemReward+' 💎');}
   const data=JH_DATA[newLv-1];
   // Update caps to real CoC values
-  const GOLD_CAPS=[1000,2500,10000,50000,100000,300000,500000,750000];
+  const GOLD_CAPS=[2000,5000,20000,100000,250000,500000,1000000,2000000];
   const DARK_CAPS=[0,0,0,0,0,0,2500,5000];
   G.gold_cap=GOLD_CAPS[Math.min(newLv-1,GOLD_CAPS.length-1)];
   G.elixir_cap=GOLD_CAPS[Math.min(newLv-1,GOLD_CAPS.length-1)];
@@ -2814,10 +2824,22 @@ function renderResearchPanel(){
 
 function upgradeLabFromPanel(){
   const lab=G.buildings.find(b=>b.type==='laboratorium'&&!b.upgrading);
-  if(!lab){toast('Inget labb att uppgradera!');return;}
-  selectedBuilding=lab;
-  doBuildAction();
-  renderResearchPanel();
+  if(!lab){toast('Labb uppgraderas redan!');return;}
+  const bt2=BUILDING_TYPES['laboratorium'];
+  const nextLv2=lab.lv+1;
+  const maxAllowed2=getMaxBuildingLv(bt2);
+  if(nextLv2>maxAllowed2){toast('Max nivå för JH'+G.jh_level+'!');return;}
+  const cost2=bt2.costGold?bt2.costGold[Math.min(nextLv2-1,7)]:0;
+  if(G.gold<cost2){toast('Inte tillräckligt 🪙!');return;}
+  const freeB2=G.builders.slice(0,JH_DATA[G.jh_level-1]?.maxBuilders||2).find(b=>!b.busy);
+  if(!freeB2){toast('Ingen ledig byggare!');return;}
+  G.gold-=cost2;
+  const buildTime2=bt2.buildTime?bt2.buildTime[Math.min(nextLv2-1,7)]:60;
+  const now2=Date.now()/1000;
+  lab.upgrading=true;lab.upgradeStart=now2;lab.upgradeEnd=now2+buildTime2;
+  freeB2.busy=true;freeB2.task={bId:lab.id,type:'upgrade'};freeB2.endTime=lab.upgradeEnd;
+  toast('Laboratorium uppgraderas till Lv'+nextLv2+'!');
+  renderResearchPanel();saveGame();
 }
 
 function startResearch(id){
@@ -3012,7 +3034,7 @@ function generateEnemyBase(){
   const place=(type,gx,gy,lv)=>{
     const bt=BUILDING_TYPES[type];if(!bt)return;
     const hpArr=bt.hp||[500];
-    const hp=hpArr[Math.min(lv-1,hpArr.length-1)]*1.3;
+    const hp=Math.max(50,(hpArr[Math.min(lv-1,hpArr.length-1)]||100))*1.3;
     const dpsArr=bt.dps||[0];
     const dps=dpsArr[Math.min(lv-1,dpsArr.length-1)];
     const fireRate=bt.splash?0.5:0.8;
@@ -3839,8 +3861,8 @@ function openLabResearch(){
 
 function recalcCaps(){
   // TH base cap
-  const GOLD_CAPS=[1000,2500,10000,50000,100000,300000,500000,750000];
-  const DARK_CAPS=[0,0,0,0,500,1000,2500,5000]; // JH5+ base dark cap
+  const GOLD_CAPS=[2000,5000,20000,100000,250000,500000,1000000,2000000];
+  const DARK_CAPS=[0,0,0,0,1000,2000,5000,10000]; // JH5+ base dark cap
   let gCap=GOLD_CAPS[Math.min(G.jh_level-1,GOLD_CAPS.length-1)];
   let eCap=gCap;
   let dCap=DARK_CAPS[Math.min(G.jh_level-1,DARK_CAPS.length-1)];
@@ -4302,7 +4324,7 @@ window.handleCanvasClick=function(cx,cy){
     const s=BUILDING_TYPES[b.type]?.size||1;
     return gx0>=b.gx&&gx0<b.gx+s&&gy0>=b.gy&&gy0<b.gy+s;
   });
-  if(resHit&&tryCollect(resHit))return;
+  if(resHit){collectAllOfType(resHit.type);return;}
   if(placingType){
     const bt=BUILDING_TYPES[placingType];if(!bt)return;
     const gx=Math.floor((cx-camX)/CELL),gy=Math.floor((cy-camY)/CELL);
