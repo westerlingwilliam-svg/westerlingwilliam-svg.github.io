@@ -17,7 +17,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:whit
 
 /* ── TOP HUD ── */
 #hud{position:fixed;top:10px;left:50%;transform:translateX(-50%);right:auto;width:calc(100% - 20px);max-width:min(98vw,780px);z-index:200;display:flex;gap:8px;align-items:center;flex-wrap:nowrap}
-.res-pill{background:linear-gradient(135deg,rgba(30,20,5,0.95),rgba(20,15,3,0.98));border:1.5px solid rgba(255,215,0,0.25);border-radius:50px;padding:6px 12px 6px 8px;display:flex;align-items:center;gap:6px;font-size:0.85rem;font-weight:800;cursor:pointer;transition:.2s;backdrop-filter:blur(12px);box-shadow:0 2px 12px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.06)}
+.res-pill{background:linear-gradient(135deg,rgba(30,20,5,0.95),rgba(20,15,3,0.98));border:1.5px solid rgba(255,215,0,0.25);border-radius:50px;padding:6px 12px 6px 8px;display:flex;align-items:center;gap:6px;font-size:0.88rem;font-weight:900;min-width:130px;cursor:pointer;transition:.2s;backdrop-filter:blur(12px);box-shadow:0 2px 12px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.06)}
 .res-pill:active{transform:scale(0.94)}
 .res-icon{font-size:1.3rem}
 .res-val{min-width:36px;text-align:right}
@@ -515,7 +515,7 @@ body{background:#1a2e10}
 
 
 /* Resource bar pills — CoC style fill background */
-.res-pill-bar{padding:0!important;overflow:hidden;min-width:110px;position:relative;height:34px;align-items:stretch!important}
+.res-pill-bar{padding:0!important;overflow:hidden;min-width:140px;position:relative;height:36px;align-items:stretch!important}
 .res-bar-bg{position:absolute;inset:0;width:0%;transition:width .7s ease;border-radius:50px}
 .res-bar-content{position:relative;z-index:1;display:flex;align-items:center;gap:6px;padding:0 10px 0 8px;height:100%;width:100%}
 .res-val{font-size:0.85rem;font-weight:900;color:white;text-shadow:0 1px 3px rgba(0,0,0,0.6)}
@@ -589,7 +589,7 @@ body{background:#1a2e10}
     <div class="res-bar-bg" id="elixir-bar" style="background:linear-gradient(90deg,rgba(150,0,220,0.5),rgba(180,50,255,0.35))"></div>
     <div class="res-bar-content"><span class="res-icon">🧪</span><span class="res-val" id="elixir-val">0</span><span class="res-max" id="elixir-max">/1K</span></div>
   </div>
-  <div id="builder-pill" style="background:linear-gradient(135deg,rgba(30,20,5,0.95),rgba(20,15,3,0.98));border:1.5px solid rgba(255,215,0,0.25);border-radius:50px;padding:6px 12px 6px 8px;display:flex;align-items:center;gap:6px;font-size:0.85rem;font-weight:800;backdrop-filter:blur(12px);box-shadow:0 2px 12px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.06);cursor:pointer" onclick="switchNav('by')" title="Byggare">
+  <div id="builder-pill" style="background:linear-gradient(135deg,rgba(30,20,5,0.95),rgba(20,15,3,0.98));border:1.5px solid rgba(255,215,0,0.25);border-radius:50px;padding:6px 12px 6px 8px;display:flex;align-items:center;gap:6px;font-size:0.88rem;font-weight:900;min-width:130px;backdrop-filter:blur(12px);box-shadow:0 2px 12px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.06);cursor:pointer" onclick="switchNav('by')" title="Byggare">
     <span style="font-size:1.2rem">🔨</span>
     <span id="builder-pill-text" style="color:white;font-size:0.85rem;font-weight:900">2/2</span>
   </div>
@@ -605,6 +605,7 @@ body{background:#1a2e10}
   <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
     <a href="games.html" style="background:rgba(0,0,0,0.6);border:1.5px solid rgba(255,255,255,0.2);border-radius:50px;padding:7px 14px;font-size:0.75rem;font-weight:900;color:white;text-decoration:none;display:flex;align-items:center;gap:5px;white-space:nowrap">🏠 Meny</a>
     <button onclick="document.getElementById('sett').style.display='flex'" style="background:rgba(0,0,0,0.6);border:1.5px solid rgba(255,255,255,0.2);border-radius:50%;width:36px;height:36px;font-size:1.1rem;cursor:pointer;color:white;display:flex;align-items:center;justify-content:center;flex-shrink:0">⚙️</button>
+    <button onclick="document.getElementById('code-modal').style.display='flex'" style="background:rgba(0,0,0,0.6);border:1.5px solid rgba(255,215,0,0.25);border-radius:50px;height:36px;padding:0 12px;font-size:0.65rem;font-weight:900;letter-spacing:1px;cursor:pointer;color:rgba(255,200,80,0.7);display:flex;align-items:center;flex-shrink:0">🔐</button>
   </div>
 </div>
 
@@ -881,7 +882,7 @@ body{background:#1a2e10}
 </div>
 
 <!-- Code System -->
-<button onclick="document.getElementById('code-modal').style.display='flex'" style="position:fixed;right:max(12px,calc(50% - 292px));top:50%;transform:translateY(-50%);z-index:200;background:linear-gradient(135deg,rgba(20,14,3,0.95),rgba(12,8,1,0.98));border:1.5px solid rgba(255,215,0,0.2);border-radius:50px;color:rgba(255,200,80,0.6);font-size:0.65rem;font-weight:900;padding:8px 10px;cursor:pointer;writing-mode:vertical-rl;text-orientation:mixed;letter-spacing:2px;backdrop-filter:blur(8px);box-shadow:0 2px 12px rgba(0,0,0,0.4)">KOD</button>
+
 
 <div id="code-modal" onclick="if(event.target===this)this.style.display='none'" style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);align-items:center;justify-content:center">
   <div style="background:linear-gradient(160deg,#1a1a2e,#0d0d1a);border:2px solid rgba(255,215,0,0.25);border-radius:28px;width:min(90vw,300px);overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.7)">
