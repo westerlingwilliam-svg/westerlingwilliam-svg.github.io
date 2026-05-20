@@ -16,8 +16,8 @@ html{font-size:clamp(14px,1.6vw,22px)}
 html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:white;font-family:var(--font)}
 
 /* ── TOP HUD ── */
-#hud{position:fixed;top:10px;left:50%;transform:translateX(-50%);right:auto;width:calc(100% - 20px);max-width:min(98vw,780px);z-index:200;display:flex;gap:8px;align-items:center;flex-wrap:nowrap}
-.res-pill{background:linear-gradient(135deg,rgba(30,20,5,0.95),rgba(20,15,3,0.98));border:1.5px solid rgba(255,215,0,0.25);border-radius:50px;padding:6px 12px 6px 8px;display:flex;align-items:center;gap:6px;font-size:0.88rem;font-weight:900;min-width:130px;cursor:pointer;transition:.2s;backdrop-filter:blur(12px);box-shadow:0 2px 12px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.06)}
+#hud{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:flex-start;padding:8px;gap:0;pointer-events:none}
+.res-pill-legacy{display:none}
 .res-pill:active{transform:scale(0.94)}
 .res-icon{font-size:1.3rem}
 .res-val{min-width:36px;text-align:right}
@@ -515,9 +515,9 @@ body{background:#1a2e10}
 
 
 /* Resource bar pills — CoC style fill background */
-.res-pill-bar{padding:0!important;overflow:hidden;min-width:140px;position:relative;height:36px;align-items:stretch!important}
-.res-bar-bg{position:absolute;inset:0;width:0%;transition:width .7s ease;border-radius:50px}
-.res-bar-content{position:relative;z-index:1;display:flex;align-items:center;gap:6px;padding:0 10px 0 8px;height:100%;width:100%}
+.res-pill-bar-legacy{display:none}
+
+
 .res-val{font-size:0.85rem;font-weight:900;color:white;text-shadow:0 1px 3px rgba(0,0,0,0.6)}
 .res-max{font-size:0.58rem;color:rgba(255,255,255,0.55);font-weight:600}
 .res-icon{font-size:1.2rem;flex-shrink:0}
@@ -581,34 +581,89 @@ body{background:#1a2e10}
 
 <!-- ── TOP HUD ── -->
 <div id="hud">
-  <div class="res-pill res-pill-bar" title="Riksdaler">
-    <div class="res-bar-bg" id="gold-bar" style="background:linear-gradient(90deg,rgba(200,140,0,0.5),rgba(255,180,0,0.35))"></div>
-    <div class="res-bar-content"><span class="res-icon">🪙</span><span class="res-val" id="gold-val">0</span><span class="res-max" id="gold-max">/1K</span></div>
-  </div>
-  <div class="res-pill res-pill-bar" title="SD-Saft">
-    <div class="res-bar-bg" id="elixir-bar" style="background:linear-gradient(90deg,rgba(150,0,220,0.5),rgba(180,50,255,0.35))"></div>
-    <div class="res-bar-content"><span class="res-icon">🧪</span><span class="res-val" id="elixir-val">0</span><span class="res-max" id="elixir-max">/1K</span></div>
-  </div>
-  <div id="builder-pill" style="background:linear-gradient(135deg,rgba(30,20,5,0.95),rgba(20,15,3,0.98));border:1.5px solid rgba(255,215,0,0.25);border-radius:50px;padding:6px 12px 6px 8px;display:flex;align-items:center;gap:6px;font-size:0.88rem;font-weight:900;min-width:130px;backdrop-filter:blur(12px);box-shadow:0 2px 12px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.06);cursor:pointer" onclick="switchNav('by')" title="Byggare">
-    <span style="font-size:1.2rem">🔨</span>
-    <span id="builder-pill-text" style="color:white;font-size:0.85rem;font-weight:900">2/2</span>
-  </div>
-  <div class="res-pill res-pill-bar" title="Jimmie-Kraft" id="dark-pill">
-    <div class="res-bar-bg" id="dark-bar" style="background:linear-gradient(90deg,rgba(100,0,180,0.5),rgba(140,0,220,0.35))"></div>
-    <div class="res-bar-content"><span class="res-icon">💜</span><span class="res-val" id="dark-val">0</span><span class="res-max">/0</span></div>
-  </div>
-  <div id="jhall-badge">🏛️ JH <span id="jh-level">1</span></div>
-  <div id="train-hud" style="display:none;background:linear-gradient(135deg,rgba(100,0,180,0.7),rgba(60,0,120,0.8));border:1.5px solid rgba(180,80,255,0.4);border-radius:50px;padding:5px 10px;font-size:0.72rem;font-weight:800;color:#dd88ff;gap:5px;align-items:center;cursor:pointer" onclick="switchNav('army')">
-    <span>⚔️</span><span id="train-hud-text">Tränar...</span><div style="background:rgba(255,255,255,0.1);border-radius:50px;height:4px;width:60px;overflow:hidden;margin-left:2px"><div id="train-hud-bar" style="height:100%;background:#cc44ff;border-radius:50px;transition:width .5s"></div></div>
-  </div>
-  <div class="res-pill" title="Gems" style="background:rgba(0,100,0,0.6)"><div class="res-icon">💎</div><div><div class="res-val" id="gem-val">50</div></div></div>
-  <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
-    <a href="games.html" style="background:rgba(0,0,0,0.6);border:1.5px solid rgba(255,255,255,0.2);border-radius:50px;padding:7px 14px;font-size:0.75rem;font-weight:900;color:white;text-decoration:none;display:flex;align-items:center;gap:5px;white-space:nowrap">🏠 Meny</a>
-    <button onclick="document.getElementById('sett').style.display='flex'" style="background:rgba(0,0,0,0.6);border:1.5px solid rgba(255,255,255,0.2);border-radius:50%;width:36px;height:36px;font-size:1.1rem;cursor:pointer;color:white;display:flex;align-items:center;justify-content:center;flex-shrink:0">⚙️</button>
-    <button onclick="document.getElementById('code-modal').style.display='flex'" style="background:rgba(0,0,0,0.6);border:1.5px solid rgba(255,215,0,0.25);border-radius:50px;height:36px;padding:0 12px;font-size:0.65rem;font-weight:900;letter-spacing:1px;cursor:pointer;color:rgba(255,200,80,0.7);display:flex;align-items:center;flex-shrink:0">🔐</button>
-  </div>
-</div>
 
+  <!-- LEFT buttons -->
+  <div style="pointer-events:all;display:flex;flex-direction:column;gap:5px;flex-shrink:0">
+    <a href="games.html" style="width:38px;height:38px;background:rgba(0,0,0,0.82);border:2px solid rgba(255,255,255,0.18);border-radius:10px;font-size:1.1rem;color:white;text-decoration:none;display:flex;align-items:center;justify-content:center">🏠</a>
+    <button onclick="document.getElementById('sett').style.display='flex'" style="width:38px;height:38px;background:rgba(0,0,0,0.82);border:2px solid rgba(255,255,255,0.18);border-radius:10px;font-size:1.1rem;cursor:pointer;color:white;display:flex;align-items:center;justify-content:center">⚙️</button>
+    <button onclick="document.getElementById('code-modal').style.display='flex'" style="width:38px;height:38px;background:rgba(0,0,0,0.82);border:2px solid rgba(255,215,0,0.3);border-radius:10px;font-size:1rem;cursor:pointer;color:#FFD700;display:flex;align-items:center;justify-content:center">🔐</button>
+  </div>
+
+  <!-- CENTER: JH + builders -->
+  <div style="pointer-events:all;position:absolute;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;top:8px">
+    <div style="background:rgba(12,7,1,0.95);border:2px solid rgba(210,155,0,0.65);border-radius:12px;padding:5px 14px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(0,0,0,0.6)">
+      <span style="font-size:1.2rem">🏛️</span>
+      <div>
+        <div style="font-size:0.5rem;color:rgba(255,200,60,0.5);font-weight:700;letter-spacing:1.5px">JIMMIE HALL</div>
+        <div style="font-family:'Cinzel',serif;color:#FFD700;font-size:1rem;font-weight:900">Lv <span id="jh-level">1</span></div>
+      </div>
+    </div>
+    <div id="builder-pill" onclick="switchNav('by')" style="pointer-events:all;cursor:pointer;background:rgba(0,0,0,0.82);border:2px solid rgba(255,160,0,0.3);border-radius:10px;padding:4px 12px;display:flex;align-items:center;gap:5px">
+      <span>🔨</span>
+      <span id="builder-pill-text" style="color:#ffcc44;font-size:0.82rem;font-weight:900">2/2</span>
+      <span style="color:rgba(255,255,255,0.3);font-size:0.62rem">byggare</span>
+    </div>
+  </div>
+
+  <!-- RIGHT: resources, fixed 185px wide -->
+  <div style="pointer-events:all;margin-left:auto;display:flex;flex-direction:column;gap:4px;width:185px;flex-shrink:0">
+
+    <div id="gold-pill" style="position:relative;border:2px solid rgba(230,170,0,0.8);border-radius:14px;padding:7px 10px;display:flex;align-items:center;gap:9px;overflow:hidden;background:rgba(16,8,0,0.98);box-shadow:0 0 20px rgba(210,150,0,0.4),0 5px 16px rgba(0,0,0,0.7),inset 0 1px 0 rgba(255,255,255,0.08),inset 0 -1px 0 rgba(0,0,0,0.3)">
+      <!-- Fill bar -->
+      <div id="gold-pill-bar-fill" style="position:absolute;top:0;left:0;bottom:0;transition:width .6s cubic-bezier(.4,0,.2,1);pointer-events:none;width:0%;overflow:hidden">
+        <div style="position:absolute;inset:0;background:linear-gradient(90deg,#b87800,#ffcc00,#ffe44d)"></div>
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0.28) 0%,transparent 55%)"></div>
+      </div><div style="display:none"></div>
+      <!-- Sheen overlay -->
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0.06) 0%,transparent 50%,rgba(0,0,0,0.12) 100%);pointer-events:none;border-radius:12px"></div>
+      <!-- Icon orb -->
+      <div style="position:relative;width:32px;height:32px;background:radial-gradient(circle at 30% 25%,#fff5b0,#ffcc00,#886600);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.9rem;box-shadow:0 0 12px rgba(255,210,0,0.7),0 3px 8px rgba(0,0,0,0.6),inset 0 1px 2px rgba(255,255,255,0.3)">🪙</div>
+      <!-- Values -->
+      <div style="position:relative;flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:4px">
+        <span id="gold-val" style="font-size:1rem;font-weight:900;color:#fff8c0;font-family:'Cinzel',serif;letter-spacing:.5px;text-shadow:0 2px 0 rgba(0,0,0,0.9),0 0 12px rgba(255,210,0,0.7),1px 1px 3px rgba(0,0,0,1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-text-stroke:0.3px rgba(200,120,0,0.5)">0</span>
+        <span style="font-size:0.58rem;color:rgba(255,200,60,0.45);font-weight:700;white-space:nowrap;text-align:right;flex-shrink:0">/<span id="gold-max">1K</span></span>
+      </div>
+    </div>
+
+    <div id="elixir-pill" style="position:relative;border:2px solid rgba(200,70,255,0.8);border-radius:14px;padding:7px 10px;display:flex;align-items:center;gap:9px;overflow:hidden;background:rgba(10,1,18,0.98);box-shadow:0 0 20px rgba(170,50,230,0.4),0 5px 16px rgba(0,0,0,0.7),inset 0 1px 0 rgba(255,255,255,0.08),inset 0 -1px 0 rgba(0,0,0,0.3)">
+      <!-- Fill bar -->
+      <div id="elixir-pill-bar-fill" style="position:absolute;top:0;left:0;bottom:0;background:linear-gradient(180deg,#ee88ff 0%,#aa00dd 40%,#7700aa 100%);box-shadow:inset 0 1px 0 rgba(255,200,255,0.5),inset 0 -1px 0 rgba(0,0,0,0.3);transition:width .6s cubic-bezier(.4,0,.2,1);pointer-events:none;width:0%"></div>
+      <!-- Sheen overlay -->
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0.06) 0%,transparent 50%,rgba(0,0,0,0.12) 100%);pointer-events:none;border-radius:12px"></div>
+      <!-- Icon orb -->
+      <div style="position:relative;width:32px;height:32px;background:radial-gradient(circle at 30% 25%,#ffccff,#cc44ee,#550088);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.9rem;box-shadow:0 0 12px rgba(200,60,255,0.7),0 3px 8px rgba(0,0,0,0.6),inset 0 1px 2px rgba(255,255,255,0.3)">🧪</div>
+      <!-- Values -->
+      <div style="position:relative;flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:4px">
+        <span id="elixir-val" style="font-size:1rem;font-weight:900;color:#fce0ff;font-family:'Cinzel',serif;letter-spacing:.5px;text-shadow:0 2px 0 rgba(0,0,0,0.9),0 0 12px rgba(200,60,255,0.7),1px 1px 3px rgba(0,0,0,1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-text-stroke:0.3px rgba(140,0,200,0.5)">0</span>
+        <span style="font-size:0.58rem;color:rgba(190,80,255,0.45);font-weight:700;white-space:nowrap;text-align:right;flex-shrink:0">/<span id="elixir-max">1K</span></span>
+      </div>
+    </div>
+
+    <div id="dark-pill" style="position:relative;border:2px solid rgba(130,50,200,0.8);border-radius:14px;padding:7px 10px;display:flex;align-items:center;gap:9px;overflow:hidden;background:rgba(3,0,6,0.98);box-shadow:0 0 20px rgba(110,30,180,0.35),0 5px 16px rgba(0,0,0,0.7),inset 0 1px 0 rgba(255,255,255,0.08),inset 0 -1px 0 rgba(0,0,0,0.3)">
+      <!-- Fill bar -->
+      <div id="dark-pill-bar-fill" style="position:absolute;top:0;left:0;bottom:0;background:linear-gradient(180deg,#9944cc 0%,#5500aa 40%,#330077 100%);box-shadow:inset 0 1px 0 rgba(200,140,255,0.4),inset 0 -1px 0 rgba(0,0,0,0.4);transition:width .6s cubic-bezier(.4,0,.2,1);pointer-events:none;width:0%"></div>
+      <!-- Sheen overlay -->
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0.06) 0%,transparent 50%,rgba(0,0,0,0.12) 100%);pointer-events:none;border-radius:12px"></div>
+      <!-- Icon orb -->
+      <div style="position:relative;width:32px;height:32px;background:radial-gradient(circle at 30% 25%,#cc88ff,#7700bb,#200044);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.9rem;box-shadow:0 0 12px rgba(130,40,210,0.6),0 3px 8px rgba(0,0,0,0.6),inset 0 1px 2px rgba(255,255,255,0.3)">💜</div>
+      <!-- Values -->
+      <div style="position:relative;flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:4px">
+        <span id="dark-val" style="font-size:1rem;font-weight:900;color:#e8ccff;font-family:'Cinzel',serif;letter-spacing:.5px;text-shadow:0 2px 0 rgba(0,0,0,0.9),0 0 12px rgba(140,50,220,0.6),1px 1px 3px rgba(0,0,0,1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-text-stroke:0.3px rgba(100,20,180,0.5)">0</span>
+        <span style="font-size:0.58rem;color:rgba(140,60,200,0.45);font-weight:700;white-space:nowrap;text-align:right;flex-shrink:0">/<span id="dark-max">1K</span></span>
+      </div>
+    </div>
+
+    <div style="background:rgba(1,18,3,0.97);border:2px solid rgba(40,150,40,0.55);border-radius:10px;padding:5px 8px;display:flex;align-items:center;gap:7px">
+      <div style="width:28px;height:28px;background:linear-gradient(135deg,#88ff88,#22aa22,#104410);clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);flex-shrink:0"></div>
+      <div>
+        <div style="font-size:0.5rem;color:rgba(80,200,80,0.45);font-weight:700;letter-spacing:1px">GEMS</div>
+        <div id="gem-val" style="font-size:0.88rem;font-weight:900;color:#66ee66;font-family:'Cinzel',serif">50</div>
+      </div>
+    </div>
+
+  </div>
+  <div id="train-hud" style="display:none"></div>
+</div>
 <!-- ── GAME CANVAS ── -->
 <div id="game-wrap">
   <canvas id="base-canvas"></canvas>
@@ -1130,6 +1185,21 @@ function initGrass(){
 }
 initGrass();
 
+function drawTree(ctx,x,y,r){
+  // Trunk
+  ctx.fillStyle='#6b4226';ctx.fillRect(x-r*0.15,y,r*0.3,r*0.6);
+  // Shadow
+  ctx.fillStyle='rgba(0,0,0,0.2)';ctx.beginPath();ctx.ellipse(x+r*0.15,y+r*0.55,r*0.35,r*0.1,0,0,Math.PI*2);ctx.fill();
+  // Canopy layers
+  const cols=['#2d7a12','#3a9018','#4aa020'];
+  cols.forEach((col,i)=>{
+    ctx.fillStyle=col;ctx.beginPath();
+    ctx.arc(x-(i*r*0.08),y-(i*r*0.25)-r*0.1,r*(0.55-i*0.08),0,Math.PI*2);ctx.fill();
+  });
+  // Highlight
+  ctx.fillStyle='rgba(255,255,255,0.12)';ctx.beginPath();ctx.arc(x-r*0.12,y-r*0.35,r*0.22,0,Math.PI*2);ctx.fill();
+}
+
 function drawBase(){
   ctx.clearRect(0,0,W,H);
 
@@ -1184,6 +1254,28 @@ function drawBase(){
   drawCollectParticles();
   // Build mode highlights
   drawBuildSpots();
+
+  // ── DECORATIVE TREES ─────────────────────────────────────────────
+  const treeSeed=42;
+  const mapW2=GRID*CELL, mapH2=GRID*CELL;
+  // Place trees around the edges using deterministic positions
+  const treePositions=[];
+  for(let i=0;i<60;i++){
+    const ang=i*(Math.PI*2/60);
+    const rad=GRID*CELL*0.52+((i*7919)%1)*CELL*3;
+    const tx=camX+mapW2/2+Math.cos(ang)*rad;
+    const ty=camY+mapH2/2+Math.sin(ang)*rad;
+    treePositions.push([tx,ty,CELL*(0.5+((i*1301)%100)/200)]);
+  }
+  // Also scatter some inside corners
+  [[1,1],[1,GRID-2],[GRID-2,1],[GRID-2,GRID-2],[1,GRID/2],[GRID-2,GRID/2],[GRID/2,1],[GRID/2,GRID-2]].forEach(([gx,gy])=>{
+    treePositions.push([gx*CELL,gy*CELL,CELL*0.6]);
+  });
+  treePositions.forEach(([tx,ty,tr])=>{
+    const sx3=tx, sy3=ty;
+    if(sx3<-tr*2||sx3>W+tr||sy3<-tr*2||sy3>H+tr)return;
+    drawTree(ctx,sx3,sy3,tr);
+  });
 
   // ── SECOND PASS: level badges + collect icons always on top ─────
   G.buildings.forEach(b=>{
@@ -1297,49 +1389,39 @@ function drawBuilding(b){
   const bw=s*CELL,bh=s*CELL;
   const isSelected=selectedBuilding&&selectedBuilding.id===b.id;
 
-  // ── DEPTH SYSTEM ─────────────────────────────────────────────────
-  // 1. Soft ground shadow (offset south-east for sun from top-left)
-  const shadowS=b.type==='mur'?0.32:bt.size>=3?0.48:0.42;
-  ctx.fillStyle='rgba(0,0,0,0.22)';
-  ctx.beginPath();ctx.ellipse(sx+bw*0.55,sy+bh*0.94,bw*shadowS,bh*0.1,0,0,Math.PI*2);ctx.fill();
-  // 2. Ambient occlusion — darker where building meets ground
-  const aoG=ctx.createLinearGradient(sx,sy+bh*0.75,sx,sy+bh);
-  aoG.addColorStop(0,'transparent');aoG.addColorStop(1,'rgba(0,0,0,0.18)');
-  ctx.fillStyle=aoG;ctx.fillRect(sx,sy+bh*0.75,bw,bh*0.25);
+  // ── CoC-STYLE ISOMETRIC DEPTH ────────────────────────────────────
+  // 1. Large soft shadow offset south-east
+  const shadowS=b.type==='mur'?0.28:bt.size>=3?0.52:0.44;
+  ctx.fillStyle='rgba(0,0,0,0.35)';
+  ctx.beginPath();ctx.ellipse(sx+bw*0.6,sy+bh*0.96,bw*shadowS,bh*0.1,0,0,Math.PI*2);ctx.fill();
 
   // Draw building
   drawBuildingGraphic(ctx,b.type,b.lv,sx,sy,bw,bh);
 
-  // 3. Right-side depth panel (east wall, slightly darker than front)
-  if(b.type!=='mur'&&b.type!=='bomb_falla'){
-    const depthSize=Math.max(3,CELL*0.13);
-    const wallG=ctx.createLinearGradient(sx+bw,sy,sx+bw+depthSize,sy+bh);
-    wallG.addColorStop(0,'rgba(0,0,0,0.28)');wallG.addColorStop(1,'rgba(0,0,0,0.12)');
-    ctx.fillStyle=wallG;
-    ctx.beginPath();
-    ctx.moveTo(sx+bw,sy+CELL*0.15);
-    ctx.lineTo(sx+bw+depthSize,sy+CELL*0.08);
-    ctx.lineTo(sx+bw+depthSize,sy+bh+CELL*0.06);
-    ctx.lineTo(sx+bw,sy+bh);
-    ctx.closePath();ctx.fill();
-    // Bottom depth panel (south wall)
-    const botG=ctx.createLinearGradient(sx,sy+bh,sx,sy+bh+depthSize);
-    botG.addColorStop(0,'rgba(0,0,0,0.25)');botG.addColorStop(1,'rgba(0,0,0,0.05)');
-    ctx.fillStyle=botG;
-    ctx.beginPath();
-    ctx.moveTo(sx,sy+bh);
-    ctx.lineTo(sx+bw,sy+bh);
-    ctx.lineTo(sx+bw+depthSize,sy+bh+CELL*0.06);
-    ctx.lineTo(sx+depthSize,sy+bh+CELL*0.06);
-    ctx.closePath();ctx.fill();
-  }
-
-  // 4. Top-left highlight — light coming from top-left
+  // 2. Right depth wall (thicker, more CoC-like)
   if(b.type!=='mur'){
-    const hlG=ctx.createLinearGradient(sx,sy,sx+bw*0.5,sy+bh*0.5);
-    hlG.addColorStop(0,'rgba(255,255,255,0.07)');hlG.addColorStop(1,'transparent');
-    ctx.fillStyle=hlG;ctx.fillRect(sx,sy,bw,bh);
+    const dw=Math.max(4,CELL*0.18);
+    // Right wall — dark
+    const rwG=ctx.createLinearGradient(sx+bw,sy,sx+bw+dw,sy+bh);
+    rwG.addColorStop(0,'rgba(0,0,0,0.45)');rwG.addColorStop(1,'rgba(0,0,0,0.2)');
+    ctx.fillStyle=rwG;
+    ctx.beginPath();ctx.moveTo(sx+bw,sy);ctx.lineTo(sx+bw+dw,sy+dw*0.4);
+    ctx.lineTo(sx+bw+dw,sy+bh+dw*0.4);ctx.lineTo(sx+bw,sy+bh);ctx.fill();
+    // Bottom wall — slightly less dark
+    const bwG=ctx.createLinearGradient(sx,sy+bh,sx+bw,sy+bh+dw);
+    bwG.addColorStop(0,'rgba(0,0,0,0.38)');bwG.addColorStop(1,'rgba(0,0,0,0.08)');
+    ctx.fillStyle=bwG;
+    ctx.beginPath();ctx.moveTo(sx,sy+bh);ctx.lineTo(sx+bw,sy+bh);
+    ctx.lineTo(sx+bw+dw,sy+bh+dw*0.4);ctx.lineTo(sx+dw,sy+bh+dw*0.4);ctx.fill();
+    // Bright top-left edge (sun from top-left)
+    ctx.fillStyle='rgba(255,255,255,0.12)';
+    ctx.fillRect(sx,sy,bw,bh*0.06);
+    ctx.fillRect(sx,sy,bw*0.04,bh);
   }
+  // 3. Ground ambient occlusion
+  const aoG=ctx.createLinearGradient(sx,sy+bh*0.7,sx,sy+bh);
+  aoG.addColorStop(0,'transparent');aoG.addColorStop(1,'rgba(0,0,0,0.22)');
+  ctx.fillStyle=aoG;ctx.fillRect(sx+1,sy+bh*0.7,bw-2,bh*0.3);
 
   // Selection ring (pulsing)
   if(isSelected){
@@ -2204,15 +2286,15 @@ function updateHUD(){
   const ePct=Math.min(100,G.elixir/Math.max(1,G.elixir_cap)*100);
   const dPct=Math.min(100,G.dark/Math.max(1,G.dark_cap||1)*100);
   const dmx=document.getElementById('dark-max');if(dmx)dmx.textContent='/'+fmt(G.dark_cap);
-  const gb=document.getElementById('gold-bar');if(gb)gb.style.width=gPct+'%';
-  const eb=document.getElementById('elixir-bar');if(eb)eb.style.width=ePct+'%';
-  const db=document.getElementById('dark-bar');if(db)db.style.width=dPct+'%';
+  const gb=document.getElementById('gold-pill-bar-fill');if(gb)gb.style.width=gPct+'%';
+  const eb=document.getElementById('elixir-pill-bar-fill');if(eb)eb.style.width=ePct+'%';
+  const db=document.getElementById('dark-pill-bar-fill');if(db)db.style.width=dPct+'%';
   // Hide dark pill if no dark elixir capacity yet
   const dp=document.getElementById('dark-pill');
   if(dp){
-    dp.style.display=(G.dark_cap>0||G.jh_level>=5)?'flex':'none';
+    dp.style.display=(G.dark_cap>0||G.jh_level>=5)?'flex':'none';dp.style.flexDirection='flex';
     const dv=document.getElementById('dark-val');
-    const dpb=document.getElementById('dark-bar-fill');
+    const dpb=document.getElementById('dark-pill-bar-fill');
     const dmxEl=document.getElementById('dark-max');
     if(dv)dv.textContent=fmt(Math.floor(G.dark||0));
     if(dmxEl)dmxEl.textContent='/'+fmt(G.dark_cap||0);
