@@ -605,8 +605,8 @@ body{background:#1a2e10}
     </div>
   </div>
 
-  <!-- RIGHT: resources, fixed 185px wide -->
-  <div style="pointer-events:all;margin-left:auto;display:flex;flex-direction:column;gap:4px;width:185px;flex-shrink:0">
+  <!-- RIGHT: resources, scales with screen -->
+  <div style="pointer-events:all;margin-left:auto;display:flex;flex-direction:column;gap:4px;width:clamp(160px,22vw,260px);flex-shrink:0">
 
     <div id="gold-pill" style="position:relative;border:2px solid rgba(230,170,0,0.8);border-radius:14px;padding:7px 10px;display:flex;align-items:center;gap:9px;overflow:hidden;background:rgba(16,8,0,0.98);box-shadow:0 0 20px rgba(210,150,0,0.4),0 5px 16px rgba(0,0,0,0.7),inset 0 1px 0 rgba(255,255,255,0.08),inset 0 -1px 0 rgba(0,0,0,0.3)">
       <!-- Fill bar -->
@@ -617,11 +617,11 @@ body{background:#1a2e10}
       <!-- Sheen overlay -->
       <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0.06) 0%,transparent 50%,rgba(0,0,0,0.12) 100%);pointer-events:none;border-radius:12px"></div>
       <!-- Icon orb -->
-      <div style="position:relative;width:32px;height:32px;background:radial-gradient(circle at 30% 25%,#fff5b0,#ffcc00,#886600);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.9rem;box-shadow:0 0 12px rgba(255,210,0,0.7),0 3px 8px rgba(0,0,0,0.6),inset 0 1px 2px rgba(255,255,255,0.3)">🪙</div>
+      <div style="position:relative;width:clamp(28px,4vw,40px);height:clamp(28px,4vw,40px);background:radial-gradient(circle at 30% 25%,#fff5b0,#ffcc00,#886600);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.9rem;box-shadow:0 0 12px rgba(255,210,0,0.7),0 3px 8px rgba(0,0,0,0.6),inset 0 1px 2px rgba(255,255,255,0.3)">🪙</div>
       <!-- Values -->
       <div style="position:relative;flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:4px">
         <span id="gold-val" style="font-size:1rem;font-weight:900;color:#fff8c0;font-family:'Cinzel',serif;letter-spacing:.5px;text-shadow:0 2px 0 rgba(0,0,0,0.9),0 0 12px rgba(255,210,0,0.7),1px 1px 3px rgba(0,0,0,1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-text-stroke:0.3px rgba(200,120,0,0.5)">0</span>
-        <span style="font-size:0.58rem;color:rgba(255,200,60,0.45);font-weight:700;white-space:nowrap;text-align:right;flex-shrink:0">/<span id="gold-max">1K</span></span>
+        <span style="font-size:clamp(0.52rem,0.9vw,0.7rem);color:rgba(255,200,60,0.55);font-weight:700;white-space:nowrap;text-align:right;flex-shrink:0">/<span id="gold-max">1K</span></span>
       </div>
     </div>
 
@@ -631,11 +631,11 @@ body{background:#1a2e10}
       <!-- Sheen overlay -->
       <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0.06) 0%,transparent 50%,rgba(0,0,0,0.12) 100%);pointer-events:none;border-radius:12px"></div>
       <!-- Icon orb -->
-      <div style="position:relative;width:32px;height:32px;background:radial-gradient(circle at 30% 25%,#ffccff,#cc44ee,#550088);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.9rem;box-shadow:0 0 12px rgba(200,60,255,0.7),0 3px 8px rgba(0,0,0,0.6),inset 0 1px 2px rgba(255,255,255,0.3)">🧪</div>
+      <div style="position:relative;width:clamp(28px,4vw,40px);height:clamp(28px,4vw,40px);background:radial-gradient(circle at 30% 25%,#ffccff,#cc44ee,#550088);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.9rem;box-shadow:0 0 12px rgba(200,60,255,0.7),0 3px 8px rgba(0,0,0,0.6),inset 0 1px 2px rgba(255,255,255,0.3)">🧪</div>
       <!-- Values -->
       <div style="position:relative;flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:4px">
         <span id="elixir-val" style="font-size:1rem;font-weight:900;color:#fce0ff;font-family:'Cinzel',serif;letter-spacing:.5px;text-shadow:0 2px 0 rgba(0,0,0,0.9),0 0 12px rgba(200,60,255,0.7),1px 1px 3px rgba(0,0,0,1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-text-stroke:0.3px rgba(140,0,200,0.5)">0</span>
-        <span style="font-size:0.58rem;color:rgba(190,80,255,0.45);font-weight:700;white-space:nowrap;text-align:right;flex-shrink:0">/<span id="elixir-max">1K</span></span>
+        <span style="font-size:clamp(0.52rem,0.9vw,0.7rem);color:rgba(190,80,255,0.55);font-weight:700;white-space:nowrap;text-align:right;flex-shrink:0">/<span id="elixir-max">1K</span></span>
       </div>
     </div>
 
@@ -645,11 +645,11 @@ body{background:#1a2e10}
       <!-- Sheen overlay -->
       <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0.06) 0%,transparent 50%,rgba(0,0,0,0.12) 100%);pointer-events:none;border-radius:12px"></div>
       <!-- Icon orb -->
-      <div style="position:relative;width:32px;height:32px;background:radial-gradient(circle at 30% 25%,#cc88ff,#7700bb,#200044);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.9rem;box-shadow:0 0 12px rgba(130,40,210,0.6),0 3px 8px rgba(0,0,0,0.6),inset 0 1px 2px rgba(255,255,255,0.3)">💜</div>
+      <div style="position:relative;width:clamp(28px,4vw,40px);height:clamp(28px,4vw,40px);background:radial-gradient(circle at 30% 25%,#cc88ff,#7700bb,#200044);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.9rem;box-shadow:0 0 12px rgba(130,40,210,0.6),0 3px 8px rgba(0,0,0,0.6),inset 0 1px 2px rgba(255,255,255,0.3)">💜</div>
       <!-- Values -->
       <div style="position:relative;flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:4px">
         <span id="dark-val" style="font-size:1rem;font-weight:900;color:#e8ccff;font-family:'Cinzel',serif;letter-spacing:.5px;text-shadow:0 2px 0 rgba(0,0,0,0.9),0 0 12px rgba(140,50,220,0.6),1px 1px 3px rgba(0,0,0,1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-text-stroke:0.3px rgba(100,20,180,0.5)">0</span>
-        <span style="font-size:0.58rem;color:rgba(140,60,200,0.45);font-weight:700;white-space:nowrap;text-align:right;flex-shrink:0">/<span id="dark-max">1K</span></span>
+        <span style="font-size:clamp(0.52rem,0.9vw,0.7rem);color:rgba(140,60,200,0.55);font-weight:700;white-space:nowrap;text-align:right;flex-shrink:0">/<span id="dark-max">1K</span></span>
       </div>
     </div>
 
@@ -1185,21 +1185,6 @@ function initGrass(){
 }
 initGrass();
 
-function drawTree(ctx,x,y,r){
-  // Trunk
-  ctx.fillStyle='#6b4226';ctx.fillRect(x-r*0.15,y,r*0.3,r*0.6);
-  // Shadow
-  ctx.fillStyle='rgba(0,0,0,0.2)';ctx.beginPath();ctx.ellipse(x+r*0.15,y+r*0.55,r*0.35,r*0.1,0,0,Math.PI*2);ctx.fill();
-  // Canopy layers
-  const cols=['#2d7a12','#3a9018','#4aa020'];
-  cols.forEach((col,i)=>{
-    ctx.fillStyle=col;ctx.beginPath();
-    ctx.arc(x-(i*r*0.08),y-(i*r*0.25)-r*0.1,r*(0.55-i*0.08),0,Math.PI*2);ctx.fill();
-  });
-  // Highlight
-  ctx.fillStyle='rgba(255,255,255,0.12)';ctx.beginPath();ctx.arc(x-r*0.12,y-r*0.35,r*0.22,0,Math.PI*2);ctx.fill();
-}
-
 function drawBase(){
   ctx.clearRect(0,0,W,H);
 
@@ -1254,28 +1239,6 @@ function drawBase(){
   drawCollectParticles();
   // Build mode highlights
   drawBuildSpots();
-
-  // ── DECORATIVE TREES ─────────────────────────────────────────────
-  const treeSeed=42;
-  const mapW2=GRID*CELL, mapH2=GRID*CELL;
-  // Place trees around the edges using deterministic positions
-  const treePositions=[];
-  for(let i=0;i<60;i++){
-    const ang=i*(Math.PI*2/60);
-    const rad=GRID*CELL*0.52+((i*7919)%1)*CELL*3;
-    const tx=camX+mapW2/2+Math.cos(ang)*rad;
-    const ty=camY+mapH2/2+Math.sin(ang)*rad;
-    treePositions.push([tx,ty,CELL*(0.5+((i*1301)%100)/200)]);
-  }
-  // Also scatter some inside corners
-  [[1,1],[1,GRID-2],[GRID-2,1],[GRID-2,GRID-2],[1,GRID/2],[GRID-2,GRID/2],[GRID/2,1],[GRID/2,GRID-2]].forEach(([gx,gy])=>{
-    treePositions.push([gx*CELL,gy*CELL,CELL*0.6]);
-  });
-  treePositions.forEach(([tx,ty,tr])=>{
-    const sx3=tx, sy3=ty;
-    if(sx3<-tr*2||sx3>W+tr||sy3<-tr*2||sy3>H+tr)return;
-    drawTree(ctx,sx3,sy3,tr);
-  });
 
   // ── SECOND PASS: level badges + collect icons always on top ─────
   G.buildings.forEach(b=>{
