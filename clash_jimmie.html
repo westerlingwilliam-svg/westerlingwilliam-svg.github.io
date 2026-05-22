@@ -556,6 +556,7 @@ body{background:#1a2e10}
 #upg-gem-btn.disabled{background:rgba(100,100,100,0.3);box-shadow:none;cursor:not-allowed;color:rgba(255,255,255,0.4)}
 #upg-close-btn{width:100%;padding:11px;border:none;border-radius:50px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);font-family:'Nunito',sans-serif;font-size:0.85rem;font-weight:800;cursor:pointer}
 
+@keyframes heroGlow{0%,100%{box-shadow:0 0 0 2px rgba(255,215,0,0.3),0 0 10px rgba(255,215,0,0.15)}50%{box-shadow:0 0 0 3px rgba(255,215,0,0.7),0 0 18px rgba(255,215,0,0.4)}}
 </style>
 </head>
 <body>
@@ -678,7 +679,7 @@ body{background:#1a2e10}
       <button class="atk-btn red" onclick="surrenderAttack()">🏳️ Ge upp</button>
       <button class="atk-btn" id="speed-btn" onclick="toggleSpeed()" style="min-width:56px">▶️ 1×</button>
       <button class="atk-btn" id="spell-btn" onclick="deploySpell()">⚡ Rage</button>
-      <button class="atk-btn green" id="hero-attack-btn" onclick="deployHero()">👑 Jimmie!</button>
+      <!-- Heroes shown in side panel -->
     </div>
   </div>
 </div>
@@ -980,33 +981,33 @@ const JH_DATA=[
 const BUILDING_TYPES={
   'jimmie_hall':{unlockJH:1,name:'Jimmie Hall',icon:'🏛️',desc:'Hjärtat i byn. Uppgradera för att låsa upp fler byggnader.',size:4,maxLv:8,costGold:[0,1000,5000,20000,75000,200000,600000,1500000],costElixir:[0,0,0,0,0,0,0,0],buildTime:[0,60,300,1200,3600,7200,14400,28800],hp:[1000,1500,2200,3100,4200,5500,7200,9000],limit:1,category:'special',
    stats:lv=>`HP: ${[1000,1500,2200,3100,4200,5500,7200,9000][lv-1]}`},
-  'kanon':{unlockJH:1,name:'Kanon',icon:'💣',desc:'Kraftfullt försvar. Siktar på marktrupper.',size:2,maxLv:8,costGold:[250,500,1000,2000,4000,8000,15000,30000],buildTime:[5,60,120,300,600,1200,3600,7200],hp:[400,450,500,570,650,750,870,1000],dps:[9,11,13,15,17,20,24,28],limitByJH:[1,1,2,2,3,3,3,3],category:'defense',
+  'kanon':{unlockJH:1,name:'Kanon',icon:'💣',desc:'Kraftfullt försvar. Siktar på marktrupper.',size:2,maxLv:8,costGold:[250, 500, 1800, 6500, 23000, 84000, 280000, 1000000],buildTime:[5,60,240,600,1800,5400,14400,36000],hp:[400,450,500,570,650,750,870,1000],dps:[9,11,13,15,17,20,24,28],limitByJH:[1,1,2,2,3,3,3,3],category:'defense',
    stats:lv=>`DPS: ${[9,11,13,15,17,20,24,28][lv-1]} | HP: ${[400,450,500,570,650,750,870,1000][lv-1]}`},
-  'pilbage_torn':{unlockJH:2,name:'Pilbåge-Torn',icon:'🏹',desc:'Träffar både mark- och lufttrupper.',size:2,maxLv:8,costGold:[300,600,1200,2400,4800,9600,19200,38400],buildTime:[5,90,180,360,720,1440,4320,8640],hp:[380,420,480,560,650,760,890,1050],dps:[11,15,19,25,30,35,42,50],limitByJH:[0,1,1,2,2,3,3,3],category:'defense',
+  'pilbage_torn':{unlockJH:2,name:'Pilbåge-Torn',icon:'🏹',desc:'Träffar både mark- och lufttrupper.',size:2,maxLv:8,costGold:[300, 600, 2200, 7800, 28000, 100000, 360000, 1300000],buildTime:[5,90,360,900,2700,7200,18000,43200],hp:[380,420,480,560,650,760,890,1050],dps:[11,15,19,25,30,35,42,50],limitByJH:[0,1,1,2,2,3,3,3],category:'defense',
    stats:lv=>`DPS: ${[11,15,19,25,30,35,42,50][lv-1]} | HP: ${[380,420,480,560,650,760,890,1050][lv-1]}`},
-  'morsare':{unlockJH:3,name:'Mörsare',icon:'🎯',desc:'Splash-skada på marktrupper. Låg räckvidd men kraftfull.',size:2,maxLv:8,costGold:[400,800,1600,3200,6400,12800,25600,51200],buildTime:[60,120,240,480,960,1920,5760,11520],hp:[400,450,500,550,600,700,800,900],dps:[4,5,6,7,8.5,10,12,14],splash:true,limitByJH:[0,0,1,1,2,2,2,2],category:'defense',
+  'morsare':{unlockJH:3,name:'Mörsare',icon:'🎯',desc:'Splash-skada på marktrupper. Låg räckvidd men kraftfull.',size:2,maxLv:8,costGold:[400, 800, 2900, 10000, 37000, 130000, 480000, 1700000],buildTime:[60,120,480,1200,3600,10800,28800,72000],hp:[400,450,500,550,600,700,800,900],dps:[4,5,6,7,8.5,10,12,14],splash:true,limitByJH:[0,0,1,1,2,2,2,2],category:'defense',
    stats:lv=>`DPS: ${[4,5,6,7,8.5,10,12,14][lv-1]} (Splash!) | HP: ${[400,450,500,550,600,700,800,900][lv-1]}`},
-  'luftforsvar':{unlockJH:3,name:'Luftförsvar',icon:'🚀',desc:'Förstör flygande Jimmie-enheter.',size:2,maxLv:8,costGold:[500,1000,2000,4000,8000,16000,32000,64000],buildTime:[90,180,360,720,1440,2880,8640,17280],hp:[900,950,1000,1050,1100,1150,1200,1300],dps:[80,108,130,160,192,224,280,320],limitByJH:[0,0,1,1,1,2,2,2],category:'defense',
+  'luftforsvar':{unlockJH:3,name:'Luftförsvar',icon:'🚀',desc:'Förstör flygande Jimmie-enheter.',size:2,maxLv:8,costGold:[500, 1000, 3600, 13000, 47000, 170000, 600000, 2200000],buildTime:[90,180,720,2400,7200,21600,57600,144000],hp:[900,950,1000,1050,1100,1150,1200,1300],dps:[80,108,130,160,192,224,280,320],limitByJH:[0,0,1,1,1,2,2,2],category:'defense',
    stats:lv=>`DPS: ${[80,108,130,160,192,224,280,320][lv-1]} (Luft) | HP: ${[900,950,1000,1050,1100,1150,1200,1300][lv-1]}`},
-  'tesla_torn':{unlockJH:5,name:'Tesla-Torn',icon:'⚡',desc:'Gömd tills fienden är nära. Elektrisk skada.',size:2,maxLv:6,costGold:[1000,2000,4000,8000,16000,32000],buildTime:[300,600,1200,2400,4800,9600],hp:[600,700,800,900,1000,1100],dps:[17,21,26,33,41,51],limitByJH:[0,0,0,0,1,1,2,2],category:'defense',unlockJH:5,
+  'tesla_torn':{unlockJH:5,name:'Tesla-Torn',icon:'⚡',desc:'Gömd tills fienden är nära. Elektrisk skada.',size:2,maxLv:6,costGold:[1000, 2000, 7200, 26000, 93000, 340000],buildTime:[300,600,2400,7200,21600,64800],hp:[600,700,800,900,1000,1100],dps:[17,21,26,33,41,51],limitByJH:[0,0,0,0,1,1,2,2],category:'defense',unlockJH:5,
    stats:lv=>`DPS: ${[17,21,26,33,41,51][lv-1]} (Dold) | HP: ${[600,700,800,900,1000,1100][lv-1]}`},
-  'riksdaler_gruva':{unlockJH:1,name:'Riksdaler-Gruva',icon:'⛏️',desc:'Producerar Riksdaler automatiskt.',size:2,maxLv:8,costGold:[150,300,600,1200,2400,4800,9600,19200],buildTime:[5,40,80,160,320,640,1920,3840],goldPerHour:[200,400,600,800,1000,1300,1600,2000],buildingCap:[3000,5000,10000,20000,40000,75000,150000,300000],limitByJH:[1,2,3,4,5,6,6,6],category:'resource',
+  'riksdaler_gruva':{unlockJH:1,name:'Riksdaler-Gruva',icon:'⛏️',desc:'Producerar Riksdaler automatiskt.',size:2,maxLv:8,costGold:[150, 300, 1100, 3900, 14000, 50000, 180000, 650000],buildTime:[5,40,160,600,2400,8640,28800,86400],goldPerHour:[200,400,600,800,1000,1300,1600,2000],buildingCap:[3000,5000,10000,20000,40000,75000,150000,300000],limitByJH:[1,2,3,4,5,6,6,6],category:'resource',
    stats:lv=>`${[120,180,240,360,480,600,780,960][lv-1]} Riksdaler/tim`},
-  'riksdaler_forrad':{unlockJH:1,name:'Riksdaler-Förråd',icon:'💰',desc:'Lagrar Riksdaler.',size:3,maxLv:8,costGold:[200,400,800,1600,3200,6400,12800,25600],buildTime:[5,60,120,240,480,960,2880,5760],capacity:[1500,3000,6000,12000,25000,45000,100000,250000,500000,1000000],limitByJH:[1,1,2,2,2,2,2,3],category:'resource',
+  'riksdaler_forrad':{unlockJH:1,name:'Riksdaler-Förråd',icon:'💰',desc:'Lagrar Riksdaler.',size:3,maxLv:8,costGold:[200, 400, 1400, 5200, 19000, 67000, 240000, 870000],buildTime:[5,60,240,720,2880,10800,36000,108000],capacity:[1500,3000,6000,12000,25000,45000,100000,250000,500000,1000000],limitByJH:[1,1,2,2,2,2,2,3],category:'resource',
    stats:lv=>{const cap=[1500,3000,6000,12000,25000,45000,100000,250000,500000,1000000][Math.max(0,lv-1)];return`Kapacitet: ${cap?cap.toLocaleString():'-'}`}},
-  'saft_samlare':{unlockJH:1,name:'SD-Saft-Samlare',icon:'🧫',desc:'Producerar SD-Saft automatiskt.',size:2,maxLv:8,costElixir:[150,300,600,1200,2400,4800,9600,19200],buildTime:[5,40,80,160,320,640,1920,3840],elixirPerHour:[200,400,600,800,1000,1300,1600,2000],buildingCap:[3000,5000,10000,20000,40000,75000,150000,300000],limitByJH:[1,2,3,4,5,6,6,6],category:'resource',
+  'saft_samlare':{unlockJH:1,name:'SD-Saft-Samlare',icon:'🧫',desc:'Producerar SD-Saft automatiskt.',size:2,maxLv:8,costElixir:[150, 300, 1100, 3900, 14000, 50000, 180000, 650000],buildTime:[5,40,160,600,2400,8640,28800,86400],elixirPerHour:[200,400,600,800,1000,1300,1600,2000],buildingCap:[3000,5000,10000,20000,40000,75000,150000,300000],limitByJH:[1,2,3,4,5,6,6,6],category:'resource',
    stats:lv=>`${[120,180,240,360,480,600,780,960][lv-1]} Saft/tim`},
-  'saft_tank':{unlockJH:1,name:'SD-Saft-Tank',icon:'🫙',desc:'Lagrar SD-Saft.',size:3,maxLv:8,costGold:[200,400,800,1600,3200,6400,12800,25600],buildTime:[5,60,120,240,480,960,2880,5760],capacity:[1500,3000,6000,12000,25000,45000,100000,250000,500000,1000000],limitByJH:[1,1,2,2,2,2,2,3],category:'resource',
+  'saft_tank':{unlockJH:1,name:'SD-Saft-Tank',icon:'🫙',desc:'Lagrar SD-Saft.',size:3,maxLv:8,costGold:[200, 400, 1400, 5200, 19000, 67000, 240000, 870000],buildTime:[5,60,240,720,2880,10800,36000,108000],capacity:[1500,3000,6000,12000,25000,45000,100000,250000,500000,1000000],limitByJH:[1,1,2,2,2,2,2,3],category:'resource',
    stats:lv=>{const cap=[1500,3000,6000,12000,25000,45000,100000,250000,500000,1000000][Math.max(0,lv-1)];return`Kapacitet: ${cap?cap.toLocaleString():'-'}`}},
-  'kasern':{unlockJH:1,name:'Kasern',icon:'⚔️',desc:'Tränar Jimmie-trupper.',size:3,maxLv:8,costElixir:[200,400,800,1600,3200,6400,12800,25600],buildTime:[45,90,180,360,720,1440,4320,8640],trainingBoost:[1,1.1,1.2,1.3,1.5,1.7,2,2.5],limitByJH:[1,1,1,1,1,1,1,1],category:'military',
+  'kasern':{unlockJH:1,name:'Kasern',icon:'⚔️',desc:'Tränar Jimmie-trupper.',size:3,maxLv:8,costElixir:[200, 400, 1400, 5200, 19000, 67000, 240000, 870000],buildTime:[45,90,360,1080,3600,12600,43200,129600],trainingBoost:[1,1.1,1.2,1.3,1.5,1.7,2,2.5],limitByJH:[1,1,1,1,1,1,1,1],category:'military',
    stats:lv=>`Träningsboost: ${[1,1.1,1.2,1.3,1.5,1.7,2,2.5][lv-1]}x`},
-  'laboratorium':{unlockJH:3,name:'Laboratorium',icon:'🔬',desc:'Forskar uppgraderingar för trupper och besvärjelser.',size:3,maxLv:8,costGold:[500,1000,2000,4000,8000,16000,32000,64000],buildTime:[120,240,480,960,1920,3840,11520,23040],limitByJH:[0,0,1,1,1,1,1,1],category:'military',unlockJH:3,
+  'laboratorium':{unlockJH:3,name:'Laboratorium',icon:'🔬',desc:'Forskar uppgraderingar för trupper och besvärjelser.',size:3,maxLv:8,costGold:[500, 1000, 3600, 13000, 47000, 170000, 600000, 2200000],buildTime:[120,240,960,3600,14400,54000,180000,540000],limitByJH:[0,0,1,1,1,1,1,1],category:'military',unlockJH:3,
    stats:_=>`Möjliggör truppforskning`},
-  'arme_lager':{unlockJH:1,name:'Armélager',icon:'🏕️',desc:'Ökar kapaciteten för trupper.',size:3,maxLv:8,costElixir:[150,300,600,1200,2400,4800,9600,19200],buildTime:[5,40,80,160,320,640,1920,3840],capacity:[50,70,90,120,160,200,240,300],limitByJH:[1,1,2,2,3,3,4,4],category:'military',
+  'arme_lager':{unlockJH:1,name:'Armélager',icon:'🏕️',desc:'Ökar kapaciteten för trupper.',size:3,maxLv:8,costElixir:[150, 300, 1100, 3900, 14000, 50000, 180000, 650000],buildTime:[5,40,160,600,2400,8640,28800,86400],capacity:[50,70,90,120,160,200,240,300],limitByJH:[1,1,2,2,3,3,4,4],category:'military',
    stats:lv=>`Armé-kapacitet: ${[20,30,40,60,80,100,120,150][lv-1]}`},
   'dark_bohrare':{unlockJH:7,name:'Jimmie-Kraft Borr',icon:'🖤',desc:'Utvinner Jimmie-Kraft djupt under marken.',size:2,maxLv:6,costGold:[3000,6000,12000,24000,48000,96000],buildTime:[360,720,1440,2880,5760,11520],darkPerHour:[20,30,45,60,80,100,120,140],buildingCap:[200,400,800,1600,3000,5000,8000,12000],limitByJH:[0,0,0,0,1,1,2,2],category:'resource',unlockJH:5,
    stats:lv=>`${[20,40,60,80,100,120][lv-1]} J-Kraft/tim`},
-  'mur':{unlockJH:1,name:'Mur',icon:'🧱',desc:'Blockerar angripare. Uppgradera för starkare murar.',size:1,maxLv:8,costGold:[50,100,300,1000,2000,5000,10000,30000],buildTime:[0,5,10,30,60,120,300,600],hp:[300,500,700,1000,1500,2500,4000,7000],limitByJH:[25,50,75,100,125,150,175,200],category:'wall',
+  'mur':{unlockJH:1,name:'Mur',icon:'🧱',desc:'Blockerar angripare. Uppgradera för starkare murar.',size:1,maxLv:8,costGold:[50, 100, 540, 3200, 12000, 52000, 190000, 1000000],buildTime:[0,5,30,120,360,1440,5400,21600],hp:[300,500,700,1000,1500,2500,4000,7000],limitByJH:[25,50,75,100,125,150,175,200],category:'wall',
    stats:lv=>`HP: ${[300,500,700,1000,1500,2500,4000,7000][lv-1]}`},
   'dark_forrad':{unlockJH:5,name:'Jimmie-Kraft-Tank',icon:'🖤',desc:'Lagrar Jimmie-Kraft.',size:3,maxLv:6,
     costGold:[2000,4000,8000,16000,32000,64000],
@@ -1244,22 +1245,31 @@ function drawBase(){
   // Build mode highlights
   drawBuildSpots();
 
-  // ── SECOND PASS: level badges + collect icons always on top ─────
+  // ── SECOND PASS: badge first, collect icon on top ──────────────
   G.buildings.forEach(b=>{
     if(b.gx===undefined)return;
     const _size=(BUILDING_TYPES[b.type]?.size||1);
     const bw2=_size*CELL,bh2=_size*CELL;
     const sx2=b.gx*CELL+camX,sy2=b.gy*CELL+camY;
     if(sx2+bw2<0||sx2>W||sy2+bh2<0||sy2>H)return;
-    // Level badge
-    if(b.type!=='mur'&&b.lv>0){
-      const lbx=sx2+bw2-4,lby=sy2+5;
-      ctx.fillStyle='rgba(0,0,0,0.85)';ctx.beginPath();ctx.arc(lbx,lby,10,0,Math.PI*2);ctx.fill();
-      ctx.fillStyle=b.lv>=7?'#FFD700':b.lv>=5?'#ff9900':b.lv>=3?'#66ccff':'rgba(255,255,255,0.9)';
-      ctx.font='bold 9px Nunito';ctx.textAlign='center';ctx.textBaseline='middle';
-      ctx.fillText(b.lv,lbx,lby);
+
+    // 1. Level badge (under collect icon)
+    if(b.type!=='mur'&&b.type!=='jimmie_hall'&&b.lv>0){
+      const badgeCX=sx2+bw2/2;
+      const badgeCY=sy2+bh2*0.82;
+      const br=Math.max(9,bw2*0.13);
+      const badgeW=br*2.7;
+      ctx.fillStyle='rgba(0,0,0,0.72)';
+      ctx.beginPath();ctx.roundRect(badgeCX-badgeW/2,badgeCY-br*0.75,badgeW,br*1.5,br*0.75);ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,0.42)';
+      ctx.font=`${Math.max(6,br*0.62)}px Nunito`;ctx.textAlign='left';ctx.textBaseline='middle';
+      ctx.fillText('Lv',badgeCX-badgeW/2+br*0.32,badgeCY);
+      ctx.fillStyle=b.lv>=8?'#FFD700':b.lv>=6?'#ffaa33':b.lv>=4?'#88ddff':'white';
+      ctx.font=`bold ${Math.max(8,br*0.96)}px Nunito`;ctx.textAlign='center';
+      ctx.fillText(b.lv,badgeCX+br*0.32,badgeCY);
     }
-    // Collect icon
+
+    // 2. Collect icon (on top of everything)
     const _bt2=BUILDING_TYPES[b.type];
     const stored2=b.stored||0;
     const minC=_bt2?.darkPerHour?10:30;
@@ -1267,8 +1277,8 @@ function drawBase(){
       const cap2=_bt2.buildingCap?_bt2.buildingCap[Math.min(b.lv-1,_bt2.buildingCap.length-1)]:500;
       const pct2=Math.min(1,stored2/cap2);
       const bob2=Math.sin(Date.now()/600)*5;
-      const ix=sx2+bw2/2,iy=sy2-14+bob2;
-      ctx.fillStyle='rgba(0,0,0,0.2)';ctx.beginPath();ctx.ellipse(ix,sy2-3,12,4,0,0,Math.PI*2);ctx.fill();
+      const ix=sx2+bw2/2, iy=sy2-16+bob2;
+      ctx.fillStyle='rgba(0,0,0,0.18)';ctx.beginPath();ctx.ellipse(ix,sy2-4,11,3.5,0,0,Math.PI*2);ctx.fill();
       const bgCol2=b.storeType==='dark'?'#440066':b.storeType==='elixir'?'#8800cc':'#cc8800';
       const grd2=ctx.createRadialGradient(ix,iy,0,ix,iy,13);
       grd2.addColorStop(0,bgCol2+'ff');grd2.addColorStop(1,bgCol2+'88');
@@ -1279,7 +1289,6 @@ function drawBase(){
       ctx.strokeStyle='rgba(255,255,255,0.9)';ctx.lineWidth=2.5;ctx.stroke();
       ctx.font='16px serif';ctx.textAlign='center';ctx.textBaseline='middle';
       ctx.fillText(b.storeType==='dark'?'💜':b.storeType==='elixir'?'🧪':'🪙',ix,iy);
-      // Amount text
       ctx.font='bold 9px Arial';ctx.fillStyle='white';ctx.textBaseline='top';
       ctx.fillText(fmt(Math.floor(stored2)),ix,iy+15);
     }
@@ -1800,8 +1809,7 @@ function drawBuildingGraphic(ctx,type,lv,sx,sy,bw,bh){
       ctx.fillStyle=ng;ctx.beginPath();ctx.arc(nx,ny+Math.sin(t*2+ni)*2,bw*0.068,0,Math.PI*2);ctx.fill();
     });
     // Lv
-    ctx.fillStyle='rgba(0,0,0,0.5)';ctx.beginPath();ctx.arc(cx,sy+bh*0.09,bw*0.12,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#FFD700';ctx.font=`bold ${bw*0.1}px Arial`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('Lv'+lv,cx,sy+bh*0.09);
+
 
   // ════════════════════════════════════════════════════════════════
   } else if(type==='saft_tank'){
@@ -2033,14 +2041,7 @@ function drawBuildingGraphic(ctx,type,lv,sx,sy,bw,bh){
     ctx.fillText(BUILDING_TYPES[type]?.icon||'🏗️',cx,cy);
   }
 
-  // ── Level badge ───────────────────────────────────────────────
-  if(type!=='mur'&&type!=='jimmie_hall'&&type!=='riksdaler_forrad'){
-    ctx.fillStyle='rgba(0,0,0,0.78)';ctx.beginPath();ctx.arc(sx+bw-5,sy+6,9,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle=lv>=7?'#FFD700':lv>=5?'#ff9900':lv>=3?'#88ccff':'rgba(255,255,255,0.85)';
-    ctx.font=`bold ${Math.max(7,bw*0.15)}px Arial`;ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(lv,sx+bw-5,sy+6);
-    if(lv>=6){ctx.strokeStyle=lv>=8?'rgba(255,215,0,0.7)':lv>=7?'rgba(255,160,0,0.6)':'rgba(100,160,255,0.5)';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(sx+bw-5,sy+6,9,0,Math.PI*2);ctx.stroke();}
-  }
+  // Level badge now drawn in second pass
 }
 
 
@@ -3068,7 +3069,7 @@ function startAttackMode(){
   const firstTroop=Object.keys(atkTroopPool)[0];
   if(firstTroop){setTimeout(()=>selectAtkTroop(firstTroop),100);}
   // Stars check: hero available?
-  document.getElementById('hero-attack-btn').style.display=
+  const _hab=document.getElementById('hero-attack-btn');if(_hab)_hab.style.display=
     G.heroes.jimmie_akesson.lv>0?'block':'none';
   // Start loop
   if(atkRaf)cancelAnimationFrame(atkRaf);
@@ -3285,7 +3286,7 @@ function renderAtkTroopsBar(){
   // Update side panel
   const side=document.getElementById('atk-side-panel');
   if(side){
-    side.innerHTML=Object.entries(atkTroopPool).filter(([_,c])=>c>0).map(([id,cnt])=>{
+    side.innerHTML=Object.entries(atkTroopPool).filter(([_,cnt])=>cnt>0).map(([id,cnt])=>{
       const tt=TROOP_TYPES[id];if(!tt)return'';
       return `<div class="atk-side-troop${selectedAtkTroop===id?' selected':''}" style="pointer-events:all;cursor:pointer" onclick="selectAtkTroop('${id}')">
         <span class="atk-side-icon">${tt.icon||'⚔️'}</span>
@@ -3293,7 +3294,21 @@ function renderAtkTroopsBar(){
       </div>`;
     }).join('');
   }
-  row.innerHTML=Object.entries(atkTroopPool).map(([id,cnt])=>{
+  // Hero cards in bottom row
+  const heroRowHtml=Object.entries(G.heroes).map(([hid,h])=>{
+    const hdef=HERO_TYPES[hid];if(!hdef||h.lv<1)return'';
+    const deployed=atkUnits.some(u=>u.heroId===hid&&u.alive);
+    const isPending=window.pendingHeroDeploy===hid;
+    return `<div class="at-troop${isPending?' selected':''}" onclick="window.pendingHeroDeploy='${hid}';selectedAtkTroop=null;document.querySelectorAll('.at-troop').forEach(t=>t.classList.remove('selected'));this.classList.add('selected');toast('Placera ${hdef.name} på slagfältet! 👑')"
+      style="border-color:${deployed?'rgba(100,100,100,0.3)':'rgba(255,215,0,0.7)'};
+             box-shadow:${isPending?'0 0 14px rgba(255,215,0,0.6)':'0 0 8px rgba(255,215,0,0.2)'};
+             animation:${deployed?'none':'heroGlow 1.5s ease-in-out infinite'};
+             opacity:${deployed?0.4:1};cursor:${deployed?'default':'pointer'}">
+      <span style="font-size:1.5rem">${hdef.icon}</span>
+      <div class="at-troop-count" style="color:#FFD700">${deployed?'Ute':'Lv'+h.lv}</div>
+    </div>`;
+  }).join('');
+  row.innerHTML=heroRowHtml+Object.entries(atkTroopPool).map(([id,cnt])=>{
     if(!cnt)return'';
     const tt=TROOP_TYPES[id];if(!tt)return'';
     return`<div class="at-troop${selectedAtkTroop===id?' selected':''}" onclick="selectAtkTroop('${id}')">
@@ -3395,8 +3410,8 @@ function drawAttack(){
     const ls=u.isMoving?Math.sin(wph)*0.22:0;
     const as_=u.isMoving?Math.sin(wph+Math.PI)*0.18:0;
     const bob=u.isMoving?Math.abs(Math.sin(wph))*0.05:0;
-    const szMap={lill_jimmie:1.0,jimmie_bagare:0.82,sd_jatte:1.9,jimmie_trollkarl:1.05,jimmie_ballong:1.1,minar_jimmie:0.92,pekka_jimmie:2.3};
-    const heroMult=u.isHero?1.6:1.0;
+    const szMap={lill_jimmie:1.0,jimmie_bagare:0.82,sd_jatte:1.9,jimmie_trollkarl:1.05,jimmie_ballong:1.1,minar_jimmie:0.92,pekka_jimmie:1.7};
+    const heroMult=u.isHero?2.0:1.0;
     const sc=(szMap[u.troopId]||1.0)*heroMult*Math.max(7,ATK_C*0.44);
     const bc=rage?'rgba(255,70,0,0.95)':col;
     const ux=u.x, uy=u.troopId==='jimmie_ballong'?u.y-sc*1.9:u.y;
@@ -3647,7 +3662,7 @@ function drawAttack(){
   // Timer & stars
   document.getElementById('attack-timer-circle').textContent=Math.ceil(Math.max(0,atkTimer));
   // Stars
-  const pctDest=atkDestroyed/atkBuildings.length;
+  const _nonWallBldgs=atkBuildings.filter(b=>b.type!=='mur');const pctDest=_nonWallBldgs.length?_nonWallBldgs.filter(b=>!b.alive).length/_nonWallBldgs.length:0;
   let stars='☆☆☆';
   if(pctDest>=0.33)stars='⭐☆☆';
   if(pctDest>=0.66)stars='⭐⭐☆';
@@ -3705,33 +3720,24 @@ function updateAttack(dt){
       const wgx=Math.floor(nextGX), wgy=Math.floor(nextGY);
       const wallB=atkBuildings.find(b=>b.type==='mur'&&b.alive&&b.gx===wgx&&b.gy===wgy);
       if(wallB){
-        // Check if there's a gap nearby we can route through
-        const ux2=(u.x-ATK_CAM_X)/ATK_C, uy2=(u.y-ATK_CAM_Y)/ATK_C;
-        const tx2=(u.target.gx+u.target.size/2), ty2=(u.target.gy+u.target.size/2);
-        let foundGap=false;
-        // Look for open cells around the wall in the direction of target
-        for(let r=1;r<=3;r++){
-          const perpX=-(ty2-uy2), perpY=(tx2-ux2);
-          const perpLen=Math.sqrt(perpX*perpX+perpY*perpY)||1;
-          for(const side of [r,-r]){
-            const checkGX=Math.floor(ux2+perpX/perpLen*side);
-            const checkGY=Math.floor(uy2+perpY/perpLen*side);
-            const blocked=atkBuildings.some(b=>b.alive&&b.type==='mur'&&b.gx===checkGX&&b.gy===checkGY);
-            if(!blocked){
-              // Steer toward the gap
-              const gapX=checkGX*ATK_C+ATK_C/2+ATK_CAM_X;
-              const gapY=checkGY*ATK_C+ATK_C/2+ATK_CAM_Y;
-              const gdx=gapX-u.x, gdy=gapY-u.y;
-              const gd=Math.sqrt(gdx*gdx+gdy*gdy)||1;
-              u.x+=gdx/gd*spd*dt; u.y+=gdy/gd*spd*dt;
-              foundGap=true;break;
-            }
+        // Always attack the blocking wall immediately — no gap searching
+        u.target=wallB;
+        // Attack it right now if adjacent
+        const wdx=(wallB.gx+0.5)*ATK_C+ATK_CAM_X-u.x;
+        const wdy=(wallB.gy+0.5)*ATK_C+ATK_CAM_Y-u.y;
+        const wd=Math.sqrt(wdx*wdx+wdy*wdy);
+        if(wd<=ATK_C*1.5){
+          u.attackTimer=(u.attackTimer||0)-dt;
+          if(u.attackTimer<=0){
+            const dpsVal=(TROOP_TYPES[u.troopId]?.dps?.[Math.min((u.lv||1)-1,5)]||10)*(rage?2:1);
+            wallB.hp-=dpsVal*(u.isHero?2:1);
+            u.attackTimer=1/(TROOP_TYPES[u.troopId]?.aps||1);
+            if(wallB.hp<=0){wallB.alive=false;wallB.hp=0;atkDestroyed++;spawnExplosion((wallB.gx+0.5)*ATK_C+ATK_CAM_X,(wallB.gy+0.5)*ATK_C+ATK_CAM_Y);const nonWall=atkBuildings.filter(b=>b.type!=='mur');if(nonWall.every(b=>!b.alive)&&nonWall.length>0)endAttack(true);}
+            spawnParticle(u.x,u.y,'rgba(200,180,100,0.8)',3);
           }
-          if(foundGap)break;
-        }
-        if(!foundGap){
-          // No gap found — attack the wall
-          if(u.target!==wallB)u.target=wallB;
+        } else {
+          // Move toward the wall
+          u.x+=wdx/wd*spd*dt; u.y+=wdy/wd*spd*dt;
         }
       } else {
         u.x+=stepX;u.y+=stepY;
@@ -3754,7 +3760,7 @@ function updateAttack(dt){
           spawnParticle(tx,ty,'rgba(255,200,0,0.8)',4);
         }
         u.attackTimer=0.8;
-        if(u.target.hp<=0){u.target.alive=false;atkDestroyed++;spawnExplosion(tx,ty);if(atkDestroyed>=atkBuildings.length)endAttack(true);}
+        if(u.target.hp<=0){u.target.alive=false;atkDestroyed++;spawnExplosion(tx,ty);const nonWall2=atkBuildings.filter(b=>b.type!=='mur');if(nonWall2.length>0&&nonWall2.every(b=>!b.alive))endAttack(true);}
       }
     }
   });
@@ -3869,7 +3875,22 @@ document.getElementById('attack-canvas').addEventListener('touchstart',e=>{
   const rect=e.target.getBoundingClientRect();
   const t=e.touches[0];
   const x=t.clientX-rect.left,y=t.clientY-rect.top;
-
+  // Deploy hero if pending
+  if(window.pendingHeroDeploy){
+    const hid=window.pendingHeroDeploy;
+    window.pendingHeroDeploy=null;
+    const hdef=HERO_TYPES[hid];
+    const h=G.heroes[hid];
+    if(hdef&&h&&h.lv>=1&&!atkUnits.some(u=>u.heroId===hid&&u.alive)){
+      const heroTroopId=hid==='jimmie_akesson'?'lill_jimmie':hid==='ebba_buschen'?'jimmie_bagare':'jimmie_trollkarl';
+      const hpVal=hdef.hp(h.lv);
+      atkUnits.push({id:Date.now()+Math.random(),troopId:heroTroopId,x,y,hp:hpVal,maxHp:hpVal,lv:h.lv,alive:true,target:null,attackTimer:0,isHero:true,heroId:hid,isMoving:false,isAir:false});
+      for(let i=0;i<8;i++)spawnParticle(x,y,'rgba(255,215,0,0.9)',4);
+      toast(hdef.name+' kastar sig in i striden! 👑');
+      renderAtkTroopsBar();
+    }
+    return;
+  }
   const gx=Math.floor((x-ATK_CAM_X)/ATK_C);
   const gy=Math.floor((y-ATK_CAM_Y)/ATK_C);
   if(gx<0||gx>=AGRID||gy<0||gy>=AGRID)return;
@@ -3884,10 +3905,26 @@ document.getElementById('attack-canvas').addEventListener('touchstart',e=>{
 },{passive:false});
 
 document.getElementById('attack-canvas').addEventListener('click',e=>{
-  if(!selectedAtkTroop)return;
-  if(atkTroopPool[selectedAtkTroop]<=0){toast('Inga fler trupper!');return;}
   const rect=e.target.getBoundingClientRect();
   const x=e.clientX-rect.left,y=e.clientY-rect.top;
+  // Deploy hero if pending
+  if(window.pendingHeroDeploy){
+    const hid=window.pendingHeroDeploy;
+    window.pendingHeroDeploy=null;
+    const hdef=HERO_TYPES[hid];
+    const h=G.heroes[hid];
+    if(hdef&&h&&h.lv>=1&&!atkUnits.some(u=>u.heroId===hid&&u.alive)){
+      const heroTroopId=hid==='jimmie_akesson'?'lill_jimmie':hid==='ebba_buschen'?'jimmie_bagare':'jimmie_trollkarl';
+      const hpVal=hdef.hp(h.lv);
+      atkUnits.push({id:Date.now()+Math.random(),troopId:heroTroopId,x,y,hp:hpVal,maxHp:hpVal,lv:h.lv,alive:true,target:null,attackTimer:0,isHero:true,heroId:hid,isMoving:false,isAir:false});
+      for(let i=0;i<8;i++)spawnParticle(x,y,'rgba(255,215,0,0.9)',4);
+      toast(hdef.name+' kastar sig in i striden! 👑');
+      renderAtkTroopsBar();
+    }
+    return;
+  }
+  if(!selectedAtkTroop)return;
+  if(atkTroopPool[selectedAtkTroop]<=0){toast('Inga fler trupper!');return;}
   const gx2=Math.floor((x-ATK_CAM_X)/ATK_C);
   const gy2=Math.floor((y-ATK_CAM_Y)/ATK_C);
   if(gx2<0||gx2>=AGRID||gy2<0||gy2>=AGRID)return;
@@ -3925,7 +3962,7 @@ function deployHero(){
     deployTroop('lill_jimmie',x+Math.cos(angle)*40,y+Math.sin(angle)*40,false);
   }
   heroDeployed=true;toast('JIMMIE ÅR KAISER! 👑');
-  document.getElementById('hero-attack-btn').style.opacity='0.5';
+  const _hab2=document.getElementById('hero-attack-btn');if(_hab2)_hab2.style.opacity='0.5';
   document.getElementById('hero-attack-btn').disabled=true;
 }
 
@@ -3939,7 +3976,7 @@ function deploySpell(){
   document.getElementById('spell-btn').disabled=true;
 }
 
-function surrenderAttack(){endAttack(false);}
+function surrenderAttack(){if(atkRaf){cancelAnimationFrame(atkRaf);atkRaf=null;}endAttack(false);}
 
 function endAttack(allDestroyed){
   atkStarted=false;atkSpeed=1;
