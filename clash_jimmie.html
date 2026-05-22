@@ -1363,8 +1363,8 @@ function drawBuilding(b){
 
   // ── ISOMETRIC 3D DEPTH — CoC style ──────────────────────────────
   const isWall=b.type==='mur';
-  if(bw<8)return; // too small to bother
-  const isoH=isWall?CELL*0.14:Math.max(CELL*0.22,bw*0.16);
+  if(bw<6)return;
+  const isoH=isWall?CELL*0.13:Math.max(CELL*0.2,bw*0.14);
   const cx2=sx+bw/2;
 
   // 1. Ground dirt patch under building (connects to earth)
@@ -1408,17 +1408,15 @@ function drawBuilding(b){
     // 6. Top-left sun highlight
     ctx.fillStyle='rgba(255,255,255,0.09)';
     ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(sx+bw*0.5,sy);ctx.lineTo(sx,sy+bh*0.5);ctx.closePath();ctx.fill();
-  } else {
-    // Wall isometric sides
-    ctx.fillStyle='rgba(0,0,0,0.45)';
+  } else if(CELL>16){
+    ctx.fillStyle='rgba(0,0,0,0.4)';
     ctx.fillRect(sx,sy+bh-1,bw,isoH);
-    ctx.fillStyle='rgba(0,0,0,0.2)';
-    ctx.beginPath();ctx.moveTo(sx+bw,sy+bh-1);ctx.lineTo(sx+bw+isoH*0.5,sy+bh+isoH*0.5);ctx.lineTo(sx+bw+isoH*0.5,sy+bh+isoH*0.5+bh*0.02);ctx.lineTo(sx+bw,sy+bh+1);ctx.fill();
   }
-  // 7. Drop shadow on ground
-  const shG=ctx.createRadialGradient(cx2+isoH*0.3,sy+bh+isoH*0.7,0,cx2+isoH*0.3,sy+bh+isoH*0.7,bw*0.55);
-  shG.addColorStop(0,'rgba(0,0,0,0.3)');shG.addColorStop(1,'transparent');
-  ctx.fillStyle=shG;ctx.beginPath();ctx.ellipse(cx2+isoH*0.3,sy+bh+isoH*0.7,bw*0.5,bh*0.12,0,0,Math.PI*2);ctx.fill();
+  // 7. Drop shadow only for larger buildings
+  if(bw>CELL*0.8){
+  ctx.fillStyle='rgba(0,0,0,0.22)';
+  ctx.beginPath();ctx.ellipse(cx2+isoH*0.25,sy+bh+isoH*0.5,bw*0.45,bh*0.09,0,0,Math.PI*2);ctx.fill();
+  }
 
   // Selection ring (pulsing)
   if(isSelected){
@@ -1709,9 +1707,9 @@ function drawBuildingGraphic(ctx,type,lv,sx,sy,bw,bh){
     const shG=ctx.createLinearGradient(sx+bw*0.3,sy+bh*0.38,sx+bw*0.7,sy+bh*0.92);
     shG.addColorStop(0,'#1a1a3a');shG.addColorStop(1,'#0a0a18');
     ctx.fillStyle=shG;ctx.beginPath();ctx.roundRect(sx+bw*0.3,sy+bh*0.38,bw*0.4,bh*0.54,4);ctx.fill();
-    // Blue rings
-    ctx.strokeStyle='rgba(80,120,255,0.4)';ctx.lineWidth=bw*0.025;
-    [0.48,0.62,0.76].forEach(ry=>{ctx.beginPath();ctx.moveTo(sx+bw*0.32,sy+bh*ry);ctx.lineTo(sx+bw*0.68,sy+bh*ry);ctx.stroke();});
+    // Blue rings (simplified)
+    ctx.strokeStyle='rgba(80,120,255,0.35)';ctx.lineWidth=bw*0.022;
+    ctx.beginPath();ctx.moveTo(sx+bw*0.32,sy+bh*0.54);ctx.lineTo(sx+bw*0.68,sy+bh*0.54);ctx.stroke();
     // Insulated pole
     const poleG=ctx.createLinearGradient(cx-bw*0.06,0,cx+bw*0.06,0);
     poleG.addColorStop(0,'#111128');poleG.addColorStop(0.5,'#2a2a5a');poleG.addColorStop(1,'#111128');
@@ -1724,7 +1722,7 @@ function drawBuildingGraphic(ctx,type,lv,sx,sy,bw,bh){
     coilG.addColorStop(0.5,'#4466ff');coilG.addColorStop(1,'#111144');
     ctx.fillStyle=coilG;ctx.beginPath();ctx.arc(0,0,bw*0.22,0,Math.PI*2);ctx.fill();
     // Lightning bolts
-    for(let lb=0;lb<4;lb++){
+    for(let lb=0;lb<2;lb++){
       const ba=tTe*4+lb*Math.PI/2;
       const blen=bw*(0.2+Math.sin(tTe*7+lb)*0.07);
       ctx.strokeStyle=`rgba(180,220,255,${0.7+Math.sin(tTe*6+lb)*0.3})`;ctx.lineWidth=bw*0.03;
@@ -1776,8 +1774,8 @@ function drawBuildingGraphic(ctx,type,lv,sx,sy,bw,bh){
     // Pipe highlights
     ctx.fillStyle='rgba(255,255,255,0.15)';ctx.beginPath();ctx.roundRect(sx+bw*0.38,sy+bh*0.14,bw*0.1,bh*0.5,bw*0.05);ctx.fill();
     // Elixir bubbles
-    for(let bi=0;bi<4;bi++){
-      const by2=sy+bh*(0.7-((tSS*0.3+bi*0.25)%0.6));
+    for(let bi=0;bi<2;bi++){
+      const by2=sy+bh*(0.7-((tSS*0.4+bi*0.5)%0.6));
       const bop=Math.sin(tSS*4+bi)*0.3+0.7;
       ctx.fillStyle=`rgba(200,100,255,${bop*0.6})`;ctx.beginPath();ctx.arc(cx,by2,bw*0.04,0,Math.PI*2);ctx.fill();
     }
@@ -2014,8 +2012,8 @@ function drawBuildingGraphic(ctx,type,lv,sx,sy,bw,bh){
     shG.addColorStop(0,'#160330');shG.addColorStop(0.5,'#340870');shG.addColorStop(1,'#160330');
     ctx.fillStyle=shG;ctx.fillRect(cx-bw*0.07,sy+bh*0.14,bw*0.14,bh*0.5);
     // Energy rings moving up
-    for(let ri=0;ri<4;ri++){
-      const ry=((tDb*0.5+ri*0.25)%1);
+    for(let ri=0;ri<2;ri++){
+      const ry=((tDb*0.5+ri*0.5)%1);
       ctx.strokeStyle=`rgba(190,70,255,${Math.sin(ry*Math.PI)*0.7})`;ctx.lineWidth=bw*0.02;
       ctx.beginPath();ctx.ellipse(cx,sy+bh*(0.64-ry*0.5),bw*0.07,bh*0.016,0,0,Math.PI*2);ctx.stroke();
     }
@@ -2067,9 +2065,19 @@ function getBuildingColor(type,lv){
 
 // ── GAME LOOP ─────────────────────────────────────────────────────
 let lastRAF=0;
+let _lastDrawT=0;
+let _staticDirty=true; // set true when buildings change
 function gameLoop(t){
   requestAnimationFrame(gameLoop);
-  const dt=(t-lastRAF)/1000;lastRAF=t;
+setInterval(recalcCaps,3000);
+  // Throttle draw to 30fps
+  if(t-_lastDrawT<33){
+    // Still tick at full speed
+    const dt2=Math.min((t-(lastRAF||t))/1000,0.1);lastRAF=t;
+    tick(dt2);return;
+  }
+  const dt=Math.min((t-_lastDrawT)/1000,0.1);
+  _lastDrawT=t;lastRAF=t;
   tick(dt);
   drawBase();
   updateHUD();
@@ -2077,8 +2085,6 @@ function gameLoop(t){
 
 function tick(dt){
   ambientTime+=dt;
-  recalcCaps();
-
   tickResourceOrbs(dt);tickCollectParticles(dt);updateHUDPulse();
   const now=Date.now()/1000;
   // Resource generation from buildings
@@ -4862,6 +4868,11 @@ function confirmTroopRemove(){
 
 
 
+
+
+
+
+
 // ── BUILDING SPRITE CACHE ─────────────────────────────────────────
 const _spriteCache=new Map();
 const _ANIMATED_TYPES=new Set(['saft_samlare','saft_tank','riksdaler_gruva','tesla_torn','dark_bohrare','dark_forrad','laboratorium']);
@@ -4970,6 +4981,7 @@ if(!G.spells)G.spells={};
 centerCamera();
 renderByPanel();
 requestAnimationFrame(gameLoop);
+setInterval(recalcCaps,3000);
 switchNav('by');
 // Welcome message
 setTimeout(startTutorial,1000);
