@@ -580,84 +580,70 @@ body{background:#1a2e10}
 </div>
 
 <!-- ── TOP HUD ── -->
-<div id="hud">
+<div id="hud" style="position:fixed;top:0;left:0;right:0;z-index:200;pointer-events:none;display:flex;justify-content:space-between;align-items:flex-start;padding:clamp(6px,1.3vw,16px);gap:clamp(5px,1.0vw,13px);font-family:'Nunito',sans-serif">
 
-  <!-- LEFT buttons -->
-  <div style="pointer-events:all;display:flex;flex-direction:column;gap:5px;flex-shrink:0">
-    <a href="games.html" style="width:38px;height:38px;background:rgba(0,0,0,0.82);border:2px solid rgba(255,255,255,0.18);border-radius:10px;font-size:1.1rem;color:white;text-decoration:none;display:flex;align-items:center;justify-content:center">🏠</a>
-    <button onclick="document.getElementById('sett').style.display='flex'" style="width:38px;height:38px;background:rgba(0,0,0,0.82);border:2px solid rgba(255,255,255,0.18);border-radius:10px;font-size:1.1rem;cursor:pointer;color:white;display:flex;align-items:center;justify-content:center">⚙️</button>
-    <button onclick="document.getElementById('code-modal').style.display='flex'" style="width:38px;height:38px;background:rgba(0,0,0,0.82);border:2px solid rgba(255,215,0,0.3);border-radius:10px;font-size:1rem;cursor:pointer;color:#FFD700;display:flex;align-items:center;justify-content:center">🔐</button>
+  <!-- LEFT: buttons -->
+  <div style="pointer-events:all;display:flex;flex-direction:column;gap:clamp(5px,0.8vw,10px);flex-shrink:0">
+    <a href="games.html" style="background:rgba(0,0,0,0.82);border:2px solid rgba(255,255,255,0.18);border-radius:clamp(10px,1.3vw,16px);width:clamp(42px,5.2vw,68px);height:clamp(42px,5.2vw,68px);font-size:clamp(1.12rem,2.0vw,1.75rem);color:white;text-decoration:none;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,0.5)">🏠</a>
+    <button onclick="document.getElementById('sett').style.display='flex'" style="background:rgba(0,0,0,0.82);border:2px solid rgba(255,255,255,0.18);border-radius:clamp(10px,1.3vw,16px);width:clamp(42px,5.2vw,68px);height:clamp(42px,5.2vw,68px);font-size:clamp(1.12rem,2.0vw,1.75rem);cursor:pointer;color:white;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,0.5)">⚙️</button>
+    <button onclick="document.getElementById('code-modal').style.display='flex'" style="background:rgba(0,0,0,0.82);border:2px solid rgba(255,215,0,0.3);border-radius:clamp(10px,1.3vw,16px);width:clamp(42px,5.2vw,68px);height:clamp(42px,5.2vw,68px);font-size:clamp(1.06rem,1.9vw,1.62rem);cursor:pointer;color:#FFD700;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,0.5)">🔐</button>
   </div>
 
   <!-- CENTER: JH + builders -->
-  <div style="pointer-events:all;position:absolute;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;top:8px">
-    <div style="background:rgba(12,7,1,0.95);border:2px solid rgba(210,155,0,0.65);border-radius:12px;padding:5px 14px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(0,0,0,0.6)">
-      <span style="font-size:1.2rem">🏛️</span>
+  <div style="pointer-events:all;position:absolute;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:clamp(4px,0.7vw,9px);top:clamp(6px,1.3vw,16px)">
+    <div style="background:rgba(12,7,1,0.95);border:2px solid rgba(210,155,0,0.65);border-radius:clamp(13px,1.6vw,21px);padding:clamp(5px,0.9vw,12px) clamp(13px,2.0vw,26px);display:flex;align-items:center;gap:clamp(6px,1.0vw,14px);box-shadow:0 4px 14px rgba(0,0,0,0.6)">
+      <span style="font-size:clamp(1.25rem,2.5vw,2.00rem)">🏛️</span>
       <div>
-        <div style="font-size:0.5rem;color:rgba(255,200,60,0.5);font-weight:700;letter-spacing:1.5px">JIMMIE HALL</div>
-        <div style="font-family:'Cinzel',serif;color:#FFD700;font-size:1rem;font-weight:900">Lv <span id="jh-level">1</span></div>
+        <div style="font-size:clamp(0.56rem,0.9vw,0.81rem);color:rgba(255,200,60,0.5);font-weight:700;letter-spacing:1.5px">JIMMIE HALL</div>
+        <div style="font-family:'Cinzel',serif;color:#FFD700;font-size:clamp(1.06rem,2.0vw,1.62rem);font-weight:900;line-height:1">Lv <span id="jh-level">1</span></div>
       </div>
     </div>
-    <div id="builder-pill" onclick="switchNav('by')" style="pointer-events:all;cursor:pointer;background:rgba(0,0,0,0.82);border:2px solid rgba(255,160,0,0.3);border-radius:10px;padding:4px 12px;display:flex;align-items:center;gap:5px">
-      <span>🔨</span>
-      <span id="builder-pill-text" style="color:#ffcc44;font-size:0.82rem;font-weight:900">2/2</span>
-      <span style="color:rgba(255,255,255,0.3);font-size:0.62rem">byggare</span>
+    <div id="builder-pill" onclick="switchNav('by')" style="pointer-events:all;cursor:pointer;background:rgba(0,0,0,0.82);border:2px solid rgba(255,160,0,0.3);border-radius:clamp(10px,1.3vw,16px);padding:clamp(4px,0.7vw,9px) clamp(10px,1.6vw,21px);display:flex;align-items:center;gap:clamp(5px,0.8vw,10px)">
+      <span style="font-size:clamp(1.06rem,1.8vw,1.38rem)">🔨</span>
+      <span id="builder-pill-text" style="color:#ffcc44;font-size:clamp(0.90rem,1.5vw,1.25rem);font-weight:900">2/2</span>
+      <span style="color:rgba(255,255,255,0.3);font-size:clamp(0.69rem,1.1vw,0.94rem)">byggare</span>
     </div>
   </div>
 
-  <!-- RIGHT: resources, scales with screen -->
-  <div style="pointer-events:all;margin-left:auto;display:flex;flex-direction:column;gap:4px;width:clamp(160px,22vw,260px);flex-shrink:0">
+  <!-- RIGHT: resources + gems -->
+  <div style="pointer-events:all;margin-left:auto;display:flex;flex-direction:column;gap:clamp(4px,0.7vw,8px);width:clamp(195px,28.6vw,364px);flex-shrink:0">
 
-    <div id="gold-pill" style="position:relative;border:2px solid rgba(230,170,0,0.8);border-radius:14px;padding:7px 10px;display:flex;align-items:center;gap:9px;overflow:hidden;background:rgba(16,8,0,0.98);box-shadow:0 0 20px rgba(210,150,0,0.4),0 5px 16px rgba(0,0,0,0.7),inset 0 1px 0 rgba(255,255,255,0.08),inset 0 -1px 0 rgba(0,0,0,0.3)">
-      <!-- Fill bar -->
-      <div id="gold-pill-bar-fill" style="position:absolute;top:0;left:0;bottom:0;transition:width .6s cubic-bezier(.4,0,.2,1);pointer-events:none;width:0%;overflow:hidden">
-        <div style="position:absolute;inset:0;background:linear-gradient(90deg,#b87800,#ffcc00,#ffe44d)"></div>
-        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0.28) 0%,transparent 55%)"></div>
-      </div><div style="display:none"></div>
-      <!-- Sheen overlay -->
-      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0.06) 0%,transparent 50%,rgba(0,0,0,0.12) 100%);pointer-events:none;border-radius:12px"></div>
-      <!-- Icon orb -->
-      <div style="position:relative;width:clamp(28px,4vw,40px);height:clamp(28px,4vw,40px);background:radial-gradient(circle at 30% 25%,#fff5b0,#ffcc00,#886600);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.9rem;box-shadow:0 0 12px rgba(255,210,0,0.7),0 3px 8px rgba(0,0,0,0.6),inset 0 1px 2px rgba(255,255,255,0.3)">🪙</div>
-      <!-- Values -->
-      <div style="position:relative;flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:4px">
-        <span id="gold-val" style="font-size:1rem;font-weight:900;color:#fff8c0;font-family:'Cinzel',serif;letter-spacing:.5px;text-shadow:0 2px 0 rgba(0,0,0,0.9),0 0 12px rgba(255,210,0,0.7),1px 1px 3px rgba(0,0,0,1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-text-stroke:0.3px rgba(200,120,0,0.5)">0</span>
-        <span style="font-size:clamp(0.52rem,0.9vw,0.7rem);color:rgba(255,200,60,0.55);font-weight:700;white-space:nowrap;text-align:right;flex-shrink:0">/<span id="gold-max">1K</span></span>
+    <!-- Gold -->
+    <div id="gold-pill" style="position:relative;border:2px solid rgba(230,170,0,0.8);border-radius:clamp(10px,1.3vw,18px);padding:clamp(5px,0.9vw,10px) clamp(8px,1.3vw,16px);display:flex;align-items:center;gap:clamp(6px,1.0vw,13px);overflow:hidden;background:rgba(18,9,0,0.98);box-shadow:0 0 20px rgba(200,140,0,0.35),0 4px 12px rgba(0,0,0,0.7)">
+      <div id="gold-pill-bar-fill" style="position:absolute;top:0;left:0;bottom:0;background:linear-gradient(180deg,#ffe066 0%,#cc8800 40%,#aa6600 100%);box-shadow:inset 0 1px 0 rgba(255,255,200,0.5),inset 0 -1px 0 rgba(0,0,0,0.3);transition:width .6s cubic-bezier(.4,0,.2,1);pointer-events:none;width:0%"></div>
+      <div style="position:relative;width:clamp(29px,4.2vw,49px);height:clamp(29px,4.2vw,49px);background:radial-gradient(circle at 30% 25%,#fff5b0,#ffcc00,#886600);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:clamp(0.88rem,1.5vw,1.25rem);box-shadow:0 0 12px rgba(255,210,0,0.6)">🪙</div>
+      <div style="position:relative;flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:3px">
+        <span id="gold-val" style="font-size:clamp(1.00rem,1.8vw,1.44rem);font-weight:900;color:#fff8c0;font-family:'Cinzel',serif;letter-spacing:.3px;text-shadow:0 2px 0 rgba(0,0,0,0.9),0 0 10px rgba(255,210,0,0.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-text-stroke:0.3px rgba(200,120,0,0.5)">0</span>
+        <span style="font-size:clamp(0.60rem,1.0vw,0.81rem);color:rgba(255,200,60,0.5);font-weight:700;white-space:nowrap;flex-shrink:0">/<span id="gold-max">1K</span></span>
       </div>
     </div>
 
-    <div id="elixir-pill" style="position:relative;border:2px solid rgba(200,70,255,0.8);border-radius:14px;padding:7px 10px;display:flex;align-items:center;gap:9px;overflow:hidden;background:rgba(10,1,18,0.98);box-shadow:0 0 20px rgba(170,50,230,0.4),0 5px 16px rgba(0,0,0,0.7),inset 0 1px 0 rgba(255,255,255,0.08),inset 0 -1px 0 rgba(0,0,0,0.3)">
-      <!-- Fill bar -->
+    <!-- Elixir -->
+    <div id="elixir-pill" style="position:relative;border:2px solid rgba(200,70,255,0.8);border-radius:clamp(10px,1.3vw,18px);padding:clamp(5px,0.9vw,10px) clamp(8px,1.3vw,16px);display:flex;align-items:center;gap:clamp(6px,1.0vw,13px);overflow:hidden;background:rgba(10,1,18,0.98);box-shadow:0 0 20px rgba(160,40,220,0.35),0 4px 12px rgba(0,0,0,0.7)">
       <div id="elixir-pill-bar-fill" style="position:absolute;top:0;left:0;bottom:0;background:linear-gradient(180deg,#ee88ff 0%,#aa00dd 40%,#7700aa 100%);box-shadow:inset 0 1px 0 rgba(255,200,255,0.5),inset 0 -1px 0 rgba(0,0,0,0.3);transition:width .6s cubic-bezier(.4,0,.2,1);pointer-events:none;width:0%"></div>
-      <!-- Sheen overlay -->
-      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0.06) 0%,transparent 50%,rgba(0,0,0,0.12) 100%);pointer-events:none;border-radius:12px"></div>
-      <!-- Icon orb -->
-      <div style="position:relative;width:clamp(28px,4vw,40px);height:clamp(28px,4vw,40px);background:radial-gradient(circle at 30% 25%,#ffccff,#cc44ee,#550088);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.9rem;box-shadow:0 0 12px rgba(200,60,255,0.7),0 3px 8px rgba(0,0,0,0.6),inset 0 1px 2px rgba(255,255,255,0.3)">🧪</div>
-      <!-- Values -->
-      <div style="position:relative;flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:4px">
-        <span id="elixir-val" style="font-size:1rem;font-weight:900;color:#fce0ff;font-family:'Cinzel',serif;letter-spacing:.5px;text-shadow:0 2px 0 rgba(0,0,0,0.9),0 0 12px rgba(200,60,255,0.7),1px 1px 3px rgba(0,0,0,1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-text-stroke:0.3px rgba(140,0,200,0.5)">0</span>
-        <span style="font-size:clamp(0.52rem,0.9vw,0.7rem);color:rgba(190,80,255,0.55);font-weight:700;white-space:nowrap;text-align:right;flex-shrink:0">/<span id="elixir-max">1K</span></span>
+      <div style="position:relative;width:clamp(29px,4.2vw,49px);height:clamp(29px,4.2vw,49px);background:radial-gradient(circle at 30% 25%,#ffccff,#cc44ee,#550088);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:clamp(0.88rem,1.5vw,1.25rem);box-shadow:0 0 12px rgba(200,60,255,0.6)">🧪</div>
+      <div style="position:relative;flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:3px">
+        <span id="elixir-val" style="font-size:clamp(1.00rem,1.8vw,1.44rem);font-weight:900;color:#fce0ff;font-family:'Cinzel',serif;letter-spacing:.3px;text-shadow:0 2px 0 rgba(0,0,0,0.9),0 0 10px rgba(200,60,255,0.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-text-stroke:0.3px rgba(140,0,200,0.5)">0</span>
+        <span style="font-size:clamp(0.60rem,1.0vw,0.81rem);color:rgba(190,80,255,0.5);font-weight:700;white-space:nowrap;flex-shrink:0">/<span id="elixir-max">1K</span></span>
       </div>
     </div>
 
-    <div id="dark-pill" style="position:relative;border:2px solid rgba(130,50,200,0.8);border-radius:14px;padding:7px 10px;display:flex;align-items:center;gap:9px;overflow:hidden;background:rgba(3,0,6,0.98);box-shadow:0 0 20px rgba(110,30,180,0.35),0 5px 16px rgba(0,0,0,0.7),inset 0 1px 0 rgba(255,255,255,0.08),inset 0 -1px 0 rgba(0,0,0,0.3)">
-      <!-- Fill bar -->
+    <!-- Dark elixir -->
+    <div id="dark-pill" style="position:relative;border:2px solid rgba(130,50,200,0.8);border-radius:clamp(10px,1.3vw,18px);padding:clamp(5px,0.9vw,10px) clamp(8px,1.3vw,16px);display:flex;align-items:center;gap:clamp(6px,1.0vw,13px);overflow:hidden;background:rgba(3,1,6,0.98);box-shadow:0 0 16px rgba(100,20,160,0.35),0 4px 12px rgba(0,0,0,0.7)">
       <div id="dark-pill-bar-fill" style="position:absolute;top:0;left:0;bottom:0;background:linear-gradient(180deg,#9944cc 0%,#5500aa 40%,#330077 100%);box-shadow:inset 0 1px 0 rgba(200,140,255,0.4),inset 0 -1px 0 rgba(0,0,0,0.4);transition:width .6s cubic-bezier(.4,0,.2,1);pointer-events:none;width:0%"></div>
-      <!-- Sheen overlay -->
-      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0.06) 0%,transparent 50%,rgba(0,0,0,0.12) 100%);pointer-events:none;border-radius:12px"></div>
-      <!-- Icon orb -->
-      <div style="position:relative;width:clamp(28px,4vw,40px);height:clamp(28px,4vw,40px);background:radial-gradient(circle at 30% 25%,#cc88ff,#7700bb,#200044);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.9rem;box-shadow:0 0 12px rgba(130,40,210,0.6),0 3px 8px rgba(0,0,0,0.6),inset 0 1px 2px rgba(255,255,255,0.3)">💜</div>
-      <!-- Values -->
-      <div style="position:relative;flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:4px">
-        <span id="dark-val" style="font-size:1rem;font-weight:900;color:#e8ccff;font-family:'Cinzel',serif;letter-spacing:.5px;text-shadow:0 2px 0 rgba(0,0,0,0.9),0 0 12px rgba(140,50,220,0.6),1px 1px 3px rgba(0,0,0,1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-text-stroke:0.3px rgba(100,20,180,0.5)">0</span>
-        <span style="font-size:clamp(0.52rem,0.9vw,0.7rem);color:rgba(140,60,200,0.55);font-weight:700;white-space:nowrap;text-align:right;flex-shrink:0">/<span id="dark-max">1K</span></span>
+      <div style="position:relative;width:clamp(29px,4.2vw,49px);height:clamp(29px,4.2vw,49px);background:radial-gradient(circle at 30% 25%,#cc88ff,#7700bb,#200044);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:clamp(0.88rem,1.5vw,1.25rem);box-shadow:0 0 10px rgba(120,40,200,0.5)">💜</div>
+      <div style="position:relative;flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:3px">
+        <span id="dark-val" style="font-size:clamp(1.00rem,1.8vw,1.44rem);font-weight:900;color:#e8ccff;font-family:'Cinzel',serif;letter-spacing:.3px;text-shadow:0 2px 0 rgba(0,0,0,0.9),0 0 10px rgba(140,40,200,0.5);-webkit-text-stroke:0.3px rgba(100,20,180,0.5)">0</span>
+        <span style="font-size:clamp(0.60rem,1.0vw,0.81rem);color:rgba(140,60,200,0.5);font-weight:700;white-space:nowrap;flex-shrink:0">/<span id="dark-max">0</span></span>
       </div>
     </div>
 
-    <div style="background:rgba(1,18,3,0.97);border:2px solid rgba(40,150,40,0.55);border-radius:10px;padding:5px 8px;display:flex;align-items:center;gap:7px">
-      <div style="width:28px;height:28px;background:linear-gradient(135deg,#88ff88,#22aa22,#104410);clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);flex-shrink:0"></div>
+    <!-- Gems -->
+    <div style="background:rgba(1,18,3,0.98);border:2px solid rgba(40,150,40,0.6);border-radius:clamp(10px,1.3vw,18px);padding:clamp(5px,0.9vw,10px) clamp(8px,1.3vw,16px);display:flex;align-items:center;gap:clamp(6px,1.0vw,13px);box-shadow:0 0 14px rgba(30,160,30,0.25),0 3px 10px rgba(0,0,0,0.5)">
+      <div style="width:clamp(29px,4.2vw,49px);height:clamp(29px,4.2vw,49px);background:linear-gradient(135deg,#99ff99,#22bb22,#104410);clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);flex-shrink:0"></div>
       <div>
-        <div style="font-size:0.5rem;color:rgba(80,200,80,0.45);font-weight:700;letter-spacing:1px">GEMS</div>
-        <div id="gem-val" style="font-size:0.88rem;font-weight:900;color:#66ee66;font-family:'Cinzel',serif">50</div>
+        <div style="font-size:clamp(0.55rem,0.9vw,0.75rem);color:rgba(80,200,80,0.45);font-weight:700;letter-spacing:1px">GEMS</div>
+        <div id="gem-val" style="font-size:clamp(1.00rem,1.8vw,1.44rem);font-weight:900;color:#66ee66;font-family:'Cinzel',serif">50</div>
       </div>
     </div>
 
