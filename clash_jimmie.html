@@ -1359,7 +1359,7 @@ function drawBuilding(b){
   // ── ISOMETRIC 3D DEPTH — CoC style ──────────────────────────────
   const isWall=b.type==='mur';
   if(bw<6)return;
-  const isoH=isWall?CELL*0.13:Math.max(CELL*0.2,bw*0.14);
+  const isoH=isWall?CELL*0.14:Math.max(CELL*0.24,bw*0.16);
   const cx2=sx+bw/2;
 
   // 1. Ground dirt patch under building (connects to earth)
@@ -1372,13 +1372,15 @@ function drawBuilding(b){
   if(_spr){
     ctx.drawImage(_spr,sx,sy,bw,bh);
   } else {
-    drawBuildingGraphic(ctx,b.type,b.lv,sx,sy,bw,bh);
+    drawBuildingGraphic(ctx,b.type,b.lv||1,sx,sy,bw,bh);
   }
 
   if(!isWall){
     // 3. RIGHT side wall — darkest (east face, shadow)
-    const rightFaceG=ctx.createLinearGradient(sx+bw,sy+bh*0.3,sx+bw+isoH,sy+bh+isoH);
-    rightFaceG.addColorStop(0,'rgba(0,0,0,0.55)');rightFaceG.addColorStop(1,'rgba(0,0,0,0.25)');
+    const rightFaceG=ctx.createLinearGradient(sx+bw,sy,sx+bw+isoH,sy+bh+isoH);
+    rightFaceG.addColorStop(0,'rgba(0,0,0,0.15)');
+    rightFaceG.addColorStop(0.2,'rgba(0,0,0,0.5)');
+    rightFaceG.addColorStop(1,'rgba(0,0,0,0.3)');
     ctx.fillStyle=rightFaceG;
     ctx.beginPath();
     ctx.moveTo(sx+bw,sy+bh*0.08);
@@ -1388,7 +1390,9 @@ function drawBuilding(b){
     ctx.closePath();ctx.fill();
     // 4. BOTTOM face wall — medium dark (south face)
     const botFaceG=ctx.createLinearGradient(sx,sy+bh,sx+bw,sy+bh+isoH);
-    botFaceG.addColorStop(0,'rgba(0,0,0,0.4)');botFaceG.addColorStop(1,'rgba(0,0,0,0.15)');
+    botFaceG.addColorStop(0,'rgba(0,0,0,0.45)');
+    botFaceG.addColorStop(0.5,'rgba(0,0,0,0.3)');
+    botFaceG.addColorStop(1,'rgba(0,0,0,0.1)');
     ctx.fillStyle=botFaceG;
     ctx.beginPath();
     ctx.moveTo(sx,sy+bh);
@@ -1401,8 +1405,11 @@ function drawBuilding(b){
     ctx.beginPath();ctx.moveTo(sx,sy+bh);ctx.lineTo(sx+bw,sy+bh);ctx.stroke();
     ctx.beginPath();ctx.moveTo(sx+bw,sy+bh*0.08);ctx.lineTo(sx+bw,sy+bh);ctx.stroke();
     // 6. Top-left sun highlight
-    ctx.fillStyle='rgba(255,255,255,0.09)';
-    ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(sx+bw*0.5,sy);ctx.lineTo(sx,sy+bh*0.5);ctx.closePath();ctx.fill();
+    const hlG2=ctx.createLinearGradient(sx,sy,sx+bw*0.6,sy+bh*0.6);
+    hlG2.addColorStop(0,'rgba(255,255,255,0.15)');
+    hlG2.addColorStop(0.4,'rgba(255,255,255,0.04)');
+    hlG2.addColorStop(1,'transparent');
+    ctx.fillStyle=hlG2;ctx.fillRect(sx,sy,bw,bh);
   } else if(CELL>16){
     ctx.fillStyle='rgba(0,0,0,0.4)';
     ctx.fillRect(sx,sy+bh-1,bw,isoH);
@@ -1411,6 +1418,14 @@ function drawBuilding(b){
   if(bw>CELL*0.8){
   ctx.fillStyle='rgba(0,0,0,0.22)';
   ctx.beginPath();ctx.ellipse(cx2+isoH*0.25,sy+bh+isoH*0.5,bw*0.45,bh*0.09,0,0,Math.PI*2);ctx.fill();
+  }
+
+  // Level-based ambient glow
+  if(b.lv>=7&&b.type!=='mur'){
+    const glowR=b.lv>=8?'rgba(255,215,0,0.08)':'rgba(180,120,255,0.06)';
+    const glowGrd=ctx.createRadialGradient(sx+bw/2,sy+bh/2,0,sx+bw/2,sy+bh/2,bw*0.8);
+    glowGrd.addColorStop(0,glowR);glowGrd.addColorStop(1,'transparent');
+    ctx.fillStyle=glowGrd;ctx.fillRect(sx-bw*0.3,sy-bh*0.3,bw*1.6,bh*1.6);
   }
 
   // Selection ring (pulsing)
@@ -1463,7 +1478,7 @@ function drawBuilding(b){
 
 }
 
-function drawBuildingGraphic(ctx,type,lv,sx,sy,bw,bh){
+function drawBuildingGraphic(ctx,type,lv=1,sx,sy,bw,bh){
   const cx=sx+bw/2, cy=sy+bh/2;
   const t=Date.now()/1000;
 
@@ -3119,147 +3134,142 @@ function generateEnemyBase(){
   const BASES={
     1:{
       buildings:[
-        ['jimmie_hall',11,10,1],
-        ['kanon',8,8,1],['kanon',16,8,1],
-        ['riksdaler_gruva',5,14,1],['saft_samlare',18,14,1],
-        ['riksdaler_forrad',5,10,1],['saft_tank',19,10,1],
-        ['kasern',7,17,1],['arme_lager',17,17,1],
+        ['jimmie_hall',10,10,1],
+        ['kanon',7,8,1],['kanon',15,8,1],
+        ['kanon',7,13,1],
       ],
-      walls:[[9,9],[10,9],[11,9],[12,9],[13,9],[14,9],[15,9],
-             [9,14],[10,14],[11,14],[12,14],[13,14],[14,14],[15,14],
-             [9,10],[9,11],[9,12],[9,13],[15,10],[15,11],[15,12],[15,13]],
+      walls:[
+        [9,10],[9,11],[9,12],[9,13],[9,14],
+        [10,9],[11,9],[12,9],[13,9],
+        [14,9],[14,10],[14,11],[14,12],[14,13],[14,14],
+        [10,14],[11,14],[12,14],[13,14],
+      ],
     },
     2:{
       buildings:[
-        ['jimmie_hall',11,10,2],
-        ['kanon',7,7,2],['kanon',17,7,2],
-        ['pilbage_torn',7,15,1],
-        ['riksdaler_gruva',4,12,2],['riksdaler_gruva',20,12,2],
-        ['saft_samlare',4,16,2],['saft_samlare',20,16,2],
-        ['riksdaler_forrad',4,8,1],['saft_tank',20,8,1],
-        ['kasern',8,18,1],['arme_lager',16,18,1],
+        ['jimmie_hall',10,10,2],
+        ['kanon',6,7,2],['kanon',16,7,2],
+        ['kanon',6,14,1],['kanon',16,14,1],
+        ['pilbage_torn',12,6,1],
       ],
-      walls:[[9,9],[10,9],[11,9],[12,9],[13,9],[14,9],[15,9],
-             [9,15],[10,15],[11,15],[12,15],[13,15],[14,15],[15,15],
-             [9,10],[9,11],[9,12],[9,13],[9,14],[15,10],[15,11],[15,12],[15,13],[15,14]],
+      walls:[
+        [8,9],[9,9],[10,9],[11,9],[12,9],[13,9],[14,9],[15,9],
+        [8,15],[9,15],[10,15],[11,15],[12,15],[13,15],[14,15],[15,15],
+        [8,10],[8,11],[8,12],[8,13],[8,14],
+        [15,10],[15,11],[15,12],[15,13],[15,14],
+      ],
     },
     3:{
       buildings:[
-        ['jimmie_hall',11,10,3],
-        ['kanon',6,7,3],['kanon',18,7,3],
-        ['pilbage_torn',6,14,2],['pilbage_torn',18,14,2],
-        ['morsare',13,6,1],
-        ['riksdaler_gruva',3,5,3],['riksdaler_gruva',21,5,3],
-        ['saft_samlare',3,15,3],['saft_samlare',21,15,3],
-        ['riksdaler_forrad',3,10,2],['saft_tank',21,10,2],
-        ['kasern',7,19,1],['laboratorium',13,19,1],['arme_lager',17,18,1],
+        ['jimmie_hall',10,10,3],
+        ['kanon',6,6,3],['kanon',16,6,3],
+        ['kanon',6,15,2],['kanon',16,15,2],
+        ['pilbage_torn',10,6,2],['pilbage_torn',10,17,1],
+        ['morsare',13,5,1],
       ],
-      walls:[[8,8],[9,8],[10,8],[11,8],[12,8],[13,8],[14,8],[15,8],[16,8],
-             [8,15],[9,15],[10,15],[11,15],[12,15],[13,15],[14,15],[15,15],[16,15],
-             [8,9],[8,10],[8,11],[8,12],[8,13],[8,14],[16,9],[16,10],[16,11],[16,12],[16,13],[16,14]],
+      walls:[
+        [8,8],[9,8],[10,8],[11,8],[12,8],[13,8],[14,8],[15,8],
+        [8,16],[9,16],[10,16],[11,16],[12,16],[13,16],[14,16],[15,16],
+        [8,9],[8,10],[8,11],[8,12],[8,13],[8,14],[8,15],
+        [15,9],[15,10],[15,11],[15,12],[15,13],[15,14],[15,15],
+      ],
     },
     4:{
       buildings:[
-        ['jimmie_hall',11,10,4],
-        ['kanon',6,6,4],['kanon',18,6,4],['kanon',12,17,3],
-        ['pilbage_torn',6,15,3],['pilbage_torn',18,15,3],
-        ['morsare',8,6,2],
-        ['riksdaler_gruva',3,4,4],['riksdaler_gruva',21,4,4],['riksdaler_gruva',3,18,4],
-        ['saft_samlare',21,18,4],['saft_samlare',3,12,4],['saft_samlare',21,12,4],
-        ['riksdaler_forrad',3,8,2],['saft_tank',22,8,2],
-        ['kasern',7,20,2],['laboratorium',14,20,1],
+        ['jimmie_hall',10,10,4],
+        ['kanon',5,6,4],['kanon',17,6,4],
+        ['kanon',5,15,3],['kanon',17,15,3],
+        ['pilbage_torn',10,5,3],['pilbage_torn',10,17,2],
+        ['morsare',7,5,2],['morsare',16,5,2],
+        ['luftforsvar',13,17,2],
       ],
-      walls:[[8,8],[9,8],[10,8],[11,8],[12,8],[13,8],[14,8],[15,8],[16,8],
-             [8,16],[9,16],[10,16],[11,16],[12,16],[13,16],[14,16],[15,16],[16,16],
-             [8,9],[8,10],[8,11],[8,12],[8,13],[8,14],[8,15],
-             [16,9],[16,10],[16,11],[16,12],[16,13],[16,14],[16,15]],
+      walls:[
+        [7,7],[8,7],[9,7],[10,7],[11,7],[12,7],[13,7],[14,7],[15,7],
+        [7,17],[8,17],[9,17],[10,17],[11,17],[12,17],[13,17],[14,17],[15,17],
+        [7,8],[7,9],[7,10],[7,11],[7,12],[7,13],[7,14],[7,15],[7,16],
+        [15,8],[15,9],[15,10],[15,11],[15,12],[15,13],[15,14],[15,15],[15,16],
+      ],
     },
     5:{
       buildings:[
-        ['jimmie_hall',11,10,5],
-        ['kanon',5,6,5],['kanon',19,6,5],['kanon',12,18,4],
-        ['pilbage_torn',5,14,4],['pilbage_torn',19,14,4],
-        ['morsare',7,6,3],['morsare',16,6,3],
-        ['luftforsvar',4,10,2],
-        ['riksdaler_gruva',2,4,5],['riksdaler_gruva',22,4,5],['riksdaler_gruva',2,17,5],
-        ['riksdaler_gruva',22,17,5],['riksdaler_gruva',12,20,5],
-        ['saft_samlare',2,10,5],['saft_samlare',22,10,5],['saft_samlare',12,22,5],
-        ['riksdaler_forrad',2,7,3],['saft_tank',22,7,3],
-        ['kasern',6,20,3],['arme_lager',16,20,3],['laboratorium',12,19,2],
+        ['jimmie_hall',10,10,5],
+        ['kanon',5,5,5],['kanon',17,5,5],
+        ['kanon',5,16,4],['kanon',17,16,4],
+        ['pilbage_torn',10,4,4],['pilbage_torn',10,18,3],
+        ['morsare',6,4,3],['morsare',16,4,3],
+        ['luftforsvar',4,11,2],['luftforsvar',18,11,2],
+        ['kanon',12,18,3],
       ],
-      walls:[[8,8],[9,8],[10,8],[11,8],[12,8],[13,8],[14,8],[15,8],[16,8],
-             [8,16],[9,16],[10,16],[11,16],[12,16],[13,16],[14,16],[15,16],[16,16],
-             [8,9],[8,10],[8,11],[8,12],[8,13],[8,14],[8,15],
-             [16,9],[16,10],[16,11],[16,12],[16,13],[16,14],[16,15],
-             [10,7],[11,7],[12,7],[13,7],[14,7]],
+      walls:[
+        [7,7],[8,7],[9,7],[10,7],[11,7],[12,7],[13,7],[14,7],[15,7],
+        [7,17],[8,17],[9,17],[10,17],[11,17],[12,17],[13,17],[14,17],[15,17],
+        [7,8],[7,9],[7,10],[7,11],[7,12],[7,13],[7,14],[7,15],[7,16],
+        [15,8],[15,9],[15,10],[15,11],[15,12],[15,13],[15,14],[15,15],[15,16],
+        [9,6],[10,6],[11,6],[12,6],[13,6],
+        [9,18],[10,18],[11,18],[12,18],[13,18],
+      ],
     },
     6:{
       buildings:[
-        ['jimmie_hall',11,10,6],
-        ['kanon',5,5,6],['kanon',19,5,6],['kanon',5,17,5],
-        ['pilbage_torn',19,17,5],['pilbage_torn',12,4,4],
-        ['morsare',7,5,4],['morsare',16,5,4],
-        ['luftforsvar',4,10,3],['luftforsvar',20,10,3],
-        ['riksdaler_gruva',2,3,6],['riksdaler_gruva',22,3,6],['riksdaler_gruva',2,16,6],
-        ['riksdaler_gruva',22,16,6],['riksdaler_gruva',2,10,6],['riksdaler_gruva',22,10,6],
-        ['saft_samlare',2,7,6],['saft_samlare',22,7,6],['saft_samlare',2,13,6],
-        ['riksdaler_forrad',2,19,3],['riksdaler_forrad',22,19,3],
-        ['saft_tank',12,21,3],['saft_tank',8,21,3],
-        ['kasern',6,21,4],['laboratorium',13,21,3],
+        ['jimmie_hall',10,10,6],
+        ['kanon',4,4,6],['kanon',18,4,6],
+        ['kanon',4,17,5],['kanon',18,17,5],
+        ['pilbage_torn',10,3,5],['pilbage_torn',10,19,4],
+        ['morsare',5,4,4],['morsare',17,4,4],
+        ['morsare',5,17,3],
+        ['luftforsvar',3,10,3],['luftforsvar',19,10,3],
+        ['pilbage_torn',3,16,4],
       ],
-      walls:[[8,8],[9,8],[10,8],[11,8],[12,8],[13,8],[14,8],[15,8],[16,8],
-             [8,16],[9,16],[10,16],[11,16],[12,16],[13,16],[14,16],[15,16],[16,16],
-             [8,9],[8,10],[8,11],[8,12],[8,13],[8,14],[8,15],
-             [16,9],[16,10],[16,11],[16,12],[16,13],[16,14],[16,15],
-             [10,7],[11,7],[12,7],[13,7],[14,7],[10,17],[11,17],[12,17],[13,17],[14,17]],
+      walls:[
+        [6,7],[7,7],[8,7],[9,7],[10,7],[11,7],[12,7],[13,7],[14,7],[15,7],[16,7],
+        [6,18],[7,18],[8,18],[9,18],[10,18],[11,18],[12,18],[13,18],[14,18],[15,18],[16,18],
+        [6,8],[6,9],[6,10],[6,11],[6,12],[6,13],[6,14],[6,15],[6,16],[6,17],
+        [16,8],[16,9],[16,10],[16,11],[16,12],[16,13],[16,14],[16,15],[16,16],[16,17],
+      ],
     },
     7:{
       buildings:[
-        ['jimmie_hall',11,10,7],
-        ['kanon',5,5,6],['kanon',19,5,6],['kanon',5,17,6],['kanon',19,17,6],
-        ['pilbage_torn',12,4,6],['pilbage_torn',12,19,5],
-        ['morsare',6,4,5],['morsare',18,4,5],
-        ['luftforsvar',3,10,4],['luftforsvar',21,10,4],
-        ['tesla_torn',9,9,2],['tesla_torn',15,9,2],
-        ['riksdaler_gruva',2,3,7],['riksdaler_gruva',22,3,7],['riksdaler_gruva',2,10,7],
-        ['riksdaler_gruva',22,10,7],['riksdaler_gruva',2,17,7],['riksdaler_gruva',22,17,7],
-        ['saft_samlare',2,7,7],['saft_samlare',22,7,7],['saft_samlare',2,14,7],
-        ['riksdaler_forrad',2,20,4],['riksdaler_forrad',22,20,4],
-        ['saft_tank',8,22,4],['saft_tank',16,22,4],
-        ['dark_bohrare',12,22,1],
-        ['kasern',6,22,5],['laboratorium',13,22,4],
+        ['jimmie_hall',10,10,7],
+        ['kanon',4,4,7],['kanon',18,4,7],
+        ['kanon',4,17,6],['kanon',18,17,6],
+        ['pilbage_torn',10,3,6],['pilbage_torn',10,19,5],
+        ['pilbage_torn',3,7,5],['pilbage_torn',19,7,5],
+        ['morsare',5,3,5],['morsare',17,3,5],
+        ['luftforsvar',3,13,4],['luftforsvar',19,13,4],
+        ['tesla_torn',9,9,2],['tesla_torn',13,9,2],
+        ['morsare',16,17,4],
       ],
-      walls:[[8,8],[9,8],[10,8],[11,8],[12,8],[13,8],[14,8],[15,8],[16,8],
-             [8,16],[9,16],[10,16],[11,16],[12,16],[13,16],[14,16],[15,16],[16,16],
-             [8,9],[8,10],[8,11],[8,12],[8,13],[8,14],[8,15],
-             [16,9],[16,10],[16,11],[16,12],[16,13],[16,14],[16,15],
-             [9,7],[10,7],[11,7],[12,7],[13,7],[14,7],[15,7],
-             [9,17],[10,17],[11,17],[12,17],[13,17],[14,17],[15,17]],
+      walls:[
+        [6,7],[7,7],[8,7],[9,7],[10,7],[11,7],[12,7],[13,7],[14,7],[15,7],[16,7],
+        [6,18],[7,18],[8,18],[9,18],[10,18],[11,18],[12,18],[13,18],[14,18],[15,18],[16,18],
+        [6,8],[6,9],[6,10],[6,11],[6,12],[6,13],[6,14],[6,15],[6,16],[6,17],
+        [16,8],[16,9],[16,10],[16,11],[16,12],[16,13],[16,14],[16,15],[16,16],[16,17],
+        [9,6],[10,6],[11,6],[12,6],[13,6],
+        [9,19],[10,19],[11,19],[12,19],[13,19],
+      ],
     },
     8:{
       buildings:[
-        ['jimmie_hall',11,10,8],
-        ['kanon',4,4,8],['kanon',20,4,8],['kanon',4,18,7],['kanon',20,18,7],
-        ['pilbage_torn',12,3,7],['pilbage_torn',12,20,7],['pilbage_torn',3,11,6],
-        ['morsare',6,3,6],['morsare',18,3,6],['morsare',6,20,5],
-        ['luftforsvar',3,8,6],['luftforsvar',21,8,6],
-        ['tesla_torn',9,9,4],['tesla_torn',15,9,4],
-        ['riksdaler_gruva',2,2,8],['riksdaler_gruva',22,2,8],['riksdaler_gruva',2,10,8],
-        ['riksdaler_gruva',22,10,8],['riksdaler_gruva',2,18,8],['riksdaler_gruva',22,18,8],
-        ['saft_samlare',2,6,8],['saft_samlare',22,6,8],['saft_samlare',2,14,8],
-        ['riksdaler_forrad',2,21,6],['riksdaler_forrad',22,21,6],['riksdaler_forrad',12,22,5],
-        ['saft_tank',7,22,6],['saft_tank',17,22,6],
-        ['dark_bohrare',4,22,4],['dark_bohrare',20,22,4],
-        ['kasern',5,22,7],['laboratorium',13,22,6],
+        ['jimmie_hall',10,10,8],
+        ['kanon',3,3,8],['kanon',19,3,8],
+        ['kanon',3,18,7],['kanon',19,18,7],
+        ['kanon',10,2,7],
+        ['pilbage_torn',10,20,6],
+        ['pilbage_torn',3,10,6],['pilbage_torn',19,10,6],
+        ['morsare',4,3,6],['morsare',18,3,6],
+        ['morsare',4,18,5],['morsare',18,18,5],
+        ['luftforsvar',3,14,6],['luftforsvar',20,14,6],
+        ['tesla_torn',9,9,4],['tesla_torn',13,9,4],
+        ['tesla_torn',9,14,3],['tesla_torn',13,14,3],
       ],
-      walls:[[8,8],[9,8],[10,8],[11,8],[12,8],[13,8],[14,8],[15,8],[16,8],
-             [8,16],[9,16],[10,16],[11,16],[12,16],[13,16],[14,16],[15,16],[16,16],
-             [8,9],[8,10],[8,11],[8,12],[8,13],[8,14],[8,15],
-             [16,9],[16,10],[16,11],[16,12],[16,13],[16,14],[16,15],
-             [9,7],[10,7],[11,7],[12,7],[13,7],[14,7],[15,7],
-             [9,17],[10,17],[11,17],[12,17],[13,17],[14,17],[15,17],
-             [7,8],[7,9],[7,10],[7,11],[7,12],[7,13],[7,14],[7,15],[7,16],
-             [17,8],[17,9],[17,10],[17,11],[17,12],[17,13],[17,14],[17,15],[17,16]],
+      walls:[
+        [5,7],[6,7],[7,7],[8,7],[9,7],[10,7],[11,7],[12,7],[13,7],[14,7],[15,7],[16,7],[17,7],
+        [5,19],[6,19],[7,19],[8,19],[9,19],[10,19],[11,19],[12,19],[13,19],[14,19],[15,19],[16,19],[17,19],
+        [5,8],[5,9],[5,10],[5,11],[5,12],[5,13],[5,14],[5,15],[5,16],[5,17],[5,18],
+        [17,8],[17,9],[17,10],[17,11],[17,12],[17,13],[17,14],[17,15],[17,16],[17,17],[17,18],
+        [8,6],[9,6],[10,6],[11,6],[12,6],[13,6],[14,6],
+        [8,20],[9,20],[10,20],[11,20],[12,20],[13,20],[14,20],
+      ],
     },
   };
 
@@ -3378,7 +3388,7 @@ function drawAttack(){
   atkBuildings.filter(b=>b.alive).forEach(b=>{
     const sx=b.gx*ATK_C+ATK_CAM_X,sy=b.gy*ATK_C+ATK_CAM_Y;
     const bw=b.size*ATK_C,bh=b.size*ATK_C;
-    drawBuildingGraphic(ctx,b.type,b.lv,sx,sy,bw,bh);
+    drawBuildingGraphic(ctx,b.type,b.lv||1,sx,sy,bw,bh);
     // HP bar
     const pct=b.hp/b.maxHp;
     ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fillRect(sx,sy-8,bw,6);
@@ -4030,7 +4040,7 @@ canvas.addEventListener('wheel',e=>{
   e.preventDefault();
   const delta=e.deltaY>0?-0.08:0.08;
   const oldZoom=zoom;
-  zoom=Math.max(0.45,Math.min(1.5,zoom+delta));
+  zoom=Math.max(0.45,Math.min(3.0,zoom+delta));
   if(zoom===oldZoom)return;
   CELL=Math.round(BASE_CELL*zoom);
   // Zoom toward mouse cursor
@@ -4058,7 +4068,7 @@ canvas.addEventListener('touchmove',e=>{
     const delta=(dist-lastPinchDist)*0.004;
     const oldZoom2=zoom;
     const minZoom2=Math.max(0.3,Math.min(W,H)/(GRID*BASE_CELL));
-    zoom=Math.max(minZoom2,Math.min(2.0,zoom+delta));
+    zoom=Math.max(minZoom2,Math.min(3.0,zoom+delta));
     const oldCell2=Math.round(BASE_CELL*oldZoom2);
     CELL=Math.round(BASE_CELL*zoom);
     // Zoom toward pinch center
@@ -4913,7 +4923,7 @@ function getBuildingSprite(b){
   const dpr=window.devicePixelRatio||1;
   octx.setTransform(dpr,0,0,dpr,0,0);
   const cssSize=size/dpr;
-  drawBuildingGraphic(octx,b.type,b.lv,0,0,cssSize,cssSize);
+  drawBuildingGraphic(octx,b.type,b.lv||1,0,0,cssSize,cssSize);
   _spriteCache.set(key,oc);
   return oc;
 }
