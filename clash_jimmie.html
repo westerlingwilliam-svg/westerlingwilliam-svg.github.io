@@ -1185,6 +1185,24 @@ function initGrass(){
 }
 initGrass();
 
+
+// ── GRASS CACHE ──────────────────────────────────────────────────
+let _grassCanvas=null,_grassCamX=null,_grassCamY=null,_grassZoom=null;
+function drawGrassCached(ctx,W,H,camX,camY,zoom){
+  // Only redraw grass when camera moves or zoom changes
+  const camXR=Math.round(camX/4)*4,camYR=Math.round(camY/4)*4;
+  if(!_grassCanvas||_grassCamX!==camXR||_grassCamY!==camYR||_grassZoom!==zoom||_grassCanvas.width!==W||_grassCanvas.height!==H){
+    if(!_grassCanvas||_grassCanvas.width!==W||_grassCanvas.height!==H){
+      _grassCanvas=document.createElement('canvas');_grassCanvas.width=W;_grassCanvas.height=H;
+    }
+    const gc=_grassCanvas.getContext('2d');
+    gc.clearRect(0,0,W,H);
+    drawGrassRaw(gc,W,H,camX,camY);
+    _grassCamX=camXR;_grassCamY=camYR;_grassZoom=zoom;
+  }
+  ctx.drawImage(_grassCanvas,0,0);
+}
+
 function drawBase(){
   ctx.clearRect(0,0,W,H);
 
@@ -1345,7 +1363,8 @@ function drawBuilding(b){
 
   // ── ISOMETRIC 3D DEPTH — CoC style ──────────────────────────────
   const isWall=b.type==='mur';
-  const isoH=isWall?CELL*0.14:Math.max(CELL*0.22,bw*0.16); // height of 3D side panels
+  if(bw<8)return; // too small to bother
+  const isoH=isWall?CELL*0.14:Math.max(CELL*0.22,bw*0.16);
   const cx2=sx+bw/2;
 
   // 1. Ground dirt patch under building (connects to earth)
@@ -1468,14 +1487,14 @@ function drawBuildingGraphic(ctx,type,lv,sx,sy,bw,bh){
       if(w>40){const brickW=Math.max(10,w*0.38);for(let rx=x+brickW;rx<x+w;rx+=brickW){ctx.beginPath();ctx.moveTo(rx,y);ctx.lineTo(rx,y+h);ctx.stroke();}}
     }
   }
-  const _shadeCache={};
+  const _shadeCache2={};
   function shadeCol(hex,f){
     const key=hex+'|'+f;
-    if(_shadeCache[key])return _shadeCache[key];
-    const oc2=document.createElement('canvas').getContext('2d');oc2.fillStyle=hex;oc2.fillRect(0,0,1,1);
-    const d=oc2.getImageData(0,0,1,1).data;
-    const r=`rgb(${Math.floor(d[0]*f)},${Math.floor(d[1]*f)},${Math.floor(d[2]*f)})`;
-    _shadeCache[key]=r;return r;
+    if(_shadeCache2[key])return _shadeCache2[key];
+    let h=hex.replace('#','');
+    if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+    const r2=`rgb(${Math.floor(parseInt(h.slice(0,2),16)*f)},${Math.floor(parseInt(h.slice(2,4),16)*f)},${Math.floor(parseInt(h.slice(4,6),16)*f)})`;
+    _shadeCache2[key]=r2;return r2;
   }
   function drawBattlements(x,y,w,sz,col){
     const n=Math.floor(w/(sz*1.8));
@@ -2787,10 +2806,7 @@ function renderResearchPanel(){
   const bt_lab=BUILDING_TYPES['laboratorium'];
   // Panel header with close + move
   const labInst=G.buildings.find(b=>b.type==='laboratorium');
-  let html=`<div style="display:flex;gap:8px;margin-bottom:14px">
-    <button onclick="movingBuilding=G.buildings.find(b=>b.type==='laboratorium');document.querySelectorAll('.panel').forEach(p=>p.classList.remove('open'));toast('Tryck på ny position ✥')" style="flex:1;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.15);border-radius:12px;color:rgba(255,255,255,0.8);padding:9px;font-size:0.78rem;font-weight:800;cursor:pointer">✥ Flytta Labb</button>
-    <button onclick="switchNav('by')" style="flex:1;background:rgba(255,215,0,0.08);border:1.5px solid rgba(255,215,0,0.2);border-radius:12px;color:rgba(255,215,0,0.8);padding:9px;font-size:0.78rem;font-weight:800;cursor:pointer">🏗️ Uppgradera</button>
-  </div>`;
+  let html='';
   let html2='';
   // Lab upgrade card
   if(lab&&bt_lab){
@@ -2912,10 +2928,7 @@ function renderHeroesPanel(){
   const scroll=document.getElementById('panel-heroes-scroll');if(!scroll)return;
   // Panel header with close + move
   const labInst=G.buildings.find(b=>b.type==='laboratorium');
-  let html=`<div style="display:flex;gap:8px;margin-bottom:14px">
-    <button onclick="movingBuilding=G.buildings.find(b=>b.type==='laboratorium');document.querySelectorAll('.panel').forEach(p=>p.classList.remove('open'));toast('Tryck på ny position ✥')" style="flex:1;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.15);border-radius:12px;color:rgba(255,255,255,0.8);padding:9px;font-size:0.78rem;font-weight:800;cursor:pointer">✥ Flytta Labb</button>
-    <button onclick="switchNav('by')" style="flex:1;background:rgba(255,215,0,0.08);border:1.5px solid rgba(255,215,0,0.2);border-radius:12px;color:rgba(255,215,0,0.8);padding:9px;font-size:0.78rem;font-weight:800;cursor:pointer">🏗️ Uppgradera</button>
-  </div>`;
+  let html='';
   let html2='';
   Object.entries(HERO_TYPES).forEach(([hid,hdef])=>{
     if(hdef.unlockJH&&hdef.unlockJH>G.jh_level){
@@ -4489,10 +4502,7 @@ function renderShopPanel(){
   if(!types.length){scroll.innerHTML='<div style="text-align:center;color:rgba(255,255,255,0.3);padding:30px">Inga byggnader.</div>';return;}
   // Panel header with close + move
   const labInst=G.buildings.find(b=>b.type==='laboratorium');
-  let html=`<div style="display:flex;gap:8px;margin-bottom:14px">
-    <button onclick="movingBuilding=G.buildings.find(b=>b.type==='laboratorium');document.querySelectorAll('.panel').forEach(p=>p.classList.remove('open'));toast('Tryck på ny position ✥')" style="flex:1;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.15);border-radius:12px;color:rgba(255,255,255,0.8);padding:9px;font-size:0.78rem;font-weight:800;cursor:pointer">✥ Flytta Labb</button>
-    <button onclick="switchNav('by')" style="flex:1;background:rgba(255,215,0,0.08);border:1.5px solid rgba(255,215,0,0.2);border-radius:12px;color:rgba(255,215,0,0.8);padding:9px;font-size:0.78rem;font-weight:800;cursor:pointer">🏗️ Uppgradera</button>
-  </div>`;
+  let html='';
   let html2='';
   types.forEach(([typeId,bt])=>{
     const existing=G.buildings.filter(b=>b.type===typeId);
