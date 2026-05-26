@@ -1276,7 +1276,7 @@ function drawBase(){
     if(stored2>=minC&&_bt2&&(_bt2.goldPerHour||_bt2.elixirPerHour||_bt2.darkPerHour)&&!b.upgrading&&!suppressedCollect.has(b.id)){
       const cap2=_bt2.buildingCap?_bt2.buildingCap[Math.min(b.lv-1,_bt2.buildingCap.length-1)]:500;
       const pct2=Math.min(1,stored2/cap2);
-      const bob2=Math.sin(Date.now()/600)*5;
+      const bob2=Math.sin(Date.now()/800)*6+Math.sin(Date.now()/1300)*2;
       const ix=sx2+bw2/2, iy=sy2-16+bob2;
       ctx.fillStyle='rgba(0,0,0,0.18)';ctx.beginPath();ctx.ellipse(ix,sy2-4,11,3.5,0,0,Math.PI*2);ctx.fill();
       const bgCol2=b.storeType==='dark'?'#440066':b.storeType==='elixir'?'#8800cc':'#cc8800';
@@ -2272,10 +2272,10 @@ function drawBuildingGraphic(ctx,type,lv=1,sx,sy,bw,bh){
   // ════════════════════════════════════════════════════════════════
   } else if(type==='mur'){
     const wallPalettes=[
-      ['#9a9a9a','#7a7a7a','#bbbbbb'],['#aaaaaa','#888888','#cccccc'],
-      ['#cc8844','#aa6622','#ffaa66'],['#aa3333','#882222','#cc5555'],
-      ['#884488','#662266','#aa66aa'],['#4488aa','#226688','#66aacc'],
-      ['#44aa44','#228822','#66cc66'],['#ccaa22','#aa8800','#ffcc44'],
+      ['#aaaaaa','#888888','#cccccc'],['#bbbbbb','#999999','#dddddd'],
+      ['#dd9944','#bb7722','#ffbb66'],['#cc3333','#aa1111','#ee5555'],
+      ['#aa44aa','#882288','#cc66cc'],['#4499cc','#2277aa','#66bbee'],
+      ['#44bb44','#229922','#66dd66'],['#eebb22','#cc9900','#ffdd44'],
     ];
     const [mainC,darkC,lightC]=wallPalettes[Math.min(lv-1,7)];
     const wG=ctx.createLinearGradient(sx,sy,sx,sy+bh);
@@ -3893,7 +3893,7 @@ function drawAttack(){
       [[ux-sc*0.38,0],[ux+sc*0.09,0]].forEach(([x])=>{ctx.fillRect(x,uy+sc*0.52,sc*0.3,sc*0.14);});
       // Body
       const pg=atkCtx.createLinearGradient(ux-sc*0.75,uy-sc*0.3,ux+sc*0.75,uy+sc*0.55);
-      pg.addColorStop(0,'#2244cc');pg.addColorStop(0.5,'#1133aa');pg.addColorStop(1,'#091866');
+      pg.addColorStop(0,'#2255ee');pg.addColorStop(0.5,'#1144cc');pg.addColorStop(1,'#0a1e7a');
       ctx.fillStyle=pg;ctx.beginPath();ctx.roundRect(ux-sc*0.74,uy-sc*0.3,sc*1.48,sc*0.84,sc*0.1);ctx.fill();
       // Chest plate highlight
       ctx.fillStyle='rgba(100,140,255,0.2)';ctx.fillRect(ux-sc*0.62,uy-sc*0.28,sc*1.24,sc*0.25);
@@ -4046,7 +4046,7 @@ function drawAttack(){
         ctx.fillStyle='#5a3a0a';ctx.beginPath();ctx.roundRect(x,uy+sc*(0.48+s),sc*0.28,sc*0.58,sc*0.07);ctx.fill();
       });
       const bg=atkCtx.createLinearGradient(ux-sc*0.56,uy-sc*0.24,ux+sc*0.56,uy+sc*0.52);
-      bg.addColorStop(0,rage?'#ff8800':bc);bg.addColorStop(1,rage?'#cc4400':'#7a5010');
+      bg.addColorStop(0,rage?'#ff8800':'#cc6600');bg.addColorStop(1,rage?'#cc4400':'#8a5c10');
       ctx.fillStyle=bg;ctx.beginPath();ctx.roundRect(ux-sc*0.56,uy-sc*0.24,sc*1.12,sc*0.78,sc*0.12);ctx.fill();
       ctx.fillStyle='rgba(255,200,100,0.15)';ctx.fillRect(ux-sc*0.5,uy-sc*0.22,sc,sc*0.2);
       ctx.fillStyle='#2a1806';ctx.fillRect(ux-sc*0.54,uy+sc*0.2,sc*1.08,sc*0.11);
@@ -4085,9 +4085,15 @@ function drawAttack(){
     // HP bar
     const hbw=sc*2.2;const pct=u.hp/u.maxHp;
     const hY=u.troopId==='sd_jatte'?uy-sc*1.78:u.troopId==='pekka_jimmie'?uy-sc*2.16:uy-sc*1.42;
-    ctx.fillStyle='rgba(0,0,0,0.7)';ctx.beginPath();ctx.roundRect(ux-hbw/2,hY,hbw,5,2);ctx.fill();
+    // HP bar background
+    ctx.fillStyle='rgba(0,0,0,0.75)';ctx.beginPath();ctx.roundRect(ux-hbw/2-1,hY-1,hbw+2,7,3);ctx.fill();
+    // HP bar fill
     const hcol=pct>0.6?'#4ade80':pct>0.3?'#facc15':'#ef4444';
-    ctx.fillStyle=hcol;ctx.beginPath();ctx.roundRect(ux-hbw/2,hY,hbw*pct,5,2);ctx.fill();
+    const hbarG=ctx.createLinearGradient(ux-hbw/2,hY,ux-hbw/2,hY+5);
+    hbarG.addColorStop(0,hcol+'ff');hbarG.addColorStop(1,hcol+'99');
+    ctx.fillStyle=hbarG;ctx.beginPath();ctx.roundRect(ux-hbw/2,hY,hbw*pct,5,3);ctx.fill();
+    // HP bar shine
+    ctx.fillStyle='rgba(255,255,255,0.2)';ctx.beginPath();ctx.roundRect(ux-hbw/2,hY,hbw*pct,2,2);ctx.fill();
     if(u.isHero){ctx.font=`${sc*0.7}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('👑',ux,hY-sc*0.5);}
   });
   // Defense fire lines
@@ -4573,7 +4579,7 @@ canvas.addEventListener('mouseup',e=>{
 });
 canvas.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0];dragStart={x:t.clientX,y:t.clientY};camStart={x:camX,y:camY};dragging=false;},{passive:false});
 canvas.addEventListener('touchmove',e=>{e.preventDefault();const t=e.touches[0];const dx=t.clientX-dragStart.x,dy=t.clientY-dragStart.y;if(Math.abs(dx)>8||Math.abs(dy)>8)dragging=true;if(dragging){
-    camX=camStart.x+dx;camY=camStart.y+dy;clampCamera();
+    camTargX=camStart.x+dx;camTargY=camStart.y+dy;camX=camTargX;camY=camTargY;clampCamera();
   }},{passive:false});
 canvas.addEventListener('touchend',e=>{e.preventDefault();if(!dragging){const t=e.changedTouches[0];handleCanvasClick(t.clientX,t.clientY);}dragging=false;},{passive:false});
 
