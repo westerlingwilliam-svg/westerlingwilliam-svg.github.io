@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Jimmie Vale</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;}
+#canvas{display:block;position:fixed;inset:0;}
+#ui{position:fixed;inset:0;pointer-events:none;}
+
+/* HUD */
+#hud{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:flex-start;padding:14px 16px;pointer-events:all;}
+.res-pill{display:flex;align-items:center;gap:8px;background:rgba(8,5,2,0.82);border:1.5px solid rgba(212,175,55,0.45);border-radius:50px;padding:7px 16px 7px 10px;backdrop-filter:blur(12px);box-shadow:0 3px 14px rgba(0,0,0,0.5);}
+.res-orb{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.8rem;}
+.res-orb.gold{background:radial-gradient(circle at 32% 28%,#fff5a0,#ffcc00,#886600);box-shadow:0 0 10px rgba(255,200,0,0.5);}
+.res-orb.gem{background:radial-gradient(circle at 32% 28%,#aaffaa,#22cc44,#115522);box-shadow:0 0 10px rgba(40,200,80,0.5);}
+.res-val{font-family:'Cinzel',serif;font-weight:700;font-size:0.95rem;color:#FFE060;}
+.res-val.g{color:#66ee66;}
+#game-title{font-family:'Cinzel Decorative',serif;font-size:clamp(0.9rem,2.5vw,1.2rem);font-weight:700;color:#FFD700;text-shadow:0 0 20px rgba(255,210,0,0.5),0 2px 4px rgba(0,0,0,0.8);letter-spacing:3px;text-align:center;padding:8px 20px;background:rgba(8,5,2,0.75);border:1.5px solid rgba(212,175,55,0.4);border-radius:12px;backdrop-filter:blur(12px);}
+
+/* Shop button */
+#shop-btn{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);pointer-events:all;background:linear-gradient(135deg,rgba(20,12,2,0.95),rgba(10,6,1,0.98));border:2px solid rgba(212,175,55,0.6);border-radius:50px;padding:12px 32px;display:flex;align-items:center;gap:10px;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,0.5),0 0 16px rgba(212,175,55,0.15);transition:all .2s;backdrop-filter:blur(12px);}
+#shop-btn:hover{border-color:rgba(212,175,55,0.9);box-shadow:0 6px 24px rgba(0,0,0,0.6),0 0 24px rgba(212,175,55,0.25);transform:translateX(-50%) translateY(-2px);}
+#shop-btn .icon{font-size:1.4rem;}
+#shop-btn .label{font-family:'Cinzel',serif;font-size:0.85rem;font-weight:700;color:#D4AF37;letter-spacing:2px;}
+#home-btn{pointer-events:all;width:46px;height:46px;display:flex;align-items:center;justify-content:center;background:rgba(8,5,2,0.82);border:1.5px solid rgba(212,175,55,0.45);border-radius:50%;backdrop-filter:blur(12px);box-shadow:0 3px 14px rgba(0,0,0,0.5);font-size:1.2rem;text-decoration:none;transition:all .2s;flex-shrink:0;}
+#home-btn:hover{border-color:rgba(212,175,55,0.85);box-shadow:0 4px 18px rgba(0,0,0,0.6),0 0 14px rgba(212,175,55,0.2);transform:translateY(-2px);}
+
+/* Shop */
+#shop{position:fixed;inset:0;z-index:200;display:none;align-items:flex-start;justify-content:center;padding-top:16px;}
+#shop.open{display:flex;}
+#shop-bg{position:absolute;inset:0;background:rgba(0,0,0,0.78);backdrop-filter:blur(6px);}
+#shop-panel{position:relative;z-index:1;width:min(96vw,660px);max-height:90vh;display:flex;flex-direction:column;border-radius:3px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.85),0 0 0 1px rgba(212,175,55,0.25);}
+
+/* Shop header */
+#sh-header{background:linear-gradient(180deg,#1e1408,#2a1c0c);border-bottom:3px solid #6a4010;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden;}
+#sh-header::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0,transparent 39px,rgba(0,0,0,0.12) 39px,rgba(0,0,0,0.12) 41px),repeating-linear-gradient(0deg,transparent 0,transparent 27px,rgba(0,0,0,0.08) 27px,rgba(0,0,0,0.08) 29px);pointer-events:none;}
+.s-torch{display:flex;flex-direction:column;align-items:center;gap:2px;position:relative;z-index:1;}
+.s-flame{width:14px;height:20px;background:radial-gradient(ellipse at 50% 85%,#fffaaa,#ff9900,transparent);border-radius:50% 50% 35% 35%;animation:fl .35s ease-in-out infinite alternate;}
+@keyframes fl{from{transform:scaleX(1) scaleY(1);opacity:0.92;}to{transform:scaleX(0.82) scaleY(1.1);opacity:1;}}
+.s-tbase{width:7px;height:13px;background:linear-gradient(180deg,#8B5E2A,#4a2e08);border-radius:2px;}
+.sh-center{text-align:center;position:relative;z-index:1;}
+.sh-title{font-family:'Cinzel Decorative',serif;font-size:clamp(1rem,3vw,1.35rem);font-weight:700;color:#D4AF37;text-shadow:0 0 20px rgba(212,175,55,0.6),0 2px 6px rgba(0,0,0,0.9);letter-spacing:3px;}
+.sh-sub{font-family:'IM Fell English',serif;font-style:italic;font-size:0.7rem;color:rgba(212,175,55,0.45);letter-spacing:2px;margin-top:2px;}
+#sh-close{width:36px;height:36px;border:1.5px solid rgba(212,175,55,0.4);border-radius:50%;background:rgba(212,175,55,0.08);color:#D4AF37;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.18s;position:relative;z-index:1;font-family:'Cinzel',serif;}
+#sh-close:hover{background:rgba(212,175,55,0.22);border-color:rgba(212,175,55,0.8);}
+
+/* Tabs */
+#sh-tabs{background:linear-gradient(180deg,#160e04,#1e1408);display:flex;border-bottom:2px solid #4a2e08;}
+.sh-tab{flex:1;padding:11px 6px;font-family:'Cinzel',serif;font-size:0.62rem;font-weight:700;letter-spacing:1.5px;color:rgba(212,175,55,0.38);text-align:center;cursor:pointer;border:none;background:none;text-transform:uppercase;transition:.15s;position:relative;}
+.sh-tab.active{color:#D4AF37;background:rgba(212,175,55,0.06);}
+.sh-tab.active::after{content:'';position:absolute;bottom:-2px;left:25%;right:25%;height:2px;background:linear-gradient(90deg,transparent,#D4AF37,transparent);}
+.sh-tab:hover:not(.active){color:rgba(212,175,55,0.65);}
+
+/* Body */
+#sh-body{flex:1;overflow-y:auto;background:linear-gradient(160deg,#130c04,#1c1208);position:relative;min-height:260px;}
+#sh-body::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0,transparent 59px,rgba(0,0,0,0.1) 59px,rgba(0,0,0,0.1) 61px),repeating-linear-gradient(90deg,transparent 0,transparent 59px,rgba(0,0,0,0.07) 59px,rgba(0,0,0,0.07) 61px);pointer-events:none;}
+#sh-body::-webkit-scrollbar{width:5px;background:rgba(0,0,0,0.3);}
+#sh-body::-webkit-scrollbar-thumb{background:rgba(212,175,55,0.25);border-radius:3px;}
+
+/* Divider */
+.s-divider{display:flex;align-items:center;gap:14px;padding:18px 22px 0;position:relative;z-index:1;}
+.s-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,0.28),transparent);}
+.s-rune{font-family:'Cinzel',serif;font-size:0.65rem;color:rgba(212,175,55,0.35);letter-spacing:5px;}
+
+/* Pillars */
+.s-pillars{display:flex;justify-content:space-between;padding:10px 20px;position:relative;z-index:1;}
+.s-pillar{width:14px;height:52px;background:linear-gradient(90deg,#1e1408,#3a2810,#1e1408);border-radius:2px;box-shadow:0 4px 10px rgba(0,0,0,0.6);}
+.s-pillar::before,.s-pillar::after{content:'';display:block;height:2px;background:rgba(212,175,55,0.18);border-radius:1px;margin:5px 2px;}
+
+/* Empty state */
+.s-empty{display:flex;flex-direction:column;align-items:center;padding:40px 30px 50px;text-align:center;position:relative;z-index:1;}
+.s-empty-icon{font-size:3rem;margin-bottom:14px;animation:bob 2.8s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-9px);}}
+.s-empty-title{font-family:'Cinzel Decorative',serif;font-size:1rem;color:#D4AF37;margin-bottom:8px;text-shadow:0 0 14px rgba(212,175,55,0.35);}
+.s-empty-text{font-family:'IM Fell English',serif;font-style:italic;font-size:0.85rem;color:rgba(212,175,55,0.4);line-height:1.7;max-width:280px;}
+
+/* Arch */
+.s-arch{width:100%;height:70px;background:radial-gradient(ellipse at 50% 0%,rgba(212,175,55,0.06) 0%,transparent 70%);position:relative;z-index:1;}
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<div id="ui">
+  <div id="hud">
+    <div style="display:flex;gap:8px;">
+      <div class="res-pill"><div class="res-orb gold">🪙</div><span class="res-val" id="gv">0</span></div>
+      <div class="res-pill"><div class="res-orb gem">💎</div><span class="res-val g" id="gmv">50</span></div>
+    </div>
+    <div id="game-title">JIMMIE VALE</div>
+    <a id="home-btn" href="games.html" title="Tillbaka till spel">🏠</a>
+  </div>
+  <button id="shop-btn" onclick="openShop()">
+    <span class="icon">🏪</span><span class="label">Shop</span>
+  </button>
+</div>
+
+<div id="shop">
+  <div id="shop-bg" onclick="closeShop()"></div>
+  <div id="shop-panel">
+    <div id="sh-header">
+      <div class="s-torch"><div class="s-flame"></div><div class="s-tbase"></div></div>
+      <div class="sh-center">
+        <div class="sh-title">THE DRAGON MARKET</div>
+        <div class="sh-sub">Ancient Wares & Mystical Goods</div>
+      </div>
+      <div class="s-torch"><div class="s-flame"></div><div class="s-tbase"></div></div>
+      <button id="sh-close" onclick="closeShop()">✕</button>
+    </div>
+    <div id="sh-tabs">
+      <button class="sh-tab active">🐉 Dragons</button>
+      <button class="sh-tab">🏠 Habitats</button>
+      <button class="sh-tab">🌿 Decor</button>
+      <button class="sh-tab">⚗️ Items</button>
+    </div>
+    <div id="sh-body">
+      <div class="s-divider"><div class="s-line"></div><div class="s-rune">✦ MDCCCXLVII ✦</div><div class="s-line"></div></div>
+      <div class="s-pillars">
+        <div class="s-pillar"></div><div class="s-pillar"></div><div class="s-pillar"></div>
+        <div class="s-pillar"></div><div class="s-pillar"></div><div class="s-pillar"></div>
+      </div>
+      <div class="s-arch"></div>
+      <div class="s-empty">
+        <div class="s-empty-icon">🐲</div>
+        <div class="s-empty-title">Coming Soon</div>
+        <div class="s-empty-text">The merchants are still preparing their wares. Check back soon, dragon tamer.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('canvas');
+let ctx = canvas.getContext('2d');
+let W, H;
+
+function resize() {
+  const dpr = window.devicePixelRatio || 1;
+  W = window.innerWidth; H = window.innerHeight;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+window.addEventListener('resize', resize); resize();
+
+// ── CLOUDS ────────────────────────────────────────────────────────
+function drawCloud(x, y, s, a) {
+  ctx.save(); ctx.globalAlpha = a;
+  const blobs = [[0,0,50],[46,-16,40],[90,-8,46],[134,4,36],[24,14,32],[65,18,30],[100,10,28]];
+  blobs.forEach(([bx,by,r]) => {
+    const g = ctx.createRadialGradient(x+bx*s,y+by*s,0,x+bx*s,y+by*s,r*s);
+    g.addColorStop(0,'#ffffff'); g.addColorStop(0.7,'#f0f8ff'); g.addColorStop(1,'rgba(220,240,255,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(x+bx*s, y+by*s, r*s, 0, Math.PI*2); ctx.fill();
+  });
+  ctx.restore();
+}
+
+// ── ISLAND ────────────────────────────────────────────────────────
+function sr(s){const x=Math.sin(s)*43758.5453;return x-Math.floor(x);}
+
+function drawIsland(W, H, cam) {
+  const cx = W/2 + cam.x;
+  const cy = H/2 + cam.y;
+  const z = cam.zoom;
+
+  const gridSize = 18;
+  const cellSize = 32 * z;
+  const playW = gridSize * cellSize;
+  const playH = gridSize * cellSize;
+  const left = cx - playW/2, top = cy - playH/2;
+  const right = cx + playW/2, bot = cy + playH/2;
+
+  // ── FOREST FLOOR BASE (solid dark fill — fully covered by pattern below, no gradient math needed) ──
+  ctx.fillStyle = '#16240e';
+  ctx.fillRect(0, 0, W, H);
+
+  // ── TREES: seamless tiled pattern covers the whole forest, including right up to the wall ──
+  drawForestPattern(W, H, cam, left, top, right, bot);
+
+    // ── STONE BORDER WALL (richer, more ornate) ──
+  const wallT = 14 * z;
+
+  // Outer shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.35)';
+  ctx.fillRect(left-wallT-3, top-wallT-3, playW+wallT*2+6, playH+wallT*2+6);
+
+  // Base wall slab with gradient
+  const wallG = ctx.createLinearGradient(left-wallT, top-wallT, right+wallT, bot+wallT);
+  wallG.addColorStop(0, '#7a7264');
+  wallG.addColorStop(0.5, '#5e5648');
+  wallG.addColorStop(1, '#3a3428');
+  ctx.fillStyle = wallG;
+  ctx.fillRect(left-wallT, top-wallT, playW+wallT*2, playH+wallT*2);
+
+  // Inner shadow (where wall meets grass)
+  ctx.strokeStyle = 'rgba(0,0,0,0.4)'; ctx.lineWidth = 3*z;
+  ctx.strokeRect(left+1, top+1, playW-2, playH-2);
+
+  // Stone block pattern along the wall (proper masonry, not just dots)
+  const blockSize = 18*z;
+  function drawWallBlocks(x0,y0,wL,hL,horizontal){
+    const n = horizontal ? Math.ceil(wL/blockSize) : Math.ceil(hL/blockSize);
+    for(let i=0;i<n;i++){
+      const t=i/n;
+      const bx = horizontal ? x0+i*blockSize : x0;
+      const by = horizontal ? y0 : y0+i*blockSize;
+      const bw = horizontal ? blockSize : wL;
+      const bh = horizontal ? hL : blockSize;
+      const seed = sr(Math.round(bx*0.3)*13+Math.round(by*0.3)*17+5000);
+      const light = sr(Math.round(bx*0.3)*7+Math.round(by*0.3)*23+5000);
+      ctx.fillStyle = `hsl(32,${10+light*8}%,${30+light*22}%)`;
+      ctx.beginPath();
+      ctx.roundRect(bx+1.5, by+1.5, bw-3, bh-3, 2.5*z);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 0.8;
+      ctx.stroke();
+      // highlight
+      ctx.fillStyle = `rgba(255,255,255,${0.04+light*0.06})`;
+      ctx.beginPath();
+      ctx.roundRect(bx+2, by+2, bw*0.5, bh*0.3, 2*z);
+      ctx.fill();
+    }
+  }
+  drawWallBlocks(left-wallT, top-wallT, playW+wallT*2, wallT, true);   // top
+  drawWallBlocks(left-wallT, bot, playW+wallT*2, wallT, true);          // bottom
+  drawWallBlocks(left-wallT, top, wallT, playH, false);                 // left
+  drawWallBlocks(right, top, wallT, playH, false);                      // right
+
+  // Corner towers (small decorative stone pillars)
+  [[left-wallT,top-wallT],[right,top-wallT],[left-wallT,bot],[right,bot]].forEach(([px,py])=>{
+    const cG = ctx.createRadialGradient(px+wallT*0.3,py+wallT*0.3,0,px+wallT*0.5,py+wallT*0.5,wallT*0.9);
+    cG.addColorStop(0,'#8a8272'); cG.addColorStop(1,'#48422e');
+    ctx.fillStyle=cG;
+    ctx.beginPath(); ctx.roundRect(px,py,wallT,wallT,3*z); ctx.fill();
+    ctx.strokeStyle='rgba(0,0,0,0.3)'; ctx.lineWidth=1; ctx.stroke();
+  });
+
+  // Outer rim highlight
+  ctx.strokeStyle='rgba(220,210,190,0.3)'; ctx.lineWidth=1.5*z;
+  ctx.strokeRect(left-wallT+1, top-wallT+1, playW+wallT*2-2, playH+wallT*2-2);
+
+  // ── GRASS PLAY AREA — untouched logic, just keep as is ──
+  ctx.save();
+  ctx.beginPath(); ctx.rect(left, top, playW, playH); ctx.clip();
+
+  const gG = ctx.createLinearGradient(left, top, right, bot);
+  gG.addColorStop(0,'#5cc82c'); gG.addColorStop(0.5,'#4ab420'); gG.addColorStop(1,'#388a16');
+  ctx.fillStyle = gG; ctx.fillRect(left, top, playW, playH);
+
+  for(let gy=0; gy<gridSize; gy++){
+    for(let gx=0; gx<gridSize; gx++){
+      if((gx+gy)%2===0){
+        ctx.fillStyle='rgba(255,255,255,0.025)';
+        ctx.fillRect(left+gx*cellSize, top+gy*cellSize, cellSize, cellSize);
+      }
+    }
+  }
+  ctx.strokeStyle='rgba(0,0,0,0.04)'; ctx.lineWidth=1;
+  for(let gx=0;gx<=gridSize;gx++){
+    ctx.beginPath(); ctx.moveTo(left+gx*cellSize, top); ctx.lineTo(left+gx*cellSize, bot); ctx.stroke();
+  }
+  for(let gy=0;gy<=gridSize;gy++){
+    ctx.beginPath(); ctx.moveTo(left, top+gy*cellSize); ctx.lineTo(right, top+gy*cellSize); ctx.stroke();
+  }
+
+  const sg = ctx.createRadialGradient(left+playW*0.3, top+playH*0.25, 0, cx, cy, playW*0.7);
+  sg.addColorStop(0,'rgba(180,255,90,0.18)'); sg.addColorStop(1,'transparent');
+  ctx.fillStyle=sg; ctx.fillRect(left,top,playW,playH);
+
+  ctx.restore();
+}
+
+
+let _forestTile=null;
+
+// Draws a single soft cloud-like canopy clump (like CoC tree-tops)
+function drawCanopyClump(x, y, r, baseHue, baseSat, baseLight, seed) {
+  // Cluster of 4-6 overlapping circles forming an organic blob shape
+  const n = 5;
+  const blobs = [];
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * Math.PI * 2 + sr(seed*7+i*3.1)*0.6;
+    const dist = r * (0.32 + sr(seed*11+i*5.3)*0.22);
+    const br = r * (0.62 + sr(seed*13+i*2.7)*0.32);
+    blobs.push([x + Math.cos(a)*dist, y + Math.sin(a)*dist*0.85, br]);
+  }
+  blobs.push([x, y, r*0.85]); // center anchor blob
+
+  // Dark base shadow shape first (creates depth/crevices between clumps)
+  ctx.fillStyle = `hsl(${baseHue-4},${baseSat-2}%,${Math.max(6,baseLight-14)}%)`;
+  blobs.forEach(([bx,by,br]) => {
+    ctx.beginPath(); ctx.arc(bx, by, br*1.06, 0, Math.PI*2); ctx.fill();
+  });
+
+  // Mid-tone fill
+  ctx.fillStyle = `hsl(${baseHue},${baseSat}%,${baseLight}%)`;
+  blobs.forEach(([bx,by,br]) => {
+    ctx.beginPath(); ctx.arc(bx, by, br*0.92, 0, Math.PI*2); ctx.fill();
+  });
+
+  // Lighter top-left highlight per blob (sun direction)
+  blobs.forEach(([bx,by,br], i) => {
+    const g = ctx.createRadialGradient(bx-br*0.32, by-br*0.38, br*0.05, bx, by, br*0.9);
+    g.addColorStop(0, `hsla(${baseHue+6},${baseSat+5}%,${Math.min(72,baseLight+22)}%,0.9)`);
+    g.addColorStop(0.55, `hsla(${baseHue},${baseSat}%,${baseLight+6}%,0.3)`);
+    g.addColorStop(1, 'transparent');
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(bx, by, br*0.85, 0, Math.PI*2); ctx.fill();
+  });
+
+  // Tiny bright specular dots for texture (like leaf glints)
+  for (let i = 0; i < 3; i++) {
+    const a = sr(seed*17+i*9.1)*Math.PI*2;
+    const d = r * (0.15 + sr(seed*19+i*4.3)*0.4);
+    const px = x + Math.cos(a)*d, py = y + Math.sin(a)*d*0.85 - r*0.15;
+    ctx.fillStyle = `hsla(${baseHue+10},${baseSat}%,${Math.min(80,baseLight+30)}%,0.5)`;
+    ctx.beginPath(); ctx.arc(px, py, r*0.1, 0, Math.PI*2); ctx.fill();
+  }
+}
+
+const FOREST_REF_Z = 1.0; // tile is baked once at this reference zoom and reused forever
+
+function buildForestTile() {
+  const tileSize = Math.round(260 * FOREST_REF_Z);
+  const tc = document.createElement('canvas');
+  tc.width = tileSize; tc.height = tileSize;
+  const tx = tc.getContext('2d');
+  const prevCtx = ctx; ctx = tx;
+
+  ctx.fillStyle = '#16240e';
+  ctx.fillRect(0,0,tileSize,tileSize);
+
+  const cellPx = 22 * FOREST_REF_Z;
+  const cols = Math.ceil(tileSize/cellPx);
+  for (let dxRep=-1; dxRep<=1; dxRep++) {
+    for (let dyRep=-1; dyRep<=1; dyRep++) {
+      for (let gy=-1; gy<cols+1; gy++) {
+        for (let gx=-1; gx<cols+1; gx++) {
+          const seed = gx*131+gy*977;
+          const rowOff = (gy%2)*cellPx*0.5;
+          const jx = gx*cellPx + rowOff + (sr(seed*3.1)-0.5)*cellPx*0.5 + cellPx*0.5 + dxRep*tileSize;
+          const jy = gy*cellPx*0.86 + (sr(seed*5.7)-0.5)*cellPx*0.5 + cellPx*0.5 + dyRep*tileSize;
+          if (jx < -30 || jx > tileSize+30 || jy < -30 || jy > tileSize+30) continue;
+          const r = cellPx * (0.62 + sr(seed*2.3)*0.3);
+          const hue = 86 + sr(seed*1.7)*22;
+          const sat = 38 + sr(seed*4.1)*22;
+          const light = 28 + sr(seed*6.3)*16;
+          drawCanopyClump(jx, jy, r, hue, sat, light, seed);
+        }
+      }
+    }
+  }
+  ctx = prevCtx;
+
+  _forestTile = tc;
+  return tc;
+}
+
+function drawForestPattern(W, H, cam, left, top, right, bot) {
+  const z = cam.zoom;
+  // Tile is baked exactly once and reused forever — scaling for zoom happens
+  // via the pattern's transform matrix below, never by regenerating pixels.
+  if (!_forestTile) buildForestTile();
+  const tile = _forestTile;
+  const baseTs = tile.width; // tile size at reference zoom (unscaled)
+  const ts = baseTs * z;     // effective on-screen tile size at current zoom
+
+  // Solid dark base fill first — guarantees no corner can ever show through,
+  // regardless of any pattern/offset math.
+  ctx.fillStyle = '#101c0a';
+  ctx.fillRect(0, 0, W, H);
+
+  // Tile the forest texture, scaled by zoom via pattern transform, offset by camera
+  ctx.save();
+  const pattern = ctx.createPattern(tile, 'repeat');
+  if (pattern.setTransform) {
+    const m = new DOMMatrix();
+    const offX = (((cam.x % ts) + ts) % ts);
+    const offY = (((cam.y % ts) + ts) % ts);
+    m.translateSelf(offX, offY);
+    m.scaleSelf(z, z);
+    pattern.setTransform(m);
+    ctx.fillStyle = pattern;
+    ctx.fillRect(0, 0, W, H);
+  } else {
+    // Fallback for browsers without pattern.setTransform
+    const offX = (((cam.x % ts) + ts) % ts);
+    const offY = (((cam.y % ts) + ts) % ts);
+    ctx.translate(offX, offY);
+    ctx.scale(z, z);
+    ctx.fillStyle = pattern;
+    ctx.fillRect(-offX/z-baseTs, -offY/z-baseTs, (W+ts*2)/z, (H+ts*2)/z);
+  }
+  ctx.restore();
+
+  // Vignette/fog over the tiled distant forest for depth
+  const fogG = ctx.createRadialGradient((left+right)/2, (top+bot)/2, (right-left)*0.55, (left+right)/2, (top+bot)/2, (right-left)*1.3);
+  fogG.addColorStop(0, 'rgba(10,18,8,0)');
+  fogG.addColorStop(1, 'rgba(8,16,6,0.45)');
+  ctx.fillStyle = fogG;
+  ctx.fillRect(0,0,W,H);
+}
+
+
+
+function drawTree(x, y, sz, variant, depthFog) {
+  variant = (variant === undefined || variant === null) ? 0 : variant;
+  depthFog = depthFog || 0; // 0 = close/clear, 1 = far/hazy
+
+  // Atmospheric perspective: distant trees are desaturated + lighter + slightly blue
+  function fog(col) {
+    if (depthFog < 0.05) return col;
+    return mixColor(col, '#5a7a8a', depthFog * 0.45);
+  }
+
+  if (variant === 1) {
+    // Round oak — soft layered circles with gradient shading, smooth
+    const h=40*sz, w=34*sz;
+    ctx.fillStyle=`rgba(0,0,0,${0.22*(1-depthFog*0.5)})`;
+    ctx.beginPath(); ctx.ellipse(x+3*sz,y+3*sz,w*0.42,h*0.09,0,0,Math.PI*2); ctx.fill();
+
+    // Trunk with gradient
+    const trunkG = ctx.createLinearGradient(x-2.2*sz,0,x+2.2*sz,0);
+    trunkG.addColorStop(0, fog('#2a1a0c'));
+    trunkG.addColorStop(0.5, fog('#4a3018'));
+    trunkG.addColorStop(1, fog('#3a2614'));
+    ctx.fillStyle = trunkG;
+    ctx.beginPath();
+    ctx.moveTo(x-2.2*sz, y);
+    ctx.quadraticCurveTo(x-1.6*sz, y-h*0.12, x-1.8*sz, y-h*0.2);
+    ctx.lineTo(x+1.8*sz, y-h*0.2);
+    ctx.quadraticCurveTo(x+1.6*sz, y-h*0.12, x+2.2*sz, y);
+    ctx.closePath(); ctx.fill();
+
+    // Foliage - soft radial-shaded circles, layered for volume
+    const fcx = x, fcy = y - h*0.46;
+    const fr = w*0.46;
+    const foliageBlobs = [
+      [0, h*0.06, fr*1.0],
+      [-fr*0.42, -h*0.02, fr*0.72],
+      [fr*0.4, -h*0.04, fr*0.7],
+      [-fr*0.1, -fr*0.55, fr*0.62],
+      [fr*0.18, -fr*0.5, fr*0.58],
+    ];
+    foliageBlobs.forEach(([bx,by,br], i) => {
+      const bgx = fcx+bx, bgy = fcy+by;
+      const g = ctx.createRadialGradient(bgx-br*0.3, bgy-br*0.35, br*0.1, bgx, bgy, br*1.05);
+      g.addColorStop(0, fog(i%2===0 ? '#4a9430':'#3a8024'));
+      g.addColorStop(0.6, fog(i%2===0 ? '#2e6e1c':'#266018'));
+      g.addColorStop(1, fog('#1c4e10'));
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(bgx, bgy, br, 0, Math.PI*2); ctx.fill();
+    });
+    // Top sun highlight
+    ctx.fillStyle = `rgba(255,255,220,${(0.14)*(1-depthFog*0.7)})`;
+    ctx.beginPath(); ctx.arc(fcx-fr*0.3, fcy-fr*0.5, fr*0.26, 0, Math.PI*2); ctx.fill();
+
+  } else if (variant === 2) {
+    // Tall dark pine — smooth scalloped layers (bezier bumps instead of jagged lines)
+    const h=52*sz, w=24*sz;
+    ctx.fillStyle=`rgba(0,0,0,${0.22*(1-depthFog*0.5)})`;
+    ctx.beginPath(); ctx.ellipse(x+2.5*sz,y+3*sz,w*0.48,h*0.06,0,0,Math.PI*2); ctx.fill();
+
+    const trunkG2 = ctx.createLinearGradient(x-1.8*sz,0,x+1.8*sz,0);
+    trunkG2.addColorStop(0, fog('#241808'));
+    trunkG2.addColorStop(0.5, fog('#3a2a16'));
+    trunkG2.addColorStop(1, fog('#2c1f0e'));
+    ctx.fillStyle = trunkG2;
+    ctx.fillRect(x-1.8*sz, y-h*0.13, 3.6*sz, h*0.17);
+
+    const layers=[
+      {yOff:-h*0.08, w:w*0.76, h:h*0.3, col:['#0e2807','#1a3e0e']},
+      {yOff:-h*0.3,  w:w*0.64, h:h*0.27,col:['#163209','#204813']},
+      {yOff:-h*0.5,  w:w*0.52, h:h*0.25,col:['#1c3c0d','#265418']},
+      {yOff:-h*0.68, w:w*0.4,  h:h*0.22,col:['#224410','#2c601d']},
+      {yOff:-h*0.84, w:w*0.26, h:h*0.18,col:['#284e14','#326a22']},
+    ];
+    layers.forEach((L)=>{
+      const topY = y+L.yOff-L.h, botY = y+L.yOff;
+      const g = ctx.createLinearGradient(x, topY, x, botY);
+      g.addColorStop(0, fog(L.col[1]));
+      g.addColorStop(1, fog(L.col[0]));
+      ctx.fillStyle = g;
+      // Smooth scalloped triangle using quadratic bumps along the bottom edge
+      ctx.beginPath();
+      ctx.moveTo(x, topY);
+      ctx.quadraticCurveTo(x-L.w*0.32, botY-L.h*0.18, x-L.w/2, botY);
+      ctx.quadraticCurveTo(x-L.w*0.18, botY-L.h*0.06, x, botY-L.h*0.1);
+      ctx.quadraticCurveTo(x+L.w*0.18, botY-L.h*0.06, x+L.w/2, botY);
+      ctx.quadraticCurveTo(x+L.w*0.32, botY-L.h*0.18, x, topY);
+      ctx.closePath(); ctx.fill();
+    });
+    // Subtle highlight strip
+    ctx.fillStyle = `rgba(255,255,220,${0.07*(1-depthFog*0.7)})`;
+    ctx.beginPath();
+    ctx.ellipse(x-w*0.08, y-h*0.78, w*0.12, h*0.12, -0.3, 0, Math.PI*2);
+    ctx.fill();
+
+  } else if (variant === 3) {
+    // Birch — pale smooth trunk, soft round canopy
+    const h=44*sz, w=18*sz;
+    ctx.fillStyle=`rgba(0,0,0,${0.2*(1-depthFog*0.5)})`;
+    ctx.beginPath(); ctx.ellipse(x+2*sz,y+3*sz,w*0.55,h*0.06,0,0,Math.PI*2); ctx.fill();
+
+    const trunkG3=ctx.createLinearGradient(x-1.6*sz,0,x+1.6*sz,0);
+    trunkG3.addColorStop(0, fog('#6a6250'));
+    trunkG3.addColorStop(0.45, fog('#c4bca6'));
+    trunkG3.addColorStop(1, fog('#8a8270'));
+    ctx.fillStyle=trunkG3;
+    ctx.beginPath();
+    ctx.moveTo(x-1.6*sz, y);
+    ctx.quadraticCurveTo(x-1.2*sz, y-h*0.25, x-1.3*sz, y-h*0.5);
+    ctx.lineTo(x+1.3*sz, y-h*0.5);
+    ctx.quadraticCurveTo(x+1.2*sz, y-h*0.25, x+1.6*sz, y);
+    ctx.closePath(); ctx.fill();
+    // Bark marks
+    ctx.strokeStyle = `rgba(50,45,35,${0.35*(1-depthFog*0.5)})`; ctx.lineWidth=1*sz;
+    [0.15,0.3].forEach(t=>{ ctx.beginPath(); ctx.moveTo(x-1.3*sz,y-h*t); ctx.lineTo(x+0.8*sz,y-h*t-h*0.02); ctx.stroke(); });
+
+    const fcx2=x, fcy2=y-h*0.66, fr2=w*0.85;
+    const g2 = ctx.createRadialGradient(fcx2-fr2*0.3,fcy2-fr2*0.3,fr2*0.1,fcx2,fcy2,fr2*1.1);
+    g2.addColorStop(0, fog('#5aa838'));
+    g2.addColorStop(0.6, fog('#3a8024'));
+    g2.addColorStop(1, fog('#286018'));
+    ctx.fillStyle=g2;
+    ctx.beginPath(); ctx.arc(fcx2,fcy2,fr2,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle=`rgba(255,255,220,${0.12*(1-depthFog*0.7)})`;
+    ctx.beginPath(); ctx.arc(fcx2-fr2*0.3,fcy2-fr2*0.3,fr2*0.25,0,Math.PI*2); ctx.fill();
+
+  } else {
+    // Classic pine — smooth scalloped layers
+    const h=38*sz, w=28*sz;
+    ctx.fillStyle=`rgba(0,0,0,${0.2*(1-depthFog*0.5)})`;
+    ctx.beginPath(); ctx.ellipse(x+3*sz,y+4*sz,w*0.42,h*0.1,0,0,Math.PI*2); ctx.fill();
+
+    const trunkG4=ctx.createLinearGradient(x-2.3*sz,0,x+2.3*sz,0);
+    trunkG4.addColorStop(0, fog('#321f0c'));
+    trunkG4.addColorStop(0.5, fog('#4a3018'));
+    trunkG4.addColorStop(1, fog('#3a2510'));
+    ctx.fillStyle=trunkG4;
+    ctx.fillRect(x-2.3*sz, y-h*0.16, 4.6*sz, h*0.2);
+
+    const layers2=[
+      {yOff:-h*0.15, w:w*0.92, h:h*0.4, col:['#163a0e','#1e4a14']},
+      {yOff:-h*0.42, w:w*0.74, h:h*0.36,col:['#1e4a14','#26591a']},
+      {yOff:-h*0.65, w:w*0.54, h:h*0.3, col:['#265818','#2e6620']},
+    ];
+    layers2.forEach(L=>{
+      const topY=y+L.yOff-L.h, botY=y+L.yOff;
+      const g=ctx.createLinearGradient(x,topY,x,botY);
+      g.addColorStop(0,fog(L.col[1])); g.addColorStop(1,fog(L.col[0]));
+      ctx.fillStyle=g;
+      ctx.beginPath();
+      ctx.moveTo(x,topY);
+      ctx.quadraticCurveTo(x-L.w*0.3,botY-L.h*0.2,x-L.w/2,botY);
+      ctx.quadraticCurveTo(x-L.w*0.15,botY-L.h*0.05,x,botY-L.h*0.08);
+      ctx.quadraticCurveTo(x+L.w*0.15,botY-L.h*0.05,x+L.w/2,botY);
+      ctx.quadraticCurveTo(x+L.w*0.3,botY-L.h*0.2,x,topY);
+      ctx.closePath(); ctx.fill();
+    });
+    ctx.fillStyle=`rgba(255,255,220,${0.08*(1-depthFog*0.7)})`;
+    ctx.beginPath(); ctx.ellipse(x-w*0.1,y-h*0.72,w*0.12,h*0.1,-0.3,0,Math.PI*2); ctx.fill();
+  }
+}
+
+function mixColor(hex, hex2, t) {
+  const a=parseInt(hex.slice(1),16), b=parseInt(hex2.slice(1),16);
+  const ar=(a>>16)&255, ag=(a>>8)&255, ab=a&255;
+  const br=(b>>16)&255, bg=(b>>8)&255, bb=b&255;
+  const r=Math.round(ar+(br-ar)*t), g=Math.round(ag+(bg-ag)*t), bl=Math.round(ab+(bb-ab)*t);
+  return `rgb(${r},${g},${bl})`;
+}
+
+// ── CAMERA ───────────────────────────────────────────────────────
+const cam = { x: 0, y: 0, zoom: 1.0, vx: 0, vy: 0 };
+const CAM_ZOOM_MIN = 0.7, CAM_ZOOM_MAX = 2.0;
+
+// Mouse/touch drag
+let dragStartX=0, dragStartY=0, isDragging=false;
+let lastTouchDist=0, pinchCenterX=0, pinchCenterY=0;
+
+canvas.addEventListener('mousedown', e=>{
+  isDragging=true; dragStartX=e.clientX-cam.x; dragStartY=e.clientY-cam.y;
+  cam.vx=0; cam.vy=0;
+});
+window.addEventListener('mouseup', ()=>isDragging=false);
+window.addEventListener('mousemove', e=>{
+  if(!isDragging) return;
+  cam.vx=(e.clientX-dragStartX-cam.x)*0.8;
+  cam.vy=(e.clientY-dragStartY-cam.y)*0.8;
+  cam.x=e.clientX-dragStartX;
+  cam.y=e.clientY-dragStartY;
+});
+let isZooming=false, _zoomSettleTimer=null;
+function markZooming(){
+  isZooming=true;
+  clearTimeout(_zoomSettleTimer);
+  _zoomSettleTimer=setTimeout(()=>{ isZooming=false; }, 160);
+}
+canvas.addEventListener('wheel', e=>{
+  e.preventDefault();
+  markZooming();
+  const factor=e.deltaY>0?0.92:1.09;
+  const beforeX=(e.clientX-W/2-cam.x)/cam.zoom;
+  const beforeY=(e.clientY-H/2-cam.y)/cam.zoom;
+  cam.zoom=Math.max(CAM_ZOOM_MIN, Math.min(CAM_ZOOM_MAX, cam.zoom*factor));
+  cam.x=e.clientX-W/2-beforeX*cam.zoom;
+  cam.y=e.clientY-H/2-beforeY*cam.zoom;
+},{passive:false});
+
+// Touch pinch+pan
+canvas.addEventListener('touchstart',e=>{
+  if(e.touches.length===1){
+    isDragging=true;
+    dragStartX=e.touches[0].clientX-cam.x;
+    dragStartY=e.touches[0].clientY-cam.y;
+    cam.vx=0; cam.vy=0;
+  } else if(e.touches.length===2){
+    isDragging=false;
+    const dx=e.touches[0].clientX-e.touches[1].clientX;
+    const dy=e.touches[0].clientY-e.touches[1].clientY;
+    lastTouchDist=Math.sqrt(dx*dx+dy*dy);
+    pinchCenterX=(e.touches[0].clientX+e.touches[1].clientX)/2;
+    pinchCenterY=(e.touches[0].clientY+e.touches[1].clientY)/2;
+  }
+},{passive:true});
+canvas.addEventListener('touchmove',e=>{
+  e.preventDefault();
+  if(e.touches.length===1&&isDragging){
+    cam.x=e.touches[0].clientX-dragStartX;
+    cam.y=e.touches[0].clientY-dragStartY;
+  } else if(e.touches.length===2){
+    const dx=e.touches[0].clientX-e.touches[1].clientX;
+    const dy=e.touches[0].clientY-e.touches[1].clientY;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    if(lastTouchDist>0){
+      markZooming();
+      const factor=dist/lastTouchDist;
+      const pcx=(e.touches[0].clientX+e.touches[1].clientX)/2;
+      const pcy=(e.touches[0].clientY+e.touches[1].clientY)/2;
+      const bx=(pcx-W/2-cam.x)/cam.zoom;
+      const by=(pcy-H/2-cam.y)/cam.zoom;
+      cam.zoom=Math.max(CAM_ZOOM_MIN,Math.min(CAM_ZOOM_MAX,cam.zoom*factor));
+      cam.x=pcx-W/2-bx*cam.zoom;
+      cam.y=pcy-H/2-by*cam.zoom;
+    }
+    lastTouchDist=dist;
+  }
+},{passive:false});
+canvas.addEventListener('touchend',e=>{ if(e.touches.length===0) isDragging=false; },{passive:true});
+
+// ── RENDER ────────────────────────────────────────────────────────
+let off = 0;
+
+function render(ms) {
+  // Camera inertia
+  if(!isDragging){ cam.x+=cam.vx*0.12; cam.y+=cam.vy*0.12; cam.vx*=0.88; cam.vy*=0.88; }
+  // Pan limits — keep the play square close to centered, never far from view
+  const _hw=W*0.42*cam.zoom, _hh=_hw*0.5;
+  const maxPanX=Math.max(0, W*0.12), maxPanY=Math.max(0, H*0.1);
+  cam.x=Math.max(-maxPanX,Math.min(maxPanX,cam.x));
+  cam.y=Math.max(-maxPanY,Math.min(maxPanY,cam.y));
+  requestAnimationFrame(render);
+  const t = ms/1000;
+  ctx.clearRect(0,0,W,H);
+
+  // Sky
+  const sky=ctx.createLinearGradient(0,0,0,H);
+  sky.addColorStop(0,'#2ea8da'); sky.addColorStop(0.5,'#52bde8'); sky.addColorStop(1,'#80d0f0');
+  ctx.fillStyle=sky; ctx.fillRect(0,0,W,H);
+
+  // Clouds
+  off = (t*10) % (W+300);
+  [[100,70,0.9,0.82],[400,110,1.1,0.72],[680,55,0.78,0.68],[950,95,1.0,0.78],[1180,130,0.88,0.65],[-80,185,0.65,0.42],[530,195,0.72,0.4],[870,210,0.68,0.38]].forEach(([x,y,s,a]) => {
+    drawCloud(((x+off)%(W+380))-180, y, s, a);
+  });
+
+  // Faint bottom haze
+  ctx.save(); ctx.globalAlpha=0.3;
+  const haze=ctx.createLinearGradient(0,H*0.8,0,H);
+  haze.addColorStop(0,'transparent'); haze.addColorStop(1,'#c8e8f8');
+  ctx.fillStyle=haze; ctx.fillRect(0,H*0.8,W,H*0.2); ctx.restore();
+
+  // Island — rendered directly every frame. The forest is now a cheap bucketed
+  // pattern fill (not per-frame tree generation), so this is fast even without caching.
+  drawIsland(W, H, cam);
+}
+requestAnimationFrame(render);
+
+// ── SHOP ──────────────────────────────────────────────────────────
+function openShop(){document.getElementById('shop').classList.add('open');}
+function closeShop(){document.getElementById('shop').classList.remove('open');}
+document.querySelectorAll('.sh-tab').forEach(btn=>{
+  btn.onclick=()=>{document.querySelectorAll('.sh-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');};
+});
+</script>
+</body>
+</html>
