@@ -45,10 +45,10 @@ html,body{width:100%;height:100%;overflow:hidden;}
 #home-btn:hover{border-color:rgba(212,175,55,0.85);box-shadow:0 4px 18px rgba(0,0,0,0.6),0 0 14px rgba(212,175,55,0.2);transform:translateY(-2px);}
 
 /* Shop */
-#shop{position:fixed;inset:0;z-index:200;display:none;align-items:flex-start;justify-content:center;padding-top:4px;}
+#shop{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;}
 #shop.open{display:flex;}
 #shop-bg{position:absolute;inset:0;background:rgba(5,8,4,0.78);backdrop-filter:blur(6px);}
-#shop-panel{position:relative;z-index:1;width:min(96vw,660px);max-height:96vh;display:flex;flex-direction:column;border-radius:10px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.7),0 0 0 3px #6e6a5c,0 0 0 5px #38362e;}
+#shop-panel{position:relative;z-index:1;width:520px;height:480px;display:flex;flex-direction:column;border-radius:10px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.7),0 0 0 3px #6e6a5c,0 0 0 5px #38362e;}
 #shop-panel::after{content:'';position:absolute;bottom:-4px;right:-4px;width:90px;height:60px;z-index:5;pointer-events:none;background:
     radial-gradient(circle at 30% 70%, rgba(70,115,40,0.6) 0%, transparent 40%),
     radial-gradient(circle at 60% 50%, rgba(55,100,30,0.45) 0%, transparent 45%),
@@ -118,23 +118,23 @@ html,body{width:100%;height:100%;overflow:hidden;}
 #sh-body::-webkit-scrollbar-thumb{background:rgba(140,170,100,0.35);border-radius:3px;}
 
 /* Divider */
-.s-divider{display:flex;align-items:center;gap:14px;padding:10px 22px 0;position:relative;z-index:1;}
+.s-divider{display:flex;align-items:center;gap:14px;padding:6px 22px 0;position:relative;z-index:1;}
 .s-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(150,175,115,0.35),transparent);}
 .s-rune{font-family:'Cinzel',serif;font-size:0.65rem;color:rgba(170,190,140,0.5);letter-spacing:5px;}
 
 /* Pillars — stone columns with moss */
-.s-pillars{display:flex;justify-content:space-between;padding:6px 20px;position:relative;z-index:1;}
-.s-pillar{width:14px;height:52px;background:linear-gradient(90deg,#3a3830,#5e5c52,#3a3830);border-radius:2px;box-shadow:0 4px 10px rgba(0,0,0,0.5);position:relative;overflow:hidden;}
-.s-pillar::before,.s-pillar::after{content:'';display:block;height:2px;background:rgba(0,0,0,0.3);border-radius:1px;margin:5px 2px;}
+.s-pillars{display:flex;justify-content:space-between;align-items:center;padding:4px 20px;position:relative;z-index:1;}
+.s-pillar{width:52px;height:10px;background:linear-gradient(180deg,#3a3830,#5e5c52,#3a3830);border-radius:2px;box-shadow:0 2px 6px rgba(0,0,0,0.5);position:relative;overflow:hidden;}
+.s-pillar::before,.s-pillar::after{content:'';display:block;width:2px;height:8px;background:rgba(0,0,0,0.3);border-radius:1px;margin:1px auto;}
 
 /* Empty state */
 .s-empty{display:flex;flex-direction:column;align-items:center;padding:40px 30px 50px;text-align:center;position:relative;z-index:1;}
 
 /* Dragon shop cards */
-.dragon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px;padding:8px 22px 24px;position:relative;z-index:1;}
-.dragon-card{background:linear-gradient(160deg,#5a584c,#46443a);border:1.5px solid rgba(0,0,0,0.35);border-radius:12px;padding:12px 10px 14px;display:flex;flex-direction:column;align-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),inset 0 -3px 6px rgba(0,0,0,0.25),0 4px 10px rgba(0,0,0,0.3);position:relative;overflow:hidden;}
+.dragon-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;padding:6px 16px 16px;position:relative;z-index:1;}
+.dragon-card{width:180px;background:linear-gradient(160deg,#5a584c,#46443a);border:1.5px solid rgba(0,0,0,0.35);border-radius:12px;padding:8px 8px 10px;display:flex;flex-direction:column;align-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),inset 0 -3px 6px rgba(0,0,0,0.25),0 4px 10px rgba(0,0,0,0.3);position:relative;overflow:hidden;}
 .dragon-card::before{content:'';position:absolute;top:-4px;right:-4px;width:36px;height:26px;pointer-events:none;background:radial-gradient(circle at 30% 60%, rgba(80,125,48,0.5) 0%, transparent 50%);}
-.dragon-card-frame{width:100%;aspect-ratio:1/1;background:radial-gradient(circle at 50% 38%, rgba(255,140,40,0.12) 0%, transparent 65%),linear-gradient(160deg,#2a2822,#1c1a16);border:2px solid #1a1812;border-radius:10px;box-shadow:inset 0 0 16px rgba(0,0,0,0.6),inset 0 2px 4px rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:10px;}
+.dragon-card-frame{width:100%;aspect-ratio:1/1;background:radial-gradient(circle at 50% 38%, rgba(255,140,40,0.12) 0%, transparent 65%),linear-gradient(160deg,#2a2822,#1c1a16);border:2px solid #1a1812;border-radius:10px;box-shadow:inset 0 0 16px rgba(0,0,0,0.6),inset 0 2px 4px rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:6px;}
 .dragon-canvas{width:100%;height:100%;}
 .dragon-card-name{font-family:'Cinzel Decorative',serif;font-size:0.82rem;color:#e8dfc8;letter-spacing:1px;margin-bottom:4px;text-shadow:0 1px 2px rgba(0,0,0,0.5);}
 .dragon-card-desc{font-family:'IM Fell English',serif;font-style:italic;font-size:0.68rem;color:rgba(200,210,180,0.6);line-height:1.4;margin-bottom:10px;min-height:34px;}
@@ -147,7 +147,7 @@ html,body{width:100%;height:100%;overflow:hidden;}
 .s-empty-text{font-family:'IM Fell English',serif;font-style:italic;font-size:0.85rem;color:rgba(195,205,175,0.65);line-height:1.7;max-width:280px;}
 
 /* Arch */
-.s-arch{width:100%;height:24px;background:radial-gradient(ellipse at 50% 0%,rgba(110,140,75,0.1) 0%,transparent 70%);position:relative;z-index:1;}
+.s-arch{width:100%;height:6px;background:radial-gradient(ellipse at 50% 0%,rgba(110,140,75,0.1) 0%,transparent 70%);position:relative;z-index:1;}
 /* Help popup — small, semi-transparent, glassy */
 #shop-help-overlay{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;padding:20px;}
 #shop-help-overlay.open{display:flex;}
@@ -191,10 +191,10 @@ html,body{width:100%;height:100%;overflow:hidden;}
       <button id="sh-close" onclick="closeShop()">✕</button>
     </div>
     <div id="sh-tabs">
-      <button class="sh-tab active" data-tab="dragons">🐉 Dragons</button>
-      <button class="sh-tab" data-tab="habitats">🏠 Habitats</button>
-      <button class="sh-tab" data-tab="decor">🌿 Decor</button>
-      <button class="sh-tab" data-tab="items">⚗️ Items</button>
+      <button class="sh-tab active" data-tab="dragons">Dragons</button>
+      <button class="sh-tab" data-tab="habitats">Habitats</button>
+      <button class="sh-tab" data-tab="decor">Decor</button>
+      <button class="sh-tab" data-tab="items">Buildings</button>
     </div>
     <div id="sh-body">
       <div class="s-divider"><div class="s-line"></div><div class="s-rune">✦ MDCCCXLVII ✦</div><div class="s-line"></div></div>
@@ -221,21 +221,18 @@ html,body{width:100%;height:100%;overflow:hidden;}
       <!-- OTHER TABS (empty state) -->
       <div class="sh-panel" data-panel="habitats" style="display:none">
         <div class="s-empty">
-          <div class="s-empty-icon">🏠</div>
           <div class="s-empty-title">Coming Soon</div>
           <div class="s-empty-text">The merchants are still preparing their wares. Check back soon, dragon tamer.</div>
         </div>
       </div>
       <div class="sh-panel" data-panel="decor" style="display:none">
         <div class="s-empty">
-          <div class="s-empty-icon">🌿</div>
           <div class="s-empty-title">Coming Soon</div>
           <div class="s-empty-text">The merchants are still preparing their wares. Check back soon, dragon tamer.</div>
         </div>
       </div>
       <div class="sh-panel" data-panel="items" style="display:none">
         <div class="s-empty">
-          <div class="s-empty-icon">⚗️</div>
           <div class="s-empty-title">Coming Soon</div>
           <div class="s-empty-text">The merchants are still preparing their wares. Check back soon, dragon tamer.</div>
         </div>
@@ -833,322 +830,261 @@ document.querySelectorAll('.sh-tab').forEach(btn=>{
   };
 });
 
-// ── DRAGON RENDERING ────────────────────────────────────────────
-// Built from smooth bezier curves with simple spring-damped wing
-// physics (not pure sine — has lag/overshoot like a real flapping wing
-// carrying momentum, rather than a robotic back-and-forth).
-
 function makeDragonPhysics() {
-  return {
-    wingAngle: 0, wingVel: 0,
-    bodyBob: 0, bodyVel: 0,
-    tailPhase: 0,
-    t: Math.random()*10
-  };
+  return { t: Math.random()*10, wingAngle: 0, wingVel: 0, bodyBob: 0, bodyVel: 0 };
 }
-
 function stepDragonPhysics(p, dt) {
   p.t += dt;
-  const flapSpeed = 2.6;
-  const target = Math.sin(p.t * flapSpeed) * 0.62 - 0.22;
-
-  const stiffness = 60, damping = 9;
-  const accel = (target - p.wingAngle) * stiffness - p.wingVel * damping;
+  // Spring-damped wing flap
+  const target = Math.sin(p.t * 3.2) * 0.55;
+  const accel = (target - p.wingAngle) * 55 - p.wingVel * 8;
   p.wingVel += accel * dt;
   p.wingAngle += p.wingVel * dt;
-
-  const liftTarget = Math.max(0, -Math.sin(p.t*flapSpeed - 0.5)) * 5;
-  const bAccel = (liftTarget - p.bodyBob) * 40 - p.bodyVel * 8;
+  // Body rises on downstroke (wingAngle positive = wings up = body lifts)
+  const bobTarget = -p.wingAngle * 9;
+  const bAccel = (bobTarget - p.bodyBob) * 40 - p.bodyVel * 7;
   p.bodyVel += bAccel * dt;
   p.bodyBob += p.bodyVel * dt;
-
-  p.tailPhase += (Math.sin(p.t*flapSpeed*0.9 - 1.1) - p.tailPhase) * Math.min(1, dt*5);
-}
-
-function cubicPt(p0,p1,p2,p3,t){
-  const mt=1-t;
-  return {
-    x: mt*mt*mt*p0.x + 3*mt*mt*t*p1.x + 3*mt*t*t*p2.x + t*t*t*p3.x,
-    y: mt*mt*mt*p0.y + 3*mt*mt*t*p1.y + 3*mt*t*t*p2.y + t*t*t*p3.y
-  };
-}
-function cubicTan(p0,p1,p2,p3,t){
-  const mt=1-t;
-  const dx = 3*mt*mt*(p1.x-p0.x)+6*mt*t*(p2.x-p1.x)+3*t*t*(p3.x-p2.x);
-  const dy = 3*mt*mt*(p1.y-p0.y)+6*mt*t*(p2.y-p1.y)+3*t*t*(p3.y-p2.y);
-  const len=Math.hypot(dx,dy)||1;
-  return {x:dx/len,y:dy/len};
-}
-// Draws a single small spike whose BASE sits exactly on a given point with
-// a given outward direction — used to anchor spikes onto body/neck/tail
-// curves so they're always glued to the surface, never floating free.
-function drawSpike(dctx, x, y, dirx, diry, len, width, col){
-  const px=-diry, py=dirx; // perpendicular for base width
-  dctx.fillStyle = col;
-  dctx.beginPath();
-  dctx.moveTo(x - px*width/2, y - py*width/2);
-  dctx.lineTo(x + dirx*len, y + diry*len);
-  dctx.lineTo(x + px*width/2, y + py*width/2);
-  dctx.closePath();
-  dctx.fill();
-}
-
-function drawWingMembrane(dctx, originX, originY, flapAngle, mirror, scale, glowT) {
-  dctx.save();
-  dctx.translate(originX, originY);
-  dctx.scale(mirror, 1);
-  dctx.rotate(flapAngle);
-
-  const spanLen = 92*scale, spanDrop = 20*scale;
-  // Bone tips — bigger, bolder fan than before, like the reference's broad sail-like wing
-  const bones = [
-    {x: spanLen*0.40, y: -spanDrop*2.0},
-    {x: spanLen*0.78, y: -spanDrop*1.0},
-    {x: spanLen*1.0,  y: spanDrop*0.3},
-    {x: spanLen*0.92, y: spanDrop*1.6},
-    {x: spanLen*0.62, y: spanDrop*2.1},
-  ];
-
-  // Membrane skin — flat yellow/orange like the reference, not dark red
-  dctx.beginPath();
-  dctx.moveTo(0,0);
-  dctx.lineTo(bones[0].x, bones[0].y);
-  for (let i=0;i<bones.length-1;i++){
-    const a=bones[i], b=bones[i+1];
-    const midX=(a.x+b.x)/2, midY=(a.y+b.y)/2 + spanDrop*0.5;
-    dctx.quadraticCurveTo(midX, midY, b.x, b.y);
-  }
-  dctx.quadraticCurveTo(spanLen*0.3, spanDrop*2.6, 0, spanDrop*0.2);
-  dctx.closePath();
-  const skinG = dctx.createLinearGradient(0,-spanDrop,spanLen,spanDrop*2);
-  skinG.addColorStop(0, '#ffcf2e');
-  skinG.addColorStop(0.6, '#ffb800');
-  skinG.addColorStop(1, '#ff9d00');
-  dctx.fillStyle = skinG;
-  dctx.fill();
-  dctx.strokeStyle = '#3a1400';
-  dctx.lineWidth = 3.2*scale;
-  dctx.lineJoin = 'round';
-  dctx.stroke();
-
-  // Rib lines radiating from the shoulder (bold, dark — like the reference's veined wing)
-  dctx.strokeStyle = '#3a1400';
-  dctx.lineWidth = 2.6*scale;
-  dctx.lineCap = 'round';
-  bones.forEach(b=>{
-    dctx.beginPath(); dctx.moveTo(0,0); dctx.lineTo(b.x,b.y); dctx.stroke();
-  });
-  // Thicker leading-edge bone (forearm)
-  dctx.lineWidth = 4.4*scale;
-  dctx.beginPath(); dctx.moveTo(0,0); dctx.lineTo(bones[0].x*0.5, bones[0].y*0.5); dctx.stroke();
-
-  dctx.restore();
 }
 
 function drawFireDragon(dctx, W, H, p) {
   dctx.clearRect(0,0,W,H);
-  const cx = W*0.5, cy = H*0.56 - p.bodyBob;
-  const scale = Math.min(W,H) / 230;
-  const glowT = (Math.sin(p.t*3)+1)/2;
+  const cx = W/2, cy = H/2 + 10;
+  const s = Math.min(W,H) / 260;
+  const t = p.t;
 
   dctx.save();
-  dctx.translate(cx, cy);
-  dctx.scale(scale, scale);
+  dctx.translate(cx, cy + p.bodyBob);
+  dctx.scale(s, s);
 
-  const OUTLINE = '#2e0f00';
-  const RED = '#e8341a';
-  const RED_DARK = '#b8230f';
-  const YELLOW = '#ffcc22';
-  const YELLOW_DARK = '#ffa800';
-  const CREAM = '#fff3c4';
+  const RED = '#e8311a';
+  const RED_DK = '#9a1e0c';
+  const RED_LT = '#f06030';
+  const GOLD = '#ffc814';
+  const INK = '#2a0e00';
+  const CREAM = '#fff0b0';
 
-  // Soft drop shadow
-  dctx.fillStyle = 'rgba(0,0,0,0.16)';
-  dctx.beginPath(); dctx.ellipse(2, 56, 46, 9, 0, 0, Math.PI*2); dctx.fill();
+  dctx.lineJoin = 'round';
+  dctx.lineCap = 'round';
+  dctx.strokeStyle = INK;
 
-  // ── BACK WING (behind body, smaller for depth) ──
-  drawWingMembrane(dctx, 2, -18, p.wingAngle*0.85, -1, 0.74, glowT);
+  function fill(col){ dctx.fillStyle=col; dctx.fill(); dctx.stroke(); }
 
-  // ── TAIL — chunky, curling under, with flat yellow arrow tip ──
-  const tailSway = p.tailPhase * 12;
+  // Breathing animation — subtle scale
+  const breathe = Math.sin(t*1.4)*0.012;
+  dctx.scale(1+breathe, 1+breathe);
+
+  // ── TAIL (curls from bottom of body, goes to one side) ──
+  dctx.lineWidth = 3;
   dctx.beginPath();
-  dctx.moveTo(-14, 18);
-  dctx.bezierCurveTo(-32, 30, -46+tailSway*0.3, 40, -54+tailSway, 50+tailSway*0.3);
-  dctx.bezierCurveTo(-60+tailSway, 56, -66+tailSway*1.1, 56, -70+tailSway*1.2, 50);
-  dctx.bezierCurveTo(-62+tailSway, 48, -50+tailSway*0.5, 40, -38, 30);
-  dctx.bezierCurveTo(-28, 24, -20, 20, -8, 22);
+  dctx.moveTo(20, 42);
+  dctx.bezierCurveTo(40, 55, 60, 65, 70, 55);
+  dctx.bezierCurveTo(80, 46, 72, 34, 58, 36);
+  dctx.bezierCurveTo(50, 37, 46, 44, 50, 50);
+  dctx.bezierCurveTo(48, 48, 42, 42, 30, 38);
   dctx.closePath();
-  dctx.fillStyle = RED;
-  dctx.fill();
-  dctx.strokeStyle = OUTLINE; dctx.lineWidth = 3; dctx.lineJoin='round'; dctx.stroke();
-  // Arrow-shaped tail tip (flat yellow, like the reference)
-  dctx.fillStyle = YELLOW;
-  dctx.beginPath();
-  dctx.moveTo(-70+tailSway*1.2, 50);
-  dctx.lineTo(-80+tailSway*1.3, 44);
-  dctx.lineTo(-84+tailSway*1.3, 52);
-  dctx.lineTo(-80+tailSway*1.2, 60);
-  dctx.lineTo(-68+tailSway, 56);
-  dctx.closePath();
-  dctx.fill();
-  dctx.strokeStyle = OUTLINE; dctx.lineWidth = 2.6; dctx.stroke();
+  fill(RED_DK);
 
-  // ── BACK LEG (smaller, behind/below, peeking out) ──
-  dctx.beginPath();
-  dctx.moveTo(-22, 30);
-  dctx.bezierCurveTo(-26, 42, -22, 52, -12, 54);
-  dctx.bezierCurveTo(-4, 55, 2, 50, 0, 44);
-  dctx.bezierCurveTo(-6, 42, -14, 38, -18, 32);
-  dctx.closePath();
-  dctx.fillStyle = RED_DARK; dctx.fill();
-  dctx.strokeStyle = OUTLINE; dctx.lineWidth = 2.6; dctx.lineJoin='round'; dctx.stroke();
-  dctx.fillStyle = YELLOW;
-  [[-12,54],[-4,55],[1,51]].forEach(([fx,fy])=>{
-    dctx.beginPath(); dctx.ellipse(fx,fy+3,3,4,0,0,Math.PI*2); dctx.fill();
-    dctx.strokeStyle=OUTLINE; dctx.lineWidth=1.6; dctx.stroke();
-  });
-
-  // ── BODY — big, chubby, round (the chibi proportions from the reference) ──
-  const bodyPath = new Path2D();
-  bodyPath.moveTo(-12, 22);
-  bodyPath.bezierCurveTo(-34, 18, -42, -6, -34, -26);
-  bodyPath.bezierCurveTo(-26, -44, -4, -52, 16, -46);
-  bodyPath.bezierCurveTo(38, -40, 50, -22, 48, -2);
-  bodyPath.bezierCurveTo(46, 16, 32, 28, 14, 28);
-  bodyPath.bezierCurveTo(4, 30, -4, 26, -12, 22);
-  bodyPath.closePath();
-  dctx.fillStyle = RED;
-  dctx.fill(bodyPath);
-  dctx.strokeStyle = OUTLINE; dctx.lineWidth = 3.2; dctx.lineJoin='round'; dctx.stroke(bodyPath);
-
-  // Belly patch — yellow with a scale/diamond pattern, clipped to body
-  dctx.save();
-  dctx.clip(bodyPath);
-  dctx.beginPath();
-  dctx.moveTo(-20, 10);
-  dctx.bezierCurveTo(-14, 22, 4, 26, 18, 18);
-  dctx.bezierCurveTo(28, 12, 32, 0, 26, -10);
-  dctx.bezierCurveTo(12, -6, -4, -4, -16, -8);
-  dctx.bezierCurveTo(-24, -2, -25, 5, -20, 10);
-  dctx.closePath();
-  dctx.fillStyle = YELLOW;
-  dctx.fill();
-  dctx.strokeStyle = YELLOW_DARK; dctx.lineWidth = 1.5; dctx.stroke();
-  // Diamond scale dots on the belly
-  for (let row=0; row<3; row++){
-    for (let col=0; col<4; col++){
-      const sx = -16 + col*11 + (row%2)*5;
-      const sy = -2 + row*9;
-      dctx.fillStyle = YELLOW_DARK;
+  // ── BACK LEGS (peeking below body) ──
+  dctx.lineWidth = 2.5;
+  [[-28, 40], [28, 40]].forEach(([lx, ly], side) => {
+    // upper leg
+    dctx.beginPath();
+    dctx.ellipse(lx, ly, 13, 18, side===0?-0.2:0.2, 0, Math.PI*2);
+    fill(RED_DK);
+    // lower leg
+    const footX = lx + (side===0?-8:8);
+    dctx.beginPath();
+    dctx.ellipse(footX, ly+28, 10, 14, side===0?-0.3:0.3, 0, Math.PI*2);
+    fill(RED_DK);
+    // claws
+    dctx.fillStyle = CREAM;
+    for(let c=0;c<3;c++){
+      const cx2 = footX-8+(c*8) + (side===0?-2:2);
+      dctx.lineWidth=1.5;
       dctx.beginPath();
-      dctx.moveTo(sx, sy-3); dctx.lineTo(sx+3.5, sy); dctx.lineTo(sx, sy+3); dctx.lineTo(sx-3.5, sy);
-      dctx.closePath(); dctx.fill();
+      dctx.ellipse(cx2, ly+42, 3, 5, 0, 0, Math.PI*2);
+      fill(CREAM);
     }
-  }
-  dctx.restore();
+  });
 
-  // Dorsal spikes — small yellow triangles along the back, bold-outlined
-  [[-26,-26],[-12,-40],[4,-48],[20,-46],[34,-34]].forEach(([sx,sy],i)=>{
-    dctx.fillStyle = YELLOW;
+  // ── WINGS (spread to each side) ──
+  dctx.lineWidth = 3;
+  const flap = p.wingAngle; // positive = up, negative = down
+
+  [-1, 1].forEach(side => {
+    const wx = side * 46, wy = -18;
+    // flapLift: tips move up when flap>0, outer tips move more (natural flex)
+    const flapY = (t) => flap * t * 38;
+
+    // tip positions — x goes OUTWARD from shoulder (same direction as side)
+    const tips = [
+      {x: wx + side*20, y: wy-40 + flapY(0.5)},
+      {x: wx + side*36, y: wy-26 + flapY(0.8)},
+      {x: wx + side*42, y: wy-4  + flapY(0.9)},
+      {x: wx + side*34, y: wy+18 + flapY(0.7)},
+    ];
+    const root = {x: wx*0.58, y: wy+4};
+
     dctx.beginPath();
-    dctx.moveTo(sx, sy-9);
-    dctx.lineTo(sx-6, sy+3);
-    dctx.lineTo(sx+6, sy+3);
+    dctx.moveTo(root.x, root.y);
+    dctx.lineTo(tips[0].x, tips[0].y);
+    for(let i=0;i<tips.length-1;i++){
+      const a=tips[i], b=tips[i+1];
+      dctx.quadraticCurveTo((a.x+b.x)/2, (a.y+b.y)/2, b.x, b.y);
+    }
+    dctx.quadraticCurveTo(wx + side*20, wy+26 + flapY(0.4), root.x, root.y);
     dctx.closePath();
+    dctx.fillStyle = GOLD;
     dctx.fill();
-    dctx.strokeStyle = OUTLINE; dctx.lineWidth = 2; dctx.lineJoin='round'; dctx.stroke();
+    dctx.strokeStyle = INK; dctx.lineWidth = 3; dctx.stroke();
+    // rib lines from shoulder to each finger tip
+    dctx.strokeStyle = INK; dctx.lineWidth = 2;
+    tips.forEach(tip=>{
+      dctx.beginPath(); dctx.moveTo(root.x, root.y); dctx.lineTo(tip.x, tip.y); dctx.stroke();
+    });
   });
 
-  // ── FRONT LEG (big, in front, clawed feet) ──
-  dctx.beginPath();
-  dctx.moveTo(20, 18);
-  dctx.bezierCurveTo(16, 32, 18, 46, 30, 50);
-  dctx.bezierCurveTo(40, 53, 48, 47, 46, 38);
-  dctx.bezierCurveTo(38, 36, 30, 30, 26, 20);
-  dctx.closePath();
-  dctx.fillStyle = RED;
-  dctx.fill();
-  dctx.strokeStyle = OUTLINE; dctx.lineWidth = 3; dctx.lineJoin='round'; dctx.stroke();
-  // Claws — bold yellow ovals with outline like the reference's clawed feet
-  dctx.fillStyle = YELLOW;
-  [[30,50],[39,52],[45,47]].forEach(([fx,fy])=>{
-    dctx.beginPath(); dctx.ellipse(fx,fy+3,3.6,5,0.1,0,Math.PI*2); dctx.fill();
-    dctx.strokeStyle = OUTLINE; dctx.lineWidth = 2; dctx.stroke();
-  });
-
-  // ── HEAD — big, round, chibi-proportioned, attached close to the body (short neck) ──
-  dctx.save();
-  dctx.translate(34, -54);
-  dctx.rotate(-0.05);
-
-  // Skull/snout — big round chubby shape
-  dctx.beginPath();
-  dctx.moveTo(-20, -14);
-  dctx.bezierCurveTo(-10, -26, 14, -27, 26, -16);
-  dctx.bezierCurveTo(36, -7, 38, 6, 30, 14);
-  dctx.bezierCurveTo(24, 19, 14, 19, 8, 14);
-  dctx.bezierCurveTo(0, 19, -14, 18, -22, 10);
-  dctx.bezierCurveTo(-28, 3, -26, -8, -20, -14);
-  dctx.closePath();
-  dctx.fillStyle = RED;
-  dctx.fill();
-  dctx.strokeStyle = OUTLINE; dctx.lineWidth = 3.2; dctx.lineJoin='round'; dctx.stroke();
-
-  // Open mouth — wide, friendly, showing white teeth (like the reference's big grin)
-  dctx.beginPath();
-  dctx.moveTo(-21, 6);
-  dctx.bezierCurveTo(-10, 16, 14, 18, 27, 8);
-  dctx.bezierCurveTo(18, 17, -2, 20, -16, 16);
-  dctx.bezierCurveTo(-20, 13, -22, 9, -21, 6);
-  dctx.closePath();
-  dctx.fillStyle = '#7a1408';
-  dctx.fill();
-  dctx.strokeStyle = OUTLINE; dctx.lineWidth = 2.4; dctx.lineJoin='round'; dctx.stroke();
-  // Upper teeth row
-  dctx.fillStyle = '#fff8e8';
-  [[-15,7],[-6,10],[3,11.5],[12,11],[20,9]].forEach(([tx,ty])=>{
+  // Tail spikes (gold, sitting ON TOP of the tail)
+  dctx.lineWidth = 2;
+  [[38,44],[50,50],[60,48],[68,42]].forEach(([sx,sy])=>{
     dctx.beginPath();
-    dctx.moveTo(tx-2.6,ty); dctx.lineTo(tx,ty+5); dctx.lineTo(tx+2.6,ty);
-    dctx.closePath(); dctx.fill();
+    dctx.moveTo(sx-4,sy); dctx.lineTo(sx,sy-12); dctx.lineTo(sx+4,sy);
+    dctx.closePath();
+    dctx.fillStyle=GOLD; dctx.fill(); dctx.strokeStyle=INK; dctx.stroke();
+  });
+  dctx.lineWidth = 3.5;
+  dctx.beginPath();
+  dctx.ellipse(0, 14, 52, 44, 0, 0, Math.PI*2);
+  fill(RED);
+
+  // Belly patch with details
+  dctx.save();
+  dctx.beginPath(); dctx.ellipse(0,14,52,44,0,0,Math.PI*2); dctx.clip();
+
+  // Base gold fill
+  dctx.beginPath(); dctx.ellipse(0, 22, 30, 28, 0, 0, Math.PI*2);
+  dctx.fillStyle = GOLD; dctx.fill();
+
+  // Horizontal scale bands — slightly darker arcs that give a plated look
+  dctx.strokeStyle = 'rgba(180,100,0,0.35)';
+  dctx.lineWidth = 2.2;
+  [-6, 4, 14, 24, 33].forEach(sy => {
+    const hw = Math.sqrt(Math.max(0, 900 - (sy-22)*(sy-22))) * 0.95;
+    dctx.beginPath();
+    dctx.moveTo(-hw, sy);
+    dctx.quadraticCurveTo(0, sy+5, hw, sy);
+    dctx.stroke();
   });
 
-  // Horns — cream, curving back, bold outline
-  dctx.fillStyle = CREAM;
-  dctx.beginPath();
-  dctx.moveTo(-12,-18); dctx.bezierCurveTo(-22,-28,-26,-42,-18,-50);
-  dctx.bezierCurveTo(-20,-40,-14,-30,-4,-20); dctx.closePath();
+  // Subtle highlight on upper belly (light catching the rounded surface)
+  const hiG = dctx.createRadialGradient(-8, 4, 2, 0, 14, 26);
+  hiG.addColorStop(0, 'rgba(255,240,120,0.55)');
+  hiG.addColorStop(1, 'transparent');
+  dctx.fillStyle = hiG;
+  dctx.beginPath(); dctx.ellipse(0, 22, 30, 28, 0, 0, Math.PI*2);
   dctx.fill();
-  dctx.strokeStyle = OUTLINE; dctx.lineWidth = 2.6; dctx.lineJoin='round'; dctx.stroke();
-  dctx.fillStyle = CREAM;
+
+  // Central crease line
+  dctx.strokeStyle = 'rgba(160,85,0,0.28)';
+  dctx.lineWidth = 1.4;
   dctx.beginPath();
-  dctx.moveTo(2,-21); dctx.bezierCurveTo(-2,-34,4,-46,16,-50);
-  dctx.bezierCurveTo(10,-40,10,-30,10,-20); dctx.closePath();
-  dctx.fill();
-  dctx.strokeStyle = OUTLINE; dctx.lineWidth = 2.6; dctx.lineJoin='round'; dctx.stroke();
-
-  // Nostril
-  dctx.fillStyle = RED_DARK;
-  dctx.beginPath(); dctx.ellipse(27,-4,2.6,2,0.3,0,Math.PI*2); dctx.fill();
-  dctx.strokeStyle = OUTLINE; dctx.lineWidth = 1.6; dctx.stroke();
-
-  // Big friendly round eye — white with black pupil, bold outline (the
-  // single most important feature for matching the reference's charm)
-  dctx.fillStyle = '#ffffff';
-  dctx.beginPath(); dctx.ellipse(-4,-11,9,9.5,0,0,Math.PI*2); dctx.fill();
-  dctx.strokeStyle = OUTLINE; dctx.lineWidth = 2.8; dctx.stroke();
-  dctx.fillStyle = '#1a0a02';
-  dctx.beginPath(); dctx.ellipse(-1.5,-10,4.4,4.8,0,0,Math.PI*2); dctx.fill();
-  // Eye shine
-  dctx.fillStyle = '#ffffff';
-  dctx.beginPath(); dctx.ellipse(-3.5,-13,2,2.2,0,0,Math.PI*2); dctx.fill();
+  dctx.moveTo(0, -4); dctx.quadraticCurveTo(2, 18, 0, 40);
+  dctx.stroke();
 
   dctx.restore();
 
-  // ── FRONT WING (in front of body, bigger — depth contrast with back wing) ──
-  drawWingMembrane(dctx, -14, -22, p.wingAngle, 1, 1.0, glowT);
+  // (no chest spikes — moved to tail)
+
+  // ── FRONT ARMS ──
+  dctx.lineWidth = 2.5;
+  [[-44, 10], [44, 10]].forEach(([ax, ay], side) => {
+    // upper arm
+    dctx.beginPath();
+    dctx.ellipse(ax, ay+10, 10, 16, side===0?0.3:-0.3, 0, Math.PI*2);
+    dctx.fillStyle = RED; dctx.fill(); dctx.strokeStyle=INK; dctx.stroke();
+    // forearm
+    const fax = ax + (side===0?-6:6);
+    dctx.beginPath();
+    dctx.ellipse(fax, ay+34, 8, 13, side===0?0.5:-0.5, 0, Math.PI*2);
+    dctx.fillStyle = RED; dctx.fill(); dctx.strokeStyle=INK; dctx.stroke();
+    // claws
+    for(let c=0;c<3;c++){
+      const cx2 = fax-6+(c*6);
+      dctx.lineWidth=1.5;
+      dctx.beginPath();
+      dctx.ellipse(cx2, ay+48, 2.8, 4.5, 0, 0, Math.PI*2);
+      dctx.fillStyle=CREAM; dctx.fill(); dctx.strokeStyle=INK; dctx.stroke();
+    }
+  });
+
+  // ── HEAD ──
+  dctx.lineWidth = 3.5;
+  // Neck
+  dctx.beginPath();
+  dctx.ellipse(0, -34, 22, 20, 0, 0, Math.PI*2);
+  fill(RED);
+
+  // Head (big round, front-facing)
+  dctx.beginPath();
+  dctx.ellipse(0, -68, 36, 32, 0, 0, Math.PI*2);
+  fill(RED);
+
+  // Snout (slightly protruding forward — shown as wider lower half)
+  dctx.beginPath();
+  dctx.ellipse(0, -54, 22, 16, 0, 0, Math.PI*2);
+  fill(RED);
+
+  // Open mouth
+  dctx.lineWidth = 2.5;
+  dctx.beginPath();
+  dctx.arc(0, -54, 18, 0.1, Math.PI-0.1);
+  dctx.fillStyle = RED_DK; dctx.fill(); dctx.stroke();
+  // Teeth
+  dctx.fillStyle = CREAM;
+  [-12,-4,4,12].forEach(tx=>{
+    dctx.lineWidth=1.5;
+    dctx.beginPath();
+    dctx.moveTo(tx-2.5,-48); dctx.lineTo(tx,-43); dctx.lineTo(tx+2.5,-48);
+    dctx.closePath(); dctx.fillStyle=CREAM; dctx.fill();
+  });
+
+  // Horns on TOP of head, angled outward
+  dctx.lineWidth = 2.5;
+  [[-18,-98,-0.52], [18,-98,0.52]].forEach(([hx,hy,rot])=>{
+    dctx.save(); dctx.translate(hx,hy); dctx.rotate(rot);
+    dctx.beginPath();
+    dctx.moveTo(-5,4); dctx.quadraticCurveTo(-7,-12,0,-24); dctx.quadraticCurveTo(7,-12,5,4);
+    dctx.closePath();
+    dctx.fillStyle=GOLD; dctx.fill(); dctx.strokeStyle=INK; dctx.stroke();
+    dctx.restore();
+  });
+
+  // TWO eyes (front-facing = both eyes visible)
+  dctx.lineWidth = 2.5;
+  [[-15,-75],[15,-75]].forEach(([ex,ey])=>{
+    // eye white
+    dctx.beginPath(); dctx.ellipse(ex,ey,11,11,0,0,Math.PI*2);
+    dctx.fillStyle='#fff'; dctx.fill(); dctx.strokeStyle=INK; dctx.stroke();
+    // pupil
+    dctx.beginPath(); dctx.ellipse(ex+1,ey+1,5,5.6,0,0,Math.PI*2);
+    dctx.fillStyle='#1a0a02'; dctx.fill();
+    // shine
+    dctx.beginPath(); dctx.ellipse(ex-2,ey-2,2.4,2.6,0,0,Math.PI*2);
+    dctx.fillStyle='#fff'; dctx.fill();
+  });
+
+  // Nostrils
+  dctx.fillStyle = RED_DK;
+  [[-7,-55],[7,-55]].forEach(([nx,ny])=>{
+    dctx.lineWidth=1.5;
+    dctx.beginPath(); dctx.ellipse(nx,ny,2.4,1.8,0,0,Math.PI*2);
+    dctx.fill(); dctx.strokeStyle=INK; dctx.stroke();
+  });
 
   dctx.restore();
 }
+
 function initDragonCanvases() {
   document.querySelectorAll('canvas.dragon-canvas').forEach(cv=>{
     if (cv._dragonInit) return;
