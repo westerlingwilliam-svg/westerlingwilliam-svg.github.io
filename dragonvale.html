@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!-- Jimmie Vale v3.0 | Features: Tutorial, Quests, Farm, Shrine, 3 Habitats, 3 Dragons -->
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -301,7 +303,7 @@ html,body{width:100%;height:100%;overflow:hidden;}
   <button id="shop-btn" onclick="openShop()">
     <span class="label">SHOP</span>
   </button>
-  <button id="quest-btn" onclick="openQuestPanel()" style="position:absolute;bottom:24px;right:116px;">
+  <button id="quest-btn" onclick="openQuestPanel()" style="position:absolute;bottom:clamp(20px,2.5vw,32px);right:calc(clamp(20px,2vw,32px) + clamp(84px,8vw,108px) + 12px);">
     <div id="quest-badge"></div>
     <span class="icon">📜</span>
     <span class="label">QUESTS</span>
@@ -1585,10 +1587,11 @@ function confirmBuildingPlacement2(){
     game.buildings.push({type,gx,gy,crop:null,cropEnd:null,cropDuration:null});
   }
   game.placement=null;
+  saveGame();
 }
 function confirmPlacement(){
   if(!game.placement) return;
-  if(game.placement.isBuilding){ confirmBuildingPlacement(); return; }
+  if(game.placement.isBuilding){ confirmBuildingPlacement(); saveGame(); return; }
   const {type,cost,gx,gy}=game.placement;
   if(!isValidPlacement(gx,gy)) return;
   if(!spendGold(cost)) return;
@@ -3776,6 +3779,7 @@ function tutDone(){
   const ov = document.getElementById('tut-overlay');
   if(ov) ov.style.display = 'none';
   localStorage.setItem('tut_v4_done','1');
+  saveGame();
 }
 
 // Overlay click handler — pass through to spotlight target
@@ -3885,6 +3889,81 @@ plantCrop=function(buildingIdx,cropId){
 
 // Update badge periodically
 setInterval(updateQuestBadge, 2000);
+
+
+// ══════════════════════════════════════════════════════
+// SAVE / LOAD (localStorage)
+// ══════════════════════════════════════════════════════
+const SAVE_KEY = 'jimmie_vale_save_v1';
+
+function saveGame(){
+  try {
+    const data = {
+      gold: Math.floor(game.gold),
+      food: game.food||0,
+      shrine: game.shrine,
+      questsDone: game.questsDone||{},
+      placedHabitats: game.placedHabitats.map(h=>({
+        type:h.type, gx:h.gx, gy:h.gy,
+        dragons:[...h.dragons],
+        dragonLevels:[...(h.dragonLevels||h.dragons.map(()=>1))],
+        gold:Math.floor(h.gold||0)
+      })),
+      buildings: (game.buildings||[]).map(b=>({
+        type:b.type, gx:b.gx, gy:b.gy,
+        crop:b.crop||null, cropEnd:b.cropEnd||null, cropDuration:b.cropDuration||null
+      })),
+    };
+    localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+  } catch(e){ console.warn('Save failed:', e); }
+}
+
+function loadGame(){
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if(!raw) return false;
+    const data = JSON.parse(raw);
+    game.gold = data.gold||1500;
+    game.food = data.food||100;
+    if(data.shrine) game.shrine = data.shrine;
+    game.questsDone = data.questsDone||{};
+    game.placedHabitats = (data.placedHabitats||[]).map(h=>({
+      ...h,
+      gold: h.gold||0,
+      dragonLevels: h.dragonLevels||h.dragons.map(()=>1)
+    }));
+    game.buildings = (data.buildings||[]).map(b=>({
+      ...b,
+      crop: b.crop||null,
+      cropEnd: b.cropEnd||null,
+      cropDuration: b.cropDuration||null
+    }));
+    // Reset roam state so dragons get fresh positions
+    Object.keys(_dragonRoamState).forEach(k=>delete _dragonRoamState[k]);
+    updateGoldUI();
+    document.getElementById('fv').textContent = game.food;
+    updateQuestBadge();
+    return true;
+  } catch(e){ console.warn('Load failed:', e); return false; }
+}
+
+// Auto-save every 15 seconds
+setInterval(saveGame, 15000);
+
+// Save on key actions
+const _wrap = (fn, name) => {
+  const orig = window[name];
+  if(typeof orig !== 'function') return;
+  window[name] = function(){ const r=orig.apply(this,arguments); saveGame(); return r; };
+};
+
+// Load on startup (before tutorial check)
+window.addEventListener('DOMContentLoaded', ()=>{
+  const loaded = loadGame();
+  if(loaded){
+    updateGoldUI();
+  }
+});
 
 </script>
 
