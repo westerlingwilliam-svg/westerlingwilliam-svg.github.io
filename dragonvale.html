@@ -15,14 +15,14 @@ html,body{width:100%;height:100%;overflow:hidden;}
 
 /* HUD */
 #hud{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:flex-start;padding:14px 16px;pointer-events:all;pointer-events:none;}#hud>*{pointer-events:all;}
-.res-pill{display:flex;align-items:center;gap:clamp(8px,1vw,14px);background:linear-gradient(160deg,#5a3a00 0%,#7a5010 30%,#3a2000 70%,#2a1600 100%);border-radius:50px;padding:clamp(6px,0.7vw,10px) clamp(14px,1.5vw,22px) clamp(6px,0.7vw,10px) clamp(6px,0.7vw,10px);box-shadow:0 0 0 1.5px rgba(255,210,60,0.7),0 0 0 3px rgba(120,70,0,0.5),0 4px 18px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,220,80,0.25),inset 0 -1px 0 rgba(0,0,0,0.4);position:relative;}
+.res-pill{display:flex;align-items:center;gap:clamp(12px,1.5vw,22px);background:linear-gradient(160deg,#5a3a00 0%,#7a5010 30%,#3a2000 70%,#2a1600 100%);border-radius:50px;padding:clamp(10px,1.1vw,18px) clamp(22px,2.4vw,34px) clamp(10px,1.1vw,18px) clamp(10px,1.1vw,18px);box-shadow:0 0 0 1.5px rgba(255,210,60,0.7),0 0 0 3px rgba(120,70,0,0.5),0 4px 18px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,220,80,0.25),inset 0 -1px 0 rgba(0,0,0,0.4);position:relative;}
 .res-pill::before{content:"";position:absolute;inset:1px;border-radius:50px;background:linear-gradient(160deg,rgba(255,200,60,0.12) 0%,rgba(255,160,0,0.06) 50%,transparent 100%);pointer-events:none;}
-.res-orb{width:clamp(28px,3vw,40px);height:clamp(28px,3vw,40px);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:clamp(0.85rem,1.2vw,1.15rem);}
+.res-orb{width:clamp(42px,4.5vw,60px);height:clamp(42px,4.5vw,60px);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:clamp(1.2rem,1.8vw,1.6rem);}
 .res-orb.gold{background:radial-gradient(circle at 35% 30%,#fff0a0,#ffc000,#7a4a00);box-shadow:0 0 0 1.5px rgba(255,200,60,0.7),0 0 12px rgba(255,180,0,0.5);}
-.res-orb.food{background:radial-gradient(circle at 35% 30%,#ccffaa,#44cc22,#1a5a08);box-shadow:0 0 0 1.5px rgba(80,220,60,0.7),0 0 12px rgba(60,180,0,0.5);width:clamp(34px,3.4vw,48px);height:clamp(34px,3.4vw,48px);font-size:clamp(1.1rem,1.5vw,1.5rem);}
+.res-orb.food{background:radial-gradient(circle at 35% 30%,#ccffaa,#44cc22,#1a5a08);box-shadow:0 0 0 1.5px rgba(80,220,60,0.7),0 0 12px rgba(60,180,0,0.5);width:clamp(48px,5vw,68px);height:clamp(48px,5vw,68px);font-size:clamp(1.4rem,2vw,1.9rem);}
 .food-pill{background:linear-gradient(160deg,#0a3a00 0%,#1a5a08 30%,#082800 70%,#041400 100%);box-shadow:0 0 0 1.5px rgba(80,220,60,0.7),0 0 0 3px rgba(20,80,0,0.5),0 4px 18px rgba(0,0,0,0.6),inset 0 1px 0 rgba(100,255,60,0.2),inset 0 -1px 0 rgba(0,0,0,0.4);}
 .food-pill::before{background:linear-gradient(160deg,rgba(80,220,60,0.12) 0%,rgba(40,160,0,0.06) 50%,transparent 100%);}
-.res-val{font-family:'Cinzel',serif;font-weight:700;font-size:clamp(0.95rem,1.4vw,1.25rem);color:#FFE878;text-shadow:0 1px 4px rgba(0,0,0,0.8),0 0 12px rgba(255,200,0,0.3);}
+.res-val{font-family:'Cinzel',serif;font-weight:700;font-size:clamp(1.25rem,2vw,1.7rem);color:#FFE878;text-shadow:0 1px 4px rgba(0,0,0,0.8),0 0 12px rgba(255,200,0,0.3);}
 .res-pill-inner{display:flex;flex-direction:column;align-items:flex-start;gap:1px;}
 .res-income{font-family:'Cinzel',serif;font-size:clamp(0.58rem,0.8vw,0.75rem);color:rgba(255,210,100,0.7);letter-spacing:0.5px;}
 .res-val.bump{animation:goldbump 0.3s ease-out;}
@@ -31,7 +31,7 @@ html,body{width:100%;height:100%;overflow:hidden;}
 #game-title{
   position:absolute;left:50%;top:14px;transform:translateX(-50%);
   font-family:'Cinzel Decorative',serif;
-  font-size:clamp(1rem,2vw,1.4rem);
+  font-size:clamp(1.3rem,2.8vw,2rem);
   font-weight:700;
   letter-spacing:4px;
   text-align:center;
@@ -81,7 +81,7 @@ html,body{width:100%;height:100%;overflow:hidden;}
     linear-gradient(105deg, transparent 38%, rgba(0,0,0,0.15) 39%, transparent 41%),
     linear-gradient(20deg, transparent 60%, rgba(0,0,0,0.12) 61%, transparent 63%),
     linear-gradient(150deg,#9a9286,#6e6658 45%,#3e382c);
-  border:2px solid rgba(212,175,55,0.6);border-radius:clamp(16px,2vw,24px);width:clamp(84px,8vw,108px);height:clamp(84px,8vw,108px);padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.15),inset 0 -2px 4px rgba(0,0,0,0.3);transition:all .2s;overflow:hidden;box-sizing:border-box;}
+  border:2px solid rgba(212,175,55,0.6);border-radius:clamp(18px,2.2vw,28px);width:clamp(108px,11vw,144px);height:clamp(108px,11vw,144px);padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.15),inset 0 -2px 4px rgba(0,0,0,0.3);transition:all .2s;overflow:hidden;box-sizing:border-box;}
 #shop-btn::before{content:'';position:absolute;inset:0;pointer-events:none;
   background:
     repeating-linear-gradient(115deg, rgba(0,0,0,0.05) 0px, rgba(0,0,0,0.05) 1px, transparent 1px, transparent 4px),
@@ -90,7 +90,7 @@ html,body{width:100%;height:100%;overflow:hidden;}
 #shop-btn::after{content:'';position:absolute;top:3px;left:3px;right:3px;bottom:3px;border-radius:16px;pointer-events:none;border:1px solid rgba(0,0,0,0.25);box-shadow:inset 0 0 10px rgba(0,0,0,0.25);}
 #shop-btn:hover{border-color:rgba(212,175,55,0.9);box-shadow:0 6px 24px rgba(0,0,0,0.6),0 0 24px rgba(212,175,55,0.25);transform:translateY(-2px);}
 #shop-btn .label{position:relative;z-index:1;font-family:'Cinzel Decorative',serif;font-size:0.78rem;font-weight:700;color:#FFD700;letter-spacing:1.5px;text-shadow:0 2px 3px rgba(0,0,0,0.6),0 0 8px rgba(255,210,0,0.25);}
-#home-btn{pointer-events:all;position:fixed;right:14px;top:50%;transform:translateY(-50%);width:clamp(42px,4vw,54px);height:clamp(42px,4vw,54px);display:flex;align-items:center;justify-content:center;background:rgba(8,5,2,0.82);border:1.5px solid rgba(212,175,55,0.45);border-radius:50%;backdrop-filter:blur(12px);box-shadow:0 3px 14px rgba(0,0,0,0.5);font-size:clamp(1.1rem,1.5vw,1.4rem);text-decoration:none;transition:all .2s;z-index:100;}
+#home-btn{pointer-events:all;position:fixed;right:14px;top:50%;transform:translateY(-50%);width:clamp(50px,5vw,66px);height:clamp(50px,5vw,66px);display:flex;align-items:center;justify-content:center;background:rgba(8,5,2,0.82);border:1.5px solid rgba(212,175,55,0.45);border-radius:50%;backdrop-filter:blur(12px);box-shadow:0 3px 14px rgba(0,0,0,0.5);font-size:clamp(1.1rem,1.5vw,1.4rem);text-decoration:none;transition:all .2s;z-index:100;}
 #home-btn:hover{border-color:rgba(212,175,55,0.85);box-shadow:0 4px 18px rgba(0,0,0,0.6),0 0 14px rgba(212,175,55,0.2);transform:translateY(-2px);}
 
 /* Shop */
@@ -214,8 +214,8 @@ html,body{width:100%;height:100%;overflow:hidden;}
 /* Habitat context menu */
 #habitat-menu{position:fixed;inset:0;z-index:120;display:none;align-items:flex-end;justify-content:center;pointer-events:none;}
 #habitat-menu.open{display:flex;}
-#habitat-menu-content{pointer-events:all;width:min(96vw,480px);background:linear-gradient(180deg,#2e2c28 0%,#3a3830 100%);border:1.5px solid rgba(220,210,180,0.18);border-radius:18px 18px 0 0;padding:18px 16px 24px;box-shadow:0 -10px 40px rgba(0,0,0,0.6),0 -1px 0 rgba(255,255,255,0.06);}
-#habitat-menu-title{font-family:'Cinzel Decorative',serif;font-size:0.85rem;color:#c8b890;text-align:center;margin-bottom:14px;letter-spacing:2px;text-transform:uppercase;}
+#habitat-menu-content{pointer-events:all;width:min(96vw,560px);background:linear-gradient(180deg,#2e2c28 0%,#3a3830 100%);border:1.5px solid rgba(220,210,180,0.18);border-radius:18px 18px 0 0;padding:22px 20px 28px;box-shadow:0 -10px 40px rgba(0,0,0,0.6),0 -1px 0 rgba(255,255,255,0.06);}
+#habitat-menu-title{font-family:'Cinzel Decorative',serif;font-size:1rem;color:#c8b890;text-align:center;margin-bottom:14px;letter-spacing:2px;text-transform:uppercase;}
 #habitat-dragons-row{display:flex;gap:10px;justify-content:center;margin-bottom:16px;}
 .dragon-slot-card{width:120px;display:flex;flex-direction:column;align-items:center;gap:6px;}
 .dragon-slot-img{width:120px;height:120px;border-radius:12px;background:linear-gradient(160deg,#2a2822,#1c1a16);border:1.5px solid rgba(255,180,40,0.3);box-shadow:inset 0 0 18px rgba(0,0,0,0.7),0 2px 8px rgba(0,0,0,0.4);position:relative;overflow:visible;display:flex;align-items:center;justify-content:center;}
@@ -271,12 +271,12 @@ html,body{width:100%;height:100%;overflow:hidden;}
     linear-gradient(105deg, transparent 38%, rgba(0,0,0,0.15) 39%, transparent 41%),
     linear-gradient(20deg, transparent 60%, rgba(0,0,0,0.12) 61%, transparent 63%),
     linear-gradient(150deg,#2a5a9a,#1a3a7a 45%,#0e1e4a);
-  border:2px solid rgba(80,160,255,0.6);border-radius:clamp(16px,2vw,24px);width:clamp(84px,8vw,108px);height:clamp(84px,8vw,108px);padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;box-shadow:0 4px 20px rgba(0,40,120,0.5),inset 0 1px 0 rgba(255,255,255,0.15),inset 0 -2px 4px rgba(0,0,0,0.3);transition:all .2s;overflow:hidden;box-sizing:border-box;}
+  border:2px solid rgba(80,160,255,0.6);border-radius:clamp(18px,2.2vw,28px);width:clamp(108px,11vw,144px);height:clamp(108px,11vw,144px);padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;box-shadow:0 4px 20px rgba(0,40,120,0.5),inset 0 1px 0 rgba(255,255,255,0.15),inset 0 -2px 4px rgba(0,0,0,0.3);transition:all .2s;overflow:hidden;box-sizing:border-box;}
 #quest-btn::before{content:'';position:absolute;inset:0;pointer-events:none;
   background:repeating-linear-gradient(135deg,transparent 0,transparent 6px,rgba(255,255,255,0.03) 6px,rgba(255,255,255,0.03) 7px),
   radial-gradient(ellipse at 50% 0%,rgba(120,200,255,0.18) 0%,transparent 60%);border-radius:18px;}
-#quest-btn .label{font-family:'Cinzel',serif;font-size:clamp(0.72rem,0.9vw,0.95rem);font-weight:700;color:#a0d0ff;letter-spacing:1px;text-shadow:0 1px 4px rgba(0,0,0,0.8);position:relative;z-index:1;}
-#quest-btn .icon{font-size:clamp(1.5rem,2.2vw,2.2rem);position:relative;z-index:1;line-height:1;}
+#quest-btn .label{font-family:'Cinzel',serif;font-size:clamp(0.92rem,1.25vw,1.25rem);font-weight:700;color:#a0d0ff;letter-spacing:1px;text-shadow:0 1px 4px rgba(0,0,0,0.8);position:relative;z-index:1;}
+#quest-btn .icon{font-size:clamp(2rem,3vw,3rem);position:relative;z-index:1;line-height:1;}
 #quest-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,40,180,0.6),inset 0 1px 0 rgba(255,255,255,0.2),inset 0 -2px 4px rgba(0,0,0,0.3);}
 #quest-badge{position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:#e83030;border-radius:50%;border:2px solid #1a3a7a;display:none;z-index:2;}
 #quest-badge.show{display:block;}
@@ -294,9 +294,9 @@ html,body{width:100%;height:100%;overflow:hidden;}
   box-shadow:0 2px 10px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,220,80,0.15);
 }
 #xp-level-star{font-size:clamp(1rem,1.3vw,1.4rem);line-height:1;}
-#xp-level-text{font-family:'Cinzel',serif;font-size:clamp(0.88rem,1.2vw,1.1rem);font-weight:700;color:#FFE878;letter-spacing:1px;}
+#xp-level-text{font-family:'Cinzel',serif;font-size:clamp(1.1rem,1.6vw,1.5rem);font-weight:700;color:#FFE878;letter-spacing:1px;}
 #xp-bar-outer{
-  width:clamp(160px,18vw,260px);height:clamp(16px,1.8vw,22px);
+  width:clamp(220px,24vw,340px);height:clamp(20px,2.5vw,30px);
   background:rgba(0,0,0,0.55);
   border:1px solid rgba(255,200,60,0.3);
   border-radius:10px;overflow:hidden;
@@ -312,7 +312,7 @@ html,body{width:100%;height:100%;overflow:hidden;}
 }
 @keyframes xpShimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
 #xp-bar-label{
-  font-family:'Cinzel',serif;font-size:clamp(0.72rem,0.9vw,0.88rem);
+  font-family:'Cinzel',serif;font-size:clamp(0.88rem,1.1vw,1.1rem);
   color:#FFE060;text-align:right;letter-spacing:0.5px;
   text-shadow:0 1px 4px rgba(0,0,0,0.9),0 0 10px rgba(255,180,0,0.3);
   font-weight:700;
@@ -360,7 +360,7 @@ html,body{width:100%;height:100%;overflow:hidden;}
   <button id="shop-btn" onclick="openShop()">
     <span class="label">SHOP</span>
   </button>
-  <button id="quest-btn" onclick="openQuestPanel()" style="position:absolute;bottom:clamp(20px,2.5vw,32px);right:calc(clamp(20px,2vw,32px) + clamp(84px,8vw,108px) + 12px);">
+  <button id="quest-btn" onclick="openQuestPanel()" style="position:absolute;bottom:clamp(20px,2.5vw,32px);right:calc(clamp(20px,2vw,32px) + clamp(108px,11vw,144px) + 28px);">
     <div id="quest-badge"></div>
     <span class="icon">📜</span>
     <span class="label">QUESTS</span>
@@ -2032,9 +2032,9 @@ function closeShop(){ document.getElementById('shop').classList.remove('open'); 
 function scaleShop(){
   const panel=document.getElementById('shop-panel');
   if(!panel) return;
-  const scaleX=window.innerWidth/580;
-  const scaleY=window.innerHeight/560;
-  const scale=Math.min(scaleX,scaleY,1.8);
+  const scaleX=window.innerWidth/520;
+  const scaleY=window.innerHeight/500;
+  const scale=Math.min(scaleX,scaleY,2.0);
   panel.style.transform=`scale(${Math.max(0.5,scale)})`;
 }
 window.addEventListener('resize',scaleShop);
