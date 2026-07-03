@@ -90,7 +90,7 @@ html,body{width:100%;height:100%;overflow:hidden;}
 #shop-btn::after{content:'';position:absolute;top:3px;left:3px;right:3px;bottom:3px;border-radius:16px;pointer-events:none;border:1px solid rgba(0,0,0,0.25);box-shadow:inset 0 0 10px rgba(0,0,0,0.25);}
 #shop-btn:hover{border-color:rgba(212,175,55,0.9);box-shadow:0 6px 24px rgba(0,0,0,0.6),0 0 24px rgba(212,175,55,0.25);transform:translateY(-2px);}
 #shop-btn .label{position:relative;z-index:1;font-family:'Cinzel Decorative',serif;font-size:0.78rem;font-weight:700;color:#FFD700;letter-spacing:1.5px;text-shadow:0 2px 3px rgba(0,0,0,0.6),0 0 8px rgba(255,210,0,0.25);}
-#home-btn{pointer-events:all;width:46px;height:46px;display:flex;align-items:center;justify-content:center;background:rgba(8,5,2,0.82);border:1.5px solid rgba(212,175,55,0.45);border-radius:50%;backdrop-filter:blur(12px);box-shadow:0 3px 14px rgba(0,0,0,0.5);font-size:1.2rem;text-decoration:none;transition:all .2s;flex-shrink:0;}
+#home-btn{pointer-events:all;position:fixed;right:14px;top:50%;transform:translateY(-50%);width:clamp(42px,4vw,54px);height:clamp(42px,4vw,54px);display:flex;align-items:center;justify-content:center;background:rgba(8,5,2,0.82);border:1.5px solid rgba(212,175,55,0.45);border-radius:50%;backdrop-filter:blur(12px);box-shadow:0 3px 14px rgba(0,0,0,0.5);font-size:clamp(1.1rem,1.5vw,1.4rem);text-decoration:none;transition:all .2s;z-index:100;}
 #home-btn:hover{border-color:rgba(212,175,55,0.85);box-shadow:0 4px 18px rgba(0,0,0,0.6),0 0 14px rgba(212,175,55,0.2);transform:translateY(-2px);}
 
 /* Shop */
@@ -138,7 +138,7 @@ html,body{width:100%;height:100%;overflow:hidden;}
 .sh-tab:hover:not(.active){background:linear-gradient(180deg,#666458,#525044);color:rgba(225,230,210,0.7);}
 
 /* Body — old mossy stone floor */
-#sh-body{flex:1;overflow:hidden;background:
+#sh-body{flex:1;overflow:hidden;position:relative;background:
     radial-gradient(circle at 12% 10%, rgba(80,120,50,0.12) 0%, transparent 16%),
     radial-gradient(circle at 85% 22%, rgba(70,105,45,0.1) 0%, transparent 14%),
     radial-gradient(circle at 30% 75%, rgba(90,130,55,0.12) 0%, transparent 18%),
@@ -181,7 +181,7 @@ html,body{width:100%;height:100%;overflow:hidden;}
 .s-empty{display:flex;flex-direction:column;align-items:center;padding:40px 30px 50px;text-align:center;position:relative;z-index:1;}
 
 /* Dragon shop cards */
-.dragon-grid{display:flex;flex-wrap:nowrap;gap:12px;padding:8px 16px 16px;position:relative;z-index:1;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;scrollbar-color:rgba(200,180,100,0.3) transparent;-webkit-overflow-scrolling:touch;}
+.dragon-grid{display:flex;flex-wrap:nowrap;gap:12px;padding:0 16px 16px;position:relative;z-index:1;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;scrollbar-color:rgba(200,180,100,0.3) transparent;-webkit-overflow-scrolling:touch;}
 .dragon-grid::-webkit-scrollbar{height:4px;}
 .dragon-grid::-webkit-scrollbar-track{background:transparent;}
 .dragon-grid::-webkit-scrollbar-thumb{background:rgba(200,180,100,0.3);border-radius:2px;}
@@ -280,6 +280,55 @@ html,body{width:100%;height:100%;overflow:hidden;}
 #quest-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,40,180,0.6),inset 0 1px 0 rgba(255,255,255,0.2),inset 0 -2px 4px rgba(0,0,0,0.3);}
 #quest-badge{position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:#e83030;border-radius:50%;border:2px solid #1a3a7a;display:none;z-index:2;}
 #quest-badge.show{display:block;}
+
+/* XP Bar */
+#xp-bar-wrap{
+  position:fixed;top:14px;right:12px;
+  display:flex;flex-direction:column;align-items:flex-end;gap:6px;pointer-events:none;z-index:100;
+}
+#xp-level-badge{
+  display:inline-flex;align-items:center;gap:clamp(5px,0.6vw,8px);
+  background:linear-gradient(135deg,#2a1e08,#1a1208);
+  border:1.5px solid rgba(255,200,60,0.5);
+  border-radius:20px;padding:clamp(4px,0.5vw,7px) clamp(12px,1.4vw,18px) clamp(4px,0.5vw,7px) clamp(8px,1vw,13px);
+  box-shadow:0 2px 10px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,220,80,0.15);
+}
+#xp-level-star{font-size:clamp(1rem,1.3vw,1.4rem);line-height:1;}
+#xp-level-text{font-family:'Cinzel',serif;font-size:clamp(0.88rem,1.2vw,1.1rem);font-weight:700;color:#FFE878;letter-spacing:1px;}
+#xp-bar-outer{
+  width:clamp(160px,18vw,260px);height:clamp(16px,1.8vw,22px);
+  background:rgba(0,0,0,0.55);
+  border:1px solid rgba(255,200,60,0.3);
+  border-radius:10px;overflow:hidden;
+  box-shadow:0 2px 8px rgba(0,0,0,0.4),inset 0 1px 3px rgba(0,0,0,0.5);
+}
+#xp-bar-fill{
+  height:100%;width:0%;border-radius:10px;
+  background:linear-gradient(90deg,#b06010,#f0a020,#ffe060,#f0a020);
+  background-size:200% 100%;
+  animation:xpShimmer 2.5s linear infinite;
+  transition:width 0.6s cubic-bezier(0.4,0,0.2,1);
+  box-shadow:0 0 8px rgba(255,180,0,0.6);
+}
+@keyframes xpShimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+#xp-bar-label{
+  font-family:'Cinzel',serif;font-size:clamp(0.72rem,0.9vw,0.88rem);
+  color:#FFE060;text-align:right;letter-spacing:0.5px;
+  text-shadow:0 1px 4px rgba(0,0,0,0.9),0 0 10px rgba(255,180,0,0.3);
+  font-weight:700;
+}
+
+#game-confirm{display:none;position:fixed;inset:0;z-index:9500;align-items:center;justify-content:center;background:rgba(0,0,0,0.65);}
+#game-confirm.show{display:flex;}
+#game-confirm-box{background:linear-gradient(160deg,#2a1a08,#1a1008);border:1.5px solid rgba(255,200,60,0.45);border-radius:16px;padding:24px 28px;max-width:320px;width:90%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.8);}
+#game-confirm-msg{font-family:Cinzel,serif;font-size:0.88rem;color:#ffe0a0;line-height:1.5;margin-bottom:18px;}
+#game-confirm-btns{display:flex;gap:10px;justify-content:center;}
+.gcb{font-family:Cinzel,serif;font-size:0.8rem;font-weight:700;padding:9px 22px;border-radius:20px;cursor:pointer;border:1.5px solid;}
+.gcb-cancel{background:rgba(0,0,0,0.3);border-color:rgba(255,200,60,0.3);color:#aaa;}
+.gcb-ok{background:linear-gradient(180deg,#8b1a1a,#5a0e0e);border-color:rgba(255,80,60,0.5);color:#ffbbbb;}
+
+#xp-popup{position:fixed;pointer-events:none;z-index:8100;font-family:'Cinzel',serif;font-weight:700;font-size:0.9rem;color:#FFE060;text-shadow:0 0 10px rgba(255,180,0,0.8),0 1px 4px rgba(0,0,0,0.9);opacity:0;}
+@keyframes xpFloat{0%{opacity:1;transform:translateY(0);}100%{opacity:0;transform:translateY(-40px);}}
 </style>
 </head>
 <body>
@@ -298,6 +347,14 @@ html,body{width:100%;height:100%;overflow:hidden;}
       <div class="res-pill food-pill"><div class="res-orb food">🍖</div><span class="res-val f" id="fv">100</span></div>
     </div>
     <div id="game-title">JIMMIE VALE</div>
+    <div id="xp-bar-wrap">
+      <div id="xp-level-badge">
+        <span id="xp-level-star">⭐</span>
+        <span id="xp-level-text">LV 1</span>
+      </div>
+      <div id="xp-bar-outer"><div id="xp-bar-fill"></div></div>
+      <div id="xp-bar-label" id="xp-bar-label">0 / 130 XP</div>
+    </div>
     <a id="home-btn" href="games.html" title="Tillbaka till spel">🏠</a>
   </div>
   <button id="shop-btn" onclick="openShop()">
@@ -332,15 +389,15 @@ html,body{width:100%;height:100%;overflow:hidden;}
       <button id="sh-tab-items" class="sh-tab" data-tab="items">Buildings</button>
     </div>
     <div id="sh-body">
-      <div class="s-divider"><div class="s-line"></div><div class="s-rune">✦ MDCCCXLVII ✦</div><div class="s-line"></div></div>
-      <div class="s-pillars">
-        <div class="s-pillar"></div><div class="s-pillar"></div><div class="s-pillar"></div>
-        <div class="s-pillar"></div><div class="s-pillar"></div><div class="s-pillar"></div>
-      </div>
-      <div class="s-arch"></div>
-
       <!-- DRAGONS TAB -->
       <div class="sh-panel" data-panel="dragons">
+        <div class="s-divider"><div class="s-line"></div><div class="s-rune">✦ MDCCCXLVII ✦</div><div class="s-line"></div></div>
+        <div class="s-pillars">
+          <div class="s-pillar"></div><div class="s-pillar"></div><div class="s-pillar"></div>
+          <div class="s-pillar"></div><div class="s-pillar"></div><div class="s-pillar"></div>
+        </div>
+        <div class="s-arch"></div>
+
         <div class="dragon-grid">
           <div class="dragon-card">
             <div class="dragon-card-frame">
@@ -366,14 +423,20 @@ html,body{width:100%;height:100%;overflow:hidden;}
             </div>
             <div class="dragon-card-name">Earth Dragon</div>
             <div class="dragon-card-desc">An armored titan of the deep earth — slow to move, impossible to stop.</div>
-            <div class="dragon-gpm">🪙 +5/min at Lv.1</div>
-            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>300</span></button>
+            <div class="dragon-gpm">🪙 +7/min at Lv.1</div>
+            <button id="earth-dragon-buy-btn" class="dragon-card-buy"><span class="dc-coin">🪙</span><span>300</span></button>
           </div>
         </div>
       </div>
 
       <!-- OTHER TABS (empty state) -->
       <div class="sh-panel" data-panel="habitats" style="display:none">
+        <div class="s-divider"><div class="s-line"></div><div id="habitat-count-bar" class="s-rune" style="color:rgba(220,200,140,0.85);letter-spacing:1px;white-space:nowrap;flex-shrink:0;padding:0 8px;"></div><div class="s-line"></div></div>
+        <div class="s-pillars">
+          <div class="s-pillar"></div><div class="s-pillar"></div><div class="s-pillar"></div>
+          <div class="s-pillar"></div><div class="s-pillar"></div><div class="s-pillar"></div>
+        </div>
+        <div class="s-arch"></div>
         <div class="dragon-grid">
           <div class="dragon-card">
             <div class="habitat-frame">
@@ -402,12 +465,26 @@ html,body{width:100%;height:100%;overflow:hidden;}
         </div>
       </div>
       <div class="sh-panel" data-panel="decor" style="display:none">
+        <div class="s-divider"><div class="s-line"></div><div class="s-rune">✦ MDCCCXLVII ✦</div><div class="s-line"></div></div>
+        <div class="s-pillars">
+          <div class="s-pillar"></div><div class="s-pillar"></div><div class="s-pillar"></div>
+          <div class="s-pillar"></div><div class="s-pillar"></div><div class="s-pillar"></div>
+        </div>
+        <div class="s-arch"></div>
+
         <div class="s-empty">
           <div class="s-empty-title">Coming Soon</div>
           <div class="s-empty-text">The merchants are still preparing their wares. Check back soon, dragon tamer.</div>
         </div>
       </div>
       <div class="sh-panel" data-panel="items" style="display:none">
+        <div class="s-divider"><div class="s-line"></div><div class="s-rune">✦ MDCCCXLVII ✦</div><div class="s-line"></div></div>
+        <div class="s-pillars">
+          <div class="s-pillar"></div><div class="s-pillar"></div><div class="s-pillar"></div>
+          <div class="s-pillar"></div><div class="s-pillar"></div><div class="s-pillar"></div>
+        </div>
+        <div class="s-arch"></div>
+
         <div class="dragon-grid">
           <div class="dragon-card">
             <div class="dragon-card-frame">
@@ -415,7 +492,7 @@ html,body{width:100%;height:100%;overflow:hidden;}
             </div>
             <div class="dragon-card-name">Farm</div>
             <div class="dragon-card-desc">A cozy farmstead where you grow food for your dragons.</div>
-            <button id="tut-farm-btn" class="dragon-card-buy"><span class="dc-coin">🪙</span><span>300</span></button>
+            <button id="tut-farm-btn" class="dragon-card-buy" data-farm-buy="1"><span class="dc-coin">🪙</span><span>300</span></button>
           </div>
         </div>
       </div>
@@ -446,13 +523,14 @@ html,body{width:100%;height:100%;overflow:hidden;}
 
 <!-- Habitat context menu (shown when tapping a placed habitat) -->
 <div id="habitat-menu" style="display:none">
-  <div id="habitat-menu-content">
+  <div id="habitat-menu-content" style="position:relative;">
+    <button class="hm-btn hm-close" onclick="closeHabitatMenu()" style="position:absolute;top:12px;right:14px;padding:6px 12px;font-size:0.75rem;">✕</button>
     <div id="habitat-menu-title">Fire Habitat</div>
     <div id="habitat-dragons-row"></div>
-    <div class="habitat-menu-actions">
-      <button class="hm-btn" onclick="openShopToAddDragon()">Add Dragon</button>
+    <div class="habitat-menu-actions" style="display:flex;gap:10px;justify-content:center;margin-top:14px;">
+      <button class="hm-btn" onclick="openShopToAddDragon()">+ Add Dragon</button>
       <button class="hm-btn" onclick="moveSelectedHabitat()">✦ Move</button>
-      <button class="hm-btn hm-close" onclick="closeHabitatMenu()">✕ Close</button>
+      <button class="hm-btn" onclick="sellHabitat()" style="background:rgba(120,20,20,0.4);border-color:rgba(200,60,60,0.4);color:#ffaaaa;">💰 Sell</button>
     </div>
   </div>
 </div>
@@ -1033,6 +1111,8 @@ requestAnimationFrame(render);
 const game = {
   gold: 1500,
   food: 100,
+  xp: 0,
+  level: 1,
   placedHabitats: [],
   buildings: [],
   shrine: {gx:Math.floor((18-3)/2), gy:Math.floor((18-3)/2)}, // unique pre-placed blue stone plate
@@ -1060,7 +1140,9 @@ function upgradeHabitatDragon(habitatIdx, dragonIdx){
   const cost = LEVEL_COST[lv+1];
   if(!spendFood(cost)) { showNotification('Not enough food! (Need '+cost+' 🍖)', 'error'); return; }
   h.dragonLevels[dragonIdx] = lv+1;
-  openHabitatMenu(habitatIdx); // refresh menu
+  const newLv=lv+1;
+  addXP(newLv>=10?50:10);
+  openHabitatMenu(habitatIdx);
 }
 document.getElementById('gv').textContent = game.gold;
 updateGoldUI();
@@ -1090,7 +1172,8 @@ function updateGoldUI(collected){
   // Income rate
   const rate=game.placedHabitats.reduce((s,h)=>{
     const lvs=h.dragonLevels||h.dragons.map(()=>1);
-    return s+lvs.reduce((a,l)=>a+(l||1)*5,0);
+    const gRate=h.type==='earth'?7:5;
+    return s+h.dragons.reduce((a,d,di)=>a+(lvs[di]||1)*gRate,0);
   },0);
   const gi=document.getElementById('gi');
   if(gi) gi.textContent=rate>0?`+${rate}/min`:'';
@@ -1130,6 +1213,11 @@ function isValidPlacement(gx, gy, excludeIdx=-1){
     const dgx=(gx+HABITAT_SIZE/2)-(h.gx+HABITAT_SIZE/2);
     const dgy=(gy+HABITAT_SIZE/2)-(h.gy+HABITAT_SIZE/2);
     if((dgx/erx)*(dgx/erx)+(dgy/ery)*(dgy/ery)<1) return false;
+  }
+  // Block placement on any farm buildings
+  for(const b of (game.buildings||[])){
+    if(gx<b.gx+BUILDING_SIZE && gx+HABITAT_SIZE>b.gx &&
+       gy<b.gy+BUILDING_SIZE && gy+HABITAT_SIZE>b.gy) return false;
   }
   // Block placement on shrine — use habitat's visual bounding box (matches the red border)
   const sh=game.shrine;
@@ -1201,20 +1289,6 @@ function drawBuildings(){
     const oc=getHabitatCache('bld_'+b.type, size);
     drawFarmHouse(oc.getContext('2d'), size, size, now/1000);
     ctx.drawImage(oc, px, py, size, size);
-    // Glow valid habitats when pendingDragon is active
-    if(game.pendingDragon){
-      const pd=game.pendingDragon;
-      const valid=h.type===pd.habitatType&&h.dragons.length<3;
-      const pulse=0.5+Math.sin(performance.now()/300)*0.45;
-      if(valid){
-        const r2=habitatOutlineRect(px,py,size);
-        ctx.strokeStyle=`rgba(80,220,80,${pulse})`;
-        ctx.lineWidth=4; ctx.setLineDash([]);
-        ctx.strokeRect(r2.x,r2.y,r2.w,r2.h);
-        ctx.fillStyle=`rgba(80,220,80,${pulse*0.15})`;
-        ctx.fillRect(r2.x,r2.y,r2.w,r2.h);
-      }
-    }
 
     // Crop timer overlay
     if(b.crop && b.cropEnd){
@@ -1291,9 +1365,10 @@ function stepMiniDragons(dt){
   game.placedHabitats.forEach(h=>{
     if(h.dragons.length===0) return;
     const lvs=h.dragonLevels||h.dragons.map(()=>1);
-    const totalLv=lvs.reduce((s,l)=>s+(l||1),0);
+    const gRate=h.type==='earth'?7:5;
+    const totalGold=h.dragons.reduce((s,d,di)=>{const lv=(lvs[di]||1);return s+lv*gRate;},0);
     const goldMax=h.dragons.length*150;
-    h.gold=(h.gold||0)+totalLv*(5/60)*dt;
+    h.gold=(h.gold||0)+totalGold*(1/60)*dt;
     if(h.gold>goldMax) h.gold=goldMax;
   });
 }
@@ -1462,6 +1537,20 @@ function drawPlacedHabitats(){
 
     ctx.drawImage(oc, px, py, size, size);
 
+    // Glow valid habitats when pendingDragon is active
+    if(game.pendingDragon){
+      const pd=game.pendingDragon;
+      if(h.type===pd.habitatType&&h.dragons.length<3){
+        const pulse=0.5+Math.sin(performance.now()/300)*0.45;
+        const r2=habitatOutlineRect(px,py,size);
+        ctx.strokeStyle=`rgba(80,220,80,${pulse})`;
+        ctx.lineWidth=4; ctx.setLineDash([]);
+        ctx.strokeRect(r2.x,r2.y,r2.w,r2.h);
+        ctx.fillStyle=`rgba(80,220,80,${pulse*0.15})`;
+        ctx.fillRect(r2.x,r2.y,r2.w,r2.h);
+      }
+    }
+
     // Coin bubble — shows when collectable, displays amount
     if(h.dragons.length>0){
       const goldMax=h.dragons.length*150;
@@ -1574,9 +1663,26 @@ function cancelPlacement(){
   document.getElementById('place-bar').style.display='none';
 }
 
+function isBuildingOverlap(gx,gy,excludeIdx=-1){
+  for(const h of game.placedHabitats){
+    if(gx<h.gx+HABITAT_SIZE&&gx+BUILDING_SIZE>h.gx&&gy<h.gy+HABITAT_SIZE&&gy+BUILDING_SIZE>h.gy) return true;
+  }
+  for(let i=0;i<(game.buildings||[]).length;i++){
+    if(i===excludeIdx) continue;
+    const b=game.buildings[i];
+    if(gx<b.gx+BUILDING_SIZE&&gx+BUILDING_SIZE>b.gx&&gy<b.gy+BUILDING_SIZE&&gy+BUILDING_SIZE>b.gy) return true;
+  }
+  if(game.shrine){const s=game.shrine;if(gx<s.gx+SHRINE_SIZE&&gx+BUILDING_SIZE>s.gx&&gy<s.gy+SHRINE_SIZE&&gy+BUILDING_SIZE>s.gy) return true;}
+  return false;
+}
+
 function confirmBuildingPlacement2(){
   if(!game.placement||!game.placement.isBuilding) return;
   const {type,cost,gx,gy,moveIdx}=game.placement;
+  if(isBuildingOverlap(gx,gy,moveIdx!=null?moveIdx:-1)){
+    showNotification('Cannot place here — overlaps another building or habitat!','error');
+    return;
+  }
   if(moveIdx!=null){
     // Moving existing building
     game.buildings[moveIdx].gx=gx;
@@ -1687,6 +1793,7 @@ canvas.addEventListener('click', e=>{
         const collected=Math.floor(h.gold);
         game.gold+=collected;
         h.gold=0;
+        addXP(h.dragons.length>=3?20:10);
         updateGoldUI(true);
         showGoldPopup(px+size/2, py+size/4, collected);
         return;
@@ -1702,6 +1809,7 @@ canvas.addEventListener('click', e=>{
 function openHabitatMenu(idx){
   game.selectedHabitatIdx=idx;
   const h=game.placedHabitats[idx];
+  if(!h) return;
   const menu=document.getElementById('habitat-menu');
   menu.classList.add('open'); menu.style.display='flex';
 
@@ -1752,12 +1860,23 @@ function openHabitatMenu(idx){
         upBtn.style.cursor='default';
       } else {
         const cost=LEVEL_COST[lv2+1];
-        upBtn.textContent='Uppgradera — '+cost+' 🍖';
+        upBtn.textContent='Upgrade — '+cost+' 🍖';
         upBtn.onclick=(()=>{
           const slotIdx=i;
           const habIdx=idx;
           return ()=>upgradeHabitatDragon(habIdx, slotIdx);
         })();
+      // Sell dragon button
+      const sellDBtn=document.createElement('button');
+      sellDBtn.style.cssText='width:100%;font-family:Cinzel,serif;font-size:0.55rem;font-weight:700;color:#ffaaaa;background:rgba(120,20,20,0.3);border:1px solid rgba(200,60,60,0.35);border-radius:10px;padding:4px 0;cursor:pointer;margin-top:3px;';
+      sellDBtn.textContent='Sell Dragon';
+      sellDBtn.onclick=(()=>{const si=i,hi=idx;return async()=>{
+        const totalDragons=game.placedHabitats.reduce((s,h)=>s+h.dragons.length,0);
+        if(totalDragons<=1){ showNotification("You can't sell your last dragon!",'error'); return; }
+        const ok=await gameConfirm('Sell this dragon? You will receive 125 🪙.','Sell');
+        if(ok){const h=game.placedHabitats[hi];h.dragons.splice(si,1);if(h.dragonLevels)h.dragonLevels.splice(si,1);game.gold+=125;updateGoldUI();Object.keys(_dragonRoamState).filter(k=>k.startsWith(hi+'_')).forEach(k=>delete _dragonRoamState[k]);saveGame();openHabitatMenu(hi);}
+      };})();
+      card.appendChild(sellDBtn);
       }
       card.appendChild(upBtn);
     }
@@ -1830,6 +1949,26 @@ const DRAGON_COST = { fire:250, grass:250, earth:300 };
 // Human-readable habitat names for error messages
 const HABITAT_NAMES = { fire:'Eld-Habitat', grass:'Gräs-Habitat', earth:'Djord-Habitat' };
 
+// Convert vertical scroll to horizontal on dragon grids
+document.querySelectorAll('.dragon-grid').forEach(grid=>{
+  grid.addEventListener('wheel', e=>{
+    if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){
+      e.preventDefault();
+      grid.scrollLeft+=e.deltaY;
+    }
+  },{passive:false});
+});
+function maxHabitats(){
+  const lv=game.level||1;
+  return 3+Math.floor(lv/5)*2; // 3 at lv1, +2 every 5 levels
+}
+function maxFarms(){
+  const lv=game.level||1;
+  if(lv>=9) return 3;
+  if(lv>=3) return 2;
+  return 1;
+}
+
 document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
   btn.addEventListener('click', e=>{
     e.stopPropagation();
@@ -1840,12 +1979,19 @@ document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
 
     if(isHabitat){
       const habitatType=isHabitat.dataset.habitat||'fire';
+      if(game.placedHabitats.length>=maxHabitats()){ showNotification(`Reach level ${(Math.floor((game.level)/5)+1)*5} to unlock more habitats!`,'error'); return; }
       if(game.gold<500){ showNotification('Not enough gold! (Need 500 🪙)', 'error'); return; }
       startPlacement(habitatType,500);
     }
     if(isBuilding){
       const buildingType=isBuilding.dataset.building||'farm';
       const cost=300;
+      const curFarms=(game.buildings||[]).filter(b=>b.type==='farm').length;
+      const max=maxFarms();
+      if(curFarms>=max){
+        const nextLv=curFarms>=2?9:3;
+        showNotification(`Reach level ${nextLv} to unlock more Farms!`,'error'); return;
+      }
       if(game.gold<cost){ showNotification(`Not enough gold! (Need ${cost} 🪙)`, 'error'); return; }
       game.placement={type:buildingType,cost,gx:Math.floor((18-BUILDING_SIZE)/2),gy:Math.floor((18-BUILDING_SIZE)/2),isBuilding:true};
       closeShop();
@@ -1853,6 +1999,7 @@ document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
 
     if(dragonCanvas){
       const dragonType=dragonCanvas.dataset.dragon;
+      if(dragonType==='earth'&&(game.level||1)<3){ showNotification('Earth Dragon unlocks at Level 3!','error'); return; }
       const habitatType=DRAGON_HABITAT[dragonType];
       const cost=DRAGON_COST[dragonType]||250;
 
@@ -1870,8 +2017,8 @@ document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
         return;
       }
       spendGold(cost);
+      if(dragonType==='fire'||dragonType==='grass') addXP(20);
       closeShop();
-      // Enter "choose habitat" mode instead of auto-placing
       game.pendingDragon = {type: dragonType, habitatType};
       showNotification('Choose a habitat for your dragon!', 'success');
     }
@@ -1880,7 +2027,7 @@ document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
 
 
 // ── SHOP ──────────────────────────────────────────────────────────
-function openShop(){ document.getElementById('shop').classList.add('open'); scaleShop(); }
+function openShop(){ document.getElementById('shop').classList.add('open'); scaleShop(); setTimeout(updateShopButtons,80); }
 function closeShop(){ document.getElementById('shop').classList.remove('open'); }
 function scaleShop(){
   const panel=document.getElementById('shop-panel');
@@ -2012,8 +2159,8 @@ function drawSideDragon(ctx, W, H, p) {
   // NECK
   ctx.lineWidth=2.5;
   ctx.beginPath();
-  ctx.moveTo(24,-10); ctx.bezierCurveTo(30,-22,34,-30,40,-34);
-  ctx.bezierCurveTo(46,-30,44,-18,38,-8);
+  ctx.moveTo(38,-4); ctx.bezierCurveTo(44,-16,46,-30,40,-34);
+  ctx.bezierCurveTo(34,-30,30,-22,24,-7);
   ctx.closePath();
   ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
 
@@ -2021,7 +2168,6 @@ function drawSideDragon(ctx, W, H, p) {
   ctx.lineWidth=2.5;
   ctx.beginPath(); ctx.ellipse(48,-36,20,15,-0.1,0,Math.PI*2);
   ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  // snout
   ctx.beginPath(); ctx.ellipse(64,-32,10,8,0,0,Math.PI*2);
   ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
   // mouth line
@@ -2241,8 +2387,8 @@ function drawSideDragonAt(ctx, cx, cy, s, p) {
   // NECK
   ctx.lineWidth=2.5;
   ctx.beginPath();
-  ctx.moveTo(24,-10); ctx.bezierCurveTo(30,-22,34,-30,40,-34);
-  ctx.bezierCurveTo(46,-30,44,-18,38,-8);
+  ctx.moveTo(38,-4); ctx.bezierCurveTo(44,-16,46,-30,40,-34);
+  ctx.bezierCurveTo(34,-30,30,-22,24,-7);
   ctx.closePath();
   ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
 
@@ -2250,9 +2396,9 @@ function drawSideDragonAt(ctx, cx, cy, s, p) {
   ctx.lineWidth=2.5;
   ctx.beginPath(); ctx.ellipse(48,-36,20,15,-0.1,0,Math.PI*2);
   ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  // snout
   ctx.beginPath(); ctx.ellipse(64,-32,10,8,0,0,Math.PI*2);
-  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(64,-32,10,8,0,0,Math.PI*2);
+  ctx.beginPath(); ctx.moveTo(56,-28); ctx.quadraticCurveTo(64,-24,72,-28); ctx.stroke();
   // mouth line
   ctx.strokeStyle=INK; ctx.lineWidth=1.5;
   ctx.beginPath(); ctx.moveTo(56,-28); ctx.quadraticCurveTo(64,-24,72,-28); ctx.stroke();
@@ -2928,8 +3074,8 @@ function drawFarmHouse(ctx, W, H, t){
 
 const CROPS = [
   {id:'wheat',      name:'Wheat',        icon:'🌾', cost:30,  time:30,  food:25,  desc:'Quick harvest, small yield.'},
-  {id:'carrot',     name:'Carrot',       icon:'🥕', cost:100, time:120, food:110, desc:'Takes 2 minutes, good return.'},
-  {id:'dragonfruit',name:'Dragon Fruit', icon:'🍈', cost:350, time:300, food:400, desc:'5 minutes, exceptional yield.'},
+  {id:'carrot',     name:'Carrot',       icon:'🥕', cost:100, time:120, food:60, desc:'Takes 2 minutes, good return.'},
+  {id:'dragonfruit',name:'Dragon Fruit', icon:'🍈', cost:350, time:300, food:200, desc:'5 minutes, exceptional yield.'},
 ];
 
 
@@ -3635,7 +3781,7 @@ let _tutRAF  = null;
 let _tutPos  = null;
 
 function tutInit(){
-  if(localStorage.getItem('tut_v4_done')) return;
+  if(localStorage.getItem('tut_v5_done')) return;
   // Show welcome screen first
   showWelcomeScreen();
 }
@@ -3778,7 +3924,7 @@ function tutDone(){
   if(_tutPos){ clearInterval(_tutPos); _tutPos = null; }
   const ov = document.getElementById('tut-overlay');
   if(ov) ov.style.display = 'none';
-  localStorage.setItem('tut_v4_done','1');
+  localStorage.setItem('tut_v5_done','1');
   saveGame();
 }
 
@@ -3807,25 +3953,21 @@ setTimeout(tutInit, 800);
 // QUEST SYSTEM
 // ══════════════════════════════════════════════════════
 const QUEST_DEFS = [
-  {id:'fire_habitat', title:'Build a Fire Habitat',
-   desc:'Place a Fire Habitat on your island.',
-   icon:'🌋',
-   progress:()=>game.placedHabitats.filter(h=>h.type==='fire').length,
-   max:1},
-  {id:'fire_dragon', title:'Buy a Fire Dragon',
-   desc:'Add a Fire Dragon to your Fire Habitat.',
-   icon:'🔥',
-   progress:()=>game.placedHabitats.reduce((s,h)=>s+h.dragons.filter(d=>d==='fire').length,0),
-   max:1},
-  {id:'plant_wheat', title:'Plant Wheat',
-   desc:'Grow Wheat in your Farm.',
-   icon:'🌾',
+  {id:'fire_habitat', title:'Build a Fire Habitat', desc:'Place a Fire Habitat on your island.', icon:'🌋',
+   progress:()=>game.placedHabitats.filter(h=>h.type==='fire').length, max:1, xp:50, gold:250},
+  {id:'fire_dragon', title:'Buy a Fire Dragon', desc:'Add a Fire Dragon to your habitat.', icon:'🔥',
+   progress:()=>game.placedHabitats.reduce((s,h)=>s+h.dragons.filter(d=>d==='fire').length,0), max:1, xp:50, gold:250},
+  {id:'plant_wheat', title:'Plant Wheat', desc:'Grow Wheat in your Farm.', icon:'🌾',
    progress:()=>(game.questsDone&&game.questsDone.wheat_ever)?1:((game.buildings&&game.buildings.some(b=>b.crop==='wheat'))?1:0),
-   max:1},
+   max:1, xp:50, gold:250},
+  {id:'dragon_max', title:'Max Out a Dragon', desc:'Level any dragon to Level 10.', icon:'⚔️',
+   progress:()=>game.placedHabitats.some(h=>h.dragonLevels&&h.dragonLevels.some(l=>l>=10))?1:0,
+   max:1, xp:500, gold:1000},
 ];
 
 function questsCompletedCount(){
-  return QUEST_DEFS.filter(q=>q.progress()>=q.max).length;
+  if(!game.questsClaimed) game.questsClaimed={};
+  return QUEST_DEFS.filter(q=>q.progress()>=q.max&&!game.questsClaimed[q.id]).length;
 }
 
 function updateQuestBadge(){
@@ -3848,27 +3990,44 @@ function closeQuestPanel(){
   if(el) el.style.display='none';
 }
 
+function claimQuest(qid){
+  const q=QUEST_DEFS.find(q=>q.id===qid);
+  if(!q||q.progress()<q.max) return;
+  if(!game.questsClaimed) game.questsClaimed={};
+  if(game.questsClaimed[qid]) return;
+  game.questsClaimed[qid]=true;
+  addXP(q.xp);
+  game.gold+=q.gold;
+  updateGoldUI();
+  saveGame();
+  renderQuestList();
+  updateQuestBadge();
+}
+
 function renderQuestList(){
   const list=document.getElementById('quest-list');
   if(!list) return;
   list.innerHTML='';
-  QUEST_DEFS.forEach(q=>{
+  if(!game.questsClaimed) game.questsClaimed={};
+  QUEST_DEFS.filter(q=>!game.questsClaimed[q.id]).forEach(q=>{
     const prog=Math.min(q.progress(),q.max);
     const done=prog>=q.max;
+    const claimed=!!game.questsClaimed[q.id];
     const pct=Math.round((prog/q.max)*100);
     const card=document.createElement('div');
-    card.style.cssText=`background:${done?'rgba(40,80,20,0.35)':'rgba(10,25,60,0.6)'};border:1.5px solid ${done?'rgba(80,200,60,0.5)':'rgba(80,160,255,0.25)'};border-radius:12px;padding:14px 16px;`;
+    card.style.cssText=`background:${claimed?'rgba(20,40,10,0.5)':done?'rgba(40,80,20,0.35)':'rgba(10,25,60,0.6)'};border:1.5px solid ${claimed?'rgba(60,140,30,0.3)':done?'rgba(80,200,60,0.5)':'rgba(80,160,255,0.25)'};border-radius:12px;padding:14px 16px;`;
     card.innerHTML=`
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
         <div style="font-size:2rem;flex-shrink:0;">${q.icon}</div>
         <div style="flex:1;">
-          <div style="font-family:Cinzel,serif;font-size:0.88rem;font-weight:700;color:${done?'#88ee66':'#a0d0ff'};">${q.title}</div>
-          <div style="font-size:0.72rem;color:rgba(160,190,255,0.7);margin-top:2px;">${q.desc}</div>
+          <div style="font-family:Cinzel,serif;font-size:0.88rem;font-weight:700;color:${claimed?'rgba(140,200,80,0.5)':done?'#88ee66':'#a0d0ff'};">${q.title}</div>
+          <div style="font-size:0.72rem;color:rgba(160,190,255,0.6);margin-top:2px;">${q.desc}</div>
+          <div style="font-size:0.65rem;color:rgba(255,220,80,0.6);margin-top:3px;">🪙 ${q.gold} · ⭐ XP on claim</div>
         </div>
-        ${done?'<div style="font-size:1.4rem;">✅</div>':''}
+        ${claimed?'<div style="font-size:1.4rem;opacity:0.5;">✅</div>':done?`<button onclick="claimQuest('${q.id}')" style="background:linear-gradient(180deg,#44aa22,#226610);border:1.5px solid rgba(80,200,60,0.5);color:#fff;font-family:Cinzel,serif;font-size:0.75rem;font-weight:700;padding:8px 14px;border-radius:16px;cursor:pointer;white-space:nowrap;">Claim</button>`:''}
       </div>
       <div style="background:rgba(0,0,0,0.4);border-radius:6px;height:10px;overflow:hidden;">
-        <div style="background:${done?'linear-gradient(90deg,#44aa22,#88dd44)':'linear-gradient(90deg,#1a5aaa,#4090ee)'};height:100%;width:${pct}%;border-radius:6px;transition:width 0.5s ease;"></div>
+        <div style="background:${claimed?'linear-gradient(90deg,#336611,#558822)':done?'linear-gradient(90deg,#44aa22,#88dd44)':'linear-gradient(90deg,#1a5aaa,#4090ee)'};height:100%;width:${pct}%;border-radius:6px;"></div>
       </div>
       <div style="font-family:Cinzel,serif;font-size:0.68rem;color:rgba(160,190,255,0.6);margin-top:5px;text-align:right;">${prog} / ${q.max}</div>
     `;
@@ -3894,15 +4053,18 @@ setInterval(updateQuestBadge, 2000);
 // ══════════════════════════════════════════════════════
 // SAVE / LOAD (localStorage)
 // ══════════════════════════════════════════════════════
-const SAVE_KEY = 'jimmie_vale_save_v1';
+const SAVE_KEY = 'jimmie_vale_save_v2';
 
 function saveGame(){
   try {
     const data = {
       gold: Math.floor(game.gold),
       food: game.food||0,
+      xp: game.xp||0,
+      level: game.level||1,
       shrine: game.shrine,
       questsDone: game.questsDone||{},
+      questsClaimed: game.questsClaimed||{},
       placedHabitats: game.placedHabitats.map(h=>({
         type:h.type, gx:h.gx, gy:h.gy,
         dragons:[...h.dragons],
@@ -3925,8 +4087,11 @@ function loadGame(){
     const data = JSON.parse(raw);
     game.gold = data.gold||1500;
     game.food = data.food||100;
+    game.xp = data.xp||0;
+    game.level = data.level||1;
     if(data.shrine) game.shrine = data.shrine;
     game.questsDone = data.questsDone||{};
+    game.questsClaimed = data.questsClaimed||{};
     game.placedHabitats = (data.placedHabitats||[]).map(h=>({
       ...h,
       gold: h.gold||0,
@@ -3957,13 +4122,156 @@ const _wrap = (fn, name) => {
   window[name] = function(){ const r=orig.apply(this,arguments); saveGame(); return r; };
 };
 
-// Load on startup (before tutorial check)
-window.addEventListener('DOMContentLoaded', ()=>{
+// Load on startup — handle both before and after DOMContentLoaded
+function _initOnLoad(){
   const loaded = loadGame();
   if(loaded){
+    localStorage.setItem('tut_v5_done','1'); // skip tutorial if save exists
     updateGoldUI();
   }
-});
+}
+if(document.readyState==='loading') window.addEventListener('DOMContentLoaded',_initOnLoad);
+else _initOnLoad();
+
+
+// ══════════════════════════════════════════════════════
+// XP SYSTEM
+// ══════════════════════════════════════════════════════
+function xpForLevel(lv){
+  let xp=130;
+  for(let i=1;i<lv;i++) xp=Math.floor(xp*(i<5?1.3:1.2));
+  return xp;
+}
+
+function showXPPopup(amount){
+  const bar=document.getElementById('xp-bar-outer');
+  if(!bar) return;
+  const r=bar.getBoundingClientRect();
+  let el=document.getElementById('xp-popup');
+  if(!el){el=document.createElement('div');el.id='xp-popup';document.body.appendChild(el);}
+  el.textContent='+'+amount+' XP';
+  el.style.left=(r.left+r.width/2-30)+'px';
+  el.style.top=(r.top-10)+'px';
+  el.style.animation='none'; void el.offsetWidth;
+  el.style.animation='xpFloat 1.4s ease-out forwards';
+}
+
+function addXP(amount){
+  showXPPopup(amount);
+  if(!amount||amount<=0) return;
+  game.xp=(game.xp||0)+amount;
+  // Level up check
+  while(game.xp >= xpForLevel(game.level)){
+    game.xp -= xpForLevel(game.level);
+    game.level++;
+    showNotification(`Level Up! You are now Level ${game.level}! 🌟`, 'success');
+  }
+  updateXPBar();
+}
+
+function updateXPBar(){
+  const lv=game.level||1;
+  const xp=game.xp||0;
+  const need=xpForLevel(lv);
+  const pct=Math.min(100,(xp/need)*100);
+  const fill=document.getElementById('xp-bar-fill');
+  const label=document.getElementById('xp-bar-label');
+  const badge=document.getElementById('xp-level-text');
+  const star=document.getElementById('xp-level-star');
+  if(fill) fill.style.width=pct+'%';
+  if(label) label.textContent=xp+' / '+need+' XP';
+  if(badge) badge.textContent='LV '+lv;
+  // Change star based on level bracket
+  if(star){
+    if(lv>=10) star.textContent='💎';
+    else if(lv>=5) star.textContent='🌟';
+    else star.textContent='⭐';
+  }
+}
+
+// Update XP bar every 2s and on load
+setInterval(updateXPBar, 2000);
+window.addEventListener('DOMContentLoaded',()=>setTimeout(updateXPBar, 200));
+
+
+let _gcbResolve=null;
+function gameConfirm(msg, okLabel='Confirm'){
+  return new Promise(res=>{
+    _gcbResolve=res;
+    document.getElementById('game-confirm-msg').textContent=msg;
+    document.getElementById('gcb-ok-btn').textContent=okLabel;
+    document.getElementById('game-confirm').classList.add('show');
+  });
+}
+function gameConfirmResolve(val){
+  document.getElementById('game-confirm').classList.remove('show');
+  if(_gcbResolve){ _gcbResolve(val); _gcbResolve=null; }
+}
+
+
+async function sellHabitat(){
+  const idx=game.selectedHabitatIdx;
+  if(idx==null) return;
+  if(game.placedHabitats.length<=1){ showNotification("You can't sell your last habitat!",'error'); return; }
+  const h=game.placedHabitats[idx];
+  const ok=await gameConfirm(`Sell this ${h.type} habitat and all ${h.dragons.length} dragon(s) inside? You will receive 250 🪙.`,'Sell');
+  if(ok){
+    game.gold+=250;
+    game.placedHabitats.splice(idx,1);
+    // Clean up roam state
+    Object.keys(_dragonRoamState).filter(k=>k.startsWith(idx+'_')).forEach(k=>delete _dragonRoamState[k]);
+    updateGoldUI();
+    saveGame();
+    closeHabitatMenu();
+  }
+}
+
+
+function updateShopButtons(){
+  // ── Habitat count bar (inside habitats panel, updates on shop open/tab switch) ──
+  const bar = document.getElementById('habitat-count-bar');
+  if(bar){
+    const cur = game.placedHabitats.length;
+    const mx = maxHabitats();
+    const nextLv = mx>=9?null:(mx>=7?15:(mx>=5?10:5));
+    bar.textContent = `${cur} / ${mx} Habitats` + (nextLv&&cur>=mx ? ` · +2 at Lv.${nextLv}` : '');
+  }
+
+  // ── Earth Dragon lock state ──
+  const earthBtn = document.getElementById('earth-dragon-buy-btn');
+  if(earthBtn){
+    if((game.level||1)<3){
+      earthBtn.disabled=true;
+      earthBtn.innerHTML='🔒 Level 3';
+      earthBtn.style.opacity='0.6';
+      earthBtn.style.cursor='default';
+    } else {
+      earthBtn.disabled=false;
+      earthBtn.innerHTML='<span class="dc-coin">🪙</span><span>300</span>';
+      earthBtn.style.opacity='1';
+      earthBtn.style.cursor='pointer';
+    }
+  }
+
+  // ── Farm buy button lock state ──
+  const farmBtn = document.querySelector('[data-farm-buy]');
+  if(farmBtn){
+    const cur = (game.buildings||[]).filter(b=>b.type==='farm').length;
+    const mx = maxFarms();
+    if(cur >= mx){
+      const nextLv = cur>=2 ? 9 : 3;
+      farmBtn.disabled = true;
+      farmBtn.textContent = `🔒 Unlock at Level ${nextLv}`;
+      farmBtn.style.opacity = '0.5';
+      farmBtn.style.cursor = 'default';
+    } else {
+      farmBtn.disabled = false;
+      farmBtn.innerHTML = '<span class="dc-coin">🪙</span><span>300</span>';
+      farmBtn.style.opacity = '1';
+      farmBtn.style.cursor = 'pointer';
+    }
+  }
+}
 
 </script>
 
@@ -3988,5 +4296,13 @@ window.addEventListener('DOMContentLoaded', ()=>{
     <div id="quest-list" style="padding:16px;display:flex;flex-direction:column;gap:12px;max-height:60vh;overflow-y:auto;"></div>
   </div>
 </div>
-</body>
+<div id="game-confirm">
+  <div id="game-confirm-box">
+    <div id="game-confirm-msg"></div>
+    <div id="game-confirm-btns">
+      <button class="gcb gcb-cancel" onclick="gameConfirmResolve(false)">Cancel</button>
+      <button class="gcb gcb-ok" onclick="gameConfirmResolve(true)" id="gcb-ok-btn">Sell</button>
+    </div>
+  </div>
+</div></body>
 </html>
