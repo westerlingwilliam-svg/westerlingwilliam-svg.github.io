@@ -278,8 +278,8 @@ html,body{width:100%;height:100%;overflow:hidden;}
 #quest-btn .label{font-family:'Cinzel',serif;font-size:clamp(1.05rem,1.5vw,1.5rem);font-weight:700;color:#a0d0ff;letter-spacing:1px;text-shadow:0 1px 4px rgba(0,0,0,0.8);position:relative;z-index:1;}
 #quest-btn .icon{font-size:clamp(2rem,3vw,3rem);position:relative;z-index:1;line-height:1;}
 #quest-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,40,180,0.6),inset 0 1px 0 rgba(255,255,255,0.2),inset 0 -2px 4px rgba(0,0,0,0.3);}
-#quest-badge{position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:#e83030;border-radius:50%;border:2px solid #1a3a7a;display:none;z-index:2;}
-#quest-badge.show{display:block;}
+
+
 
 /* XP Bar */
 #xp-bar-wrap{
@@ -352,6 +352,20 @@ html,body{width:100%;height:100%;overflow:hidden;}
 .hatch-timer{font-family:Cinzel,serif;font-size:0.75rem;color:rgba(220,200,120,0.8);letter-spacing:1px;}
 .hatch-btn{background:linear-gradient(180deg,#2a9a20,#156010);border:1.5px solid rgba(80,220,60,0.6);color:#fff;font-family:Cinzel,serif;font-size:0.8rem;font-weight:700;padding:9px 0;border-radius:14px;cursor:pointer;width:100%;box-shadow:0 0 14px rgba(60,200,40,0.4);animation:hatchGlow 1s ease-in-out infinite alternate;}
 @keyframes hatchGlow{from{box-shadow:0 0 10px rgba(60,200,40,0.3);}to{box-shadow:0 0 22px rgba(60,220,40,0.7);}}
+
+#quest-list::-webkit-scrollbar{width:6px;}
+#quest-list::-webkit-scrollbar-track{background:transparent;}
+#quest-list::-webkit-scrollbar-thumb{background:rgba(80,160,255,0.4);border-radius:6px;}
+#quest-list::-webkit-scrollbar-thumb:hover{background:rgba(80,160,255,0.7);}
+
+  0%{transform:scale(1);box-shadow:0 4px 20px rgba(0,40,120,0.5),inset 0 1px 0 rgba(255,255,255,0.15),inset 0 -2px 4px rgba(0,0,0,0.3),0 0 0 0 rgba(220,50,50,0);}
+  50%{transform:scale(1.12);box-shadow:0 6px 28px rgba(60,120,255,0.7),inset 0 1px 0 rgba(255,255,255,0.2),inset 0 -2px 4px rgba(0,0,0,0.3),0 0 0 4px rgba(220,50,50,0.7),0 0 20px rgba(80,160,255,0.5);}
+  100%{transform:scale(1);box-shadow:0 4px 20px rgba(0,40,120,0.5),inset 0 1px 0 rgba(255,255,255,0.15),inset 0 -2px 4px rgba(0,0,0,0.3),0 0 0 0 rgba(220,50,50,0);}
+}
+#quest-btn.quest-ready{
+  animation:questPulse 1.8s ease-in-out infinite;
+  border-color:rgba(220,50,50,0.9)!important;
+}
 </style>
 </head>
 <body>
@@ -384,7 +398,6 @@ html,body{width:100%;height:100%;overflow:hidden;}
     <span class="label">SHOP</span>
   </button>
   <button id="quest-btn" onclick="openQuestPanel()" style="position:absolute;bottom:clamp(20px,2.5vw,32px);right:calc(clamp(20px,2vw,32px) + clamp(108px,11vw,144px) + 28px);">
-    <div id="quest-badge"></div>
     <span class="icon">📜</span>
     <span class="label">QUESTS</span>
   </button>
@@ -1694,7 +1707,11 @@ function drawBuildingPlacementGhost(){
   if(game.placement.type==='hatchery') drawHatchery(oc.getContext('2d'),size,size,performance.now()/1000);
   else drawFarmHouse(oc.getContext('2d'),size,size,performance.now()/1000);
   ctx.save(); ctx.globalAlpha=0.7; ctx.drawImage(oc, px, py, size, size); ctx.restore();
-  ctx.strokeStyle='rgba(80,200,80,0.9)'; ctx.lineWidth=2.5; ctx.setLineDash([5,3]);
+  const bValid=!isBuildingOverlap(gx,gy,game.placement.moveIdx!=null?game.placement.moveIdx:-1);
+  ctx.strokeStyle=bValid?'rgba(80,200,80,0.9)':'rgba(200,50,50,0.9)';
+  ctx.fillStyle=bValid?'rgba(80,200,80,0.12)':'rgba(200,50,50,0.22)';
+  ctx.lineWidth=2.5; ctx.setLineDash([5,3]);
+  ctx.fillRect(px+size*0.08, py+size*0.18, size*0.84, size*0.72);
   ctx.strokeRect(px+size*0.08, py+size*0.18, size*0.84, size*0.72);
   ctx.setLineDash([]);
 }
@@ -2019,6 +2036,7 @@ function addDragonToSelected(){
 }
 
 function moveSelectedHabitat(){
+  if(_tutStep>=0 && _tutStep<TUT_STEPS.length){ showNotification('Finish the tutorial first!','error'); return; }
   const idx=game.selectedHabitatIdx;
   if(idx===null||idx===undefined) return;
   const h=game.placedHabitats[idx];
@@ -4146,8 +4164,14 @@ function tutShow(){
     const s = TUT_STEPS[_tutStep];
     if(!s) return;
     const ov2=document.getElementById('tut-overlay');
-    if(s.hideDuring && ov2) ov2.style.visibility='hidden';
-    else if(ov2) ov2.style.visibility='visible';
+    const hint=document.getElementById('tut-float-hint');
+    if(s.hideDuring){
+      if(ov2) ov2.style.visibility='hidden';
+      if(hint){ hint.textContent=s.text; hint.style.display='block'; }
+    } else {
+      if(ov2) ov2.style.visibility='visible';
+      if(hint) hint.style.display='none';
+    }
     if(s.advance && s.advance()){ tutAdvance(); return; }
     _tutRAF = requestAnimationFrame(poll);
   }
@@ -4296,10 +4320,11 @@ function questsCompletedCount(){
 }
 
 function updateQuestBadge(){
-  const badge=document.getElementById('quest-badge');
-  if(!badge) return;
+  const btn=document.getElementById('quest-btn');
+  if(!btn) return;
   const done=questsCompletedCount();
-  badge.className=done>0?'show':'';
+  if(done>0) btn.classList.add('quest-ready');
+  else btn.classList.remove('quest-ready');
 }
 
 function openQuestPanel(){
@@ -4802,7 +4827,7 @@ function hatchEgg(eggIdx){
       <div style="font-family:'Cinzel Decorative',serif;font-size:2rem;font-weight:700;color:#a0d0ff;letter-spacing:2px;">📜 Quests</div>
       <button onclick="closeQuestPanel()" style="background:rgba(0,0,0,0.3);border:1px solid rgba(80,160,255,0.3);border-radius:50%;width:42px;height:42px;color:#a0d0ff;cursor:pointer;font-size:1.3rem;display:flex;align-items:center;justify-content:center;">✕</button>
     </div>
-    <div id="quest-list" style="padding:16px 20px;display:flex;flex-direction:column;gap:12px;height:60vh;overflow-y:auto;scrollbar-width:thin;"></div>
+    <div id="quest-list" style="padding:16px 20px;display:flex;flex-direction:column;gap:12px;height:60vh;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(80,160,255,0.4) transparent;"></div>
   </div>
 </div>
 <div id="game-confirm">
@@ -4836,5 +4861,5 @@ function hatchEgg(eggIdx){
   </div>
   <div id="hatchery-slots" style="display:flex;gap:12px;"></div>
 </div>
-</body>
+<div id="tut-float-hint" style="display:none;position:fixed;top:16px;left:50%;transform:translateX(-50%);background:linear-gradient(160deg,#2a1e08,#1a1208);border:1.5px solid rgba(255,200,60,0.55);border-radius:12px;padding:10px 22px;font-family:Cinzel,serif;font-size:0.88rem;font-weight:700;color:#FFE878;box-shadow:0 4px 20px rgba(0,0,0,0.7);z-index:9500;pointer-events:none;white-space:nowrap;animation:tutBounce 0.7s ease-in-out infinite alternate;"></div></body>
 </html>
