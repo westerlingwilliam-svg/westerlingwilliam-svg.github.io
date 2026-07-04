@@ -4416,6 +4416,7 @@ const SAVE_KEY = 'jimmie_vale_save_v1';
 function saveGame(){
   try {
     const data = {
+      lastSave: Date.now(),
       gold: Math.floor(game.gold),
       food: game.food||0,
       xp: game.xp||0,
@@ -4446,6 +4447,28 @@ function loadGame(){
     const data = JSON.parse(raw);
     game.gold = data.gold||1500;
     game.food = data.food||100;
+
+    // ── Offline earnings ──
+    if(data.lastSave){
+      const elapsed = Math.min((Date.now()-data.lastSave)/1000, 8*3600); // max 8h
+      if(elapsed>5 && data.placedHabitats){
+        let offlineGold = 0;
+        data.placedHabitats.forEach(h=>{
+          if(!h.dragons||h.dragons.length===0) return;
+          const lvs = h.dragonLevels||h.dragons.map(()=>1);
+          const rate = h.type==='earth'?7:5;
+          const perSec = h.dragons.reduce((s,d,di)=>s+(lvs[di]||1)*rate,0)/60;
+          const cap = h.dragons.length*150;
+          const earned = Math.min(perSec*elapsed, cap-(h.gold||0));
+          if(earned>0){ offlineGold+=earned; h.gold=(h.gold||0)+earned; }
+        });
+        if(offlineGold>1){
+          game.gold += Math.floor(offlineGold);
+          const mins = Math.round(elapsed/60);
+          setTimeout(()=>showNotification(`Welcome back! +${Math.floor(offlineGold)}🪙 earned in ${mins} min offline`,'success'),1200);
+        }
+      }
+    }
     game.xp = data.xp||0;
     game.level = data.level||1;
     if(data.shrine) game.shrine = data.shrine;
