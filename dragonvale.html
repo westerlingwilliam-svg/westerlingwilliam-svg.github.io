@@ -4451,21 +4451,20 @@ function loadGame(){
     // ── Offline earnings ──
     if(data.lastSave){
       const elapsed = Math.min((Date.now()-data.lastSave)/1000, 8*3600); // max 8h
-      if(elapsed>5 && data.placedHabitats){
+      if(elapsed>5){
         let offlineGold = 0;
-        data.placedHabitats.forEach(h=>{
+        game.placedHabitats.forEach(h=>{
           if(!h.dragons||h.dragons.length===0) return;
           const lvs = h.dragonLevels||h.dragons.map(()=>1);
           const rate = h.type==='earth'?7:5;
           const perSec = h.dragons.reduce((s,d,di)=>s+(lvs[di]||1)*rate,0)/60;
           const cap = h.dragons.length*150;
           const earned = Math.min(perSec*elapsed, cap-(h.gold||0));
-          if(earned>0){ offlineGold+=earned; h.gold=(h.gold||0)+earned; }
+          if(earned>0){ h.gold=(h.gold||0)+earned; offlineGold+=earned; }
         });
-        if(offlineGold>1){
-          game.gold += Math.floor(offlineGold);
+        if(offlineGold>=1){
           const mins = Math.round(elapsed/60);
-          setTimeout(()=>showNotification(`Welcome back! +${Math.floor(offlineGold)}🪙 earned in ${mins} min offline`,'success'),1200);
+          setTimeout(()=>showNotification(`Welcome back! Habitats earned while offline — collect them!`,'success'),1200);
         }
       }
     }
