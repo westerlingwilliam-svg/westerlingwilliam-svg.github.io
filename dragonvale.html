@@ -214,15 +214,15 @@ html,body{width:100%;height:100%;overflow:hidden;}
 /* Habitat context menu */
 #habitat-menu{position:fixed;inset:0;z-index:120;display:none;align-items:flex-end;justify-content:center;pointer-events:none;}
 #habitat-menu.open{display:flex;}
-#habitat-menu-content{pointer-events:all;width:min(96vw,820px);background:linear-gradient(180deg,#2e2c28 0%,#3a3830 100%);border:1.5px solid rgba(220,210,180,0.18);border-radius:18px 18px 0 0;padding:34px 32px 48px;box-shadow:0 -10px 40px rgba(0,0,0,0.6),0 -1px 0 rgba(255,255,255,0.06);}
+#habitat-menu-content{pointer-events:all;width:min(96vw,620px);background:linear-gradient(180deg,#2e2c28 0%,#3a3830 100%);border:1.5px solid rgba(220,210,180,0.18);border-radius:18px 18px 0 0;padding:20px 16px 30px;box-shadow:0 -10px 40px rgba(0,0,0,0.6),0 -1px 0 rgba(255,255,255,0.06);}
 #habitat-menu-title{font-family:'Cinzel Decorative',serif;font-size:1.8rem;color:#c8b890;text-align:center;margin-bottom:14px;letter-spacing:2px;text-transform:uppercase;}
-#habitat-dragons-row{display:flex;gap:10px;justify-content:center;margin-bottom:16px;}
-.dragon-slot-card{width:230px;display:flex;flex-direction:column;align-items:center;gap:10px;}
-.dragon-slot-img{width:230px;height:230px;border-radius:12px;background:linear-gradient(160deg,#2a2822,#1c1a16);border:1.5px solid rgba(255,180,40,0.3);box-shadow:inset 0 0 18px rgba(0,0,0,0.7),0 2px 8px rgba(0,0,0,0.4);position:relative;overflow:visible;display:flex;align-items:center;justify-content:center;}
+#habitat-dragons-row{display:flex;gap:8px;justify-content:center;margin-bottom:12px;}
+.dragon-slot-card{width:180px;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.dragon-slot-img{width:180px;height:180px;border-radius:10px;background:linear-gradient(160deg,#2a2822,#1c1a16);border:1.5px solid rgba(255,180,40,0.3);box-shadow:inset 0 0 18px rgba(0,0,0,0.7),0 2px 8px rgba(0,0,0,0.4);position:relative;overflow:visible;display:flex;align-items:center;justify-content:center;}
 .dragon-slot-img.empty{border-color:rgba(255,255,255,0.1);background:rgba(0,0,0,0.2);}
 .dragon-slot-img.empty::after{content:'+';font-size:2.6rem;color:rgba(255,255,255,0.2);line-height:1;}
 .dragon-level-tag{position:absolute;top:-8px;right:-8px;background:linear-gradient(135deg,#d4a017,#8a6200);color:#fff8e0;font-family:'Cinzel',serif;font-size:0.78rem;font-weight:700;padding:4px 10px;border-radius:10px;box-shadow:0 2px 4px rgba(0,0,0,0.4);letter-spacing:0.5px;border:1px solid rgba(255,220,100,0.4);}
-.slot-upgrade-btn{width:100%;font-family:'Cinzel',serif;font-size:0.82rem;font-weight:700;letter-spacing:0.5px;color:#fff8e0;background:linear-gradient(180deg,#c8920a,#7a5200);border:1px solid rgba(0,0,0,0.4);border-radius:16px;padding:10px 0;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,220,80,0.2),0 2px 4px rgba(0,0,0,0.3);transition:.15s;}
+.slot-upgrade-btn{width:100%;font-family:'Cinzel',serif;font-size:0.72rem;font-weight:700;letter-spacing:0.5px;color:#fff8e0;background:linear-gradient(180deg,#c8920a,#7a5200);border:1px solid rgba(0,0,0,0.4);border-radius:14px;padding:8px 0;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,220,80,0.2),0 2px 4px rgba(0,0,0,0.3);transition:.15s;}
 .slot-upgrade-btn:hover{background:linear-gradient(180deg,#d8a20a,#8a6200);}
 .habitat-menu-actions{display:flex;gap:8px;justify-content:center;}
 .hm-btn{font-family:'Cinzel',serif;font-size:0.9rem;font-weight:700;letter-spacing:0.5px;color:#e8dfc8;background:linear-gradient(180deg,#5a5848,#42403a);border:1px solid rgba(0,0,0,0.35);border-radius:22px;padding:13px 26px;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 2px 4px rgba(0,0,0,0.3);transition:.15s;}
@@ -332,6 +332,26 @@ html,body{width:100%;height:100%;overflow:hidden;}
 
 #quest-list .quest-title{font-size:1.1rem;}
 #quest-inner{font-size:1rem;}
+
+#cheat-btn{position:fixed;right:14px;bottom:140px;width:clamp(34px,3.5vw,44px);height:clamp(34px,3.5vw,44px);border-radius:50%;background:rgba(8,5,2,0.82);border:1.5px solid rgba(212,175,55,0.3);color:rgba(212,175,55,0.5);font-size:clamp(0.8rem,1vw,1rem);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:100;pointer-events:all;transition:all .2s;}
+#cheat-btn:hover{border-color:rgba(212,175,55,0.7);color:rgba(212,175,55,0.9);}
+#cheat-overlay{display:none;position:fixed;inset:0;z-index:9200;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);}
+#cheat-overlay.show{display:flex;}
+#cheat-box{background:linear-gradient(160deg,#2a1e08,#1a1208);border:1.5px solid rgba(255,200,60,0.45);border-radius:16px;padding:24px 28px;width:min(320px,90vw);text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.8);}
+#cheat-title{font-family:'Cinzel Decorative',serif;font-size:0.9rem;color:#FFE878;margin-bottom:16px;letter-spacing:1px;}
+#cheat-input{width:100%;box-sizing:border-box;background:rgba(0,0,0,0.4);border:1.5px solid rgba(255,200,60,0.3);border-radius:10px;padding:10px 14px;font-family:Cinzel,serif;font-size:0.9rem;color:#FFE878;letter-spacing:2px;text-align:center;outline:none;margin-bottom:14px;}
+#cheat-input:focus{border-color:rgba(255,200,60,0.7);}
+#cheat-submit{font-family:Cinzel,serif;font-size:0.8rem;font-weight:700;padding:10px 28px;background:linear-gradient(180deg,#c8920a,#7a5200);border:1.5px solid rgba(255,200,60,0.5);border-radius:20px;color:#fff8e0;cursor:pointer;margin-right:8px;}
+#cheat-cancel{font-family:Cinzel,serif;font-size:0.8rem;padding:10px 20px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,200,60,0.2);border-radius:20px;color:#aaa;cursor:pointer;}
+
+#hatchery-menu{position:fixed;bottom:0;left:50%;transform:translateX(-50%);z-index:150;width:min(96vw,560px);background:linear-gradient(180deg,#1e1c18,#2a2820);border:1.5px solid rgba(220,190,120,0.25);border-radius:18px 18px 0 0;padding:20px 20px 32px;box-shadow:0 -8px 32px rgba(0,0,0,0.6);display:none;}
+#hatchery-menu.open{display:block;}
+.hatch-slot{flex:1;background:rgba(0,0,0,0.3);border:1.5px solid rgba(200,170,90,0.2);border-radius:14px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:200px;position:relative;}
+.hatch-slot.empty{border-style:dashed;opacity:0.5;}
+.hatch-slot canvas{border-radius:10px;}
+.hatch-timer{font-family:Cinzel,serif;font-size:0.75rem;color:rgba(220,200,120,0.8);letter-spacing:1px;}
+.hatch-btn{background:linear-gradient(180deg,#2a9a20,#156010);border:1.5px solid rgba(80,220,60,0.6);color:#fff;font-family:Cinzel,serif;font-size:0.8rem;font-weight:700;padding:9px 0;border-radius:14px;cursor:pointer;width:100%;box-shadow:0 0 14px rgba(60,200,40,0.4);animation:hatchGlow 1s ease-in-out infinite alternate;}
+@keyframes hatchGlow{from{box-shadow:0 0 10px rgba(60,200,40,0.3);}to{box-shadow:0 0 22px rgba(60,220,40,0.7);}}
 </style>
 </head>
 <body>
@@ -417,8 +437,8 @@ html,body{width:100%;height:100%;overflow:hidden;}
             </div>
             <div class="dragon-card-name">Grass Dragon</div>
             <div class="dragon-card-desc">A vibrant forest spirit, swift as the wind through the canopy.</div>
-            <div class="dragon-gpm">🪙 +5/min at Lv.1</div>
-            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>250</span></button>
+            <div class="dragon-gpm">🪙 +7/min at Lv.1</div>
+            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>500</span></button>
           </div>
           <div class="dragon-card">
             <div class="dragon-card-frame">
@@ -426,8 +446,8 @@ html,body{width:100%;height:100%;overflow:hidden;}
             </div>
             <div class="dragon-card-name">Earth Dragon</div>
             <div class="dragon-card-desc">An armored titan of the deep earth — slow to move, impossible to stop.</div>
-            <div class="dragon-gpm">🪙 +7/min at Lv.1</div>
-            <button id="earth-dragon-buy-btn" class="dragon-card-buy"><span class="dc-coin">🪙</span><span>300</span></button>
+            <div class="dragon-gpm">🪙 +10/min at Lv.1</div>
+            <button id="earth-dragon-buy-btn" class="dragon-card-buy"><span class="dc-coin">🪙</span><span>1500</span></button>
           </div>
         </div>
       </div>
@@ -487,8 +507,15 @@ html,body{width:100%;height:100%;overflow:hidden;}
           <div class="s-pillar"></div><div class="s-pillar"></div><div class="s-pillar"></div>
         </div>
         <div class="s-arch"></div>
-
         <div class="dragon-grid">
+          <div class="dragon-card">
+            <div class="dragon-card-frame">
+              <canvas class="building-canvas" data-building="hatchery" width="220" height="220"></canvas>
+            </div>
+            <div class="dragon-card-name">Dragon Hatchery</div>
+            <div class="dragon-card-desc">A sacred stone altar where dragon eggs are kept warm and safe.</div>
+            <button id="tut-hatchery-btn" class="dragon-card-buy"><span style="color:#88ee66;font-weight:700;">FREE</span></button>
+          </div>
           <div class="dragon-card">
             <div class="dragon-card-frame">
               <canvas class="building-canvas" data-building="farm" width="220" height="220"></canvas>
@@ -1124,8 +1151,8 @@ const game = {
   placement: null,
   buildings: [], // [{type, gx, gy}]
 };
-const LEVEL_COST = [0,0,10,20,40,60,80,110,150,200,250]; // index = target level
-const MAX_LEVEL = 10;
+const LEVEL_COST = [0,0,10,20,40,60,80,110,150,200,250,320,400,500,620,800]; // index = target level
+const MAX_LEVEL = 15;
 
 function spendFood(amount){
   if(game.food < amount) return false;
@@ -1176,14 +1203,24 @@ function updateGoldUI(collected){
   // Income rate
   const rate=game.placedHabitats.reduce((s,h)=>{
     const lvs=h.dragonLevels||h.dragons.map(()=>1);
-    const gRate=h.type==='earth'?7:5;
-    return s+h.dragons.reduce((a,d,di)=>a+(lvs[di]||1)*gRate,0);
+    return s+h.dragons.reduce((a,d,di)=>a+dragonGPM(d,lvs[di]||1),0);
   },0);
   const gi=document.getElementById('gi');
-  if(gi) gi.textContent=rate>0?`+${rate}/min`:'';
+  if(gi) gi.textContent=rate>0?`+${Math.round(rate)}/min`:'';
 }
 
 // ── GRID HELPERS ──────────────────────────────────────────────────
+
+// Dragon gold per minute by type and level
+// Multiplier per level step: starts at ×2.0, decreases to ×1.2 at lv9→10
+const _DRAGON_MULT = [1, 2.0, 1.85, 1.7, 1.5, 1.4, 1.3, 1.22, 1.18, 1.14, 1.11, 1.09, 1.07, 1.05, 1.05];
+// Cumulative multipliers from level 1
+const _DRAGON_CUM = _DRAGON_MULT.reduce((a,m,i)=>{ a.push((a[i-1]||1)*m); return a; },[]);
+function dragonGPM(dragonType, level){
+  const base = dragonType==='earth'?10 : dragonType==='grass'?7 : 5;
+  const mult = _DRAGON_CUM[Math.min(level,MAX_LEVEL)-1] || 1;
+  return Math.round(base * mult * 10) / 10;
+}
 const HABITAT_SIZE = 5;
 
 function getGridCoords(){
@@ -1291,24 +1328,60 @@ function drawBuildings(){
     const px=left+b.gx*cellSize, py=top+b.gy*cellSize;
     const size=Math.round(BUILDING_SIZE*cellSize);
     const oc=getHabitatCache('bld_'+b.type, size);
-    drawFarmHouse(oc.getContext('2d'), size, size, now/1000);
+    if(b.type==='hatchery') drawHatchery(oc.getContext('2d'),size,size,now/1000);
+    else drawFarmHouse(oc.getContext('2d'),size,size,now/1000);
     ctx.drawImage(oc, px, py, size, size);
+
+    // Hatchery egg timer overlay
+    if(b.type==='hatchery' && b.eggs && b.eggs.length>0){
+      const bx=px+size*0.5, by=py+size*0.08;
+      const ps=size*0.18, pw=size*0.82, fs=Math.max(9,size*0.09)+'px';
+      ctx.save(); ctx.translate(bx,by);
+      const anyReady=b.eggs.some(e=>now>=e.startTime+e.duration);
+      if(anyReady){
+        const pulse=1+Math.sin(now/280)*0.07; ctx.scale(pulse,pulse);
+        ctx.fillStyle='rgba(10,50,10,0.92)';
+        ctx.beginPath(); ctx.roundRect(-pw/2,-ps/2,pw,ps,ps*0.5); ctx.fill();
+        ctx.strokeStyle='rgba(80,220,60,0.9)'; ctx.lineWidth=size*0.012;
+        ctx.beginPath(); ctx.roundRect(-pw/2,-ps/2,pw,ps,ps*0.5); ctx.stroke();
+        ctx.fillStyle='#88ee66'; ctx.font='bold '+fs+' Cinzel,serif';
+        ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText('Ready To Hatch!', 0, 1);
+      } else {
+        const soonest=b.eggs.reduce((a,e)=>(!a||e.startTime+e.duration<a.startTime+a.duration)?e:a,null);
+        if(soonest){
+          const remaining=Math.ceil((soonest.startTime+soonest.duration-now)/1000);
+          const mins=Math.floor(remaining/60), secs=remaining%60;
+          const pct=1-(soonest.startTime+soonest.duration-now)/soonest.duration;
+          const pw2=size*0.65;
+          ctx.fillStyle='rgba(15,15,30,0.88)';
+          ctx.beginPath(); ctx.roundRect(-pw2/2,-ps/2,pw2,ps,ps*0.5); ctx.fill();
+          ctx.strokeStyle='rgba(200,160,60,0.5)'; ctx.lineWidth=size*0.01;
+          ctx.beginPath(); ctx.roundRect(-pw2/2,-ps/2,pw2,ps,ps*0.5); ctx.stroke();
+          ctx.fillStyle='rgba(200,160,40,0.3)';
+          ctx.beginPath(); ctx.roundRect(-pw2/2+size*0.02,-ps*0.25,(pw2-size*0.04)*pct,ps*0.5,ps*0.25); ctx.fill();
+          ctx.fillStyle='#d4b860'; ctx.font='bold '+fs+' Cinzel,serif';
+          ctx.textAlign='center'; ctx.textBaseline='middle';
+          ctx.fillText('🥚 '+(mins>0?mins+'m ':'')+secs+'s', 0, 1);
+        }
+      }
+      ctx.restore();
+    }
 
     // Crop timer overlay
     if(b.crop && b.cropEnd){
       const crop=CROPS.find(cr=>cr.id===b.crop);
       const ready=now>=b.cropEnd;
       const bx=px+size*0.5, by=py+size*0.08;
+      const ps=size*0.18, pw=size*0.65, fs=Math.max(9,size*0.09)+'px';
       ctx.save(); ctx.translate(bx,by);
       if(ready){
-        // Harvest pill
-        const pulse=1+Math.sin(now/300)*0.06;
-        ctx.scale(pulse,pulse);
+        const pulse=1+Math.sin(now/300)*0.06; ctx.scale(pulse,pulse);
         ctx.fillStyle='rgba(20,60,10,0.92)';
-        ctx.beginPath(); ctx.roundRect(-36,-14,72,28,14); ctx.fill();
-        ctx.strokeStyle='rgba(80,220,60,0.8)'; ctx.lineWidth=2;
-        ctx.beginPath(); ctx.roundRect(-36,-14,72,28,14); ctx.stroke();
-        ctx.fillStyle='#88ee66'; ctx.font='bold 11px Cinzel,serif';
+        ctx.beginPath(); ctx.roundRect(-pw/2,-ps/2,pw,ps,ps*0.5); ctx.fill();
+        ctx.strokeStyle='rgba(80,220,60,0.8)'; ctx.lineWidth=size*0.012;
+        ctx.beginPath(); ctx.roundRect(-pw/2,-ps/2,pw,ps,ps*0.5); ctx.stroke();
+        ctx.fillStyle='#88ee66'; ctx.font='bold '+fs+' Cinzel,serif';
         ctx.textAlign='center'; ctx.textBaseline='middle';
         ctx.fillText((crop?crop.icon:'🌾')+' Ready!', 0, 1);
       } else {
@@ -1316,13 +1389,12 @@ function drawBuildings(){
         const mins=Math.floor(remaining/60), secs=remaining%60;
         const pct=1-(b.cropEnd-now)/(b.cropDuration*1000);
         ctx.fillStyle='rgba(10,20,5,0.88)';
-        ctx.beginPath(); ctx.roundRect(-36,-14,72,28,14); ctx.fill();
-        ctx.strokeStyle='rgba(100,180,40,0.6)'; ctx.lineWidth=1.5;
-        ctx.beginPath(); ctx.roundRect(-36,-14,72,28,14); ctx.stroke();
-        // Progress bar
+        ctx.beginPath(); ctx.roundRect(-pw/2,-ps/2,pw,ps,ps*0.5); ctx.fill();
+        ctx.strokeStyle='rgba(100,180,40,0.6)'; ctx.lineWidth=size*0.01;
+        ctx.beginPath(); ctx.roundRect(-pw/2,-ps/2,pw,ps,ps*0.5); ctx.stroke();
         ctx.fillStyle='rgba(60,140,20,0.4)';
-        ctx.beginPath(); ctx.roundRect(-32,-6,64*pct,12,6); ctx.fill();
-        ctx.fillStyle='#ccee88'; ctx.font='bold 10px Cinzel,serif';
+        ctx.beginPath(); ctx.roundRect(-pw/2+size*0.02,-ps*0.25,(pw-size*0.04)*pct,ps*0.5,ps*0.25); ctx.fill();
+        ctx.fillStyle='#ccee88'; ctx.font='bold '+fs+' Cinzel,serif';
         ctx.textAlign='center'; ctx.textBaseline='middle';
         ctx.fillText((crop?crop.icon:'⏱')+' '+(mins>0?mins+'m ':'')+secs+'s', 0, 1);
       }
@@ -1369,9 +1441,8 @@ function stepMiniDragons(dt){
   game.placedHabitats.forEach(h=>{
     if(h.dragons.length===0) return;
     const lvs=h.dragonLevels||h.dragons.map(()=>1);
-    const gRate=h.type==='earth'?7:5;
-    const totalGold=h.dragons.reduce((s,d,di)=>{const lv=(lvs[di]||1);return s+lv*gRate;},0);
-    const goldMax=h.dragons.length*150;
+    const totalGold=h.dragons.reduce((s,d,di)=>{return s+dragonGPM(d,lvs[di]||1);},0);
+    const goldMax=1000;
     h.gold=(h.gold||0)+totalGold*(1/60)*dt;
     if(h.gold>goldMax) h.gold=goldMax;
   });
@@ -1557,11 +1628,11 @@ function drawPlacedHabitats(){
 
     // Coin bubble — shows when collectable, displays amount
     if(h.dragons.length>0){
-      const goldMax=h.dragons.length*150;
+      const goldMax=1000;
       const gold=h.gold||0;
       const pct=gold/goldMax;
       if(pct>=0.2){
-        const bx=px+size*0.5, by=py+size*0.08;
+        const bx=px+size*0.5, by=py+size*0.1;
         const pulse=1+Math.sin(performance.now()/400)*0.06;
         const amt=Math.floor(gold);
         ctx.save();
@@ -1619,8 +1690,9 @@ function drawBuildingPlacementGhost(){
   const {gx,gy}=game.placement;
   const px=left+gx*cellSize, py=top+gy*cellSize;
   const size=Math.round(BUILDING_SIZE*cellSize);
-  const oc=getHabitatCache('bld_ghost', size);
-  drawFarmHouse(oc.getContext('2d'), size, size, performance.now()/1000);
+  const oc=getHabitatCache('bld_ghost_'+game.placement.type, size);
+  if(game.placement.type==='hatchery') drawHatchery(oc.getContext('2d'),size,size,performance.now()/1000);
+  else drawFarmHouse(oc.getContext('2d'),size,size,performance.now()/1000);
   ctx.save(); ctx.globalAlpha=0.7; ctx.drawImage(oc, px, py, size, size); ctx.restore();
   ctx.strokeStyle='rgba(80,200,80,0.9)'; ctx.lineWidth=2.5; ctx.setLineDash([5,3]);
   ctx.strokeRect(px+size*0.08, py+size*0.18, size*0.84, size*0.72);
@@ -1635,7 +1707,10 @@ function drawPlacementGhost(){
   const size=game.placement.isBuilding?Math.round(BUILDING_SIZE*cellSize):Math.round(HABITAT_SIZE*cellSize);
   const valid=isValidPlacement(gx,gy);
   const oc=getHabitatCache((game.placement.isBuilding?'bld_':'')+game.placement.type, size);
-  if(game.placement.isBuilding) drawFarmHouse(oc.getContext('2d'), size, size, performance.now()/1000);
+  if(game.placement.isBuilding){
+    if(game.placement.type==='hatchery') drawHatchery(oc.getContext('2d'),size,size,performance.now()/1000);
+    else drawFarmHouse(oc.getContext('2d'),size,size,performance.now()/1000);
+  }
   else if(game.placement.type==='grass') drawGrassHabitat(oc.getContext('2d'), size, size, performance.now()/1000);
   else if(game.placement.type==='earth') drawEarthHabitat(oc.getContext('2d'), size, size, performance.now()/1000);
   else drawFireHabitat(oc.getContext('2d'), size, size, performance.now()/1000);
@@ -1663,6 +1738,11 @@ function startPlacement(type, cost){
 }
 
 function cancelPlacement(){
+  if(game.placement&&game.placement.isHabitatMove&&game.placement.snapshot){
+    // Restore habitat at its original position
+    const s=game.placement.snapshot;
+    game.placedHabitats.splice(game.placement.moveIdx,0,{...s,dragons:[...s.dragons],dragonLevels:[...s.dragonLevels]});
+  }
   game.placement=null;
   document.getElementById('place-bar').style.display='none';
 }
@@ -1704,10 +1784,23 @@ function confirmPlacement(){
   if(game.placement.isBuilding){ confirmBuildingPlacement(); saveGame(); return; }
   const {type,cost,gx,gy}=game.placement;
   if(!isValidPlacement(gx,gy)) return;
+  if(game.placement.isHabitatMove){
+    // Moving: restore snapshot at new position, no gold cost
+    const s=game.placement.snapshot;
+    game.placedHabitats.push({...s,gx,gy,dragons:[...s.dragons],dragonLevels:[...s.dragonLevels]});
+    game.placement=null;
+    document.getElementById('place-bar').style.display='none';
+    // Clear roam state so dragons re-init at new position
+    const newIdx=game.placedHabitats.length-1;
+    Object.keys(_dragonRoamState).forEach(k=>{if(k.startsWith('')) delete _dragonRoamState[k];});
+    saveGame();
+    return;
+  }
   if(!spendGold(cost)) return;
-  const newHabitat={type,gx,gy,dragons:game.placement.savedDragons||[],dragonLevels:game.placement.savedLevels||[],gold:game.placement.savedGold||0};
+  const newHabitat={type,gx,gy,dragons:[],dragonLevels:[],gold:0};
   game.placedHabitats.push(newHabitat);
-  cancelPlacement();
+  game.placement=null;
+  document.getElementById('place-bar').style.display='none';
 }
 
 // Update placement ghost position on pointer move
@@ -1761,7 +1854,7 @@ canvas.addEventListener('click', e=>{
     const b=game.buildings[i];
     const px=left+b.gx*cellSize, py=top+b.gy*cellSize;
     const size=Math.round(BUILDING_SIZE*cellSize);
-    if(sx>=px&&sx<=px+size&&sy>=py&&sy<=py+size){ openFarmMenu(i); return; }
+    if(sx>=px&&sx<=px+size&&sy>=py&&sy<=py+size){ if(b.type==='hatchery'){ openHatcheryMenu(i); return; } openFarmMenu(i); return; }
   }
 
   // Place pending dragon into clicked habitat
@@ -1790,7 +1883,7 @@ canvas.addEventListener('click', e=>{
     const h=game.placedHabitats[i];
     const px=left+h.gx*cellSize, py=top+h.gy*cellSize, size=HABITAT_SIZE*cellSize;
     if(sx>=px&&sx<=px+size&&sy>=py&&sy<=py+size){
-      const goldMax=h.dragons.length*150;
+      const goldMax=1000;
       const threshold=goldMax*0.2;
       if((h.gold||0)>=threshold && threshold>0){
         // Collect gold
@@ -1832,7 +1925,7 @@ function openHabitatMenu(idx){
     if(dragon){
       // Static snapshot of the correct dragon type
       const cv=document.createElement('canvas');
-      const sz=220; cv.width=sz; cv.height=sz;
+      const sz=180; cv.width=sz; cv.height=sz;
       cv.style.width=sz+'px'; cv.style.height=sz+'px';
       cv.style.borderRadius='10px';
       const staticPhys={t:0,wing:0,wingV:0,bob:0,bobV:0,sway:0,swayV:0,swayDir:1,tailSwing:0,tailV:0};
@@ -1849,7 +1942,7 @@ function openHabitatMenu(idx){
       // Gold per minute badge
       const gpm=document.createElement('div');
       gpm.style.cssText='position:absolute;bottom:6px;left:0;right:0;text-align:center;font-family:Cinzel,serif;font-size:0.82rem;font-weight:700;color:#FFE060;text-shadow:0 1px 3px rgba(0,0,0,0.9);';
-      gpm.textContent='+'+( lv*5)+'/min';
+      gpm.textContent='+'+Math.round(dragonGPM(dragon,lv))+'/min';
       imgBox.appendChild(gpm);
     }
 
@@ -1866,12 +1959,10 @@ function openHabitatMenu(idx){
       } else {
         const cost=LEVEL_COST[lv2+1];
         upBtn.textContent='Upgrade — '+cost+' 🍖';
-        upBtn.onclick=(()=>{
-          const slotIdx=i;
-          const habIdx=idx;
-          return ()=>upgradeHabitatDragon(habIdx, slotIdx);
-        })();
-      // Sell dragon button
+        upBtn.onclick=(()=>{ const slotIdx=i,habIdx=idx; return ()=>upgradeHabitatDragon(habIdx,slotIdx); })();
+      }
+      card.appendChild(upBtn);
+      // Sell dragon button — always shown regardless of level
       const sellDBtn=document.createElement('button');
       sellDBtn.style.cssText='width:100%;font-family:Cinzel,serif;font-size:0.55rem;font-weight:700;color:#ffaaaa;background:rgba(120,20,20,0.3);border:1px solid rgba(200,60,60,0.35);border-radius:10px;padding:4px 0;cursor:pointer;margin-top:3px;';
       sellDBtn.textContent='Sell Dragon';
@@ -1882,8 +1973,6 @@ function openHabitatMenu(idx){
         if(ok){const h=game.placedHabitats[hi];h.dragons.splice(si,1);if(h.dragonLevels)h.dragonLevels.splice(si,1);game.gold+=125;updateGoldUI();Object.keys(_dragonRoamState).filter(k=>k.startsWith(hi+'_')).forEach(k=>delete _dragonRoamState[k]);saveGame();openHabitatMenu(hi);}
       };})();
       card.appendChild(sellDBtn);
-      }
-      card.appendChild(upBtn);
     }
 
     row.appendChild(card);
@@ -1930,17 +2019,29 @@ function addDragonToSelected(){
 }
 
 function moveSelectedHabitat(){
-  if(game.selectedHabitatIdx===null) return;
-  const h=game.placedHabitats[game.selectedHabitatIdx];
-  // Save dragons and gold so they survive the move
-  game.placement={type:h.type, cost:0, gx:h.gx, gy:h.gy,
-    movingIdx:game.selectedHabitatIdx,
-    savedDragons:[...h.dragons], savedGold:h.gold||0};
+  const idx=game.selectedHabitatIdx;
+  if(idx===null||idx===undefined) return;
+  const h=game.placedHabitats[idx];
+  if(!h) return;
+  // Save a full deep copy of the habitat so cancel can restore it exactly
+  const snapshot={
+    type:h.type, gx:h.gx, gy:h.gy,
+    dragons:[...h.dragons],
+    dragonLevels:[...(h.dragonLevels||h.dragons.map(()=>1))],
+    gold:h.gold||0
+  };
+  game.placement={
+    type:h.type, cost:0, gx:h.gx, gy:h.gy,
+    isHabitatMove:true,
+    moveIdx:idx,
+    snapshot
+  };
   closeHabitatMenu();
-  game.placedHabitats.splice(game.selectedHabitatIdx,1);
+  // Remove habitat from array AFTER saving snapshot and idx
+  game.placedHabitats.splice(idx,1);
   game.selectedHabitatIdx=null;
   document.getElementById('place-bar').style.display='block';
-  document.getElementById('place-label').textContent='Flytta och tryck för att placera';
+  document.getElementById('place-label').textContent='Move and tap to place';
 }
 
 function showGoldPopup(x, y, amount){
@@ -1948,7 +2049,7 @@ function showGoldPopup(x, y, amount){
   el.textContent='+'+amount+' 🪙';
   el.style.cssText=`position:fixed;left:${x}px;top:${y}px;transform:translate(-50%,-50%);
     font-family:Cinzel,serif;font-size:1.1rem;font-weight:700;color:#ffd700;
-    text-shadow:0 2px 6px rgba(0,0,0,0.8);pointer-events:none;z-index:500;
+    text-shadow:0 2px 6px rgba(0,0,0,0.8);pointer-events:none;z-index:9000;
     animation:goldpop 1.2s ease-out forwards;`;
   document.body.appendChild(el);
   setTimeout(()=>el.remove(), 1200);
@@ -1958,7 +2059,7 @@ function showGoldPopup(x, y, amount){
 // Dragon type → required habitat type mapping
 const DRAGON_HABITAT = { fire:'fire', grass:'grass', earth:'earth' };
 // Dragon costs
-const DRAGON_COST = { fire:250, grass:250, earth:300 };
+const DRAGON_COST = { fire:250, grass:500, earth:1500 };
 // Human-readable habitat names for error messages
 const HABITAT_NAMES = { fire:'Eld-Habitat', grass:'Gräs-Habitat', earth:'Djord-Habitat' };
 
@@ -1998,6 +2099,12 @@ document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
     }
     if(isBuilding){
       const buildingType=isBuilding.dataset.building||'farm';
+      if(buildingType==='hatchery'){
+        const cost=0;
+        if((game.buildings||[]).some(b=>b.type==='hatchery')){ showNotification('You already have a Dragon Hatchery!','error'); return; }
+        game.placement={type:'hatchery',cost,gx:Math.floor((18-BUILDING_SIZE)/2),gy:Math.floor((18-BUILDING_SIZE)/2),isBuilding:true};
+        closeShop(); return;
+      }
       const cost=300;
       const curFarms=(game.buildings||[]).filter(b=>b.type==='farm').length;
       const max=maxFarms();
@@ -2032,8 +2139,19 @@ document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
       spendGold(cost);
       if(dragonType==='fire'||dragonType==='grass') addXP(20);
       closeShop();
-      game.pendingDragon = {type: dragonType, habitatType};
-      showNotification('Choose a habitat for your dragon!', 'success');
+      const HATCH_TIMES={fire:30000,grass:180000,earth:600000};
+      const hatchery=(game.buildings||[]).find(b=>b.type==='hatchery');
+      if(hatchery){
+        if(!hatchery.eggs) hatchery.eggs=[];
+        if(hatchery.eggs.length>=3){ showNotification('Hatchery is full! Hatch an egg first.','error'); return; }
+        const tutInstant=_tutStep>=0&&_tutStep<TUT_STEPS.length;
+        hatchery.eggs.push({dragonType,habitatType,startTime:Date.now(),duration:tutInstant?0:HATCH_TIMES[dragonType]||30000});
+        saveGame();
+        showNotification('Egg added to Hatchery! 🥚','success');
+      } else {
+        game.pendingDragon={type:dragonType,habitatType};
+        showNotification('Choose a habitat for your dragon!','success');
+      }
     }
   });
 });
@@ -2935,6 +3053,143 @@ function drawEarthDragon(ctx, W, H, p){
 // ══════════════════════════════════════════════════════
 // FARM HOUSE — isometric-style, produces food
 // ══════════════════════════════════════════════════════
+function drawHatchery(ctx, W, H, t){
+  ctx.clearRect(0,0,W,H);
+  const s=Math.min(W,H)/310;
+  ctx.save();
+  ctx.translate(W*0.5, H*0.65);
+
+  // Helper: stone mound
+  function stoneMound(x,y,rx,ry){
+    ctx.fillStyle='rgba(0,0,0,0.15)';
+    ctx.beginPath(); ctx.ellipse(x+2*s,y+4*s,rx,ry*0.55,0,0,Math.PI*2); ctx.fill();
+    const g=ctx.createRadialGradient(x-rx*0.25,y-ry*0.3,rx*0.05,x,y,rx);
+    g.addColorStop(0,'#9e9488'); g.addColorStop(0.5,'#787068'); g.addColorStop(1,'#484440');
+    ctx.fillStyle=g;
+    ctx.beginPath(); ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2); ctx.fill();
+    // Highlight
+    ctx.fillStyle='rgba(255,255,255,0.08)';
+    ctx.beginPath(); ctx.ellipse(x-rx*0.2,y-ry*0.25,rx*0.45,ry*0.3,0,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle='rgba(0,0,0,0.25)'; ctx.lineWidth=1*s;
+    ctx.beginPath(); ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2); ctx.stroke();
+  }
+
+  // Helper: hay nest (fluffy layered hay)
+  function hayNest(x,y,r){
+    const bob=Math.sin(t*1.1)*1.2*s;
+    ctx.save(); ctx.translate(x,y+bob);
+    // Outer hay ring — multiple curved strands
+    const layers=3, strandsPerLayer=14;
+    const cols=['#c8a018','#dbb828','#e8cc38','#b89010'];
+    for(let l=layers-1;l>=0;l--){
+      const lr=r*(0.7+l*0.25), lh=r*(0.5+l*0.15);
+      for(let i=0;i<strandsPerLayer;i++){
+        const ang=(i/strandsPerLayer)*Math.PI*2;
+        const wave=Math.sin(t*1.8+i*0.7+l)*0.08;
+        const ex=Math.cos(ang+wave)*lr, ey=Math.sin(ang+wave)*lh-r*0.3;
+        ctx.strokeStyle=cols[(i+l)%cols.length];
+        ctx.lineWidth=(2.5-l*0.5)*s;
+        ctx.lineCap='round';
+        ctx.beginPath();
+        ctx.moveTo(Math.cos(ang)*r*0.25, -r*0.1);
+        ctx.quadraticCurveTo(
+          Math.cos(ang)*lr*0.55, ey*0.4,
+          ex, ey
+        );
+        ctx.stroke();
+      }
+    }
+    // Center dome cap
+    const cap=ctx.createRadialGradient(-r*0.15,-r*0.35,0,0,-r*0.1,r*0.6);
+    cap.addColorStop(0,'#f0d840'); cap.addColorStop(0.5,'#c8a020'); cap.addColorStop(1,'#8a6808');
+    ctx.fillStyle=cap;
+    ctx.beginPath(); ctx.ellipse(0,-r*0.12,r*0.5,r*0.32,0,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+
+  // ── Ground shadow ──
+  ctx.fillStyle='rgba(0,0,0,0.15)';
+  ctx.beginPath(); ctx.ellipse(0,8*s,105*s,22*s,0,0,Math.PI*2); ctx.fill();
+
+  // ── Back nests ──
+  stoneMound(20*s,-32*s, 24*s,13*s);
+  hayNest(20*s,-46*s, 20*s);
+  stoneMound(62*s,-20*s, 20*s,11*s);
+  hayNest(62*s,-32*s, 17*s);
+
+  // ── Tower ──
+  // Base stones
+  stoneMound(-68*s,-4*s, 38*s,17*s);
+  // Body
+  const tw=38*s, th=82*s;
+  const tx=-68*s, ty=-74*s;
+  const tbg=ctx.createLinearGradient(tx-tw/2,0,tx+tw/2,0);
+  tbg.addColorStop(0,'#7a5030'); tbg.addColorStop(0.35,'#c08848'); tbg.addColorStop(0.65,'#a06838'); tbg.addColorStop(1,'#5a3820');
+  ctx.fillStyle=tbg;
+  ctx.beginPath(); ctx.roundRect(tx-tw/2,ty,tw,th,3*s); ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,0.2)'; ctx.lineWidth=1.5*s;
+  ctx.beginPath(); ctx.roundRect(tx-tw/2,ty,tw,th,3*s); ctx.stroke();
+  // Horizontal plank lines
+  ctx.strokeStyle='rgba(0,0,0,0.12)'; ctx.lineWidth=1*s;
+  for(let i=1;i<5;i++){
+    const ply=ty+i*(th/5);
+    ctx.beginPath(); ctx.moveTo(tx-tw/2,ply); ctx.lineTo(tx+tw/2,ply); ctx.stroke();
+  }
+  // Door
+  const dg=ctx.createLinearGradient(0,ty+th*0.6,0,ty+th);
+  dg.addColorStop(0,'#3a2010'); dg.addColorStop(1,'#1e1008');
+  ctx.fillStyle=dg;
+  ctx.beginPath(); ctx.roundRect(tx-10*s,ty+th*0.54,20*s,th*0.46,3*s); ctx.fill();
+  ctx.strokeStyle='rgba(180,120,40,0.4)'; ctx.lineWidth=1*s;
+  ctx.beginPath(); ctx.roundRect(tx-10*s,ty+th*0.54,20*s,th*0.46,3*s); ctx.stroke();
+  // Window
+  ctx.fillStyle='rgba(255,200,80,0.25)';
+  ctx.beginPath(); ctx.ellipse(tx,ty+th*0.28,5*s,6*s,0,0,Math.PI*2); ctx.fill();
+  ctx.strokeStyle='rgba(180,130,40,0.6)'; ctx.lineWidth=1.2*s;
+  ctx.beginPath(); ctx.ellipse(tx,ty+th*0.28,5*s,6*s,0,0,Math.PI*2); ctx.stroke();
+  // Roof
+  ctx.beginPath(); ctx.moveTo(tx-tw/2-6*s,ty); ctx.lineTo(tx,ty-54*s); ctx.lineTo(tx+tw/2+6*s,ty); ctx.closePath();
+  const rfg=ctx.createLinearGradient(tx-tw/2,ty,tx+tw/2,ty-44*s);
+  rfg.addColorStop(0,'#6a6830'); rfg.addColorStop(0.4,'#9a9840'); rfg.addColorStop(1,'#5a5828');
+  ctx.fillStyle=rfg; ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,0.18)'; ctx.lineWidth=1.5*s; ctx.stroke();
+
+  // ── Front nest (largest) ──
+  stoneMound(-14*s,0*s, 32*s,17*s);
+  hayNest(-14*s,-16*s, 27*s);
+
+  // ── Grass tufts ──
+  [[-96*s,4*s],[-55*s,8*s],[92*s,2*s],[46*s,6*s],[-36*s,12*s]].forEach(([gx,gy])=>{
+    const blades=[[-4,-1],[-2,1],[0,-2],[2,0],[4,-1]];
+    blades.forEach(([dx,h],i)=>{
+      const sway=Math.sin(t*1.8+i+gx)*1.5*s;
+      const col=i%2===0?'#4aaa28':'#336618';
+      ctx.strokeStyle=col; ctx.lineWidth=(1.8+Math.random()*0.4)*s; ctx.lineCap='round';
+      ctx.beginPath();
+      ctx.moveTo(gx+dx*s,gy);
+      ctx.quadraticCurveTo(gx+dx*s+sway,gy-(6+h)*s,gx+dx*s+sway*2,gy-(11+h)*s);
+      ctx.stroke();
+    });
+  });
+
+  // ── Pebbles ──
+  [[-44*s,10*s,6*s,3.5*s],[-28*s,15*s,4.5*s,2.8*s],[42*s,11*s,5*s,3*s],[-10*s,14*s,3.5*s,2.2*s]].forEach(([px,py,rx,ry])=>{
+    // Pebble shadow
+    ctx.fillStyle='rgba(0,0,0,0.15)';
+    ctx.beginPath(); ctx.ellipse(px+1*s,py+2*s,rx,ry*0.5,0,0,Math.PI*2); ctx.fill();
+    const pg=ctx.createRadialGradient(px-rx*0.3,py-ry*0.4,0.5*s,px,py,rx);
+    pg.addColorStop(0,'#aaa098'); pg.addColorStop(0.6,'#7a7268'); pg.addColorStop(1,'#4a4840');
+    ctx.fillStyle=pg;
+    ctx.beginPath(); ctx.ellipse(px,py,rx,ry,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,0.12)';
+    ctx.beginPath(); ctx.ellipse(px-rx*0.25,py-ry*0.3,rx*0.35,ry*0.25,0,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle='rgba(0,0,0,0.18)'; ctx.lineWidth=0.8*s;
+    ctx.beginPath(); ctx.ellipse(px,py,rx,ry,0,0,Math.PI*2); ctx.stroke();
+  });
+
+  ctx.restore();
+}
+
 function drawFarmHouse(ctx, W, H, t){
   ctx.clearRect(0,0,W,H);
   const s=Math.min(W,H)/310;
@@ -3089,6 +3344,7 @@ const CROPS = [
   {id:'wheat',      name:'Wheat',        icon:'🌾', cost:30,  time:30,  food:25,  desc:'Quick harvest, small yield.'},
   {id:'carrot',     name:'Carrot',       icon:'🥕', cost:100, time:120, food:60, desc:'Takes 2 minutes, good return.'},
   {id:'dragonfruit',name:'Dragon Fruit', icon:'🍈', cost:350, time:300, food:200, desc:'5 minutes, exceptional yield.'},
+  {id:'starbloom',   name:'Starbloom Root', icon:'🌺', cost:1100, time:900, food:600, desc:'15 minutes, massive yield.'},
 ];
 
 
@@ -3320,7 +3576,12 @@ function initBuildingCanvases(){
     cv.width=SIZE*dpr; cv.height=SIZE*dpr;
     cv.style.width=SIZE+'px'; cv.style.height=SIZE+'px';
     bctx.setTransform(dpr,0,0,dpr,0,0);
-    function loop(now){ requestAnimationFrame(loop); drawFarmHouse(bctx,SIZE,SIZE,now/1000); }
+    const buildingType = cv.dataset.building || 'farm';
+    function loop(now){
+      requestAnimationFrame(loop);
+      if(buildingType==='hatchery') drawHatchery(bctx,SIZE,SIZE,now/1000);
+      else drawFarmHouse(bctx,SIZE,SIZE,now/1000);
+    }
     requestAnimationFrame(loop);
   });
 }
@@ -3752,44 +4013,65 @@ const TUT_STEPS = [
   // 0: open shop
   {text:'Click the Shop', targetId:'shop-btn', arrowDir:'left',
    advance:()=>document.getElementById('shop').classList.contains('open')},
-  // 1: click habitats tab
-  {text:'Click Habitats', targetId:'sh-tab-habitats', arrowDir:'above',
-   advance:()=>document.querySelector('.sh-panel[data-panel="habitats"]').style.display!=='none'},
-  // 2: buy fire habitat — advance when placement starts
-  {text:'Buy a Fire Habitat', targetId:'tut-fire-habitat-btn', arrowDir:'above',
-   advance:()=>!!game.placement || game.placedHabitats.some(h=>h.type==='fire')},
-  // 3: place habitat (overlay hidden)
-  {text:'Place your Habitat', targetId:'canvas', arrowDir:'center', hideDuring:true,
-   advance:()=>game.placedHabitats.some(h=>h.type==='fire') && !game.placement},
-  // 4: open shop for dragon
-  {text:'Click the Shop', targetId:'shop-btn', arrowDir:'left',
-   advance:()=>document.getElementById('shop').classList.contains('open')},
-  // 5: buy fire dragon — advance when pendingDragon is set
-  {text:'Buy a Fire Dragon', targetId:'tut-fire-dragon-btn', shopTab:'dragons', arrowDir:'above',
-   advance:()=>!!game.pendingDragon},
-  // 6: place dragon in habitat (overlay hidden, habitats glow)
-  {text:'Place Dragon in a Habitat', targetId:'canvas', arrowDir:'center', hideDuring:true,
-   advance:()=>game.placedHabitats.some(h=>h.dragons.includes('fire')) && !game.pendingDragon},
-  // 7: admire dragon for 2 seconds
-  {text:'Meet your Dragon! 🐉', targetId:null, arrowDir:'center', hideDuring:true,
-   minDelay:2500, _startTime:0,
-   advance:()=>{ const s=TUT_STEPS[7]; if(!s._startTime) s._startTime=Date.now(); return Date.now()-s._startTime>s.minDelay; }},
-  // 8: open shop for farm
-  {text:'Click the Shop', targetId:'shop-btn', arrowDir:'left',
-   advance:()=>document.getElementById('shop').classList.contains('open')},
-  // 9: click buildings tab
+  // 1: click buildings tab
   {text:'Click Buildings', targetId:'sh-tab-items', arrowDir:'above',
    advance:()=>document.querySelector('.sh-panel[data-panel="items"]').style.display!=='none'},
-  // 10: buy farm
+  // 2: buy hatchery
+  {text:'Buy a Dragon Hatchery', targetId:'tut-hatchery-btn', arrowDir:'above',
+   advance:()=>(game.placement&&game.placement.type==='hatchery')||(game.buildings||[]).some(b=>b.type==='hatchery')},
+  // 3: place hatchery
+  {text:'Place your Hatchery', targetId:'canvas', arrowDir:'center', hideDuring:true,
+   advance:()=>(game.buildings||[]).some(b=>b.type==='hatchery')&&!game.placement},
+  // 4: open shop for habitat
+  {text:'Click the Shop', targetId:'shop-btn', arrowDir:'left',
+   advance:()=>document.getElementById('shop').classList.contains('open')},
+  // 5: click habitats tab
+  {text:'Click Habitats', targetId:'sh-tab-habitats', arrowDir:'above',
+   advance:()=>document.querySelector('.sh-panel[data-panel="habitats"]').style.display!=='none'},
+  // 6: buy fire habitat
+  {text:'Buy a Fire Habitat', targetId:'tut-fire-habitat-btn', arrowDir:'above',
+   advance:()=>!!game.placement||game.placedHabitats.some(h=>h.type==='fire')},
+  // 7: place habitat
+  {text:'Place your Habitat', targetId:'canvas', arrowDir:'center', hideDuring:true,
+   advance:()=>game.placedHabitats.some(h=>h.type==='fire')&&!game.placement},
+  // 8: open shop for dragon
+  {text:'Click the Shop', targetId:'shop-btn', arrowDir:'left',
+   advance:()=>document.getElementById('shop').classList.contains('open')},
+  // 9: buy fire dragon (tutorial egg will be instant)
+  {text:'Buy a Fire Dragon', targetId:'tut-fire-dragon-btn', shopTab:'dragons', arrowDir:'above',
+   advance:()=>{
+     const h=(game.buildings||[]).find(b=>b.type==='hatchery');
+     return h&&h.eggs&&h.eggs.some(e=>e.dragonType==='fire');
+   }},
+  // 10: click hatchery
+  {text:'Click your Hatchery', targetId:'canvas', arrowDir:'center', hideDuring:true,
+   advance:()=>!!document.getElementById('hatchery-menu')&&document.getElementById('hatchery-menu').classList.contains('open')},
+  // 11: click hatch button
+  {text:'Hatch your Dragon!', targetFn:()=>document.querySelector('#hatchery-slots .hatch-btn'), arrowDir:'above',
+   advance:()=>!!game.pendingDragon},
+  // 12: place dragon in habitat
+  {text:'Place Dragon in a Habitat', targetId:'canvas', arrowDir:'center', hideDuring:true,
+   advance:()=>game.placedHabitats.some(h=>h.dragons.includes('fire'))&&!game.pendingDragon},
+  // 13: admire dragon
+  {text:'Meet your Dragon! 🐉', targetId:null, arrowDir:'center', hideDuring:true,
+   minDelay:2500, _startTime:0,
+   advance:function(){ const s=TUT_STEPS[13]; if(!s._startTime) s._startTime=Date.now(); return Date.now()-s._startTime>s.minDelay; }},
+  // 14: open shop for farm
+  {text:'Click the Shop', targetId:'shop-btn', arrowDir:'left',
+   advance:()=>document.getElementById('shop').classList.contains('open')},
+  // 15: click buildings tab
+  {text:'Click Buildings', targetId:'sh-tab-items', arrowDir:'above',
+   advance:()=>document.querySelector('.sh-panel[data-panel="items"]').style.display!=='none'},
+  // 16: buy farm
   {text:'Buy a Farm', targetId:'tut-farm-btn', arrowDir:'above',
-   advance:()=>(game.placement&&game.placement.isBuilding)||(game.buildings&&game.buildings.length>0)},
-  // 11: place farm (overlay hidden)
+   advance:()=>(game.placement&&game.placement.isBuilding&&game.placement.type==='farm')||(game.buildings&&game.buildings.some(b=>b.type==='farm'))},
+  // 17: place farm
   {text:'Place your Farm', targetId:'canvas', arrowDir:'center', hideDuring:true,
-   advance:()=>game.buildings&&game.buildings.length>0&&!game.placement},
-  // 12: click farm on map (overlay hidden)
+   advance:()=>game.buildings&&game.buildings.some(b=>b.type==='farm')&&!game.placement},
+  // 18: click farm on map
   {text:'Click on your Farm', targetId:'canvas', arrowDir:'center', hideDuring:true,
    advance:()=>!!document.getElementById('farm-menu')},
-  // 13: grow wheat
+  // 19: grow wheat
   {text:'Grow some Wheat', targetFn:()=>document.querySelector('#farm-menu button[onclick*="wheat"]'), arrowDir:'above',
    advance:()=>game.buildings&&game.buildings.some(b=>b.crop==='wheat')},
 ];
@@ -3799,7 +4081,7 @@ let _tutRAF  = null;
 let _tutPos  = null;
 
 function tutInit(){
-  if(localStorage.getItem('tut_v5_done')) return;
+  if(localStorage.getItem('tut_v7_done')) return;
   // Show welcome screen first
   showWelcomeScreen();
 }
@@ -3942,7 +4224,7 @@ function tutDone(){
   if(_tutPos){ clearInterval(_tutPos); _tutPos = null; }
   const ov = document.getElementById('tut-overlay');
   if(ov) ov.style.display = 'none';
-  localStorage.setItem('tut_v5_done','1');
+  localStorage.setItem('tut_v7_done','1');
   saveGame();
 }
 
@@ -3971,16 +4253,41 @@ setTimeout(tutInit, 800);
 // QUEST SYSTEM
 // ══════════════════════════════════════════════════════
 const QUEST_DEFS = [
-  {id:'fire_habitat', title:'Build a Fire Habitat', desc:'Place a Fire Habitat on your island.', icon:'🌋',
-   progress:()=>game.placedHabitats.filter(h=>h.type==='fire').length, max:1, xp:50, gold:250},
-  {id:'fire_dragon', title:'Buy a Fire Dragon', desc:'Add a Fire Dragon to your habitat.', icon:'🔥',
-   progress:()=>game.placedHabitats.reduce((s,h)=>s+h.dragons.filter(d=>d==='fire').length,0), max:1, xp:50, gold:250},
-  {id:'plant_wheat', title:'Plant Wheat', desc:'Grow Wheat in your Farm.', icon:'🌾',
-   progress:()=>(game.questsDone&&game.questsDone.wheat_ever)?1:((game.buildings&&game.buildings.some(b=>b.crop==='wheat'))?1:0),
-   max:1, xp:50, gold:250},
-  {id:'dragon_max', title:'Max Out a Dragon', desc:'Level any dragon to Level 10.', icon:'⚔️',
-   progress:()=>game.placedHabitats.some(h=>h.dragonLevels&&h.dragonLevels.some(l=>l>=10))?1:0,
-   max:1, xp:500, gold:1000},
+  // ── Starter ──
+  {id:'fire_habitat', xp:50, title:'Build a Fire Habitat', desc:'Place a Fire Habitat on your island.', icon:'🌋',
+   progress:()=>game.placedHabitats.filter(h=>h.type==='fire').length, max:1, gold:100},
+  {id:'fire_dragon', xp:50,  title:'Buy a Fire Dragon',    desc:'Add a Fire Dragon to your habitat.',   icon:'🔥',
+   progress:()=>game.placedHabitats.reduce((s,h)=>s+h.dragons.filter(d=>d==='fire').length,0), max:1, gold:100},
+  {id:'plant_wheat', xp:50,  title:'Plant Wheat',           desc:'Grow Wheat in your Farm.',             icon:'🌾',
+   progress:()=>(game.questsDone&&game.questsDone.wheat_ever)?1:0, max:1, gold:100},
+  // ── Easy ──
+  {id:'buy_grass_dragon', xp:75, title:'Buy a Grass Dragon', desc:'Add a Grass Dragon to a habitat.', icon:'🌿',
+   progress:()=>game.placedHabitats.reduce((s,h)=>s+h.dragons.filter(d=>d==='grass').length,0), max:1, gold:200},
+  {id:'two_habitats', xp:75, title:'Build 2 Habitats', desc:'Have 2 habitats on your island.', icon:'🏡',
+   progress:()=>Math.min(game.placedHabitats.length,2), max:2, gold:200},
+  {id:'upgrade_lv3', xp:75, title:'Upgrade to Level 3', desc:'Level up any dragon to Level 3.', icon:'⬆️',
+   progress:()=>game.placedHabitats.some(h=>(h.dragonLevels||[]).some(l=>l>=3))?1:0, max:1, gold:200},
+  // ── Medium ──
+  {id:'all_types', xp:150, title:'Own All 3 Habitat Types', desc:'Have a Fire, Grass, and Earth Habitat.', icon:'🌍',
+   progress:()=>['fire','grass','earth'].filter(t=>game.placedHabitats.some(h=>h.type===t)).length, max:3, gold:400},
+  {id:'three_dragons', xp:100, title:'Own 3 Dragons', desc:'Have 3 dragons across your habitats.', icon:'🐲',
+   progress:()=>Math.min(game.placedHabitats.reduce((s,h)=>s+h.dragons.length,0),3), max:3, gold:300},
+  {id:'harvest_fruit', xp:100, title:'Harvest Dragon Fruit', desc:'Harvest Dragon Fruit from your Farm.', icon:'🍈',
+   progress:()=>(game.questsDone&&game.questsDone.dragon_fruit_ever)?1:0, max:1, gold:350},
+  {id:'two_farms', xp:120, title:'Build 2 Farms', desc:'Have 2 Farms on your island.', icon:'🌻',
+   progress:()=>Math.min((game.buildings||[]).filter(b=>b.type==='farm').length,2), max:2, gold:400},
+  {id:'upgrade_lv5', xp:150, title:'Upgrade to Level 5', desc:'Level up any dragon to Level 5.', icon:'✨',
+   progress:()=>game.placedHabitats.some(h=>(h.dragonLevels||[]).some(l=>l>=5))?1:0, max:1, gold:400},
+  // ── Hard ──
+  {id:'earth_lv7', xp:200, title:'Earth Dragon Level 7', desc:'Level up an Earth Dragon to Level 7.', icon:'⛰️',
+   progress:()=>game.placedHabitats.some(h=>h.type==='earth'&&(h.dragonLevels||[]).some(l=>l>=7))?1:0, max:1, gold:500},
+  {id:'reach_lv5', xp:300, title:'Reach Level 5', desc:'Advance your island to Level 5.', icon:'🌟',
+   progress:()=>game.level>=5?1:0, max:1, gold:1000},
+  {id:'dragon_max', xp:300, title:'Max Out a Dragon', desc:'Level any dragon to Level 10.', icon:'⚔️',
+   progress:()=>game.placedHabitats.some(h=>(h.dragonLevels||[]).some(l=>l>=10))?1:0, max:1, gold:1000},
+  // ── Legendary ──
+  {id:'three_max', xp:1000, title:'Max Out 3 Dragons', desc:'Level up 3 different dragons to Level 15.', icon:'💎',
+   progress:()=>Math.min(game.placedHabitats.reduce((s,h)=>s+(h.dragonLevels||[]).filter(l=>l>=15).length,0),3), max:3, gold:5000},
 ];
 
 function questsCompletedCount(){
@@ -4015,12 +4322,13 @@ function claimQuest(qid){
   if(!game.questsClaimed) game.questsClaimed={};
   if(game.questsClaimed[qid]) return;
   game.questsClaimed[qid]=true;
-  addXP(q.xp);
   game.gold+=q.gold;
   updateGoldUI();
   saveGame();
   renderQuestList();
   updateQuestBadge();
+  showNotification(`Quest complete! +${q.gold} 🪙 · +${q.xp||0} XP`,'success');
+  addXP(q.xp||0); updateXPBar();
 }
 
 function renderQuestList(){
@@ -4041,7 +4349,7 @@ function renderQuestList(){
         <div style="flex:1;">
           <div style="font-family:Cinzel,serif;font-size:1.1rem;font-weight:700;color:${claimed?'rgba(140,200,80,0.5)':done?'#88ee66':'#a0d0ff'};">${q.title}</div>
           <div style="font-size:0.88rem;color:rgba(160,190,255,0.6);margin-top:4px;">${q.desc}</div>
-          <div style="font-size:0.8rem;color:rgba(255,220,80,0.6);margin-top:5px;">🪙 ${q.gold} · ⭐ XP on claim</div>
+          <div style="font-size:0.8rem;color:rgba(255,220,80,0.7);margin-top:5px;">🪙 ${q.gold} gold &nbsp;·&nbsp; ⭐ ${q.xp||0} XP</div>
         </div>
         ${claimed?'<div style="font-size:1.4rem;opacity:0.5;">✅</div>':done?`<button onclick="claimQuest('${q.id}')" style="background:linear-gradient(180deg,#44aa22,#226610);border:1.5px solid rgba(80,200,60,0.5);color:#fff;font-family:Cinzel,serif;font-size:0.9rem;font-weight:700;padding:11px 20px;border-radius:18px;cursor:pointer;white-space:nowrap;">Claim</button>`:''}
       </div>
@@ -4058,10 +4366,15 @@ function renderQuestList(){
 const _origPlantCrop=plantCrop;
 plantCrop=function(buildingIdx,cropId){
   _origPlantCrop(buildingIdx,cropId);
-  if(cropId==='wheat'){
-    if(!game.questsDone) game.questsDone={};
-    game.questsDone.wheat_ever=true;
-  }
+  if(!game.questsDone) game.questsDone={};
+  if(cropId==='wheat') game.questsDone.wheat_ever=true;
+  updateQuestBadge();
+};
+const _origHarvestCrop=harvestCrop;
+harvestCrop=function(buildingIdx){
+  const b=(game.buildings||[])[buildingIdx];
+  if(b&&b.crop==='dragonfruit'){ if(!game.questsDone) game.questsDone={}; game.questsDone.dragon_fruit_ever=true; }
+  _origHarvestCrop(buildingIdx);
   updateQuestBadge();
 };
 
@@ -4072,7 +4385,7 @@ setInterval(updateQuestBadge, 2000);
 // ══════════════════════════════════════════════════════
 // SAVE / LOAD (localStorage)
 // ══════════════════════════════════════════════════════
-const SAVE_KEY = 'jimmie_vale_save_v2';
+const SAVE_KEY = 'jimmie_vale_save_v1';
 
 function saveGame(){
   try {
@@ -4092,7 +4405,8 @@ function saveGame(){
       })),
       buildings: (game.buildings||[]).map(b=>({
         type:b.type, gx:b.gx, gy:b.gy,
-        crop:b.crop||null, cropEnd:b.cropEnd||null, cropDuration:b.cropDuration||null
+        crop:b.crop||null, cropEnd:b.cropEnd||null, cropDuration:b.cropDuration||null,
+        eggs:(b.eggs||[]).map(e=>({...e}))
       })),
     };
     localStorage.setItem(SAVE_KEY, JSON.stringify(data));
@@ -4120,7 +4434,8 @@ function loadGame(){
       ...b,
       crop: b.crop||null,
       cropEnd: b.cropEnd||null,
-      cropDuration: b.cropDuration||null
+      cropDuration: b.cropDuration||null,
+      eggs: (b.eggs||[]).map(e=>({...e}))
     }));
     // Reset roam state so dragons get fresh positions
     Object.keys(_dragonRoamState).forEach(k=>delete _dragonRoamState[k]);
@@ -4145,7 +4460,7 @@ const _wrap = (fn, name) => {
 function _initOnLoad(){
   const loaded = loadGame();
   if(loaded){
-    localStorage.setItem('tut_v5_done','1'); // skip tutorial if save exists
+    localStorage.setItem('tut_v7_done','1'); // skip tutorial if save exists
     updateGoldUI();
   }
 }
@@ -4202,8 +4517,9 @@ function updateXPBar(){
   if(badge) badge.textContent='LV '+lv;
   // Change star based on level bracket
   if(star){
-    if(lv>=10) star.textContent='💎';
-    else if(lv>=5) star.textContent='🌟';
+    if(lv>=15) star.textContent='💎';
+    else if(lv>=8) star.textContent='🌟';
+    else if(lv>=4) star.textContent='⭐️';
     else star.textContent='⭐';
   }
 }
@@ -4233,7 +4549,8 @@ async function sellHabitat(){
   if(idx==null) return;
   if(game.placedHabitats.length<=1){ showNotification("You can't sell your last habitat!",'error'); return; }
   const h=game.placedHabitats[idx];
-  const ok=await gameConfirm(`Sell this ${h.type} habitat and all ${h.dragons.length} dragon(s) inside? You will receive 250 🪙.`,'Sell');
+  if(h.dragons.length>0){ showNotification("Remove all dragons before selling!",'error'); return; }
+  const ok=await gameConfirm(`Sell this ${h.type} habitat? You will receive 250 🪙.`,'Sell');
   if(ok){
     game.gold+=250;
     game.placedHabitats.splice(idx,1);
@@ -4266,7 +4583,7 @@ function updateShopButtons(){
       earthBtn.style.cursor='default';
     } else {
       earthBtn.disabled=false;
-      earthBtn.innerHTML='<span class="dc-coin">🪙</span><span>300</span>';
+      earthBtn.innerHTML='<span class="dc-coin">🪙</span><span>1500</span>';
       earthBtn.style.opacity='1';
       earthBtn.style.cursor='pointer';
     }
@@ -4292,6 +4609,179 @@ function updateShopButtons(){
   }
 }
 
+
+function openCheat(){
+  document.getElementById('cheat-overlay').classList.add('show');
+  document.getElementById('cheat-input').value='';
+  document.getElementById('cheat-msg').textContent='';
+  setTimeout(()=>document.getElementById('cheat-input').focus(), 50);
+}
+function closeCheat(){
+  document.getElementById('cheat-overlay').classList.remove('show');
+}
+function submitCheat(){
+  const code=document.getElementById('cheat-input').value.trim().toUpperCase();
+  const msg=document.getElementById('cheat-msg');
+  if(code==='RESET'){
+    localStorage.removeItem('jimmie_vale_save_v1');
+    localStorage.removeItem('tut_v7_done');
+    msg.style.color='#88ee66';
+    msg.textContent='✓ Progress reset! Reloading...';
+    setTimeout(()=>location.reload(), 1000);
+    return;
+  }
+  if(code==='JIMMIE' || code==='DRAGONVALE' || code==='DEBUG'){
+    game.gold+=10000;
+    game.food+=10000;
+    updateGoldUI();
+    document.getElementById('fv').textContent=Math.floor(game.food);
+    saveGame();
+    msg.style.color='#88ee66';
+    msg.textContent='✓ +10,000 🪙 and +10,000 🍖 added!';
+    setTimeout(closeCheat, 1500);
+  } else {
+    msg.style.color='#ff8888';
+    msg.textContent='✗ Invalid code.';
+  }
+}
+
+
+// ══════════════════════════════════════════════════════
+// HATCHERY SYSTEM
+// ══════════════════════════════════════════════════════
+let _hatcheryIdx=null;
+let _hatcheryRaf=null;
+
+function openHatcheryMenu(buildingIdx){
+  closeHabitatMenu(); closeFarmMenu(); closeShrineMenu();
+  _hatcheryIdx=buildingIdx;
+  document.getElementById('hatchery-menu').classList.add('open');
+  renderHatcherySlots();
+  if(_hatcheryRaf) clearInterval(_hatcheryRaf);
+  _hatcheryRaf=setInterval(renderHatcherySlots, 1000);
+}
+
+function closeHatcheryMenu(){
+  document.getElementById('hatchery-menu').classList.remove('open');
+  if(_hatcheryRaf){ clearInterval(_hatcheryRaf); _hatcheryRaf=null; }
+  _hatcheryIdx=null;
+}
+
+function drawEggOnCanvas(cv, dragonType, readiness){
+  const ctx=cv.getContext('2d'); const W=cv.width, H=cv.height;
+  ctx.clearRect(0,0,W,H);
+  const cx=W/2, cy=H*0.52;
+  const cols={fire:['#ff7040','#cc2800','#ffb080'],grass:['#60d040','#1a7a08','#a0f060'],earth:['#c09050','#7a5010','#e0c080']};
+  const [mid,dark,light]=cols[dragonType]||cols.fire;
+  const r=Math.min(W,H)*0.32;
+  // Glow
+  if(readiness>=1){
+    const g=ctx.createRadialGradient(cx,cy,r*0.2,cx,cy,r*1.6);
+    g.addColorStop(0,mid.replace('#','rgba(').replace(/(..)(..)(..)$/,(_,r2,g2,b2)=>`${parseInt(r2,16)},${parseInt(g2,16)},${parseInt(b2,16)},0.4)`));
+    g.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=g; ctx.beginPath(); ctx.ellipse(cx,cy,r*1.6,r*1.8,0,0,Math.PI*2); ctx.fill();
+  }
+  // Egg body
+  const eg=ctx.createRadialGradient(cx-r*0.25,cy-r*0.3,r*0.05,cx,cy,r);
+  eg.addColorStop(0,light); eg.addColorStop(0.55,mid); eg.addColorStop(1,dark);
+  ctx.fillStyle=eg;
+  ctx.beginPath(); ctx.ellipse(cx,cy,r*0.72,r,0,0,Math.PI*2); ctx.fill();
+  // Crack lines if near ready
+  if(readiness>0.7){
+    const alpha=(readiness-0.7)/0.3;
+    ctx.strokeStyle=`rgba(255,255,255,${alpha*0.6})`; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.moveTo(cx+r*0.1,cy-r*0.3); ctx.lineTo(cx+r*0.3,cy); ctx.lineTo(cx+r*0.1,cy+r*0.2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx-r*0.1,cy-r*0.1); ctx.lineTo(cx-r*0.25,cy+r*0.15); ctx.stroke();
+  }
+  // Highlight
+  ctx.fillStyle='rgba(255,255,255,0.35)';
+  ctx.beginPath(); ctx.ellipse(cx-r*0.2,cy-r*0.35,r*0.22,r*0.3,-0.3,0,Math.PI*2); ctx.fill();
+}
+
+function renderHatcherySlots(){
+  const container=document.getElementById('hatchery-slots');
+  if(!container||_hatcheryIdx===null) return;
+  const b=(game.buildings||[])[_hatcheryIdx];
+  if(!b) return;
+  const eggs=b.eggs||[];
+  const now=Date.now();
+  container.innerHTML='';
+  for(let i=0;i<3;i++){
+    const slot=document.createElement('div');
+    slot.className='hatch-slot'+(i>=eggs.length?' empty':'');
+    if(i<eggs.length){
+      const egg=eggs[i];
+      const elapsed=now-egg.startTime;
+      const ready=elapsed>=egg.duration;
+      const pct=Math.min(1,elapsed/egg.duration);
+      // Canvas for egg
+      const cv=document.createElement('canvas'); cv.width=140; cv.height=140;
+      drawEggOnCanvas(cv,egg.dragonType,pct);
+      slot.appendChild(cv);
+      // Dragon type label
+      const lbl=document.createElement('div');
+      lbl.style.cssText='font-family:Cinzel,serif;font-size:0.7rem;color:rgba(220,200,120,0.8);text-transform:capitalize;';
+      lbl.textContent=egg.dragonType+' Dragon';
+      slot.appendChild(lbl);
+      if(ready){
+        const btn=document.createElement('button');
+        btn.className='hatch-btn';
+        btn.textContent='✦ HATCH!';
+        btn.onclick=()=>hatchEgg(i);
+        slot.appendChild(btn);
+      } else {
+        const remaining=egg.duration-elapsed;
+        const mins=Math.floor(remaining/60000);
+        const secs=Math.floor((remaining%60000)/1000);
+        const timer=document.createElement('div');
+        timer.className='hatch-timer';
+        timer.textContent=mins>0?`${mins}m ${secs}s`:`${secs}s`;
+        slot.appendChild(timer);
+        // Progress bar
+        const bar=document.createElement('div');
+        bar.style.cssText='width:100%;height:6px;background:rgba(0,0,0,0.4);border-radius:4px;overflow:hidden;';
+        bar.innerHTML=`<div style="height:100%;width:${pct*100}%;background:linear-gradient(90deg,#c8a020,#f0d040);border-radius:4px;transition:width 0.5s;"></div>`;
+        slot.appendChild(bar);
+      }
+    } else {
+      // Empty slot
+      const emp=document.createElement('div');
+      emp.style.cssText='font-size:2rem;opacity:0.3;margin-top:auto;margin-bottom:auto;';
+      emp.textContent='🥚';
+      slot.appendChild(emp);
+      const lbl=document.createElement('div');
+      lbl.style.cssText='font-family:Cinzel,serif;font-size:0.65rem;color:rgba(180,160,100,0.4);margin-top:auto;';
+      lbl.textContent='Empty';
+      slot.appendChild(lbl);
+    }
+    container.appendChild(slot);
+  }
+}
+
+function startHatcheryMove(){
+  const idx=_hatcheryIdx;
+  if(idx==null) return;
+  const b=(game.buildings||[])[idx];
+  if(!b) return;
+  closeHatcheryMenu();
+  game.placement={isBuilding:true, type:b.type, cost:0, gx:b.gx, gy:b.gy, moveIdx:idx};
+  document.getElementById('place-bar').style.display='block';
+  document.getElementById('place-label').textContent='Move your Hatchery';
+}
+
+function hatchEgg(eggIdx){
+  const idx=_hatcheryIdx;
+  const b=(game.buildings||[])[idx];
+  if(!b||!b.eggs||!b.eggs[eggIdx]) return;
+  const egg={...b.eggs[eggIdx]}; // copy before splice
+  const habitatType=egg.habitatType||(egg.dragonType==='fire'?'fire':egg.dragonType==='grass'?'grass':'earth');
+  b.eggs.splice(eggIdx,1);
+  saveGame();
+  closeHatcheryMenu();
+  game.pendingDragon={type:egg.dragonType,habitatType};
+  showNotification('Choose a habitat for your '+egg.dragonType+' dragon!','success');
+}
+
 </script>
 
 <div id="tut-overlay" style="display:none;position:fixed;inset:0;z-index:8000;pointer-events:all;">
@@ -4312,7 +4802,7 @@ function updateShopButtons(){
       <div style="font-family:'Cinzel Decorative',serif;font-size:2rem;font-weight:700;color:#a0d0ff;letter-spacing:2px;">📜 Quests</div>
       <button onclick="closeQuestPanel()" style="background:rgba(0,0,0,0.3);border:1px solid rgba(80,160,255,0.3);border-radius:50%;width:42px;height:42px;color:#a0d0ff;cursor:pointer;font-size:1.3rem;display:flex;align-items:center;justify-content:center;">✕</button>
     </div>
-    <div id="quest-list" style="padding:28px;display:flex;flex-direction:column;gap:18px;max-height:74vh;overflow-y:auto;"></div>
+    <div id="quest-list" style="padding:16px 20px;display:flex;flex-direction:column;gap:12px;height:60vh;overflow-y:auto;scrollbar-width:thin;"></div>
   </div>
 </div>
 <div id="game-confirm">
@@ -4323,5 +4813,28 @@ function updateShopButtons(){
       <button class="gcb gcb-ok" onclick="gameConfirmResolve(true)" id="gcb-ok-btn">Sell</button>
     </div>
   </div>
-</div></body>
+</div><button id="cheat-btn" onclick="openCheat()" title="Dev tools">⚙</button>
+<div id="cheat-overlay">
+  <div id="cheat-box">
+    <div id="cheat-title">🔑 Enter Code</div>
+    <input id="cheat-input" type="text" placeholder="Type code..." maxlength="20" autocomplete="off" onkeydown="if(event.key==='Enter')submitCheat();">
+    <div>
+      <button id="cheat-submit" onclick="submitCheat()">Redeem</button>
+      <button id="cheat-cancel" onclick="closeCheat()">Cancel</button>
+    </div>
+    <div id="cheat-msg" style="font-family:Cinzel,serif;font-size:0.72rem;margin-top:10px;min-height:18px;"></div>
+  </div>
+</div>
+
+<div id="hatchery-menu">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <div style="font-family:'Cinzel Decorative',serif;font-size:0.9rem;color:#d4b870;letter-spacing:2px;">🥚 Dragon Hatchery</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button id="hatchery-move-btn" onclick="startHatcheryMove()" style="background:rgba(255,200,60,0.12);border:1px solid rgba(255,200,60,0.3);color:#FFE060;font-family:Cinzel,serif;font-size:0.72rem;padding:5px 12px;border-radius:14px;cursor:pointer;">✦ Move</button>
+      <button onclick="closeHatcheryMenu()" style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.15);border-radius:50%;width:28px;height:28px;color:#aaa;cursor:pointer;font-size:0.9rem;">✕</button>
+    </div>
+  </div>
+  <div id="hatchery-slots" style="display:flex;gap:12px;"></div>
+</div>
+</body>
 </html>
