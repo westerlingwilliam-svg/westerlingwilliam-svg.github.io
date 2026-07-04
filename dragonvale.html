@@ -3613,6 +3613,7 @@ function initDragonCanvases() {
     const type = cv.dataset.dragon || 'fire';
     function fit(){
       const r = cv.getBoundingClientRect();
+      if(r.width===0||r.height===0) return; // skip if hidden
       cv.width = Math.max(1,r.width*dpr); cv.height = Math.max(1,r.height*dpr);
       dctx.setTransform(dpr,0,0,dpr,0,0);
     }
@@ -3624,6 +3625,9 @@ function initDragonCanvases() {
       requestAnimationFrame(loop);
       const dt = Math.min(0.05, (now-last)/1000); last = now;
       const r = cv.getBoundingClientRect();
+      if(r.width===0||r.height===0) return; // hidden, skip
+      // Refit if canvas not sized yet
+      if(cv.width<=1||cv.height<=1) fit();
       if(type==='fire'){   stepDragonPhysics(phys,dt);  drawFireDragon(dctx,r.width,r.height,phys); }
       else if(type==='grass'){ stepDragonPhysics(phys,dt); drawGrassDragon(dctx,r.width,r.height,phys); }
       else if(type==='earth'){ stepEarthDragonPhysics(phys,dt); drawEarthDragon(dctx,r.width,r.height,phys); }
