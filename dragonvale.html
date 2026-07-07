@@ -492,6 +492,24 @@ html,body{width:100%;height:100%;overflow:hidden;}
             <div class="dragon-gpm">🪙 +30/min at Lv.1</div>
             <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>5000</span></button>
           </div>
+          <div class="dragon-card">
+            <div class="dragon-card-frame">
+              <canvas class="dragon-canvas" data-dragon="ice" width="220" height="220"></canvas>
+            </div>
+            <div class="dragon-card-name">Ice Dragon</div>
+            <div class="dragon-card-desc">A glacial beast of frost and silence, born from the coldest peaks.</div>
+            <div class="dragon-gpm">🪙 +8/min at Lv.1</div>
+            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>1500</span></button>
+          </div>
+          <div class="dragon-card">
+            <div class="dragon-card-frame">
+              <canvas class="dragon-canvas" data-dragon="bluefire" width="220" height="220"></canvas>
+            </div>
+            <div class="dragon-card-name">Blue Fire Dragon</div>
+            <div class="dragon-card-desc">A rare dragon whose flames burn an intense electric blue.</div>
+            <div class="dragon-gpm">🪙 +12/min at Lv.1</div>
+            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>2000</span></button>
+          </div>
         </div>
       </div>
 
@@ -518,7 +536,7 @@ html,body{width:100%;height:100%;overflow:hidden;}
             </div>
             <div class="dragon-card-name">Grass Habitat</div>
             <div class="dragon-card-desc">A lush forest glade where nature thrives. Perfect for grass dragons.</div>
-            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>500</span></button>
+            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>750</span></button>
           </div>
           <div class="dragon-card">
             <div class="habitat-frame">
@@ -526,7 +544,7 @@ html,body{width:100%;height:100%;overflow:hidden;}
             </div>
             <div class="dragon-card-name">Earth Habitat</div>
             <div class="dragon-card-desc">Ancient stone arches and cracked earth. A domain for earth dragons.</div>
-            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>500</span></button>
+            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>1250</span></button>
           </div>
         </div>
       </div>
@@ -1207,11 +1225,30 @@ const game = {
 const LEVEL_COST = [0,0,10,20,40,60,80,110,150,200,250,320,400,500,620,800]; // index = target level
 const MAX_LEVEL = 15;
 
+function isDragonBreeding(habitatIdx, dragonIdx){
+  return (game.buildings||[]).some(b=>
+    b.type==='breeder' && b.breedState && !b.breedState.done && (
+      (b.breedState.slot1 && b.breedState.slot1.habitatIdx===habitatIdx && b.breedState.slot1.dragonIdx===dragonIdx) ||
+      (b.breedState.slot2 && b.breedState.slot2.habitatIdx===habitatIdx && b.breedState.slot2.dragonIdx===dragonIdx)
+    )
+  );
+}
+function habitatGoldMax(h){
+  const caps={fire:1500,grass:2000,earth:3000};
+  return caps[h.type]||1500;
+}
 function spendFood(amount){
   if(game.food < amount) return false;
   game.food -= amount;
   document.getElementById('fv').textContent = game.food;
   return true;
+}
+
+function dragonFoodMult(dragonType){
+  if(dragonType==='fire') return 0.5;
+  if(dragonType==='grass') return 0.67;
+  if(dragonType==='poison') return 1.33;
+  return 1.0; // earth unchanged
 }
 
 function upgradeHabitatDragon(habitatIdx, dragonIdx){
@@ -1220,7 +1257,8 @@ function upgradeHabitatDragon(habitatIdx, dragonIdx){
   if(!h.dragonLevels) h.dragonLevels=h.dragons.map(()=>1);
   const lv = h.dragonLevels[dragonIdx]||1;
   if(lv >= MAX_LEVEL) return;
-  const cost = LEVEL_COST[lv+1];
+  const dragonType=h.dragons[dragonIdx]||'fire';
+  const cost = Math.round(LEVEL_COST[lv+1] * dragonFoodMult(dragonType));
   if(!spendFood(cost)) { showNotification('Not enough food! (Need '+cost+' 🍖)', 'error'); return; }
   h.dragonLevels[dragonIdx] = lv+1;
   const newLv=lv+1;
@@ -1254,9 +1292,9 @@ function updateGoldUI(collected){
   el.textContent=Math.floor(game.gold).toLocaleString();
   if(collected){ el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
   // Income rate
-  const rate=game.placedHabitats.reduce((s,h)=>{
+  const rate=game.placedHabitats.reduce((s,h,hi)=>{
     const lvs=h.dragonLevels||h.dragons.map(()=>1);
-    return s+h.dragons.reduce((a,d,di)=>a+dragonGPM(d,lvs[di]||1),0);
+    return s+h.dragons.reduce((a,d,di)=>isDragonBreeding(hi,di)?a:a+dragonGPM(d,lvs[di]||1),0);
   },0);
   const gi=document.getElementById('gi');
   if(gi) gi.textContent=rate>0?`+${Math.round(rate)}/min`:'';
@@ -1270,14 +1308,16 @@ const _DRAGON_MULT = [1, 2.0, 1.85, 1.7, 1.5, 1.4, 1.3, 1.22, 1.18, 1.14, 1.11, 
 // Cumulative multipliers from level 1
 const _DRAGON_CUM = _DRAGON_MULT.reduce((a,m,i)=>{ a.push((a[i-1]||1)*m); return a; },[]);
 function dragonGPM(dragonType, level){
-  if(dragonType==='poison'){
-    // Quadratic: 30/min at lv1, 850/min at lv15
-    const lv=Math.min(level,15);
-    return Math.round(1.9*lv*lv + 28.1*lv);
-  }
-  const base = dragonType==='earth'?10 : dragonType==='grass'?7 : 5;
-  const mult = _DRAGON_CUM[Math.min(level,MAX_LEVEL)-1] || 1;
-  return Math.round(base * mult * 10) / 10;
+  const lv=Math.min(Math.max(level,1),15)-1;
+  const tables={
+    fire:   [5,10,16,23,31,39,49,60,71,84,97,111,127,143,160],
+    ice:    [8,16,25,36,49,63,79,97,116,137,160,184,210,237,265],
+    bluefire:[12,23,37,52,70,90,112,137,163,192,222,254,288,324,360],
+    grass:  [7,14,22,31,42,54,67,82,98,115,133,153,174,196,220],
+    earth:  [10,20,33,47,64,82,102,124,148,174,202,232,264,298,334],
+    poison: [30,50,74,101,132,167,206,249,295,345,398,456,517,582,650],
+  };
+  return (tables[dragonType]||tables.fire)[lv];
 }
 const HABITAT_SIZE = 5;
 
@@ -1386,6 +1426,12 @@ function drawBuildings(){
   if(!game.buildings) game.buildings=[];
   const now=Date.now();
   const _overlays=[];
+  // Update breed state
+  (game.buildings||[]).forEach(b=>{
+    if(b.breedState&&!b.breedState.done&&Date.now()-b.breedState.startTime>=b.breedState.duration){
+      b.breedState.done=true; saveGame();
+    }
+  });
   game.buildings.forEach((b,bi)=>{
     const {left,top,cellSize}=getGridCoords();
     const px=left+b.gx*cellSize, py=top+b.gy*cellSize;
@@ -1396,6 +1442,54 @@ function drawBuildings(){
     else drawFarmHouse(oc.getContext('2d'),size,size,now/1000);
     ctx.drawImage(oc, px, py, size, size);
 
+    // Draw breeding dragons flying inside the cave
+    if(b.type==='breeder' && b.breedState && !b.breedState.done){
+      const t=now/1000;
+      const dragonSize=Math.round(size*0.22);
+      const pad=Math.round(dragonSize*0.5);
+      const mocW=dragonSize+pad*2;
+      [{slot:b.breedState.slot1,off:0},{slot:b.breedState.slot2,off:Math.PI}].forEach(({slot,off})=>{
+        if(!slot) return;
+        const cacheKey='breed_'+slot.type+'_'+dragonSize;
+        if(!_habitatCache[cacheKey]||_habitatCache[cacheKey].width!==mocW){
+          const mc=document.createElement('canvas'); mc.width=mocW; mc.height=mocW;
+          _habitatCache[cacheKey]=mc;
+        }
+        const moc=_habitatCache[cacheKey];
+        const mctx=moc.getContext('2d');
+        mctx.clearRect(0,0,mocW,mocW);
+        mctx.save(); mctx.translate(pad,pad);
+        const origClear=mctx.clearRect.bind(mctx); mctx.clearRect=()=>{};
+        const phys=_miniDragonPhysList[off===0?0:1];
+        if(slot.type==='grass') drawSideGrassDragon(mctx,dragonSize,dragonSize,phys);
+        else if(slot.type==='earth') drawSideEarthDragon(mctx,dragonSize,dragonSize,phys);
+        else if(slot.type==='poison') drawSidePoisonDragon(mctx,dragonSize,dragonSize,phys);
+        else if(slot.type==='ice') drawSideIceDragon(mctx,dragonSize,dragonSize,phys);
+        else if(slot.type==='bluefire') drawSideBluefireDragon(mctx,dragonSize,dragonSize,phys);
+        else drawSideDragon(mctx,dragonSize,dragonSize,phys);
+        mctx.clearRect=origClear; mctx.restore();
+        const cx=px+size*(0.38+0.24*Math.sin(t*0.35+off));
+        const cy=py+size*(0.64+0.04*Math.sin(t*0.55+off+1));
+        const flip=Math.cos(t*0.35+off)<0;
+        ctx.save(); ctx.translate(cx,cy);
+        if(flip) ctx.scale(-1,1);
+        ctx.drawImage(moc,-mocW/2,-mocW/2);
+        ctx.restore();
+      });
+    }
+
+    // Breeder timer overlay
+    if(b.type==='breeder' && b.breedState){
+      const bs=b.breedState;
+      const bx2=px+size*0.5, by2=py+size*0.08;
+      const ps2=size*0.18, pw2=size*0.75, fs2=Math.max(9,size*0.09)+'px';
+      if(bs.done){
+        _overlays.push({bx:bx2,by:by2,size,type:'breed_ready'});
+      } else {
+        const rem=Math.ceil((bs.startTime+bs.duration-now)/1000);
+        _overlays.push({bx:bx2,by:by2,size,type:'breed_timer',rem});
+      }
+    }
     // Hatchery egg timer — deferred to draw on top
     if(b.type==='hatchery' && b.eggs && b.eggs.length>0){
       _overlays.push({bx:px+size*0.5, by:py+size*0.08, size, eggs:b.eggs, now});
@@ -1436,7 +1530,34 @@ function drawBuildings(){
     }
   });
   // Draw egg overlays on top of all buildings
-  _overlays.forEach(({bx,by,size,eggs,now})=>{
+  _overlays.forEach(({bx,by,size,eggs,now,type,rem})=>{
+    if(type==='breed_ready'){
+      const ps=size*0.18, pw=size*0.82, fs=Math.max(9,size*0.09)+'px';
+      const pulse=1+Math.sin(performance.now()/280)*0.07;
+      ctx.save(); ctx.translate(bx,by); ctx.scale(pulse,pulse);
+      ctx.fillStyle='rgba(60,0,120,0.92)';
+      ctx.beginPath(); ctx.roundRect(-pw/2,-ps/2,pw,ps,ps*0.5); ctx.fill();
+      ctx.strokeStyle='rgba(160,80,255,0.9)'; ctx.lineWidth=size*0.012;
+      ctx.beginPath(); ctx.roundRect(-pw/2,-ps/2,pw,ps,ps*0.5); ctx.stroke();
+      ctx.fillStyle='#cc88ff'; ctx.font='bold '+fs+' Cinzel,serif';
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText('Egg Ready!', 0, 1);
+      ctx.restore(); return;
+    }
+    if(type==='breed_timer'){
+      const ps=size*0.18, pw=size*0.65, fs=Math.max(9,size*0.09)+'px';
+      ctx.save(); ctx.translate(bx,by);
+      ctx.fillStyle='rgba(30,0,60,0.88)';
+      ctx.beginPath(); ctx.roundRect(-pw/2,-ps/2,pw,ps,ps*0.5); ctx.fill();
+      ctx.strokeStyle='rgba(120,40,200,0.6)'; ctx.lineWidth=size*0.01;
+      ctx.beginPath(); ctx.roundRect(-pw/2,-ps/2,pw,ps,ps*0.5); ctx.stroke();
+      ctx.fillStyle='#cc88ff'; ctx.font='bold '+fs+' Cinzel,serif';
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      const m=Math.floor(rem/60), s2=rem%60;
+      ctx.fillText('🧬 '+(m>0?m+'m ':'')+s2+'s', 0, 1);
+      ctx.restore(); return;
+    }
+    if(!eggs) return;
     const ps=size*0.18, pw=size*0.82, fs=Math.max(9,size*0.09)+'px';
     ctx.save(); ctx.translate(bx,by);
     const anyReady=eggs.some(e=>now>=e.startTime+e.duration);
@@ -1507,8 +1628,9 @@ function stepMiniDragons(dt){
   game.placedHabitats.forEach(h=>{
     if(h.dragons.length===0) return;
     const lvs=h.dragonLevels||h.dragons.map(()=>1);
-    const totalGold=h.dragons.reduce((s,d,di)=>{return s+dragonGPM(d,lvs[di]||1);},0);
-    const goldMax=1000;
+    const hIdx=game.placedHabitats.indexOf(h);
+    const totalGold=h.dragons.reduce((s,d,di)=>{if(isDragonBreeding(hIdx,di)) return s; return s+dragonGPM(d,lvs[di]||1);},0);
+    const goldMax=habitatGoldMax(h);
     h.gold=(h.gold||0)+totalGold*(1/60)*dt;
     if(h.gold>goldMax) h.gold=goldMax;
   });
@@ -1647,6 +1769,7 @@ function drawPlacedHabitats(){
 
     // Draw dragons on habitat canvas so they scale with habitat
     h.dragons.forEach((d,di)=>{
+      if(isDragonBreeding(i,di)) return; // breeding - don't show in habitat
       const roam=getDragonRoam(i,di,d);
       roam._earthMode=(d==='earth');
       const phys=_miniDragonPhysList[di%3];
@@ -1697,7 +1820,7 @@ function drawPlacedHabitats(){
 
     // Coin bubble — collect for deferred drawing (on top of everything)
     if(h.dragons.length>0){
-      const goldMax=h.dragons.length*150;
+      const goldMax=habitatGoldMax(h);
       const gold=h.gold||0;
       const threshold=goldMax*0.2;
       if(gold>=threshold && threshold>0) _bubbles.push({bx:px+size*0.5, by:py+size*0.1, gold:Math.floor(gold), pct:gold/goldMax});
@@ -1828,6 +1951,10 @@ function isBuildingOverlap(gx,gy,excludeIdx=-1){
 function confirmBuildingPlacement2(){
   if(!game.placement||!game.placement.isBuilding) return;
   const {type,cost,gx,gy,moveIdx}=game.placement;
+  const _maxColsB=game.expansions?36:18;
+  if(gx<0||gy<0||gx+BUILDING_SIZE>_maxColsB||gy+BUILDING_SIZE>18){
+    showNotification("Can't place outside the island!",'error'); return;
+  }
   if(isBuildingOverlap(gx,gy,moveIdx!=null?moveIdx:-1)){
     showNotification('Cannot place here — overlaps another building or habitat!','error');
     return;
@@ -1876,7 +2003,8 @@ canvas.addEventListener('mousemove', e=>{
   const bsz=game.placement.isShrine?SHRINE_SIZE:game.placement.isBuilding?BUILDING_SIZE:HABITAT_SIZE;
   const halfPx=Math.round(bsz*cellSize/2);
   const {gx,gy}=screenToGrid(e.clientX-rect.left-halfPx, e.clientY-rect.top-halfPx);
-  game.placement.gx=Math.max(0,Math.min(18-bsz,gx));
+  const _maxC=game.expansions?36:18;
+  game.placement.gx=Math.max(0,Math.min(_maxC-bsz,gx));
   game.placement.gy=Math.max(0,Math.min(18-bsz,gy));
 });
 canvas.addEventListener('touchmove', e=>{
@@ -1887,7 +2015,8 @@ canvas.addEventListener('touchmove', e=>{
   const bsz=game.placement.isShrine?SHRINE_SIZE:game.placement.isBuilding?BUILDING_SIZE:HABITAT_SIZE;
   const halfPx=Math.round(bsz*cellSize/2);
   const {gx,gy}=screenToGrid(touch.clientX-rect.left-halfPx, touch.clientY-rect.top-halfPx);
-  game.placement.gx=Math.max(0,Math.min(18-bsz,gx));
+  const _maxCT=game.expansions?36:18;
+  game.placement.gx=Math.max(0,Math.min(_maxCT-bsz,gx));
   game.placement.gy=Math.max(0,Math.min(18-bsz,gy));
 },{passive:true});
 
@@ -1919,7 +2048,8 @@ canvas.addEventListener('click', e=>{
     const b=game.buildings[i];
     const px=left+b.gx*cellSize, py=top+b.gy*cellSize;
     const size=Math.round(BUILDING_SIZE*cellSize);
-    if(sx>=px&&sx<=px+size&&sy>=py&&sy<=py+size){ if(b.type==='hatchery'){ openHatcheryMenu(i); return; } if(b.type==='breeder'){ openBreederMenu(i); return; } openFarmMenu(i); return; }
+    const bMargin=size*0.15;
+    if(sx>=px+bMargin&&sx<=px+size-bMargin&&sy>=py+bMargin&&sy<=py+size-bMargin){ if(b.type==='hatchery'){ openHatcheryMenu(i); return; } if(b.type==='breeder'){ if(b.breedState&&b.breedState.done){ collectBreedEgg(i); return; } if(b.breedState&&!b.breedState.done){ showNotification('Breeding in progress!','error'); return; } openBreederMenu(i); return; } openFarmMenu(i); return; }
   }
 
   // Place pending dragon into clicked habitat
@@ -1948,8 +2078,10 @@ canvas.addEventListener('click', e=>{
   for(let i=game.placedHabitats.length-1;i>=0;i--){
     const h=game.placedHabitats[i];
     const px=left+h.gx*cellSize, py=top+h.gy*cellSize, size=HABITAT_SIZE*cellSize;
-    if(sx>=px&&sx<=px+size&&sy>=py&&sy<=py+size){
-      const goldMax=h.dragons.length*150;
+    // Use visual oval bounding box for click detection
+    const vr=habitatOutlineRect(px,py,size);
+    if(sx>=vr.x&&sx<=vr.x+vr.w&&sy>=vr.y&&sy<=vr.y+vr.h){
+      const goldMax=habitatGoldMax(h);
       const threshold=goldMax*0.2;
       if((h.gold||0)>=threshold && threshold>0){
         // Collect gold
@@ -1998,6 +2130,8 @@ function openHabitatMenu(idx){
       if(dragon==='grass') drawGrassDragon(cv.getContext('2d'), sz, sz, staticPhys);
       else if(dragon==='earth') drawEarthDragon(cv.getContext('2d'), sz, sz, staticPhys);
       else if(dragon==='poison') drawPoisonDragon(cv.getContext('2d'), sz, sz, staticPhys);
+      else if(dragon==='ice') drawIceDragon(cv.getContext('2d'), sz, sz, staticPhys);
+      else if(dragon==='bluefire') drawBluefireDragon(cv.getContext('2d'), sz, sz, staticPhys);
       else drawFireDragon(cv.getContext('2d'), sz, sz, staticPhys);
       imgBox.appendChild(cv);
 
@@ -2125,9 +2259,10 @@ function showGoldPopup(x, y, amount){
 
 // ── HOOK BUY BUTTON ───────────────────────────────────────────────
 // Dragon type → required habitat type mapping
-const DRAGON_HABITAT = { fire:'fire', grass:'grass', earth:'earth', poison:['grass','fire'] };
+const DRAGON_HABITAT = { fire:'fire', grass:'grass', earth:'earth', poison:['grass','fire'], ice:'grass', bluefire:'fire' };
 // Dragon costs
 const DRAGON_COST = { fire:250, grass:500, earth:1500 };
+const HATCH_TIMES = { fire:30000, grass:180000, earth:600000, poison:1800000, ice:900000, bluefire:1200000 };
 // Human-readable habitat names for error messages
 const HABITAT_NAMES = { fire:'Fire Habitat', grass:'Grass Habitat', earth:'Earth Habitat' };
 
@@ -2162,8 +2297,10 @@ document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
     if(isHabitat){
       const habitatType=isHabitat.dataset.habitat||'fire';
       if(game.placedHabitats.length>=maxHabitats()){ showNotification(`Reach level ${(Math.floor((game.level)/5)+1)*5} to unlock more habitats!`,'error'); return; }
-      if(game.gold<500){ showNotification('Not enough gold! (Need 500 🪙)', 'error'); return; }
-      startPlacement(habitatType,500);
+      const habitatCosts={fire:500,grass:750,earth:1250};
+      const hCost=habitatCosts[habitatType]||500;
+      if(game.gold<hCost){ showNotification(`Not enough gold! (Need ${hCost} 🪙)`, 'error'); return; }
+      startPlacement(habitatType,hCost);
     }
     if(isBuilding){
       const buildingType=isBuilding.dataset.building||'farm';
@@ -2186,7 +2323,7 @@ document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
       const max=maxFarms();
       if(curFarms>=max){
         const nextLv=curFarms>=2?9:3;
-        showNotification(`Reach level ${nextLv} to unlock more Farms!`,'error'); return;
+        showNotification(maxFarms()>=3&&curFarms>=3?'You have the maximum number of Farms!':'Reach level '+nextLv+' to unlock more Farms!','error'); return;
       }
       if(game.gold<cost){ showNotification(`Not enough gold! (Need ${cost} 🪙)`, 'error'); return; }
       game.placement={type:buildingType,cost,gx:Math.floor((18-BUILDING_SIZE)/2),gy:Math.floor((18-BUILDING_SIZE)/2),isBuilding:true};
@@ -2203,31 +2340,20 @@ document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
 
       if(game.gold<cost){ showNotification(`Not enough gold! (Need ${cost} 🪙)`, 'error'); return; }
 
-      // Only place in matching habitat type with space
-      const target=game.placedHabitats.find(h=>habitatTypes.includes(h.type) && h.dragons.length<3);
-      if(!target){
-        const hasWrongHabitat=game.placedHabitats.some(h=>h.type===habitatType);
-        if(game.placedHabitats.length===0 || !game.placedHabitats.some(h=>h.type===habitatType)){
-          showNotification(`You need a ${HABITAT_NAMES[habitatType]||'matching habitat'} first!`, 'error');
-        } else {
-          showNotification(`All ${HABITAT_NAMES[habitatType]||'matching habitats'} are full! (Max 3 dragons)`, 'error');
-        }
-        return;
-      }
       spendGold(cost);
       if(dragonType==='fire'||dragonType==='grass') addXP(20);
       closeShop();
-      const HATCH_TIMES={fire:30000,grass:180000,earth:600000,poison:1800000};
+      // HATCH_TIMES defined globally below
       const hatchery=(game.buildings||[]).find(b=>b.type==='hatchery');
       if(hatchery){
         if(!hatchery.eggs) hatchery.eggs=[];
         if(hatchery.eggs.length>=3){ showNotification('Hatchery is full! Hatch an egg first.','error'); return; }
         const tutInstant=_tutStep>=0&&_tutStep<TUT_STEPS.length;
-        hatchery.eggs.push({dragonType,habitatType,startTime:Date.now(),duration:tutInstant?0:HATCH_TIMES[dragonType]||30000});
+        hatchery.eggs.push({dragonType,habitatType:habitatTypeRaw,startTime:Date.now(),duration:tutInstant?0:HATCH_TIMES[dragonType]||30000});
         saveGame();
         showNotification('Egg added to Hatchery! 🥚','success');
       } else {
-        game.pendingDragon={type:dragonType,habitatType};
+        game.pendingDragon={type:dragonType,habitatType:habitatTypeRaw};
         showNotification('Choose a habitat for your dragon!','success');
       }
     }
@@ -2280,6 +2406,468 @@ function stepDragonPhysics(p, dt) {
   // Flip direction when close to edge
   if(Math.abs(p.sway - swayTarget) < 0.04 && Math.abs(p.swayV) < 0.05) p.swayDir *= -1;
 }
+
+function drawSideIceDragon(ctx, W, H, p) {
+  ctx.clearRect(0,0,W,H);
+  const s = Math.min(W,H) / 140;
+  ctx.save();
+  ctx.translate(W*0.5, H*0.52+p.bob);
+  ctx.scale(s, s);
+
+  const RED = '#e8311a', RDK = '#b5230f', GOLD = '#ffc814', INK = '#2a0e00', CREAM = '#fff2c0';
+  ctx.lineJoin='round'; ctx.lineCap='round'; ctx.strokeStyle=INK;
+
+  // shadow
+  ctx.fillStyle='rgba(0,0,0,0.15)';
+  ctx.beginPath(); ctx.ellipse(4,44,28,7,0,0,Math.PI*2); ctx.fill();
+
+  // TAIL
+  ctx.lineWidth=3;
+  ctx.beginPath();
+  ctx.moveTo(-30,8);
+  ctx.bezierCurveTo(-55,14,-62,24,-58,34);
+  ctx.bezierCurveTo(-54,40,-46,38,-46,32);
+  ctx.strokeStyle=RED; ctx.stroke();
+  ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.stroke();
+  // tail tip diamond
+  ctx.fillStyle=GOLD;
+  ctx.beginPath();
+  ctx.moveTo(-58,34); ctx.lineTo(-64,28); ctx.lineTo(-68,34); ctx.lineTo(-64,40); ctx.closePath();
+  ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.stroke();
+
+  // BACK WING (behind body, smaller)
+  const wa = p.wing * 0.8;
+  ctx.save();
+  ctx.translate(-8, -10);
+  ctx.fillStyle = GOLD;
+  ctx.beginPath();
+  ctx.moveTo(0,0);
+  ctx.lineTo(-16 + wa*8, -26 + wa*6);
+  ctx.quadraticCurveTo(-4 + wa*4, -20, 6 + wa*2, -32 + wa*4);
+  ctx.quadraticCurveTo(14 + wa*2, -22, 22, -18 + wa*3);
+  ctx.quadraticCurveTo(12, -4, 0, 0);
+  ctx.closePath();
+  ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.8; ctx.stroke();
+  // ribs
+  ctx.strokeStyle=INK; ctx.lineWidth=1.2;
+  [[-16+wa*8,-26+wa*6],[6+wa*2,-32+wa*4],[22,-18+wa*3]].forEach(([tx,ty])=>{
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(tx,ty); ctx.stroke();
+  });
+  ctx.restore();
+
+  // BODY
+  ctx.lineWidth=2.5;
+  ctx.beginPath(); ctx.ellipse(0, 10, 36, 24, -0.12, 0, Math.PI*2);
+  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  // belly
+  ctx.save();
+  ctx.beginPath(); ctx.ellipse(0,10,36,24,-0.12,0,Math.PI*2); ctx.clip();
+  ctx.beginPath(); ctx.ellipse(8,18,20,14,-0.1,0,Math.PI*2);
+  ctx.fillStyle=GOLD; ctx.fill();
+  ctx.restore();
+
+  // spine spikes
+  ctx.lineWidth=1.8;
+  [[-18,-8],[-4,-16],[10,-17],[22,-10]].forEach(([sx,sy])=>{
+    ctx.beginPath(); ctx.moveTo(sx-4,sy+4); ctx.lineTo(sx,sy-6); ctx.lineTo(sx+4,sy+4); ctx.closePath();
+    ctx.fillStyle=GOLD; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  });
+
+  // BACK LEG
+  ctx.lineWidth=2;
+  ctx.beginPath(); ctx.ellipse(-18,30,8,12,0.1,0,Math.PI*2);
+  ctx.fillStyle=RDK; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  ctx.fillStyle=CREAM;
+  [[-24,40],[-18,43],[-12,41]].forEach(([fx,fy])=>{
+    ctx.beginPath(); ctx.ellipse(fx,fy,2.5,3.5,0,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1; ctx.stroke();
+  });
+
+  // FRONT LEG
+  ctx.lineWidth=2;
+  ctx.beginPath(); ctx.ellipse(16,30,8,12,-0.1,0,Math.PI*2);
+  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  ctx.fillStyle=CREAM;
+  [[10,40],[16,43],[22,41]].forEach(([fx,fy])=>{
+    ctx.beginPath(); ctx.ellipse(fx,fy,2.5,3.5,0,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1; ctx.stroke();
+  });
+
+  // NECK
+  ctx.lineWidth=2.5;
+  ctx.beginPath();
+  ctx.moveTo(38,-4); ctx.bezierCurveTo(44,-16,46,-30,40,-34);
+  ctx.bezierCurveTo(34,-30,30,-22,24,-7);
+  ctx.closePath();
+  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+
+  // HEAD
+  ctx.lineWidth=2.5;
+  ctx.beginPath(); ctx.ellipse(48,-36,20,15,-0.1,0,Math.PI*2);
+  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(64,-32,10,8,0,0,Math.PI*2);
+  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  // mouth line
+  ctx.strokeStyle=INK; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(56,-28); ctx.quadraticCurveTo(64,-24,72,-28); ctx.stroke();
+  // nostril
+  ctx.fillStyle=RDK; ctx.beginPath(); ctx.ellipse(70,-30,1.8,1.4,0,0,Math.PI*2); ctx.fill();
+  // horn
+  ctx.fillStyle=GOLD; ctx.lineWidth=1.8;
+  ctx.beginPath(); ctx.moveTo(38,-46); ctx.bezierCurveTo(36,-54,40,-60,46,-58); ctx.bezierCurveTo(44,-54,42,-48,40,-44); ctx.closePath();
+  ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  // eye
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(40,-38,5.5,0,Math.PI*2); ctx.fill();
+  ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.fillStyle='#1a0a02'; ctx.beginPath(); ctx.arc(41,-37,2.8,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(39,-39,1.2,0,Math.PI*2); ctx.fill();
+
+  // FRONT WING (in front, larger, animated)
+  ctx.save();
+  ctx.translate(4, -8);
+  ctx.fillStyle=GOLD;
+  ctx.beginPath();
+  ctx.moveTo(0,0);
+  ctx.lineTo(-18 + p.wing*10, -30 + p.wing*8);
+  ctx.quadraticCurveTo(-4 + p.wing*4, -24, 8 + p.wing*3, -38 + p.wing*5);
+  ctx.quadraticCurveTo(18 + p.wing*3, -26, 28, -20 + p.wing*4);
+  ctx.quadraticCurveTo(16, -4, 0, 0);
+  ctx.closePath();
+  ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=2; ctx.stroke();
+  ctx.strokeStyle=INK; ctx.lineWidth=1.3;
+  [[-18+p.wing*10,-30+p.wing*8],[8+p.wing*3,-38+p.wing*5],[28,-20+p.wing*4]].forEach(([tx,ty])=>{
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(tx,ty); ctx.stroke();
+  });
+  ctx.restore();
+
+  ctx.restore();
+}
+
+function drawFireHabitat(ctx, W, H, t) {
+  ctx.clearRect(0,0,W,H);
+  const cx=W/2, cy=H/2+4;
+  const s=Math.min(W,H)/310;
+  const glow=(Math.sin(t*1.4)+1)/2;
+  const flicker=(Math.sin(t*4.8)*0.5+Math.sin(t*2.9)*0.5+1)/2;
+
+  ctx.save();
+  ctx.translate(cx,cy);
+  ctx.scale(s,s);
+
+  // Stone border ring
+  const borderG=ctx.createRadialGradient(0,0,82,0,0,108);
+  borderG.addColorStop(0,'#6a6258'); borderG.addColorStop(0.5,'#524e48'); borderG.addColorStop(1,'#2e2c28');
+  ctx.fillStyle=borderG;
+  ctx.beginPath(); ctx.ellipse(0,0,108,64,0,0,Math.PI*2); ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,0.55)'; ctx.lineWidth=2.5; ctx.stroke();
+  ctx.save();
+  ctx.beginPath(); ctx.ellipse(0,0,108,64,0,0,Math.PI*2); ctx.clip();
+  ctx.beginPath(); ctx.ellipse(0,0,96,56,0,0,Math.PI*2); ctx.fillStyle='#0e0a08'; ctx.fill();
+  for(let i=0;i<18;i++){
+    const a=(i/18)*Math.PI*2;
+    ctx.strokeStyle=`rgba(0,0,0,${0.2+Math.sin(i*1.7)*0.1})`; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(Math.cos(a)*88,Math.sin(a)*52); ctx.lineTo(Math.cos(a)*106,Math.sin(a)*62); ctx.stroke();
+  }
+  const ringHL=ctx.createRadialGradient(-40,-30,10,-20,-15,70);
+  ringHL.addColorStop(0,'rgba(180,165,145,0.35)'); ringHL.addColorStop(1,'transparent');
+  ctx.fillStyle=ringHL; ctx.beginPath(); ctx.ellipse(0,0,108,64,0,0,Math.PI*2); ctx.fill();
+  for(let i=0;i<22;i++){
+    const a=(i/22)*Math.PI*2, rx=94+Math.sin(i*3.1)*5, ry=56+Math.sin(i*2.3)*3;
+    const bx=Math.cos(a)*rx, by=Math.sin(a)*ry, light=0.5+Math.sin(i*1.9)*0.3;
+    ctx.fillStyle=`hsl(30,${12+light*8|0}%,${28+light*18|0}%)`;
+    ctx.beginPath(); ctx.ellipse(bx,by,7+Math.sin(i*2)*2,4+Math.sin(i*1.5)*1.5,a,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle='rgba(0,0,0,0.3)'; ctx.lineWidth=0.8; ctx.stroke();
+  }
+  ctx.restore();
+
+  // Base terrain
+  const baseG=ctx.createRadialGradient(0,-8,6,0,0,88);
+  baseG.addColorStop(0,'#2c2420'); baseG.addColorStop(0.6,'#1a1210'); baseG.addColorStop(1,'#0e0a08');
+  ctx.fillStyle=baseG; ctx.beginPath(); ctx.ellipse(0,0,96,56,0,0,Math.PI*2); ctx.fill();
+
+  // Lava cracks
+  function lavaLine(x1,y1,cpx,cpy,x2,y2,w){
+    ctx.strokeStyle=`rgba(255,${140+flicker*60|0},0,0.9)`; ctx.lineWidth=w; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.quadraticCurveTo(cpx,cpy,x2,y2); ctx.stroke();
+    ctx.strokeStyle=`rgba(255,255,${150+flicker*80|0},${0.6+flicker*0.3})`; ctx.lineWidth=w*0.35;
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.quadraticCurveTo(cpx,cpy,x2,y2); ctx.stroke();
+  }
+  lavaLine(-38,-8,-10,-20,28,5,4.5); lavaLine(28,5,50,-10,63,10,3.5);
+  lavaLine(-38,-8,-55,8,-58,18,3); lavaLine(28,5,18,22,-10,30,4);
+  lavaLine(-10,-20,10,-32,16,-28,2.5); lavaLine(-58,18,-28,28,-10,30,3);
+  lavaLine(-10,30,18,40,33,30,3);
+  const cracksGlow=ctx.createRadialGradient(0,0,10,0,0,68);
+  cracksGlow.addColorStop(0,`rgba(255,80,0,${0.12+glow*0.1})`); cracksGlow.addColorStop(1,'transparent');
+  ctx.fillStyle=cracksGlow; ctx.beginPath(); ctx.ellipse(0,0,96,56,0,0,Math.PI*2); ctx.fill();
+
+  // Volcanoes
+  function volcano(vx,vy,vr,vh,seed){
+    const ambG=ctx.createRadialGradient(vx,vy,2,vx,vy,vr*2.2);
+    ambG.addColorStop(0,`rgba(255,80,0,${0.18+glow*0.12})`); ambG.addColorStop(1,'transparent');
+    ctx.fillStyle=ambG; ctx.beginPath(); ctx.ellipse(vx,vy,vr*2.2,vr*1.1,0,0,Math.PI*2); ctx.fill();
+    const cG=ctx.createLinearGradient(vx-vr,vy,vx+vr,vy);
+    cG.addColorStop(0,'#2a2218'); cG.addColorStop(0.5,'#3e3428'); cG.addColorStop(1,'#28201a');
+    ctx.fillStyle=cG;
+    ctx.beginPath();
+    ctx.moveTo(vx-vr,vy); ctx.quadraticCurveTo(vx-vr*0.6,vy-vh*0.5,vx-vr*0.25,vy-vh);
+    ctx.quadraticCurveTo(vx,vy-vh-4,vx+vr*0.25,vy-vh); ctx.quadraticCurveTo(vx+vr*0.6,vy-vh*0.5,vx+vr,vy);
+    ctx.quadraticCurveTo(vx,vy+vr*0.22,vx-vr,vy); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle='rgba(0,0,0,0.5)'; ctx.lineWidth=1.2; ctx.stroke();
+    const crG=ctx.createRadialGradient(vx,vy-vh,1,vx,vy-vh,vr*0.55);
+    crG.addColorStop(0,`rgba(255,255,${100+flicker*80|0},0.95)`);
+    crG.addColorStop(0.3,`rgba(255,${130+flicker*70|0},0,0.9)`);
+    crG.addColorStop(0.7,'rgba(180,40,0,0.6)'); crG.addColorStop(1,'transparent');
+    ctx.fillStyle=crG; ctx.beginPath(); ctx.ellipse(vx,vy-vh,vr*0.55,vr*0.3,0,0,Math.PI*2); ctx.fill();
+    for(let i=0;i<5;i++){
+      const phase=(t*(1.4+i*0.3)+seed+i*1.27)%1.8/1.8;
+      const px2=vx+Math.sin(i*2.1+t*0.8)*vr*0.35*(0.3+phase*0.7);
+      const py2=vy-vh-phase*vh*1.1;
+      const alpha=phase<0.3?phase/0.3:(1-phase)*1.4;
+      const sz=(1.5+i*0.4)*(1-phase*0.6);
+      if(alpha<=0||sz<=0) continue;
+      const pG=ctx.createRadialGradient(px2,py2,0,px2,py2,sz*2.5);
+      pG.addColorStop(0,`rgba(255,255,${150+flicker*80|0},${Math.min(1,alpha)})`);
+      pG.addColorStop(0.4,`rgba(255,${110+flicker*60|0},0,${Math.min(1,alpha)*0.8})`);
+      pG.addColorStop(1,'transparent');
+      ctx.fillStyle=pG; ctx.beginPath(); ctx.arc(px2,py2,sz*2.5,0,Math.PI*2); ctx.fill();
+    }
+  }
+  volcano(-40,-22,22,28,0.0); volcano(44,-18,18,24,1.4);
+  volcano(-8,16,16,20,2.8); volcano(62,6,14,16,0.7);
+
+  ctx.restore();
+}
+
+// Draws the side dragon at a specific canvas position without clearRect (for habitats)
+
+function drawSideBluefireDragon(ctx, W, H, p) {
+  ctx.clearRect(0,0,W,H);
+  const s = Math.min(W,H) / 140;
+  ctx.save();
+  ctx.translate(W*0.5, H*0.52+p.bob);
+  ctx.scale(s, s);
+
+  const RED = '#e8311a', RDK = '#b5230f', GOLD = '#ffc814', INK = '#2a0e00', CREAM = '#fff2c0';
+  ctx.lineJoin='round'; ctx.lineCap='round'; ctx.strokeStyle=INK;
+
+  // shadow
+  ctx.fillStyle='rgba(0,0,0,0.15)';
+  ctx.beginPath(); ctx.ellipse(4,44,28,7,0,0,Math.PI*2); ctx.fill();
+
+  // TAIL
+  ctx.lineWidth=3;
+  ctx.beginPath();
+  ctx.moveTo(-30,8);
+  ctx.bezierCurveTo(-55,14,-62,24,-58,34);
+  ctx.bezierCurveTo(-54,40,-46,38,-46,32);
+  ctx.strokeStyle=RED; ctx.stroke();
+  ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.stroke();
+  // tail tip diamond
+  ctx.fillStyle=GOLD;
+  ctx.beginPath();
+  ctx.moveTo(-58,34); ctx.lineTo(-64,28); ctx.lineTo(-68,34); ctx.lineTo(-64,40); ctx.closePath();
+  ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.stroke();
+
+  // BACK WING (behind body, smaller)
+  const wa = p.wing * 0.8;
+  ctx.save();
+  ctx.translate(-8, -10);
+  ctx.fillStyle = GOLD;
+  ctx.beginPath();
+  ctx.moveTo(0,0);
+  ctx.lineTo(-16 + wa*8, -26 + wa*6);
+  ctx.quadraticCurveTo(-4 + wa*4, -20, 6 + wa*2, -32 + wa*4);
+  ctx.quadraticCurveTo(14 + wa*2, -22, 22, -18 + wa*3);
+  ctx.quadraticCurveTo(12, -4, 0, 0);
+  ctx.closePath();
+  ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.8; ctx.stroke();
+  // ribs
+  ctx.strokeStyle=INK; ctx.lineWidth=1.2;
+  [[-16+wa*8,-26+wa*6],[6+wa*2,-32+wa*4],[22,-18+wa*3]].forEach(([tx,ty])=>{
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(tx,ty); ctx.stroke();
+  });
+  ctx.restore();
+
+  // BODY
+  ctx.lineWidth=2.5;
+  ctx.beginPath(); ctx.ellipse(0, 10, 36, 24, -0.12, 0, Math.PI*2);
+  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  // belly
+  ctx.save();
+  ctx.beginPath(); ctx.ellipse(0,10,36,24,-0.12,0,Math.PI*2); ctx.clip();
+  ctx.beginPath(); ctx.ellipse(8,18,20,14,-0.1,0,Math.PI*2);
+  ctx.fillStyle=GOLD; ctx.fill();
+  ctx.restore();
+
+  // spine spikes
+  ctx.lineWidth=1.8;
+  [[-18,-8],[-4,-16],[10,-17],[22,-10]].forEach(([sx,sy])=>{
+    ctx.beginPath(); ctx.moveTo(sx-4,sy+4); ctx.lineTo(sx,sy-6); ctx.lineTo(sx+4,sy+4); ctx.closePath();
+    ctx.fillStyle=GOLD; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  });
+
+  // BACK LEG
+  ctx.lineWidth=2;
+  ctx.beginPath(); ctx.ellipse(-18,30,8,12,0.1,0,Math.PI*2);
+  ctx.fillStyle=RDK; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  ctx.fillStyle=CREAM;
+  [[-24,40],[-18,43],[-12,41]].forEach(([fx,fy])=>{
+    ctx.beginPath(); ctx.ellipse(fx,fy,2.5,3.5,0,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1; ctx.stroke();
+  });
+
+  // FRONT LEG
+  ctx.lineWidth=2;
+  ctx.beginPath(); ctx.ellipse(16,30,8,12,-0.1,0,Math.PI*2);
+  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  ctx.fillStyle=CREAM;
+  [[10,40],[16,43],[22,41]].forEach(([fx,fy])=>{
+    ctx.beginPath(); ctx.ellipse(fx,fy,2.5,3.5,0,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1; ctx.stroke();
+  });
+
+  // NECK
+  ctx.lineWidth=2.5;
+  ctx.beginPath();
+  ctx.moveTo(38,-4); ctx.bezierCurveTo(44,-16,46,-30,40,-34);
+  ctx.bezierCurveTo(34,-30,30,-22,24,-7);
+  ctx.closePath();
+  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+
+  // HEAD
+  ctx.lineWidth=2.5;
+  ctx.beginPath(); ctx.ellipse(48,-36,20,15,-0.1,0,Math.PI*2);
+  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(64,-32,10,8,0,0,Math.PI*2);
+  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  // mouth line
+  ctx.strokeStyle=INK; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(56,-28); ctx.quadraticCurveTo(64,-24,72,-28); ctx.stroke();
+  // nostril
+  ctx.fillStyle=RDK; ctx.beginPath(); ctx.ellipse(70,-30,1.8,1.4,0,0,Math.PI*2); ctx.fill();
+  // horn
+  ctx.fillStyle=GOLD; ctx.lineWidth=1.8;
+  ctx.beginPath(); ctx.moveTo(38,-46); ctx.bezierCurveTo(36,-54,40,-60,46,-58); ctx.bezierCurveTo(44,-54,42,-48,40,-44); ctx.closePath();
+  ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  // eye
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(40,-38,5.5,0,Math.PI*2); ctx.fill();
+  ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.fillStyle='#1a0a02'; ctx.beginPath(); ctx.arc(41,-37,2.8,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(39,-39,1.2,0,Math.PI*2); ctx.fill();
+
+  // FRONT WING (in front, larger, animated)
+  ctx.save();
+  ctx.translate(4, -8);
+  ctx.fillStyle=GOLD;
+  ctx.beginPath();
+  ctx.moveTo(0,0);
+  ctx.lineTo(-18 + p.wing*10, -30 + p.wing*8);
+  ctx.quadraticCurveTo(-4 + p.wing*4, -24, 8 + p.wing*3, -38 + p.wing*5);
+  ctx.quadraticCurveTo(18 + p.wing*3, -26, 28, -20 + p.wing*4);
+  ctx.quadraticCurveTo(16, -4, 0, 0);
+  ctx.closePath();
+  ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=2; ctx.stroke();
+  ctx.strokeStyle=INK; ctx.lineWidth=1.3;
+  [[-18+p.wing*10,-30+p.wing*8],[8+p.wing*3,-38+p.wing*5],[28,-20+p.wing*4]].forEach(([tx,ty])=>{
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(tx,ty); ctx.stroke();
+  });
+  ctx.restore();
+
+  ctx.restore();
+}
+
+function drawFireHabitat(ctx, W, H, t) {
+  ctx.clearRect(0,0,W,H);
+  const cx=W/2, cy=H/2+4;
+  const s=Math.min(W,H)/310;
+  const glow=(Math.sin(t*1.4)+1)/2;
+  const flicker=(Math.sin(t*4.8)*0.5+Math.sin(t*2.9)*0.5+1)/2;
+
+  ctx.save();
+  ctx.translate(cx,cy);
+  ctx.scale(s,s);
+
+  // Stone border ring
+  const borderG=ctx.createRadialGradient(0,0,82,0,0,108);
+  borderG.addColorStop(0,'#6a6258'); borderG.addColorStop(0.5,'#524e48'); borderG.addColorStop(1,'#2e2c28');
+  ctx.fillStyle=borderG;
+  ctx.beginPath(); ctx.ellipse(0,0,108,64,0,0,Math.PI*2); ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,0.55)'; ctx.lineWidth=2.5; ctx.stroke();
+  ctx.save();
+  ctx.beginPath(); ctx.ellipse(0,0,108,64,0,0,Math.PI*2); ctx.clip();
+  ctx.beginPath(); ctx.ellipse(0,0,96,56,0,0,Math.PI*2); ctx.fillStyle='#0e0a08'; ctx.fill();
+  for(let i=0;i<18;i++){
+    const a=(i/18)*Math.PI*2;
+    ctx.strokeStyle=`rgba(0,0,0,${0.2+Math.sin(i*1.7)*0.1})`; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(Math.cos(a)*88,Math.sin(a)*52); ctx.lineTo(Math.cos(a)*106,Math.sin(a)*62); ctx.stroke();
+  }
+  const ringHL=ctx.createRadialGradient(-40,-30,10,-20,-15,70);
+  ringHL.addColorStop(0,'rgba(180,165,145,0.35)'); ringHL.addColorStop(1,'transparent');
+  ctx.fillStyle=ringHL; ctx.beginPath(); ctx.ellipse(0,0,108,64,0,0,Math.PI*2); ctx.fill();
+  for(let i=0;i<22;i++){
+    const a=(i/22)*Math.PI*2, rx=94+Math.sin(i*3.1)*5, ry=56+Math.sin(i*2.3)*3;
+    const bx=Math.cos(a)*rx, by=Math.sin(a)*ry, light=0.5+Math.sin(i*1.9)*0.3;
+    ctx.fillStyle=`hsl(30,${12+light*8|0}%,${28+light*18|0}%)`;
+    ctx.beginPath(); ctx.ellipse(bx,by,7+Math.sin(i*2)*2,4+Math.sin(i*1.5)*1.5,a,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle='rgba(0,0,0,0.3)'; ctx.lineWidth=0.8; ctx.stroke();
+  }
+  ctx.restore();
+
+  // Base terrain
+  const baseG=ctx.createRadialGradient(0,-8,6,0,0,88);
+  baseG.addColorStop(0,'#2c2420'); baseG.addColorStop(0.6,'#1a1210'); baseG.addColorStop(1,'#0e0a08');
+  ctx.fillStyle=baseG; ctx.beginPath(); ctx.ellipse(0,0,96,56,0,0,Math.PI*2); ctx.fill();
+
+  // Lava cracks
+  function lavaLine(x1,y1,cpx,cpy,x2,y2,w){
+    ctx.strokeStyle=`rgba(255,${140+flicker*60|0},0,0.9)`; ctx.lineWidth=w; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.quadraticCurveTo(cpx,cpy,x2,y2); ctx.stroke();
+    ctx.strokeStyle=`rgba(255,255,${150+flicker*80|0},${0.6+flicker*0.3})`; ctx.lineWidth=w*0.35;
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.quadraticCurveTo(cpx,cpy,x2,y2); ctx.stroke();
+  }
+  lavaLine(-38,-8,-10,-20,28,5,4.5); lavaLine(28,5,50,-10,63,10,3.5);
+  lavaLine(-38,-8,-55,8,-58,18,3); lavaLine(28,5,18,22,-10,30,4);
+  lavaLine(-10,-20,10,-32,16,-28,2.5); lavaLine(-58,18,-28,28,-10,30,3);
+  lavaLine(-10,30,18,40,33,30,3);
+  const cracksGlow=ctx.createRadialGradient(0,0,10,0,0,68);
+  cracksGlow.addColorStop(0,`rgba(255,80,0,${0.12+glow*0.1})`); cracksGlow.addColorStop(1,'transparent');
+  ctx.fillStyle=cracksGlow; ctx.beginPath(); ctx.ellipse(0,0,96,56,0,0,Math.PI*2); ctx.fill();
+
+  // Volcanoes
+  function volcano(vx,vy,vr,vh,seed){
+    const ambG=ctx.createRadialGradient(vx,vy,2,vx,vy,vr*2.2);
+    ambG.addColorStop(0,`rgba(255,80,0,${0.18+glow*0.12})`); ambG.addColorStop(1,'transparent');
+    ctx.fillStyle=ambG; ctx.beginPath(); ctx.ellipse(vx,vy,vr*2.2,vr*1.1,0,0,Math.PI*2); ctx.fill();
+    const cG=ctx.createLinearGradient(vx-vr,vy,vx+vr,vy);
+    cG.addColorStop(0,'#2a2218'); cG.addColorStop(0.5,'#3e3428'); cG.addColorStop(1,'#28201a');
+    ctx.fillStyle=cG;
+    ctx.beginPath();
+    ctx.moveTo(vx-vr,vy); ctx.quadraticCurveTo(vx-vr*0.6,vy-vh*0.5,vx-vr*0.25,vy-vh);
+    ctx.quadraticCurveTo(vx,vy-vh-4,vx+vr*0.25,vy-vh); ctx.quadraticCurveTo(vx+vr*0.6,vy-vh*0.5,vx+vr,vy);
+    ctx.quadraticCurveTo(vx,vy+vr*0.22,vx-vr,vy); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle='rgba(0,0,0,0.5)'; ctx.lineWidth=1.2; ctx.stroke();
+    const crG=ctx.createRadialGradient(vx,vy-vh,1,vx,vy-vh,vr*0.55);
+    crG.addColorStop(0,`rgba(255,255,${100+flicker*80|0},0.95)`);
+    crG.addColorStop(0.3,`rgba(255,${130+flicker*70|0},0,0.9)`);
+    crG.addColorStop(0.7,'rgba(180,40,0,0.6)'); crG.addColorStop(1,'transparent');
+    ctx.fillStyle=crG; ctx.beginPath(); ctx.ellipse(vx,vy-vh,vr*0.55,vr*0.3,0,0,Math.PI*2); ctx.fill();
+    for(let i=0;i<5;i++){
+      const phase=(t*(1.4+i*0.3)+seed+i*1.27)%1.8/1.8;
+      const px2=vx+Math.sin(i*2.1+t*0.8)*vr*0.35*(0.3+phase*0.7);
+      const py2=vy-vh-phase*vh*1.1;
+      const alpha=phase<0.3?phase/0.3:(1-phase)*1.4;
+      const sz=(1.5+i*0.4)*(1-phase*0.6);
+      if(alpha<=0||sz<=0) continue;
+      const pG=ctx.createRadialGradient(px2,py2,0,px2,py2,sz*2.5);
+      pG.addColorStop(0,`rgba(255,255,${150+flicker*80|0},${Math.min(1,alpha)})`);
+      pG.addColorStop(0.4,`rgba(255,${110+flicker*60|0},0,${Math.min(1,alpha)*0.8})`);
+      pG.addColorStop(1,'transparent');
+      ctx.fillStyle=pG; ctx.beginPath(); ctx.arc(px2,py2,sz*2.5,0,Math.PI*2); ctx.fill();
+    }
+  }
+  volcano(-40,-22,22,28,0.0); volcano(44,-18,18,24,1.4);
+  volcano(-8,16,16,20,2.8); volcano(62,6,14,16,0.7);
+
+  ctx.restore();
+}
+
+// Draws the side dragon at a specific canvas position without clearRect (for habitats)
 
 function drawSidePoisonDragon(ctx, W, H, p) {
   ctx.clearRect(0,0,W,H);
@@ -2998,6 +3586,280 @@ function drawFireHabitat(ctx, W, H, t) {
   ctx.restore();
 }
 
+
+function drawIceDragon(ctx, W, H, p) {
+  ctx.clearRect(0,0,W,H);
+  const cx = W/2, cy = H/2 + p.bob;
+  const s = Math.min(W,H) / 260;
+  const t = p.t;
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.scale(s, s);
+  const RED='#c8e8ff',RED_DK='#88b8e0',GOLD='#e0f4ff',INK='#1a2a3a',CREAM='#ffffff';
+  ctx.lineJoin='round'; ctx.lineCap='round'; ctx.strokeStyle=INK;
+  const breathe=Math.sin(t*1.4)*0.012;
+  ctx.scale(1+breathe,1+breathe);
+  ctx.fillStyle='rgba(0,0,0,0.15)';
+  ctx.beginPath(); ctx.ellipse(0,58,40,8,0,0,Math.PI*2); ctx.fill();
+  const flap=p.wing;
+  [-1,1].forEach(side=>{
+    const wx=side*46,wy=-18;
+    const flapY=(f)=>flap*f*38;
+    const tips=[{x:wx+side*20,y:wy-40+flapY(0.5)},{x:wx+side*36,y:wy-26+flapY(0.8)},{x:wx+side*42,y:wy-4+flapY(0.9)},{x:wx+side*34,y:wy+18+flapY(0.7)}];
+    const root={x:wx*0.58,y:wy+4};
+    ctx.beginPath(); ctx.moveTo(root.x,root.y); ctx.lineTo(tips[0].x,tips[0].y);
+    for(let i=0;i<tips.length-1;i++){const a=tips[i],b=tips[i+1];ctx.quadraticCurveTo((a.x+b.x)/2,(a.y+b.y)/2,b.x,b.y);}
+    ctx.quadraticCurveTo(wx+side*20,wy+26+flapY(0.4),root.x,root.y); ctx.closePath();
+    ctx.fillStyle=GOLD; ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=3; ctx.stroke();
+    ctx.strokeStyle=INK; ctx.lineWidth=2;
+    tips.forEach(tip=>{ctx.beginPath();ctx.moveTo(root.x,root.y);ctx.lineTo(tip.x,tip.y);ctx.stroke();});
+  });
+  ctx.beginPath(); ctx.moveTo(20,14); ctx.bezierCurveTo(40,55,60,65,70,55); ctx.bezierCurveTo(80,46,72,34,58,36); ctx.bezierCurveTo(50,37,46,44,50,50); ctx.bezierCurveTo(48,48,42,42,30,38); ctx.closePath();
+  ctx.fillStyle=RED_DK; ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=3; ctx.stroke();
+  ctx.lineWidth=2;
+  [[38,44],[50,50],[60,48],[68,42]].forEach(([sx,sy])=>{ctx.beginPath();ctx.moveTo(sx-4,sy);ctx.lineTo(sx,sy-12);ctx.lineTo(sx+4,sy);ctx.closePath();ctx.fillStyle=GOLD;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();});
+  [[-28,40],[28,40]].forEach(([lx,ly],side)=>{
+    ctx.beginPath();ctx.ellipse(lx,ly,13,18,side===0?-0.2:0.2,0,Math.PI*2);ctx.fillStyle=RED_DK;ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2.5;ctx.stroke();
+    ctx.beginPath();ctx.ellipse(lx+(side===0?-8:8),ly+28,10,14,side===0?-0.3:0.3,0,Math.PI*2);ctx.fillStyle=RED_DK;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
+    ctx.fillStyle=CREAM;
+    for(let cv=0;cv<3;cv++){const cx2=lx+(side===0?-8:8)-8+(cv*8)+(side===0?-2:2);ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(cx2,ly+42,3,5,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle=INK;ctx.stroke();}
+  });
+  ctx.lineWidth=3.5;
+  ctx.beginPath();ctx.ellipse(0,14,52,44,0,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
+  ctx.save();
+  ctx.beginPath();ctx.ellipse(0,14,52,44,0,0,Math.PI*2);ctx.clip();
+  ctx.beginPath();ctx.ellipse(0,22,30,28,0,0,Math.PI*2);ctx.fillStyle=GOLD;ctx.fill();
+  ctx.strokeStyle='rgba(180,100,0,0.35)';ctx.lineWidth=2.2;
+  [-6,4,14,24,33].forEach(sy=>{const hw=Math.sqrt(Math.max(0,900-(sy-22)*(sy-22)))*0.95;ctx.beginPath();ctx.moveTo(-hw,sy);ctx.quadraticCurveTo(0,sy+5,hw,sy);ctx.stroke();});
+  ctx.restore();
+  [[-44,10],[44,10]].forEach(([ax,ay],side)=>{
+    ctx.beginPath();ctx.ellipse(ax,ay+10,10,16,side===0?0.3:-0.3,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2.5;ctx.stroke();
+    const fax=ax+(side===0?-6:6);
+    ctx.beginPath();ctx.ellipse(fax,ay+34,8,13,side===0?0.5:-0.5,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
+    ctx.fillStyle=CREAM;
+    for(let cv=0;cv<3;cv++){const cx2=fax-6+(cv*6);ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(cx2,ay+48,2.8,4.5,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle=INK;ctx.stroke();}
+  });
+  ctx.lineWidth=3.5;
+  ctx.beginPath();ctx.ellipse(0,-34,22,20,0,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
+  ctx.beginPath();ctx.ellipse(0,-68,36,32,0,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
+  ctx.beginPath();ctx.ellipse(0,-54,22,16,0,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
+  ctx.beginPath();ctx.ellipse(0,-54,18,11,-0.05,0,Math.PI);ctx.fillStyle=RED_DK;ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2.2;ctx.stroke();
+  ctx.fillStyle=CREAM;
+  [[-13,6],[-4,9],[5,10],[13,8]].forEach(([tx,ty])=>{ctx.beginPath();ctx.moveTo(tx-2.2,-48+ty);ctx.lineTo(tx,-43+ty);ctx.lineTo(tx+2.2,-48+ty);ctx.closePath();ctx.fill();});
+  ctx.lineWidth=2.5;
+  [[-16,-96,-0.45],[16,-96,0.45]].forEach(([hx,hy,rot])=>{
+    ctx.save();ctx.translate(hx,hy);ctx.rotate(rot);
+    ctx.beginPath();ctx.moveTo(-5,4);ctx.quadraticCurveTo(-7,-12,0,-24);ctx.quadraticCurveTo(7,-12,5,4);ctx.closePath();
+    ctx.fillStyle=GOLD;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();ctx.restore();
+  });
+  [[-15,-75],[15,-75]].forEach(([ex,ey])=>{
+    ctx.beginPath();ctx.ellipse(ex,ey,11,11,0,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2.5;ctx.stroke();
+    ctx.beginPath();ctx.ellipse(ex+1,ey+1,5,5.6,0,0,Math.PI*2);ctx.fillStyle='#2255cc';ctx.fill();
+    ctx.beginPath();ctx.ellipse(ex+1,ey+1,2.4,2.6,0,0,Math.PI*2);ctx.fillStyle='rgba(200,230,255,0.8)';ctx.fill();
+  });
+  [[-7,-55],[7,-55]].forEach(([nx,ny])=>{ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(nx,ny,2.4,1.8,0,0,Math.PI*2);ctx.fillStyle=RED_DK;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();});
+
+  // ── ICE & SNOW DETAILS ──────────────────────────────────────────
+  // Frost cracks on body
+  ctx.strokeStyle='rgba(180,230,255,0.5)'; ctx.lineWidth=1.2;
+  [[-18,8,-8,-12],[10,-5,22,15],[-5,-20,8,-8],[-22,-10,-12,5]].forEach(([x1,y1,x2,y2])=>{
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+  });
+
+  // Snowflake pattern on belly
+  const sf=(cx2,cy2,r2,a2)=>{
+    for(let i=0;i<6;i++){
+      const ang=a2+i*Math.PI/3;
+      ctx.beginPath(); ctx.moveTo(cx2,cy2);
+      ctx.lineTo(cx2+Math.cos(ang)*r2,cy2+Math.sin(ang)*r2); ctx.stroke();
+      // Cross bars
+      const mx=cx2+Math.cos(ang)*r2*0.5, my=cy2+Math.sin(ang)*r2*0.5;
+      const perp=ang+Math.PI/2;
+      ctx.beginPath(); ctx.moveTo(mx+Math.cos(perp)*r2*0.25,my+Math.sin(perp)*r2*0.25);
+      ctx.lineTo(mx-Math.cos(perp)*r2*0.25,my-Math.sin(perp)*r2*0.25); ctx.stroke();
+    }
+  };
+  ctx.strokeStyle='rgba(220,240,255,0.6)'; ctx.lineWidth=1;
+  sf(0,28,12,p.t*0.3);
+  ctx.strokeStyle='rgba(200,230,255,0.4)'; ctx.lineWidth=0.8;
+  sf(-18,15,7,p.t*0.3+1);
+  sf(18,18,7,p.t*0.3+2);
+
+  // Ice crystals on horns (spiky tips)
+  [[-16,-96],[-6,-72],[6,-72],[16,-96]].forEach(([cx3,cy3],idx)=>{
+    const sz=4+Math.sin(p.t*1.5+idx)*0.5;
+    ctx.fillStyle='rgba(220,245,255,0.85)';
+    ctx.strokeStyle='rgba(160,210,240,0.7)'; ctx.lineWidth=0.8;
+    for(let sp=0;sp<4;sp++){
+      const a=sp*Math.PI/2+0.4;
+      ctx.beginPath();
+      ctx.moveTo(cx3,cy3);
+      ctx.lineTo(cx3+Math.cos(a)*sz,cy3+Math.sin(a)*sz);
+      ctx.lineTo(cx3+Math.cos(a+0.4)*sz*0.4,cy3+Math.sin(a+0.4)*sz*0.4);
+      ctx.closePath(); ctx.fill(); ctx.stroke();
+    }
+  });
+
+  // Floating snow/frost particles
+  for(let pi=0;pi<6;pi++){
+    const ang=p.t*0.6+pi*1.047;
+    const rad=45+Math.sin(p.t*0.8+pi)*10;
+    const sx=Math.cos(ang)*rad, sy=Math.sin(ang)*rad*0.55-10;
+    const sal=0.3+Math.sin(p.t*1.8+pi)*0.25;
+    ctx.fillStyle=`rgba(220,245,255,${sal})`;
+    ctx.beginPath(); ctx.arc(sx,sy,1.8+Math.sin(p.t+pi),0,Math.PI*2); ctx.fill();
+    // mini snowflake cross
+    ctx.strokeStyle=`rgba(200,235,255,${sal*0.7})`;
+    ctx.lineWidth=0.8;
+    ctx.beginPath(); ctx.moveTo(sx-2.5,sy); ctx.lineTo(sx+2.5,sy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(sx,sy-2.5); ctx.lineTo(sx,sy+2.5); ctx.stroke();
+  }
+
+  // Cold breath wisps from mouth
+  const breathAng=[-0.3,0,0.3];
+  breathAng.forEach((ang,i)=>{
+    const bx=-42+Math.sin(p.t*1.2+i)*3, by=-52;
+    const len=8+Math.sin(p.t*1.5+i)*4;
+    const ba=0.25+Math.sin(p.t+i)*0.15;
+    ctx.strokeStyle=`rgba(200,235,255,${ba})`;
+    ctx.lineWidth=2-i*0.5;
+    ctx.beginPath();
+    ctx.moveTo(bx,by);
+    ctx.bezierCurveTo(bx+Math.cos(ang)*len,by-len*0.5,bx+Math.cos(ang)*len*1.8,by-len,bx+Math.cos(ang)*len*2,by-len*1.5);
+    ctx.stroke();
+  });
+
+  // ── ICE DETAILS ─────────────────────────────────────────────
+  // Frost cracks on body
+  ctx.save();
+  ctx.strokeStyle='rgba(180,220,255,0.6)'; ctx.lineWidth=1.2;
+  [[-20,-5,-10,10],[5,-15,18,0],[-8,15,5,5],[15,-5,8,18]].forEach(([x1,y1,x2,y2])=>{
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+  });
+  // Snowflake arms on belly
+  [[0,22],[-15,30],[15,30]].forEach(([sx,sy])=>{
+    ctx.strokeStyle='rgba(255,255,255,0.55)'; ctx.lineWidth=1;
+    for(let a=0;a<6;a++){
+      const ang=a*Math.PI/3;
+      ctx.beginPath(); ctx.moveTo(sx,sy); ctx.lineTo(sx+Math.cos(ang)*7,sy+Math.sin(ang)*7); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(sx+Math.cos(ang)*4,sy+Math.sin(ang)*4);
+      ctx.lineTo(sx+Math.cos(ang+0.6)*6.5,sy+Math.sin(ang+0.6)*6.5); ctx.stroke();
+    }
+  });
+  ctx.restore();
+
+  // Floating ice crystals / snow particles
+  const tnow=p.t;
+  for(let i=0;i<6;i++){
+    const a=tnow*0.5+i*1.047;
+    const pr=42+Math.sin(tnow*0.8+i)*10;
+    const px2=Math.cos(a)*pr, py2=Math.sin(a)*pr*0.6-10;
+    const pa=0.3+Math.abs(Math.sin(tnow*1.2+i))*0.55;
+    ctx.fillStyle=`rgba(220,240,255,${pa})`;
+    ctx.save(); ctx.translate(px2,py2); ctx.rotate(tnow*0.4+i);
+    const sz=2+Math.sin(tnow+i)*0.8;
+    // tiny 6-arm snowflake
+    for(let arm=0;arm<6;arm++){
+      const ang=arm*Math.PI/3;
+      ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(Math.cos(ang)*sz*2.5,Math.sin(ang)*sz*2.5);
+      ctx.strokeStyle=`rgba(200,230,255,${pa})`; ctx.lineWidth=0.8; ctx.stroke();
+    }
+    ctx.fillStyle=`rgba(255,255,255,${pa+0.1})`;
+    ctx.beginPath(); ctx.arc(0,0,sz*0.6,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+  // Frost breath / mist from mouth
+  const puff=Math.abs(Math.sin(tnow*0.8));
+  ctx.fillStyle=`rgba(200,230,255,${0.18+puff*0.14})`;
+  ctx.beginPath(); ctx.ellipse(5,-46-puff*4, 9+puff*5, 5+puff*3, -0.1, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(-5,-42-puff*3, 7+puff*4, 4+puff*2, -0.2, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(-13,-39-puff*2, 5+puff*3, 3+puff*2, -0.3, 0, Math.PI*2); ctx.fill();
+  ctx.restore();
+}
+
+
+// ══════════════════════════════════════════════════════
+// GRASS DRAGON — flying side-view, green & white
+// ══════════════════════════════════════════════════════
+
+function drawBluefireDragon(ctx, W, H, p) {
+  ctx.clearRect(0,0,W,H);
+  const cx = W/2, cy = H/2 + p.bob;
+  const s = Math.min(W,H) / 260;
+  const t = p.t;
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.scale(s, s);
+  const RED='#1a44cc',RED_DK='#0e2888',GOLD='#00aaff',INK='#050818',CREAM='#c0e8ff';
+  ctx.lineJoin='round'; ctx.lineCap='round'; ctx.strokeStyle=INK;
+  const breathe=Math.sin(t*1.4)*0.012;
+  ctx.scale(1+breathe,1+breathe);
+  ctx.fillStyle='rgba(0,0,0,0.15)';
+  ctx.beginPath(); ctx.ellipse(0,58,40,8,0,0,Math.PI*2); ctx.fill();
+  const flap=p.wing;
+  [-1,1].forEach(side=>{
+    const wx=side*46,wy=-18;
+    const flapY=(f)=>flap*f*38;
+    const tips=[{x:wx+side*20,y:wy-40+flapY(0.5)},{x:wx+side*36,y:wy-26+flapY(0.8)},{x:wx+side*42,y:wy-4+flapY(0.9)},{x:wx+side*34,y:wy+18+flapY(0.7)}];
+    const root={x:wx*0.58,y:wy+4};
+    ctx.beginPath(); ctx.moveTo(root.x,root.y); ctx.lineTo(tips[0].x,tips[0].y);
+    for(let i=0;i<tips.length-1;i++){const a=tips[i],b=tips[i+1];ctx.quadraticCurveTo((a.x+b.x)/2,(a.y+b.y)/2,b.x,b.y);}
+    ctx.quadraticCurveTo(wx+side*20,wy+26+flapY(0.4),root.x,root.y); ctx.closePath();
+    ctx.fillStyle=GOLD; ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=3; ctx.stroke();
+    ctx.strokeStyle=INK; ctx.lineWidth=2;
+    tips.forEach(tip=>{ctx.beginPath();ctx.moveTo(root.x,root.y);ctx.lineTo(tip.x,tip.y);ctx.stroke();});
+  });
+  ctx.beginPath(); ctx.moveTo(20,14); ctx.bezierCurveTo(40,55,60,65,70,55); ctx.bezierCurveTo(80,46,72,34,58,36); ctx.bezierCurveTo(50,37,46,44,50,50); ctx.bezierCurveTo(48,48,42,42,30,38); ctx.closePath();
+  ctx.fillStyle=RED_DK; ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=3; ctx.stroke();
+  ctx.lineWidth=2;
+  [[38,44],[50,50],[60,48],[68,42]].forEach(([sx,sy])=>{ctx.beginPath();ctx.moveTo(sx-4,sy);ctx.lineTo(sx,sy-12);ctx.lineTo(sx+4,sy);ctx.closePath();ctx.fillStyle=GOLD;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();});
+  [[-28,40],[28,40]].forEach(([lx,ly],side)=>{
+    ctx.beginPath();ctx.ellipse(lx,ly,13,18,side===0?-0.2:0.2,0,Math.PI*2);ctx.fillStyle=RED_DK;ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2.5;ctx.stroke();
+    ctx.beginPath();ctx.ellipse(lx+(side===0?-8:8),ly+28,10,14,side===0?-0.3:0.3,0,Math.PI*2);ctx.fillStyle=RED_DK;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
+    ctx.fillStyle=CREAM;
+    for(let cv=0;cv<3;cv++){const cx2=lx+(side===0?-8:8)-8+(cv*8)+(side===0?-2:2);ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(cx2,ly+42,3,5,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle=INK;ctx.stroke();}
+  });
+  ctx.lineWidth=3.5;
+  ctx.beginPath();ctx.ellipse(0,14,52,44,0,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
+  ctx.save();
+  ctx.beginPath();ctx.ellipse(0,14,52,44,0,0,Math.PI*2);ctx.clip();
+  ctx.beginPath();ctx.ellipse(0,22,30,28,0,0,Math.PI*2);ctx.fillStyle=GOLD;ctx.fill();
+  ctx.strokeStyle='rgba(180,100,0,0.35)';ctx.lineWidth=2.2;
+  [-6,4,14,24,33].forEach(sy=>{const hw=Math.sqrt(Math.max(0,900-(sy-22)*(sy-22)))*0.95;ctx.beginPath();ctx.moveTo(-hw,sy);ctx.quadraticCurveTo(0,sy+5,hw,sy);ctx.stroke();});
+  ctx.restore();
+  [[-44,10],[44,10]].forEach(([ax,ay],side)=>{
+    ctx.beginPath();ctx.ellipse(ax,ay+10,10,16,side===0?0.3:-0.3,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2.5;ctx.stroke();
+    const fax=ax+(side===0?-6:6);
+    ctx.beginPath();ctx.ellipse(fax,ay+34,8,13,side===0?0.5:-0.5,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
+    ctx.fillStyle=CREAM;
+    for(let cv=0;cv<3;cv++){const cx2=fax-6+(cv*6);ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(cx2,ay+48,2.8,4.5,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle=INK;ctx.stroke();}
+  });
+  ctx.lineWidth=3.5;
+  ctx.beginPath();ctx.ellipse(0,-34,22,20,0,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
+  ctx.beginPath();ctx.ellipse(0,-68,36,32,0,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
+  ctx.beginPath();ctx.ellipse(0,-54,22,16,0,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
+  ctx.beginPath();ctx.ellipse(0,-54,18,11,-0.05,0,Math.PI);ctx.fillStyle=RED_DK;ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2.2;ctx.stroke();
+  ctx.fillStyle=CREAM;
+  [[-13,6],[13,8]].forEach(([tx,ty])=>{ctx.beginPath();ctx.moveTo(tx-2.2,-48+ty);ctx.lineTo(tx,-43+ty);ctx.lineTo(tx+2.2,-48+ty);ctx.closePath();ctx.fill();});
+  ctx.lineWidth=2.5;
+  [[-18,-98,-0.52],[18,-98,0.52]].forEach(([hx,hy,rot])=>{
+    ctx.save();ctx.translate(hx,hy);ctx.rotate(rot);
+    ctx.beginPath();ctx.moveTo(-5,4);ctx.quadraticCurveTo(-7,-12,0,-24);ctx.quadraticCurveTo(7,-12,5,4);ctx.closePath();
+    ctx.fillStyle=GOLD;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();ctx.restore();
+  });
+  [[-15,-75],[15,-75]].forEach(([ex,ey])=>{
+    ctx.beginPath();ctx.ellipse(ex,ey,11,11,0,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2.5;ctx.stroke();
+    ctx.beginPath();ctx.ellipse(ex+1,ey+1,5,5.6,0,0,Math.PI*2);ctx.fillStyle='#1a0a02';ctx.fill();
+    ctx.beginPath();ctx.ellipse(ex-2,ey-2,2.4,2.6,0,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
+  });
+  [[-7,-55],[7,-55]].forEach(([nx,ny])=>{ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(nx,ny,2.4,1.8,0,0,Math.PI*2);ctx.fillStyle=RED_DK;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();});
+  ctx.restore();
+}
+
+
+// ══════════════════════════════════════════════════════
+// GRASS DRAGON — flying side-view, green & white
+// ══════════════════════════════════════════════════════
 
 function drawPoisonDragon(ctx, W, H, p) {
   ctx.clearRect(0,0,W,H);
@@ -3799,6 +4661,7 @@ const CROPS = [
   {id:'carrot',     name:'Carrot',       icon:'🥕', cost:100, time:120, food:60, desc:'Takes 2 minutes, good return.'},
   {id:'dragonfruit',name:'Dragon Fruit', icon:'🍈', cost:350, time:300, food:200, desc:'5 minutes, exceptional yield.'},
   {id:'starbloom',   name:'Starbloom Root', icon:'🌺', cost:1100, time:900, food:600, desc:'15 minutes, massive yield.'},
+  {id:'moonpetal',    name:'Moon Petal',    icon:'🌙', cost:5000, time:1200, food:2300, desc:'20 minutes, legendary yield.', minLevel:10},
 ];
 
 
@@ -3864,6 +4727,7 @@ function openFarmMenu(buildingIdx){
   } else {
     html+=`<div style="font-family:Cinzel,serif;font-size:0.72rem;color:#aaa;margin-bottom:10px;text-align:center;">Choose a crop to plant:</div><div style="display:flex;flex-direction:column;gap:8px;">`;
     CROPS.forEach(crop=>{
+    if(crop.minLevel && (game.level||1)<crop.minLevel) return; // hide if locked
       const mins=Math.floor(crop.time/60), secs=crop.time%60;
       const timeStr=mins>0?`${mins}m${secs>0?' '+secs+'s':''}`:`${secs}s`;
       html+=`<button onclick="plantCrop(${buildingIdx},'${crop.id}')" style="display:flex;align-items:center;gap:12px;background:rgba(255,200,60,0.08);border:1.5px solid rgba(255,200,60,0.25);border-radius:12px;padding:12px 16px;cursor:pointer;color:#fff;text-align:left;" onmouseover="this.style.background='rgba(255,200,60,0.18)'" onmouseout="this.style.background='rgba(255,200,60,0.08)'">
@@ -3905,7 +4769,7 @@ function harvestCrop(buildingIdx){
   if(!crop||!b) return;
   game.food=(game.food||0)+crop.food;
   document.getElementById('fv').textContent=game.food;
-  const xpMap={wheat:10,carrot:20,dragonfruit:40};
+  const xpMap={wheat:10,carrot:20,dragonfruit:40,moonpetal:80};
   addXP(xpMap[crop.id]||10);
   b.crop=null; b.cropEnd=null; b.cropDuration=null;
   saveGame();
@@ -4176,6 +5040,8 @@ function initDragonCanvases() {
       else if(type==='grass'){ stepDragonPhysics(phys,dt); drawGrassDragon(dctx,r.width,r.height,phys); }
       else if(type==='earth'){ stepEarthDragonPhysics(phys,dt); drawEarthDragon(dctx,r.width,r.height,phys); }
       else if(type==='poison'){ stepDragonPhysics(phys,dt); drawPoisonDragon(dctx,r.width,r.height,phys); }
+      else if(type==='ice'){ stepDragonPhysics(phys,dt); drawIceDragon(dctx,r.width,r.height,phys); }
+      else if(type==='bluefire'){ stepDragonPhysics(phys,dt); drawBluefireDragon(dctx,r.width,r.height,phys); }
     }
     requestAnimationFrame(loop);
   });
@@ -4982,6 +5848,7 @@ function saveGame(){
       buildings: (game.buildings||[]).map(b=>({
         type:b.type, gx:b.gx, gy:b.gy,
         crop:b.crop||null, cropEnd:b.cropEnd||null, cropDuration:b.cropDuration||null,
+        breedState:b.breedState||null,
         eggs:(b.eggs||[]).map(e=>({...e}))
       })),
     };
@@ -5007,7 +5874,7 @@ function loadGame(){
           const lvs = h.dragonLevels||h.dragons.map(()=>1);
           const rate = h.type==='earth'?7:5;
           const perSec = h.dragons.reduce((s,d,di)=>s+(lvs[di]||1)*rate,0)/60;
-          const cap = h.dragons.length*150;
+          const cap = {fire:1500,grass:2000,earth:3000}[h.type]||1500;
           const earned = Math.min(perSec*elapsed, cap-(h.gold||0));
           if(earned>0){ h.gold=(h.gold||0)+earned; offlineGold+=earned; }
         });
@@ -5033,6 +5900,7 @@ function loadGame(){
       crop: b.crop||null,
       cropEnd: b.cropEnd||null,
       cropDuration: b.cropDuration||null,
+      breedState: b.breedState||null,
       eggs: (b.eggs||[]).map(e=>({...e}))
     }));
     // Reset roam state so dragons get fresh positions
@@ -5210,9 +6078,10 @@ function updateShopButtons(){
     const cur = (game.buildings||[]).filter(b=>b.type==='farm').length;
     const mx = maxFarms();
     if(cur >= mx){
+      const isMax = (mx >= 3 && cur >= 3);
       const nextLv = cur>=2 ? 9 : 3;
       farmBtn.disabled = true;
-      farmBtn.textContent = `🔒 Level ${nextLv}`;
+      farmBtn.textContent = isMax ? '✅ Max' : `🔒 Level ${nextLv}`;
       farmBtn.style.opacity = '0.5';
       farmBtn.style.cursor = 'default';
     } else {
@@ -5407,12 +6276,21 @@ function hatchEgg(eggIdx){
   const idx=_hatcheryIdx;
   const b=(game.buildings||[])[idx];
   if(!b||!b.eggs||!b.eggs[eggIdx]) return;
-  const egg={...b.eggs[eggIdx]}; // copy before splice
-  const habitatType=egg.habitatType||(egg.dragonType==='fire'?'fire':egg.dragonType==='earth'?'earth':'grass');
+  const egg={...b.eggs[eggIdx]};
+  const habitatTypeRaw=egg.habitatType||DRAGON_HABITAT[egg.dragonType]||'fire';
+  const habitatTypes=Array.isArray(habitatTypeRaw)?habitatTypeRaw:[habitatTypeRaw];
+  // Block if no valid habitat with space
+  const target=game.placedHabitats.find(h=>habitatTypes.includes(h.type)&&h.dragons.length<3);
+  if(!target){
+    const hasAny=game.placedHabitats.some(h=>habitatTypes.includes(h.type));
+    if(hasAny) showNotification('All matching habitats are full! (Max 3 dragons)','error');
+    else showNotification(`You need a ${habitatTypes.map(t=>HABITAT_NAMES[t]||t).join(' or ')} to hatch this egg!`,'error');
+    return;
+  }
   b.eggs.splice(eggIdx,1);
   saveGame();
   closeHatcheryMenu();
-  game.pendingDragon={type:egg.dragonType,habitatType};
+  game.pendingDragon={type:egg.dragonType,habitatType:habitatTypeRaw};
   showNotification('Choose a habitat for your '+egg.dragonType+' dragon!','success');
 }
 
@@ -5470,19 +6348,26 @@ function openBreederMenu(idx){
     <button onclick="moveBreeder(${idx})" style="position:absolute;top:14px;left:16px;font-family:Cinzel,serif;font-size:0.82rem;font-weight:700;padding:9px 18px;border-radius:18px;background:rgba(40,20,60,0.4);border:1.5px solid rgba(160,80,255,0.25);color:rgba(180,120,255,0.8);cursor:pointer;">✦ Move</button>
     <div style="font-family:'Cinzel Decorative',serif;font-size:1.3rem;font-weight:700;color:#cc88ff;text-align:center;margin-bottom:6px;">Breeding Cave</div>
     <div style="font-family:serif;font-size:0.82rem;color:rgba(180,140,220,0.7);text-align:center;margin-bottom:22px;font-style:italic;">Select two dragons to breed a new egg</div>
-    <div style="display:flex;gap:20px;justify-content:center;align-items:center;margin-bottom:28px;">
-      <div id="breed-slot-0" style="width:180px;height:180px;background:rgba(80,20,140,0.3);border:2px dashed rgba(160,80,255,0.4);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;" onclick="openDragonPicker(0)">
-        <div style="font-size:3rem;color:rgba(160,80,255,0.5);">+</div>
-        <div style="font-family:Cinzel,serif;font-size:0.72rem;color:rgba(160,100,220,0.6);">Choose Dragon</div>
+    <div style="display:flex;gap:20px;align-items:flex-start;justify-content:center;margin-bottom:28px;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:20px;flex:1;">
+        <div style="display:flex;gap:20px;justify-content:center;align-items:center;">
+          <div id="breed-slot-0" style="width:180px;height:180px;background:rgba(80,20,140,0.3);border:2px dashed rgba(160,80,255,0.4);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;" onclick="openDragonPicker(0)">
+            <div style="font-size:3rem;color:rgba(160,80,255,0.5);">+</div>
+            <div style="font-family:Cinzel,serif;font-size:0.72rem;color:rgba(160,100,220,0.6);">Choose Dragon</div>
+          </div>
+          <div style="font-size:2rem;color:rgba(160,80,255,0.6);">❤️</div>
+          <div id="breed-slot-1" style="width:180px;height:180px;background:rgba(80,20,140,0.3);border:2px dashed rgba(160,80,255,0.4);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;" onclick="openDragonPicker(1)">
+            <div style="font-size:3rem;color:rgba(160,80,255,0.5);">+</div>
+            <div style="font-family:Cinzel,serif;font-size:0.72rem;color:rgba(160,100,220,0.6);">Choose Dragon</div>
+          </div>
+        </div>
       </div>
-      <div style="font-size:2rem;color:rgba(160,80,255,0.6);">❤️</div>
-      <div id="breed-slot-1" style="width:180px;height:180px;background:rgba(80,20,140,0.3);border:2px dashed rgba(160,80,255,0.4);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;" onclick="openDragonPicker(1)">
-        <div style="font-size:3rem;color:rgba(160,80,255,0.5);">+</div>
-        <div style="font-family:Cinzel,serif;font-size:0.72rem;color:rgba(160,100,220,0.6);">Choose Dragon</div>
+      <div id="breed-odds-panel" style="width:90px;flex-shrink:0;background:rgba(40,0,80,0.4);border:1px solid rgba(160,80,255,0.25);border-radius:12px;padding:10px 10px;min-height:160px;">
+        <div style="font-family:Cinzel,serif;font-size:0.68rem;color:rgba(160,100,220,0.5);text-align:center;margin-top:20px;">Select both<br>dragons to<br>see odds</div>
       </div>
     </div>
     <div style="display:flex;justify-content:center;">
-      <button onclick="showNotification('Breeding coming soon!','error')" style="font-family:Cinzel,serif;font-size:1.9rem;font-weight:700;padding:22px 80px;border-radius:32px;background:linear-gradient(180deg,#6a2aaa,#3a0a7a);border:1.5px solid rgba(160,80,255,0.5);color:#e8c8ff;cursor:pointer;box-shadow:0 4px 20px rgba(100,0,200,0.4);letter-spacing:2px;">Breed</button>
+      <button id="breed-action-btn" onclick="startBreeding(${idx})" style="font-family:Cinzel,serif;font-size:1.4rem;font-weight:700;padding:20px 70px;border-radius:32px;background:linear-gradient(180deg,#6a2aaa,#3a0a7a);border:1.5px solid rgba(160,80,255,0.5);color:#e8c8ff;cursor:pointer;box-shadow:0 4px 20px rgba(100,0,200,0.4);letter-spacing:1px;">Breed</button>
     </div>
   `;
   document.body.appendChild(el);
@@ -5518,6 +6403,8 @@ function openDragonPicker(slotIdx){
       if(type==='grass') drawGrassDragon(canvas.getContext('2d'),80,80,phys);
       else if(type==='earth') drawEarthDragon(canvas.getContext('2d'),80,80,phys);
       else if(type==='poison') drawPoisonDragon(canvas.getContext('2d'),80,80,phys);
+      else if(type==='ice') drawIceDragon(canvas.getContext('2d'),80,80,phys);
+      else if(type==='bluefire') drawBluefireDragon(canvas.getContext('2d'),80,80,phys);
       else drawFireDragon(canvas.getContext('2d'),80,80,phys);
       card.appendChild(canvas);
       const name = document.createElement('div');
@@ -5559,6 +6446,7 @@ function updateBreedSlots(){
       cv.width=120; cv.height=120; cv.style.cssText='width:120px;height:120px;border-radius:10px;';
       if(sel.type==='grass') drawGrassDragon(cv.getContext('2d'),120,120,phys);
       else if(sel.type==='earth') drawEarthDragon(cv.getContext('2d'),120,120,phys);
+      else if(sel.type==='poison') drawPoisonDragon(cv.getContext('2d'),120,120,phys);
       else drawFireDragon(cv.getContext('2d'),120,120,phys);
       slot.innerHTML='';
       slot.appendChild(cv);
@@ -5578,6 +6466,41 @@ function updateBreedSlots(){
       slot.style.borderColor='rgba(160,80,255,0.4)';
     }
   });
+  // Update odds panel
+  const oddsPanel=document.getElementById('breed-odds-panel');
+  if(oddsPanel){
+    if(_breedSlots[0]&&_breedSlots[1]){
+      const odds=getBreedingOdds(_breedSlots[0].type,_breedSlots[1].type);
+      oddsPanel.innerHTML='<div style="font-family:Cinzel,serif;font-size:0.72rem;font-weight:700;color:#cc88ff;margin-bottom:6px;text-align:center;">Odds</div>';
+      odds.forEach(o=>{
+        const row=document.createElement('div');
+        row.style.cssText='display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;gap:4px;';
+        const cv=document.createElement('canvas');
+        cv.width=36; cv.height=36; cv.style.cssText='width:36px;height:36px;border-radius:6px;flex-shrink:0;';
+        const ph={t:0,wing:0,wingV:0,bob:0,bobV:0,sway:0,swayV:0,swayDir:1,tailSwing:0,tailV:0};
+        if(o.type==='mystery'){
+          const mctx=cv.getContext('2d');
+          mctx.fillStyle='rgba(80,20,140,0.4)';
+          mctx.beginPath(); mctx.roundRect(0,0,36,36,6); mctx.fill();
+          mctx.fillStyle='rgba(200,150,255,0.9)';
+          mctx.font='bold 22px serif'; mctx.textAlign='center'; mctx.textBaseline='middle';
+          mctx.fillText('?',18,18);
+        } else if(o.type==='earth') drawEarthDragon(cv.getContext('2d'),36,36,ph);
+        else if(o.type==='grass') drawGrassDragon(cv.getContext('2d'),36,36,ph);
+        else if(o.type==='poison') drawPoisonDragon(cv.getContext('2d'),36,36,ph);
+        else if(o.type==='ice') drawIceDragon(cv.getContext('2d'),36,36,ph);
+        else if(o.type==='bluefire') drawBluefireDragon(cv.getContext('2d'),36,36,ph);
+        else drawFireDragon(cv.getContext('2d'),36,36,ph);
+        const pct=document.createElement('span');
+        pct.style.cssText='font-family:Cinzel,serif;font-size:0.72rem;font-weight:700;color:#cc88ff;flex-shrink:0;';
+        pct.textContent=o.pct+'%';
+        row.appendChild(cv); row.appendChild(pct);
+        oddsPanel.appendChild(row);
+      });
+    } else {
+      oddsPanel.innerHTML='<div style="font-family:Cinzel,serif;font-size:0.68rem;color:rgba(160,100,220,0.5);text-align:center;margin-top:20px;">Select both<br>dragons to<br>see odds</div>';
+    }
+  }
 }
 
 // Reset breed slots when breeder menu closes
@@ -5585,6 +6508,67 @@ const _origCloseBreeder = ()=>{
   const el=document.getElementById('breeder-menu'); if(el) el.remove();
   _breedSlots=[null,null];
 };
+
+
+// ── BREEDING SYSTEM ───────────────────────────────────────────
+function getBreedingOdds(t1, t2){
+  const sorted=[t1,t2].sort();
+  // Poison + Poison → 10% poison, 90% mystery (fire or grass)
+  if(t1==='poison'&&t2==='poison') return [{type:'poison',pct:10},{type:'mystery',pct:90}];
+  // Any combo with poison → 10% poison, 90% the other
+  if(t1==='poison'||t2==='poison'){
+    const other=t1==='poison'?t2:t1;
+    return [{type:'poison',pct:10},{type:other,pct:90}];
+  }
+  // Grass + Fire → 10% poison, 45/45
+  const combo=sorted.join('+');
+  if(combo==='fire+grass') return [{type:'poison',pct:10},{type:'fire',pct:45},{type:'grass',pct:45}];
+  // Same type
+  if(t1===t2) return [{type:t1,pct:100}];
+  // Default 50/50
+  return [{type:t1,pct:50},{type:t2,pct:50}];
+}
+
+function rollBreedResult(t1,t2){
+  const odds=getBreedingOdds(t1,t2);
+  const roll=Math.random()*100;
+  let cum=0;
+  let result=odds[odds.length-1].type;
+  for(const o of odds){ cum+=o.pct; if(roll<cum){ result=o.type; break; } }
+  // Mystery resolves to fire or grass randomly
+  if(result==='mystery') result=Math.random()<0.5?'fire':'grass';
+  return result;
+}
+
+function startBreeding(buildingIdx){
+  const b=(game.buildings||[])[buildingIdx];
+  if(!b||b.breedState) return;
+  const s1=_breedSlots[0], s2=_breedSlots[1];
+  if(!s1||!s2){ showNotification('Choose two dragons first!','error'); return; }
+  const result=rollBreedResult(s1.type,s2.type);
+  b.breedState={slot1:s1,slot2:s2,startTime:Date.now(),duration:600000,result,done:false};
+  _breedSlots=[null,null];
+  saveGame();
+  document.getElementById('breeder-menu')?.remove();
+  showNotification('Breeding started! Check back in 10 seconds.','success');
+}
+
+function collectBreedEgg(buildingIdx){
+  const b=(game.buildings||[])[buildingIdx];
+  if(!b||!b.breedState||!b.breedState.done) return;
+  const hatchery=(game.buildings||[]).find(x=>x.type==='hatchery');
+  if(!hatchery){ showNotification('You need a Dragon Hatchery!','error'); return; }
+  if(!hatchery.eggs) hatchery.eggs=[];
+  if(hatchery.eggs.length>=3){ showNotification('Hatchery is full! Hatch an egg first.','error'); return; }
+  const dragonType=b.breedState.result;
+  const habitatTypeRaw=DRAGON_HABITAT[dragonType];
+  hatchery.eggs.push({dragonType,habitatType:habitatTypeRaw,startTime:Date.now(),duration:HATCH_TIMES[dragonType]||30000});
+  b.breedState=null;
+  saveGame();
+  showNotification('Egg moved to Hatchery!','success');
+}
+
+const DRAGON_DISPLAY={fire:'Fire Dragon',grass:'Grass Dragon',earth:'Earth Dragon',poison:'Poison Dragon',ice:'Ice Dragon',bluefire:'Blue Fire Dragon'};
 
 </script>
 
