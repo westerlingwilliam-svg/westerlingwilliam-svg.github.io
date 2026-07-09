@@ -275,7 +275,7 @@ html,body{width:100%;height:100%;overflow:hidden;}
 #quest-btn::before{content:'';position:absolute;inset:0;pointer-events:none;
   background:repeating-linear-gradient(135deg,transparent 0,transparent 6px,rgba(255,255,255,0.03) 6px,rgba(255,255,255,0.03) 7px),
   radial-gradient(ellipse at 50% 0%,rgba(120,200,255,0.18) 0%,transparent 60%);border-radius:18px;}
-#quest-btn .label{font-family:'Cinzel',serif;font-size:clamp(1.05rem,1.5vw,1.5rem);font-weight:700;color:#a0d0ff;letter-spacing:1px;text-shadow:0 1px 4px rgba(0,0,0,0.8);position:relative;z-index:1;}
+#quest-btn .label{font-family:'Cinzel',serif;font-size:clamp(1.25rem,1.7vw,1.7rem);font-weight:700;color:#a0d0ff;letter-spacing:1px;text-shadow:0 1px 4px rgba(0,0,0,0.8);position:relative;z-index:1;}
 #quest-btn .icon{font-size:clamp(2rem,3vw,3rem);position:relative;z-index:1;line-height:1;}
 #quest-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,40,180,0.6),inset 0 1px 0 rgba(255,255,255,0.2),inset 0 -2px 4px rgba(0,0,0,0.3);}
 
@@ -380,10 +380,17 @@ html,body{width:100%;height:100%;overflow:hidden;}
 #expand-btn::before{content:'';position:absolute;inset:0;pointer-events:none;
   background:repeating-linear-gradient(135deg,transparent 0,transparent 6px,rgba(255,255,255,0.025) 6px,rgba(255,255,255,0.025) 7px),
   radial-gradient(ellipse at 50% 0%,rgba(120,255,120,0.12) 0%,transparent 60%);border-radius:inherit;}
-#expand-btn .label{font-family:'Cinzel',serif;font-size:clamp(1.05rem,1.5vw,1.5rem);font-weight:700;color:#88ee88;letter-spacing:1px;text-shadow:0 1px 4px rgba(0,0,0,0.8);position:relative;z-index:1;line-height:1.2;text-align:center;}
+#expand-btn .label{font-family:'Cinzel',serif;font-size:clamp(1.25rem,1.7vw,1.7rem);font-weight:700;color:#88ee88;letter-spacing:1px;text-shadow:0 1px 4px rgba(0,0,0,0.8);position:relative;z-index:1;line-height:1.2;text-align:center;}
 #expand-btn .icon{font-size:clamp(1.8rem,2.6vw,2.6rem);position:relative;z-index:1;line-height:1;}
 #expand-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,100,0,0.5),inset 0 1px 0 rgba(255,255,255,0.18);}
+
+#news-btn::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(135deg,transparent 0,transparent 6px,rgba(255,255,255,0.025) 6px,rgba(255,255,255,0.025) 7px),
+  radial-gradient(ellipse at 50% 0%,rgba(255,230,80,0.18) 0%,transparent 60%);border-radius:inherit;}
+#news-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(180,120,0,0.6),inset 0 1px 0 rgba(255,240,100,0.2);}
 </style>
+#news-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(180,120,0,0.6);}
+
 </head>
 <body>
 <div id="game-notif"></div>
@@ -415,11 +422,12 @@ html,body{width:100%;height:100%;overflow:hidden;}
     <span class="label">SHOP</span>
   </button>
   <button id="expand-btn" onclick="openExpandPanel()" style="position:absolute;bottom:clamp(20px,2.5vw,32px);right:calc(clamp(20px,2vw,32px) + (clamp(108px,11vw,144px) + 28px)*2);">
-    <span class="icon">🗺️</span>
     <span class="label">EXPAND</span>
   </button>
+  <button id="news-btn" onclick="openNewsPanel()" style="position:absolute;bottom:clamp(20px,2.5vw,32px);right:calc(clamp(20px,2vw,32px) + (clamp(108px,11vw,144px) + 28px)*3);background:linear-gradient(150deg,#7a5a00,#4a3500 45%,#2a1e00);border:2px solid rgba(220,180,40,0.7);border-radius:clamp(18px,2.2vw,28px);width:clamp(108px,11vw,144px);height:clamp(108px,11vw,144px);padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;box-sizing:border-box;pointer-events:all;">
+    <span style="font-family:Cinzel,serif;font-size:clamp(1.25rem,1.7vw,1.7rem);font-weight:700;color:#ffd860;letter-spacing:1px;text-shadow:0 1px 4px rgba(0,0,0,0.8);">NEWS</span>
+  </button>
   <button id="quest-btn" onclick="openQuestPanel()" style="position:absolute;bottom:clamp(20px,2.5vw,32px);right:calc(clamp(20px,2vw,32px) + clamp(108px,11vw,144px) + 28px);">
-    <span class="icon">📜</span>
     <span class="label">QUESTS</span>
   </button>
 </div>
@@ -485,6 +493,15 @@ html,body{width:100%;height:100%;overflow:hidden;}
           </div>
           <div class="dragon-card">
             <div class="dragon-card-frame">
+              <canvas class="dragon-canvas" data-dragon="ice" width="220" height="220"></canvas>
+            </div>
+            <div class="dragon-card-name">Ice Dragon</div>
+            <div class="dragon-card-desc">A glacial beast of frost and silence, born from the coldest peaks.</div>
+            <div class="dragon-gpm">🪙 +17/min at Lv.1</div>
+            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>3000</span></button>
+          </div>
+          <div class="dragon-card">
+            <div class="dragon-card-frame">
               <canvas class="dragon-canvas" data-dragon="poison" width="220" height="220"></canvas>
             </div>
             <div class="dragon-card-name">Poison Dragon</div>
@@ -494,21 +511,12 @@ html,body{width:100%;height:100%;overflow:hidden;}
           </div>
           <div class="dragon-card">
             <div class="dragon-card-frame">
-              <canvas class="dragon-canvas" data-dragon="ice" width="220" height="220"></canvas>
-            </div>
-            <div class="dragon-card-name">Ice Dragon</div>
-            <div class="dragon-card-desc">A glacial beast of frost and silence, born from the coldest peaks.</div>
-            <div class="dragon-gpm">🪙 +8/min at Lv.1</div>
-            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>1500</span></button>
-          </div>
-          <div class="dragon-card">
-            <div class="dragon-card-frame">
               <canvas class="dragon-canvas" data-dragon="bluefire" width="220" height="220"></canvas>
             </div>
             <div class="dragon-card-name">Blue Fire Dragon</div>
             <div class="dragon-card-desc">A rare dragon whose flames burn an intense electric blue.</div>
-            <div class="dragon-gpm">🪙 +12/min at Lv.1</div>
-            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>2000</span></button>
+            <div class="dragon-gpm">🪙 +40/min at Lv.1</div>
+            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>7000</span></button>
           </div>
         </div>
       </div>
@@ -545,6 +553,14 @@ html,body{width:100%;height:100%;overflow:hidden;}
             <div class="dragon-card-name">Earth Habitat</div>
             <div class="dragon-card-desc">Ancient stone arches and cracked earth. A domain for earth dragons.</div>
             <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>1250</span></button>
+          </div>
+          <div class="dragon-card">
+            <div class="habitat-frame">
+              <canvas class="habitat-canvas" data-habitat="ice" width="220" height="220"></canvas>
+            </div>
+            <div class="dragon-card-name">Ice Habitat</div>
+            <div class="dragon-card-desc">A frozen lake surrounded by snow, ice crystals and a cozy igloo.</div>
+            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>4000</span></button>
           </div>
         </div>
       </div>
@@ -1234,13 +1250,13 @@ function isDragonBreeding(habitatIdx, dragonIdx){
   );
 }
 function habitatGoldMax(h){
-  const caps={fire:1500,grass:2000,earth:3000};
+  const caps={fire:1500,grass:2000,earth:3000,ice:5000};
   return caps[h.type]||1500;
 }
 function spendFood(amount){
   if(game.food < amount) return false;
   game.food -= amount;
-  document.getElementById('fv').textContent = game.food;
+  document.getElementById('fv').textContent = Math.floor(game.food).toLocaleString();
   return true;
 }
 
@@ -1248,6 +1264,8 @@ function dragonFoodMult(dragonType){
   if(dragonType==='fire') return 0.5;
   if(dragonType==='grass') return 0.67;
   if(dragonType==='poison') return 1.33;
+  if(dragonType==='ice') return 0.87;   // 0.67 * 1.3
+  if(dragonType==='bluefire') return 1.07; // 0.67 * 1.6
   return 1.0; // earth unchanged
 }
 
@@ -1311,8 +1329,8 @@ function dragonGPM(dragonType, level){
   const lv=Math.min(Math.max(level,1),15)-1;
   const tables={
     fire:   [5,10,16,23,31,39,49,60,71,84,97,111,127,143,160],
-    ice:    [8,16,25,36,49,63,79,97,116,137,160,184,210,237,265],
-    bluefire:[12,23,37,52,70,90,112,137,163,192,222,254,288,324,360],
+    ice:    [17,30,45,63,84,106,131,159,189,221,256,294,333,375,420],
+    bluefire:[40,65,95,129,168,211,260,312,370,432,499,571,647,728,813],
     grass:  [7,14,22,31,42,54,67,82,98,115,133,153,174,196,220],
     earth:  [10,20,33,47,64,82,102,124,148,174,202,232,264,298,334],
     poison: [30,50,74,101,132,167,206,249,295,345,398,456,517,582,650],
@@ -1686,6 +1704,345 @@ function drawSideGrassDragon(ctx, W, H, p){
   ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-16+p.wing*10,-28+p.wing*7); ctx.quadraticCurveTo(-2+p.wing*3,-22,8+p.wing*3,-36+p.wing*4); ctx.quadraticCurveTo(18+p.wing*3,-24,28,-18+p.wing*3); ctx.quadraticCurveTo(16,-4,0,0); ctx.closePath();
   ctx.fillStyle=LIME; ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.8; ctx.stroke();
   ctx.restore();
+
+  // Flower on head
+  const fang=p.t*0.5;
+  ctx.save(); ctx.translate(0,18);
+  for(let i=0;i<5;i++){
+    const a=i*Math.PI*2/5+fang;
+    ctx.fillStyle='rgba(255,180,200,0.85)';
+    ctx.beginPath(); ctx.ellipse(Math.cos(a)*5,Math.sin(a)*5,4,2.5,a,0,Math.PI*2); ctx.fill();
+  }
+  ctx.fillStyle='#ffe840'; ctx.beginPath(); ctx.arc(0,0,3,0,Math.PI*2); ctx.fill();
+  ctx.restore();
+  // Floating leaf particles
+  [0,1,2].forEach(i=>{
+    const la=p.t*0.6+i*2.1, lr=18+Math.sin(p.t+i)*6;
+    const lx=Math.cos(la)*lr, ly=-15+Math.sin(la*0.7)*10;
+    const la2=0.3+Math.sin(p.t+i)*0.4;
+    ctx.fillStyle=`rgba(80,180,40,${la2})`;
+    ctx.save(); ctx.translate(lx,ly); ctx.rotate(la+p.t);
+    ctx.beginPath(); ctx.ellipse(0,0,4,2,0,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+  });
+  ctx.restore();
+}
+
+function drawSideDragon(ctx, W, H, p){
+  ctx.clearRect(0,0,W,H);
+  const s=Math.min(W,H)/140;
+  ctx.save();
+  ctx.translate(W*0.5, H*0.52+p.bob);
+  ctx.scale(s,s);
+  const GRN='#dd3311',GDK='#991100',GLT='#ff6633',LIME='#ffcc00',WHT='#fff8e0',INK='#2a0800';
+  ctx.lineJoin='round'; ctx.lineCap='round'; ctx.strokeStyle=INK;
+  // Shadow
+  ctx.fillStyle='rgba(0,0,0,0.12)'; ctx.beginPath(); ctx.ellipse(4,44,26,6,0,0,Math.PI*2); ctx.fill();
+  // Tail (filled)
+  ctx.fillStyle='#dd3311'; ctx.strokeStyle='#991100'; ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(-28,2); ctx.bezierCurveTo(-50,6,-60,16,-58,28);
+  ctx.bezierCurveTo(-56,36,-48,38,-44,32);
+  ctx.bezierCurveTo(-48,30,-52,26,-50,18);
+  ctx.bezierCurveTo(-48,10,-28,10,-26,6);
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+  // Back wing
+  const wa=p.wing*0.7;
+  ctx.save(); ctx.translate(-6,-12);
+  ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-14+wa*6,-22+wa*4); ctx.quadraticCurveTo(-2+wa*2,-16,6+wa,-28+wa*3); ctx.quadraticCurveTo(14+wa,-20,20,-14+wa*2); ctx.quadraticCurveTo(10,-4,0,0); ctx.closePath();
+  ctx.fillStyle=LIME; ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.6; ctx.stroke();
+  ctx.restore();
+  // Body
+  ctx.lineWidth=2.5; ctx.beginPath(); ctx.ellipse(0,10,36,23,-0.1,0,Math.PI*2); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  ctx.save(); ctx.beginPath(); ctx.ellipse(0,10,36,23,-0.1,0,Math.PI*2); ctx.clip();
+  ctx.beginPath(); ctx.ellipse(8,17,20,13,0,0,Math.PI*2); ctx.fillStyle=WHT; ctx.fill(); ctx.restore();
+  // Spine leaves
+  [[-18,-8],[-6,-16],[8,-17],[22,-10]].forEach(([sx,sy])=>{
+    ctx.fillStyle=LIME; ctx.beginPath(); ctx.moveTo(sx,sy+4); ctx.bezierCurveTo(sx-5,sy-5,sx,sy-10,sx+5,sy-5); ctx.bezierCurveTo(sx+5,sy-5,sx+4,sy+2,sx,sy+4); ctx.closePath(); ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.4; ctx.stroke();
+  });
+  // Legs
+  ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(-18,30,8,12,0.1,0,Math.PI*2); ctx.fillStyle=GDK; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  [[-24,40],[-18,43],[-12,41]].forEach(([fx,fy])=>{ ctx.fillStyle=WHT; ctx.lineWidth=1; ctx.beginPath(); ctx.ellipse(fx,fy,2.4,3.4,0,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.stroke(); });
+  ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(16,30,8,12,-0.1,0,Math.PI*2); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  [[10,40],[16,43],[22,41]].forEach(([fx,fy])=>{ ctx.fillStyle=WHT; ctx.lineWidth=1; ctx.beginPath(); ctx.ellipse(fx,fy,2.4,3.4,0,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.stroke(); });
+  // Neck
+  ctx.lineWidth=2.4; ctx.beginPath(); ctx.moveTo(22,-3); ctx.bezierCurveTo(28,-18,34,-28,40,-34); ctx.bezierCurveTo(46,-30,43,-14,35,4); ctx.closePath(); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  // Head
+  ctx.lineWidth=2.4; ctx.beginPath(); ctx.ellipse(48,-36,20,15,-0.1,0,Math.PI*2); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  ctx.fillStyle=WHT; ctx.beginPath(); ctx.ellipse(42,-40,7,5,0.3,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(64,-32,10,8,0,0,Math.PI*2); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  ctx.strokeStyle=INK; ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(56,-28); ctx.quadraticCurveTo(64,-24,72,-28); ctx.stroke();
+  ctx.fillStyle=GDK; ctx.beginPath(); ctx.ellipse(70,-30,1.8,1.4,0.3,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle=LIME; ctx.beginPath(); ctx.moveTo(36,-46); ctx.bezierCurveTo(28,-52,30,-64,40,-62); ctx.bezierCurveTo(48,-60,44,-50,40,-44); ctx.closePath(); ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.8; ctx.stroke();
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(40,-38,5.5,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.fillStyle=GLT; ctx.beginPath(); ctx.arc(41,-37,3.2,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#0a2208'; ctx.beginPath(); ctx.arc(41,-37,1.8,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(39,-39,1.2,0,Math.PI*2); ctx.fill();
+  // Front wing
+  ctx.save(); ctx.translate(4,-8);
+  ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-16+p.wing*10,-28+p.wing*7); ctx.quadraticCurveTo(-2+p.wing*3,-22,8+p.wing*3,-36+p.wing*4); ctx.quadraticCurveTo(18+p.wing*3,-24,28,-18+p.wing*3); ctx.quadraticCurveTo(16,-4,0,0); ctx.closePath();
+  ctx.fillStyle=LIME; ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.8; ctx.stroke();
+  ctx.restore();
+  ctx.restore();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function drawSidePoisonDragon(ctx, W, H, p){
+  ctx.clearRect(0,0,W,H);
+  const s=Math.min(W,H)/140;
+  ctx.save();
+  ctx.translate(W*0.5, H*0.52+p.bob);
+  ctx.scale(s,s);
+  const GRN='#1a8a20',GDK='#0e5a14',GLT='#44cc44',LIME='#cc1111',WHT='#aeff88',INK='#0a1e0a';
+  ctx.lineJoin='round'; ctx.lineCap='round'; ctx.strokeStyle=INK;
+  // Shadow
+  ctx.fillStyle='rgba(0,0,0,0.12)'; ctx.beginPath(); ctx.ellipse(4,44,26,6,0,0,Math.PI*2); ctx.fill();
+  // Tail (filled)
+  ctx.fillStyle='#1a8a20'; ctx.strokeStyle='#0e5a14'; ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(-28,2); ctx.bezierCurveTo(-50,6,-60,16,-58,28);
+  ctx.bezierCurveTo(-56,36,-48,38,-44,32);
+  ctx.bezierCurveTo(-48,30,-52,26,-50,18);
+  ctx.bezierCurveTo(-48,10,-28,10,-26,6);
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+  // Back wing
+  const wa=p.wing*0.7;
+  ctx.save(); ctx.translate(-6,-12);
+  ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-14+wa*6,-22+wa*4); ctx.quadraticCurveTo(-2+wa*2,-16,6+wa,-28+wa*3); ctx.quadraticCurveTo(14+wa,-20,20,-14+wa*2); ctx.quadraticCurveTo(10,-4,0,0); ctx.closePath();
+  ctx.fillStyle=LIME; ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.6; ctx.stroke();
+  ctx.restore();
+  // Spine leaves
+  [[-18,-8],[-6,-16],[8,-17],[22,-10]].forEach(([sx,sy])=>{
+    ctx.fillStyle=LIME; ctx.beginPath(); ctx.moveTo(sx,sy+4); ctx.bezierCurveTo(sx-5,sy-5,sx,sy-10,sx+5,sy-5); ctx.bezierCurveTo(sx+5,sy-5,sx+4,sy+2,sx,sy+4); ctx.closePath(); ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.4; ctx.stroke();
+  });
+  // Body
+  ctx.lineWidth=2.5; ctx.beginPath(); ctx.ellipse(0,10,36,23,-0.1,0,Math.PI*2); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  ctx.save(); ctx.beginPath(); ctx.ellipse(0,10,36,23,-0.1,0,Math.PI*2); ctx.clip();
+  ctx.beginPath(); ctx.ellipse(8,17,20,13,0,0,Math.PI*2); ctx.fillStyle=WHT; ctx.fill(); ctx.restore();
+  // Legs
+  ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(-18,30,8,12,0.1,0,Math.PI*2); ctx.fillStyle=GDK; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  [[-24,40],[-18,43],[-12,41]].forEach(([fx,fy])=>{ ctx.fillStyle=WHT; ctx.lineWidth=1; ctx.beginPath(); ctx.ellipse(fx,fy,2.4,3.4,0,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.stroke(); });
+  ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(16,30,8,12,-0.1,0,Math.PI*2); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  [[10,40],[16,43],[22,41]].forEach(([fx,fy])=>{ ctx.fillStyle=WHT; ctx.lineWidth=1; ctx.beginPath(); ctx.ellipse(fx,fy,2.4,3.4,0,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.stroke(); });
+  // Neck
+  ctx.lineWidth=2.4; ctx.beginPath(); ctx.moveTo(22,-3); ctx.bezierCurveTo(28,-18,34,-28,40,-34); ctx.bezierCurveTo(46,-30,43,-14,35,4); ctx.closePath(); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  // Head
+  ctx.lineWidth=2.4; ctx.beginPath(); ctx.ellipse(48,-36,20,15,-0.1,0,Math.PI*2); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  ctx.fillStyle=WHT; ctx.beginPath(); ctx.ellipse(42,-40,7,5,0.3,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(64,-32,10,8,0,0,Math.PI*2); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  ctx.strokeStyle=INK; ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(56,-28); ctx.quadraticCurveTo(64,-24,72,-28); ctx.stroke();
+  ctx.fillStyle=GDK; ctx.beginPath(); ctx.ellipse(70,-30,1.8,1.4,0.3,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(40,-38,5.5,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.fillStyle=GLT; ctx.beginPath(); ctx.arc(41,-37,3.2,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#0a2208'; ctx.beginPath(); ctx.arc(41,-37,1.8,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(39,-39,1.2,0,Math.PI*2); ctx.fill();
+  // Front wing
+  ctx.save(); ctx.translate(4,-8);
+  ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-16+p.wing*10,-28+p.wing*7); ctx.quadraticCurveTo(-2+p.wing*3,-22,8+p.wing*3,-36+p.wing*4); ctx.quadraticCurveTo(18+p.wing*3,-24,28,-18+p.wing*3); ctx.quadraticCurveTo(16,-4,0,0); ctx.closePath();
+  ctx.fillStyle=LIME; ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.8; ctx.stroke();
+  ctx.restore();
+
+  // Poison spots on body
+  ctx.fillStyle='rgba(0,180,20,0.32)';
+  [[-8,4],[10,-6],[-4,14],[16,2]].forEach(([sx,sy])=>{
+    ctx.beginPath(); ctx.ellipse(sx,sy,5,4,0,0,Math.PI*2); ctx.fill();
+  });
+  // Poison vial on head
+  ctx.save(); ctx.translate(38,-63); ctx.rotate(-0.25);
+  ctx.fillStyle='rgba(180,255,180,0.85)'; ctx.strokeStyle='#0a1e0a'; ctx.lineWidth=1.2;
+  ctx.beginPath(); ctx.roundRect(-4,0,9,14,2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle='rgba(0,200,20,0.8)'; ctx.beginPath(); ctx.roundRect(-3,5,7,8,1); ctx.fill();
+  ctx.fillStyle='#cc9944'; ctx.beginPath(); ctx.roundRect(-3,-4,7,6,1); ctx.fill(); ctx.stroke();
+  ctx.restore();
+  // Floating green particles
+  [0,1,2,3].forEach(i=>{
+    const a=p.t*0.9+i*1.57, r=24+Math.sin(p.t+i)*6;
+    const al=0.35+Math.abs(Math.sin(p.t*1.5+i))*0.4;
+    ctx.fillStyle=`rgba(0,220,30,${al})`;
+    ctx.beginPath(); ctx.arc(Math.cos(a)*r,-8+Math.sin(a)*r*0.5,2.5,0,Math.PI*2); ctx.fill();
+  });
+  ctx.restore();
+}
+
+
+function drawSideIceDragon(ctx, W, H, p){
+  ctx.clearRect(0,0,W,H);
+  const s=Math.min(W,H)/140;
+  ctx.save();
+  ctx.translate(W*0.5, H*0.52+p.bob);
+  ctx.scale(s,s);
+  const GRN='#c8e8ff',GDK='#88b8e0',GLT='#e8f6ff',LIME='#88ccff',WHT='#ffffff',INK='#1a2a3a';
+  ctx.lineJoin='round'; ctx.lineCap='round'; ctx.strokeStyle=INK;
+  // Shadow
+  ctx.fillStyle='rgba(0,0,0,0.12)'; ctx.beginPath(); ctx.ellipse(4,44,26,6,0,0,Math.PI*2); ctx.fill();
+  // Tail (filled)
+  ctx.fillStyle='#c8e8ff'; ctx.strokeStyle='#88b8e0'; ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(-28,2); ctx.bezierCurveTo(-50,6,-60,16,-58,28);
+  ctx.bezierCurveTo(-56,36,-48,38,-44,32);
+  ctx.bezierCurveTo(-48,30,-52,26,-50,18);
+  ctx.bezierCurveTo(-48,10,-28,10,-26,6);
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+  // Snowflake at tail tip
+  ctx.save(); ctx.translate(-52,34);
+  ctx.strokeStyle='rgba(60,140,220,0.95)'; ctx.lineWidth=1.5;
+  for(let a=0;a<6;a++){
+    const ang=a*Math.PI/3+p.t*0.2;
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(Math.cos(ang)*9,Math.sin(ang)*9); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(Math.cos(ang)*5,Math.sin(ang)*5); ctx.lineTo(Math.cos(ang+0.5)*7.5,Math.sin(ang+0.5)*7.5); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(Math.cos(ang)*5,Math.sin(ang)*5); ctx.lineTo(Math.cos(ang-0.5)*7.5,Math.sin(ang-0.5)*7.5); ctx.stroke();
+  }
+  ctx.fillStyle='rgba(80,160,240,0.95)'; ctx.beginPath(); ctx.arc(0,0,2.5,0,Math.PI*2); ctx.fill();
+  ctx.restore();
+  // Back wing
+  const wa=p.wing*0.7;
+  ctx.save(); ctx.translate(-6,-12);
+  ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-14+wa*6,-22+wa*4); ctx.quadraticCurveTo(-2+wa*2,-16,6+wa,-28+wa*3); ctx.quadraticCurveTo(14+wa,-20,20,-14+wa*2); ctx.quadraticCurveTo(10,-4,0,0); ctx.closePath();
+  ctx.fillStyle=LIME; ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.6; ctx.stroke();
+  ctx.restore();
+  // Ice spikes on back (sitting on body surface)
+  [[-24,-16],[-10,-20],[4,-19],[16,-16]].forEach(([sx,sy])=>{
+    ctx.fillStyle='rgba(160,220,255,0.88)'; ctx.strokeStyle='#2266aa'; ctx.lineWidth=0.9;
+    ctx.beginPath(); ctx.moveTo(sx-3,sy+10); ctx.lineTo(sx,sy); ctx.lineTo(sx+3,sy+10); ctx.closePath();
+    ctx.fill(); ctx.stroke();
+    ctx.fillStyle='rgba(220,245,255,0.5)';
+    ctx.beginPath(); ctx.moveTo(sx,sy); ctx.lineTo(sx-1.5,sy+6); ctx.lineTo(sx,sy+10); ctx.closePath(); ctx.fill();
+  });
+  // Body
+  ctx.lineWidth=2.5; ctx.beginPath(); ctx.ellipse(0,10,36,23,-0.1,0,Math.PI*2); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  ctx.save(); ctx.beginPath(); ctx.ellipse(0,10,36,23,-0.1,0,Math.PI*2); ctx.clip();
+  ctx.beginPath(); ctx.ellipse(8,17,20,13,0,0,Math.PI*2); ctx.fillStyle=WHT; ctx.fill(); ctx.restore();
+  // Legs
+  ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(-18,30,8,12,0.1,0,Math.PI*2); ctx.fillStyle=GDK; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  [[-24,40],[-18,43],[-12,41]].forEach(([fx,fy])=>{ ctx.fillStyle=WHT; ctx.lineWidth=1; ctx.beginPath(); ctx.ellipse(fx,fy,2.4,3.4,0,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.stroke(); });
+  ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(16,30,8,12,-0.1,0,Math.PI*2); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  [[10,40],[16,43],[22,41]].forEach(([fx,fy])=>{ ctx.fillStyle=WHT; ctx.lineWidth=1; ctx.beginPath(); ctx.ellipse(fx,fy,2.4,3.4,0,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.stroke(); });
+  // Ice spike horn — behind head
+  ctx.save(); ctx.translate(40,-52); ctx.rotate(-0.15);
+  ctx.fillStyle='#88ccff'; ctx.strokeStyle='#2266aa'; ctx.lineWidth=1.2;
+  ctx.beginPath(); ctx.moveTo(0,6); ctx.lineTo(-4,0); ctx.lineTo(0,-20); ctx.lineTo(4,0); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.fillStyle='rgba(220,245,255,0.7)';
+  ctx.beginPath(); ctx.moveTo(0,-20); ctx.lineTo(-1.5,0); ctx.lineTo(0,6); ctx.lineTo(1,0); ctx.closePath(); ctx.fill();
+  ctx.restore();
+  // Neck
+  ctx.lineWidth=2.4; ctx.beginPath(); ctx.moveTo(22,-3); ctx.bezierCurveTo(28,-18,34,-28,40,-34); ctx.bezierCurveTo(46,-30,43,-14,35,4); ctx.closePath(); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  // Head
+  ctx.lineWidth=2.4; ctx.beginPath(); ctx.ellipse(48,-36,20,15,-0.1,0,Math.PI*2); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  ctx.fillStyle=WHT; ctx.beginPath(); ctx.ellipse(42,-40,7,5,0.3,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(64,-32,10,8,0,0,Math.PI*2); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  ctx.strokeStyle=INK; ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(56,-28); ctx.quadraticCurveTo(64,-24,72,-28); ctx.stroke();
+  ctx.fillStyle=GDK; ctx.beginPath(); ctx.ellipse(70,-30,1.8,1.4,0.3,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(40,-38,5.5,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.fillStyle=GLT; ctx.beginPath(); ctx.arc(41,-37,3.2,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#0a2208'; ctx.beginPath(); ctx.arc(41,-37,1.8,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(39,-39,1.2,0,Math.PI*2); ctx.fill();
+  // Front wing
+  ctx.save(); ctx.translate(4,-8);
+  ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-16+p.wing*10,-28+p.wing*7); ctx.quadraticCurveTo(-2+p.wing*3,-22,8+p.wing*3,-36+p.wing*4); ctx.quadraticCurveTo(18+p.wing*3,-24,28,-18+p.wing*3); ctx.quadraticCurveTo(16,-4,0,0); ctx.closePath();
+  ctx.fillStyle=LIME; ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.8; ctx.stroke();
+  ctx.restore();
+
+  // Frost breath from mouth
+  const ib=Math.abs(Math.sin(p.t*0.8));
+  ctx.fillStyle=`rgba(200,235,255,${0.18+ib*0.14})`;
+  [0,1,2].forEach(i=>{
+    ctx.beginPath(); ctx.ellipse(54+i*9,-30+ib*3+i*2,5+i*3+ib*2,3+i+ib*2,-0.15,0,Math.PI*2); ctx.fill();
+  });
+  // Orbiting ice sparkles
+  [0,1,2,3].forEach(i=>{
+    const ia=p.t*0.7+i*1.57, ir=22+Math.sin(p.t+i)*5;
+    const al=0.35+Math.abs(Math.sin(p.t*1.3+i))*0.45;
+    ctx.fillStyle=`rgba(200,235,255,${al})`;
+    ctx.beginPath(); ctx.arc(Math.cos(ia)*ir,-8+Math.sin(ia)*ir*0.5,2,0,Math.PI*2); ctx.fill();
+  });
+  ctx.restore();
+}
+
+
+function drawSideBluefireDragon(ctx, W, H, p){
+  ctx.clearRect(0,0,W,H);
+  const s=Math.min(W,H)/140;
+  ctx.save();
+  ctx.translate(W*0.5, H*0.52+p.bob);
+  ctx.scale(s,s);
+  const GRN='#1a44cc',GDK='#0e2888',GLT='#4488ff',LIME='#00aaff',WHT='#c0e8ff',INK='#050818';
+  ctx.lineJoin='round'; ctx.lineCap='round'; ctx.strokeStyle=INK;
+  // Shadow
+  ctx.fillStyle='rgba(0,0,0,0.12)'; ctx.beginPath(); ctx.ellipse(4,44,26,6,0,0,Math.PI*2); ctx.fill();
+  // Tail (filled)
+  ctx.fillStyle='#1a44cc'; ctx.strokeStyle='#0e2888'; ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(-28,2); ctx.bezierCurveTo(-50,6,-60,16,-58,28);
+  ctx.bezierCurveTo(-56,36,-48,38,-44,32);
+  ctx.bezierCurveTo(-48,30,-52,26,-50,18);
+  ctx.bezierCurveTo(-48,10,-28,10,-26,6);
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+  // Back wing
+  const wa=p.wing*0.7;
+  ctx.save(); ctx.translate(-6,-12);
+  ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-14+wa*6,-22+wa*4); ctx.quadraticCurveTo(-2+wa*2,-16,6+wa,-28+wa*3); ctx.quadraticCurveTo(14+wa,-20,20,-14+wa*2); ctx.quadraticCurveTo(10,-4,0,0); ctx.closePath();
+  ctx.fillStyle=LIME; ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.6; ctx.stroke();
+  ctx.restore();
+  // Spine leaves
+  [[-18,-8],[-6,-16],[8,-17],[22,-10]].forEach(([sx,sy])=>{
+    ctx.fillStyle=LIME; ctx.beginPath(); ctx.moveTo(sx,sy+4); ctx.bezierCurveTo(sx-5,sy-5,sx,sy-10,sx+5,sy-5); ctx.bezierCurveTo(sx+5,sy-5,sx+4,sy+2,sx,sy+4); ctx.closePath(); ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.4; ctx.stroke();
+  });
+  // Body
+  ctx.lineWidth=2.5; ctx.beginPath(); ctx.ellipse(0,10,36,23,-0.1,0,Math.PI*2); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  ctx.save(); ctx.beginPath(); ctx.ellipse(0,10,36,23,-0.1,0,Math.PI*2); ctx.clip();
+  ctx.beginPath(); ctx.ellipse(8,17,20,13,0,0,Math.PI*2); ctx.fillStyle=WHT; ctx.fill(); ctx.restore();
+  // Legs
+  ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(-18,30,8,12,0.1,0,Math.PI*2); ctx.fillStyle=GDK; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  [[-24,40],[-18,43],[-12,41]].forEach(([fx,fy])=>{ ctx.fillStyle=WHT; ctx.lineWidth=1; ctx.beginPath(); ctx.ellipse(fx,fy,2.4,3.4,0,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.stroke(); });
+  ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(16,30,8,12,-0.1,0,Math.PI*2); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  [[10,40],[16,43],[22,41]].forEach(([fx,fy])=>{ ctx.fillStyle=WHT; ctx.lineWidth=1; ctx.beginPath(); ctx.ellipse(fx,fy,2.4,3.4,0,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.stroke(); });
+  // Neck
+  ctx.lineWidth=2.4; ctx.beginPath(); ctx.moveTo(22,-3); ctx.bezierCurveTo(28,-18,34,-28,40,-34); ctx.bezierCurveTo(46,-30,43,-14,35,4); ctx.closePath(); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  // Head
+  ctx.lineWidth=2.4; ctx.beginPath(); ctx.ellipse(48,-36,20,15,-0.1,0,Math.PI*2); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  ctx.fillStyle=WHT; ctx.beginPath(); ctx.ellipse(42,-40,7,5,0.3,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(64,-32,10,8,0,0,Math.PI*2); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  ctx.strokeStyle=INK; ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(56,-28); ctx.quadraticCurveTo(64,-24,72,-28); ctx.stroke();
+  ctx.fillStyle=GDK; ctx.beginPath(); ctx.ellipse(70,-30,1.8,1.4,0.3,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle=LIME; ctx.beginPath(); ctx.moveTo(36,-46); ctx.bezierCurveTo(28,-52,30,-64,40,-62); ctx.bezierCurveTo(48,-60,44,-50,40,-44); ctx.closePath(); ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.8; ctx.stroke();
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(40,-38,5.5,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.fillStyle=GLT; ctx.beginPath(); ctx.arc(41,-37,3.2,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#0a2208'; ctx.beginPath(); ctx.arc(41,-37,1.8,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(39,-39,1.2,0,Math.PI*2); ctx.fill();
+  // Front wing
+  ctx.save(); ctx.translate(4,-8);
+  ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-16+p.wing*10,-28+p.wing*7); ctx.quadraticCurveTo(-2+p.wing*3,-22,8+p.wing*3,-36+p.wing*4); ctx.quadraticCurveTo(18+p.wing*3,-24,28,-18+p.wing*3); ctx.quadraticCurveTo(16,-4,0,0); ctx.closePath();
+  ctx.fillStyle=LIME; ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.8; ctx.stroke();
+  ctx.restore();
+
+  // Blue fire glow particles
+  [0,1,2,3].forEach(i=>{
+    const a=p.t*1.0+i*1.57, r=22+Math.sin(p.t*0.8+i)*6;
+    const al=0.3+Math.abs(Math.sin(p.t*1.5+i))*0.45;
+    ctx.fillStyle=`rgba(60,140,255,${al})`;
+    ctx.beginPath(); ctx.arc(Math.cos(a)*r,-8+Math.sin(a)*r*0.5,2.5,0,Math.PI*2); ctx.fill();
+  });
+  // Blue fire breath from mouth
+  const bf=Math.abs(Math.sin(p.t*0.9));
+  ctx.fillStyle=`rgba(100,160,255,${0.2+bf*0.15})`;
+  [0,1,2].forEach(i=>{
+    ctx.beginPath(); ctx.ellipse(54+i*9,-30+bf*3+i*2,5+i*3+bf*2,3+i+bf*2,-0.15,0,Math.PI*2); ctx.fill();
+  });
   ctx.restore();
 }
 
@@ -1765,6 +2122,7 @@ function drawPlacedHabitats(){
     const octx=oc.getContext('2d');
     if(h.type==='grass') drawGrassHabitat(octx, size, size, performance.now()/1000);
     else if(h.type==='earth') drawEarthHabitat(octx, size, size, performance.now()/1000);
+    else if(h.type==='ice') drawIceHabitat(octx, size, size, performance.now()/1000);
     else drawFireHabitat(octx, size, size, performance.now()/1000);
 
     // Draw dragons on habitat canvas so they scale with habitat
@@ -1790,6 +2148,8 @@ function drawPlacedHabitats(){
       if(d==='grass') drawSideGrassDragon(mctx, dragonSize, dragonSize, phys);
       else if(d==='earth') drawSideEarthDragon(mctx, dragonSize, dragonSize, phys);
       else if(d==='poison') drawSidePoisonDragon(mctx, dragonSize, dragonSize, phys);
+      else if(d==='ice') drawSideIceDragon(mctx, dragonSize, dragonSize, phys);
+      else if(d==='bluefire') drawSideBluefireDragon(mctx, dragonSize, dragonSize, phys);
       else drawSideDragon(mctx, dragonSize, dragonSize, phys);
       mctx.clearRect=origClear;
       mctx.restore();
@@ -1901,6 +2261,7 @@ function drawPlacementGhost(){
   }
   else if(game.placement.type==='grass') drawGrassHabitat(oc.getContext('2d'), size, size, performance.now()/1000);
   else if(game.placement.type==='earth') drawEarthHabitat(oc.getContext('2d'), size, size, performance.now()/1000);
+  else if(game.placement.type==='ice') drawIceHabitat(oc.getContext('2d'), size, size, performance.now()/1000);
   else drawFireHabitat(oc.getContext('2d'), size, size, performance.now()/1000);
   ctx.save(); ctx.globalAlpha=0.65;
   ctx.drawImage(oc, px, py, size, size);
@@ -2259,12 +2620,12 @@ function showGoldPopup(x, y, amount){
 
 // ── HOOK BUY BUTTON ───────────────────────────────────────────────
 // Dragon type → required habitat type mapping
-const DRAGON_HABITAT = { fire:'fire', grass:'grass', earth:'earth', poison:['grass','fire'], ice:'grass', bluefire:'fire' };
+const DRAGON_HABITAT = { fire:'fire', grass:'grass', earth:'earth', poison:['grass','fire'], ice:'ice', bluefire:['ice','fire'] };
 // Dragon costs
 const DRAGON_COST = { fire:250, grass:500, earth:1500 };
 const HATCH_TIMES = { fire:30000, grass:180000, earth:600000, poison:1800000, ice:900000, bluefire:1200000 };
 // Human-readable habitat names for error messages
-const HABITAT_NAMES = { fire:'Fire Habitat', grass:'Grass Habitat', earth:'Earth Habitat' };
+const HABITAT_NAMES = { fire:'Fire Habitat', grass:'Grass Habitat', earth:'Earth Habitat', ice:'Ice Habitat' };
 
 // Convert vertical scroll to horizontal on dragon grids
 document.querySelectorAll('.dragon-grid').forEach(grid=>{
@@ -2277,7 +2638,14 @@ document.querySelectorAll('.dragon-grid').forEach(grid=>{
 });
 function maxHabitats(){
   const lv=game.level||1;
-  return 3+Math.floor(lv/5)*2; // 3 at lv1, +2 every 5 levels
+  if(lv>=20) return 16;
+  if(lv>=18) return 14;
+  if(lv>=16) return 12;
+  if(lv>=14) return 11;
+  if(lv>=12) return 9;
+  if(lv>=9)  return 7;
+  if(lv>=5)  return 5;
+  return 3;
 }
 function maxFarms(){
   const lv=game.level||1;
@@ -2297,7 +2665,9 @@ document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
     if(isHabitat){
       const habitatType=isHabitat.dataset.habitat||'fire';
       if(game.placedHabitats.length>=maxHabitats()){ showNotification(`Reach level ${(Math.floor((game.level)/5)+1)*5} to unlock more habitats!`,'error'); return; }
-      const habitatCosts={fire:500,grass:750,earth:1250};
+      if(habitatType==='earth'&&(game.level||1)<4){ showNotification('Earth Habitat unlocks at Level 4!','error'); return; }
+      if(habitatType==='ice'&&(game.level||1)<10){ showNotification('Ice Habitat unlocks at Level 10!','error'); return; }
+      const habitatCosts={fire:500,grass:750,earth:1250,ice:4000};
       const hCost=habitatCosts[habitatType]||500;
       if(game.gold<hCost){ showNotification(`Not enough gold! (Need ${hCost} 🪙)`, 'error'); return; }
       startPlacement(habitatType,hCost);
@@ -2332,7 +2702,9 @@ document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
 
     if(dragonCanvas){
       const dragonType=dragonCanvas.dataset.dragon;
-      if(dragonType==='earth'&&(game.level||1)<3){ showNotification('Earth Dragon unlocks at Level 3!','error'); return; }
+      if(dragonType==='earth'&&(game.level||1)<4){ showNotification('Earth Dragon unlocks at Level 4!','error'); return; }
+      if(dragonType==='ice'&&(game.level||1)<10){ showNotification('Ice Dragon unlocks at Level 10!','error'); return; }
+      if(dragonType==='bluefire'&&(game.level||1)<10){ showNotification('Blue Fire Dragon unlocks at Level 10!','error'); return; }
       const habitatTypeRaw=DRAGON_HABITAT[dragonType];
       const habitatTypes=Array.isArray(habitatTypeRaw)?habitatTypeRaw:[habitatTypeRaw];
       const habitatType=habitatTypes[0];
@@ -2407,140 +2779,6 @@ function stepDragonPhysics(p, dt) {
   if(Math.abs(p.sway - swayTarget) < 0.04 && Math.abs(p.swayV) < 0.05) p.swayDir *= -1;
 }
 
-function drawSideIceDragon(ctx, W, H, p) {
-  ctx.clearRect(0,0,W,H);
-  const s = Math.min(W,H) / 140;
-  ctx.save();
-  ctx.translate(W*0.5, H*0.52+p.bob);
-  ctx.scale(s, s);
-
-  const RED = '#e8311a', RDK = '#b5230f', GOLD = '#ffc814', INK = '#2a0e00', CREAM = '#fff2c0';
-  ctx.lineJoin='round'; ctx.lineCap='round'; ctx.strokeStyle=INK;
-
-  // shadow
-  ctx.fillStyle='rgba(0,0,0,0.15)';
-  ctx.beginPath(); ctx.ellipse(4,44,28,7,0,0,Math.PI*2); ctx.fill();
-
-  // TAIL
-  ctx.lineWidth=3;
-  ctx.beginPath();
-  ctx.moveTo(-30,8);
-  ctx.bezierCurveTo(-55,14,-62,24,-58,34);
-  ctx.bezierCurveTo(-54,40,-46,38,-46,32);
-  ctx.strokeStyle=RED; ctx.stroke();
-  ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.stroke();
-  // tail tip diamond
-  ctx.fillStyle=GOLD;
-  ctx.beginPath();
-  ctx.moveTo(-58,34); ctx.lineTo(-64,28); ctx.lineTo(-68,34); ctx.lineTo(-64,40); ctx.closePath();
-  ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.stroke();
-
-  // BACK WING (behind body, smaller)
-  const wa = p.wing * 0.8;
-  ctx.save();
-  ctx.translate(-8, -10);
-  ctx.fillStyle = GOLD;
-  ctx.beginPath();
-  ctx.moveTo(0,0);
-  ctx.lineTo(-16 + wa*8, -26 + wa*6);
-  ctx.quadraticCurveTo(-4 + wa*4, -20, 6 + wa*2, -32 + wa*4);
-  ctx.quadraticCurveTo(14 + wa*2, -22, 22, -18 + wa*3);
-  ctx.quadraticCurveTo(12, -4, 0, 0);
-  ctx.closePath();
-  ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.8; ctx.stroke();
-  // ribs
-  ctx.strokeStyle=INK; ctx.lineWidth=1.2;
-  [[-16+wa*8,-26+wa*6],[6+wa*2,-32+wa*4],[22,-18+wa*3]].forEach(([tx,ty])=>{
-    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(tx,ty); ctx.stroke();
-  });
-  ctx.restore();
-
-  // BODY
-  ctx.lineWidth=2.5;
-  ctx.beginPath(); ctx.ellipse(0, 10, 36, 24, -0.12, 0, Math.PI*2);
-  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  // belly
-  ctx.save();
-  ctx.beginPath(); ctx.ellipse(0,10,36,24,-0.12,0,Math.PI*2); ctx.clip();
-  ctx.beginPath(); ctx.ellipse(8,18,20,14,-0.1,0,Math.PI*2);
-  ctx.fillStyle=GOLD; ctx.fill();
-  ctx.restore();
-
-  // spine spikes
-  ctx.lineWidth=1.8;
-  [[-18,-8],[-4,-16],[10,-17],[22,-10]].forEach(([sx,sy])=>{
-    ctx.beginPath(); ctx.moveTo(sx-4,sy+4); ctx.lineTo(sx,sy-6); ctx.lineTo(sx+4,sy+4); ctx.closePath();
-    ctx.fillStyle=GOLD; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  });
-
-  // BACK LEG
-  ctx.lineWidth=2;
-  ctx.beginPath(); ctx.ellipse(-18,30,8,12,0.1,0,Math.PI*2);
-  ctx.fillStyle=RDK; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  ctx.fillStyle=CREAM;
-  [[-24,40],[-18,43],[-12,41]].forEach(([fx,fy])=>{
-    ctx.beginPath(); ctx.ellipse(fx,fy,2.5,3.5,0,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1; ctx.stroke();
-  });
-
-  // FRONT LEG
-  ctx.lineWidth=2;
-  ctx.beginPath(); ctx.ellipse(16,30,8,12,-0.1,0,Math.PI*2);
-  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  ctx.fillStyle=CREAM;
-  [[10,40],[16,43],[22,41]].forEach(([fx,fy])=>{
-    ctx.beginPath(); ctx.ellipse(fx,fy,2.5,3.5,0,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1; ctx.stroke();
-  });
-
-  // NECK
-  ctx.lineWidth=2.5;
-  ctx.beginPath();
-  ctx.moveTo(38,-4); ctx.bezierCurveTo(44,-16,46,-30,40,-34);
-  ctx.bezierCurveTo(34,-30,30,-22,24,-7);
-  ctx.closePath();
-  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-
-  // HEAD
-  ctx.lineWidth=2.5;
-  ctx.beginPath(); ctx.ellipse(48,-36,20,15,-0.1,0,Math.PI*2);
-  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  ctx.beginPath(); ctx.ellipse(64,-32,10,8,0,0,Math.PI*2);
-  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  // mouth line
-  ctx.strokeStyle=INK; ctx.lineWidth=1.5;
-  ctx.beginPath(); ctx.moveTo(56,-28); ctx.quadraticCurveTo(64,-24,72,-28); ctx.stroke();
-  // nostril
-  ctx.fillStyle=RDK; ctx.beginPath(); ctx.ellipse(70,-30,1.8,1.4,0,0,Math.PI*2); ctx.fill();
-  // horn
-  ctx.fillStyle=GOLD; ctx.lineWidth=1.8;
-  ctx.beginPath(); ctx.moveTo(38,-46); ctx.bezierCurveTo(36,-54,40,-60,46,-58); ctx.bezierCurveTo(44,-54,42,-48,40,-44); ctx.closePath();
-  ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  // eye
-  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(40,-38,5.5,0,Math.PI*2); ctx.fill();
-  ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.stroke();
-  ctx.fillStyle='#1a0a02'; ctx.beginPath(); ctx.arc(41,-37,2.8,0,Math.PI*2); ctx.fill();
-  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(39,-39,1.2,0,Math.PI*2); ctx.fill();
-
-  // FRONT WING (in front, larger, animated)
-  ctx.save();
-  ctx.translate(4, -8);
-  ctx.fillStyle=GOLD;
-  ctx.beginPath();
-  ctx.moveTo(0,0);
-  ctx.lineTo(-18 + p.wing*10, -30 + p.wing*8);
-  ctx.quadraticCurveTo(-4 + p.wing*4, -24, 8 + p.wing*3, -38 + p.wing*5);
-  ctx.quadraticCurveTo(18 + p.wing*3, -26, 28, -20 + p.wing*4);
-  ctx.quadraticCurveTo(16, -4, 0, 0);
-  ctx.closePath();
-  ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=2; ctx.stroke();
-  ctx.strokeStyle=INK; ctx.lineWidth=1.3;
-  [[-18+p.wing*10,-30+p.wing*8],[8+p.wing*3,-38+p.wing*5],[28,-20+p.wing*4]].forEach(([tx,ty])=>{
-    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(tx,ty); ctx.stroke();
-  });
-  ctx.restore();
-
-  ctx.restore();
-}
-
 function drawFireHabitat(ctx, W, H, t) {
   ctx.clearRect(0,0,W,H);
   const cx=W/2, cy=H/2+4;
@@ -2638,140 +2876,6 @@ function drawFireHabitat(ctx, W, H, t) {
 
 // Draws the side dragon at a specific canvas position without clearRect (for habitats)
 
-function drawSideBluefireDragon(ctx, W, H, p) {
-  ctx.clearRect(0,0,W,H);
-  const s = Math.min(W,H) / 140;
-  ctx.save();
-  ctx.translate(W*0.5, H*0.52+p.bob);
-  ctx.scale(s, s);
-
-  const RED = '#e8311a', RDK = '#b5230f', GOLD = '#ffc814', INK = '#2a0e00', CREAM = '#fff2c0';
-  ctx.lineJoin='round'; ctx.lineCap='round'; ctx.strokeStyle=INK;
-
-  // shadow
-  ctx.fillStyle='rgba(0,0,0,0.15)';
-  ctx.beginPath(); ctx.ellipse(4,44,28,7,0,0,Math.PI*2); ctx.fill();
-
-  // TAIL
-  ctx.lineWidth=3;
-  ctx.beginPath();
-  ctx.moveTo(-30,8);
-  ctx.bezierCurveTo(-55,14,-62,24,-58,34);
-  ctx.bezierCurveTo(-54,40,-46,38,-46,32);
-  ctx.strokeStyle=RED; ctx.stroke();
-  ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.stroke();
-  // tail tip diamond
-  ctx.fillStyle=GOLD;
-  ctx.beginPath();
-  ctx.moveTo(-58,34); ctx.lineTo(-64,28); ctx.lineTo(-68,34); ctx.lineTo(-64,40); ctx.closePath();
-  ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.stroke();
-
-  // BACK WING (behind body, smaller)
-  const wa = p.wing * 0.8;
-  ctx.save();
-  ctx.translate(-8, -10);
-  ctx.fillStyle = GOLD;
-  ctx.beginPath();
-  ctx.moveTo(0,0);
-  ctx.lineTo(-16 + wa*8, -26 + wa*6);
-  ctx.quadraticCurveTo(-4 + wa*4, -20, 6 + wa*2, -32 + wa*4);
-  ctx.quadraticCurveTo(14 + wa*2, -22, 22, -18 + wa*3);
-  ctx.quadraticCurveTo(12, -4, 0, 0);
-  ctx.closePath();
-  ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.8; ctx.stroke();
-  // ribs
-  ctx.strokeStyle=INK; ctx.lineWidth=1.2;
-  [[-16+wa*8,-26+wa*6],[6+wa*2,-32+wa*4],[22,-18+wa*3]].forEach(([tx,ty])=>{
-    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(tx,ty); ctx.stroke();
-  });
-  ctx.restore();
-
-  // BODY
-  ctx.lineWidth=2.5;
-  ctx.beginPath(); ctx.ellipse(0, 10, 36, 24, -0.12, 0, Math.PI*2);
-  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  // belly
-  ctx.save();
-  ctx.beginPath(); ctx.ellipse(0,10,36,24,-0.12,0,Math.PI*2); ctx.clip();
-  ctx.beginPath(); ctx.ellipse(8,18,20,14,-0.1,0,Math.PI*2);
-  ctx.fillStyle=GOLD; ctx.fill();
-  ctx.restore();
-
-  // spine spikes
-  ctx.lineWidth=1.8;
-  [[-18,-8],[-4,-16],[10,-17],[22,-10]].forEach(([sx,sy])=>{
-    ctx.beginPath(); ctx.moveTo(sx-4,sy+4); ctx.lineTo(sx,sy-6); ctx.lineTo(sx+4,sy+4); ctx.closePath();
-    ctx.fillStyle=GOLD; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  });
-
-  // BACK LEG
-  ctx.lineWidth=2;
-  ctx.beginPath(); ctx.ellipse(-18,30,8,12,0.1,0,Math.PI*2);
-  ctx.fillStyle=RDK; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  ctx.fillStyle=CREAM;
-  [[-24,40],[-18,43],[-12,41]].forEach(([fx,fy])=>{
-    ctx.beginPath(); ctx.ellipse(fx,fy,2.5,3.5,0,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1; ctx.stroke();
-  });
-
-  // FRONT LEG
-  ctx.lineWidth=2;
-  ctx.beginPath(); ctx.ellipse(16,30,8,12,-0.1,0,Math.PI*2);
-  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  ctx.fillStyle=CREAM;
-  [[10,40],[16,43],[22,41]].forEach(([fx,fy])=>{
-    ctx.beginPath(); ctx.ellipse(fx,fy,2.5,3.5,0,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1; ctx.stroke();
-  });
-
-  // NECK
-  ctx.lineWidth=2.5;
-  ctx.beginPath();
-  ctx.moveTo(38,-4); ctx.bezierCurveTo(44,-16,46,-30,40,-34);
-  ctx.bezierCurveTo(34,-30,30,-22,24,-7);
-  ctx.closePath();
-  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-
-  // HEAD
-  ctx.lineWidth=2.5;
-  ctx.beginPath(); ctx.ellipse(48,-36,20,15,-0.1,0,Math.PI*2);
-  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  ctx.beginPath(); ctx.ellipse(64,-32,10,8,0,0,Math.PI*2);
-  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  // mouth line
-  ctx.strokeStyle=INK; ctx.lineWidth=1.5;
-  ctx.beginPath(); ctx.moveTo(56,-28); ctx.quadraticCurveTo(64,-24,72,-28); ctx.stroke();
-  // nostril
-  ctx.fillStyle=RDK; ctx.beginPath(); ctx.ellipse(70,-30,1.8,1.4,0,0,Math.PI*2); ctx.fill();
-  // horn
-  ctx.fillStyle=GOLD; ctx.lineWidth=1.8;
-  ctx.beginPath(); ctx.moveTo(38,-46); ctx.bezierCurveTo(36,-54,40,-60,46,-58); ctx.bezierCurveTo(44,-54,42,-48,40,-44); ctx.closePath();
-  ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  // eye
-  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(40,-38,5.5,0,Math.PI*2); ctx.fill();
-  ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.stroke();
-  ctx.fillStyle='#1a0a02'; ctx.beginPath(); ctx.arc(41,-37,2.8,0,Math.PI*2); ctx.fill();
-  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(39,-39,1.2,0,Math.PI*2); ctx.fill();
-
-  // FRONT WING (in front, larger, animated)
-  ctx.save();
-  ctx.translate(4, -8);
-  ctx.fillStyle=GOLD;
-  ctx.beginPath();
-  ctx.moveTo(0,0);
-  ctx.lineTo(-18 + p.wing*10, -30 + p.wing*8);
-  ctx.quadraticCurveTo(-4 + p.wing*4, -24, 8 + p.wing*3, -38 + p.wing*5);
-  ctx.quadraticCurveTo(18 + p.wing*3, -26, 28, -20 + p.wing*4);
-  ctx.quadraticCurveTo(16, -4, 0, 0);
-  ctx.closePath();
-  ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=2; ctx.stroke();
-  ctx.strokeStyle=INK; ctx.lineWidth=1.3;
-  [[-18+p.wing*10,-30+p.wing*8],[8+p.wing*3,-38+p.wing*5],[28,-20+p.wing*4]].forEach(([tx,ty])=>{
-    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(tx,ty); ctx.stroke();
-  });
-  ctx.restore();
-
-  ctx.restore();
-}
-
 function drawFireHabitat(ctx, W, H, t) {
   ctx.clearRect(0,0,W,H);
   const cx=W/2, cy=H/2+4;
@@ -2868,158 +2972,6 @@ function drawFireHabitat(ctx, W, H, t) {
 }
 
 // Draws the side dragon at a specific canvas position without clearRect (for habitats)
-
-function drawSidePoisonDragon(ctx, W, H, p) {
-  ctx.clearRect(0,0,W,H);
-  const s = Math.min(W,H) / 140;
-  ctx.save();
-  ctx.translate(W*0.5, H*0.52+p.bob);
-  ctx.scale(s, s);
-
-  const RED = '#1a8a20', RDK = '#0e5a14', GOLD = '#cc1111', INK = '#0a1e0a', CREAM = '#aeff88';
-  ctx.lineJoin='round'; ctx.lineCap='round'; ctx.strokeStyle=INK;
-
-  // shadow
-  ctx.fillStyle='rgba(0,0,0,0.15)';
-  ctx.beginPath(); ctx.ellipse(4,44,28,7,0,0,Math.PI*2); ctx.fill();
-
-  // TAIL
-  ctx.lineWidth=3;
-  ctx.beginPath();
-  ctx.moveTo(-30,8);
-  ctx.bezierCurveTo(-55,14,-62,24,-58,34);
-  ctx.bezierCurveTo(-54,40,-46,38,-46,32);
-  ctx.strokeStyle=RED; ctx.stroke();
-  ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.stroke();
-  // tail tip diamond
-  ctx.fillStyle=GOLD;
-  ctx.beginPath();
-  ctx.moveTo(-58,34); ctx.lineTo(-64,28); ctx.lineTo(-68,34); ctx.lineTo(-64,40); ctx.closePath();
-  ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.stroke();
-
-  // BACK WING (behind body, smaller)
-  const wa = p.wing * 0.8;
-  ctx.save();
-  ctx.translate(-8, -10);
-  ctx.fillStyle = GOLD;
-  ctx.beginPath();
-  ctx.moveTo(0,0);
-  ctx.lineTo(-16 + wa*8, -26 + wa*6);
-  ctx.quadraticCurveTo(-4 + wa*4, -20, 6 + wa*2, -32 + wa*4);
-  ctx.quadraticCurveTo(14 + wa*2, -22, 22, -18 + wa*3);
-  ctx.quadraticCurveTo(12, -4, 0, 0);
-  ctx.closePath();
-  ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.8; ctx.stroke();
-  // ribs
-  ctx.strokeStyle=INK; ctx.lineWidth=1.2;
-  [[-16+wa*8,-26+wa*6],[6+wa*2,-32+wa*4],[22,-18+wa*3]].forEach(([tx,ty])=>{
-    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(tx,ty); ctx.stroke();
-  });
-  ctx.restore();
-
-  // BODY
-  ctx.lineWidth=2.5;
-  ctx.beginPath(); ctx.ellipse(0, 10, 36, 24, -0.12, 0, Math.PI*2);
-  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  // belly
-  ctx.save();
-  ctx.beginPath(); ctx.ellipse(0,10,36,24,-0.12,0,Math.PI*2); ctx.clip();
-  ctx.beginPath(); ctx.ellipse(8,18,20,14,-0.1,0,Math.PI*2);
-  ctx.fillStyle=GOLD; ctx.fill();
-  ctx.restore();
-
-  // spine spikes
-  ctx.lineWidth=1.8;
-  [[-18,-8],[-4,-16],[10,-17],[22,-10]].forEach(([sx,sy])=>{
-    ctx.beginPath(); ctx.moveTo(sx-4,sy+4); ctx.lineTo(sx,sy-6); ctx.lineTo(sx+4,sy+4); ctx.closePath();
-    ctx.fillStyle=GOLD; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  });
-
-  // BACK LEG
-  ctx.lineWidth=2;
-  ctx.beginPath(); ctx.ellipse(-18,30,8,12,0.1,0,Math.PI*2);
-  ctx.fillStyle=RDK; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  ctx.fillStyle=CREAM;
-  [[-24,40],[-18,43],[-12,41]].forEach(([fx,fy])=>{
-    ctx.beginPath(); ctx.ellipse(fx,fy,2.5,3.5,0,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1; ctx.stroke();
-  });
-
-  // FRONT LEG
-  ctx.lineWidth=2;
-  ctx.beginPath(); ctx.ellipse(16,30,8,12,-0.1,0,Math.PI*2);
-  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  ctx.fillStyle=CREAM;
-  [[10,40],[16,43],[22,41]].forEach(([fx,fy])=>{
-    ctx.beginPath(); ctx.ellipse(fx,fy,2.5,3.5,0,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1; ctx.stroke();
-  });
-
-  // NECK
-  ctx.lineWidth=2.5;
-  ctx.beginPath();
-  ctx.moveTo(24,-7); ctx.bezierCurveTo(30,-22,34,-30,40,-34);
-  ctx.bezierCurveTo(46,-30,44,-16,38,-4);
-  ctx.closePath();
-  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-
-  // HEAD
-  ctx.lineWidth=2.5;
-  ctx.beginPath(); ctx.ellipse(48,-36,20,15,-0.1,0,Math.PI*2);
-  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  ctx.beginPath(); ctx.ellipse(64,-32,10,8,0,0,Math.PI*2);
-  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  // mouth line
-  ctx.strokeStyle=INK; ctx.lineWidth=1.5;
-  ctx.beginPath(); ctx.moveTo(56,-28); ctx.quadraticCurveTo(64,-24,72,-28); ctx.stroke();
-  // nostril
-  ctx.fillStyle=RDK; ctx.beginPath(); ctx.ellipse(70,-30,1.8,1.4,0,0,Math.PI*2); ctx.fill();
-  // horn
-  // POISON VIAL instead of horn
-  ctx.save(); ctx.translate(38,-62);
-  ctx.fillStyle='rgba(180,255,180,0.75)'; ctx.strokeStyle=INK; ctx.lineWidth=1.5;
-  ctx.beginPath(); ctx.roundRect(-3,0,7,14,2); ctx.fill(); ctx.stroke();
-  ctx.fillStyle='rgba(0,200,20,0.8)';
-  ctx.beginPath(); ctx.roundRect(-2,5,5,8,1); ctx.fill();
-  ctx.fillStyle='#cc9944'; ctx.strokeStyle=INK;
-  ctx.beginPath(); ctx.roundRect(-2,-4,5,6,1); ctx.fill(); ctx.stroke();
-  ctx.restore();
-  ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  // eye
-  ctx.fillStyle='#aaff00'; ctx.beginPath(); ctx.arc(40,-38,5.5,0,Math.PI*2); ctx.fill();
-  ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.stroke();
-  ctx.fillStyle='#0a2000'; ctx.beginPath(); ctx.ellipse(40,-37,1.2,3.5,0,0,Math.PI*2); ctx.fill();
-  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(39,-39,1.2,0,Math.PI*2); ctx.fill();
-
-  // FRONT WING (in front, larger, animated)
-  ctx.save();
-  ctx.translate(4, -8);
-  ctx.fillStyle=GOLD;
-  ctx.beginPath();
-  ctx.moveTo(0,0);
-  ctx.lineTo(-18 + p.wing*10, -30 + p.wing*8);
-  ctx.quadraticCurveTo(-4 + p.wing*4, -24, 8 + p.wing*3, -38 + p.wing*5);
-  ctx.quadraticCurveTo(18 + p.wing*3, -26, 28, -20 + p.wing*4);
-  ctx.quadraticCurveTo(16, -4, 0, 0);
-  ctx.closePath();
-  ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=2; ctx.stroke();
-  ctx.strokeStyle=INK; ctx.lineWidth=1.3;
-  [[-18+p.wing*10,-30+p.wing*8],[8+p.wing*3,-38+p.wing*5],[28,-20+p.wing*4]].forEach(([tx,ty])=>{
-    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(tx,ty); ctx.stroke();
-  });
-  // Poison particles
-  for(let pi=0;pi<4;pi++){
-    const pa=p.t*0.9+pi*1.57;
-    const pr=32+Math.sin(p.t+pi)*8;
-    const ppx=Math.cos(pa)*pr, ppy=-10+Math.sin(pa)*pr*0.5;
-    const pal=0.35+Math.sin(p.t*1.5+pi)*0.3;
-    ctx.fillStyle=`rgba(0,220,30,${pal})`;
-    ctx.beginPath(); ctx.arc(ppx,ppy,2.5+Math.sin(p.t+pi),0,Math.PI*2); ctx.fill();
-    ctx.fillStyle='rgba(180,255,150,0.35)';
-    ctx.beginPath(); ctx.arc(ppx-0.8,ppy-0.8,1,0,Math.PI*2); ctx.fill();
-  }
-  ctx.restore();
-
-  ctx.restore();
-}
 
 function drawFireHabitat(ctx, W, H, t) {
   ctx.clearRect(0,0,W,H);
@@ -3127,140 +3079,6 @@ function drawFireHabitat(ctx, W, H, t) {
 }
 
 // Draws the side dragon at a specific canvas position without clearRect (for habitats)
-
-function drawSideDragon(ctx, W, H, p) {
-  ctx.clearRect(0,0,W,H);
-  const s = Math.min(W,H) / 140;
-  ctx.save();
-  ctx.translate(W*0.5, H*0.52+p.bob);
-  ctx.scale(s, s);
-
-  const RED = '#e8311a', RDK = '#b5230f', GOLD = '#ffc814', INK = '#2a0e00', CREAM = '#fff2c0';
-  ctx.lineJoin='round'; ctx.lineCap='round'; ctx.strokeStyle=INK;
-
-  // shadow
-  ctx.fillStyle='rgba(0,0,0,0.15)';
-  ctx.beginPath(); ctx.ellipse(4,44,28,7,0,0,Math.PI*2); ctx.fill();
-
-  // TAIL
-  ctx.lineWidth=3;
-  ctx.beginPath();
-  ctx.moveTo(-30,8);
-  ctx.bezierCurveTo(-55,14,-62,24,-58,34);
-  ctx.bezierCurveTo(-54,40,-46,38,-46,32);
-  ctx.strokeStyle=RED; ctx.stroke();
-  ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.stroke();
-  // tail tip diamond
-  ctx.fillStyle=GOLD;
-  ctx.beginPath();
-  ctx.moveTo(-58,34); ctx.lineTo(-64,28); ctx.lineTo(-68,34); ctx.lineTo(-64,40); ctx.closePath();
-  ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.stroke();
-
-  // BACK WING (behind body, smaller)
-  const wa = p.wing * 0.8;
-  ctx.save();
-  ctx.translate(-8, -10);
-  ctx.fillStyle = GOLD;
-  ctx.beginPath();
-  ctx.moveTo(0,0);
-  ctx.lineTo(-16 + wa*8, -26 + wa*6);
-  ctx.quadraticCurveTo(-4 + wa*4, -20, 6 + wa*2, -32 + wa*4);
-  ctx.quadraticCurveTo(14 + wa*2, -22, 22, -18 + wa*3);
-  ctx.quadraticCurveTo(12, -4, 0, 0);
-  ctx.closePath();
-  ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.8; ctx.stroke();
-  // ribs
-  ctx.strokeStyle=INK; ctx.lineWidth=1.2;
-  [[-16+wa*8,-26+wa*6],[6+wa*2,-32+wa*4],[22,-18+wa*3]].forEach(([tx,ty])=>{
-    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(tx,ty); ctx.stroke();
-  });
-  ctx.restore();
-
-  // BODY
-  ctx.lineWidth=2.5;
-  ctx.beginPath(); ctx.ellipse(0, 10, 36, 24, -0.12, 0, Math.PI*2);
-  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  // belly
-  ctx.save();
-  ctx.beginPath(); ctx.ellipse(0,10,36,24,-0.12,0,Math.PI*2); ctx.clip();
-  ctx.beginPath(); ctx.ellipse(8,18,20,14,-0.1,0,Math.PI*2);
-  ctx.fillStyle=GOLD; ctx.fill();
-  ctx.restore();
-
-  // spine spikes
-  ctx.lineWidth=1.8;
-  [[-18,-8],[-4,-16],[10,-17],[22,-10]].forEach(([sx,sy])=>{
-    ctx.beginPath(); ctx.moveTo(sx-4,sy+4); ctx.lineTo(sx,sy-6); ctx.lineTo(sx+4,sy+4); ctx.closePath();
-    ctx.fillStyle=GOLD; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  });
-
-  // BACK LEG
-  ctx.lineWidth=2;
-  ctx.beginPath(); ctx.ellipse(-18,30,8,12,0.1,0,Math.PI*2);
-  ctx.fillStyle=RDK; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  ctx.fillStyle=CREAM;
-  [[-24,40],[-18,43],[-12,41]].forEach(([fx,fy])=>{
-    ctx.beginPath(); ctx.ellipse(fx,fy,2.5,3.5,0,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1; ctx.stroke();
-  });
-
-  // FRONT LEG
-  ctx.lineWidth=2;
-  ctx.beginPath(); ctx.ellipse(16,30,8,12,-0.1,0,Math.PI*2);
-  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  ctx.fillStyle=CREAM;
-  [[10,40],[16,43],[22,41]].forEach(([fx,fy])=>{
-    ctx.beginPath(); ctx.ellipse(fx,fy,2.5,3.5,0,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1; ctx.stroke();
-  });
-
-  // NECK
-  ctx.lineWidth=2.5;
-  ctx.beginPath();
-  ctx.moveTo(38,-4); ctx.bezierCurveTo(44,-16,46,-30,40,-34);
-  ctx.bezierCurveTo(34,-30,30,-22,24,-7);
-  ctx.closePath();
-  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-
-  // HEAD
-  ctx.lineWidth=2.5;
-  ctx.beginPath(); ctx.ellipse(48,-36,20,15,-0.1,0,Math.PI*2);
-  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  ctx.beginPath(); ctx.ellipse(64,-32,10,8,0,0,Math.PI*2);
-  ctx.fillStyle=RED; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  // mouth line
-  ctx.strokeStyle=INK; ctx.lineWidth=1.5;
-  ctx.beginPath(); ctx.moveTo(56,-28); ctx.quadraticCurveTo(64,-24,72,-28); ctx.stroke();
-  // nostril
-  ctx.fillStyle=RDK; ctx.beginPath(); ctx.ellipse(70,-30,1.8,1.4,0,0,Math.PI*2); ctx.fill();
-  // horn
-  ctx.fillStyle=GOLD; ctx.lineWidth=1.8;
-  ctx.beginPath(); ctx.moveTo(38,-46); ctx.bezierCurveTo(36,-54,40,-60,46,-58); ctx.bezierCurveTo(44,-54,42,-48,40,-44); ctx.closePath();
-  ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
-  // eye
-  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(40,-38,5.5,0,Math.PI*2); ctx.fill();
-  ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.stroke();
-  ctx.fillStyle='#1a0a02'; ctx.beginPath(); ctx.arc(41,-37,2.8,0,Math.PI*2); ctx.fill();
-  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(39,-39,1.2,0,Math.PI*2); ctx.fill();
-
-  // FRONT WING (in front, larger, animated)
-  ctx.save();
-  ctx.translate(4, -8);
-  ctx.fillStyle=GOLD;
-  ctx.beginPath();
-  ctx.moveTo(0,0);
-  ctx.lineTo(-18 + p.wing*10, -30 + p.wing*8);
-  ctx.quadraticCurveTo(-4 + p.wing*4, -24, 8 + p.wing*3, -38 + p.wing*5);
-  ctx.quadraticCurveTo(18 + p.wing*3, -26, 28, -20 + p.wing*4);
-  ctx.quadraticCurveTo(16, -4, 0, 0);
-  ctx.closePath();
-  ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=2; ctx.stroke();
-  ctx.strokeStyle=INK; ctx.lineWidth=1.3;
-  [[-18+p.wing*10,-30+p.wing*8],[8+p.wing*3,-38+p.wing*5],[28,-20+p.wing*4]].forEach(([tx,ty])=>{
-    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(tx,ty); ctx.stroke();
-  });
-  ctx.restore();
-
-  ctx.restore();
-}
 
 function drawFireHabitat(ctx, W, H, t) {
   ctx.clearRect(0,0,W,H);
@@ -3644,13 +3462,17 @@ function drawIceDragon(ctx, W, H, p) {
   ctx.beginPath();ctx.ellipse(0,-68,36,32,0,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
   ctx.beginPath();ctx.ellipse(0,-54,22,16,0,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
   ctx.beginPath();ctx.ellipse(0,-54,18,11,-0.05,0,Math.PI);ctx.fillStyle=RED_DK;ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2.2;ctx.stroke();
-  ctx.fillStyle=CREAM;
-  [[-13,6],[-4,9],[5,10],[13,8]].forEach(([tx,ty])=>{ctx.beginPath();ctx.moveTo(tx-2.2,-48+ty);ctx.lineTo(tx,-43+ty);ctx.lineTo(tx+2.2,-48+ty);ctx.closePath();ctx.fill();});
-  ctx.lineWidth=2.5;
-  [[-16,-96,-0.45],[16,-96,0.45]].forEach(([hx,hy,rot])=>{
-    ctx.save();ctx.translate(hx,hy);ctx.rotate(rot);
-    ctx.beginPath();ctx.moveTo(-5,4);ctx.quadraticCurveTo(-7,-12,0,-24);ctx.quadraticCurveTo(7,-12,5,4);ctx.closePath();
-    ctx.fillStyle=GOLD;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();ctx.restore();
+    ctx.lineWidth=2.5;
+  // Clean ice spike horns (blue, angular)
+  [[-16,-94,-0.3],[16,-94,0.3]].forEach(([hx,hy,rot])=>{
+    ctx.save(); ctx.translate(hx,hy); ctx.rotate(rot);
+    // Outer spike
+    ctx.fillStyle='#88ccff'; ctx.strokeStyle='#2266aa'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.moveTo(0,6); ctx.lineTo(-4,0); ctx.lineTo(0,-22); ctx.lineTo(4,0); ctx.closePath(); ctx.fill(); ctx.stroke();
+    // Inner highlight stripe
+    ctx.fillStyle='rgba(220,245,255,0.7)';
+    ctx.beginPath(); ctx.moveTo(0,-22); ctx.lineTo(-1.5,0); ctx.lineTo(0,6); ctx.lineTo(1,0); ctx.closePath(); ctx.fill();
+    ctx.restore();
   });
   [[-15,-75],[15,-75]].forEach(([ex,ey])=>{
     ctx.beginPath();ctx.ellipse(ex,ey,11,11,0,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2.5;ctx.stroke();
@@ -3685,21 +3507,6 @@ function drawIceDragon(ctx, W, H, p) {
   sf(-18,15,7,p.t*0.3+1);
   sf(18,18,7,p.t*0.3+2);
 
-  // Ice crystals on horns (spiky tips)
-  [[-16,-96],[-6,-72],[6,-72],[16,-96]].forEach(([cx3,cy3],idx)=>{
-    const sz=4+Math.sin(p.t*1.5+idx)*0.5;
-    ctx.fillStyle='rgba(220,245,255,0.85)';
-    ctx.strokeStyle='rgba(160,210,240,0.7)'; ctx.lineWidth=0.8;
-    for(let sp=0;sp<4;sp++){
-      const a=sp*Math.PI/2+0.4;
-      ctx.beginPath();
-      ctx.moveTo(cx3,cy3);
-      ctx.lineTo(cx3+Math.cos(a)*sz,cy3+Math.sin(a)*sz);
-      ctx.lineTo(cx3+Math.cos(a+0.4)*sz*0.4,cy3+Math.sin(a+0.4)*sz*0.4);
-      ctx.closePath(); ctx.fill(); ctx.stroke();
-    }
-  });
-
   // Floating snow/frost particles
   for(let pi=0;pi<6;pi++){
     const ang=p.t*0.6+pi*1.047;
@@ -3715,19 +3522,6 @@ function drawIceDragon(ctx, W, H, p) {
     ctx.beginPath(); ctx.moveTo(sx,sy-2.5); ctx.lineTo(sx,sy+2.5); ctx.stroke();
   }
 
-  // Cold breath wisps from mouth
-  const breathAng=[-0.3,0,0.3];
-  breathAng.forEach((ang,i)=>{
-    const bx=-42+Math.sin(p.t*1.2+i)*3, by=-52;
-    const len=8+Math.sin(p.t*1.5+i)*4;
-    const ba=0.25+Math.sin(p.t+i)*0.15;
-    ctx.strokeStyle=`rgba(200,235,255,${ba})`;
-    ctx.lineWidth=2-i*0.5;
-    ctx.beginPath();
-    ctx.moveTo(bx,by);
-    ctx.bezierCurveTo(bx+Math.cos(ang)*len,by-len*0.5,bx+Math.cos(ang)*len*1.8,by-len,bx+Math.cos(ang)*len*2,by-len*1.5);
-    ctx.stroke();
-  });
 
   // ── ICE DETAILS ─────────────────────────────────────────────
   // Frost cracks on body
@@ -3839,10 +3633,7 @@ function drawBluefireDragon(ctx, W, H, p) {
   ctx.beginPath();ctx.ellipse(0,-68,36,32,0,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
   ctx.beginPath();ctx.ellipse(0,-54,22,16,0,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
   ctx.beginPath();ctx.ellipse(0,-54,18,11,-0.05,0,Math.PI);ctx.fillStyle=RED_DK;ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2.2;ctx.stroke();
-  ctx.fillStyle=CREAM;
-  [[-13,6],[13,8]].forEach(([tx,ty])=>{ctx.beginPath();ctx.moveTo(tx-2.2,-48+ty);ctx.lineTo(tx,-43+ty);ctx.lineTo(tx+2.2,-48+ty);ctx.closePath();ctx.fill();});
-  ctx.lineWidth=2.5;
-  [[-18,-98,-0.52],[18,-98,0.52]].forEach(([hx,hy,rot])=>{
+    [[-18,-98,-0.52],[18,-98,0.52]].forEach(([hx,hy,rot])=>{
     ctx.save();ctx.translate(hx,hy);ctx.rotate(rot);
     ctx.beginPath();ctx.moveTo(-5,4);ctx.quadraticCurveTo(-7,-12,0,-24);ctx.quadraticCurveTo(7,-12,5,4);ctx.closePath();
     ctx.fillStyle=GOLD;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();ctx.restore();
@@ -3918,9 +3709,7 @@ function drawPoisonDragon(ctx, W, H, p) {
   ctx.beginPath();ctx.ellipse(0,-68,36,32,0,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
   ctx.beginPath();ctx.ellipse(0,-54,22,16,0,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
   ctx.beginPath();ctx.ellipse(0,-54,18,11,-0.05,0,Math.PI);ctx.fillStyle=RED_DK;ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2.2;ctx.stroke();
-  ctx.fillStyle=CREAM;
-  [[-13,6],[-4,9],[5,10],[13,8]].forEach(([tx,ty])=>{ctx.beginPath();ctx.moveTo(tx-2.2,-48+ty);ctx.lineTo(tx,-43+ty);ctx.lineTo(tx+2.2,-48+ty);ctx.closePath();ctx.fill();});
-  ctx.lineWidth=2.5;
+    ctx.lineWidth=2.5;
   [[-15,-75],[15,-75]].forEach(([ex,ey])=>{
     ctx.beginPath();ctx.ellipse(ex,ey,11,11,0,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2.5;ctx.stroke();
     ctx.beginPath();ctx.ellipse(ex+1,ey+1,5,5.6,0,0,Math.PI*2);ctx.fillStyle='#1a0a02';ctx.fill();
@@ -4768,7 +4557,7 @@ function harvestCrop(buildingIdx){
   const crop=CROPS.find(cr=>cr.id===b.crop);
   if(!crop||!b) return;
   game.food=(game.food||0)+crop.food;
-  document.getElementById('fv').textContent=game.food;
+  document.getElementById('fv').textContent=Math.floor(game.food).toLocaleString();
   const xpMap={wheat:10,carrot:20,dragonfruit:40,moonpetal:80};
   addXP(xpMap[crop.id]||10);
   b.crop=null; b.cropEnd=null; b.cropDuration=null;
@@ -5431,6 +5220,7 @@ function initHabitatCanvases() {
     function drawHabitat(t){
       if(type==='grass') drawGrassHabitat(hctx,SIZE,SIZE,t);
       else if(type==='earth') drawEarthHabitat(hctx,SIZE,SIZE,t);
+      else if(type==='ice') drawIceHabitat(hctx,SIZE,SIZE,t);
       else drawFireHabitat(hctx,SIZE,SIZE,t);
     }
     function loop(now){ requestAnimationFrame(loop); drawHabitat(now/1000); }
@@ -5906,7 +5696,7 @@ function loadGame(){
     // Reset roam state so dragons get fresh positions
     Object.keys(_dragonRoamState).forEach(k=>delete _dragonRoamState[k]);
     updateGoldUI();
-    document.getElementById('fv').textContent = game.food;
+    document.getElementById('fv').textContent = Math.floor(game.food).toLocaleString();
     updateQuestBadge();
     return true;
   } catch(e){ console.warn('Load failed:', e); return false; }
@@ -6063,6 +5853,17 @@ function updateShopButtons(){
     else { hatcheryBtn.disabled=false; hatcheryBtn.innerHTML='<span style="color:#88ee66;font-weight:700;">FREE</span>'; hatcheryBtn.style.opacity='1'; hatcheryBtn.style.cursor='pointer'; }
   }
 
+  // ── Ice Dragon lock ──
+  const iceDragonBtn=document.querySelector('canvas[data-dragon="ice"]')?.closest('.dragon-card')?.querySelector('.dragon-card-buy');
+  if(iceDragonBtn){
+    if((game.level||1)<10){ iceDragonBtn.disabled=true; iceDragonBtn.textContent='🔒 Level 10'; iceDragonBtn.style.opacity='0.5'; iceDragonBtn.style.cursor='default'; }
+    else if(iceDragonBtn.textContent.includes('Level')){ iceDragonBtn.disabled=false; iceDragonBtn.innerHTML='<span class="dc-coin">🪙</span><span>3000</span>'; iceDragonBtn.style.opacity='1'; iceDragonBtn.style.cursor='pointer'; }
+  }
+  const bluefireBtn=document.querySelector('canvas[data-dragon="bluefire"]')?.closest('.dragon-card')?.querySelector('.dragon-card-buy');
+  if(bluefireBtn){
+    if((game.level||1)<10){ bluefireBtn.disabled=true; bluefireBtn.textContent='🔒 Level 10'; bluefireBtn.style.opacity='0.5'; bluefireBtn.style.cursor='default'; }
+    else if(bluefireBtn.textContent.includes('Level')){ bluefireBtn.disabled=false; bluefireBtn.innerHTML='<span class="dc-coin">🪙</span><span>7000</span>'; bluefireBtn.style.opacity='1'; bluefireBtn.style.cursor='pointer'; }
+  }
   // ── Breeder buy button lock state ──
   const breederBtn=document.getElementById('breeder-buy-btn');
   if(breederBtn){
@@ -6118,7 +5919,7 @@ function submitCheat(){
     game.gold+=10000;
     game.food+=10000;
     updateGoldUI();
-    document.getElementById('fv').textContent=Math.floor(game.food);
+    document.getElementById('fv').textContent=Math.floor(game.food).toLocaleString();
     saveGame();
     msg.style.color='#88ee66';
     msg.textContent='✓ +10,000 🪙 and +10,000 🍖 added!';
@@ -6151,11 +5952,102 @@ function closeHatcheryMenu(){
   _hatcheryIdx=null;
 }
 
+function drawIceHabitat(ctx, W, H, t) {
+  ctx.clearRect(0,0,W,H);
+  const cx=W/2, cy=H/2+6;
+  const s=Math.min(W,H)/310;
+
+  // ── STONE RING + ICY SNOW GROUND ─────────────────────────────
+  ctx.save(); ctx.translate(cx,cy); ctx.scale(s,s);
+  drawHabitatRing(ctx);
+  // Snow ground inside ring
+  const snowGrad=ctx.createRadialGradient(0,4,10,0,4,97);
+  snowGrad.addColorStop(0,'#f0f9ff');
+  snowGrad.addColorStop(0.5,'#d8eefa');
+  snowGrad.addColorStop(1,'#b8d8ee');
+  ctx.fillStyle=snowGrad;
+  ctx.beginPath(); ctx.ellipse(0,0,97,58,0,0,Math.PI*2); ctx.fill();
+  ctx.restore();
+
+  // ── FROZEN POND ───────────────────────────────────────────────
+  const pondGrad=ctx.createRadialGradient(cx-12*s,cy-6*s,4*s,cx,cy+4*s,58*s);
+  pondGrad.addColorStop(0,'rgba(200,240,255,0.9)');
+  pondGrad.addColorStop(0.4,'rgba(140,210,245,0.85)');
+  pondGrad.addColorStop(1,'rgba(100,180,230,0.8)');
+  ctx.fillStyle=pondGrad;
+  ctx.beginPath(); ctx.ellipse(cx,cy+3*s,63*s,32*s,0,0,Math.PI*2); ctx.fill();
+  // Pond reflection
+  ctx.fillStyle='rgba(255,255,255,0.3)';
+  ctx.beginPath(); ctx.ellipse(cx-14*s,cy-1*s,23*s,8*s,-0.2,0,Math.PI*2); ctx.fill();
+  // Animated sparkles
+  [[cx-23*s,cy-3*s],[cx+15*s,cy+6*s],[cx-4*s,cy+9*s]].forEach(([px,py],i)=>{
+    const spark=0.5+0.5*Math.sin(t*2.2+i*1.5);
+    ctx.save(); ctx.translate(px,py);
+    ctx.strokeStyle=`rgba(255,255,255,${spark*0.8})`; ctx.lineWidth=0.8*s;
+    for(let a=0;a<4;a++){
+      const ang=a*Math.PI/2+t*0.3;
+      ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(Math.cos(ang)*4*s,Math.sin(ang)*4*s); ctx.stroke();
+    }
+    ctx.fillStyle=`rgba(255,255,255,${spark*0.9})`;
+    ctx.beginPath(); ctx.arc(0,0,1.5*s,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+  });
+  ctx.strokeStyle='rgba(160,210,240,0.5)'; ctx.lineWidth=1.5*s;
+  ctx.beginPath(); ctx.ellipse(cx,cy+3*s,63*s,32*s,0,0,Math.PI*2); ctx.stroke();
+
+  // ── SNOW TREES (back of habitat) ─────────────────────────────
+  [[cx-58*s,cy-36*s,1.5],[cx-20*s,cy-44*s,1.7],[cx+20*s,cy-42*s,1.5],[cx+56*s,cy-30*s,1.3]].forEach(([tx,ty,sc])=>{
+    ctx.save(); ctx.translate(tx,ty); ctx.scale(sc,sc);
+    ctx.fillStyle='#5a3a1a';
+    ctx.fillRect(-1.5*s,0,3*s,6*s);
+    [[0,-17*s,11*s,9*s],[0,-11*s,14*s,8*s],[0,-4*s,17*s,8*s]].forEach(([lx,ly,lw,lh])=>{
+      ctx.fillStyle='#1a5a20';
+      ctx.beginPath(); ctx.moveTo(lx,ly); ctx.lineTo(lx-lw/2,ly+lh); ctx.lineTo(lx+lw/2,ly+lh); ctx.closePath(); ctx.fill();
+      ctx.fillStyle='rgba(235,248,255,0.92)';
+      ctx.beginPath(); ctx.moveTo(lx,ly); ctx.lineTo(lx-lw*0.35,ly+lh*0.5); ctx.lineTo(lx+lw*0.35,ly+lh*0.5); ctx.closePath(); ctx.fill();
+    });
+    ctx.restore();
+  });
+
+  // ── IGLOO (right side) ───────────────────────────────────────
+  const iglx=cx+62*s, igly=cy+10*s;
+  ctx.fillStyle='rgba(235,248,255,0.95)';
+  ctx.strokeStyle='rgba(190,225,245,0.8)'; ctx.lineWidth=1.2*s;
+  ctx.beginPath(); ctx.ellipse(iglx,igly,14*s,11*s,0,Math.PI,Math.PI*2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle='rgba(220,240,255,0.8)';
+  ctx.beginPath(); ctx.ellipse(iglx,igly,16*s,4*s,0,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='rgba(100,160,200,0.6)';
+  ctx.beginPath(); ctx.ellipse(iglx,igly,4*s,5*s,0,Math.PI,Math.PI*2); ctx.fill();
+  ctx.strokeStyle='rgba(190,220,240,0.45)'; ctx.lineWidth=0.7*s;
+  ctx.beginPath(); ctx.moveTo(iglx-14*s,igly); ctx.bezierCurveTo(iglx-8*s,igly-6*s,iglx+8*s,igly-6*s,iglx+14*s,igly); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(iglx-10*s,igly-4*s); ctx.bezierCurveTo(iglx-3*s,igly-10*s,iglx+3*s,igly-10*s,iglx+10*s,igly-4*s); ctx.stroke();
+
+  // ── ICE CRYSTALS ─────────────────────────────────────────────
+  [[cx-77*s,cy-15*s,0],[cx-40*s,cy+28*s,-0.2],[cx+46*s,cy-22*s,0.3],[cx+77*s,cy-8*s,-0.1]].forEach(([kx,ky,kr])=>{
+    ctx.save(); ctx.translate(kx,ky); ctx.rotate(kr);
+    const g=0.85+0.15*Math.sin(t*1.8+kx);
+    [[-3*s,0,9*s,4*s],[0,0,12*s,4*s],[3*s,0,9*s,4*s]].forEach(([ox,oy,h,w])=>{
+      ctx.fillStyle=`rgba(140,220,255,${g*0.85})`;
+      ctx.strokeStyle=`rgba(100,190,240,0.7)`; ctx.lineWidth=0.6*s;
+      ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(ox-w/2,oy+h*0.4); ctx.lineTo(ox,oy+h); ctx.lineTo(ox+w/2,oy+h*0.4); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.fillStyle=`rgba(220,245,255,${g*0.5})`;
+      ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(ox-w*0.25,oy+h*0.3); ctx.lineTo(ox,oy+h*0.5); ctx.closePath(); ctx.fill();
+    });
+    ctx.restore();
+  });
+
+  // ── SNOW BUMPS ───────────────────────────────────────────────
+  ctx.fillStyle='rgba(230,246,255,0.7)';
+  [[cx-52*s,cy+18*s,19*s,8*s],[cx+58*s,cy+6*s,14*s,7*s],[cx-22*s,cy+38*s,16*s,9*s],[cx+30*s,cy+31*s,20*s,8*s],[cx+8*s,cy+43*s,13*s,6*s],[cx-68*s,cy+5*s,12*s,6*s]].forEach(([bx,by,bw,bh])=>{
+    ctx.beginPath(); ctx.ellipse(bx,by,bw,bh,0,0,Math.PI*2); ctx.fill();
+  });
+}
+
 function drawEggOnCanvas(cv, dragonType, readiness){
   const ctx=cv.getContext('2d'); const W=cv.width, H=cv.height;
   ctx.clearRect(0,0,W,H);
   const cx=W/2, cy=H*0.52;
-  const cols={fire:['#ff7040','#cc2800','#ffb080'],grass:['#60d040','#1a7a08','#a0f060'],earth:['#c09050','#7a5010','#e0c080'],poison:['#22aa22','#cc1111','#88ff44']};
+  const cols={fire:['#ff7040','#cc2800','#ffb080'],grass:['#60d040','#1a7a08','#a0f060'],earth:['#c09050','#7a5010','#e0c080'],poison:['#22aa22','#cc1111','#88ff44'],ice:['#aaddff','#5599cc','#e8f6ff'],bluefire:['#8844ff','#1122cc','#cc3322']};
   const [mid,dark,light]=cols[dragonType]||cols.fire;
   const r=Math.min(W,H)*0.32;
   // Glow
@@ -6170,6 +6062,42 @@ function drawEggOnCanvas(cv, dragonType, readiness){
   eg.addColorStop(0,light); eg.addColorStop(0.55,mid); eg.addColorStop(1,dark);
   ctx.fillStyle=eg;
   ctx.beginPath(); ctx.ellipse(cx,cy,r*0.72,r,0,0,Math.PI*2); ctx.fill();
+  // Ice egg: snowflake + sparkles
+  if(dragonType==='ice'){
+    const now2=performance.now()/1000;
+    // Snowflake in center
+    ctx.save(); ctx.translate(cx,cy-r*0.1);
+    ctx.strokeStyle='rgba(255,255,255,0.65)'; ctx.lineWidth=1.5;
+    for(let a=0;a<6;a++){
+      const ang=a*Math.PI/3;
+      ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(Math.cos(ang)*r*0.35,Math.sin(ang)*r*0.35); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(Math.cos(ang)*r*0.18,Math.sin(ang)*r*0.18);
+      ctx.lineTo(Math.cos(ang+0.5)*r*0.28,Math.sin(ang+0.5)*r*0.28); ctx.stroke();
+    }
+    ctx.fillStyle='rgba(255,255,255,0.8)';
+    ctx.beginPath(); ctx.arc(0,0,3,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+    // Orbiting sparkles
+    for(let i=0;i<5;i++){
+      const a=now2*0.8+i*1.257;
+      const pr=r*1.2;
+      const fa=0.4+0.45*Math.abs(Math.sin(now2+i));
+      ctx.fillStyle=`rgba(200,235,255,${fa})`;
+      ctx.beginPath(); ctx.arc(cx+Math.cos(a)*pr,cy+Math.sin(a)*pr*0.6,2.5,0,Math.PI*2); ctx.fill();
+    }
+  }
+  // Blue fire egg: left red, right blue split
+  if(dragonType==='bluefire'){
+    ctx.save(); ctx.translate(cx,cy);
+    ctx.beginPath(); ctx.ellipse(0,0,r*0.72,r,0,0,Math.PI*2); ctx.clip();
+    ctx.fillStyle='rgba(220,40,20,0.45)';
+    ctx.fillRect(-r,-r*1.5,r,r*3);
+    ctx.fillStyle='rgba(20,40,220,0.45)';
+    ctx.fillRect(0,-r*1.5,r,r*3);
+    ctx.strokeStyle='rgba(255,255,255,0.55)'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(0,-r); ctx.lineTo(0,r); ctx.stroke();
+    ctx.restore();
+  }
   // Poison egg: red spot pattern
   if(dragonType==='poison'){
     ctx.fillStyle='rgba(180,10,10,0.55)';
@@ -6404,6 +6332,7 @@ function openDragonPicker(slotIdx){
       else if(type==='earth') drawEarthDragon(canvas.getContext('2d'),80,80,phys);
       else if(type==='poison') drawPoisonDragon(canvas.getContext('2d'),80,80,phys);
       else if(type==='ice') drawIceDragon(canvas.getContext('2d'),80,80,phys);
+      else if(type==='ice') drawIceDragon(canvas.getContext('2d'),80,80,phys);
       else if(type==='bluefire') drawBluefireDragon(canvas.getContext('2d'),80,80,phys);
       else drawFireDragon(canvas.getContext('2d'),80,80,phys);
       card.appendChild(canvas);
@@ -6447,6 +6376,8 @@ function updateBreedSlots(){
       if(sel.type==='grass') drawGrassDragon(cv.getContext('2d'),120,120,phys);
       else if(sel.type==='earth') drawEarthDragon(cv.getContext('2d'),120,120,phys);
       else if(sel.type==='poison') drawPoisonDragon(cv.getContext('2d'),120,120,phys);
+      else if(sel.type==='ice') drawIceDragon(cv.getContext('2d'),120,120,phys);
+      else if(sel.type==='bluefire') drawBluefireDragon(cv.getContext('2d'),120,120,phys);
       else drawFireDragon(cv.getContext('2d'),120,120,phys);
       slot.innerHTML='';
       slot.appendChild(cv);
@@ -6512,20 +6443,33 @@ const _origCloseBreeder = ()=>{
 
 // ── BREEDING SYSTEM ───────────────────────────────────────────
 function getBreedingOdds(t1, t2){
+  const specials=['poison','bluefire'];
+  const normals=['fire','grass','earth','ice'];
+  const isSpecial=t=>specials.includes(t);
   const sorted=[t1,t2].sort();
-  // Poison + Poison → 10% poison, 90% mystery (fire or grass)
-  if(t1==='poison'&&t2==='poison') return [{type:'poison',pct:10},{type:'mystery',pct:90}];
-  // Any combo with poison → 10% poison, 90% the other
-  if(t1==='poison'||t2==='poison'){
-    const other=t1==='poison'?t2:t1;
-    return [{type:'poison',pct:10},{type:other,pct:90}];
-  }
-  // Grass + Fire → 10% poison, 45/45
   const combo=sorted.join('+');
-  if(combo==='fire+grass') return [{type:'poison',pct:10},{type:'fire',pct:45},{type:'grass',pct:45}];
-  // Same type
+
+  // 2 of the same special → 20% that, 80% mystery
+  if(t1===t2 && isSpecial(t1)) return [{type:t1,pct:20},{type:'mystery',pct:80}];
+
+  // 2 of the same normal → 100% that type
   if(t1===t2) return [{type:t1,pct:100}];
-  // Default 50/50
+
+  // 2 different specials → 10% each, 80% mystery
+  if(isSpecial(t1)&&isSpecial(t2)) return [{type:t1,pct:10},{type:t2,pct:10},{type:'mystery',pct:80}];
+
+  // Special + normal → 10% special, 45% normal, 45% mystery
+  if(isSpecial(t1)||isSpecial(t2)){
+    const sp=isSpecial(t1)?t1:t2;
+    const no=isSpecial(t1)?t2:t1;
+    return [{type:sp,pct:10},{type:no,pct:45},{type:'mystery',pct:45}];
+  }
+
+  // Specific normal combos that produce specials
+  if(combo==='fire+grass') return [{type:'poison',pct:10},{type:'fire',pct:45},{type:'grass',pct:45}];
+  if(combo==='fire+ice')   return [{type:'bluefire',pct:10},{type:'fire',pct:45},{type:'ice',pct:45}];
+
+  // Default normal+normal → 50/50
   return [{type:t1,pct:50},{type:t2,pct:50}];
 }
 
@@ -6535,8 +6479,11 @@ function rollBreedResult(t1,t2){
   let cum=0;
   let result=odds[odds.length-1].type;
   for(const o of odds){ cum+=o.pct; if(roll<cum){ result=o.type; break; } }
-  // Mystery resolves to fire or grass randomly
-  if(result==='mystery') result=Math.random()<0.5?'fire':'grass';
+  // Mystery resolves to a random normal dragon
+  if(result==='mystery'){
+    const pool=['fire','grass','earth','ice'];
+    result=pool[Math.floor(Math.random()*pool.length)];
+  }
   return result;
 }
 
@@ -6569,6 +6516,96 @@ function collectBreedEgg(buildingIdx){
 }
 
 const DRAGON_DISPLAY={fire:'Fire Dragon',grass:'Grass Dragon',earth:'Earth Dragon',poison:'Poison Dragon',ice:'Ice Dragon',bluefire:'Blue Fire Dragon'};
+
+
+function openNewsPanel(){
+  let el=document.getElementById('news-panel');
+  if(el){ el.remove(); return; }
+  el=document.createElement('div');
+  el.id='news-panel';
+  el.style.cssText='position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(660px,100vw);background:linear-gradient(160deg,#1e1500,#100c00);border:2px solid rgba(220,180,40,0.5);border-bottom:none;border-radius:18px 18px 0 0;padding:28px 28px 40px;z-index:200;box-shadow:0 -4px 32px rgba(120,80,0,0.6);max-height:80vh;display:flex;flex-direction:column;';
+
+  const news = [
+    { date:'2026-07-07', title:'⚗️ Breeding System', items:[
+      'Breeding Cave building unlocked at Level 5 (2,000🪙)',
+      'Breed two dragons for a chance at rare offspring',
+      'Special combos: Grass+Fire → Poison, Ice+Fire → Blue Fire',
+      'Special dragons (Poison, Blue Fire) always have 10% chance in breeding',
+      'Breeding time: 10 minutes',
+    ]},
+    { date:'2026-07-07', title:'❄️ Ice Update', items:[
+      'Ice Dragon added — 3,000🪙, unlocks at Level 10',
+      'Ice Habitat added — 4,000🪙, holds up to 5,000🪙, unlocks at Level 10',
+      'Blue Fire Dragon added — 7,000🪙, unlocks at Level 10, goes in Ice or Fire habitat',
+      'Ice and Blue Fire eggs with unique designs',
+    ]},
+    { date:'2026-07-06', title:'☠️ Poison Dragon', items:[
+      'Poison Dragon added — 5,000🪙, goes in Grass or Fire habitat',
+      'Unique design with poison vials as horns, toxic spots and bubbles',
+      'Gives 30🪙/min at Lv.1 and 650🪙/min at max level',
+      'Poison egg with red spots and floating particles',
+    ]},
+    { date:'2026-07-06', title:'🏗️ Buildings', items:[
+      'Breeding Cave — 2,000🪙, Level 5 required',
+      'Dragon Hatchery — Free, store and hatch dragon eggs',
+      'Farm — 300🪙, grow food for your dragons (up to 3 farms)',
+      'New crop: Moon Petal (Level 10) — 5,000🪙, 20 min, 2,300🍖',
+    ]},
+    { date:'2026-07-06', title:'⚖️ Balance Changes', items:[
+      'Habitat gold caps: Fire 1,500🪙 · Grass 2,000🪙 · Earth 3,000🪙 · Ice 5,000🪙',
+      'Dragon food costs adjusted per type (Fire 50% off → Poison 33% extra)',
+      'Habitat unlock levels: Earth Lv.4 · Ice Lv.10',
+      'Max habitats: 3→5→7→9→11→12→14→16 across levels 1–20',
+      'XP system, quests, and island expansion at Level 10',
+    ]},
+    { date:'2026-07-05', title:'🐉 Core Game', items:[
+      'Fire Dragon, Grass Dragon, Earth Dragon — the original trio',
+      'Three habitats: Fire, Grass, Earth',
+      'Gold generation, food system, dragon leveling up to Level 15',
+      'Camera with zoom and pan, drag-and-drop placement',
+    ]},
+  ];
+
+  el.innerHTML=`
+    <button onclick="document.getElementById('news-panel').remove()" style="position:absolute;top:14px;right:16px;background:rgba(60,40,0,0.5);border:1.5px solid rgba(220,180,40,0.3);border-radius:50%;width:38px;height:38px;color:#ffd860;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;">✕</button>
+    <div style="font-family:'Cinzel Decorative',serif;font-size:1.3rem;font-weight:700;color:#ffd860;text-align:center;margin-bottom:20px;flex-shrink:0;">📰 News & Updates</div>
+    <div id="news-scroll" style="overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:14px;scrollbar-width:thin;scrollbar-color:rgba(220,180,40,0.3) transparent;padding-right:4px;">
+      ${news.map(n=>`
+        <div style="background:rgba(255,200,50,0.06);border:1px solid rgba(220,180,40,0.2);border-radius:12px;padding:14px 16px;position:relative;">
+          <div style="position:absolute;top:10px;right:12px;font-family:Cinzel,serif;font-size:0.65rem;color:rgba(220,180,40,0.5);">${n.date}</div>
+          <div style="font-family:Cinzel,serif;font-size:0.92rem;font-weight:700;color:#ffd860;margin-bottom:8px;">${n.title}</div>
+          <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;">
+            ${n.items.map(i=>`<li style="font-family:serif;font-size:0.78rem;color:rgba(255,220,140,0.8);">${i}</li>`).join('')}
+          </ul>
+        </div>`).join('')}
+    </div>
+  `;
+  document.body.appendChild(el);
+}
+
+
+// ── SECRET CODE: type "skiptime" to instantly hatch all eggs ──
+(function(){
+  let _buf='';
+  document.addEventListener('keydown', e=>{
+    _buf=(e.key.length===1?_buf+e.key:_buf).slice(-8).toLowerCase();
+    if(_buf==='skiptime'){
+      _buf='';
+      let count=0;
+      (game.buildings||[]).forEach(b=>{
+        if(b.type==='hatchery' && b.eggs){
+          b.eggs.forEach(egg=>{ egg.startTime=0; egg.duration=1; });
+          count+=b.eggs.length;
+        }
+        if(b.type==='breeder' && b.breedState && !b.breedState.done){
+          b.breedState.startTime=0; b.breedState.duration=1; count++;
+        }
+      });
+      if(count>0){ saveGame(); showNotification('⏩ Time skipped! ('+count+' eggs)', 'success'); }
+      else showNotification('No eggs to skip!', 'error');
+    }
+  });
+})();
 
 </script>
 
