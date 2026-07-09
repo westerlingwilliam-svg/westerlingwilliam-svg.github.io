@@ -2469,6 +2469,8 @@ function openHabitatMenu(idx){
   if(!h) return;
   const menu=document.getElementById('habitat-menu');
   menu.classList.add('open'); menu.style.display='flex';
+  const titleEl=document.getElementById('habitat-menu-title');
+  if(titleEl) titleEl.textContent=HABITAT_NAMES[h.type]||'Habitat';
 
   const row=document.getElementById('habitat-dragons-row');
   row.innerHTML='';
