@@ -212,9 +212,10 @@ html,body{width:100%;height:100%;overflow:hidden;}
 #place-cancel:hover{background:rgba(200,50,25,0.85);}
 
 /* Habitat context menu */
-#habitat-menu{position:fixed;inset:0;z-index:120;display:none;align-items:flex-end;justify-content:center;pointer-events:none;}
-#habitat-menu.open{display:flex;}
-#habitat-menu-content{pointer-events:all;width:min(96vw,620px);background:linear-gradient(180deg,#2e2c28 0%,#3a3830 100%);border:1.5px solid rgba(220,210,180,0.18);border-radius:18px 18px 0 0;padding:20px 16px 30px;box-shadow:0 -10px 40px rgba(0,0,0,0.6),0 -1px 0 rgba(255,255,255,0.06);}
+#habitat-menu{position:fixed;inset:0;z-index:300;display:none;align-items:flex-end;justify-content:center;pointer-events:none;will-change:transform;transform:translateZ(0);}
+#habitat-menu.open>div{pointer-events:all;}
+#habitat-menu.open{display:flex !important;}
+#habitat-menu-content{pointer-events:all;will-change:transform;transform:translateZ(0);isolation:isolate;width:min(96vw,620px);background:linear-gradient(180deg,#2e2c28 0%,#3a3830 100%);border:1.5px solid rgba(220,210,180,0.18);border-radius:18px 18px 0 0;padding:20px 16px 30px;box-shadow:0 -10px 40px rgba(0,0,0,0.6),0 -1px 0 rgba(255,255,255,0.06);}
 #habitat-menu-title{font-family:'Cinzel Decorative',serif;font-size:1.8rem;color:#c8b890;text-align:center;margin-bottom:14px;letter-spacing:2px;text-transform:uppercase;}
 #habitat-dragons-row{display:flex;gap:8px;justify-content:center;margin-bottom:12px;}
 .dragon-slot-card{width:180px;display:flex;flex-direction:column;align-items:center;gap:6px;}
@@ -344,7 +345,7 @@ html,body{width:100%;height:100%;overflow:hidden;}
 #cheat-submit{font-family:Cinzel,serif;font-size:0.8rem;font-weight:700;padding:10px 28px;background:linear-gradient(180deg,#c8920a,#7a5200);border:1.5px solid rgba(255,200,60,0.5);border-radius:20px;color:#fff8e0;cursor:pointer;margin-right:8px;}
 #cheat-cancel{font-family:Cinzel,serif;font-size:0.8rem;padding:10px 20px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,200,60,0.2);border-radius:20px;color:#aaa;cursor:pointer;}
 
-#hatchery-menu{position:fixed;bottom:0;left:50%;transform:translateX(-50%);z-index:150;width:min(96vw,560px);background:linear-gradient(180deg,#1e1c18,#2a2820);border:1.5px solid rgba(220,190,120,0.25);border-radius:18px 18px 0 0;padding:20px 20px 32px;box-shadow:0 -8px 32px rgba(0,0,0,0.6);display:none;}
+#hatchery-menu{position:fixed;bottom:0;left:50%;transform:translateX(-50%);z-index:300;width:min(96vw,560px);background:linear-gradient(180deg,#1e1c18,#2a2820);border:1.5px solid rgba(220,190,120,0.25);border-radius:18px 18px 0 0;padding:20px 20px 32px;box-shadow:0 -8px 32px rgba(0,0,0,0.6);display:none;}
 #hatchery-menu.open{display:block;}
 .hatch-slot{flex:1;background:rgba(0,0,0,0.3);border:1.5px solid rgba(200,170,90,0.2);border-radius:14px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:200px;position:relative;}
 .hatch-slot.empty{border-style:dashed;opacity:0.5;}
@@ -388,6 +389,21 @@ html,body{width:100%;height:100%;overflow:hidden;}
   background:repeating-linear-gradient(135deg,transparent 0,transparent 6px,rgba(255,255,255,0.025) 6px,rgba(255,255,255,0.025) 7px),
   radial-gradient(ellipse at 50% 0%,rgba(255,230,80,0.18) 0%,transparent 60%);border-radius:inherit;}
 #news-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(180,120,0,0.6),inset 0 1px 0 rgba(255,240,100,0.2);}
+
+.dragon-elem-badge{position:absolute;bottom:6px;left:6px;display:flex;gap:3px;z-index:2;}
+.dragon-elem-badge span{font-size:1rem;line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.8));}
+.dragon-card-frame{position:relative;}
+
+.elem-filter-btn{background:rgba(40,30,15,0.7);border:1.5px solid rgba(180,140,60,0.4);border-radius:20px;padding:5px 12px;font-family:Cinzel,serif;font-size:0.72rem;color:rgba(220,190,120,0.8);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:4px;}
+.elem-filter-btn.active{background:rgba(100,70,10,0.8);border-color:rgba(255,200,60,0.8);color:#ffd860;}
+.elem-filter-btn:hover{border-color:rgba(255,200,60,0.6);color:#ffd860;}
+
+@keyframes newsPulse{
+  0%{transform:scale(1);box-shadow:0 4px 20px rgba(0,60,180,0.4),0 0 0 0 rgba(80,160,255,0);}
+  50%{transform:scale(1.1);box-shadow:0 6px 28px rgba(0,80,220,0.7),0 0 0 5px rgba(80,160,255,0.7),0 0 20px rgba(80,160,255,0.4);}
+  100%{transform:scale(1);box-shadow:0 4px 20px rgba(0,60,180,0.4),0 0 0 0 rgba(80,160,255,0);}
+}
+#news2-btn.news-unread{animation:newsPulse 1.8s ease-in-out infinite;border-color:rgba(100,180,255,0.9)!important;}
 </style>
 #news-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(180,120,0,0.6);}
 
@@ -425,7 +441,10 @@ html,body{width:100%;height:100%;overflow:hidden;}
     <span class="label">EXPAND</span>
   </button>
   <button id="news-btn" onclick="openNewsPanel()" style="position:absolute;bottom:clamp(20px,2.5vw,32px);right:calc(clamp(20px,2vw,32px) + (clamp(108px,11vw,144px) + 28px)*3);background:linear-gradient(150deg,#7a5a00,#4a3500 45%,#2a1e00);border:2px solid rgba(220,180,40,0.7);border-radius:clamp(18px,2.2vw,28px);width:clamp(108px,11vw,144px);height:clamp(108px,11vw,144px);padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;box-sizing:border-box;pointer-events:all;">
-    <span style="font-family:Cinzel,serif;font-size:clamp(1.25rem,1.7vw,1.7rem);font-weight:700;color:#ffd860;letter-spacing:1px;text-shadow:0 1px 4px rgba(0,0,0,0.8);">NEWS</span>
+    <span style="font-family:Cinzel,serif;font-size:clamp(1.05rem,1.4vw,1.4rem);font-weight:700;color:#ffd860;letter-spacing:1px;text-shadow:0 1px 4px rgba(0,0,0,0.8);">UPDATES</span>
+  </button>
+  <button id="news2-btn" onclick="openNewsPanel2()" style="position:absolute;bottom:clamp(20px,2.5vw,32px);right:calc(clamp(20px,2vw,32px) + (clamp(108px,11vw,144px) + 28px)*4);background:radial-gradient(circle at 30% 25%,rgba(255,255,255,0.12) 0%,transparent 50%),linear-gradient(145deg,#0a2a4a,#051828 50%,#020e1a);border:2px solid rgba(80,160,255,0.55);border-radius:clamp(18px,2.2vw,28px);width:clamp(108px,11vw,144px);height:clamp(108px,11vw,144px);padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;box-sizing:border-box;pointer-events:all;box-shadow:0 4px 20px rgba(0,80,200,0.4),inset 0 1px 0 rgba(100,180,255,0.15);transition:all .2s;">
+    <span style="font-family:Cinzel,serif;font-size:clamp(1.25rem,1.7vw,1.7rem);font-weight:700;color:#7ac8ff;letter-spacing:1px;text-shadow:0 0 12px rgba(80,160,255,0.7),0 1px 4px rgba(0,0,0,0.8);">NEWS</span>
   </button>
   <button id="quest-btn" onclick="openQuestPanel()" style="position:absolute;bottom:clamp(20px,2.5vw,32px);right:calc(clamp(20px,2vw,32px) + clamp(108px,11vw,144px) + 28px);">
     <span class="label">QUESTS</span>
@@ -456,67 +475,78 @@ html,body{width:100%;height:100%;overflow:hidden;}
     <div id="sh-body">
       <!-- DRAGONS TAB -->
       <div class="sh-panel" data-panel="dragons">
+        <div style="position:relative;">
+        <div id="dragon-filter-bar" style="position:absolute;top:-14px;left:16px;bottom:0;display:flex;align-items:center;z-index:5;pointer-events:all;">
+          <button class="elem-filter-btn active" data-filter="all" onclick="openSortPopup(event)" style="padding:3px 16px;border:1.5px solid rgba(0,0,0,0.3);border-radius:16px;background:radial-gradient(circle at 40% 35%,rgba(255,255,255,0.12) 0%,transparent 60%),rgba(0,0,0,0.18);color:#e8dfc8;font-family:Cinzel,serif;font-size:0.68rem;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,0.1),inset 0 -2px 3px rgba(0,0,0,0.3);letter-spacing:1px;">Sort</button>
+        </div>
         <div class="s-divider"><div class="s-line"></div><div class="s-rune">✦ MDCCCXLVII ✦</div><div class="s-line"></div></div>
         <div class="s-pillars">
           <div class="s-pillar"></div><div class="s-pillar"></div><div class="s-pillar"></div>
           <div class="s-pillar"></div><div class="s-pillar"></div><div class="s-pillar"></div>
         </div>
+        </div>
         <div class="s-arch"></div>
 
         <div class="dragon-grid">
-          <div class="dragon-card">
+          <div class="dragon-card" data-elements="fire">
             <div class="dragon-card-frame">
+              <div class="dragon-elem-badge"><span>🔥</span></div>
               <canvas class="dragon-canvas" data-dragon="fire" width="220" height="220"></canvas>
             </div>
             <div class="dragon-card-name">Fire Dragon</div>
             <div class="dragon-card-desc">A young flame-blooded dragon, restless and quick to anger.</div>
             <div class="dragon-gpm">🪙 +5/min at Lv.1</div>
-            <button id="tut-fire-dragon-btn" class="dragon-card-buy"><span class="dc-coin">🪙</span><span>250</span></button>
+            <button id="tut-fire-dragon-btn" class="dragon-card-buy"><span class="dc-coin">🪙</span><span>300</span></button>
           </div>
-          <div class="dragon-card">
+          <div class="dragon-card" data-elements="grass">
             <div class="dragon-card-frame">
+              <div class="dragon-elem-badge"><span>🌿</span></div>
               <canvas class="dragon-canvas" data-dragon="grass" width="220" height="220"></canvas>
             </div>
             <div class="dragon-card-name">Grass Dragon</div>
             <div class="dragon-card-desc">A vibrant forest spirit, swift as the wind through the canopy.</div>
             <div class="dragon-gpm">🪙 +7/min at Lv.1</div>
-            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>500</span></button>
+            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>750</span></button>
           </div>
-          <div class="dragon-card">
+          <div class="dragon-card" data-elements="earth">
             <div class="dragon-card-frame">
+              <div class="dragon-elem-badge"><span>🪨</span></div>
               <canvas class="dragon-canvas" data-dragon="earth" width="220" height="220"></canvas>
             </div>
             <div class="dragon-card-name">Earth Dragon</div>
             <div class="dragon-card-desc">An armored titan of the deep earth — slow to move, impossible to stop.</div>
             <div class="dragon-gpm">🪙 +10/min at Lv.1</div>
-            <button id="earth-dragon-buy-btn" class="dragon-card-buy"><span class="dc-coin">🪙</span><span>1500</span></button>
+            <button id="earth-dragon-buy-btn" class="dragon-card-buy"><span class="dc-coin">🪙</span><span>2000</span></button>
           </div>
-          <div class="dragon-card">
+          <div class="dragon-card" data-elements="ice">
             <div class="dragon-card-frame">
+              <div class="dragon-elem-badge"><span>❄️</span></div>
               <canvas class="dragon-canvas" data-dragon="ice" width="220" height="220"></canvas>
             </div>
             <div class="dragon-card-name">Ice Dragon</div>
             <div class="dragon-card-desc">A glacial beast of frost and silence, born from the coldest peaks.</div>
             <div class="dragon-gpm">🪙 +17/min at Lv.1</div>
-            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>3000</span></button>
+            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>4000</span></button>
           </div>
-          <div class="dragon-card">
+          <div class="dragon-card" data-elements="grass fire">
             <div class="dragon-card-frame">
+              <div class="dragon-elem-badge"><span>🌿</span><span>🔥</span></div>
               <canvas class="dragon-canvas" data-dragon="poison" width="220" height="220"></canvas>
             </div>
             <div class="dragon-card-name">Poison Dragon</div>
             <div class="dragon-card-desc">A venomous dragon born in toxic swamps, deadly and cunning.</div>
             <div class="dragon-gpm">🪙 +30/min at Lv.1</div>
-            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>5000</span></button>
+            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>15000</span></button>
           </div>
-          <div class="dragon-card">
+          <div class="dragon-card" data-elements="fire ice">
             <div class="dragon-card-frame">
+              <div class="dragon-elem-badge"><span>🔥</span><span>❄️</span></div>
               <canvas class="dragon-canvas" data-dragon="bluefire" width="220" height="220"></canvas>
             </div>
             <div class="dragon-card-name">Blue Fire Dragon</div>
             <div class="dragon-card-desc">A rare dragon whose flames burn an intense electric blue.</div>
             <div class="dragon-gpm">🪙 +40/min at Lv.1</div>
-            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>7000</span></button>
+            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>25000</span></button>
           </div>
         </div>
       </div>
@@ -544,7 +574,7 @@ html,body{width:100%;height:100%;overflow:hidden;}
             </div>
             <div class="dragon-card-name">Grass Habitat</div>
             <div class="dragon-card-desc">A lush forest glade where nature thrives. Perfect for grass dragons.</div>
-            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>750</span></button>
+            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>1500</span></button>
           </div>
           <div class="dragon-card">
             <div class="habitat-frame">
@@ -552,7 +582,7 @@ html,body{width:100%;height:100%;overflow:hidden;}
             </div>
             <div class="dragon-card-name">Earth Habitat</div>
             <div class="dragon-card-desc">Ancient stone arches and cracked earth. A domain for earth dragons.</div>
-            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>1250</span></button>
+            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>2500</span></button>
           </div>
           <div class="dragon-card">
             <div class="habitat-frame">
@@ -565,6 +595,7 @@ html,body{width:100%;height:100%;overflow:hidden;}
         </div>
       </div>
       <div class="sh-panel" data-panel="decor" style="display:none">
+        <div style="position:relative;">
         <div class="s-divider"><div class="s-line"></div><div class="s-rune">✦ MDCCCXLVII ✦</div><div class="s-line"></div></div>
         <div class="s-pillars">
           <div class="s-pillar"></div><div class="s-pillar"></div><div class="s-pillar"></div>
@@ -578,6 +609,7 @@ html,body{width:100%;height:100%;overflow:hidden;}
         </div>
       </div>
       <div class="sh-panel" data-panel="items" style="display:none">
+        <div style="position:relative;">
         <div class="s-divider"><div class="s-line"></div><div class="s-rune">✦ MDCCCXLVII ✦</div><div class="s-line"></div></div>
         <div class="s-pillars">
           <div class="s-pillar"></div><div class="s-pillar"></div><div class="s-pillar"></div>
@@ -614,6 +646,9 @@ html,body{width:100%;height:100%;overflow:hidden;}
     </div>
   </div>
 </div>
+  </div>
+</div>
+
 
 <div id="shop-help-overlay">
   <div id="shop-help-bg" onclick="closeShopHelp()"></div>
@@ -637,21 +672,13 @@ html,body{width:100%;height:100%;overflow:hidden;}
 </div>
 
 <!-- Habitat context menu (shown when tapping a placed habitat) -->
-<div id="habitat-menu" style="display:none">
-  <div id="habitat-menu-content" style="position:relative;">
-    <button class="hm-btn hm-close" onclick="closeHabitatMenu()" style="position:absolute;top:12px;right:14px;padding:6px 12px;font-size:0.75rem;">✕</button>
-    <div id="habitat-menu-title">Fire Habitat</div>
-    <div id="habitat-dragons-row"></div>
-    <div class="habitat-menu-actions" style="display:flex;gap:10px;justify-content:center;margin-top:14px;">
-      <button class="hm-btn" onclick="openShopToAddDragon()">+ Add Dragon</button>
-      <button class="hm-btn" onclick="moveSelectedHabitat()">✦ Move</button>
-      <button class="hm-btn" onclick="sellHabitat()" style="background:rgba(120,20,20,0.4);border-color:rgba(200,60,60,0.4);color:#ffaaaa;">💰 Sell</button>
-    </div>
-  </div>
-</div>
+
 
 
 <script>
+var _activeFilters = new Set(['all']);
+var _tempFilters = new Set(['all']);
+
 const canvas = document.getElementById('canvas');
 let ctx = canvas.getContext('2d');
 let W, H;
@@ -2624,7 +2651,7 @@ function showGoldPopup(x, y, amount){
 // Dragon type → required habitat type mapping
 const DRAGON_HABITAT = { fire:'fire', grass:'grass', earth:'earth', poison:['grass','fire'], ice:'ice', bluefire:['ice','fire'] };
 // Dragon costs
-const DRAGON_COST = { fire:250, grass:500, earth:1500 };
+const DRAGON_COST = { fire:300, grass:750, earth:2000, poison:15000, ice:4000, bluefire:25000 };
 const HATCH_TIMES = { fire:30000, grass:180000, earth:600000, poison:1800000, ice:900000, bluefire:1200000 };
 // Human-readable habitat names for error messages
 const HABITAT_NAMES = { fire:'Fire Habitat', grass:'Grass Habitat', earth:'Earth Habitat', ice:'Ice Habitat' };
@@ -2669,7 +2696,7 @@ document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
       if(game.placedHabitats.length>=maxHabitats()){ showNotification(`Reach level ${(Math.floor((game.level)/5)+1)*5} to unlock more habitats!`,'error'); return; }
       if(habitatType==='earth'&&(game.level||1)<4){ showNotification('Earth Habitat unlocks at Level 4!','error'); return; }
       if(habitatType==='ice'&&(game.level||1)<10){ showNotification('Ice Habitat unlocks at Level 10!','error'); return; }
-      const habitatCosts={fire:500,grass:750,earth:1250,ice:4000};
+      const habitatCosts={fire:500,grass:1500,earth:2500,ice:4000};
       const hCost=habitatCosts[habitatType]||500;
       if(game.gold<hCost){ showNotification(`Not enough gold! (Need ${hCost} 🪙)`, 'error'); return; }
       startPlacement(habitatType,hCost);
@@ -2690,8 +2717,8 @@ document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
         game.placement={type:'breeder',cost,gx:Math.floor((18-BUILDING_SIZE)/2),gy:Math.floor((18-BUILDING_SIZE)/2),isBuilding:true};
         closeShop(); return;
       }
-      const cost=300;
       const curFarms=(game.buildings||[]).filter(b=>b.type==='farm').length;
+      const cost=curFarms>=2?2000:curFarms>=1?800:300;
       const max=maxFarms();
       if(curFarms>=max){
         const nextLv=curFarms>=2?9:3;
@@ -2706,7 +2733,7 @@ document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
       const dragonType=dragonCanvas.dataset.dragon;
       if(dragonType==='earth'&&(game.level||1)<4){ showNotification('Earth Dragon unlocks at Level 4!','error'); return; }
       if(dragonType==='ice'&&(game.level||1)<10){ showNotification('Ice Dragon unlocks at Level 10!','error'); return; }
-      if(dragonType==='bluefire'&&(game.level||1)<10){ showNotification('Blue Fire Dragon unlocks at Level 10!','error'); return; }
+      if(dragonType==='bluefire'&&(game.level||1)<15){ showNotification('Blue Fire Dragon unlocks at Level 15!','error'); return; }
       const habitatTypeRaw=DRAGON_HABITAT[dragonType];
       const habitatTypes=Array.isArray(habitatTypeRaw)?habitatTypeRaw:[habitatTypeRaw];
       const habitatType=habitatTypes[0];
@@ -2736,7 +2763,7 @@ document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
 
 
 // ── SHOP ──────────────────────────────────────────────────────────
-function openShop(){ document.getElementById('shop').classList.add('open'); scaleShop(); setTimeout(updateShopButtons,80); }
+function openShop(){ resetDragonFilter(); document.getElementById('shop').classList.add('open'); scaleShop(); setTimeout(updateShopButtons,80); }
 function closeShop(){ document.getElementById('shop').classList.remove('open'); }
 function scaleShop(){
   const panel=document.getElementById('shop-panel');
@@ -5841,7 +5868,7 @@ function updateShopButtons(){
       earthBtn.style.cursor='default';
     } else {
       earthBtn.disabled=false;
-      earthBtn.innerHTML='<span class="dc-coin">🪙</span><span>1500</span>';
+      earthBtn.innerHTML='<span class="dc-coin">🪙</span><span>2000</span>';
       earthBtn.style.opacity='1';
       earthBtn.style.cursor='pointer';
     }
@@ -5858,13 +5885,13 @@ function updateShopButtons(){
   // ── Ice Dragon lock ──
   const iceDragonBtn=document.querySelector('canvas[data-dragon="ice"]')?.closest('.dragon-card')?.querySelector('.dragon-card-buy');
   if(iceDragonBtn){
-    if((game.level||1)<10){ iceDragonBtn.disabled=true; iceDragonBtn.textContent='🔒 Level 10'; iceDragonBtn.style.opacity='0.5'; iceDragonBtn.style.cursor='default'; }
-    else if(iceDragonBtn.textContent.includes('Level')){ iceDragonBtn.disabled=false; iceDragonBtn.innerHTML='<span class="dc-coin">🪙</span><span>3000</span>'; iceDragonBtn.style.opacity='1'; iceDragonBtn.style.cursor='pointer'; }
+    if((game.level||1)<12){ iceDragonBtn.disabled=true; iceDragonBtn.textContent='🔒 Level 12'; iceDragonBtn.style.opacity='0.5'; iceDragonBtn.style.cursor='default'; }
+    else if((game.level||1)>=12&&iceDragonBtn.textContent.includes('Level')){ iceDragonBtn.disabled=false; iceDragonBtn.innerHTML='<span class="dc-coin">🪙</span><span>4000</span>'; iceDragonBtn.style.opacity='1'; iceDragonBtn.style.cursor='pointer'; }
   }
   const bluefireBtn=document.querySelector('canvas[data-dragon="bluefire"]')?.closest('.dragon-card')?.querySelector('.dragon-card-buy');
   if(bluefireBtn){
-    if((game.level||1)<10){ bluefireBtn.disabled=true; bluefireBtn.textContent='🔒 Level 10'; bluefireBtn.style.opacity='0.5'; bluefireBtn.style.cursor='default'; }
-    else if(bluefireBtn.textContent.includes('Level')){ bluefireBtn.disabled=false; bluefireBtn.innerHTML='<span class="dc-coin">🪙</span><span>7000</span>'; bluefireBtn.style.opacity='1'; bluefireBtn.style.cursor='pointer'; }
+    if((game.level||1)<15){ bluefireBtn.disabled=true; bluefireBtn.textContent='🔒 Level 15'; bluefireBtn.style.opacity='0.5'; bluefireBtn.style.cursor='default'; }
+    else if((game.level||1)>=15&&bluefireBtn.textContent.includes('Level')){ bluefireBtn.disabled=false; bluefireBtn.innerHTML='<span class="dc-coin">🪙</span><span>25000</span>'; bluefireBtn.style.opacity='1'; bluefireBtn.style.cursor='pointer'; }
   }
   // ── Breeder buy button lock state ──
   const breederBtn=document.getElementById('breeder-buy-btn');
@@ -5889,7 +5916,9 @@ function updateShopButtons(){
       farmBtn.style.cursor = 'default';
     } else {
       farmBtn.disabled = false;
-      farmBtn.innerHTML = '<span class="dc-coin">🪙</span><span>300</span>';
+      const _fc=(game.buildings||[]).filter(b=>b.type==='farm').length;
+      const _fp=_fc>=2?2000:_fc>=1?800:300;
+      farmBtn.innerHTML = '<span class="dc-coin">🪙</span><span>'+_fp+'</span>';
       farmBtn.style.opacity = '1';
       farmBtn.style.cursor = 'pointer';
     }
@@ -6481,9 +6510,9 @@ function rollBreedResult(t1,t2){
   let cum=0;
   let result=odds[odds.length-1].type;
   for(const o of odds){ cum+=o.pct; if(roll<cum){ result=o.type; break; } }
-  // Mystery resolves to a random normal dragon
+  // Mystery resolves to fire or grass only
   if(result==='mystery'){
-    const pool=['fire','grass','earth','ice'];
+    const pool=['fire','grass'];
     result=pool[Math.floor(Math.random()*pool.length)];
   }
   return result;
@@ -6495,7 +6524,7 @@ function startBreeding(buildingIdx){
   const s1=_breedSlots[0], s2=_breedSlots[1];
   if(!s1||!s2){ showNotification('Choose two dragons first!','error'); return; }
   const result=rollBreedResult(s1.type,s2.type);
-  b.breedState={slot1:s1,slot2:s2,startTime:Date.now(),duration:600000,result,done:false};
+  b.breedState={slot1:s1,slot2:s2,startTime:Date.now(),duration:1200000,result,done:false};
   _breedSlots=[null,null];
   saveGame();
   document.getElementById('breeder-menu')?.remove();
@@ -6528,41 +6557,64 @@ function openNewsPanel(){
   el.style.cssText='position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(660px,100vw);background:linear-gradient(160deg,#1e1500,#100c00);border:2px solid rgba(220,180,40,0.5);border-bottom:none;border-radius:18px 18px 0 0;padding:28px 28px 40px;z-index:200;box-shadow:0 -4px 32px rgba(120,80,0,0.6);max-height:80vh;display:flex;flex-direction:column;';
 
   const news = [
+    { date:'2026-07-11', title:'✨ Quality of Life Update', items:[
+      'Sort button in the Dragon Market — filter by element',
+      'Multi-select: combine Fire + Ice to find Blue Fire Dragon',
+      'Save button applies filter, resets when you close the shop',
+      'All button highlights when no filter is active',
+      'Element badges on each dragon card (🔥🌿🪨❄️)',
+    ]},
+    { date:'2026-07-10', title:'⚖️ Major Balance Update', items:[
+      'Poison Dragon: now Lv.12 required, costs 15,000🪙',
+      'Blue Fire Dragon: now Lv.15 required, costs 25,000🪙',
+      'Earth Dragon: costs 2,000🪙 · Ice Dragon: costs 4,000🪙',
+      'Grass Habitat: 1,500🪙 · Earth Habitat: 2,500🪙',
+      'Farms now tiered: 300🪙 → 800🪙 → 2,000🪙',
+      'Breeding time extended to 20 minutes',
+      'Random breeding results only produce Fire or Grass dragons',
+      'Gold NEWS button added to the left of EXPAND',
+      'Habitat menus now show correct habitat name',
+      '"skiptime" — secret code to instantly hatch all eggs',
+      'Food display now shows comma separators (1,000🍖)',
+    ]},
+    { date:'2026-07-09', title:'🐉 Dragon Visual Polish', items:[
+      'Poison, Ice and Blue Fire side-view dragons fully redrawn',
+      'Ice dragon: angular horn behind head, ice spikes on back, snowflake tail tip',
+      'Poison dragon: poison vial on head, green spots, floating particles',
+      'Blue Fire dragon: blue flame particles and breath',
+      'Removed double horns and overlapping spine leaves from all three',
+    ]},
+    { date:'2026-07-08', title:'🧬 Breeding Odds Rework', items:[
+      'Ice + Fire → 10% Blue Fire, 45% Ice, 45% Fire',
+      'Blue Fire + Blue Fire → 20% Blue Fire, 80% random',
+      'Any special + any normal → 10% special, 45% normal, 45% random',
+      '2 different specials → 10% each, 80% random',
+      'Level locks: Earth Lv.4 · Ice Lv.10 · Poison Lv.12 · Blue Fire Lv.15',
+    ]},
     { date:'2026-07-07', title:'⚗️ Breeding System', items:[
       'Breeding Cave building unlocked at Level 5 (2,000🪙)',
       'Breed two dragons for a chance at rare offspring',
       'Special combos: Grass+Fire → Poison, Ice+Fire → Blue Fire',
       'Special dragons (Poison, Blue Fire) always have 10% chance in breeding',
-      'Breeding time: 10 minutes',
     ]},
     { date:'2026-07-07', title:'❄️ Ice Update', items:[
-      'Ice Dragon added — 3,000🪙, unlocks at Level 10',
-      'Ice Habitat added — 4,000🪙, holds up to 5,000🪙, unlocks at Level 10',
-      'Blue Fire Dragon added — 7,000🪙, unlocks at Level 10, goes in Ice or Fire habitat',
-      'Ice and Blue Fire eggs with unique designs',
+      'Ice Dragon added — unlocks at Level 10',
+      'Ice Habitat added — holds up to 5,000🪙, unlocks at Level 10',
+      'Blue Fire Dragon added — unlocks at Level 15, goes in Ice or Fire habitat',
     ]},
     { date:'2026-07-06', title:'☠️ Poison Dragon', items:[
-      'Poison Dragon added — 5,000🪙, goes in Grass or Fire habitat',
-      'Unique design with poison vials as horns, toxic spots and bubbles',
+      'Poison Dragon added — goes in Grass or Fire habitat',
       'Gives 30🪙/min at Lv.1 and 650🪙/min at max level',
-      'Poison egg with red spots and floating particles',
     ]},
     { date:'2026-07-06', title:'🏗️ Buildings', items:[
       'Breeding Cave — 2,000🪙, Level 5 required',
       'Dragon Hatchery — Free, store and hatch dragon eggs',
-      'Farm — 300🪙, grow food for your dragons (up to 3 farms)',
+      'Farm — grow food for your dragons (up to 3 farms)',
       'New crop: Moon Petal (Level 10) — 5,000🪙, 20 min, 2,300🍖',
-    ]},
-    { date:'2026-07-06', title:'⚖️ Balance Changes', items:[
-      'Habitat gold caps: Fire 1,500🪙 · Grass 2,000🪙 · Earth 3,000🪙 · Ice 5,000🪙',
-      'Dragon food costs adjusted per type (Fire 50% off → Poison 33% extra)',
-      'Habitat unlock levels: Earth Lv.4 · Ice Lv.10',
-      'Max habitats: 3→5→7→9→11→12→14→16 across levels 1–20',
-      'XP system, quests, and island expansion at Level 10',
     ]},
     { date:'2026-07-05', title:'🐉 Core Game', items:[
       'Fire Dragon, Grass Dragon, Earth Dragon — the original trio',
-      'Three habitats: Fire, Grass, Earth',
+      'Fire, Grass and Earth habitats',
       'Gold generation, food system, dragon leveling up to Level 15',
       'Camera with zoom and pan, drag-and-drop placement',
     ]},
@@ -6609,6 +6661,156 @@ function openNewsPanel(){
   });
 })();
 
+
+function filterDragons(btn){
+  document.querySelectorAll('.elem-filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const filter=btn.dataset.filter;
+  document.querySelectorAll('.dragon-card[data-elements]').forEach(card=>{
+    if(filter==='all'){ card.style.display=''; return; }
+    const elems=(card.dataset.elements||'').split(' ');
+    card.style.display=elems.includes(filter)?'':'none';
+  });
+}
+
+
+function openSortPopup(e){
+  e.stopPropagation();
+  const existing = document.getElementById('sort-popup');
+  if(existing){ existing.remove(); return; }
+
+  _tempFilters = new Set(_activeFilters);
+
+  const overlay = document.createElement('div');
+  overlay.id = 'sort-popup';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;';
+  overlay.addEventListener('click', ()=>overlay.remove());
+
+  const panel = document.createElement('div');
+  panel.style.cssText = 'position:relative;background:rgba(20,18,12,0.92);backdrop-filter:blur(14px);border:1.5px solid rgba(180,150,60,0.4);border-radius:18px;padding:20px 22px 18px;min-width:230px;box-shadow:0 8px 40px rgba(0,0,0,0.7);';
+  panel.addEventListener('click', ev=>ev.stopPropagation());
+
+  const title = document.createElement('div');
+  title.style.cssText = "font-family:'Cinzel Decorative',serif;font-size:0.85rem;color:rgba(220,195,130,0.7);text-align:center;margin-bottom:14px;letter-spacing:2px;";
+  title.textContent = 'FILTER BY ELEMENT';
+  panel.appendChild(title);
+
+  const list = document.createElement('div');
+  list.style.cssText = 'display:flex;flex-direction:column;gap:8px;';
+  panel.appendChild(list);
+
+  const filters = [
+    {f:'fire', icon:'🔥', label:'Fire'},
+    {f:'grass', icon:'🌿', label:'Grass'},
+    {f:'earth', icon:'🪨', label:'Earth'},
+    {f:'ice', icon:'❄️', label:'Ice'},
+  ];
+
+  function makeBtn({f, icon, label}){
+    const btn = document.createElement('button');
+    const active = _tempFilters.has(f);
+    btn.style.cssText = `display:flex;align-items:center;gap:10px;padding:9px 14px;border-radius:12px;border:1.5px solid ${active?'rgba(255,200,60,0.7)':'rgba(100,80,30,0.4)'};background:${active?'rgba(80,60,10,0.7)':'rgba(40,35,15,0.5)'};cursor:pointer;width:100%;`;
+    btn.innerHTML = `<span style="font-size:1.2rem;width:24px;text-align:center;">${icon}</span><span style="font-family:Cinzel,serif;font-size:0.82rem;color:${active?'#ffd860':'#c8b890'};letter-spacing:1px;">${label}</span>${active?'<span style="margin-left:auto;color:#ffd860;">✓</span>':''}`;
+    btn.addEventListener('click', ev=>{
+      ev.stopPropagation();
+      _tempFilters.delete('all');
+      if(_tempFilters.has(f)) _tempFilters.delete(f); else _tempFilters.add(f);
+      list.innerHTML=''; filters.forEach(fi=>list.appendChild(makeBtn(fi)));
+      btnRow.innerHTML=''; makeBtnRow();
+    });
+    return btn;
+  }
+
+  filters.forEach(fi=>list.appendChild(makeBtn(fi)));
+
+  const btnRow = document.createElement('div');
+  btnRow.style.cssText = 'display:flex;gap:8px;margin-top:14px;';
+  panel.appendChild(btnRow);
+
+  function makeBtnRow(){
+    const isAll = _tempFilters.size===0 || _tempFilters.has('all');
+    const allBtn = document.createElement('button');
+    allBtn.style.cssText = `flex:1;padding:8px;border-radius:10px;border:1.5px solid ${isAll?'rgba(255,200,60,0.7)':'rgba(100,80,30,0.4)'};background:${isAll?'rgba(80,60,10,0.7)':'rgba(40,35,15,0.5)'};font-family:Cinzel,serif;font-size:0.72rem;color:${isAll?'#ffd860':'#c8b890'};cursor:pointer;`;
+    allBtn.textContent = isAll ? 'All ✓' : 'All';
+    allBtn.addEventListener('click', ev=>{ev.stopPropagation(); _tempFilters=new Set(['all']); list.innerHTML=''; filters.forEach(fi=>list.appendChild(makeBtn(fi))); btnRow.innerHTML=''; makeBtnRow();});
+    btnRow.appendChild(allBtn);
+
+    const saveBtn = document.createElement('button');
+    saveBtn.style.cssText = 'flex:2;padding:8px;border-radius:10px;border:1.5px solid rgba(255,200,60,0.6);background:rgba(80,60,10,0.8);font-family:Cinzel,serif;font-size:0.72rem;color:#ffd860;cursor:pointer;font-weight:700;letter-spacing:1px;';
+    saveBtn.textContent = 'Save';
+    saveBtn.addEventListener('click', ev=>{
+      ev.stopPropagation();
+      const filtered = new Set([..._tempFilters].filter(f=>f!=='all'));
+      _activeFilters = (filtered.size===0 || _tempFilters.has('all')) ? new Set(['all']) : filtered;
+      applyFilter();
+      overlay.remove();
+    });
+    btnRow.appendChild(saveBtn);
+  }
+  makeBtnRow();
+
+  overlay.appendChild(panel);
+  document.body.appendChild(overlay);
+}
+
+function applyFilter(){
+  document.querySelectorAll('.dragon-card[data-elements]').forEach(card=>{
+    if(_activeFilters.has('all') || _activeFilters.size===0){ card.style.display=''; return; }
+    const elems = new Set((card.dataset.elements||'').split(' '));
+    card.style.display = [..._activeFilters].every(f=>elems.has(f)) ? '' : 'none';
+  });
+}
+
+function resetDragonFilter(){
+  _activeFilters = new Set(['all']);
+  applyFilter();
+}
+
+
+const NEWS2_POSTS = [
+  { id:'qol-2026-07-11', date:'2026-07-11', title:'✨ Quality of Life Update', body:'The Dragon Market now has a Sort button! Filter dragons by element — pick one or combine multiple (e.g. Fire + Ice) to find exactly what you\'re looking for, like the Blue Fire Dragon. Each dragon card also displays an element badge in the corner so you can quickly see what type it is. Filters are multi-select and apply on Save. The filter resets automatically when you close the shop.' },
+];
+
+function getReadNews(){ try{ return JSON.parse(localStorage.getItem('jimmie_news_read')||'[]'); }catch(e){ return []; } }
+function markAllNewsRead(){ localStorage.setItem('jimmie_news_read', JSON.stringify(NEWS2_POSTS.map(p=>p.id))); updateNewsBadge(); }
+function updateNewsBadge(){
+  const read = getReadNews();
+  const unread = NEWS2_POSTS.filter(p=>!read.includes(p.id));
+  const btn = document.getElementById('news2-btn');
+  if(btn){
+    if(unread.length>0) btn.classList.add('news-unread');
+    else btn.classList.remove('news-unread');
+  }
+}
+
+function openNewsPanel2(){
+  let el=document.getElementById('news2-panel');
+  if(el){ el.remove(); return; }
+  markAllNewsRead();
+  el=document.createElement('div');
+  el.id='news2-panel';
+  el.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(560px,92vw);height:min(560px,92vw);background:linear-gradient(160deg,#020e1a,#051828);border:2px solid rgba(80,160,255,0.4);border-radius:22px;padding:44px 36px 36px;z-index:300;box-shadow:0 8px 60px rgba(0,60,180,0.6);display:flex;flex-direction:column;';
+
+  const postsHtml = NEWS2_POSTS.length===0
+    ? '<div style="font-family:Cinzel,serif;color:rgba(120,180,255,0.7);font-size:0.85rem;text-align:center;font-style:italic;margin-top:20px;">No news yet — check back soon!</div>'
+    : NEWS2_POSTS.map(p=>`
+        <div style="background:rgba(80,160,255,0.06);border:1px solid rgba(80,160,255,0.2);border-radius:16px;padding:24px;position:relative;flex:1;display:flex;flex-direction:column;justify-content:center;box-sizing:border-box;">
+          <div style="position:absolute;top:14px;right:16px;font-family:Cinzel,serif;font-size:0.8rem;color:rgba(80,160,255,0.5);">${p.date}</div>
+          <div style="font-family:Cinzel,serif;font-size:1.25rem;font-weight:700;color:#7ac8ff;margin-bottom:14px;">${p.title}</div>
+          <div style="font-family:serif;font-size:1.05rem;color:rgba(150,210,255,0.85);line-height:1.6;">${p.body}</div>
+        </div>`).join('');
+
+  el.innerHTML=`
+    <button onclick="document.getElementById('news2-panel').remove()" style="position:absolute;top:14px;right:16px;background:rgba(0,30,80,0.5);border:1.5px solid rgba(80,160,255,0.3);border-radius:50%;width:38px;height:38px;color:#7ac8ff;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;">✕</button>
+    <div style="font-family:'Cinzel Decorative',serif;font-size:1.9rem;font-weight:700;color:#7ac8ff;text-align:center;margin-bottom:28px;flex-shrink:0;text-shadow:0 0 16px rgba(80,160,255,0.5);">📡 News</div>
+    <div style="overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:14px;scrollbar-width:thin;scrollbar-color:rgba(80,160,255,0.3) transparent;">${postsHtml}</div>
+  `;
+  document.body.appendChild(el);
+}
+
+
+
+updateNewsBadge();
 </script>
 
 <div id="tut-overlay" style="display:none;position:fixed;inset:0;z-index:8000;pointer-events:all;">
@@ -6621,7 +6823,7 @@ function openNewsPanel(){
 #tut-overlay>*:not(#tut-spotlight){pointer-events:none;}
 </style>
 
-<div id="quest-panel" style="display:none;position:fixed;inset:0;z-index:200;align-items:center;justify-content:center;">
+<div id="quest-panel" style="display:none;position:fixed;inset:0;z-index:300;align-items:center;justify-content:center;will-change:transform;transform:translateZ(0);">
   <div style="position:absolute;inset:0;background:rgba(0,0,0,0.55);" onclick="closeQuestPanel()"></div>
   <div id="quest-inner" style="position:relative;z-index:1;width:min(820px,95vw);background:linear-gradient(160deg,#0a1428,#060a18);border:2px solid rgba(80,160,255,0.5);border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,80,0.7);">
     <!-- Header -->
@@ -6664,7 +6866,7 @@ function openNewsPanel(){
   <div id="hatchery-slots" style="display:flex;gap:12px;"></div>
 </div>
 <div id="tut-float-hint" style="display:none;position:fixed;top:16px;left:50%;transform:translateX(-50%);background:linear-gradient(160deg,#2a1e08,#1a1208);border:1.5px solid rgba(255,200,60,0.55);border-radius:12px;padding:10px 22px;font-family:Cinzel,serif;font-size:0.88rem;font-weight:700;color:#FFE878;box-shadow:0 4px 20px rgba(0,0,0,0.7);z-index:9500;pointer-events:none;white-space:nowrap;animation:tutBounce 0.7s ease-in-out infinite alternate;"></div>
-<div id="expand-panel" style="display:none;position:fixed;inset:0;z-index:200;align-items:center;justify-content:center;">
+<div id="expand-panel" style="display:none;position:fixed;inset:0;z-index:300;align-items:center;justify-content:center;will-change:transform;transform:translateZ(0);">
   <div style="position:absolute;inset:0;background:rgba(0,0,0,0.55);" onclick="closeExpandPanel()"></div>
   <div style="position:relative;z-index:1;width:min(700px,95vw);background:linear-gradient(160deg,#0a180a,#060e06);border:2px solid rgba(80,200,80,0.45);border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(0,60,0,0.7);">
     <div style="background:linear-gradient(90deg,#0e2a0e,#1a4a1a,#0e2a0e);padding:22px 28px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid rgba(80,200,80,0.25);position:relative;">
@@ -6692,6 +6894,18 @@ function openNewsPanel(){
     </div>
     <div style="padding:8px 12px 6px;font-family:Cinzel,serif;font-size:0.72rem;color:rgba(180,140,220,0.6);text-align:center;">Only dragons Level 5 and above can breed</div>
     <div id="dragon-picker-list" style="padding:12px 16px 20px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-height:55vh;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(160,80,255,0.4) transparent;"></div>
+  </div>
+</div>
+<div id="habitat-menu" style="display:none">
+  <div id="habitat-menu-content" style="position:relative;">
+    <button class="hm-btn hm-close" onclick="closeHabitatMenu()" style="position:absolute;top:12px;right:14px;padding:6px 12px;font-size:0.75rem;">✕</button>
+    <div id="habitat-menu-title">Fire Habitat</div>
+    <div id="habitat-dragons-row"></div>
+    <div class="habitat-menu-actions" style="display:flex;gap:10px;justify-content:center;margin-top:14px;">
+      <button class="hm-btn" onclick="openShopToAddDragon()">+ Add Dragon</button>
+      <button class="hm-btn" onclick="moveSelectedHabitat()">✦ Move</button>
+      <button class="hm-btn" onclick="sellHabitat()" style="background:rgba(120,20,20,0.4);border-color:rgba(200,60,60,0.4);color:#ffaaaa;">💰 Sell</button>
+    </div>
   </div>
 </div>
 </body>
