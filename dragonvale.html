@@ -205,8 +205,8 @@ html,body{width:100%;height:100%;overflow:hidden;}
 /* Arch */
 .s-arch{width:100%;height:6px;background:radial-gradient(ellipse at 50% 0%,rgba(110,140,75,0.1) 0%,transparent 70%);position:relative;z-index:1;}
 /* Habitat placement bar */
-#place-bar{position:fixed;bottom:0;left:0;right:0;z-index:150;pointer-events:all;}
-#place-bar-inner{margin:0 auto 16px;width:fit-content;background:rgba(10,6,2,0.88);border:1.5px solid rgba(212,175,55,0.5);border-radius:30px;padding:10px 20px;display:flex;align-items:center;gap:16px;backdrop-filter:blur(10px);}
+#place-bar{position:fixed;bottom:0;left:0;right:0;z-index:150;pointer-events:none;}
+#place-bar-inner{margin:0 auto 16px;width:fit-content;background:rgba(10,6,2,0.88);border:1.5px solid rgba(212,175,55,0.5);border-radius:30px;padding:10px 20px;display:flex;align-items:center;gap:16px;backdrop-filter:blur(10px);pointer-events:all;}
 #place-label{font-family:'Cinzel',serif;font-size:0.78rem;color:#e8dfc8;letter-spacing:1px;}
 #place-cancel{font-family:'Cinzel',serif;font-size:0.72rem;font-weight:700;color:#e8dfc8;background:rgba(160,40,20,0.7);border:1px solid rgba(200,60,30,0.5);border-radius:16px;padding:5px 14px;cursor:pointer;}
 #place-cancel:hover{background:rgba(200,50,25,0.85);}
@@ -398,7 +398,8 @@ html,body{width:100%;height:100%;overflow:hidden;}
 .elem-filter-btn.active{background:rgba(100,70,10,0.8);border-color:rgba(255,200,60,0.8);color:#ffd860;}
 .elem-filter-btn:hover{border-color:rgba(255,200,60,0.6);color:#ffd860;}
 
-@keyframes sortPopIn{
+body.placing #hud{pointer-events:none!important;}
+body.placing #hud>*{pointer-events:none!important;}
   0%{opacity:0;transform:scale(0.7) translateY(-10px);}
   60%{opacity:1;}
   100%{opacity:1;transform:scale(1) translateY(0);}
@@ -1281,16 +1282,17 @@ let off = 0;
 function render(ms) {
   // Camera inertia
   if(!isDragging){ cam.x+=cam.vx*0.12; cam.y+=cam.vy*0.12; cam.vx*=0.88; cam.vy*=0.88; }
-  // Pan limits — generous, scales with zoom so you can always reach any corner
-  const maxPanX = 18 * 64 * cam.zoom * 0.55;
-  const maxPanY = 18 * 64 * cam.zoom * 0.55;
+  // Pan limits — allow reaching all rows, accounts for grid size vs screen size
+  const gridH = 18 * 64 * cam.zoom;
+  const gridW = (game.expansions?36:18) * 64 * cam.zoom;
+  const maxPanX = Math.max(0, gridW/2 - W/2 + 40);
+  const maxPanY = Math.max(0, gridH/2 - H/2 + 20);
   cam.x=Math.max(-maxPanX,Math.min(maxPanX,cam.x));
-  // Kill velocity when hitting wall so it doesn't feel sticky
   if(Math.abs(cam.x)>=maxPanX) cam.vx=0;
-  const dt=Math.min(0.05,(ms-(render._last||ms))/1000); render._last=ms;
-  stepMiniDragons(dt);
   cam.y=Math.max(-maxPanY,Math.min(maxPanY,cam.y));
   if(Math.abs(cam.y)>=maxPanY) cam.vy=0;
+  const dt=Math.min(0.05,(ms-(render._last||ms))/1000); render._last=ms;
+  stepMiniDragons(dt);
   requestAnimationFrame(render);
   const t = ms/1000;
   ctx.clearRect(0,0,W,H);
@@ -1473,30 +1475,30 @@ function gridToScreen(gx, gy){
 
 function isValidPlacement(gx, gy, excludeIdx=-1){
   const _maxCols=game.expansions?36:18;
-  if(gx<0||gy<0||gx+HABITAT_SIZE>_maxCols||gy+HABITAT_SIZE>18) return false;
-  // Use ellipse collision — matches the visual ring (108x64 in 310-unit space)
-  const erx = HABITAT_SIZE * 216/310; // effective collision radius x in grid cells
-  const ery = HABITAT_SIZE * 128/310; // effective collision radius y in grid cells
+  if(gx<0||gy<0||gx+HABITAT_SIZE>_maxCols||gy+HABITAT_SIZE>18){
+return false;
+  }
+  // Exact grid bounding box collision — no habitat cells can overlap
   for(let i=0;i<game.placedHabitats.length;i++){
     if(i===excludeIdx) continue;
     const h=game.placedHabitats[i];
-    const dgx=(gx+HABITAT_SIZE/2)-(h.gx+HABITAT_SIZE/2);
-    const dgy=(gy+HABITAT_SIZE/2)-(h.gy+HABITAT_SIZE/2);
-    if((dgx/erx)*(dgx/erx)+(dgy/ery)*(dgy/ery)<1) return false;
+    if(gx<h.gx+HABITAT_SIZE && gx+HABITAT_SIZE>h.gx &&
+       gy<h.gy+HABITAT_SIZE && gy+HABITAT_SIZE>h.gy){
+return false;
+    }
   }
   // Block placement on any farm/hatchery/breeder buildings
   for(const b of (game.buildings||[])){
     const bcx=b.gx+BUILDING_SIZE/2, bcy=b.gy+BUILDING_SIZE/2;
     const hcx=gx+HABITAT_SIZE/2,   hcy=gy+HABITAT_SIZE/2;
-    const threshX=HABITAT_SIZE/2+BUILDING_SIZE/2-1;   // 3.5 cells
-    const threshY=HABITAT_SIZE/2+BUILDING_SIZE/2-2.5; // 2.0 cells — tighter vertically
+    const threshX=HABITAT_SIZE/2+BUILDING_SIZE/2-1;
+    const threshY=HABITAT_SIZE/2+BUILDING_SIZE/2-2.5;
     if(Math.abs(hcx-bcx)<threshX && Math.abs(hcy-bcy)<threshY) return false;
   }
-  // Block placement on shrine — use habitat's visual bounding box (matches the red border)
   const sh=game.shrine;
   if(sh){
-    const hBBrx=HABITAT_SIZE*108/310; // half-width of habitat oval in grid cells
-    const hBBry=HABITAT_SIZE*64/310;  // half-height of habitat oval in grid cells
+    const hBBrx=HABITAT_SIZE*108/310;
+    const hBBry=HABITAT_SIZE*64/310;
     const hcx=gx+HABITAT_SIZE/2, hcy=gy+HABITAT_SIZE/2;
     if(hcx-hBBrx < sh.gx+SHRINE_SIZE && hcx+hBBrx > sh.gx &&
        hcy-hBBry < sh.gy+SHRINE_SIZE && hcy+hBBry > sh.gy) return false;
@@ -3060,7 +3062,7 @@ function confirmBuildingPlacement2(){
     showNotification("Can't place outside the island!",'error'); return;
   }
   if(isBuildingOverlap(gx,gy,moveIdx!=null?moveIdx:-1)){
-    showNotification('Cannot place here — overlaps another building or habitat!','error');
+    showNotification('Cannot place here — overlaps another building!','error');
     return;
   }
   if(moveIdx!=null){
@@ -3087,6 +3089,7 @@ function confirmPlacement(){
     game.placedHabitats.push({...s,gx,gy,dragons:[...s.dragons],dragonLevels:[...s.dragonLevels]});
     game.placement=null;
     document.getElementById('place-bar').style.display='none';
+    document.getElementById('hud').style.pointerEvents=''; document.body.classList.remove('placing');
     // Clear roam state so dragons re-init at new position
     const newIdx=game.placedHabitats.length-1;
     Object.keys(_dragonRoamState).forEach(k=>{if(k.startsWith('')) delete _dragonRoamState[k];});
@@ -3098,6 +3101,7 @@ function confirmPlacement(){
   game.placedHabitats.push(newHabitat);
   game.placement=null;
   document.getElementById('place-bar').style.display='none';
+  document.getElementById('hud').style.pointerEvents=''; document.body.classList.remove('placing');
 }
 
 // Update placement ghost position on pointer move
@@ -3143,7 +3147,7 @@ canvas.addEventListener('click', e=>{
         if(gx<b.gx+BUILDING_SIZE&&gx+SHRINE_SIZE>b.gx&&gy<b.gy+BUILDING_SIZE&&gy+SHRINE_SIZE>b.gy){ blocked=true; break; }
       }
       if(blocked){ showNotification('Cannot place here — overlaps another building or habitat!','error'); return; }
-      game.shrine={gx,gy}; game.placement=null; document.getElementById('place-bar').style.display='none'; return;
+      game.shrine={gx,gy}; game.placement=null; document.getElementById('place-bar').style.display='none'; document.getElementById('hud').style.pointerEvents=''; document.body.classList.remove('placing'); return;
     }
     if(game.placement.isBuilding){ confirmBuildingPlacement2(); return; }
     confirmPlacement(); return;
@@ -3368,6 +3372,7 @@ function moveSelectedHabitat(){
   game.selectedHabitatIdx=null;
   document.getElementById('place-bar').style.display='block';
   document.getElementById('place-label').textContent='Move and tap to place';
+  document.getElementById('hud').style.pointerEvents='none'; document.body.classList.add('placing');
 }
 
 function showGoldPopup(x, y, amount){
