@@ -214,18 +214,18 @@ html,body{width:100%;height:100%;overflow:hidden;}
 #habitat-menu{position:fixed;inset:0;z-index:300;display:none;align-items:flex-end;justify-content:center;pointer-events:none;will-change:transform;transform:translateZ(0);}
 #habitat-menu.open>div{pointer-events:all;}
 #habitat-menu.open{display:flex !important;}
-#habitat-menu-content{pointer-events:all;will-change:transform;transform:translateZ(0);isolation:isolate;width:clamp(380px,88vw,1200px);min-height:30vh;max-height:80vh;overflow-y:auto;display:flex;flex-direction:column;background:linear-gradient(180deg,#2e2c28 0%,#3a3830 100%);border:1.5px solid rgba(220,210,180,0.18);border-radius:18px 18px 0 0;padding:clamp(16px,2.5vw,32px) clamp(14px,2vw,28px) clamp(24px,3vw,40px);box-shadow:0 -10px 40px rgba(0,0,0,0.6),0 -1px 0 rgba(255,255,255,0.06);}
-#habitat-menu-title{font-family:'Cinzel Decorative',serif;font-size:2.6rem;color:#c8b890;text-align:center;margin-bottom:14px;letter-spacing:2px;text-transform:uppercase;}
+#habitat-menu-content{pointer-events:all;will-change:transform;transform:translateZ(0);isolation:isolate;width:min(96vw,620px);min-height:70vh;display:flex;flex-direction:column;background:linear-gradient(180deg,#2e2c28 0%,#3a3830 100%);border:1.5px solid rgba(220,210,180,0.18);border-radius:18px 18px 0 0;padding:clamp(16px,2.5vw,32px) clamp(14px,2vw,28px) clamp(24px,3vw,40px);box-shadow:0 -10px 40px rgba(0,0,0,0.6),0 -1px 0 rgba(255,255,255,0.06);}
+#habitat-menu-title{font-family:'Cinzel Decorative',serif;font-size:1.8rem;color:#c8b890;text-align:center;margin-bottom:14px;letter-spacing:2px;text-transform:uppercase;}
 #habitat-dragons-row{display:flex;gap:8px;justify-content:center;margin-bottom:12px;}
-.dragon-slot-card{width:260px;display:flex;flex-direction:column;align-items:center;gap:10px;}
-.dragon-slot-img{width:260px;height:260px;border-radius:10px;background:linear-gradient(160deg,#2a2822,#1c1a16);border:1.5px solid rgba(255,180,40,0.3);box-shadow:inset 0 0 18px rgba(0,0,0,0.7),0 2px 8px rgba(0,0,0,0.4);position:relative;overflow:visible;display:flex;align-items:center;justify-content:center;}
+.dragon-slot-card{width:clamp(140px,25vw,260px);display:flex;flex-direction:column;align-items:center;gap:6px;}
+.dragon-slot-img{width:clamp(140px,25vw,260px);height:clamp(140px,25vw,260px);border-radius:10px;background:linear-gradient(160deg,#2a2822,#1c1a16);border:1.5px solid rgba(255,180,40,0.3);box-shadow:inset 0 0 18px rgba(0,0,0,0.7),0 2px 8px rgba(0,0,0,0.4);position:relative;overflow:visible;display:flex;align-items:center;justify-content:center;}
 .dragon-slot-img.empty{border-color:rgba(255,255,255,0.1);background:rgba(0,0,0,0.2);}
 .dragon-slot-img.empty::after{content:'+';font-size:2.6rem;color:rgba(255,255,255,0.2);line-height:1;}
 .dragon-level-tag{position:absolute;top:-8px;right:-8px;background:linear-gradient(135deg,#d4a017,#8a6200);color:#fff8e0;font-family:'Cinzel',serif;font-size:0.78rem;font-weight:700;padding:4px 10px;border-radius:10px;box-shadow:0 2px 4px rgba(0,0,0,0.4);letter-spacing:0.5px;border:1px solid rgba(255,220,100,0.4);}
-.slot-upgrade-btn{width:100%;margin-top:6px;font-family:'Cinzel',serif;font-size:1.15rem;font-weight:700;letter-spacing:0.5px;color:#fff8e0;background:linear-gradient(180deg,#c8920a,#7a5200);border:1px solid rgba(0,0,0,0.4);border-radius:22px;padding:18px 0;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,220,80,0.2),0 2px 4px rgba(0,0,0,0.3);transition:.15s;}
+.slot-upgrade-btn{width:100%;margin-top:clamp(4px,0.8vw,8px);font-family:'Cinzel',serif;font-size:clamp(0.78rem,1.1vw,1.1rem);font-weight:700;letter-spacing:0.5px;color:#fff8e0;background:linear-gradient(180deg,#c8920a,#7a5200);border:1px solid rgba(0,0,0,0.4);border-radius:clamp(12px,1.5vw,18px);padding:clamp(10px,1.3vw,16px) 0;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,220,80,0.2),0 2px 4px rgba(0,0,0,0.3);transition:.15s;}
 .slot-upgrade-btn:hover{background:linear-gradient(180deg,#d8a20a,#8a6200);}
 .habitat-menu-actions{display:flex;gap:8px;justify-content:center;}
-.hm-btn{font-family:'Cinzel',serif;font-size:1.15rem;font-weight:700;letter-spacing:0.5px;color:#e8dfc8;background:linear-gradient(180deg,#5a5848,#42403a);border:1px solid rgba(0,0,0,0.35);border-radius:28px;padding:16px 36px;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 2px 4px rgba(0,0,0,0.3);transition:.15s;}
+.hm-btn{font-family:'Cinzel',serif;font-size:0.9rem;font-weight:700;letter-spacing:0.5px;color:#e8dfc8;background:linear-gradient(180deg,#5a5848,#42403a);border:1px solid rgba(0,0,0,0.35);border-radius:22px;padding:13px 26px;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 2px 4px rgba(0,0,0,0.3);transition:.15s;}
 .hm-btn:hover{background:linear-gradient(180deg,#6a6858,#524e48);}
 .hm-btn.hm-close{background:linear-gradient(180deg,#5a3028,#3a1e18);border-color:rgba(160,40,20,0.4);}
 
@@ -3237,6 +3237,12 @@ function closeAllBuildingPanels(){
   if(br) br.remove();
 }
 
+const ELEMENT_ICONS = {
+  fire:'🔥', grass:'🌿', earth:'🪨', ice:'❄️', water:'💧',
+  poison:'🌿🔥', bluefire:'🔥❄️', mud:'💧🪨', frost:'❄️💧',
+  magma:'🔥🪨', forest:'🪨🌿'
+};
+
 function openHabitatMenu(idx){
   closeAllBuildingPanels();
     closeFarmMenu(); closeShrineMenu(); closeQuestPanel();
@@ -3249,7 +3255,6 @@ function openHabitatMenu(idx){
   if(titleEl) titleEl.textContent=HABITAT_NAMES[h.type]||'Habitat';
 
   const row=document.getElementById('habitat-dragons-row');
-  row.style.flex='1'; row.style.display='flex'; row.style.alignItems='stretch'; row.style.gap='clamp(12px,2vw,32px)';
   row.innerHTML='';
 
   for(let i=0;i<3;i++){
@@ -3258,7 +3263,7 @@ function openHabitatMenu(idx){
     card.className='dragon-slot-card';
 
     const imgBox=document.createElement('div');
-    const slotSz='260px';
+    const slotSz=Math.round(Math.min(window.innerWidth*0.25,260))+'px';
     imgBox.className='dragon-slot-img'+(dragon?'':' empty');
     imgBox.style.width=slotSz; imgBox.style.height=slotSz;
     card.style.width=slotSz;
@@ -3266,7 +3271,7 @@ function openHabitatMenu(idx){
     if(dragon){
       // Static snapshot of the correct dragon type
       const cv=document.createElement('canvas');
-      const sz=260; cv.width=sz; cv.height=sz;
+      const sz=Math.round(Math.min(window.innerWidth*0.25, 260)); cv.width=sz; cv.height=sz;
       cv.style.width=sz+'px'; cv.style.height=sz+'px';
       cv.style.borderRadius='10px';
       const staticPhys={t:0,wing:0,wingV:0,bob:0,bobV:0,sway:0,swayV:0,swayDir:1,tailSwing:0,tailV:0};
@@ -3282,6 +3287,11 @@ function openHabitatMenu(idx){
       else if(dragon==='forest') drawForestDragon(cv.getContext('2d'), sz, sz, staticPhys);
       else drawFireDragon(cv.getContext('2d'), sz, sz, staticPhys);
       imgBox.appendChild(cv);
+      // Element badge - bottom left
+      const badge=document.createElement('div');
+      badge.style.cssText='position:absolute;bottom:8px;left:6px;display:flex;gap:2px;z-index:2;font-size:1rem;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.9));';
+      badge.textContent=ELEMENT_ICONS[dragon]||'';
+      imgBox.appendChild(badge);
 
       const lvl=document.createElement('div');
       lvl.className='dragon-level-tag';
@@ -3290,7 +3300,7 @@ function openHabitatMenu(idx){
       imgBox.appendChild(lvl);
       // Gold per minute badge
       const gpm=document.createElement('div');
-      gpm.style.cssText='position:absolute;bottom:8px;left:0;right:0;text-align:center;font-family:Cinzel,serif;font-size:1.1rem;font-weight:700;color:#FFE060;text-shadow:0 1px 3px rgba(0,0,0,0.9);';
+      gpm.style.cssText='position:absolute;bottom:6px;left:0;right:0;text-align:center;font-family:Cinzel,serif;font-size:0.82rem;font-weight:700;color:#FFE060;text-shadow:0 1px 3px rgba(0,0,0,0.9);';
       gpm.textContent='+'+Math.round(dragonGPM(dragon,lv))+'/min';
       imgBox.appendChild(gpm);
     }
@@ -3300,7 +3310,7 @@ function openHabitatMenu(idx){
     if(dragon){
       // Move Dragon button
       const moveDBtn=document.createElement('button');
-      moveDBtn.style.cssText='width:100%;margin-top:10px;font-family:Cinzel,serif;font-size:1.05rem;font-weight:700;color:#88ee88;background:linear-gradient(180deg,#2a6a2a,#1a4a1a);border:1px solid rgba(80,200,80,0.4);border-radius:22px;padding:16px 0;cursor:pointer;';
+      moveDBtn.style.cssText='width:100%;margin-top:clamp(4px,0.8vw,8px);font-family:Cinzel,serif;font-size:clamp(0.65rem,1vw,0.9rem);font-weight:700;color:#88ee88;background:linear-gradient(180deg,#2a6a2a,#1a4a1a);border:1px solid rgba(80,200,80,0.4);border-radius:clamp(10px,1.5vw,16px);padding:clamp(10px,1.5vw,16px) 0;cursor:pointer;';
       moveDBtn.textContent='Move Dragon';
       moveDBtn.onclick=(()=>{const si=i,hi=idx;return ()=>{
         const srcHab=game.placedHabitats[hi];
@@ -3352,7 +3362,7 @@ function openHabitatMenu(idx){
       card.appendChild(upBtn);
       // Sell dragon button — always shown regardless of level
       const sellDBtn=document.createElement('button');
-      sellDBtn.style.cssText='width:100%;font-family:Cinzel,serif;font-size:1.05rem;font-weight:700;color:#ffaaaa;background:rgba(120,20,20,0.3);border:1px solid rgba(200,60,60,0.35);border-radius:18px;padding:16px 0;cursor:pointer;margin-top:5px;';
+      sellDBtn.style.cssText='width:100%;font-family:Cinzel,serif;font-size:clamp(0.72rem,1vw,1rem);font-weight:700;color:#ffaaaa;background:rgba(120,20,20,0.3);border:1px solid rgba(200,60,60,0.35);border-radius:clamp(10px,1.5vw,16px);padding:clamp(8px,1.1vw,13px) 0;cursor:pointer;margin-top:clamp(3px,0.5vw,6px);';
       sellDBtn.textContent='Sell Dragon';
       sellDBtn.onclick=(()=>{const si=i,hi=idx;return async()=>{
         const totalDragons=game.placedHabitats.reduce((s,h)=>s+h.dragons.length,0);
@@ -8824,12 +8834,12 @@ setInterval(()=>{ if(!document.hidden) tickOfflineGold(); }, 10000);
 <div id="habitat-menu" style="display:none">
   <div id="habitat-menu-content" style="position:relative;">
     <button class="hm-btn hm-close" onclick="closeHabitatMenu()" style="position:absolute;top:12px;right:14px;padding:10px 18px;font-size:1.1rem;border-radius:16px;">✕</button>
-      <button onclick="moveSelectedHabitat()" style="position:absolute;top:12px;left:14px;font-family:Cinzel,serif;font-size:1rem;font-weight:700;padding:12px 24px;border-radius:20px;background:linear-gradient(180deg,#2a6a2a,#1a4a1a);border:1px solid rgba(80,200,80,0.4);color:#88ee88;cursor:pointer;">✦ Move</button>
+      <button onclick="moveSelectedHabitat()" style="position:absolute;top:12px;left:14px;font-family:Cinzel,serif;font-size:0.82rem;font-weight:700;padding:9px 18px;border-radius:16px;background:linear-gradient(180deg,#2a6a2a,#1a4a1a);border:1px solid rgba(80,200,80,0.4);color:#88ee88;cursor:pointer;">✦ Move</button>
     <div id="habitat-menu-title">Fire Habitat</div>
     <div id="habitat-dragons-row"></div>
     <div class="habitat-menu-actions" style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding:0 4px;">
-      <button class="hm-btn" onclick="openShopToAddDragon()" style="font-size:1.15rem;padding:18px 34px;border-radius:28px;">+ Add Dragon</button>
-      <button class="hm-btn" onclick="sellHabitat()" style="font-size:1.15rem;padding:18px 34px;border-radius:28px;background:rgba(120,20,20,0.4);border-color:rgba(200,60,60,0.4);color:#ffaaaa;">💰 Sell</button>
+      <button class="hm-btn" onclick="openShopToAddDragon()" style="font-size:clamp(0.82rem,1.2vw,1.1rem);padding:clamp(10px,1.5vw,16px) clamp(18px,2.5vw,30px);border-radius:clamp(18px,2vw,26px);">+ Add Dragon</button>
+      <button class="hm-btn" onclick="sellHabitat()" style="font-size:clamp(0.82rem,1.2vw,1.1rem);padding:clamp(10px,1.5vw,16px) clamp(18px,2.5vw,30px);border-radius:clamp(18px,2vw,26px);background:rgba(120,20,20,0.4);border-color:rgba(200,60,60,0.4);color:#ffaaaa;">💰 Sell</button>
     </div>
   </div>
 </div>
