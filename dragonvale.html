@@ -1281,11 +1281,9 @@ let off = 0;
 function render(ms) {
   // Camera inertia
   if(!isDragging){ cam.x+=cam.vx*0.12; cam.y+=cam.vy*0.12; cam.vx*=0.88; cam.vy*=0.88; }
-  // Pan limits — allow reaching all rows, accounts for grid size vs screen size
-  const gridH = 18 * 64 * cam.zoom;
-  const gridW = (game.expansions?36:18) * 64 * cam.zoom;
-  const maxPanX = Math.max(0, gridW/2 - W/2 + 40);
-  const maxPanY = Math.max(0, gridH/2 - H/2 + 20);
+  // Pan limits — generous so you can always pan freely
+  const maxPanX = 18 * 64 * cam.zoom * 0.6;
+  const maxPanY = 18 * 64 * cam.zoom * 0.6;
   cam.x=Math.max(-maxPanX,Math.min(maxPanX,cam.x));
   if(Math.abs(cam.x)>=maxPanX) cam.vx=0;
   cam.y=Math.max(-maxPanY,Math.min(maxPanY,cam.y));
