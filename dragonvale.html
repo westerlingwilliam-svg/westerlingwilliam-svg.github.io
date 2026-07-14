@@ -8660,6 +8660,36 @@ function openNewsPanel2(){
 }
 
 updateNewsBadge();
+
+// ── BACKGROUND GOLD ACCUMULATION ──────────────────────────────
+let _lastGoldTick = Date.now();
+
+function tickOfflineGold(){
+  if(!game || !game.placedHabitats) return;
+  const now = Date.now();
+  const elapsed = Math.min((now - _lastGoldTick) / 1000, 3600); // max 1h per tick
+  _lastGoldTick = now;
+  if(elapsed < 1) return;
+  game.placedHabitats.forEach(h=>{
+    if(!h.dragons||h.dragons.length===0) return;
+    const lvs=h.dragonLevels||h.dragons.map(()=>1);
+    const totalGPM=h.dragons.reduce((s,d,di)=>isDragonBreeding?s:s+dragonGPM(d,lvs[di]||1),0);
+    const goldMax=habitatGoldMax(h);
+    const earned=totalGPM/60*elapsed;
+    h.gold=Math.min((h.gold||0)+earned, goldMax);
+  });
+  updateGoldUI();
+}
+
+// Tick when tab becomes visible again
+document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden) tickOfflineGold();
+  else _lastGoldTick = Date.now();
+});
+
+// Also tick every 30s via interval so gold updates while tab is open but inactive
+setInterval(()=>{ if(!document.hidden) tickOfflineGold(); }, 30000);
+
 </script>
 
 <div id="tut-overlay" style="display:none;position:fixed;inset:0;z-index:8000;pointer-events:all;">
