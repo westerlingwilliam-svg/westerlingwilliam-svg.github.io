@@ -344,9 +344,9 @@ html,body{width:100%;height:100%;overflow:hidden;}
 #cheat-submit{font-family:Cinzel,serif;font-size:0.8rem;font-weight:700;padding:10px 28px;background:linear-gradient(180deg,#c8920a,#7a5200);border:1.5px solid rgba(255,200,60,0.5);border-radius:20px;color:#fff8e0;cursor:pointer;margin-right:8px;}
 #cheat-cancel{font-family:Cinzel,serif;font-size:0.8rem;padding:10px 20px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,200,60,0.2);border-radius:20px;color:#aaa;cursor:pointer;}
 
-#hatchery-menu{position:fixed;bottom:0;left:50%;transform:translateX(-50%);z-index:300;width:clamp(280px,65vw,860px);min-height:50vh;max-height:88vh;overflow-y:auto;background:linear-gradient(180deg,#1e1c18,#2a2820);border:1.5px solid rgba(220,190,120,0.25);border-radius:18px 18px 0 0;padding:clamp(16px,2.5vw,30px) clamp(16px,2.5vw,30px) clamp(26px,3.5vw,44px);box-shadow:0 -8px 32px rgba(0,0,0,0.6);display:none;}
+#hatchery-menu{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:300;width:clamp(280px,70vw,900px);min-height:30vh;max-height:88vh;overflow-y:auto;background:linear-gradient(180deg,#1e1c18,#2a2820);border:1.5px solid rgba(220,190,120,0.25);border-radius:22px;padding:clamp(20px,2.5vw,36px) clamp(20px,2.5vw,36px) clamp(28px,3.5vw,44px);box-shadow:0 8px 60px rgba(0,0,0,0.8);display:none;}
 #hatchery-menu.open{display:block;}
-.hatch-slot{flex:1;background:rgba(0,0,0,0.3);border:1.5px solid rgba(200,170,90,0.2);border-radius:14px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:200px;position:relative;}
+.hatch-slot{flex:1;background:rgba(0,0,0,0.3);border:1.5px solid rgba(200,170,90,0.2);border-radius:18px;padding:20px 12px;display:flex;flex-direction:column;align-items:center;gap:12px;min-height:280px;position:relative;}
 .hatch-slot.empty{border-style:dashed;opacity:0.5;}
 .hatch-slot canvas{border-radius:10px;}
 .hatch-timer{font-family:Cinzel,serif;font-size:0.75rem;color:rgba(220,200,120,0.8);letter-spacing:1px;}
@@ -421,15 +421,6 @@ body.placing #hud>*{pointer-events:none!important;}
   100%{transform:scale(1) rotate(0deg);opacity:1;}
 }
 
-/* ── PANEL CONTENT SCALING ────────────────────────────────── */
-@media (min-width: 900px) {
-  /* sizes set dynamically in JS */
-  #habitat-menu-title { font-size: clamp(1.4rem, 2.5vw, 2.8rem); }
-  .hm-btn { font-size: clamp(0.9rem, 1.3vw, 1.4rem); padding: clamp(12px,1.4vw,20px) clamp(22px,2.5vw,40px); border-radius: clamp(20px,2vw,32px); }
-  .hm-dragon-name { font-size: 1.1rem; }
-  .hm-btn-row { gap: clamp(8px,1vw,18px); }
-  #habitat-menu-content { gap: clamp(12px,1.5vw,28px); }
-}
 </style>
 #news-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(180,120,0,0.6);}
 
@@ -7978,12 +7969,12 @@ function renderHatcherySlots(){
       const ready=elapsed>=egg.duration;
       const pct=Math.min(1,elapsed/egg.duration);
       // Canvas for egg
-      const cv=document.createElement('canvas'); cv.width=140; cv.height=140;
+      const cv=document.createElement('canvas'); cv.width=200; cv.height=200;
       drawEggOnCanvas(cv,egg.dragonType,pct);
       slot.appendChild(cv);
       // Dragon type label
       const lbl=document.createElement('div');
-      lbl.style.cssText='font-family:Cinzel,serif;font-size:0.7rem;color:rgba(220,200,120,0.8);text-transform:capitalize;';
+      lbl.style.cssText='font-family:Cinzel,serif;font-size:0.9rem;color:rgba(220,200,120,0.8);text-transform:capitalize;';
       lbl.textContent=egg.dragonType+' Dragon';
       slot.appendChild(lbl);
       if(ready){
@@ -8149,6 +8140,7 @@ function openDragonPicker(slotIdx){
     h.dragons.forEach((type, di)=>{
       const lv = (h.dragonLevels&&h.dragonLevels[di])||1;
       if(type==='frost') return; // Frost is breed-exclusive — can't be used in breeder
+      if(lv < 5) return; // Must be at least Level 5 to breed
       // Don't show dragons already in the other slot
       const other = _breedSlots[1-slotIdx];
       if(other && other.habitatIdx===hi && other.dragonIdx===di) return;
