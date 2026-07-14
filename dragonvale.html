@@ -8665,30 +8665,33 @@ updateNewsBadge();
 let _lastGoldTick = Date.now();
 
 function tickOfflineGold(){
-  if(!game || !game.placedHabitats) return;
+  if(!game||!game.placedHabitats) return;
   const now = Date.now();
-  const elapsed = Math.min((now - _lastGoldTick) / 1000, 3600); // max 1h per tick
+  const elapsed = Math.min((now - _lastGoldTick)/1000, 3600);
   _lastGoldTick = now;
-  if(elapsed < 1) return;
-  game.placedHabitats.forEach(h=>{
+  if(elapsed < 0.5) return;
+  game.placedHabitats.forEach((h,hi)=>{
     if(!h.dragons||h.dragons.length===0) return;
     const lvs=h.dragonLevels||h.dragons.map(()=>1);
-    const totalGPM=h.dragons.reduce((s,d,di)=>isDragonBreeding?s:s+dragonGPM(d,lvs[di]||1),0);
+    const totalGPM=h.dragons.reduce((s,d,di)=>{
+      if(isDragonBreeding(hi,di)) return s;
+      return s+dragonGPM(d,lvs[di]||1);
+    },0);
     const goldMax=habitatGoldMax(h);
-    const earned=totalGPM/60*elapsed;
+    const earned=(totalGPM/60)*elapsed;
     h.gold=Math.min((h.gold||0)+earned, goldMax);
   });
   updateGoldUI();
 }
 
-// Tick when tab becomes visible again
+// When tab becomes visible: add gold for time spent away
 document.addEventListener('visibilitychange',()=>{
-  if(!document.hidden) tickOfflineGold();
-  else _lastGoldTick = Date.now();
+  if(document.hidden){ _lastGoldTick=Date.now(); }
+  else { tickOfflineGold(); }
 });
 
-// Also tick every 30s via interval so gold updates while tab is open but inactive
-setInterval(()=>{ if(!document.hidden) tickOfflineGold(); }, 30000);
+// Backup interval every 10s when tab IS active
+setInterval(()=>{ if(!document.hidden) tickOfflineGold(); }, 10000);
 
 </script>
 
