@@ -7000,6 +7000,40 @@ function claimQuest(qid){
   saveGame();
   renderQuestList();
   updateQuestBadge();
+
+  // Special quest rewards
+  if(qid==='fire_habitat'){
+    showNotification(`Quest complete! +${q.gold}🪙 · Bonus: Place a free Grass Habitat!`,'success');
+    addXP(q.xp||0); updateXPBar();
+    setTimeout(()=>{
+      const mid=Math.floor((game.expansions?36:18)/2)-Math.floor(HABITAT_SIZE/2);
+      game.placement={type:'grass',cost:0,gx:mid,gy:mid,isFreeReward:true};
+      document.getElementById('place-bar').style.display='block';
+      document.getElementById('place-label').textContent='🎁 Place your free Grass Habitat!';
+      document.getElementById('hud').style.pointerEvents='none';
+      document.body.classList.add('placing');
+    },600);
+    return;
+  }
+  if(qid==='upgrade_lv3'){
+    showNotification(`Quest complete! +${q.gold}🪙 · Bonus: A free Grass Dragon is ready to hatch!`,'success');
+    addXP(q.xp||0); updateXPBar();
+    setTimeout(()=>{
+      const hatchery=(game.buildings||[]).find(b=>b.type==='hatchery');
+      if(hatchery){
+        if(!hatchery.eggs) hatchery.eggs=[];
+        hatchery.eggs.push({dragonType:'grass',habitatType:'grass',startTime:Date.now()-9999999,duration:1,freeReward:true});
+        showNotification('A free Grass Dragon egg appeared in your Hatchery! 🥚','success');
+        saveGame();
+      } else {
+        // No hatchery yet — add directly to first grass habitat
+        const gh=game.placedHabitats.find(h=>h.type==='grass'&&h.dragons.length<3);
+        if(gh){ gh.dragons.push('grass'); if(!gh.dragonLevels) gh.dragonLevels=[]; gh.dragonLevels.push(1); saveGame(); showNotification('A free Grass Dragon joined your island! 🌿','success'); }
+      }
+    },600);
+    return;
+  }
+
   showNotification(`Quest complete! +${q.gold} 🪙 · +${q.xp||0} XP`,'success');
   addXP(q.xp||0); updateXPBar();
 }
