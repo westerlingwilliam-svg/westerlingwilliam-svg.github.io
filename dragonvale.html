@@ -3283,7 +3283,8 @@ function openHabitatMenu(idx){
         upBtn.style.opacity='0.5';
         upBtn.style.cursor='default';
       } else {
-        const cost=LEVEL_COST[lv2+1];
+        const dragonType2=h.dragons[i]||'fire';
+        const cost=Math.round(LEVEL_COST[lv2+1] * dragonFoodMult(dragonType2));
         upBtn.textContent='Upgrade — '+cost+' 🍖';
         upBtn.onclick=(()=>{ const slotIdx=i,habIdx=idx; return ()=>upgradeHabitatDragon(habIdx,slotIdx); })();
       }
@@ -3430,9 +3431,9 @@ document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
     if(isHabitat){
       const habitatType=isHabitat.dataset.habitat||'fire';
       if(game.placedHabitats.length>=maxHabitats()){ showNotification(`Reach level ${(Math.floor((game.level)/5)+1)*5} to unlock more habitats!`,'error'); return; }
-      if(habitatType==='earth'&&(game.level||1)<4){ showNotification('Earth Habitat unlocks at Level 4!','error'); return; }
-      if(habitatType==='ice'&&(game.level||1)<10){ showNotification('Ice Habitat unlocks at Level 10!','error'); return; }
-      if(habitatType==='water'&&(game.level||1)<12){ showNotification('Water Habitat unlocks at Level 8!','error'); return; }
+      if(habitatType==='earth'&&(game.level||1)<6){ showNotification('Earth Habitat unlocks at Level 6!','error'); return; }
+      if(habitatType==='ice'&&(game.level||1)<11){ showNotification('Ice Habitat unlocks at Level 11!','error'); return; }
+      if(habitatType==='water'&&(game.level||1)<13){ showNotification('Water Habitat unlocks at Level 13!','error'); return; }
       const habitatCosts={fire:500,grass:2000,earth:3500,ice:8000,water:15000};
       const hCost=habitatCosts[habitatType]||500;
       if(game.gold<hCost){ showNotification(`Not enough gold! (Need ${hCost} 🪙)`, 'error'); return; }
@@ -3447,7 +3448,7 @@ document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
         closeShop(); return;
       }
       if(buildingType==='breeder'){
-        if((game.level||1)<5){ showNotification('Breeding Cave unlocks at Level 5!','error'); return; }
+        if((game.level||1)<7){ showNotification('Breeding Cave unlocks at Level 7!','error'); return; }
         if((game.buildings||[]).some(b=>b.type==='breeder')){ showNotification('You already have a Breeding Cave!','error'); return; }
         const cost=2000;
         if(game.gold<cost){ showNotification(`Not enough gold! (Need 2,000 🪙)`,'error'); return; }
@@ -3468,14 +3469,14 @@ document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
 
     if(dragonCanvas){
       const dragonType=dragonCanvas.dataset.dragon;
-      if(dragonType==='earth'&&(game.level||1)<4){ showNotification('Earth Dragon unlocks at Level 4!','error'); return; }
-      if(dragonType==='ice'&&(game.level||1)<10){ showNotification('Ice Dragon unlocks at Level 10!','error'); return; }
-      if(dragonType==='water'&&(game.level||1)<12){ showNotification('Water Dragon unlocks at Level 12!','error'); return; }
+      if(dragonType==='earth'&&(game.level||1)<6){ showNotification('Earth Dragon unlocks at Level 6!','error'); return; }
+      if(dragonType==='ice'&&(game.level||1)<11){ showNotification('Ice Dragon unlocks at Level 11!','error'); return; }
+      if(dragonType==='water'&&(game.level||1)<13){ showNotification('Water Dragon unlocks at Level 13!','error'); return; }
       if(dragonType==='frost'&&(game.level||1)<16){ showNotification('Frost Dragon unlocks at Level 16!','error'); return; }
       if(dragonType==='magma'&&(game.level||1)<14){ showNotification('Magma Dragon unlocks at Level 14!','error'); return; }
       if(dragonType==='forest'&&(game.level||1)<13){ showNotification('Forest Dragon unlocks at Level 13!','error'); return; }
-      if(dragonType==='mud'&&(game.level||1)<10){ showNotification('Mud Dragon unlocks at Level 10!','error'); return; }
-      if(dragonType==='bluefire'&&(game.level||1)<15){ showNotification('Blue Fire Dragon unlocks at Level 15!','error'); return; }
+      if(dragonType==='mud'&&(game.level||1)<13){ showNotification('Mud Dragon unlocks at Level 13!','error'); return; }
+      if(dragonType==='bluefire'&&(game.level||1)<11){ showNotification('Blue Fire Dragon unlocks at Level 11!','error'); return; }
       const habitatTypeRaw=DRAGON_HABITAT[dragonType];
       const habitatTypes=Array.isArray(habitatTypeRaw)?habitatTypeRaw:[habitatTypeRaw];
       const habitatType=habitatTypes[0];
@@ -6904,59 +6905,59 @@ setTimeout(tutInit, 800);
 // ══════════════════════════════════════════════════════
 const QUEST_DEFS = [
   // ── Starter ──
-  {id:'fire_habitat', xp:50, title:'Build a Fire Habitat', desc:'Place a Fire Habitat on your island.', icon:'🌋',
+  {id:'fire_habitat', xp:40, title:'Build a Fire Habitat', desc:'Place a Fire Habitat on your island.', icon:'🌋',
    progress:()=>game.placedHabitats.filter(h=>h.type==='fire').length, max:1, gold:100},
-  {id:'fire_dragon', xp:50,  title:'Buy a Fire Dragon',    desc:'Add a Fire Dragon to your habitat.',   icon:'🔥',
+  {id:'fire_dragon', xp:40,  title:'Buy a Fire Dragon',    desc:'Add a Fire Dragon to your habitat.',   icon:'🔥',
    progress:()=>game.placedHabitats.reduce((s,h)=>s+h.dragons.filter(d=>d==='fire').length,0), max:1, gold:100},
-  {id:'plant_wheat', xp:50,  title:'Plant Wheat',           desc:'Grow Wheat in your Farm.',             icon:'🌾',
+  {id:'plant_wheat', xp:40,  title:'Plant Wheat',           desc:'Grow Wheat in your Farm.',             icon:'🌾',
    progress:()=>(game.questsDone&&game.questsDone.wheat_ever)?1:0, max:1, gold:100},
   // ── Easy ──
-  {id:'buy_grass_dragon', xp:75, title:'Buy a Grass Dragon', desc:'Add a Grass Dragon to a habitat.', icon:'🌿',
+  {id:'buy_grass_dragon', xp:60, title:'Buy a Grass Dragon', desc:'Add a Grass Dragon to a habitat.', icon:'🌿',
    progress:()=>game.placedHabitats.reduce((s,h)=>s+h.dragons.filter(d=>d==='grass').length,0), max:1, gold:200},
-  {id:'two_habitats', xp:75, title:'Build 2 Habitats', desc:'Have 2 habitats on your island.', icon:'🏡',
+  {id:'two_habitats', xp:60, title:'Build 2 Habitats', desc:'Have 2 habitats on your island.', icon:'🏡',
    progress:()=>Math.min(game.placedHabitats.length,2), max:2, gold:200},
-  {id:'upgrade_lv3', xp:75, title:'Upgrade to Level 3', desc:'Level up any dragon to Level 3.', icon:'⬆️',
+  {id:'upgrade_lv3', xp:60, title:'Upgrade to Level 3', desc:'Level up any dragon to Level 3.', icon:'⬆️',
    progress:()=>game.placedHabitats.some(h=>(h.dragonLevels||[]).some(l=>l>=3))?1:0, max:1, gold:200},
   // ── Medium ──
-  {id:'all_types', xp:150, title:'Own All 3 Habitat Types', desc:'Have a Fire, Grass, and Earth Habitat.', icon:'🌍',
+  {id:'all_types', xp:120, title:'Own All 3 Habitat Types', desc:'Have a Fire, Grass, and Earth Habitat.', icon:'🌍',
    progress:()=>['fire','grass','earth'].filter(t=>game.placedHabitats.some(h=>h.type===t)).length, max:3, gold:400},
-  {id:'three_dragons', xp:100, title:'Own 3 Dragons', desc:'Have 3 dragons across your habitats.', icon:'🐲',
+  {id:'three_dragons', xp:80, title:'Own 3 Dragons', desc:'Have 3 dragons across your habitats.', icon:'🐲',
    progress:()=>Math.min(game.placedHabitats.reduce((s,h)=>s+h.dragons.length,0),3), max:3, gold:300},
-  {id:'harvest_fruit', xp:100, title:'Harvest Dragon Fruit', desc:'Harvest Dragon Fruit from your Farm.', icon:'🍈',
+  {id:'harvest_fruit', xp:80, title:'Harvest Dragon Fruit', desc:'Harvest Dragon Fruit from your Farm.', icon:'🍈',
    progress:()=>(game.questsDone&&game.questsDone.dragon_fruit_ever)?1:0, max:1, gold:350},
-  {id:'two_farms', xp:120, title:'Build 2 Farms', desc:'Have 2 Farms on your island.', icon:'🌻',
+  {id:'two_farms', xp:96, title:'Build 2 Farms', desc:'Have 2 Farms on your island.', icon:'🌻',
    progress:()=>Math.min((game.buildings||[]).filter(b=>b.type==='farm').length,2), max:2, gold:400},
-  {id:'upgrade_lv5', xp:150, title:'Upgrade to Level 5', desc:'Level up any dragon to Level 5.', icon:'✨',
+  {id:'upgrade_lv5', xp:120, title:'Upgrade to Level 5', desc:'Level up any dragon to Level 5.', icon:'✨',
    progress:()=>game.placedHabitats.some(h=>(h.dragonLevels||[]).some(l=>l>=5))?1:0, max:1, gold:400},
   // ── Hard ──
-  {id:'earth_lv7', xp:200, title:'Earth Dragon Level 7', desc:'Level up an Earth Dragon to Level 7.', icon:'⛰️',
+  {id:'earth_lv7', xp:160, title:'Earth Dragon Level 7', desc:'Level up an Earth Dragon to Level 7.', icon:'⛰️',
    progress:()=>game.placedHabitats.some(h=>h.type==='earth'&&(h.dragonLevels||[]).some(l=>l>=7))?1:0, max:1, gold:500},
-  {id:'reach_lv5', xp:300, title:'Reach Level 5', desc:'Advance your island to Level 5.', icon:'🌟',
-   progress:()=>game.level>=5?1:0, max:1, gold:1000},
-  {id:'dragon_max', xp:300, title:'Level Up a Dragon to Level 10', desc:'Level any dragon to Level 10.', icon:'⚔️',
+  {id:'reach_lv5', xp:240, title:'Reach Level 10', desc:'Advance your island to Level 10.', icon:'🌟',
+   progress:()=>game.level>=10?1:0, max:1, gold:1000},
+  {id:'dragon_max', xp:240, title:'Level Up a Dragon to Level 10', desc:'Level any dragon to Level 10.', icon:'⚔️',
    progress:()=>game.placedHabitats.some(h=>(h.dragonLevels||[]).some(l=>l>=10))?1:0, max:1, gold:1000},
   // ── Aquatic Update — New Dragons ──
-  {id:'buy_water_dragon', xp:100, title:'Buy a Water Dragon', desc:'Add a Water Dragon to a habitat.', icon:'💧',
+  {id:'buy_water_dragon', xp:80, title:'Buy a Water Dragon', desc:'Add a Water Dragon to a habitat.', icon:'💧',
    progress:()=>game.placedHabitats.reduce((s,h)=>s+h.dragons.filter(d=>d==='water').length,0), max:1, gold:300},
-  {id:'buy_mud_dragon', xp:150, title:'Buy a Mud Dragon', desc:'Add a Mud Dragon to a habitat.', icon:'🟤',
+  {id:'buy_mud_dragon', xp:120, title:'Buy a Mud Dragon', desc:'Add a Mud Dragon to a habitat.', icon:'🟤',
    progress:()=>game.placedHabitats.reduce((s,h)=>s+h.dragons.filter(d=>d==='mud').length,0), max:1, gold:500},
-  {id:'buy_magma_dragon', xp:200, title:'Buy a Magma Dragon', desc:'Add a Magma Dragon to a habitat.', icon:'🌋',
+  {id:'buy_magma_dragon', xp:160, title:'Buy a Magma Dragon', desc:'Add a Magma Dragon to a habitat.', icon:'🌋',
    progress:()=>game.placedHabitats.reduce((s,h)=>s+h.dragons.filter(d=>d==='magma').length,0), max:1, gold:600},
-  {id:'buy_forest_dragon', xp:175, title:'Buy a Forest Dragon', desc:'Add a Forest Dragon to a habitat.', icon:'🌿🪨',
+  {id:'buy_forest_dragon', xp:140, title:'Buy a Forest Dragon', desc:'Add a Forest Dragon to a habitat.', icon:'🌿🪨',
    progress:()=>game.placedHabitats.reduce((s,h)=>s+h.dragons.filter(d=>d==='forest').length,0), max:1, gold:500},
-  {id:'breed_frost', xp:400, title:'Breed a Frost Dragon', desc:'Breed Ice + Water to get the rare Frost Dragon (5% chance).', icon:'❄️💧',
+  {id:'breed_frost', xp:320, title:'Breed a Frost Dragon', desc:'Breed Ice + Water to get the rare Frost Dragon (5% chance).', icon:'❄️💧',
    progress:()=>game.placedHabitats.reduce((s,h)=>s+h.dragons.filter(d=>d==='frost').length,0), max:1, gold:2000},
-  {id:'frost_max', xp:2000, title:'Max Out a Frost Dragon', desc:'Level a Frost Dragon all the way to Level 15. The ultimate challenge.', icon:'🏆',
+  {id:'frost_max', xp:1600, title:'Max Out a Frost Dragon', desc:'Level a Frost Dragon all the way to Level 15. The ultimate challenge.', icon:'🏆',
    progress:()=>game.placedHabitats.some(h=>(h.dragons||[]).some((d,i)=>d==='frost'&&(h.dragonLevels||[])[i]>=15))?1:0, max:1, gold:15000},
   // ── Breeding ──
-  {id:'breed_fire_grass', xp:100, title:'Breed Fire & Grass', desc:'Breed a Fire Dragon and a Grass Dragon together.', icon:'🔥🌿',
+  {id:'breed_fire_grass', xp:80, title:'Breed Fire & Grass', desc:'Breed a Fire Dragon and a Grass Dragon together.', icon:'🔥🌿',
    progress:()=>(game.questsDone&&game.questsDone.bred_fire_grass)?1:0, max:1, gold:300},
-  {id:'breed_fire_ice', xp:150, title:'Breed Fire & Ice', desc:'Breed a Fire Dragon and an Ice Dragon together.', icon:'🔥❄️',
+  {id:'breed_fire_ice', xp:120, title:'Breed Fire & Ice', desc:'Breed a Fire Dragon and an Ice Dragon together.', icon:'🔥❄️',
    progress:()=>(game.questsDone&&game.questsDone.bred_fire_ice)?1:0, max:1, gold:400},
-  {id:'breed_ice_water', xp:200, title:'Breed Ice & Water', desc:'Breed an Ice Dragon and a Water Dragon together.', icon:'❄️💧',
+  {id:'breed_ice_water', xp:160, title:'Breed Ice & Water', desc:'Breed an Ice Dragon and a Water Dragon together.', icon:'❄️💧',
    progress:()=>(game.questsDone&&game.questsDone.bred_ice_water)?1:0, max:1, gold:500},
   // ── Legendary ──
-  {id:'three_max', xp:1000, title:'Max Out 3 Dragons', desc:'Level up 3 different dragons to Level 15.', icon:'💎',
+  {id:'three_max', xp:800, title:'Max Out 3 Dragons', desc:'Level up 3 different dragons to Level 15.', icon:'💎',
    progress:()=>Math.min(game.placedHabitats.reduce((s,h)=>s+(h.dragonLevels||[]).filter(l=>l>=15).length,0),3), max:3, gold:5000},
 ];
 
@@ -7203,7 +7204,7 @@ else _initOnLoad();
 // XP SYSTEM
 // ══════════════════════════════════════════════════════
 function xpForLevel(lv){
-  let xp=130;
+  let xp=157;
   for(let i=1;i<lv;i++) xp=Math.floor(xp*(i<5?1.3:1.2));
   return xp;
 }
@@ -7238,10 +7239,11 @@ function addXP(amount){
 const LEVEL_UNLOCKS = {
   2:  ['🪨 Earth Dragon becomes visible'],
   3:  ['⚔️ Dragon upgrades become more powerful'],
-  4:  ['🪨 Earth Dragon unlocked', '🪨 Earth Habitat unlocked'],
+  4:  [],
+  6:  ['🪨 Earth Dragon unlocked', '🪨 Earth Habitat unlocked'],
   5:  ['🌿🔥 Poison Dragon unlocked', '🔥🪨 Magma Dragon unlocked', '🪨🌿 Forest Dragon unlocked', '🧬 Breeding Cave available in shop'],
   6:  ['📈 Habitat gold caps increase'],
-  7:  ['⬆️ Dragon max food cost increases — upgrade fast!'],
+  7:  [],
   8:  ['❄️ Ice Dragon becomes visible', '💧 Water Dragon becomes visible'],
   9:  ['🏰 Expansion unlocks at Level 10'],
   10: ['❄️ Ice Dragon unlocked', '❄️ Ice Habitat unlocked', '🔥❄️ Blue Fire Dragon unlocked (breed Ice + Fire)', '💧 Water Dragon becomes visible', '🏰 Grid Expansion available'],
@@ -7390,14 +7392,14 @@ function updateShopButtons(){
   const dragonDefs = [
     {type:'fire',     unlock:1,  visible:1,  cost:300},
     {type:'grass',    unlock:1,  visible:1,  cost:750},
-    {type:'earth',    unlock:4,  visible:2,  cost:2000},
-    {type:'ice',      unlock:10, visible:8,  cost:4000},
-    {type:'water',    unlock:12, visible:10, cost:8000},
-    {type:'poison',   unlock:5,  visible:5,  cost:4500},   // Grass+Fire, breed at lv5
-    {type:'mud',      unlock:12, visible:12, cost:18000},   // Water+Earth
-    {type:'forest',   unlock:5,  visible:5,  cost:22000},   // Earth+Grass, earth at lv4+breed
-    {type:'bluefire', unlock:10, visible:10, cost:25000},   // Ice+Fire, ice at lv10
-    {type:'magma',    unlock:5,  visible:5,  cost:30000},   // Fire+Earth, earth at lv4+breed
+    {type:'earth',    unlock:6,  visible:4,  cost:2000},
+    {type:'ice',      unlock:11, visible:9,  cost:4000},
+    {type:'water',    unlock:13, visible:11, cost:8000},
+    {type:'poison',   unlock:7,  visible:7,  cost:4500},   // Grass+Fire, breed at lv5
+    {type:'mud',      unlock:13, visible:13, cost:18000},   // Water+Earth
+    {type:'forest',   unlock:7,  visible:7,  cost:22000},   // Earth+Grass, earth at lv4+breed
+    {type:'bluefire', unlock:11, visible:11, cost:25000},   // Ice+Fire, ice at lv10
+    {type:'magma',    unlock:7,  visible:7,  cost:30000},   // Fire+Earth, earth at lv4+breed
     {type:'frost',    unlock:99, visible:10, cost:45000},   // Breed only: Ice+Water (5%)
   ];
   const lv = game.level||1;
