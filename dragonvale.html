@@ -41,10 +41,9 @@ html,body{width:100%;height:100%;overflow:hidden;}
   /* Layered stone text */
   color:#e8d898;
   text-shadow:
-    0 1px 0 #fff8e0,
-    0 -1px 0 rgba(0,0,0,0.6),
-    2px 2px 0 rgba(80,60,10,0.5),
-    0 0 18px rgba(255,200,40,0.25);
+    0 1px 3px rgba(0,0,0,0.8),
+    0 0 18px rgba(255,200,40,0.3),
+    0 0 40px rgba(255,180,0,0.15);
   /* Stone tablet background */
   background:
     linear-gradient(180deg,#5a4e2a 0%,#3e3418 40%,#2e2510 80%,#1e180a 100%);
@@ -1365,8 +1364,8 @@ function spendFood(amount){
 }
 
 function dragonFoodMult(dragonType){
-  if(dragonType==='fire') return 0.75;
-  if(dragonType==='grass') return 1.0;
+  if(dragonType==='fire') return 0.45;
+  if(dragonType==='grass') return 0.6;
   if(dragonType==='poison') return 2.5;
   if(dragonType==='ice') return 1.9;
   if(dragonType==='mud') return 3.2;      // 18,000🪙
@@ -2925,7 +2924,7 @@ function drawPlacedHabitats(){
     if(h.dragons.length>0){
       const goldMax=habitatGoldMax(h);
       const gold=h.gold||0;
-      const threshold=goldMax*0.2;
+      const threshold=50;
       if(gold>=threshold && threshold>0) _bubbles.push({bx:px+size*0.5, by:py+size*0.1, gold:Math.floor(gold), pct:gold/goldMax});
     } // end h.dragons.length>0
 
@@ -3203,7 +3202,7 @@ canvas.addEventListener('click', e=>{
     const vr=habitatOutlineRect(px,py,size);
     if(sx>=vr.x&&sx<=vr.x+vr.w&&sy>=vr.y&&sy<=vr.y+vr.h){
       const goldMax=habitatGoldMax(h);
-      const threshold=goldMax*0.2;
+      const threshold=50;
       if((h.gold||0)>=threshold && threshold>0){
         // Collect gold
         const collected=Math.floor(h.gold);
@@ -6938,6 +6937,26 @@ const QUEST_DEFS = [
    progress:()=>game.level>=5?1:0, max:1, gold:1000},
   {id:'dragon_max', xp:300, title:'Level Up a Dragon to Level 10', desc:'Level any dragon to Level 10.', icon:'⚔️',
    progress:()=>game.placedHabitats.some(h=>(h.dragonLevels||[]).some(l=>l>=10))?1:0, max:1, gold:1000},
+  // ── Aquatic Update — New Dragons ──
+  {id:'buy_water_dragon', xp:100, title:'Buy a Water Dragon', desc:'Add a Water Dragon to a habitat.', icon:'💧',
+   progress:()=>game.placedHabitats.reduce((s,h)=>s+h.dragons.filter(d=>d==='water').length,0), max:1, gold:300},
+  {id:'buy_mud_dragon', xp:150, title:'Buy a Mud Dragon', desc:'Add a Mud Dragon to a habitat.', icon:'🟤',
+   progress:()=>game.placedHabitats.reduce((s,h)=>s+h.dragons.filter(d=>d==='mud').length,0), max:1, gold:500},
+  {id:'buy_magma_dragon', xp:200, title:'Buy a Magma Dragon', desc:'Add a Magma Dragon to a habitat.', icon:'🌋',
+   progress:()=>game.placedHabitats.reduce((s,h)=>s+h.dragons.filter(d=>d==='magma').length,0), max:1, gold:600},
+  {id:'buy_forest_dragon', xp:175, title:'Buy a Forest Dragon', desc:'Add a Forest Dragon to a habitat.', icon:'🌿🪨',
+   progress:()=>game.placedHabitats.reduce((s,h)=>s+h.dragons.filter(d=>d==='forest').length,0), max:1, gold:500},
+  {id:'breed_frost', xp:400, title:'Breed a Frost Dragon', desc:'Breed Ice + Water to get the rare Frost Dragon (5% chance).', icon:'❄️💧',
+   progress:()=>game.placedHabitats.reduce((s,h)=>s+h.dragons.filter(d=>d==='frost').length,0), max:1, gold:2000},
+  {id:'frost_max', xp:2000, title:'Max Out a Frost Dragon', desc:'Level a Frost Dragon all the way to Level 15. The ultimate challenge.', icon:'🏆',
+   progress:()=>game.placedHabitats.some(h=>(h.dragons||[]).some((d,i)=>d==='frost'&&(h.dragonLevels||[])[i]>=15))?1:0, max:1, gold:15000},
+  // ── Breeding ──
+  {id:'breed_fire_grass', xp:100, title:'Breed Fire & Grass', desc:'Breed a Fire Dragon and a Grass Dragon together.', icon:'🔥🌿',
+   progress:()=>(game.questsDone&&game.questsDone.bred_fire_grass)?1:0, max:1, gold:300},
+  {id:'breed_fire_ice', xp:150, title:'Breed Fire & Ice', desc:'Breed a Fire Dragon and an Ice Dragon together.', icon:'🔥❄️',
+   progress:()=>(game.questsDone&&game.questsDone.bred_fire_ice)?1:0, max:1, gold:400},
+  {id:'breed_ice_water', xp:200, title:'Breed Ice & Water', desc:'Breed an Ice Dragon and a Water Dragon together.', icon:'❄️💧',
+   progress:()=>(game.questsDone&&game.questsDone.bred_ice_water)?1:0, max:1, gold:500},
   // ── Legendary ──
   {id:'three_max', xp:1000, title:'Max Out 3 Dragons', desc:'Level up 3 different dragons to Level 15.', icon:'💎',
    progress:()=>Math.min(game.placedHabitats.reduce((s,h)=>s+(h.dragonLevels||[]).filter(l=>l>=15).length,0),3), max:3, gold:5000},
@@ -8231,6 +8250,12 @@ function startBreeding(buildingIdx){
   const breedCost = Math.round((( DRAGON_COST[s1.type]||300) + (DRAGON_COST[s2.type]||300)) / 5);
   if(!spendGold(breedCost)){ showNotification(`Not enough gold! Breeding costs ${breedCost.toLocaleString()}🪙`,'error'); return; }
   const result=rollBreedResult(s1.type,s2.type);
+  // Track breeding quests
+  if(!game.questsDone) game.questsDone={};
+  const combo=[s1.type,s2.type].sort().join('+');
+  if(combo==='fire+grass') game.questsDone.bred_fire_grass=1;
+  if(combo==='fire+ice') game.questsDone.bred_fire_ice=1;
+  if(combo==='ice+water') game.questsDone.bred_ice_water=1;
   b.breedState={slot1:s1,slot2:s2,startTime:Date.now(),duration:1200000,result,done:false};
   _breedSlots=[null,null];
   saveGame();
