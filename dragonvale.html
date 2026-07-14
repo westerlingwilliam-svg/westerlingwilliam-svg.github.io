@@ -640,7 +640,7 @@ body.placing #hud>*{pointer-events:none!important;}
             </div>
             <div class="dragon-card-name">Grass Habitat</div>
             <div class="dragon-card-desc">A lush forest glade where nature thrives. Perfect for grass dragons.</div>
-            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>2000</span></button>
+            <button class="dragon-card-buy"><span class="dc-coin">🪙</span><span>1100</span></button>
           </div>
           <div class="dragon-card">
             <div class="habitat-frame">
@@ -1475,12 +1475,14 @@ function isValidPlacement(gx, gy, excludeIdx=-1){
   if(gx<0||gy<0||gx+HABITAT_SIZE>_maxCols||gy+HABITAT_SIZE>18){
 return false;
   }
-  // Exact grid bounding box collision — no habitat cells can overlap
+  // Reduced collision zone — tighter vertically
+  const cSzX = HABITAT_SIZE - 1;
+  const cSzY = HABITAT_SIZE - 2.5;
   for(let i=0;i<game.placedHabitats.length;i++){
     if(i===excludeIdx) continue;
     const h=game.placedHabitats[i];
-    if(gx<h.gx+HABITAT_SIZE && gx+HABITAT_SIZE>h.gx &&
-       gy<h.gy+HABITAT_SIZE && gy+HABITAT_SIZE>h.gy){
+    if(gx<h.gx+cSzX && gx+cSzX>h.gx &&
+       gy<h.gy+cSzY && gy+cSzY>h.gy){
 return false;
     }
   }
@@ -1488,8 +1490,8 @@ return false;
   for(const b of (game.buildings||[])){
     const bcx=b.gx+BUILDING_SIZE/2, bcy=b.gy+BUILDING_SIZE/2;
     const hcx=gx+HABITAT_SIZE/2,   hcy=gy+HABITAT_SIZE/2;
-    const threshX=HABITAT_SIZE/2+BUILDING_SIZE/2-1;
-    const threshY=HABITAT_SIZE/2+BUILDING_SIZE/2-2.5;
+    const threshX=HABITAT_SIZE/2+BUILDING_SIZE/2-2;
+    const threshY=HABITAT_SIZE/2+BUILDING_SIZE/2-3;
     if(Math.abs(hcx-bcx)<threshX && Math.abs(hcy-bcy)<threshY) return false;
   }
   const sh=game.shrine;
@@ -3434,7 +3436,7 @@ document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
       if(habitatType==='earth'&&(game.level||1)<6){ showNotification('Earth Habitat unlocks at Level 6!','error'); return; }
       if(habitatType==='ice'&&(game.level||1)<11){ showNotification('Ice Habitat unlocks at Level 11!','error'); return; }
       if(habitatType==='water'&&(game.level||1)<13){ showNotification('Water Habitat unlocks at Level 13!','error'); return; }
-      const habitatCosts={fire:500,grass:2000,earth:3500,ice:8000,water:15000};
+      const habitatCosts={fire:500,grass:1100,earth:4000,ice:8000,water:15000};
       const hCost=habitatCosts[habitatType]||500;
       if(game.gold<hCost){ showNotification(`Not enough gold! (Need ${hCost} 🪙)`, 'error'); return; }
       startPlacement(habitatType,hCost);
@@ -7362,7 +7364,7 @@ async function sellHabitat(){
   if(game.placedHabitats.length<=1){ showNotification("You can't sell your last habitat!",'error'); return; }
   const h=game.placedHabitats[idx];
   if(h.dragons.length>0){ showNotification("Remove all dragons before selling!",'error'); return; }
-  const habitatCosts={fire:500,grass:2000,earth:3500,ice:8000,water:15000};
+  const habitatCosts={fire:500,grass:1100,earth:4000,ice:8000,water:15000};
   const sellValue=Math.floor((habitatCosts[h.type]||500)/2);
   const ok=await gameConfirm(`Sell this ${HABITAT_NAMES[h.type]||h.type}? You will receive ${sellValue} 🪙.`,'Sell');
   if(ok){
