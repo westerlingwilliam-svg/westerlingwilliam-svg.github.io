@@ -3545,7 +3545,7 @@ document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
       if(game.placedHabitats.length>=maxHabitats()){ showNotification(`Reach level ${(Math.floor((game.level)/5)+1)*5} to unlock more habitats!`,'error'); return; }
       if(habitatType==='earth'&&(game.level||1)<6){ showNotification('Earth Habitat unlocks at Level 6!','error'); return; }
       if(habitatType==='ice'&&(game.level||1)<11){ showNotification('Ice Habitat unlocks at Level 11!','error'); return; }
-      if(habitatType==='water'&&(game.level||1)<13){ showNotification('Water Habitat unlocks at Level 13!','error'); return; }
+      if(habitatType==='water'&&(game.level||1)<14){ showNotification('Water Habitat unlocks at Level 14!','error'); return; }
       const habitatCosts={fire:500,grass:1100,earth:3500,ice:8000,water:15000};
       const hCost=habitatCosts[habitatType]||500;
       if(game.gold<hCost){ showNotification(`Not enough gold! (Need ${hCost} 🪙)`, 'error'); return; }
@@ -3583,7 +3583,7 @@ document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
       const dragonType=dragonCanvas.dataset.dragon;
       if(dragonType==='earth'&&(game.level||1)<6){ showNotification('Earth Dragon unlocks at Level 6!','error'); return; }
       if(dragonType==='ice'&&(game.level||1)<11){ showNotification('Ice Dragon unlocks at Level 11!','error'); return; }
-      if(dragonType==='water'&&(game.level||1)<13){ showNotification('Water Dragon unlocks at Level 13!','error'); return; }
+      if(dragonType==='water'&&(game.level||1)<14){ showNotification('Water Dragon unlocks at Level 14!','error'); return; }
       if(dragonType==='frost'&&(game.level||1)<16){ showNotification('Frost Dragon unlocks at Level 16!','error'); return; }
       if(dragonType==='magma'&&(game.level||1)<14){ showNotification('Magma Dragon unlocks at Level 14!','error'); return; }
       if(dragonType==='forest'&&(game.level||1)<13){ showNotification('Forest Dragon unlocks at Level 13!','error'); return; }
@@ -7352,19 +7352,21 @@ function addXP(amount){
 
 const LEVEL_UNLOCKS = {
   3:  ['⚔️ Dragon upgrades become more powerful'],
-  4:  [],
-  6:  ['🪨 Earth Dragon unlocked', '🪨 Earth Habitat unlocked'],
+  4:  ['🪨 Earth Dragon becomes visible'],
   5:  ['🌿🔥 Poison Dragon unlocked', '🔥🪨 Magma Dragon unlocked', '🪨🌿 Forest Dragon unlocked', '🧬 Breeding Cave available in shop'],
-  6:  ['📈 Habitat gold caps increase'],
+  6:  ['🪨 Earth Dragon unlocked', '🪨 Earth Habitat unlocked'],
   7:  [],
-  8:  ['❄️ Ice Dragon becomes visible', '💧 Water Dragon becomes visible'],
-  9:  ['🏰 Expansion unlocks at Level 10'],
-  10: ['❄️ Ice Dragon unlocked', '❄️ Ice Habitat unlocked', '🔥❄️ Blue Fire Dragon unlocked (breed Ice + Fire)', '💧 Water Dragon becomes visible', '🏰 Grid Expansion available'],
-  11: ['📈 Max habitats increases'],
-  12: ['💧 Water Dragon unlocked', '💧 Water Habitat unlocked', '💧🪨 Mud Dragon unlocked', '❄️💧 Frost Dragon visible (breed Ice + Water for 5% chance)'],
-  13: ['🪨🌿 Forest Dragon available in market'],
-  14: ['🔥🪨 Magma Dragon available in market'],
-  15: ['🔥❄️ Blue Fire Dragon available in market'],
+  8:  [],
+  9:  ['❄️ Ice Dragon becomes visible'],
+  10: ['🏰 Grid Expansion available'],
+  11: ['❄️ Ice Dragon unlocked', '❄️ Ice Habitat unlocked', '🔥❄️ Blue Fire Dragon unlocked (breed Ice + Fire)'],
+  12: ['💧 Water Dragon becomes visible', '❄️💧 Frost Dragon available via breeding (Ice + Water, 5%)'],
+  13: ['💧🪨 Mud Dragon unlocked'],
+  14: ['💧 Water Dragon unlocked', '💧 Water Habitat unlocked'],
+  15: ['⭐ Elemental dragons reach max level'],
+  18: ['🏆 Island approaching legendary status'],
+  20: ['💎 Special dragons can now reach Level 20'],
+  25: ['👑 Max Level reached — you are a true Dragon Master!'],
 };
 
 function showLevelUpPopup(level){
@@ -7507,7 +7509,7 @@ function updateShopButtons(){
     {type:'grass',    unlock:1,  visible:1,  cost:750},
     {type:'earth',    unlock:6,  visible:4,  cost:2000},
     {type:'ice',      unlock:11, visible:9,  cost:4000},
-    {type:'water',    unlock:13, visible:11, cost:8000},
+    {type:'water',    unlock:14, visible:12, cost:8000},
     {type:'poison',   unlock:7,  visible:7,  cost:4500},   // Grass+Fire, breed at lv5
     {type:'mud',      unlock:13, visible:13, cost:18000},   // Water+Earth
     {type:'forest',   unlock:7,  visible:7,  cost:22000},   // Earth+Grass, earth at lv4+breed
@@ -8501,8 +8503,8 @@ function openNewsPanel(){
       'Special dragons (Poison, Blue Fire) always have 10% chance in breeding',
     ]},
     { date:'2026-07-07', title:'❄️ Ice Update', items:[
-      'Ice Dragon added — unlocks at Level 10',
-      'Ice Habitat added — holds up to 5,000🪙, unlocks at Level 10',
+      'Ice Dragon added — unlocks at Level 11',
+      'Ice Habitat added — holds up to 5,000🪙, unlocks at Level 11',
       'Blue Fire Dragon added — unlocks at Level 15, goes in Ice or Fire habitat',
     ]},
     { date:'2026-07-06', title:'☠️ Poison Dragon', items:[
