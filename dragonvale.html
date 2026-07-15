@@ -3529,6 +3529,7 @@ function maxHabitats(){
 }
 function maxFarms(){
   const lv=game.level||1;
+  if(lv>=18) return 4;
   if(lv>=9) return 3;
   if(lv>=3) return 2;
   return 1;
@@ -3570,11 +3571,11 @@ document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
         closeShop(); return;
       }
       const curFarms=(game.buildings||[]).filter(b=>b.type==='farm').length;
-      const cost=curFarms>=2?2000:curFarms>=1?800:300;
+      const cost=curFarms>=3?20000:curFarms>=2?2000:curFarms>=1?800:300;
       const max=maxFarms();
       if(curFarms>=max){
         const nextLv=curFarms>=2?9:3;
-        showNotification(maxFarms()>=3&&curFarms>=3?'You have the maximum number of Farms!':'Reach level '+nextLv+' to unlock more Farms!','error'); return;
+        showNotification(curFarms>=maxFarms()?'You have the maximum number of Farms!':'Unlock more Farms by leveling up!','error'); return;
       }
       if(game.gold<cost){ showNotification(`Not enough gold! (Need ${cost} 🪙)`, 'error'); return; }
       game.placement={type:buildingType,cost,gx:Math.floor((18-BUILDING_SIZE)/2),gy:Math.floor((18-BUILDING_SIZE)/2),isBuilding:true};
@@ -5982,6 +5983,7 @@ const CROPS = [
   {id:'starbloom',   name:'Starbloom Root', icon:'🌺', cost:1100, time:900, food:500, desc:'15 minutes, substantial yield.'},
   {id:'moonpetal',    name:'Moon Petal',    icon:'🌙', cost:5000, time:1200, food:1500, desc:'20 minutes, legendary yield.', minLevel:10},
   {id:'dragonheart',  name:"Dragon's Heart", icon:'🐉', cost:15000, time:1800, food:4500, desc:'30 minutes, mythical yield.', minLevel:14},
+  {id:'dragonsoul', name:"Dragon's Soul", icon:'💠', cost:33000, time:2700, food:10000, desc:'45 minutes, legendary yield.', minLevel:18},
 ];
 
 
@@ -6046,7 +6048,7 @@ function openFarmMenu(buildingIdx){
       <div style="font-family:Cinzel,serif;color:#aaa;font-size:0.75rem;">${mins}m ${secs}s remaining</div>
     </div>`;
   } else {
-    html+=`<div style="font-family:Cinzel,serif;font-size:0.72rem;color:#aaa;margin-bottom:10px;text-align:center;">Choose a crop to plant:</div><div style="display:flex;flex-direction:column;gap:8px;">`;
+    html+=`<div style="font-family:Cinzel,serif;font-size:0.72rem;color:#aaa;margin-bottom:10px;text-align:center;">Choose a crop to plant:</div><div style="display:flex;flex-direction:column;gap:10px;max-height:340px;overflow-y:auto;padding-right:6px;scrollbar-width:thin;scrollbar-color:rgba(255,200,60,0.3) transparent;">`;
     CROPS.forEach(crop=>{
     if(crop.minLevel && (game.level||1)<crop.minLevel) return; // hide if locked
       const mins=Math.floor(crop.time/60), secs=crop.time%60;
@@ -7564,8 +7566,8 @@ function updateShopButtons(){
     const cur = (game.buildings||[]).filter(b=>b.type==='farm').length;
     const mx = maxFarms();
     if(cur >= mx){
-      const isMax = (mx >= 3 && cur >= 3);
-      const nextLv = cur>=2 ? 9 : 3;
+      const isMax = (mx >= 4 && cur >= 4);
+      const nextLv = cur>=3 ? 18 : cur>=2 ? 9 : 3;
       farmBtn.disabled = true;
       farmBtn.textContent = isMax ? '✅ Max' : `🔒 Level ${nextLv}`;
       farmBtn.style.opacity = '0.5';
@@ -7573,7 +7575,7 @@ function updateShopButtons(){
     } else {
       farmBtn.disabled = false;
       const _fc=(game.buildings||[]).filter(b=>b.type==='farm').length;
-      const _fp=_fc>=2?2000:_fc>=1?800:300;
+      const _fp=_fc>=3?20000:_fc>=2?2000:_fc>=1?800:300;
       farmBtn.innerHTML = '<span class="dc-coin">🪙</span><span>'+_fp+'</span>';
       farmBtn.style.opacity = '1';
       farmBtn.style.cursor = 'pointer';
