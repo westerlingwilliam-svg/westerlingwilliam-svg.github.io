@@ -7513,13 +7513,13 @@ function updateShopButtons(){
     {type:'grass',    unlock:1,  visible:1,  cost:750},
     {type:'earth',    unlock:6,  visible:4,  cost:2000},
     {type:'ice',      unlock:11, visible:9,  cost:4000},
-    {type:'water',    unlock:14, visible:12, cost:8000},
-    {type:'poison',   unlock:7,  visible:7,  cost:4500},   // Grass+Fire, breed at lv5
-    {type:'mud',      unlock:13, visible:13, cost:18000},   // Water+Earth
-    {type:'forest',   unlock:7,  visible:7,  cost:22000},   // Earth+Grass, earth at lv4+breed
-    {type:'bluefire', unlock:11, visible:11, cost:25000},   // Ice+Fire, ice at lv10
-    {type:'magma',    unlock:7,  visible:7,  cost:30000},   // Fire+Earth, earth at lv4+breed
-    {type:'frost',    unlock:99, visible:10, cost:45000},   // Breed only: Ice+Water (5%)
+    {type:'water',    unlock:14, visible:12, cost:12000},
+    {type:'poison',   unlock:7,  visible:7,  cost:6750},
+    {type:'mud',      unlock:13, visible:13, cost:67500},
+    {type:'forest',   unlock:7,  visible:7,  cost:82500},
+    {type:'bluefire', unlock:11, visible:11, cost:93750},
+    {type:'magma',    unlock:7,  visible:7,  cost:112500},
+    {type:'frost',    unlock:99, visible:10, cost:67500},   // Breed only: Ice+Water (5%)
   ];
   const lv = game.level||1;
   dragonDefs.forEach(({type, unlock, visible, cost})=>{
