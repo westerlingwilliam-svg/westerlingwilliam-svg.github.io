@@ -421,8 +421,7 @@ body.placing #hud>*{pointer-events:none!important;}
   70%{transform:scale(1.3) rotate(10deg);}
   100%{transform:scale(1) rotate(0deg);opacity:1;}
 }
-@media (min-width: 900px)  { #breeder-menu { zoom: 0.88; } }
-@media (min-width: 1200px) { #breeder-menu { zoom: 0.82; } }
+
 
 </style>
 #news-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(180,120,0,0.6);}
@@ -3228,6 +3227,42 @@ canvas.addEventListener('click', e=>{
 });
 
 // ── HABITAT MENU ──────────────────────────────────────────────────
+function closeAllPanelsGlobal(){
+  // Habitat
+  closeHabitatMenu();
+  // Hatchery
+  const hatch=document.getElementById('hatchery-menu');
+  if(hatch) hatch.classList.remove('open');
+  // Farm
+  closeFarmMenu();
+  // Shrine
+  closeShrineMenu();
+  // Breeder
+  const br=document.getElementById('breeder-menu');
+  if(br) br.remove();
+  // News
+  const np=document.getElementById('news-panel');
+  if(np) np.remove();
+  const np2=document.getElementById('news-panel-2');
+  if(np2) np2.remove();
+  // Updates/changelog
+  const up=document.getElementById('news-panel');
+  if(up) up.remove();
+  // Backdrop
+  const bd=document.getElementById('panel-backdrop');
+  if(bd) bd.remove();
+}
+
+function showPanelBackdrop(){
+  if(!document.getElementById('panel-backdrop')){
+    const bd=document.createElement('div');
+    bd.id='panel-backdrop';
+    bd.onclick=closeAllPanelsGlobal;
+    bd.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:299;pointer-events:all;';
+    document.body.appendChild(bd);
+  }
+}
+
 function closeAllBuildingPanels(){
   // Close habitat menu
   const hm=document.getElementById('habitat-menu');
@@ -3250,7 +3285,7 @@ const ELEMENT_ICONS = {
 };
 
 function openHabitatMenu(idx){
-  closeAllBuildingPanels();
+  closeAllPanelsGlobal(); showPanelBackdrop();
     closeFarmMenu(); closeShrineMenu(); closeQuestPanel();
   game.selectedHabitatIdx=idx;
   const h=game.placedHabitats[idx];
@@ -3401,7 +3436,7 @@ function closeAllMenus(){
   closeQuestPanel();
   // Close shop too if open
 }
-function closeHabitatMenu(){
+function closeHabitatMenu(){ const bd=document.getElementById('panel-backdrop'); if(bd) bd.remove();
   game.selectedHabitatIdx=null;
   const m=document.getElementById('habitat-menu');
   if(m) m.style.display='none';
@@ -5954,7 +5989,7 @@ function openShrineMenu(){
   if(!el){
     el=document.createElement('div');
     el.id='shrine-menu';
-    el.style.cssText='position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:clamp(280px,60vw,800px);background:linear-gradient(160deg,#0a0e1a,#060814);border:1.5px solid rgba(60,140,255,0.5);border-bottom:none;border-radius:18px 18px 0 0;padding:clamp(28px,3.5vw,44px) clamp(24px,3vw,40px) clamp(36px,4vw,56px);z-index:200;box-shadow:0 -4px 32px rgba(0,40,120,0.7);text-align:center;font-size:clamp(1.1rem,1.5vw,1.5rem);';
+    el.style.cssText='position:fixed;z-index:300;bottom:0;left:50%;transform:translateX(-50%);width:clamp(280px,60vw,800px);background:linear-gradient(160deg,#0a0e1a,#060814);border:1.5px solid rgba(60,140,255,0.5);border-bottom:none;border-radius:18px 18px 0 0;padding:clamp(28px,3.5vw,44px) clamp(24px,3vw,40px) clamp(36px,4vw,56px);z-index:200;box-shadow:0 -4px 32px rgba(0,40,120,0.7);text-align:center;font-size:clamp(1.1rem,1.5vw,1.5rem);';
     document.body.appendChild(el);
   }
   el.innerHTML=`
@@ -5966,11 +6001,11 @@ function openShrineMenu(){
     <button onclick="closeShrineMenu();startShrineMove();" style="background:linear-gradient(180deg,#1a3a70,#0c1e40);border:1.5px solid rgba(60,140,255,0.5);color:#88bbff;font-family:Cinzel,serif;font-size:1rem;padding:14px 36px;border-radius:24px;cursor:pointer;">✦ Move</button>
   `;
 }
-function closeShrineMenu(){ const el=document.getElementById('shrine-menu'); if(el) el.remove(); }
+function closeShrineMenu(){ const el=document.getElementById('shrine-menu'); if(el) el.remove(); const bd=document.getElementById('panel-backdrop'); if(bd) bd.remove(); }
 function startShrineMove(){ closeShrineMenu(); game.placement={isShrine:true,gx:game.shrine.gx,gy:game.shrine.gy}; }
 
 function openFarmMenu(buildingIdx){
-  closeAllBuildingPanels();
+  closeAllPanelsGlobal(); showPanelBackdrop();
     closeHabitatMenu(); closeShrineMenu(); closeQuestPanel();
   const b=game.buildings[buildingIdx];
   if(!b) return;
@@ -5978,7 +6013,7 @@ function openFarmMenu(buildingIdx){
   if(!el){
     el=document.createElement('div');
     el.id='farm-menu';
-    el.style.cssText='position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:clamp(300px,72vw,1000px);min-height:50vh;max-height:88vh;overflow-y:auto;background:linear-gradient(160deg,#1a1208,#0e0a04);border:1.5px solid rgba(255,200,60,0.4);border-bottom:none;border-radius:18px 18px 0 0;padding:clamp(20px,3vw,44px) clamp(20px,3vw,44px) clamp(36px,4vw,60px);z-index:200;box-shadow:0 -4px 32px rgba(0,0,0,0.7);font-size:clamp(0.95rem,1.5vw,1.4rem);';
+    el.style.cssText='position:fixed;z-index:300;bottom:0;left:50%;transform:translateX(-50%);width:clamp(300px,72vw,1000px);min-height:50vh;max-height:88vh;overflow-y:auto;background:linear-gradient(160deg,#1a1208,#0e0a04);border:1.5px solid rgba(255,200,60,0.4);border-bottom:none;border-radius:18px 18px 0 0;padding:clamp(20px,3vw,44px) clamp(20px,3vw,44px) clamp(36px,4vw,60px);z-index:200;box-shadow:0 -4px 32px rgba(0,0,0,0.7);font-size:clamp(0.95rem,1.5vw,1.4rem);';
     document.body.appendChild(el);
   }
   const now=Date.now();
@@ -6029,7 +6064,7 @@ function openFarmMenu(buildingIdx){
   el.innerHTML=html;
 }
 
-function closeFarmMenu(){ const el=document.getElementById('farm-menu'); if(el) el.remove(); }
+function closeFarmMenu(){ const el=document.getElementById('farm-menu'); if(el) el.remove(); const bd=document.getElementById('panel-backdrop'); if(bd) bd.remove(); }
 
 function startBuildingMove(buildingIdx){
   closeFarmMenu();
@@ -7595,7 +7630,7 @@ let _hatcheryIdx=null;
 let _hatcheryRaf=null;
 
 function openHatcheryMenu(buildingIdx){
-  closeAllBuildingPanels();
+  closeAllPanelsGlobal(); showPanelBackdrop();
     closeHabitatMenu(); closeFarmMenu(); closeShrineMenu();
   _hatcheryIdx=buildingIdx;
   document.getElementById('hatchery-menu').classList.add('open');
@@ -8104,34 +8139,30 @@ function moveBreeder(idx){
 }
 
 function openBreederMenu(idx){
-  closeAllBuildingPanels();
+  closeAllPanelsGlobal(); showPanelBackdrop();
     closeHabitatMenu(); closeFarmMenu(); closeShrineMenu();
   let el=document.getElementById('breeder-menu');
   if(el) el.remove();
   el=document.createElement('div');
   el.id='breeder-menu';
-  el.style.cssText='position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:clamp(300px,70vw,960px);min-height:50vh;max-height:90vh;overflow-y:auto;background:linear-gradient(160deg,#120a1e,#080510);border:1.5px solid rgba(160,80,255,0.45);border-bottom:none;border-radius:18px 18px 0 0;padding:clamp(20px,3vw,40px) clamp(20px,3vw,40px) clamp(30px,4vw,52px);z-index:200;box-shadow:0 -4px 32px rgba(60,0,120,0.7);';
+  el.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:900px;max-width:96vw;max-height:92vh;overflow-y:auto;background:linear-gradient(160deg,#120a1e,#080510);border:1.5px solid rgba(160,80,255,0.45);border-radius:20px;padding:36px 36px 40px;z-index:300;box-shadow:0 20px 60px rgba(0,0,0,0.8);';
   el.innerHTML=`
-    <button onclick="document.getElementById('breeder-menu').remove()" style="position:absolute;top:14px;right:16px;font-family:Cinzel,serif;font-size:0.88rem;font-weight:700;padding:8px 14px;border-radius:50%;width:38px;height:38px;background:rgba(40,20,60,0.5);border:1.5px solid rgba(160,80,255,0.3);color:#cc88ff;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+    <button onclick="document.getElementById('breeder-menu').remove();const bd=document.getElementById('panel-backdrop');if(bd)bd.remove();" style="position:absolute;top:14px;right:16px;font-family:Cinzel,serif;font-size:0.88rem;font-weight:700;padding:8px 14px;border-radius:50%;width:38px;height:38px;background:rgba(40,20,60,0.5);border:1.5px solid rgba(160,80,255,0.3);color:#cc88ff;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
     <button onclick="moveBreeder(${idx})" style="position:absolute;top:14px;left:16px;font-family:Cinzel,serif;font-size:0.82rem;font-weight:700;padding:9px 18px;border-radius:18px;background:rgba(40,20,60,0.4);border:1.5px solid rgba(160,80,255,0.25);color:rgba(180,120,255,0.8);cursor:pointer;">✦ Move</button>
     <div style="font-family:'Cinzel Decorative',serif;font-size:1.3rem;font-weight:700;color:#cc88ff;text-align:center;margin-bottom:6px;">Breeding Cave</div>
-    <div style="font-family:serif;font-size:0.82rem;color:rgba(180,140,220,0.7);text-align:center;margin-bottom:22px;font-style:italic;">Select two dragons to breed a new egg</div>
-    <div style="display:flex;gap:20px;align-items:flex-start;justify-content:center;margin-bottom:28px;">
-      <div style="display:flex;flex-direction:column;align-items:center;gap:20px;flex:1;">
-        <div style="display:flex;gap:20px;justify-content:center;align-items:center;">
-          <div id="breed-slot-0" style="width:180px;height:180px;background:rgba(80,20,140,0.3);border:2px dashed rgba(160,80,255,0.4);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;" onclick="openDragonPicker(0)">
-            <div style="font-size:3rem;color:rgba(160,80,255,0.5);">+</div>
-            <div style="font-family:Cinzel,serif;font-size:0.72rem;color:rgba(160,100,220,0.6);">Choose Dragon</div>
-          </div>
-          <div style="font-size:2rem;color:rgba(160,80,255,0.6);">❤️</div>
-          <div id="breed-slot-1" style="width:180px;height:180px;background:rgba(80,20,140,0.3);border:2px dashed rgba(160,80,255,0.4);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;" onclick="openDragonPicker(1)">
-            <div style="font-size:3rem;color:rgba(160,80,255,0.5);">+</div>
-            <div style="font-family:Cinzel,serif;font-size:0.72rem;color:rgba(160,100,220,0.6);">Choose Dragon</div>
-          </div>
-        </div>
+    <div style="font-family:serif;font-size:0.95rem;color:rgba(180,140,220,0.7);text-align:center;margin-bottom:22px;font-style:italic;">Select two dragons to breed a new egg</div>
+    <div style="position:relative;display:flex;justify-content:center;align-items:center;gap:24px;margin-bottom:28px;">
+      <div id="breed-slot-0" style="width:240px;height:240px;background:rgba(80,20,140,0.3);border:2px dashed rgba(160,80,255,0.4);border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;" onclick="openDragonPicker(0)">
+        <div style="font-size:4rem;color:rgba(160,80,255,0.5);">+</div>
+        <div style="font-family:Cinzel,serif;font-size:0.95rem;color:rgba(160,100,220,0.6);">Choose Dragon</div>
       </div>
-      <div id="breed-odds-panel" style="width:90px;flex-shrink:0;background:rgba(40,0,80,0.4);border:1px solid rgba(160,80,255,0.25);border-radius:12px;padding:10px 10px;min-height:160px;">
-        <div style="font-family:Cinzel,serif;font-size:0.68rem;color:rgba(160,100,220,0.5);text-align:center;margin-top:20px;">Select both<br>dragons to<br>see odds</div>
+      <div style="font-size:2.5rem;color:rgba(160,80,255,0.6);">❤️</div>
+      <div id="breed-slot-1" style="width:240px;height:240px;background:rgba(80,20,140,0.3);border:2px dashed rgba(160,80,255,0.4);border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;" onclick="openDragonPicker(1)">
+        <div style="font-size:4rem;color:rgba(160,80,255,0.5);">+</div>
+        <div style="font-family:Cinzel,serif;font-size:0.95rem;color:rgba(160,100,220,0.6);">Choose Dragon</div>
+      </div>
+      <div id="breed-odds-panel" style="position:absolute;right:-10px;top:0;width:110px;background:rgba(40,0,80,0.4);border:1px solid rgba(160,80,255,0.25);border-radius:14px;padding:12px;min-height:200px;">
+        <div style="font-family:Cinzel,serif;font-size:0.75rem;color:rgba(160,100,220,0.5);text-align:center;margin-top:24px;">Select both<br>dragons to<br>see odds</div>
       </div>
     </div>
     <div style="display:flex;justify-content:center;">
@@ -8162,7 +8193,7 @@ function openDragonPicker(slotIdx){
       if(other && other.habitatIdx===hi && other.dragonIdx===di) return;
       found = true;
       const card = document.createElement('div');
-      card.style.cssText = `width:120px;background:rgba(60,20,100,0.4);border:1.5px solid rgba(160,80,255,0.3);border-radius:12px;padding:12px 8px;text-align:center;cursor:pointer;transition:border-color 0.2s;`;
+      card.style.cssText = `width:160px;background:rgba(60,20,100,0.4);border:1.5px solid rgba(160,80,255,0.3);border-radius:16px;padding:16px 10px;text-align:center;cursor:pointer;transition:border-color 0.2s;`;
       card.onmouseenter = ()=>card.style.borderColor='rgba(200,120,255,0.8)';
       card.onmouseleave = ()=>card.style.borderColor='rgba(160,80,255,0.3)';
       const canvas = document.createElement('canvas');
@@ -8218,18 +8249,18 @@ function updateBreedSlots(){
     if(sel){
       const phys={t:0,wing:0,wingV:0,bob:0,bobV:0,sway:0,swayV:0,swayDir:1,tailSwing:0,tailV:0};
       const cv=document.createElement('canvas');
-      cv.width=120; cv.height=120; cv.style.cssText='width:120px;height:120px;border-radius:10px;';
-      if(sel.type==='grass') drawGrassDragon(cv.getContext('2d'),120,120,phys);
-      else if(sel.type==='earth') drawEarthDragon(cv.getContext('2d'),120,120,phys);
-      else if(sel.type==='poison') drawPoisonDragon(cv.getContext('2d'),120,120,phys);
-      else if(sel.type==='ice') drawIceDragon(cv.getContext('2d'),120,120,phys);
-      else if(sel.type==='bluefire') drawBluefireDragon(cv.getContext('2d'),120,120,phys);
-      else if(sel.type==='water') drawWaterDragon(cv.getContext('2d'),120,120,phys);
-      else if(sel.type==='mud') drawMudDragon(cv.getContext('2d'),120,120,phys);
-      else if(sel.type==='frost') drawFrostDragon(cv.getContext('2d'),120,120,phys);
-      else if(sel.type==='magma') drawMagmaDragon(cv.getContext('2d'),120,120,phys);
-      else if(sel.type==='forest') drawForestDragon(cv.getContext('2d'),120,120,phys);
-      else drawFireDragon(cv.getContext('2d'),120,120,phys);
+      cv.width=160; cv.height=160; cv.style.cssText='width:160px;height:160px;border-radius:12px;';
+      if(sel.type==='grass') drawGrassDragon(cv.getContext('2d'),160,160,phys);
+      else if(sel.type==='earth') drawEarthDragon(cv.getContext('2d'),160,160,phys);
+      else if(sel.type==='poison') drawPoisonDragon(cv.getContext('2d'),160,160,phys);
+      else if(sel.type==='ice') drawIceDragon(cv.getContext('2d'),160,160,phys);
+      else if(sel.type==='bluefire') drawBluefireDragon(cv.getContext('2d'),160,160,phys);
+      else if(sel.type==='water') drawWaterDragon(cv.getContext('2d'),160,160,phys);
+      else if(sel.type==='mud') drawMudDragon(cv.getContext('2d'),160,160,phys);
+      else if(sel.type==='frost') drawFrostDragon(cv.getContext('2d'),160,160,phys);
+      else if(sel.type==='magma') drawMagmaDragon(cv.getContext('2d'),160,160,phys);
+      else if(sel.type==='forest') drawForestDragon(cv.getContext('2d'),160,160,phys);
+      else drawFireDragon(cv.getContext('2d'),160,160,phys);
       slot.innerHTML='';
       slot.appendChild(cv);
       const nm=document.createElement('div');
@@ -8418,7 +8449,7 @@ function openNewsPanel(){
   if(el){ el.remove(); return; }
   el=document.createElement('div');
   el.id='news-panel';
-  el.style.cssText='position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(660px,100vw);background:linear-gradient(160deg,#1e1500,#100c00);border:2px solid rgba(220,180,40,0.5);border-bottom:none;border-radius:18px 18px 0 0;padding:28px 28px 40px;z-index:200;box-shadow:0 -4px 32px rgba(120,80,0,0.6);max-height:80vh;display:flex;flex-direction:column;';
+  el.style.cssText='position:fixed;z-index:300;bottom:0;left:50%;transform:translateX(-50%);width:min(660px,100vw);background:linear-gradient(160deg,#1e1500,#100c00);border:2px solid rgba(220,180,40,0.5);border-bottom:none;border-radius:18px 18px 0 0;padding:28px 28px 40px;z-index:200;box-shadow:0 -4px 32px rgba(120,80,0,0.6);max-height:80vh;display:flex;flex-direction:column;';
 
   const news = [
     { date:'2026-07-14', title:'🌊 Aquatic Update', items:[
@@ -8493,7 +8524,7 @@ function openNewsPanel(){
   ];
 
   el.innerHTML=`
-    <button onclick="document.getElementById('news-panel').remove()" style="position:absolute;top:14px;right:16px;background:rgba(60,40,0,0.5);border:1.5px solid rgba(220,180,40,0.3);border-radius:50%;width:38px;height:38px;color:#ffd860;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;">✕</button>
+    <button onclick="document.getElementById('news-panel').remove();const bd=document.getElementById('panel-backdrop');if(bd)bd.remove();" style="position:absolute;top:14px;right:16px;background:rgba(60,40,0,0.5);border:1.5px solid rgba(220,180,40,0.3);border-radius:50%;width:38px;height:38px;color:#ffd860;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;">✕</button>
     <div style="font-family:'Cinzel Decorative',serif;font-size:1.3rem;font-weight:700;color:#ffd860;text-align:center;margin-bottom:20px;flex-shrink:0;">📰 News & Updates</div>
     <div id="news-scroll" style="overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:14px;scrollbar-width:thin;scrollbar-color:rgba(220,180,40,0.3) transparent;padding-right:4px;">
       ${news.map(n=>`
@@ -8711,7 +8742,7 @@ function openNewsPanel2(){
         </div>`).join('');
 
   el.innerHTML=`
-    <button onclick="document.getElementById('news2-panel').remove()" style="position:absolute;top:14px;right:16px;background:rgba(0,30,80,0.5);border:1.5px solid rgba(80,160,255,0.3);border-radius:50%;width:38px;height:38px;color:#7ac8ff;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;">✕</button>
+    <button onclick="document.getElementById('news2-panel').remove();const bd=document.getElementById('panel-backdrop');if(bd)bd.remove();" style="position:absolute;top:14px;right:16px;background:rgba(0,30,80,0.5);border:1.5px solid rgba(80,160,255,0.3);border-radius:50%;width:38px;height:38px;color:#7ac8ff;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;">✕</button>
     <div style="font-family:'Cinzel Decorative',serif;font-size:1.9rem;font-weight:700;color:#7ac8ff;text-align:center;margin-bottom:28px;flex-shrink:0;text-shadow:0 0 16px rgba(80,160,255,0.5);">📡 News</div>
     <div style="overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:14px;scrollbar-width:thin;scrollbar-color:rgba(80,160,255,0.3) transparent;">${postsHtml}</div>
   `;
@@ -8828,13 +8859,13 @@ setInterval(()=>{ if(!document.hidden) tickOfflineGold(); }, 10000);
 
 <div id="dragon-picker" style="display:none;position:fixed;inset:0;z-index:9000;align-items:center;justify-content:center;">
   <div style="position:absolute;inset:0;background:rgba(0,0,0,0.65);" onclick="closeDragonPicker()"></div>
-  <div style="position:relative;z-index:1;width:min(500px,95vw);background:linear-gradient(160deg,#120a1e,#080510);border:2px solid rgba(160,80,255,0.5);border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(60,0,120,0.7);">
+  <div style="position:relative;z-index:1;width:min(760px,95vw);background:linear-gradient(160deg,#120a1e,#080510);border:2px solid rgba(160,80,255,0.5);border-radius:20px;overflow:hidden;box-shadow:0 24px 60px rgba(60,0,120,0.7);">
     <div style="background:linear-gradient(90deg,#1a0a2e,#2a0a4e,#1a0a2e);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(160,80,255,0.25);">
       <div style="font-family:'Cinzel Decorative',serif;font-size:1.1rem;font-weight:700;color:#cc88ff;">Choose a Dragon</div>
       <button onclick="closeDragonPicker()" style="background:rgba(0,0,0,0.3);border:1px solid rgba(160,80,255,0.3);border-radius:50%;width:36px;height:36px;color:#cc88ff;cursor:pointer;font-size:1.1rem;">✕</button>
     </div>
     <div style="padding:8px 12px 6px;font-family:Cinzel,serif;font-size:0.72rem;color:rgba(180,140,220,0.6);text-align:center;">Only dragons Level 5 and above can breed</div>
-    <div id="dragon-picker-list" style="padding:12px 16px 20px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-height:55vh;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(160,80,255,0.4) transparent;"></div>
+    <div id="dragon-picker-list" style="padding:12px 16px 20px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-height:65vh;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(160,80,255,0.4) transparent;"></div>
   </div>
 </div>
 <div id="habitat-menu" style="display:none">
