@@ -7063,8 +7063,8 @@ const QUEST_DEFS = [
    progress:()=>game.placedHabitats.reduce((s,h)=>s+h.dragons.filter(d=>d==='forest').length,0), max:1, gold:500},
   {id:'breed_frost', xp:320, title:'Breed a Frost Dragon', desc:'Breed Ice + Water to get the rare Frost Dragon (5% chance).', icon:'❄️💧',
    progress:()=>game.placedHabitats.reduce((s,h)=>s+h.dragons.filter(d=>d==='frost').length,0), max:1, gold:2000},
-  {id:'frost_max', xp:1600, title:'Max Out a Frost Dragon', desc:'Level a Frost Dragon all the way to Level 25. The ultimate challenge.', icon:'🏆',
-   progress:()=>game.placedHabitats.some(h=>(h.dragons||[]).some((d,i)=>d==='frost'&&(h.dragonLevels||[])[i]>=25))?1:0, max:1, gold:15000},
+  {id:'frost_max', xp:1600, title:'Max Out a Frost Dragon', desc:'Level a Frost Dragon all the way to Level 20. The ultimate challenge.', icon:'🏆',
+   progress:()=>game.placedHabitats.some(h=>(h.dragons||[]).some((d,i)=>d==='frost'&&(h.dragonLevels||[])[i]>=20))?1:0, max:1, gold:15000},
   // ── Breeding ──
   {id:'breed_fire_grass', xp:80, title:'Breed Fire & Grass', desc:'Breed a Fire Dragon and a Grass Dragon together.', icon:'🔥🌿',
    progress:()=>(game.questsDone&&game.questsDone.bred_fire_grass)?1:0, max:1, gold:300},
