@@ -1342,8 +1342,10 @@ const game = {
   placement: null,
   buildings: [], // [{type, gx, gy}]
 };
-const LEVEL_COST = [0,0,10,20,40,60,80,110,150,200,250,320,400,500,620,800]; // index = target level
+const LEVEL_COST = [0,0,10,20,40,60,80,110,150,200,250,320,400,500,620,800,1020,1310,1680,2150,2750]; // index = target level, up to 20 for specials // index = target level
 const MAX_LEVEL = 15;
+const SPECIAL_MAX_LEVEL = 20;
+function maxLevelForDragon(type){ return ['water','poison','mud','bluefire','frost','magma','forest'].includes(type)?SPECIAL_MAX_LEVEL:MAX_LEVEL; }
 
 function isDragonBreeding(habitatIdx, dragonIdx){
   return (game.buildings||[]).some(b=>
@@ -1383,7 +1385,7 @@ function upgradeHabitatDragon(habitatIdx, dragonIdx){
   if(!h) return;
   if(!h.dragonLevels) h.dragonLevels=h.dragons.map(()=>1);
   const lv = h.dragonLevels[dragonIdx]||1;
-  if(lv >= MAX_LEVEL) return;
+  if(!h.dragonTypes){}; const drType=h.dragons[dragonIdx]; if(lv >= maxLevelForDragon(drType)) return;
   const dragonType=h.dragons[dragonIdx]||'fire';
   const cost = Math.round(LEVEL_COST[lv+1] * dragonFoodMult(dragonType));
   if(!spendFood(cost)) { showNotification('Not enough food! (Need '+cost+' 🍖)', 'error'); return; }
@@ -1439,15 +1441,15 @@ function dragonGPM(dragonType, level){
   const tables={
     fire:   [5,10,16,23,31,39,49,60,71,84,97,111,127,143,160],
     ice:    [15,28,43,60,79,100,124,150,178,208,241,276,313,353,395],
-    bluefire:[45,72,104,140,181,226,276,330,389,453,521,594,671,753,813],
+    bluefire:[45,72,104,140,181,226,276,330,389,453,521,594,671,753,813,878,943,1008,1073,1138,1203,1268,1333,1398,1463],
     grass:  [7,14,22,31,42,54,67,82,98,115,133,153,174,196,220],
     earth:  [10,20,33,47,64,82,102,124,148,174,202,232,264,298,334],
-    poison: [18,45,71,98,124,151,177,204,231,257,284,310,337,363,390],
-    water:  [21,55,89,124,158,192,226,260,295,329,363,397,432,466,500],
-    mud:    [40,87,134,181,229,276,323,370,417,464,511,559,606,653,700],
-    frost:  [110,189,268,346,425,504,583,662,740,819,898,977,1055,1134,1213],
-    magma:  [55,113,171,230,288,346,404,462,521,579,637,695,754,812,870],
-    forest: [42,95,149,202,256,309,363,416,469,523,576,630,683,737,790],
+    poison: [18,45,71,98,124,151,177,204,231,257,284,310,337,363,390,421,452,484,515,546,577,608,640,671,702],
+    water:  [21,55,89,124,158,192,226,260,295,329,363,397,432,466,500,540,580,620,660,700,740,780,820,860,900],
+    mud:    [40,87,134,181,229,276,323,370,417,464,511,559,606,653,700,756,812,868,924,980,1036,1092,1148,1204,1260],
+    frost:  [110,189,268,346,425,504,583,662,740,819,898,977,1055,1134,1213,1310,1407,1504,1601,1698,1795,1892,1989,2086,2183],
+    magma:  [55,113,171,230,288,346,404,462,521,579,637,695,754,812,870,940,1009,1079,1148,1218,1288,1357,1427,1496,1566],
+    forest: [42,95,149,202,256,309,363,416,469,523,576,630,683,737,790,853,916,980,1043,1106,1169,1232,1296,1359,1422],
   };
   return (tables[dragonType]||tables.fire)[lv];
 }
@@ -7022,8 +7024,8 @@ const QUEST_DEFS = [
    progress:()=>game.placedHabitats.reduce((s,h)=>s+h.dragons.filter(d=>d==='forest').length,0), max:1, gold:500},
   {id:'breed_frost', xp:320, title:'Breed a Frost Dragon', desc:'Breed Ice + Water to get the rare Frost Dragon (5% chance).', icon:'❄️💧',
    progress:()=>game.placedHabitats.reduce((s,h)=>s+h.dragons.filter(d=>d==='frost').length,0), max:1, gold:2000},
-  {id:'frost_max', xp:1600, title:'Max Out a Frost Dragon', desc:'Level a Frost Dragon all the way to Level 15. The ultimate challenge.', icon:'🏆',
-   progress:()=>game.placedHabitats.some(h=>(h.dragons||[]).some((d,i)=>d==='frost'&&(h.dragonLevels||[])[i]>=15))?1:0, max:1, gold:15000},
+  {id:'frost_max', xp:1600, title:'Max Out a Frost Dragon', desc:'Level a Frost Dragon all the way to Level 25. The ultimate challenge.', icon:'🏆',
+   progress:()=>game.placedHabitats.some(h=>(h.dragons||[]).some((d,i)=>d==='frost'&&(h.dragonLevels||[])[i]>=25))?1:0, max:1, gold:15000},
   // ── Breeding ──
   {id:'breed_fire_grass', xp:80, title:'Breed Fire & Grass', desc:'Breed a Fire Dragon and a Grass Dragon together.', icon:'🔥🌿',
    progress:()=>(game.questsDone&&game.questsDone.bred_fire_grass)?1:0, max:1, gold:300},
@@ -7032,7 +7034,7 @@ const QUEST_DEFS = [
   {id:'breed_ice_water', xp:160, title:'Breed Ice & Water', desc:'Breed an Ice Dragon and a Water Dragon together.', icon:'❄️💧',
    progress:()=>(game.questsDone&&game.questsDone.bred_ice_water)?1:0, max:1, gold:500},
   // ── Legendary ──
-  {id:'three_max', xp:800, title:'Max Out 3 Dragons', desc:'Level up 3 different dragons to Level 15.', icon:'💎',
+  {id:'three_max', xp:800, title:'Max Out 3 Dragons', desc:'Level up 3 different dragons to Level 25.', icon:'💎',
    progress:()=>Math.min(game.placedHabitats.reduce((s,h)=>s+(h.dragonLevels||[]).filter(l=>l>=15).length,0),3), max:3, gold:5000},
 ];
 
