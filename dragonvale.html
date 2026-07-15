@@ -211,10 +211,11 @@ html,body{width:100%;height:100%;overflow:hidden;}
 #place-cancel:hover{background:rgba(200,50,25,0.85);}
 
 /* Habitat context menu */
-#habitat-menu{position:fixed;inset:0;z-index:300;display:none;align-items:flex-end;justify-content:center;pointer-events:none;will-change:transform;transform:translateZ(0);}
+#habitat-menu{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;pointer-events:none;will-change:transform;transform:translateZ(0);background:rgba(0,0,0,0.55);}
+#habitat-dragons-row{display:flex;flex-direction:row;gap:16px;justify-content:center;flex:1;margin:16px 0;}
 #habitat-menu.open>div{pointer-events:all;}
 #habitat-menu.open{display:flex !important;}
-#habitat-menu-content{pointer-events:all;will-change:transform;transform:translateZ(0);isolation:isolate;width:clamp(620px,72vw,880px);min-height:70vh;display:flex;flex-direction:column;background:linear-gradient(180deg,#2e2c28 0%,#3a3830 100%);border:1.5px solid rgba(220,210,180,0.18);border-radius:18px 18px 0 0;padding:clamp(16px,2.5vw,32px) clamp(14px,2vw,28px) clamp(24px,3vw,40px);box-shadow:0 -10px 40px rgba(0,0,0,0.6),0 -1px 0 rgba(255,255,255,0.06);}
+#habitat-menu-content{pointer-events:all;will-change:transform;transform:translateZ(0);isolation:isolate;width:820px;max-width:96vw;display:flex;flex-direction:column;background:linear-gradient(180deg,#2e2c28 0%,#3a3830 100%);border:1.5px solid rgba(220,210,180,0.25);border-radius:20px;padding:28px 28px 32px;box-shadow:0 20px 60px rgba(0,0,0,0.8),0 0 0 1px rgba(255,255,255,0.04);}
 #habitat-menu-title{font-family:'Cinzel Decorative',serif;font-size:1.8rem;color:#c8b890;text-align:center;margin-bottom:14px;letter-spacing:2px;text-transform:uppercase;}
 #habitat-dragons-row{display:flex;gap:8px;justify-content:center;margin-bottom:12px;}
 .dragon-slot-card{width:clamp(140px,25vw,260px);display:flex;flex-direction:column;align-items:center;gap:6px;}
@@ -222,10 +223,10 @@ html,body{width:100%;height:100%;overflow:hidden;}
 .dragon-slot-img.empty{border-color:rgba(255,255,255,0.1);background:rgba(0,0,0,0.2);}
 .dragon-slot-img.empty::after{content:'+';font-size:2.6rem;color:rgba(255,255,255,0.2);line-height:1;}
 .dragon-level-tag{position:absolute;top:-8px;right:-8px;background:linear-gradient(135deg,#d4a017,#8a6200);color:#fff8e0;font-family:'Cinzel',serif;font-size:0.78rem;font-weight:700;padding:4px 10px;border-radius:10px;box-shadow:0 2px 4px rgba(0,0,0,0.4);letter-spacing:0.5px;border:1px solid rgba(255,220,100,0.4);}
-.slot-upgrade-btn{width:100%;margin-top:clamp(4px,0.8vw,8px);font-family:'Cinzel',serif;font-size:clamp(0.78rem,1.1vw,1.1rem);font-weight:700;letter-spacing:0.5px;color:#fff8e0;background:linear-gradient(180deg,#c8920a,#7a5200);border:1px solid rgba(0,0,0,0.4);border-radius:clamp(12px,1.5vw,18px);padding:clamp(10px,1.3vw,16px) 0;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,220,80,0.2),0 2px 4px rgba(0,0,0,0.3);transition:.15s;}
+.slot-upgrade-btn{width:100%;margin-top:clamp(4px,0.8vw,8px);font-family:'Cinzel',serif;font-size:1.2rem;font-weight:700;letter-spacing:0.5px;color:#fff8e0;background:linear-gradient(180deg,#c8920a,#7a5200);border:1px solid rgba(0,0,0,0.4);border-radius:clamp(12px,1.5vw,18px);padding:clamp(12px,1.5vw,18px) 0;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,220,80,0.2),0 2px 4px rgba(0,0,0,0.3);transition:.15s;}
 .slot-upgrade-btn:hover{background:linear-gradient(180deg,#d8a20a,#8a6200);}
 .habitat-menu-actions{display:flex;gap:8px;justify-content:center;}
-.hm-btn{font-family:'Cinzel',serif;font-size:0.9rem;font-weight:700;letter-spacing:0.5px;color:#e8dfc8;background:linear-gradient(180deg,#5a5848,#42403a);border:1px solid rgba(0,0,0,0.35);border-radius:22px;padding:13px 26px;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 2px 4px rgba(0,0,0,0.3);transition:.15s;}
+.hm-btn{font-family:'Cinzel',serif;font-size:1.25rem;font-weight:700;letter-spacing:0.5px;color:#e8dfc8;background:linear-gradient(180deg,#5a5848,#42403a);border:1px solid rgba(0,0,0,0.35);border-radius:22px;padding:16px 32px;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 2px 4px rgba(0,0,0,0.3);transition:.15s;}
 .hm-btn:hover{background:linear-gradient(180deg,#6a6858,#524e48);}
 .hm-btn.hm-close{background:linear-gradient(180deg,#5a3028,#3a1e18);border-color:rgba(160,40,20,0.4);}
 
@@ -420,8 +421,8 @@ body.placing #hud>*{pointer-events:none!important;}
   70%{transform:scale(1.3) rotate(10deg);}
   100%{transform:scale(1) rotate(0deg);opacity:1;}
 }
-@media (min-width: 900px)  { #habitat-menu-content { zoom: 0.88; } #habitat-menu-content .hm-btn, #habitat-menu-content .slot-upgrade-btn, #habitat-menu-content button { font-size: 1.05rem !important; } }
-@media (min-width: 1200px) { #habitat-menu-content { zoom: 0.82; } #habitat-menu-content .hm-btn, #habitat-menu-content .slot-upgrade-btn, #habitat-menu-content button { font-size: 1.1rem !important; } }
+@media (min-width: 900px)  { #breeder-menu { zoom: 0.88; } }
+@media (min-width: 1200px) { #breeder-menu { zoom: 0.82; } }
 
 </style>
 #news-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(180,120,0,0.6);}
@@ -3315,7 +3316,7 @@ function openHabitatMenu(idx){
     if(dragon){
       // Move Dragon button
       const moveDBtn=document.createElement('button');
-      moveDBtn.style.cssText='width:100%;margin-top:clamp(4px,0.8vw,8px);font-family:Cinzel,serif;font-size:clamp(0.65rem,1vw,0.9rem);font-weight:700;color:#88ee88;background:linear-gradient(180deg,#2a6a2a,#1a4a1a);border:1px solid rgba(80,200,80,0.4);border-radius:clamp(10px,1.5vw,16px);padding:clamp(10px,1.5vw,16px) 0;cursor:pointer;';
+      moveDBtn.style.cssText='width:100%;margin-top:clamp(4px,0.8vw,8px);font-family:Cinzel,serif;font-size:1.15rem;font-weight:700;color:#88ee88;background:linear-gradient(180deg,#2a6a2a,#1a4a1a);border:1px solid rgba(80,200,80,0.4);border-radius:clamp(10px,1.5vw,16px);padding:clamp(10px,1.5vw,16px) 0;cursor:pointer;';
       moveDBtn.textContent='Move Dragon';
       moveDBtn.onclick=(()=>{const si=i,hi=idx;return ()=>{
         const srcHab=game.placedHabitats[hi];
@@ -3367,7 +3368,7 @@ function openHabitatMenu(idx){
       card.appendChild(upBtn);
       // Sell dragon button — always shown regardless of level
       const sellDBtn=document.createElement('button');
-      sellDBtn.style.cssText='width:100%;font-family:Cinzel,serif;font-size:clamp(0.72rem,1vw,1rem);font-weight:700;color:#ffaaaa;background:rgba(120,20,20,0.3);border:1px solid rgba(200,60,60,0.35);border-radius:clamp(10px,1.5vw,16px);padding:clamp(8px,1.1vw,13px) 0;cursor:pointer;margin-top:clamp(3px,0.5vw,6px);';
+      sellDBtn.style.cssText='width:100%;font-family:Cinzel,serif;font-size:1.15rem;font-weight:700;color:#ffaaaa;background:rgba(120,20,20,0.3);border:1px solid rgba(200,60,60,0.35);border-radius:clamp(10px,1.5vw,16px);padding:clamp(8px,1.1vw,13px) 0;cursor:pointer;margin-top:clamp(3px,0.5vw,6px);';
       sellDBtn.textContent='Sell Dragon';
       sellDBtn.onclick=(()=>{const si=i,hi=idx;return async()=>{
         const totalDragons=game.placedHabitats.reduce((s,h)=>s+h.dragons.length,0);
@@ -5953,16 +5954,16 @@ function openShrineMenu(){
   if(!el){
     el=document.createElement('div');
     el.id='shrine-menu';
-    el.style.cssText='position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:clamp(280px,60vw,800px);min-height:50vh;max-height:85vh;overflow-y:auto;background:linear-gradient(160deg,#0a0e1a,#060814);border:1.5px solid rgba(60,140,255,0.5);border-bottom:none;border-radius:18px 18px 0 0;padding:clamp(20px,3vw,36px) clamp(20px,3vw,36px) clamp(28px,3.5vw,48px);z-index:200;box-shadow:0 -4px 32px rgba(0,40,120,0.7);text-align:center;font-size:clamp(1rem,1.4vw,1.4rem);';
+    el.style.cssText='position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:clamp(280px,60vw,800px);background:linear-gradient(160deg,#0a0e1a,#060814);border:1.5px solid rgba(60,140,255,0.5);border-bottom:none;border-radius:18px 18px 0 0;padding:clamp(28px,3.5vw,44px) clamp(24px,3vw,40px) clamp(36px,4vw,56px);z-index:200;box-shadow:0 -4px 32px rgba(0,40,120,0.7);text-align:center;font-size:clamp(1.1rem,1.5vw,1.5rem);';
     document.body.appendChild(el);
   }
   el.innerHTML=`
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-      <div style="font-family:Cinzel,serif;font-size:1rem;font-weight:700;color:#88bbff;">💠 Ancient Shrine</div>
-      <button onclick="closeShrineMenu()" style="background:none;border:none;color:#aaa;font-size:1.3rem;cursor:pointer;">✕</button>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+      <div style="font-family:Cinzel,serif;font-size:1.4rem;font-weight:700;color:#88bbff;">💠 Ancient Shrine</div>
+      <button onclick="closeShrineMenu()" style="background:none;border:none;color:#aaa;font-size:1.5rem;cursor:pointer;">✕</button>
     </div>
-    <div style="font-family:serif;font-style:italic;font-size:0.78rem;color:rgba(140,180,255,0.7);margin-bottom:16px;">A mysterious relic of unknown origin. Its blue gem pulses with ancient energy.</div>
-    <button onclick="closeShrineMenu();startShrineMove();" style="background:linear-gradient(180deg,#1a3a70,#0c1e40);border:1.5px solid rgba(60,140,255,0.5);color:#88bbff;font-family:Cinzel,serif;font-size:0.82rem;padding:10px 28px;border-radius:20px;cursor:pointer;">✦ Move</button>
+    <div style="font-family:serif;font-style:italic;font-size:1rem;color:rgba(140,180,255,0.7);margin-bottom:24px;">A mysterious relic of unknown origin. Its blue gem pulses with ancient energy.</div>
+    <button onclick="closeShrineMenu();startShrineMove();" style="background:linear-gradient(180deg,#1a3a70,#0c1e40);border:1.5px solid rgba(60,140,255,0.5);color:#88bbff;font-family:Cinzel,serif;font-size:1rem;padding:14px 36px;border-radius:24px;cursor:pointer;">✦ Move</button>
   `;
 }
 function closeShrineMenu(){ const el=document.getElementById('shrine-menu'); if(el) el.remove(); }
@@ -7514,7 +7515,7 @@ function updateShopButtons(){
   if(breederBtn){
     const hasBreeder=(game.buildings||[]).some(b=>b.type==='breeder');
     if(hasBreeder){ breederBtn.disabled=true; breederBtn.innerHTML='✅ Built'; breederBtn.style.opacity='0.5'; breederBtn.style.cursor='default'; }
-    else if((game.level||1)<5){ breederBtn.disabled=true; breederBtn.textContent='🔒 Level 5'; breederBtn.style.opacity='0.5'; breederBtn.style.cursor='default'; }
+    else if((game.level||1)<7){ breederBtn.disabled=true; breederBtn.textContent='🔒 Level 7'; breederBtn.style.opacity='0.5'; breederBtn.style.cursor='default'; }
     else { breederBtn.disabled=false; breederBtn.innerHTML='<span class="dc-coin">🪙</span><span>2000</span>'; breederBtn.style.opacity='1'; breederBtn.style.cursor='pointer'; }
   }
 
@@ -8109,7 +8110,7 @@ function openBreederMenu(idx){
   if(el) el.remove();
   el=document.createElement('div');
   el.id='breeder-menu';
-  el.style.cssText='position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:clamp(300px,70vw,960px);min-height:50vh;max-height:90vh;overflow-y:auto;background:linear-gradient(160deg,#120a1e,#080510);border:1.5px solid rgba(160,80,255,0.45);border-bottom:none;border-radius:18px 18px 0 0;padding:clamp(20px,3vw,40px) clamp(20px,3vw,40px) clamp(30px,4vw,52px);z-index:200;box-shadow:0 -4px 32px rgba(60,0,120,0.7);position:fixed;';
+  el.style.cssText='position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:clamp(300px,70vw,960px);min-height:50vh;max-height:90vh;overflow-y:auto;background:linear-gradient(160deg,#120a1e,#080510);border:1.5px solid rgba(160,80,255,0.45);border-bottom:none;border-radius:18px 18px 0 0;padding:clamp(20px,3vw,40px) clamp(20px,3vw,40px) clamp(30px,4vw,52px);z-index:200;box-shadow:0 -4px 32px rgba(60,0,120,0.7);';
   el.innerHTML=`
     <button onclick="document.getElementById('breeder-menu').remove()" style="position:absolute;top:14px;right:16px;font-family:Cinzel,serif;font-size:0.88rem;font-weight:700;padding:8px 14px;border-radius:50%;width:38px;height:38px;background:rgba(40,20,60,0.5);border:1.5px solid rgba(160,80,255,0.3);color:#cc88ff;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
     <button onclick="moveBreeder(${idx})" style="position:absolute;top:14px;left:16px;font-family:Cinzel,serif;font-size:0.82rem;font-weight:700;padding:9px 18px;border-radius:18px;background:rgba(40,20,60,0.4);border:1.5px solid rgba(160,80,255,0.25);color:rgba(180,120,255,0.8);cursor:pointer;">✦ Move</button>
@@ -8843,8 +8844,8 @@ setInterval(()=>{ if(!document.hidden) tickOfflineGold(); }, 10000);
     <div id="habitat-menu-title">Fire Habitat</div>
     <div id="habitat-dragons-row"></div>
     <div class="habitat-menu-actions" style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding:0 4px;">
-      <button class="hm-btn" onclick="openShopToAddDragon()" style="font-size:clamp(0.82rem,1.2vw,1.1rem);padding:clamp(10px,1.5vw,16px) clamp(18px,2.5vw,30px);border-radius:clamp(18px,2vw,26px);">+ Add Dragon</button>
-      <button class="hm-btn" onclick="sellHabitat()" style="font-size:clamp(0.82rem,1.2vw,1.1rem);padding:clamp(10px,1.5vw,16px) clamp(18px,2.5vw,30px);border-radius:clamp(18px,2vw,26px);background:rgba(120,20,20,0.4);border-color:rgba(200,60,60,0.4);color:#ffaaaa;">💰 Sell</button>
+      <button class="hm-btn" onclick="openShopToAddDragon()" style="font-size:1.2rem;padding:18px 36px;border-radius:26px;">+ Add Dragon</button>
+      <button class="hm-btn" onclick="sellHabitat()" style="font-size:1.2rem;padding:18px 36px;border-radius:26px;background:rgba(120,20,20,0.4);border-color:rgba(200,60,60,0.4);color:#ffaaaa;">💰 Sell</button>
     </div>
   </div>
 </div>
