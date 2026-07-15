@@ -3502,7 +3502,7 @@ function showGoldPopup(x, y, amount){
 // Dragon type → required habitat type mapping
 const DRAGON_HABITAT = { fire:'fire', grass:'grass', earth:'earth', poison:['grass','fire'], ice:'ice', bluefire:['ice','fire'], water:'water', mud:['water','earth'], frost:['ice','water'], magma:['fire','earth'], forest:['earth','grass'] };
 // Dragon costs
-const DRAGON_COST = { fire:300, grass:750, earth:2000, poison:6750, ice:4000, bluefire:93750, water:12000, mud:67500, frost:67500, magma:112500, forest:82500 };
+const DRAGON_COST = { fire:300, grass:750, earth:2000, poison:20000, ice:13000, bluefire:93750, water:24000, mud:67500, frost:67500, magma:112500, forest:82500 };
 const HATCH_TIMES = { fire:30000, grass:180000, earth:600000, poison:1500000, ice:900000, bluefire:2400000, water:1200000, mud:2100000, frost:3600000, magma:2700000, forest:2220000 };
 // Human-readable habitat names for error messages
 const HABITAT_NAMES = { fire:'Fire Habitat', grass:'Grass Habitat', earth:'Earth Habitat', ice:'Ice Habitat', water:'Water Habitat' };
@@ -3547,8 +3547,8 @@ document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
       const habitatType=isHabitat.dataset.habitat||'fire';
       if(game.placedHabitats.length>=maxHabitats()){ showNotification(`Reach level ${(Math.floor((game.level)/5)+1)*5} to unlock more habitats!`,'error'); return; }
       if(habitatType==='earth'&&(game.level||1)<6){ showNotification('Earth Habitat unlocks at Level 6!','error'); return; }
-      if(habitatType==='ice'&&(game.level||1)<11){ showNotification('Ice Habitat unlocks at Level 11!','error'); return; }
-      if(habitatType==='water'&&(game.level||1)<14){ showNotification('Water Habitat unlocks at Level 14!','error'); return; }
+      if(habitatType==='ice'&&(game.level||1)<12){ showNotification('Ice Habitat unlocks at Level 12!','error'); return; }
+      if(habitatType==='water'&&(game.level||1)<16){ showNotification('Water Habitat unlocks at Level 16!','error'); return; }
       const habitatCosts={fire:500,grass:1100,earth:3500,ice:8000,water:15000};
       const hCost=habitatCosts[habitatType]||500;
       if(game.gold<hCost){ showNotification(`Not enough gold! (Need ${hCost} 🪙)`, 'error'); return; }
@@ -3585,13 +3585,13 @@ document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
     if(dragonCanvas){
       const dragonType=dragonCanvas.dataset.dragon;
       if(dragonType==='earth'&&(game.level||1)<6){ showNotification('Earth Dragon unlocks at Level 6!','error'); return; }
-      if(dragonType==='ice'&&(game.level||1)<11){ showNotification('Ice Dragon unlocks at Level 11!','error'); return; }
-      if(dragonType==='water'&&(game.level||1)<14){ showNotification('Water Dragon unlocks at Level 14!','error'); return; }
+      if(dragonType==='ice'&&(game.level||1)<12){ showNotification('Ice Dragon unlocks at Level 12!','error'); return; }
+      if(dragonType==='water'&&(game.level||1)<16){ showNotification('Water Dragon unlocks at Level 16!','error'); return; }
       if(dragonType==='frost'&&(game.level||1)<16){ showNotification('Frost Dragon unlocks at Level 16!','error'); return; }
       if(dragonType==='magma'&&(game.level||1)<14){ showNotification('Magma Dragon unlocks at Level 14!','error'); return; }
       if(dragonType==='forest'&&(game.level||1)<13){ showNotification('Forest Dragon unlocks at Level 13!','error'); return; }
       if(dragonType==='mud'&&(game.level||1)<13){ showNotification('Mud Dragon unlocks at Level 13!','error'); return; }
-      if(dragonType==='bluefire'&&(game.level||1)<11){ showNotification('Blue Fire Dragon unlocks at Level 11!','error'); return; }
+      if(dragonType==='bluefire'&&(game.level||1)<12){ showNotification('Blue Fire Dragon unlocks at Level 12!','error'); return; }
       const habitatTypeRaw=DRAGON_HABITAT[dragonType];
       const habitatTypes=Array.isArray(habitatTypeRaw)?habitatTypeRaw:[habitatTypeRaw];
       const habitatType=habitatTypes[0];
@@ -7361,12 +7361,11 @@ const LEVEL_UNLOCKS = {
   6:  ['🪨 Earth Dragon unlocked', '🪨 Earth Habitat unlocked'],
   7:  [],
   8:  [],
-  9:  ['❄️ Ice Dragon becomes visible'],
-  10: ['🏰 Grid Expansion available'],
-  11: ['❄️ Ice Dragon unlocked', '❄️ Ice Habitat unlocked', '🔥❄️ Blue Fire Dragon unlocked (breed Ice + Fire)'],
-  12: ['💧 Water Dragon becomes visible', '❄️💧 Frost Dragon available via breeding (Ice + Water, 5%)'],
+  10: ['❄️ Ice Dragon becomes visible', '🏰 Grid Expansion available'],
+  12: ['❄️ Ice Dragon unlocked', '❄️ Ice Habitat unlocked', '🔥❄️ Blue Fire Dragon unlocked (breed Ice + Fire)', '❄️💧 Frost Dragon available via breeding (Ice + Water, 5%)'],
   13: ['💧🪨 Mud Dragon unlocked'],
-  14: ['💧 Water Dragon unlocked', '💧 Water Habitat unlocked'],
+  14: ['💧 Water Dragon becomes visible'],
+  16: ['💧 Water Dragon unlocked', '💧 Water Habitat unlocked'],
   15: ['⭐ Elemental dragons reach max level'],
   18: ['🏆 Island approaching legendary status'],
   20: ['💎 Special dragons can now reach Level 20'],
@@ -7512,14 +7511,14 @@ function updateShopButtons(){
     {type:'fire',     unlock:1,  visible:1,  cost:300},
     {type:'grass',    unlock:1,  visible:1,  cost:750},
     {type:'earth',    unlock:6,  visible:4,  cost:2000},
-    {type:'ice',      unlock:11, visible:9,  cost:4000},
-    {type:'water',    unlock:14, visible:12, cost:12000},
-    {type:'poison',   unlock:7,  visible:7,  cost:6750},
+    {type:'ice',      unlock:12, visible:10,  cost:13000},
+    {type:'water',    unlock:16, visible:14, cost:24000},
+    {type:'poison',   unlock:7,  visible:7,  cost:20000},
     {type:'mud',      unlock:13, visible:13, cost:67500},
     {type:'forest',   unlock:7,  visible:7,  cost:82500},
-    {type:'bluefire', unlock:11, visible:11, cost:93750},
+    {type:'bluefire', unlock:12, visible:12, cost:93750},
     {type:'magma',    unlock:7,  visible:7,  cost:112500},
-    {type:'frost',    unlock:99, visible:10, cost:67500},   // Breed only: Ice+Water (5%)
+    {type:'frost',    unlock:99, visible:12, cost:67500},   // Breed only: Ice+Water (5%)
   ];
   const lv = game.level||1;
   dragonDefs.forEach(({type, unlock, visible, cost})=>{
