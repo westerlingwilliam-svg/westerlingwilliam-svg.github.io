@@ -345,9 +345,9 @@ html,body{width:100%;height:100%;overflow:hidden;}
 #cheat-submit{font-family:Cinzel,serif;font-size:0.8rem;font-weight:700;padding:10px 28px;background:linear-gradient(180deg,#c8920a,#7a5200);border:1.5px solid rgba(255,200,60,0.5);border-radius:20px;color:#fff8e0;cursor:pointer;margin-right:8px;}
 #cheat-cancel{font-family:Cinzel,serif;font-size:0.8rem;padding:10px 20px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,200,60,0.2);border-radius:20px;color:#aaa;cursor:pointer;}
 
-#hatchery-menu{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:300;width:clamp(280px,70vw,900px);min-height:30vh;max-height:88vh;overflow-y:auto;background:linear-gradient(180deg,#1e1c18,#2a2820);border:1.5px solid rgba(220,190,120,0.25);border-radius:22px;padding:clamp(20px,2.5vw,36px) clamp(20px,2.5vw,36px) clamp(28px,3.5vw,44px);box-shadow:0 8px 60px rgba(0,0,0,0.8);display:none;}
+#hatchery-menu{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:300;width:clamp(320px,88vw,900px);max-height:92vh;overflow-y:visible;background:linear-gradient(180deg,#1e1c18,#2a2820);border:1.5px solid rgba(220,190,120,0.25);border-radius:22px;padding:clamp(16px,2vw,28px) clamp(16px,2vw,28px) clamp(20px,2.5vw,36px);box-shadow:0 8px 60px rgba(0,0,0,0.8);display:none;}
 #hatchery-menu.open{display:block;}
-.hatch-slot{flex:1;background:rgba(0,0,0,0.3);border:1.5px solid rgba(200,170,90,0.2);border-radius:18px;padding:20px 12px;display:flex;flex-direction:column;align-items:center;gap:12px;min-height:280px;position:relative;}
+.hatch-slot{flex:1;background:rgba(0,0,0,0.3);border:1.5px solid rgba(200,170,90,0.2);border-radius:18px;padding:14px 10px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:220px;position:relative;}
 .hatch-slot.empty{border-style:dashed;opacity:0.5;}
 .hatch-slot canvas{border-radius:10px;}
 .hatch-timer{font-family:Cinzel,serif;font-size:0.75rem;color:rgba(220,200,120,0.8);letter-spacing:1px;}
@@ -608,6 +608,26 @@ body.placing #hud>*{pointer-events:none!important;}
             <div class="dragon-card-desc">Born in volcanic depths, its scales glow with molten fury.</div>
             <div class="dragon-gpm">🪙 +55/min at Lv.1</div>
             <button class="dragon-card-buy">🔒 Level 14</button>
+          </div>
+          <div class="dragon-card" style="display:none" data-elements="earth fire">
+            <div class="dragon-card-frame">
+              <div class="dragon-elem-badge"><span>🪨</span><span>🔥</span></div>
+              <canvas class="dragon-canvas" data-dragon="obsidian" width="220" height="220"></canvas>
+            </div>
+            <div class="dragon-card-name">Obsidian Dragon</div>
+            <div class="dragon-card-desc">Forged from volcanic glass, its cracks pulse with inner fire.</div>
+            <div class="dragon-gpm">🪙 +65/min at Lv.1</div>
+            <button class="dragon-card-buy">🔒 Level 7</button>
+          </div>
+          <div class="dragon-card" style="display:none" data-elements="water grass">
+            <div class="dragon-card-frame">
+              <div class="dragon-elem-badge"><span>💧</span><span>🌿</span></div>
+              <canvas class="dragon-canvas" data-dragon="coral" width="220" height="220"></canvas>
+            </div>
+            <div class="dragon-card-name">Coral Dragon</div>
+            <div class="dragon-card-desc">A vibrant sea creature with brilliant coral fins and a warm smile.</div>
+            <div class="dragon-gpm">🪙 +85/min at Lv.1</div>
+            <button class="dragon-card-buy">🔒 Level 7</button>
           </div>
           <div class="dragon-card" style="display:none" data-elements="ice water">
             <div class="dragon-card-frame">
@@ -1331,6 +1351,7 @@ requestAnimationFrame(render);
 
 // ── GAME STATE ────────────────────────────────────────────────────
 const game = {
+  panelOpen: false,
   gold: 1500,
   food: 100,
   xp: 0,
@@ -1347,7 +1368,7 @@ const game = {
 const LEVEL_COST = [0,0,10,20,40,60,80,110,150,200,250,320,400,500,620,800,1020,1310,1680,2150,2750]; // index = target level, up to 20 for specials // index = target level
 const MAX_LEVEL = 15;
 const SPECIAL_MAX_LEVEL = 20;
-function maxLevelForDragon(type){ return ['water','poison','mud','bluefire','frost','magma','forest'].includes(type)?SPECIAL_MAX_LEVEL:MAX_LEVEL; }
+function maxLevelForDragon(type){ return ['water','poison','mud','bluefire','frost','magma','forest','obsidian','coral'].includes(type)?SPECIAL_MAX_LEVEL:MAX_LEVEL; }
 
 function isDragonBreeding(habitatIdx, dragonIdx){
   return (game.buildings||[]).some(b=>
@@ -1379,6 +1400,8 @@ function dragonFoodMult(dragonType){
   if(dragonType==='magma') return 4.5;    // 30,000🪙
   if(dragonType==='frost') return 6.0;    // 45,000🪙 — breed exclusive
   if(dragonType==='water') return 2.5;
+  if(dragonType==='obsidian') return 3.8;
+  if(dragonType==='coral') return 3.2;
   return 1.5; // earth
 }
 
@@ -1450,7 +1473,9 @@ function dragonGPM(dragonType, level){
     poison: [18,38,57,77,96,116,135,155,175,194,214,233,253,273,292,312,331,351,370,390],
     water:  [21,46,71,97,122,147,172,197,223,248,273,298,324,349,374,399,424,450,475,500],
     mud:    [40,75,109,144,179,214,248,283,318,353,387,422,457,492,526,561,596,631,665,700],
-    frost:  [110,168,226,284,342,400,458,516,574,632,691,749,807,865,923,981,1039,1097,1155,1213],
+    frost:  [110,172,234,295,357,419,481,542,604,666,728,789,851,913,974,1036,1098,1159,1221,1300],
+    obsidian:[65, 112, 158, 205, 251, 298, 344, 391, 438, 484, 531, 577, 624, 671, 717, 764, 810, 857, 903, 950],
+    coral:   [85, 139, 194, 248, 303, 357, 412, 466, 521, 575, 630, 684, 739, 793, 848, 902, 957, 1011, 1066, 1120],
     magma:  [55,98,141,184,227,269,312,355,398,441,484,527,570,613,656,698,741,784,827,870],
     forest: [42,81,121,160,199,239,278,318,357,396,436,475,514,554,593,633,672,711,751,790],
   };
@@ -1610,6 +1635,8 @@ function drawBuildings(){
         else if(slot.type==='frost') drawSideFrostDragon(mctx,dragonSize,dragonSize,phys);
         else if(slot.type==='magma') drawSideMagmaDragon(mctx,dragonSize,dragonSize,phys);
         else if(slot.type==='forest') drawSideForestDragon(mctx,dragonSize,dragonSize,phys);
+        else if(slot.type==='obsidian') drawSideObsidianDragon(mctx,dragonSize,dragonSize,phys);
+        else if(slot.type==='coral') drawSideCoralDragon(mctx,dragonSize,dragonSize,phys);
         else drawSideDragon(mctx,dragonSize,dragonSize,phys);
         mctx.clearRect=origClear; mctx.restore();
         const cx=px+size*(0.38+0.24*Math.sin(t*0.35+off));
@@ -2774,6 +2801,198 @@ function drawSideForestDragon(ctx, W, H, p){
   ctx.restore();
 }
 
+function drawSideObsidianDragon(ctx, W, H, p){
+  ctx.clearRect(0,0,W,H);
+  const s=Math.min(W,H)/140;
+  ctx.save();
+  ctx.translate(W*0.5, H*0.52+p.bob);
+  ctx.scale(s,s);
+  const GRN='#1e1c1a',GDK='#0e0c0a',GLT='#3a3028',LIME='#ff6600',WHT='#ff9940',INK='#080604';
+  ctx.lineJoin='round'; ctx.lineCap='round'; ctx.strokeStyle=INK;
+  // Shadow
+  ctx.fillStyle='rgba(0,0,0,0.12)'; ctx.beginPath(); ctx.ellipse(4,44,26,6,0,0,Math.PI*2); ctx.fill();
+
+  // Back wing
+  const wa=p.wing*0.7;
+  ctx.save(); ctx.translate(-6,-12);
+  ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-14+wa*6,-22+wa*4); ctx.quadraticCurveTo(-2+wa*2,-16,6+wa,-28+wa*3); ctx.quadraticCurveTo(14+wa,-20,20,-14+wa*2); ctx.quadraticCurveTo(10,-4,0,0); ctx.closePath();
+  ctx.fillStyle=LIME; ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.6; ctx.stroke();
+  ctx.restore();
+
+  // Body
+  ctx.lineWidth=2.5; ctx.beginPath(); ctx.ellipse(0,10,36,23,-0.1,0,Math.PI*2); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  ctx.save(); ctx.beginPath(); ctx.ellipse(0,10,36,23,-0.1,0,Math.PI*2); ctx.clip();
+  ctx.beginPath(); ctx.ellipse(8,17,20,13,0,0,Math.PI*2); ctx.fillStyle=WHT; ctx.fill(); ctx.restore();
+  // Legs
+  ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(-18,30,8,12,0.1,0,Math.PI*2); ctx.fillStyle=GDK; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  [[-24,40],[-18,43],[-12,41]].forEach(([fx,fy])=>{ ctx.fillStyle=WHT; ctx.lineWidth=1; ctx.beginPath(); ctx.ellipse(fx,fy,2.4,3.4,0,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.stroke(); });
+  ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(16,30,8,12,-0.1,0,Math.PI*2); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  [[10,40],[16,43],[22,41]].forEach(([fx,fy])=>{ ctx.fillStyle=WHT; ctx.lineWidth=1; ctx.beginPath(); ctx.ellipse(fx,fy,2.4,3.4,0,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.stroke(); });
+  // Neck
+  ctx.lineWidth=2.4; ctx.beginPath(); ctx.moveTo(22,-3); ctx.bezierCurveTo(28,-18,34,-28,40,-34); ctx.bezierCurveTo(46,-30,43,-14,35,4); ctx.closePath(); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  // Head
+  ctx.lineWidth=2.4; ctx.beginPath(); ctx.ellipse(48,-36,20,15,-0.1,0,Math.PI*2); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  ctx.fillStyle=WHT; ctx.beginPath(); ctx.ellipse(42,-40,7,5,0.3,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(64,-32,10,8,0,0,Math.PI*2); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  ctx.strokeStyle=INK; ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(56,-28); ctx.quadraticCurveTo(64,-24,72,-28); ctx.stroke();
+  ctx.fillStyle=GDK; ctx.beginPath(); ctx.ellipse(70,-30,1.8,1.4,0.3,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(40,-38,5.5,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.fillStyle=GLT; ctx.beginPath(); ctx.arc(41,-37,3.2,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#0a2208'; ctx.beginPath(); ctx.arc(41,-37,1.8,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(39,-39,1.2,0,Math.PI*2); ctx.fill();
+  // Front wing
+  ctx.save(); ctx.translate(4,-8);
+  ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-16+p.wing*10,-28+p.wing*7); ctx.quadraticCurveTo(-2+p.wing*3,-22,8+p.wing*3,-36+p.wing*4); ctx.quadraticCurveTo(18+p.wing*3,-24,28,-18+p.wing*3); ctx.quadraticCurveTo(16,-4,0,0); ctx.closePath();
+  ctx.fillStyle=LIME; ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.8; ctx.stroke();
+  ctx.restore();
+
+
+  // Tail with lava crack tip
+  ctx.fillStyle=GDK; ctx.strokeStyle=INK; ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(-28,2); ctx.bezierCurveTo(-50,8,-62,18,-60,30);
+  ctx.bezierCurveTo(-58,38,-50,40,-46,34);
+  ctx.bezierCurveTo(-50,32,-54,28,-52,20);
+  ctx.bezierCurveTo(-50,12,-28,10,-26,6);
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+  // Tail spike tip
+  ctx.save(); ctx.translate(-56,29);
+  ctx.fillStyle=GDK; ctx.strokeStyle=LIME; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(-4,0); ctx.lineTo(-2,-8); ctx.lineTo(0,-16); ctx.lineTo(2,-8); ctx.lineTo(4,0); ctx.closePath();
+  ctx.fill(); ctx.stroke();
+  // Lava glow on spike
+  const glw=0.5+Math.sin(performance.now()/500)*0.4;
+  ctx.strokeStyle=`rgba(255,120,0,${glw})`; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(0,-10); ctx.stroke();
+  ctx.restore();
+
+  // Spine crystal spikes — behind front wing
+  [[-10,-16],[0,-20],[12,-19],[22,-13]].forEach(([sx,sy])=>{
+    ctx.save(); ctx.translate(sx,sy);
+    // Rock base
+    ctx.fillStyle=GRN; ctx.strokeStyle=INK; ctx.lineWidth=1.2;
+    ctx.beginPath(); ctx.moveTo(-4,4); ctx.lineTo(-3,-2); ctx.lineTo(0,-10); ctx.lineTo(3,-2); ctx.lineTo(4,4); ctx.closePath();
+    ctx.fill(); ctx.stroke();
+    // Lava crack
+    const g=0.5+Math.sin(performance.now()/600+sx)*0.35;
+    ctx.strokeStyle=`rgba(255,${Math.floor(80+g*60)},0,${0.5+g*0.3})`; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(0,3); ctx.lineTo(-1,-5); ctx.stroke();
+    ctx.restore();
+  });
+
+  // Crystal horn on head — twin jagged
+  ctx.save(); ctx.translate(40,-56);
+  ctx.fillStyle=GDK; ctx.strokeStyle=LIME; ctx.lineWidth=1.5;
+  // Main spike
+  ctx.beginPath(); ctx.moveTo(-4,4); ctx.lineTo(-5,-6); ctx.lineTo(0,-22); ctx.lineTo(5,-6); ctx.lineTo(4,4); ctx.closePath();
+  ctx.fill(); ctx.stroke();
+  // Side spike
+  ctx.beginPath(); ctx.moveTo(4,2); ctx.lineTo(5,-4); ctx.lineTo(10,-14); ctx.lineTo(12,-4); ctx.lineTo(10,2); ctx.closePath();
+  ctx.fill(); ctx.stroke();
+  // Lava glows
+  const gh=0.6+Math.sin(performance.now()/400)*0.35;
+  ctx.strokeStyle=`rgba(255,100,0,${gh})`; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(0,2); ctx.lineTo(-1,-12); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(8,0); ctx.lineTo(9,-8); ctx.stroke();
+  ctx.restore();
+
+  ctx.restore();
+}
+function drawSideCoralDragon(ctx, W, H, p){
+  ctx.clearRect(0,0,W,H);
+  const s=Math.min(W,H)/140;
+  ctx.save();
+  ctx.translate(W*0.5, H*0.52+p.bob);
+  ctx.scale(s,s);
+  const GRN='#e05878',GDK='#b83a58',GLT='#ff8090',LIME='#20b0a0',WHT='#fff0e8',INK='#1a0818';
+  ctx.lineJoin='round'; ctx.lineCap='round'; ctx.strokeStyle=INK;
+  // Shadow
+  ctx.fillStyle='rgba(0,0,0,0.12)'; ctx.beginPath(); ctx.ellipse(4,44,26,6,0,0,Math.PI*2); ctx.fill();
+
+  // Back wing
+  const wa=p.wing*0.7;
+  ctx.save(); ctx.translate(-6,-12);
+  ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-14+wa*6,-22+wa*4); ctx.quadraticCurveTo(-2+wa*2,-16,6+wa,-28+wa*3); ctx.quadraticCurveTo(14+wa,-20,20,-14+wa*2); ctx.quadraticCurveTo(10,-4,0,0); ctx.closePath();
+  ctx.fillStyle=LIME; ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.6; ctx.stroke();
+  ctx.restore();
+
+  // Body
+  ctx.lineWidth=2.5; ctx.beginPath(); ctx.ellipse(0,10,36,23,-0.1,0,Math.PI*2); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  ctx.save(); ctx.beginPath(); ctx.ellipse(0,10,36,23,-0.1,0,Math.PI*2); ctx.clip();
+  ctx.beginPath(); ctx.ellipse(8,17,20,13,0,0,Math.PI*2); ctx.fillStyle=WHT; ctx.fill(); ctx.restore();
+  // Legs
+  ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(-18,30,8,12,0.1,0,Math.PI*2); ctx.fillStyle=GDK; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  [[-24,40],[-18,43],[-12,41]].forEach(([fx,fy])=>{ ctx.fillStyle=WHT; ctx.lineWidth=1; ctx.beginPath(); ctx.ellipse(fx,fy,2.4,3.4,0,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.stroke(); });
+  ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(16,30,8,12,-0.1,0,Math.PI*2); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  [[10,40],[16,43],[22,41]].forEach(([fx,fy])=>{ ctx.fillStyle=WHT; ctx.lineWidth=1; ctx.beginPath(); ctx.ellipse(fx,fy,2.4,3.4,0,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.stroke(); });
+  // Neck
+  ctx.lineWidth=2.4; ctx.beginPath(); ctx.moveTo(22,-3); ctx.bezierCurveTo(28,-18,34,-28,40,-34); ctx.bezierCurveTo(46,-30,43,-14,35,4); ctx.closePath(); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  // Head
+  ctx.lineWidth=2.4; ctx.beginPath(); ctx.ellipse(48,-36,20,15,-0.1,0,Math.PI*2); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  ctx.fillStyle=WHT; ctx.beginPath(); ctx.ellipse(42,-40,7,5,0.3,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(64,-32,10,8,0,0,Math.PI*2); ctx.fillStyle=GRN; ctx.fill(); ctx.strokeStyle=INK; ctx.stroke();
+  ctx.strokeStyle=INK; ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(56,-28); ctx.quadraticCurveTo(64,-24,72,-28); ctx.stroke();
+  ctx.fillStyle=GDK; ctx.beginPath(); ctx.ellipse(70,-30,1.8,1.4,0.3,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(40,-38,5.5,0,Math.PI*2); ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.fillStyle=GLT; ctx.beginPath(); ctx.arc(41,-37,3.2,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#0a2208'; ctx.beginPath(); ctx.arc(41,-37,1.8,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(39,-39,1.2,0,Math.PI*2); ctx.fill();
+  // Coral reef along spine — round bulbous clusters
+  const reefCols=['#ff6090','#ff8cb0','#e03070','#ff4488','#20c8b0'];
+  [[-10,-16],[2,-21],[13,-19],[23,-12]].forEach(([sx,sy],ri)=>{
+    ctx.save(); ctx.translate(sx,sy);
+    // Thick stalk base
+    ctx.fillStyle='#c02860'; ctx.strokeStyle='#8a1840'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.roundRect(-3,0,6,10,2); ctx.fill(); ctx.stroke();
+    // Main blob cluster
+    [[0,-4,5],[-4,-7,4],[5,-7,4],[0,-10,5],[-3,-13,4],[4,-13,4],[0,-16,4]].forEach(([bx,by,br],bi)=>{
+      ctx.fillStyle=reefCols[(ri+bi)%reefCols.length];
+      ctx.strokeStyle='rgba(0,0,0,0.2)'; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.arc(bx,by,br,0,Math.PI*2); ctx.fill(); ctx.stroke();
+    });
+    ctx.restore();
+  });
+  // Coral reef horn on head — thick round reef shape
+  ctx.save(); ctx.translate(38,-54);
+  const hCols=['#ff6090','#ff4488','#20c8b0','#ff8cb0','#e03070'];
+  // Stalk
+  ctx.fillStyle='#c02860'; ctx.strokeStyle='#8a1840'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.roundRect(-3,0,6,8,2); ctx.fill(); ctx.stroke();
+  // Reef blob cluster
+  [[0,-4,6],[-5,-7,5],[6,-7,5],[0,-11,6],[-4,-14,5],[5,-14,5],[0,-18,5]].forEach(([bx,by,br],i)=>{
+    ctx.fillStyle=hCols[i%hCols.length];
+    ctx.strokeStyle='rgba(0,0,0,0.15)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.arc(bx,by,br,0,Math.PI*2); ctx.fill(); ctx.stroke();
+  });
+  ctx.restore();
+  // Front wing
+  ctx.save(); ctx.translate(4,-8);
+  ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-16+p.wing*10,-28+p.wing*7); ctx.quadraticCurveTo(-2+p.wing*3,-22,8+p.wing*3,-36+p.wing*4); ctx.quadraticCurveTo(18+p.wing*3,-24,28,-18+p.wing*3); ctx.quadraticCurveTo(16,-4,0,0); ctx.closePath();
+  ctx.fillStyle=LIME; ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=1.8; ctx.stroke();
+  ctx.restore();
+
+
+  // Tail
+  ctx.fillStyle=GDK; ctx.strokeStyle=INK; ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(-28,2); ctx.bezierCurveTo(-50,8,-62,18,-60,30);
+  ctx.bezierCurveTo(-58,38,-50,40,-46,34);
+  ctx.bezierCurveTo(-50,32,-54,28,-52,20);
+  ctx.bezierCurveTo(-50,12,-28,10,-26,6);
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+  // Coral at tail tip — small reef cluster
+  ctx.save(); ctx.translate(-54,30);
+  const tCols=['#ff6090','#ff4488','#20c8b0'];
+  ctx.fillStyle='#c02860'; ctx.strokeStyle='#8a1840'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.roundRect(-2,0,4,6,2); ctx.fill(); ctx.stroke();
+  [[0,-4,5],[-4,-7,4],[4,-7,4],[0,-10,5]].forEach(([bx,by,br],i)=>{
+    ctx.fillStyle=tCols[i%tCols.length];
+    ctx.strokeStyle='rgba(0,0,0,0.15)'; ctx.lineWidth=0.8;
+    ctx.beginPath(); ctx.arc(bx,by,br,0,Math.PI*2); ctx.fill(); ctx.stroke();
+  });
+  ctx.restore();
+  ctx.restore();
+}
 function drawSideEarthDragon(ctx, W, H, p){
   ctx.clearRect(0,0,W,H);
   const s=Math.min(W,H)/140;
@@ -2900,6 +3119,8 @@ function drawPlacedHabitats(){
       else if(d==='frost') drawSideFrostDragon(mctx, dragonSize, dragonSize, phys);
       else if(d==='magma') drawSideMagmaDragon(mctx, dragonSize, dragonSize, phys);
       else if(d==='forest') drawSideForestDragon(mctx, dragonSize, dragonSize, phys);
+      else if(d==='obsidian') drawSideObsidianDragon(mctx, dragonSize, dragonSize, phys);
+      else if(d==='coral') drawSideCoralDragon(mctx, dragonSize, dragonSize, phys);
       else drawSideDragon(mctx, dragonSize, dragonSize, phys);
       mctx.clearRect=origClear;
       mctx.restore();
@@ -2933,7 +3154,11 @@ function drawPlacedHabitats(){
       const goldMax=habitatGoldMax(h);
       const gold=h.gold||0;
       const threshold=50;
-      if(gold>=threshold && threshold>0) _bubbles.push({bx:px+size*0.5, by:py+size*0.1, gold:Math.floor(gold), pct:gold/goldMax});
+      if(gold>=threshold && threshold>0) {
+        const now=Date.now();
+        const onCooldown=h._lastCollect && now-h._lastCollect < 30000;
+        if(!onCooldown) _bubbles.push({bx:px+size*0.5, by:py+size*0.1, gold:Math.floor(gold), pct:gold/goldMax});
+      }
     } // end h.dragons.length>0
 
     if(game.selectedHabitatIdx===i){
@@ -3212,6 +3437,15 @@ canvas.addEventListener('click', e=>{
       const goldMax=habitatGoldMax(h);
       const threshold=50;
       if((h.gold||0)>=threshold && threshold>0){
+        // Block if any game panel is open
+        if(game.panelOpen){ openHabitatMenu(i); return; }
+        // Cooldown: max 1 collect per habitat per 30 seconds
+        const now=Date.now();
+        if(h._lastCollect && now-h._lastCollect < 30000){
+          showNotification('Wait a moment before collecting again.','error');
+          return;
+        }
+        h._lastCollect=now;
         // Collect gold
         const collected=Math.floor(h.gold);
         game.gold+=collected;
@@ -3259,7 +3493,7 @@ function showPanelBackdrop(){
   if(!document.getElementById('panel-backdrop')){
     const bd=document.createElement('div');
     bd.id='panel-backdrop';
-    bd.onclick=closeAllPanelsGlobal;
+    bd.onclick=()=>{closeAllPanelsGlobal();game.panelOpen=false;};
     bd.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:299;pointer-events:all;';
     document.body.appendChild(bd);
   }
@@ -3287,6 +3521,7 @@ const ELEMENT_ICONS = {
 };
 
 function openHabitatMenu(idx){
+  game.panelOpen=true;
   closeAllPanelsGlobal(); showPanelBackdrop();
     closeFarmMenu(); closeShrineMenu(); closeQuestPanel();
   game.selectedHabitatIdx=idx;
@@ -3438,7 +3673,7 @@ function closeAllMenus(){
   closeQuestPanel();
   // Close shop too if open
 }
-function closeHabitatMenu(){ const bd=document.getElementById('panel-backdrop'); if(bd) bd.remove();
+function closeHabitatMenu(){ game.panelOpen=false; const bd=document.getElementById('panel-backdrop'); if(bd) bd.remove();
   game.selectedHabitatIdx=null;
   const m=document.getElementById('habitat-menu');
   if(m) m.style.display='none';
@@ -3500,10 +3735,10 @@ function showGoldPopup(x, y, amount){
 
 // ── HOOK BUY BUTTON ───────────────────────────────────────────────
 // Dragon type → required habitat type mapping
-const DRAGON_HABITAT = { fire:'fire', grass:'grass', earth:'earth', poison:['grass','fire'], ice:'ice', bluefire:['ice','fire'], water:'water', mud:['water','earth'], frost:['ice','water'], magma:['fire','earth'], forest:['earth','grass'] };
+const DRAGON_HABITAT = { obsidian:['earth','fire'], coral:['water','grass'], fire:'fire', grass:'grass', earth:'earth', poison:['grass','fire'], ice:'ice', bluefire:['ice','fire'], water:'water', mud:['water','earth'], frost:['ice','water'], magma:['fire','earth'], forest:['earth','grass'] };
 // Dragon costs
-const DRAGON_COST = { fire:300, grass:750, earth:2000, poison:20000, ice:13000, bluefire:93750, water:24000, mud:67500, frost:67500, magma:112500, forest:82500 };
-const HATCH_TIMES = { fire:30000, grass:180000, earth:600000, poison:1500000, ice:900000, bluefire:2400000, water:1200000, mud:2100000, frost:3600000, magma:2700000, forest:2220000 };
+const DRAGON_COST = { obsidian:156000, coral:220000, fire:300, grass:750, earth:2000, poison:20000, ice:13000, bluefire:93750, water:24000, mud:67500, frost:67500, magma:112500, forest:82500 };
+const HATCH_TIMES = { obsidian:2700000, coral:1800000, fire:30000, grass:180000, earth:600000, poison:1500000, ice:900000, bluefire:2400000, water:1200000, mud:2100000, frost:3600000, magma:2700000, forest:2220000 };
 // Human-readable habitat names for error messages
 const HABITAT_NAMES = { fire:'Fire Habitat', grass:'Grass Habitat', earth:'Earth Habitat', ice:'Ice Habitat', water:'Water Habitat' };
 
@@ -5298,6 +5533,170 @@ function drawForestDragon(ctx, W, H, p) {
 // GRASS DRAGON — flying side-view, green & white
 // ══════════════════════════════════════════════════════
 
+function drawObsidianDragon(ctx, W, H, p) {
+  ctx.clearRect(0,0,W,H);
+  const cx = W/2, cy = H/2 + p.bob;
+  const s = Math.min(W,H) / 260;
+  const t = p.t;
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.scale(s, s);
+  const RED='#1e1c1a',RED_DK='#0e0c0a',GOLD='#ff6600',INK='#080604',CREAM='#ff9940';
+  ctx.lineJoin='round'; ctx.lineCap='round'; ctx.strokeStyle=INK;
+  const breathe=Math.sin(t*1.4)*0.012;
+  ctx.scale(1+breathe,1+breathe);
+  ctx.fillStyle='rgba(0,0,0,0.15)';
+  ctx.beginPath(); ctx.ellipse(0,58,40,8,0,0,Math.PI*2); ctx.fill();
+  const flap=p.wing;
+  [-1,1].forEach(side=>{
+    const wx=side*46,wy=-18;
+    const flapY=(f)=>flap*f*38;
+    const tips=[{x:wx+side*20,y:wy-40+flapY(0.5)},{x:wx+side*36,y:wy-26+flapY(0.8)},{x:wx+side*42,y:wy-4+flapY(0.9)},{x:wx+side*34,y:wy+18+flapY(0.7)}];
+    const root={x:wx*0.58,y:wy+4};
+    ctx.beginPath(); ctx.moveTo(root.x,root.y); ctx.lineTo(tips[0].x,tips[0].y);
+    for(let i=0;i<tips.length-1;i++){const a=tips[i],b=tips[i+1];ctx.quadraticCurveTo((a.x+b.x)/2,(a.y+b.y)/2,b.x,b.y);}
+    ctx.quadraticCurveTo(wx+side*20,wy+26+flapY(0.4),root.x,root.y); ctx.closePath();
+    ctx.fillStyle=RED_DK; ctx.fill(); ctx.strokeStyle=GOLD; ctx.lineWidth=2; ctx.stroke();
+    ctx.strokeStyle='rgba(255,100,0,0.5)'; ctx.lineWidth=1.5;
+    tips.forEach(tip=>{ctx.beginPath();ctx.moveTo(root.x,root.y);ctx.lineTo(tip.x,tip.y);ctx.stroke();});
+  });
+  ctx.beginPath(); ctx.moveTo(20,14); ctx.bezierCurveTo(40,55,60,65,70,55); ctx.bezierCurveTo(80,46,72,34,58,36); ctx.bezierCurveTo(50,37,46,44,50,50); ctx.bezierCurveTo(48,48,42,42,30,38); ctx.closePath();
+  ctx.fillStyle=RED_DK; ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=3; ctx.stroke();
+  ctx.lineWidth=2;
+  [[38,44],[50,50],[60,48],[68,42]].forEach(([sx,sy])=>{ctx.beginPath();ctx.moveTo(sx-4,sy);ctx.lineTo(sx,sy-12);ctx.lineTo(sx+4,sy);ctx.closePath();ctx.fillStyle=GOLD;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();});
+  [[-28,40],[28,40]].forEach(([lx,ly],side)=>{
+    ctx.beginPath();ctx.ellipse(lx,ly,13,18,side===0?-0.2:0.2,0,Math.PI*2);ctx.fillStyle=RED_DK;ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2.5;ctx.stroke();
+    ctx.beginPath();ctx.ellipse(lx+(side===0?-8:8),ly+28,10,14,side===0?-0.3:0.3,0,Math.PI*2);ctx.fillStyle=RED_DK;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
+    ctx.fillStyle=CREAM;
+    for(let cv=0;cv<3;cv++){const cx2=lx+(side===0?-8:8)-8+(cv*8)+(side===0?-2:2);ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(cx2,ly+42,3,5,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle=INK;ctx.stroke();}
+  });
+  ctx.lineWidth=3.5;
+  ctx.beginPath();ctx.ellipse(0,14,52,44,0,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
+  ctx.save();
+  ctx.beginPath();ctx.ellipse(0,14,52,44,0,0,Math.PI*2);ctx.clip();
+  ctx.beginPath();ctx.ellipse(0,22,30,28,0,0,Math.PI*2);ctx.fillStyle=GOLD;ctx.fill();
+  ctx.strokeStyle='rgba(180,100,0,0.35)';ctx.lineWidth=2.2;
+  [-6,4,14,24,33].forEach(sy=>{const hw=Math.sqrt(Math.max(0,900-(sy-22)*(sy-22)))*0.95;ctx.beginPath();ctx.moveTo(-hw,sy);ctx.quadraticCurveTo(0,sy+5,hw,sy);ctx.stroke();});
+  ctx.restore();
+  [[-44,10],[44,10]].forEach(([ax,ay],side)=>{
+    ctx.beginPath();ctx.ellipse(ax,ay+10,10,16,side===0?0.3:-0.3,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2.5;ctx.stroke();
+    const fax=ax+(side===0?-6:6);
+    ctx.beginPath();ctx.ellipse(fax,ay+34,8,13,side===0?0.5:-0.5,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
+    ctx.fillStyle=CREAM;
+    for(let cv=0;cv<3;cv++){const cx2=fax-6+(cv*6);ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(cx2,ay+48,2.8,4.5,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle=INK;ctx.stroke();}
+  });
+  ctx.lineWidth=3.5;
+  ctx.beginPath();ctx.ellipse(0,-34,22,20,0,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
+  ctx.beginPath();ctx.ellipse(0,-68,36,32,0,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
+  ctx.beginPath();ctx.ellipse(0,-54,22,16,0,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
+  ctx.beginPath();ctx.ellipse(0,-54,18,11,-0.05,0,Math.PI);ctx.fillStyle=RED_DK;ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2.2;ctx.stroke();
+  ctx.fillStyle=CREAM;
+  [[-13,6],[-4,9],[5,10],[13,8]].forEach(([tx,ty])=>{ctx.beginPath();ctx.moveTo(tx-2.2,-48+ty);ctx.lineTo(tx,-43+ty);ctx.lineTo(tx+2.2,-48+ty);ctx.closePath();ctx.fill();});
+  ctx.lineWidth=2.5;
+  [[-18,-98,-0.52],[18,-98,0.52]].forEach(([hx,hy,rot])=>{
+    ctx.save();ctx.translate(hx,hy);ctx.rotate(rot);
+    ctx.beginPath();ctx.moveTo(-5,4);ctx.lineTo(-8,-8);ctx.lineTo(0,-28);ctx.lineTo(8,-8);ctx.lineTo(5,4);ctx.closePath();
+    ctx.fillStyle=RED_DK;ctx.fill();ctx.strokeStyle=GOLD;ctx.lineWidth=1.5;ctx.stroke();ctx.restore();
+  });
+  [[-15,-75],[15,-75]].forEach(([ex,ey])=>{
+    const gp=0.6+Math.sin(t*2)*0.3;
+    ctx.beginPath();ctx.ellipse(ex,ey,11,11,0,0,Math.PI*2);ctx.fillStyle=`rgba(255,${Math.floor(80+gp*60)},0,${gp})`;ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2.5;ctx.stroke();
+    ctx.beginPath();ctx.ellipse(ex+1,ey+1,5,5.6,0,0,Math.PI*2);ctx.fillStyle='#1a0a02';ctx.fill();
+    ctx.beginPath();ctx.ellipse(ex-2,ey-2,2.4,2.6,0,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
+  });
+  [[-7,-55],[7,-55]].forEach(([nx,ny])=>{ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(nx,ny,2.4,1.8,0,0,Math.PI*2);ctx.fillStyle=RED_DK;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();});
+  ctx.restore();
+}
+
+
+// ══════════════════════════════════════════════════════
+// GRASS DRAGON — flying side-view, green & white
+// ══════════════════════════════════════════════════════
+
+function drawCoralDragon(ctx, W, H, p) {
+  ctx.clearRect(0,0,W,H);
+  const cx = W/2, cy = H/2 + p.bob;
+  const s = Math.min(W,H) / 260;
+  const t = p.t;
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.scale(s, s);
+  const RED='#e05878',RED_DK='#b83a58',GOLD='#ffa080',INK='#1a0818',CREAM='#fff0e8';
+  ctx.lineJoin='round'; ctx.lineCap='round'; ctx.strokeStyle=INK;
+  const breathe=Math.sin(t*1.4)*0.012;
+  ctx.scale(1+breathe,1+breathe);
+  ctx.fillStyle='rgba(0,0,0,0.15)';
+  ctx.beginPath(); ctx.ellipse(0,58,40,8,0,0,Math.PI*2); ctx.fill();
+  const flap=p.wing;
+  [-1,1].forEach(side=>{
+    const wx=side*46,wy=-18;
+    const flapY=(f)=>flap*f*38;
+    const tips=[{x:wx+side*20,y:wy-40+flapY(0.5)},{x:wx+side*36,y:wy-26+flapY(0.8)},{x:wx+side*42,y:wy-4+flapY(0.9)},{x:wx+side*34,y:wy+18+flapY(0.7)}];
+    const root={x:wx*0.58,y:wy+4};
+    ctx.beginPath(); ctx.moveTo(root.x,root.y); ctx.lineTo(tips[0].x,tips[0].y);
+    for(let i=0;i<tips.length-1;i++){const a=tips[i],b=tips[i+1];ctx.quadraticCurveTo((a.x+b.x)/2,(a.y+b.y)/2,b.x,b.y);}
+    ctx.quadraticCurveTo(wx+side*20,wy+26+flapY(0.4),root.x,root.y); ctx.closePath();
+    ctx.fillStyle=GOLD; ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=3; ctx.stroke();
+    ctx.strokeStyle=INK; ctx.lineWidth=2;
+    tips.forEach(tip=>{ctx.beginPath();ctx.moveTo(root.x,root.y);ctx.lineTo(tip.x,tip.y);ctx.stroke();});
+  });
+  ctx.beginPath(); ctx.moveTo(20,14); ctx.bezierCurveTo(40,55,60,65,70,55); ctx.bezierCurveTo(80,46,72,34,58,36); ctx.bezierCurveTo(50,37,46,44,50,50); ctx.bezierCurveTo(48,48,42,42,30,38); ctx.closePath();
+  ctx.fillStyle=RED_DK; ctx.fill(); ctx.strokeStyle=INK; ctx.lineWidth=3; ctx.stroke();
+  ctx.lineWidth=2;
+  [[38,44],[50,50],[60,48],[68,42]].forEach(([sx,sy])=>{ctx.beginPath();ctx.moveTo(sx-4,sy);ctx.lineTo(sx,sy-12);ctx.lineTo(sx+4,sy);ctx.closePath();ctx.fillStyle=GOLD;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();});
+  [[-28,40],[28,40]].forEach(([lx,ly],side)=>{
+    ctx.beginPath();ctx.ellipse(lx,ly,13,18,side===0?-0.2:0.2,0,Math.PI*2);ctx.fillStyle=RED_DK;ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2.5;ctx.stroke();
+    ctx.beginPath();ctx.ellipse(lx+(side===0?-8:8),ly+28,10,14,side===0?-0.3:0.3,0,Math.PI*2);ctx.fillStyle=RED_DK;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
+    ctx.fillStyle=CREAM;
+    for(let cv=0;cv<3;cv++){const cx2=lx+(side===0?-8:8)-8+(cv*8)+(side===0?-2:2);ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(cx2,ly+42,3,5,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle=INK;ctx.stroke();}
+  });
+  ctx.lineWidth=3.5;
+  ctx.beginPath();ctx.ellipse(0,14,52,44,0,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
+  ctx.save();
+  ctx.beginPath();ctx.ellipse(0,14,52,44,0,0,Math.PI*2);ctx.clip();
+  ctx.beginPath();ctx.ellipse(0,22,30,28,0,0,Math.PI*2);ctx.fillStyle=GOLD;ctx.fill();
+  ctx.strokeStyle='rgba(180,100,0,0.35)';ctx.lineWidth=2.2;
+  [-6,4,14,24,33].forEach(sy=>{const hw=Math.sqrt(Math.max(0,900-(sy-22)*(sy-22)))*0.95;ctx.beginPath();ctx.moveTo(-hw,sy);ctx.quadraticCurveTo(0,sy+5,hw,sy);ctx.stroke();});
+  ctx.restore();
+  [[-44,10],[44,10]].forEach(([ax,ay],side)=>{
+    ctx.beginPath();ctx.ellipse(ax,ay+10,10,16,side===0?0.3:-0.3,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2.5;ctx.stroke();
+    const fax=ax+(side===0?-6:6);
+    ctx.beginPath();ctx.ellipse(fax,ay+34,8,13,side===0?0.5:-0.5,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
+    ctx.fillStyle=CREAM;
+    for(let cv=0;cv<3;cv++){const cx2=fax-6+(cv*6);ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(cx2,ay+48,2.8,4.5,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle=INK;ctx.stroke();}
+  });
+  ctx.lineWidth=3.5;
+  ctx.beginPath();ctx.ellipse(0,-34,22,20,0,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
+  ctx.beginPath();ctx.ellipse(0,-68,36,32,0,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
+  ctx.beginPath();ctx.ellipse(0,-54,22,16,0,0,Math.PI*2);ctx.fillStyle=RED;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();
+  ctx.beginPath();ctx.ellipse(0,-54,18,11,-0.05,0,Math.PI);ctx.fillStyle=RED_DK;ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2.2;ctx.stroke();
+  ctx.fillStyle=CREAM;
+  [[-13,6],[-4,9],[5,10],[13,8]].forEach(([tx,ty])=>{ctx.beginPath();ctx.moveTo(tx-2.2,-48+ty);ctx.lineTo(tx,-43+ty);ctx.lineTo(tx+2.2,-48+ty);ctx.closePath();ctx.fill();});
+  ctx.lineWidth=2.5;
+  [[-18,-98,-0.52],[18,-98,0.52]].forEach(([hx,hy,rot])=>{
+    ctx.save();ctx.translate(hx,hy);ctx.rotate(rot);
+    ctx.strokeStyle=GOLD; ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(0,4);ctx.lineTo(0,-12);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,-5);ctx.lineTo(-9,-18);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,-5);ctx.lineTo(9,-18);ctx.stroke();
+    ctx.fillStyle='#20b0a0'; ctx.strokeStyle=INK; ctx.lineWidth=1;
+    [[0,-12],[-9,-18],[9,-18]].forEach(([tx,ty])=>{ctx.beginPath();ctx.arc(tx,ty,3,0,Math.PI*2);ctx.fill();ctx.stroke();});
+    ctx.restore();
+  });
+  [[-15,-75],[15,-75]].forEach(([ex,ey])=>{
+    ctx.beginPath();ctx.ellipse(ex,ey,11,11,0,0,Math.PI*2);ctx.fillStyle='#20b0a0';ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2.5;ctx.stroke();
+    ctx.beginPath();ctx.ellipse(ex+1,ey+1,5,5.6,0,0,Math.PI*2);ctx.fillStyle='#1a0a02';ctx.fill();
+    ctx.beginPath();ctx.ellipse(ex-2,ey-2,2.4,2.6,0,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
+  });
+  [[-7,-55],[7,-55]].forEach(([nx,ny])=>{ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(nx,ny,2.4,1.8,0,0,Math.PI*2);ctx.fillStyle=RED_DK;ctx.fill();ctx.strokeStyle=INK;ctx.stroke();});
+  ctx.restore();
+}
+
+
+// ══════════════════════════════════════════════════════
+// GRASS DRAGON — flying side-view, green & white
+// ══════════════════════════════════════════════════════
+
 function drawFireDragon(ctx, W, H, p) {
   ctx.clearRect(0,0,W,H);
   const cx = W/2, cy = H/2 + p.bob;
@@ -5988,6 +6387,7 @@ const CROPS = [
 
 
 function openShrineMenu(){
+  game.panelOpen=true;
   closeHabitatMenu(); closeFarmMenu(); closeQuestPanel();
   let el=document.getElementById('shrine-menu');
   if(!el){
@@ -6009,6 +6409,7 @@ function closeShrineMenu(){ const el=document.getElementById('shrine-menu'); if(
 function startShrineMove(){ closeShrineMenu(); game.placement={isShrine:true,gx:game.shrine.gx,gy:game.shrine.gy}; }
 
 function openFarmMenu(buildingIdx){
+  game.panelOpen=true;
   closeAllPanelsGlobal(); showPanelBackdrop();
     closeHabitatMenu(); closeShrineMenu(); closeQuestPanel();
   const b=game.buildings[buildingIdx];
@@ -6068,7 +6469,7 @@ function openFarmMenu(buildingIdx){
   el.innerHTML=html;
 }
 
-function closeFarmMenu(){ const el=document.getElementById('farm-menu'); if(el) el.remove(); const bd=document.getElementById('panel-backdrop'); if(bd) bd.remove(); }
+function closeFarmMenu(){ game.panelOpen=false; const el=document.getElementById('farm-menu'); if(el) el.remove(); const bd=document.getElementById('panel-backdrop'); if(bd) bd.remove(); }
 
 function startBuildingMove(buildingIdx){
   closeFarmMenu();
@@ -6370,6 +6771,8 @@ function initDragonCanvases() {
       else if(type==='frost'){ stepDragonPhysics(phys,dt); drawFrostDragon(dctx,r.width,r.height,phys); }
       else if(type==='magma'){ stepDragonPhysics(phys,dt); drawMagmaDragon(dctx,r.width,r.height,phys); }
       else if(type==='forest'){ stepDragonPhysics(phys,dt); drawForestDragon(dctx,r.width,r.height,phys); }
+      else if(type==='obsidian'){ stepDragonPhysics(phys,dt); drawObsidianDragon(dctx,r.width,r.height,phys); }
+      else if(type==='coral'){ stepDragonPhysics(phys,dt); drawCoralDragon(dctx,r.width,r.height,phys); }
     }
     requestAnimationFrame(loop);
   });
@@ -7518,6 +7921,8 @@ function updateShopButtons(){
     {type:'forest',   unlock:7,  visible:5,  cost:82500},
     {type:'bluefire', unlock:12, visible:10, cost:93750},
     {type:'magma',    unlock:7,  visible:5,  cost:112500},
+    {type:'obsidian', unlock:9, visible:7, cost:156000},
+    {type:'coral',    unlock:9, visible:7, cost:220000},
     {type:'frost',    unlock:99, visible:12, cost:67500},   // Breed only: Ice+Water (5%)
   ];
   const lv = game.level||1;
@@ -7635,6 +8040,7 @@ let _hatcheryIdx=null;
 let _hatcheryRaf=null;
 
 function openHatcheryMenu(buildingIdx){
+  game.panelOpen=true;
   closeAllPanelsGlobal(); showPanelBackdrop();
     closeHabitatMenu(); closeFarmMenu(); closeShrineMenu();
   _hatcheryIdx=buildingIdx;
@@ -7859,7 +8265,7 @@ function drawEggOnCanvas(cv, dragonType, readiness){
   const ctx=cv.getContext('2d'); const W=cv.width, H=cv.height;
   ctx.clearRect(0,0,W,H);
   const cx=W/2, cy=H*0.52;
-  const cols={fire:['#ff7040','#cc2800','#ffb080'],grass:['#60d040','#1a7a08','#a0f060'],earth:['#c09050','#7a5010','#e0c080'],poison:['#22aa22','#cc1111','#88ff44'],ice:['#aaddff','#5599cc','#e8f6ff'],bluefire:['#8844ff','#1122cc','#cc3322'],water:['#1a8acc','#0a4a88','#80ccff'],mud:['#7a5a28','#3a2a10','#b08840'],frost:['#e0f0ff','#88aacc','#ffffff'],magma:['#1a1208','#0a0804','#cc4400'],forest:['#2a6a10','#0e3a06','#88cc44']};
+  const cols={fire:['#ff7040','#cc2800','#ffb080'],grass:['#60d040','#1a7a08','#a0f060'],earth:['#c09050','#7a5010','#e0c080'],obsidian:['#1e1c1a','#0a0806','#ff6600'],coral:['#e05878','#b83a58','#20b0a0'],poison:['#22aa22','#cc1111','#88ff44'],ice:['#aaddff','#5599cc','#e8f6ff'],bluefire:['#8844ff','#1122cc','#cc3322'],water:['#1a8acc','#0a4a88','#80ccff'],mud:['#7a5a28','#3a2a10','#b08840'],frost:['#e0f0ff','#88aacc','#ffffff'],magma:['#1a1208','#0a0804','#cc4400'],forest:['#2a6a10','#0e3a06','#88cc44']};
   const [mid,dark,light]=cols[dragonType]||cols.fire;
   const r=Math.min(W,H)*0.32;
   // Glow
@@ -7909,6 +8315,40 @@ function drawEggOnCanvas(cv, dragonType, readiness){
     ctx.strokeStyle='rgba(255,255,255,0.55)'; ctx.lineWidth=2;
     ctx.beginPath(); ctx.moveTo(0,-r); ctx.lineTo(0,r); ctx.stroke();
     ctx.restore();
+  }
+  // Obsidian egg: black with glowing lava cracks
+  if(dragonType==='obsidian'){
+    const now=performance.now()/1000;
+    const glow=0.5+Math.sin(now*2)*0.3;
+    ctx.save(); ctx.beginPath(); ctx.ellipse(cx,cy,r*0.72,r,0,0,Math.PI*2); ctx.clip();
+    // Lava crack lines
+    ctx.strokeStyle=`rgba(255,${Math.floor(80+glow*60)},0,${0.6+glow*0.3})`; ctx.lineWidth=2;
+    [[-0.15,-0.3,0.2,0.1],[0.1,-0.1,-0.2,0.35],[0,-0.1,0.25,-0.3],[-0.1,0.2,0.2,0.1]].forEach(([x1,y1,x2,y2])=>{
+      ctx.beginPath(); ctx.moveTo(cx+x1*r*2,cy+y1*r*2); ctx.lineTo(cx+x2*r*2,cy+y2*r*2); ctx.stroke();
+    });
+    ctx.restore();
+    // Glow dots
+    for(let i=0;i<4;i++){
+      const a=now*0.6+i*1.57;
+      ctx.fillStyle=`rgba(255,100,0,${0.4+glow*0.3})`;
+      ctx.beginPath(); ctx.arc(cx+Math.cos(a)*r*0.8,cy+Math.sin(a)*r*0.55,3,0,Math.PI*2); ctx.fill();
+    }
+  }
+  // Coral egg: pink with teal dot pattern
+  if(dragonType==='coral'){
+    const now=performance.now()/1000;
+    // Teal dots
+    ctx.fillStyle='rgba(32,176,160,0.7)';
+    [[0.1,0.05,0.12],[-0.15,-0.2,0.09],[0.2,-0.15,0.1],[-0.05,0.25,0.11],[0.15,0.2,0.08]].forEach(([ox,oy,sr])=>{
+      ctx.beginPath(); ctx.ellipse(cx+ox*r*2,cy+oy*r*2,sr*r,sr*r,0,0,Math.PI*2); ctx.fill();
+    });
+    // Floating coral sparkles
+    for(let i=0;i<5;i++){
+      const a=now*0.7+i*1.257;
+      const fa=0.4+0.4*Math.abs(Math.sin(now+i));
+      ctx.fillStyle=`rgba(32,176,160,${fa})`;
+      ctx.beginPath(); ctx.arc(cx+Math.cos(a)*r*1.15,cy+Math.sin(a)*r*0.65,2.5,0,Math.PI*2); ctx.fill();
+    }
   }
   // Poison egg: red spot pattern
   if(dragonType==='poison'){
@@ -8025,7 +8465,7 @@ function renderHatcherySlots(){
       const ready=elapsed>=egg.duration;
       const pct=Math.min(1,elapsed/egg.duration);
       // Canvas for egg
-      const cv=document.createElement('canvas'); cv.width=200; cv.height=200;
+      const cv=document.createElement('canvas'); cv.width=160; cv.height=160;
       drawEggOnCanvas(cv,egg.dragonType,pct);
       slot.appendChild(cv);
       // Dragon type label
@@ -8144,6 +8584,7 @@ function moveBreeder(idx){
 }
 
 function openBreederMenu(idx){
+  game.panelOpen=true;
   closeAllPanelsGlobal(); showPanelBackdrop();
     closeHabitatMenu(); closeFarmMenu(); closeShrineMenu();
   let el=document.getElementById('breeder-menu');
@@ -8152,7 +8593,7 @@ function openBreederMenu(idx){
   el.id='breeder-menu';
   el.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:900px;max-width:96vw;max-height:92vh;overflow-y:auto;background:linear-gradient(160deg,#120a1e,#080510);border:1.5px solid rgba(160,80,255,0.45);border-radius:20px;padding:36px 36px 40px;z-index:300;box-shadow:0 20px 60px rgba(0,0,0,0.8);';
   el.innerHTML=`
-    <button onclick="document.getElementById('breeder-menu').remove();const bd=document.getElementById('panel-backdrop');if(bd)bd.remove();" style="position:absolute;top:14px;right:16px;font-family:Cinzel,serif;font-size:0.88rem;font-weight:700;padding:8px 14px;border-radius:50%;width:38px;height:38px;background:rgba(40,20,60,0.5);border:1.5px solid rgba(160,80,255,0.3);color:#cc88ff;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+    <button onclick="document.getElementById('breeder-menu').remove();const bd=document.getElementById('panel-backdrop');if(bd)bd.remove();game.panelOpen=false;" style="position:absolute;top:14px;right:16px;font-family:Cinzel,serif;font-size:0.88rem;font-weight:700;padding:8px 14px;border-radius:50%;width:38px;height:38px;background:rgba(40,20,60,0.5);border:1.5px solid rgba(160,80,255,0.3);color:#cc88ff;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
     <button onclick="moveBreeder(${idx})" style="position:absolute;top:14px;left:16px;font-family:Cinzel,serif;font-size:0.82rem;font-weight:700;padding:9px 18px;border-radius:18px;background:rgba(40,20,60,0.4);border:1.5px solid rgba(160,80,255,0.25);color:rgba(180,120,255,0.8);cursor:pointer;">✦ Move</button>
     <div style="font-family:'Cinzel Decorative',serif;font-size:1.3rem;font-weight:700;color:#cc88ff;text-align:center;margin-bottom:6px;">Breeding Cave</div>
     <div style="font-family:serif;font-size:0.95rem;color:rgba(180,140,220,0.7);text-align:center;margin-bottom:22px;font-style:italic;">Select two dragons to breed a new egg</div>
@@ -8314,6 +8755,8 @@ function updateBreedSlots(){
         else if(o.type==='magma') drawMagmaDragon(cv.getContext('2d'),36,36,ph);
         else if(o.type==='forest') drawForestDragon(cv.getContext('2d'),36,36,ph);
         else if(o.type==='earth') drawEarthDragon(cv.getContext('2d'),36,36,ph);
+        else if(o.type==='obsidian') drawObsidianDragon(cv.getContext('2d'),36,36,ph);
+        else if(o.type==='coral') drawCoralDragon(cv.getContext('2d'),36,36,ph);
         else drawFireDragon(cv.getContext('2d'),36,36,ph);
         const pct=document.createElement('span');
         pct.style.cssText='font-family:Cinzel,serif;font-size:0.72rem;font-weight:700;color:#cc88ff;flex-shrink:0;';
@@ -8356,7 +8799,9 @@ function getBreedingOdds(t1, t2){
   const combo=sorted.join('+');
 
   // Ice + Water → 5% frost
-  if(combo==='ice+water') return [{type:'frost',pct:5},{type:'ice',pct:47.5},{type:'water',pct:47.5}];
+  if(combo==='ice+water') return [{type:'obsidian', unlock:9, visible:7, cost:156000},
+    {type:'coral',    unlock:9, visible:7, cost:220000},
+    {type:'frost',pct:5},{type:'ice',pct:47.5},{type:'water',pct:47.5}];
 
   // 2 of same new special → 10%
   if(t1===t2 && isNewSpecial(t1)) return [{type:t1,pct:10},{type:'mystery',pct:90}];
@@ -8840,7 +9285,7 @@ setInterval(()=>{ if(!document.hidden) tickOfflineGold(); }, 10000);
       <button onclick="closeHatcheryMenu()" style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.15);border-radius:50%;width:28px;height:28px;color:#aaa;cursor:pointer;font-size:0.9rem;">✕</button>
     </div>
   </div>
-  <div id="hatchery-slots" style="display:flex;gap:12px;"></div>
+  <div id="hatchery-slots" style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;"></div>
 </div>
 <div id="tut-float-hint" style="display:none;position:fixed;top:16px;left:50%;transform:translateX(-50%);background:linear-gradient(160deg,#2a1e08,#1a1208);border:1.5px solid rgba(255,200,60,0.55);border-radius:12px;padding:10px 22px;font-family:Cinzel,serif;font-size:0.88rem;font-weight:700;color:#FFE878;box-shadow:0 4px 20px rgba(0,0,0,0.7);z-index:9500;pointer-events:none;white-space:nowrap;animation:tutBounce 0.7s ease-in-out infinite alternate;"></div>
 <div id="expand-panel" style="display:none;position:fixed;inset:0;z-index:300;align-items:center;justify-content:center;will-change:transform;transform:translateZ(0);">
