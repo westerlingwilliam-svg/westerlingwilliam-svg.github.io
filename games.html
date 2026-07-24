@@ -88,6 +88,29 @@
         .back-btn:hover { transform: translateY(3px); box-shadow: 0 7px 0 #b38f00, 0 10px 20px rgba(0,0,0,0.3); background: #fff; }
         center { padding-bottom: 50px; }
 
+        .game-section { margin-bottom: 48px; }
+        .game-section-title {
+            text-align: center;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(150, 210, 255, 0.6);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .game-section-title::before,
+        .game-section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(100, 180, 255, 0.3), transparent);
+        }
+
+
         @keyframes fadeDown {
             from { opacity: 0; transform: translateY(-30px); }
             to   { opacity: 1; transform: translateY(0); }
@@ -169,6 +192,208 @@
         </div>
     </div>
     <script>
+    (function(){
+      function drawScene(now){
+        const cv = document.getElementById('jv-preview');
+        if(!cv) return;
+        const ctx = cv.getContext('2d');
+        cv.width = 500; cv.height = 300;
+        const W = cv.width, H = cv.height;
+        const t = now/1000;
+        ctx.clearRect(0,0,W,H);
+
+        // Sky gradient
+        const sky = ctx.createLinearGradient(0,0,0,H);
+        sky.addColorStop(0,'#010610'); sky.addColorStop(0.5,'#081424'); sky.addColorStop(0.75,'#0d2210'); sky.addColorStop(1,'#142808');
+        ctx.fillStyle=sky; ctx.fillRect(0,0,W,H);
+
+        // Nebula glow in middle sky
+        const neb=ctx.createRadialGradient(W*0.35,H*0.35,0,W*0.35,H*0.35,120);
+        neb.addColorStop(0,'rgba(40,100,180,0.12)'); neb.addColorStop(1,'transparent');
+        ctx.fillStyle=neb; ctx.fillRect(0,0,W,H);
+        const neb2=ctx.createRadialGradient(W*0.72,H*0.25,0,W*0.72,H*0.25,90);
+        neb2.addColorStop(0,'rgba(80,20,120,0.1)'); neb2.addColorStop(1,'transparent');
+        ctx.fillStyle=neb2; ctx.fillRect(0,0,W,H);
+
+        // Stars
+        const stars=[[40,12,1.8],[80,6,1.2],[150,18,2],[220,8,1.5],[300,15,1.8],[380,10,1.2],
+          [420,20,1.6],[60,30,1],[200,25,1.8],[340,6,1.2],[110,22,1],[260,14,2.2],
+          [410,35,1],[170,5,1.6],[320,28,1],[50,42,1.2],[240,38,1],[360,22,1.8],
+          [130,40,1.4],[290,8,1],[70,18,1.6],[460,12,2.2],[180,32,1.2],[480,45,1],
+          [15,55,1],[460,60,1.4],[100,65,1],[350,55,1.2],[430,70,1],[250,60,1.4]];
+        stars.forEach(([sx,sy,sr])=>{
+          const tw=0.3+0.7*Math.abs(Math.sin(t*1.5+sx*0.1));
+          ctx.globalAlpha=tw;
+          const sg=ctx.createRadialGradient(sx,sy,0,sx,sy,sr*2.5);
+          sg.addColorStop(0,'#ffffff'); sg.addColorStop(0.4,'rgba(180,220,255,0.6)'); sg.addColorStop(1,'transparent');
+          ctx.fillStyle=sg; ctx.beginPath(); ctx.arc(sx,sy,sr*2.5,0,Math.PI*2); ctx.fill();
+        });
+        ctx.globalAlpha=1;
+        // Extra stars spread across lower sky
+        const moreStars=[[35,75,1],[95,82,1.2],[145,70,0.9],[195,78,1.3],[245,72,1],[295,80,1.2],[345,74,1],[395,77,1.1],[445,72,1.3],[490,80,0.9],[20,105,0.8],[70,98,1],[120,108,1.1],[170,95,1.2],[220,102,0.9],[270,96,1.3],[320,104,1],[370,98,1.1],[420,106,0.8],[468,100,1],[50,128,0.8],[100,135,1],[150,125,1.2],[200,132,0.9],[250,128,1],[300,134,0.8],[350,126,1.1],[400,133,1],[450,129,0.9],[30,148,0.7],[80,155,0.8],[130,145,0.9],[180,152,0.7],[230,148,1],[280,154,0.8],[330,146,0.9],[380,153,0.7],[430,147,0.8],[475,154,0.7]];
+        moreStars.forEach(([sx,sy,sr])=>{
+          const tw=0.2+0.5*Math.abs(Math.sin(t*1.6+sx*0.09));
+          ctx.globalAlpha=tw;
+          const sg=ctx.createRadialGradient(sx,sy,0,sx,sy,sr*2);
+          sg.addColorStop(0,'rgba(200,225,255,0.9)'); sg.addColorStop(1,'transparent');
+          ctx.fillStyle=sg; ctx.beginPath(); ctx.arc(sx,sy,sr*2,0,Math.PI*2); ctx.fill();
+        });
+        ctx.globalAlpha=1;
+        // Extra stars lower in sky near text
+        const lowStars=[[90,95,1.2],[160,88,1],[230,100,1.4],[310,92,1],[390,98,1.2],[460,90,1],
+          [130,110,1],[280,105,1.3],[420,108,1],[60,118,0.9],[200,112,1.1],[360,115,1]];
+        lowStars.forEach(([sx,sy,sr])=>{
+          const tw=0.2+0.5*Math.abs(Math.sin(t*1.8+sx*0.08));
+          ctx.globalAlpha=tw;
+          const sg=ctx.createRadialGradient(sx,sy,0,sx,sy,sr*2);
+          sg.addColorStop(0,'rgba(180,220,255,0.9)'); sg.addColorStop(1,'transparent');
+          ctx.fillStyle=sg; ctx.beginPath(); ctx.arc(sx,sy,sr*2,0,Math.PI*2); ctx.fill();
+        });
+        ctx.globalAlpha=1;
+
+        // JIMMIE VALE text — cinematic style
+        const pulse=0.85+Math.sin(t*1.2)*0.15;
+        const ty2=H*0.44;
+        ctx.save();
+        ctx.textAlign='center';
+        // Deep shadow layer
+        ctx.font='900 46px "Arial Black",Arial';
+        ctx.fillStyle='rgba(0,40,0,0.6)';
+        ctx.fillText('JIMMIE VALE',W/2+3,ty2+4);
+        // Wide outer glow
+        ctx.shadowColor='rgba(50,255,80,1)'; ctx.shadowBlur=55*pulse;
+        ctx.fillStyle='rgba(50,255,50,0.08)';
+        ctx.fillText('JIMMIE VALE',W/2,ty2);
+        ctx.fillText('JIMMIE VALE',W/2,ty2);
+        // Main gradient text
+        const tg=ctx.createLinearGradient(W/2-130,ty2-40,W/2+130,ty2+8);
+        tg.addColorStop(0,'#c8ffc8');
+        tg.addColorStop(0.25,'#ffffff');
+        tg.addColorStop(0.5,'#88ff88');
+        tg.addColorStop(0.75,'#ffffff');
+        tg.addColorStop(1,'#44dd44');
+        ctx.shadowColor='rgba(60,255,80,0.9)'; ctx.shadowBlur=22*pulse;
+        ctx.fillStyle=tg;
+        ctx.fillText('JIMMIE VALE',W/2,ty2);
+        // Shine sweep overlay
+        const shine=ctx.createLinearGradient(W/2-120,ty2-35,W/2+120,ty2+5);
+        shine.addColorStop(0,'rgba(255,255,255,0)');
+        shine.addColorStop(0.4+Math.sin(t*0.8)*0.1,'rgba(255,255,255,0.35)');
+        shine.addColorStop(1,'rgba(255,255,255,0)');
+        ctx.fillStyle=shine; ctx.fillText('JIMMIE VALE',W/2,ty2);
+        // Subtitle
+        ctx.shadowBlur=8; ctx.shadowColor='rgba(80,255,80,0.5)';
+        ctx.font='600 12px Arial';
+        const subg=ctx.createLinearGradient(W/2-80,0,W/2+80,0);
+        subg.addColorStop(0,'rgba(100,255,100,0)');
+        subg.addColorStop(0.5,'rgba(180,255,180,0.7)');
+        subg.addColorStop(1,'rgba(100,255,100,0)');
+        ctx.fillStyle=subg;
+        ctx.fillText('✦  D R A G O N  P A R K  ✦',W/2,ty2+22);
+        ctx.restore();
+
+        // Ground
+        const grd=ctx.createLinearGradient(0,H-40,0,H);
+        grd.addColorStop(0,'#2d5a1e'); grd.addColorStop(1,'#1a3a10');
+        ctx.fillStyle=grd;
+        ctx.beginPath(); ctx.ellipse(W/2,H+5,W*0.62,30,0,0,Math.PI*2); ctx.fill();
+
+        // Spruce trees on ground
+        function drawSpruce(tx,ty,sz){
+          // Trunk
+          ctx.fillStyle='#5a3810';
+          ctx.fillRect(tx-sz*0.12,ty,sz*0.24,sz*0.35);
+          // Three tiers of branches, wide at bottom
+          const tiers=[[0,sz*0.28,sz*0.9],[sz*-0.08,sz*0.05,sz*0.72],[-sz*0.16,-sz*0.18,sz*0.54],[-sz*0.24,-sz*0.38,sz*0.36],[-sz*0.32,-sz*0.55,sz*0.2]];
+          tiers.forEach(([yOff,yTop,w])=>{
+            ctx.fillStyle=yTop<-sz*0.3?'#1e6018':'#1a5010';
+            ctx.beginPath();
+            ctx.moveTo(tx,ty+yTop-sz*0.05);
+            ctx.lineTo(tx-w/2,ty+yOff+sz*0.05);
+            ctx.lineTo(tx+w/2,ty+yOff+sz*0.05);
+            ctx.closePath(); ctx.fill();
+            // Snow on top tiers
+            if(yTop<-sz*0.25){
+              ctx.fillStyle='rgba(220,235,255,0.55)';
+              ctx.beginPath();
+              ctx.moveTo(tx,ty+yTop-sz*0.05);
+              ctx.lineTo(tx-w*0.3,ty+yOff-sz*0.04);
+              ctx.lineTo(tx+w*0.3,ty+yOff-sz*0.04);
+              ctx.closePath(); ctx.fill();
+            }
+          });
+        }
+        drawSpruce(22,H-44,38);
+        drawSpruce(52,H-44,50);
+        drawSpruce(442,H-44,42);
+        drawSpruce(472,H-44,48);
+
+        // Ground ellipse (original)
+        const grd2=ctx.createLinearGradient(0,H-40,0,H);
+        grd2.addColorStop(0,'#2d5a1e'); grd2.addColorStop(1,'#1a3a10');
+        ctx.fillStyle=grd2;
+        ctx.beginPath(); ctx.ellipse(W/2,H+5,W*0.62,30,0,0,Math.PI*2); ctx.fill();
+
+        // Better spruce function — solid filled layers
+        function spruce(tx,baseY,h){
+          const nLayers=5;
+          ctx.fillStyle='#4a2e10';
+          ctx.fillRect(tx-h*0.06,baseY-h*0.18,h*0.12,h*0.2);
+          for(let i=0;i<nLayers;i++){
+            const frac=i/nLayers;
+            const layerW=h*(0.9-frac*0.6);
+            const layerY=baseY-h*0.15-frac*h*0.78;
+            const nextY=baseY-h*0.15-(i+1)/nLayers*h*0.78;
+            ctx.fillStyle=`hsl(130,${50+i*5}%,${16+i*3}%)`;
+            ctx.beginPath();
+            ctx.moveTo(tx,nextY-h*0.04);
+            ctx.lineTo(tx+layerW/2,layerY+h*0.04);
+            ctx.lineTo(tx-layerW/2,layerY+h*0.04);
+            ctx.closePath(); ctx.fill();
+            if(i>=3){
+              ctx.fillStyle='rgba(215,228,255,0.45)';
+              ctx.beginPath();
+              ctx.moveTo(tx,nextY-h*0.04);
+              ctx.lineTo(tx+layerW*0.25,layerY+h*0.02);
+              ctx.lineTo(tx-layerW*0.25,layerY+h*0.02);
+              ctx.closePath(); ctx.fill();
+            }
+          }
+        }
+
+        // Houses
+        function house(hx,hy,w,roofCol){
+          const h=w*0.65;
+          ctx.fillStyle='#9a8a70'; ctx.fillRect(hx,hy,w,h); ctx.strokeStyle='#4a3a20'; ctx.lineWidth=1.5; ctx.strokeRect(hx,hy,w,h);
+          ctx.beginPath(); ctx.moveTo(hx-4,hy); ctx.lineTo(hx+w/2,hy-w*0.42); ctx.lineTo(hx+w+4,hy); ctx.closePath();
+          ctx.fillStyle=roofCol; ctx.fill(); ctx.stroke();
+          ctx.fillStyle='#5a3a15'; ctx.fillRect(hx+w/2-w*0.14,hy+h*0.45,w*0.28,h*0.55); ctx.lineWidth=1; ctx.strokeStyle='#3a2008'; ctx.strokeRect(hx+w/2-w*0.14,hy+h*0.45,w*0.28,h*0.55);
+          const wa=0.35+0.3*Math.sin(t*1.5+hx);
+          ctx.fillStyle=`rgba(255,200,80,${wa})`; ctx.fillRect(hx+5,hy+7,w*0.27,w*0.2); ctx.strokeStyle='#4a3a20'; ctx.lineWidth=1; ctx.strokeRect(hx+5,hy+7,w*0.27,w*0.2);
+          // Window cross
+          ctx.strokeStyle='rgba(60,30,10,0.4)'; ctx.lineWidth=1;
+          ctx.beginPath(); ctx.moveTo(hx+5+w*0.135,hy+7); ctx.lineTo(hx+5+w*0.135,hy+7+w*0.2); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(hx+5,hy+7+w*0.1); ctx.lineTo(hx+5+w*0.27,hy+7+w*0.1); ctx.stroke();
+        }
+
+        // groundY calculates ellipse surface y at each x
+        function groundY(x){ const dx=(x-W/2)/(W*0.62); return (H+5)-30*Math.sqrt(Math.max(0,1-dx*dx)); }
+        spruce(18,groundY(18),62); spruce(48,groundY(48),78); spruce(78,groundY(78),52);
+        const h1w=50, h1y=groundY(133)-Math.round(h1w*0.65);
+        house(108,h1y,h1w,'#c85020');
+        spruce(168,groundY(168),58); spruce(198,groundY(198),48);
+        const h2w=46, h2y=groundY(251)-Math.round(h2w*0.65);
+        house(228,h2y,h2w,'#8a4020');
+        spruce(284,groundY(284),55); spruce(310,groundY(310),70);
+        const h3w=50, h3y=groundY(375)-Math.round(h3w*0.65);
+        house(350,h3y,h3w,'#b04018');
+        spruce(410,groundY(410),60); spruce(440,groundY(440),75); spruce(472,groundY(472),55);
+        requestAnimationFrame(drawScene);
+      }
+      requestAnimationFrame(drawScene);
+    })();
+    </script>
+    <script>
         function enterSite(){
             const o=document.getElementById('intro-overlay');
             o.classList.add('fade-out');
@@ -189,69 +414,99 @@
         <h1>JIMMIE.FUN</h1>
         <div class="header-flag"><div class="f-y-h"></div><div class="f-y-v"></div></div>
     </header>
-    <div id="download-wrap" style="text-align:center;margin-bottom:40px;">
-        <a href="https://github.com/westerlingwilliam-svg/jimmie-vale-server/releases/download/v1.0.3/jimmie-vale.Setup.1.0.3.exe" style="display:inline-flex;align-items:center;gap:14px;background:linear-gradient(135deg,#22aa44,#006622);color:#fff;font-size:1.1rem;font-weight:900;padding:18px 36px;border-radius:50px;text-decoration:none;letter-spacing:1px;box-shadow:0 8px 0 #004a1a,0 12px 30px rgba(0,0,0,0.4);transition:0.2s;border:2px solid rgba(255,255,255,0.2);" onmouseover="this.style.transform='translateY(3px)';this.style.boxShadow='0 5px 0 #004a1a,0 8px 20px rgba(0,0,0,0.4)'" onmouseout="this.style.transform='';this.style.boxShadow='0 8px 0 #004a1a,0 12px 30px rgba(0,0,0,0.4)'">
-            <span style="font-size:1.6rem;">⬇️</span>
-            Tryck för att ladda ner mitt Jimmie Vale spel!
+    <div class="game-section">
+        <div class="game-section-title">SD Relaterat</div>
+        <div class="game-grid">
+        <a href="folkhemmet.html" class="game-card">
+            <div class="card-flag"><div class="cf-h"></div><div class="cf-v"></div></div>
+            <h3>Jimmie Clicker</h3>
+            <p style="opacity: 0.7; font-weight: normal;">Det ultimata clicker-spelet</p>
         </a>
-    </div>
-    <div class="game-grid">
         <a href="quotes.html" class="game-card">
             <div class="card-flag"><div class="cf-h"></div><div class="cf-v"></div></div>
             <h3>Jimmie Quotes</h3>
-            <p style="opacity:0.7;font-weight:normal;">Legendariska citat från Jimmie</p>
-        </a>
-        <a href="folkhemmet.html" class="game-card">
-            <div class="card-flag"><div class="cf-h"></div><div class="cf-v"></div></div>
-            <h3>Bygg Folkhemmet</h3>
-            <p style="opacity:0.7;font-weight:normal;">Det ultimata clicker-spelet</p>
+            <p style="opacity: 0.7; font-weight: normal;">Legendariska citat från Jimmie</p>
         </a>
         <a href="wheel.html" class="game-card">
             <div class="card-flag"><div class="cf-h"></div><div class="cf-v"></div></div>
             <h3>VILKET PARTI SKA DU RÖSTA PÅ?</h3>
-            <p style="opacity:0.7;font-weight:normal;">Låt ödet (och Jimmie) bestämma!</p>
+            <p style="opacity: 0.7; font-weight: normal;">Låt ödet (och Jimmie) bestämma!</p>
         </a>
-        <a href="valfard.html" class="game-card" style="border-bottom-color:#00ff99;">
-            <div class="card-flag" style="background:#005293;"><div class="cf-h"></div><div class="cf-v"></div></div>
+        </div>
+    </div>
+
+    <div id="download-wrap" style="margin-bottom:48px;">
+        <div class="game-section-title">Senaste Spelet</div>
+        <div style="display:flex;gap:20px;align-items:stretch;max-width:800px;margin:0 auto;">
+            <div style="flex:1.4;min-width:0;">
+                <a href="dragonvale.html" class="game-card" style="border-bottom-color:#44cc44;background:#020814;position:relative;overflow:hidden;padding:0;aspect-ratio:5/3;width:100%;display:block;">
+                    <canvas id="jv-preview" width="500" height="300" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;display:block;"></canvas>
+                </a>
+            </div>
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:16px;">
+                <div style="font-family:'Segoe UI',sans-serif;color:rgba(255,255,255,0.85);font-size:0.95rem;line-height:1.7;">
+                    <div style="font-family:Cinzel,serif;font-size:1.1rem;font-weight:700;color:#88ff88;margin-bottom:10px;">🐉 Jimmie Vale</div>
+                    Bygg din egen drakpark på en flytande ö. Kläck drakar ur ägg, placera dem i habitat och samla guld. Föd upp sällsynta drakar som Obsidian och Coral — och se din park växa!
+                    <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                        <span style="background:rgba(40,120,40,0.3);border:1px solid rgba(100,200,100,0.3);border-radius:20px;padding:3px 10px;font-size:0.75rem;color:#88ff88;">🏝️ Byggspel</span>
+                        <span style="background:rgba(40,120,40,0.3);border:1px solid rgba(100,200,100,0.3);border-radius:20px;padding:3px 10px;font-size:0.75rem;color:#88ff88;">🐉 Drakar</span>
+                        <span style="background:rgba(40,120,40,0.3);border:1px solid rgba(100,200,100,0.3);border-radius:20px;padding:3px 10px;font-size:0.75rem;color:#88ff88;">🪙 Idle</span>
+                        <span style="background:rgba(40,120,40,0.3);border:1px solid rgba(100,200,100,0.3);border-radius:20px;padding:3px 10px;font-size:0.75rem;color:#88ff88;">⚗️ Breeding</span>
+                    </div>
+                </div>
+                <a href="https://github.com/westerlingwilliam-svg/jimmie-vale-server/releases/download/v1.0.3/jimmie-vale.Setup.1.0.3.exe"
+                   style="display:flex;align-items:center;justify-content:center;gap:12px;
+                          background:linear-gradient(135deg,#0a3a0a,#1a6a1a,#0a3a0a);
+                          color:#fff;font-size:0.95rem;font-weight:900;
+                          padding:14px 20px;border-radius:14px;text-decoration:none;letter-spacing:1px;
+                          box-shadow:0 6px 0 #003300,0 10px 30px rgba(0,180,0,0.3);
+                          transition:0.2s;border:2px solid rgba(100,255,100,0.3);"
+                   onmouseover="this.style.transform='translateY(3px)';this.style.boxShadow='0 3px 0 #003300'"
+                   onmouseout="this.style.transform='';this.style.boxShadow='0 6px 0 #003300,0 10px 30px rgba(0,180,0,0.3)'">
+                    ⬇️ Ladda ner Jimmie Vale
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="game-section">
+        <div class="game-section-title">Andra Roliga Spel</div>
+        <div class="game-grid">
+        <a href="jimmies_secret.html" class="game-card featured">
+            <div class="card-icon">🔴</div>
+            <h3>Jimmie's Secret</h3>
+            <p style="opacity: 0.7; font-weight: normal;">Tryck på knappen och se vad som händer. Om du vågar.</p>
+        </a>
+        <a href="valfard.html" class="game-card" style="border-bottom-color: #00ff99;">
+            <div class="card-flag" style="background: #005293;"><div class="cf-h"></div><div class="cf-v"></div></div>
             <h3>VÄLFÄRDSBYGGAREN</h3>
-            <p style="opacity:0.7;font-weight:normal;">Uppgradera Sverige till Omega-nivå!</p>
+            <p style="opacity: 0.7; font-weight: normal;">Uppgradera Sverige till Omega-nivå!</p>
         </a>
         <a href="opinion.html" class="game-card">
             <div class="card-flag"><div class="cf-h"></div><div class="cf-v"></div></div>
             <h3>Riksdags Opinion Tycoon</h3>
-            <p style="opacity:0.7;font-weight:normal;">Ta över makten med strategi!</p>
+            <p style="opacity: 0.7; font-weight: normal;">Ta över makten med strategi!</p>
         </a>
         <a href="jimmie_tycoon_3d.html" class="game-card">
             <div class="card-icon">🗺️</div>
             <h3>Jimmie GO!</h3>
-            <p style="opacity:0.7;font-weight:normal;">Fånga Jimmie-karaktärer i verkligheten! Utforska din omgivning och bli den bästa Jimmie-tränaren.</p>
+            <p style="opacity: 0.7; font-weight: normal;">Fånga Jimmie-karaktärer i verkligheten!</p>
         </a>
         <a href="steal_jimmie.html" class="game-card featured">
             <span class="new-badge" style="background:linear-gradient(135deg,#005293,#003d6e);color:#fecc00;border:1px solid #fecc00">🎮 DEMO</span>
             <div class="card-icon">⚔️</div>
             <h3>Steal The Jimmie</h3>
-            <p style="opacity:0.7;font-weight:normal;">Rekrytera Jimmie-karaktärer som vandrar längs vägen! First person 3D.</p>
-        </a>
-        <a href="jimmies_secret.html" class="game-card featured">
-            <div class="card-icon">🔴</div>
-            <h3>Jimmie's Secret</h3>
-            <p style="opacity:0.7;font-weight:normal;">Tryck på knappen och se vad som händer. Om du vågar.</p>
+            <p style="opacity: 0.7; font-weight: normal;">Rekrytera Jimmie-karaktärer längs vägen! First person 3D.</p>
         </a>
         <a href="clash_jimmie.html" class="game-card" style="border-bottom-color:#FFD700;">
             <span class="new-badge" style="background:linear-gradient(135deg,#b38f00,#FFD700);color:#1a0a00">🏆 SPELA</span>
             <div class="card-icon">⚔️</div>
             <h3>Clash of Jimmie</h3>
-            <p style="opacity:0.7;font-weight:normal;">Bygg din SD-by, träna Jimmie-trupper och anfalla motståndarens bas! Clash of Clans-inspirerat strategispel med svenska politiker.</p>
+            <p style="opacity:0.7;font-weight:normal;">Bygg din SD-by, träna Jimmie-trupper och anfalla motståndarens bas!</p>
         </a>
-        <a href="dragonvale.html" class="game-card" style="border-bottom-color:#44cc44;">
-            <span class="new-badge" style="background:linear-gradient(135deg,#22aa44,#44ee66);color:#06200c">Nytt!</span>
-            <div class="card-icon">🐉</div>
-            <h3>Jimmie Vale</h3>
-            <p style="opacity:0.7;font-weight:normal;">Bygg din egen drakpark, kläck nya drakar och samla sällsynta arter på din flytande ö!</p>
-        </a>
+        </div>
     </div>
-    <center>
-        <a href="index.html" class="back-btn">Tillbaka till start</a>
-    </center>
+
+    <center></center>
 </body>
 </html>
