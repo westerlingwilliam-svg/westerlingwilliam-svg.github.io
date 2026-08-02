@@ -216,7 +216,7 @@ html,body{width:100%;height:100%;overflow:hidden;}
 #habitat-dragons-row{display:flex;flex-direction:row;gap:16px;justify-content:center;flex:1;margin:16px 0;}
 #habitat-menu.open>div{pointer-events:all;}
 #habitat-menu.open{display:flex !important;}
-#habitat-menu-content{pointer-events:all;will-change:transform;transform:translateZ(0);isolation:isolate;width:820px;max-width:96vw;display:flex;flex-direction:column;background:linear-gradient(180deg,#2e2c28 0%,#3a3830 100%);border:1.5px solid rgba(220,210,180,0.25);border-radius:20px;padding:clamp(16px,2.5vw,28px) clamp(14px,2.5vw,28px) clamp(20px,3vw,32px);box-shadow:0 20px 60px rgba(0,0,0,0.8),0 0 0 1px rgba(255,255,255,0.04);}
+#habitat-menu-content{pointer-events:all;will-change:transform;transform:translateZ(0);isolation:isolate;width:min(96vw,1100px);display:flex;flex-direction:column;background:linear-gradient(180deg,#2e2c28 0%,#3a3830 100%);border:1.5px solid rgba(220,210,180,0.25);border-radius:20px;padding:clamp(16px,2.5vw,28px) clamp(14px,2.5vw,28px) clamp(20px,3vw,32px);box-shadow:0 20px 60px rgba(0,0,0,0.8),0 0 0 1px rgba(255,255,255,0.04);}
 #habitat-menu-title{font-family:'Cinzel Decorative',serif;font-size:1.8rem;color:#c8b890;text-align:center;margin-bottom:14px;letter-spacing:2px;text-transform:uppercase;}
 #habitat-dragons-row{display:flex;gap:8px;justify-content:center;margin-bottom:12px;}
 .dragon-slot-card{width:clamp(140px,25vw,260px);display:flex;flex-direction:column;align-items:center;gap:6px;}
@@ -346,7 +346,7 @@ html,body{width:100%;height:100%;overflow:hidden;}
 #cheat-submit{font-family:Cinzel,serif;font-size:0.8rem;font-weight:700;padding:10px 28px;background:linear-gradient(180deg,#c8920a,#7a5200);border:1.5px solid rgba(255,200,60,0.5);border-radius:20px;color:#fff8e0;cursor:pointer;margin-right:8px;}
 #cheat-cancel{font-family:Cinzel,serif;font-size:0.8rem;padding:10px 20px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,200,60,0.2);border-radius:20px;color:#aaa;cursor:pointer;}
 
-#hatchery-menu{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:300;width:clamp(320px,88vw,900px);max-height:92vh;overflow-y:visible;background:linear-gradient(180deg,#1e1c18,#2a2820);border:1.5px solid rgba(220,190,120,0.25);border-radius:22px;padding:clamp(16px,2vw,28px) clamp(16px,2vw,28px) clamp(20px,2.5vw,36px);box-shadow:0 8px 60px rgba(0,0,0,0.8);display:none;}
+#hatchery-menu{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:300;width:clamp(320px,88vw,1100px);max-height:92vh;overflow-y:visible;background:linear-gradient(180deg,#1e1c18,#2a2820);border:1.5px solid rgba(220,190,120,0.25);border-radius:22px;padding:clamp(16px,2vw,28px) clamp(16px,2vw,28px) clamp(20px,2.5vw,36px);box-shadow:0 8px 60px rgba(0,0,0,0.8);display:none;}
 #hatchery-menu.open{display:block;}
 .hatch-slot{flex:1;background:rgba(0,0,0,0.3);border:1.5px solid rgba(200,170,90,0.2);border-radius:18px;padding:14px 10px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:220px;position:relative;}
 .hatch-slot.empty{border-style:dashed;opacity:0.5;}
@@ -4167,7 +4167,7 @@ function scaleShop(){
   if(!panel) return;
   const scaleX=window.innerWidth/520;
   const scaleY=window.innerHeight/500;
-  const scale=Math.min(scaleX,scaleY,2.0);
+  const scale=Math.min(scaleX,scaleY,2.6);
   panel.style.transform=`scale(${Math.max(0.5,scale)})`;
 }
 window.addEventListener('resize',scaleShop);
@@ -8452,7 +8452,8 @@ function openFarmMenu(buildingIdx){
   if(!el){
     el=document.createElement('div');
     el.id='farm-menu';
-    el.style.cssText='position:fixed;z-index:300;bottom:0;left:50%;transform:translateX(-50%);width:clamp(300px,72vw,1000px);min-height:50vh;max-height:88vh;overflow-y:auto;background:linear-gradient(160deg,#1a1208,#0e0a04);border:1.5px solid rgba(255,200,60,0.4);border-bottom:none;border-radius:18px 18px 0 0;padding:clamp(20px,3vw,44px) clamp(20px,3vw,44px) clamp(36px,4vw,60px);z-index:200;box-shadow:0 -4px 32px rgba(0,0,0,0.7);font-size:clamp(0.95rem,1.5vw,1.4rem);';
+    el.className='panel-anim-box-centered';
+    el.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:300;width:clamp(320px,80vw,780px);min-height:50vh;max-height:88vh;overflow-y:auto;background:linear-gradient(160deg,#1a1208,#0e0a04);border:1.5px solid rgba(255,200,60,0.4);border-radius:22px;padding:clamp(24px,3.5vw,44px);box-shadow:0 8px 60px rgba(0,0,0,0.8);font-size:clamp(0.95rem,1.5vw,1.4rem);';
     document.body.appendChild(el);
   }
   const now=Date.now();
@@ -8503,7 +8504,13 @@ function openFarmMenu(buildingIdx){
   el.innerHTML=html;
 }
 
-function closeFarmMenu(){ game.panelOpen=false; const el=document.getElementById('farm-menu'); if(el) el.remove(); const bd=document.getElementById('panel-backdrop'); if(bd) bd.remove(); }
+function closeFarmMenu(){
+  const el=document.getElementById('farm-menu');
+  const bd=document.getElementById('panel-backdrop');
+  if(el) el.style.animation='panelBoxOutCentered .16s ease both';
+  if(bd) bd.style.animation='panelBgFadeOut .16s ease both';
+  setTimeout(()=>{ game.panelOpen=false; if(el) el.remove(); if(bd) bd.remove(); }, 160);
+}
 
 function startBuildingMove(buildingIdx){
   closeFarmMenu();
@@ -8527,7 +8534,7 @@ function openVaultMenu(buildingIdx){
   if(!el){
     el=document.createElement('div');
     el.id='vault-menu';
-    el.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:300;width:clamp(300px,88vw,590px);min-height:54vh;max-height:88vh;overflow-y:auto;background:linear-gradient(160deg,#20242a,#12151a);border:1.5px solid rgba(160,180,200,0.4);border-radius:20px;padding:clamp(20px,3vw,32px);box-shadow:0 8px 60px rgba(0,0,0,0.8);font-size:clamp(0.95rem,1.4vw,1.25rem);display:flex;flex-direction:column;justify-content:center;';
+    el.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:300;width:clamp(300px,88vw,700px);min-height:54vh;max-height:88vh;overflow-y:auto;background:linear-gradient(160deg,#20242a,#12151a);border:1.5px solid rgba(160,180,200,0.4);border-radius:20px;padding:clamp(20px,3vw,32px);box-shadow:0 8px 60px rgba(0,0,0,0.8);font-size:clamp(0.95rem,1.4vw,1.25rem);display:flex;flex-direction:column;justify-content:center;';
     document.body.appendChild(el);
   }
   const lvl=b.level;
@@ -10961,7 +10968,7 @@ function openBreederMenu(idx){
   if(el) el.remove();
   el=document.createElement('div');
   el.id='breeder-menu';
-  el.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:900px;max-width:96vw;max-height:92vh;overflow-y:auto;background:linear-gradient(160deg,#120a1e,#080510);border:1.5px solid rgba(160,80,255,0.45);border-radius:20px;padding:36px 36px 40px;z-index:300;box-shadow:0 20px 60px rgba(0,0,0,0.8);';
+  el.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(96vw,1100px);max-height:92vh;overflow-y:auto;background:linear-gradient(160deg,#120a1e,#080510);border:1.5px solid rgba(160,80,255,0.45);border-radius:20px;padding:36px 36px 40px;z-index:300;box-shadow:0 20px 60px rgba(0,0,0,0.8);';
   el.innerHTML=`
     <button onclick="document.getElementById('breeder-menu').remove();const bd=document.getElementById('panel-backdrop');if(bd)bd.remove();game.panelOpen=false;" style="position:absolute;top:14px;right:16px;font-family:Cinzel,serif;font-size:0.88rem;font-weight:700;padding:8px 14px;border-radius:50%;width:38px;height:38px;background:rgba(40,20,60,0.5);border:1.5px solid rgba(160,80,255,0.3);color:#cc88ff;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
     <button onclick="moveBreeder(${idx})" style="position:absolute;top:14px;left:16px;font-family:Cinzel,serif;font-size:0.82rem;font-weight:700;padding:9px 18px;border-radius:18px;background:rgba(40,20,60,0.4);border:1.5px solid rgba(160,80,255,0.25);color:rgba(180,120,255,0.8);cursor:pointer;">✦ Move</button>
@@ -11314,7 +11321,7 @@ function openSettingsPanel(){
   showPanelBackdrop(); game.panelOpen=true;
   if(!game.settings) game.settings={};
   el=document.createElement('div'); el.id='settings-panel'; el.className='panel-anim-box-centered';
-  el.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(400px,92vw);background:linear-gradient(160deg,#141414,#1e1e1e);border:2px solid rgba(180,180,180,0.2);border-radius:22px;padding:44px 36px 36px;z-index:300;box-shadow:0 8px 60px rgba(0,0,0,0.8);';
+  el.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(92vw,560px);background:linear-gradient(160deg,#141414,#1e1e1e);border:2px solid rgba(180,180,180,0.2);border-radius:22px;padding:44px 36px 36px;z-index:300;box-shadow:0 8px 60px rgba(0,0,0,0.8);';
   function _settingsRender(){
     const on=game.settings.showHabitatDragons!==false, ag=game.settings.advancedGraphics!==false;
     window._settingsRender = _settingsRender;
@@ -11346,7 +11353,7 @@ function openNewsPanel(){
   el=document.createElement('div');
   el.id='news-panel';
   el.className='panel-anim-sheet';
-  el.style.cssText='position:fixed;z-index:300;bottom:0;left:50%;transform:translateX(-50%);width:min(660px,100vw);background:linear-gradient(160deg,#1e1500,#100c00);border:2px solid rgba(220,180,40,0.5);border-bottom:none;border-radius:18px 18px 0 0;padding:28px 28px 40px;z-index:200;box-shadow:0 -4px 32px rgba(120,80,0,0.6);max-height:80vh;display:flex;flex-direction:column;';
+  el.style.cssText='position:fixed;z-index:300;bottom:0;left:50%;transform:translateX(-50%);width:min(880px,100vw);background:linear-gradient(160deg,#1e1500,#100c00);border:2px solid rgba(220,180,40,0.5);border-bottom:none;border-radius:18px 18px 0 0;padding:28px 28px 40px;z-index:200;box-shadow:0 -4px 32px rgba(120,80,0,0.6);max-height:80vh;display:flex;flex-direction:column;';
 
   const news = [
     { date:'2026-08-01', title:'⚡ Lightning Update — Version 1.1.0', items:[
@@ -11731,7 +11738,7 @@ function openNewsPanel2(){
   el=document.createElement('div');
   el.id='news2-panel';
   el.className='panel-anim-box-centered';
-  el.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(560px,92vw);height:min(560px,92vw);background:linear-gradient(160deg,#020e1a,#051828);border:2px solid rgba(80,160,255,0.4);border-radius:22px;padding:44px 36px 36px;z-index:300;box-shadow:0 8px 60px rgba(0,60,180,0.6);display:flex;flex-direction:column;';
+  el.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(92vw,760px);height:min(92vw,760px);background:linear-gradient(160deg,#020e1a,#051828);border:2px solid rgba(80,160,255,0.4);border-radius:22px;padding:44px 36px 36px;z-index:300;box-shadow:0 8px 60px rgba(0,60,180,0.6);display:flex;flex-direction:column;';
 
   const postsHtml = NEWS2_POSTS.length===0
     ? '<div style="font-family:Cinzel,serif;color:rgba(120,180,255,0.7);font-size:0.95rem;text-align:center;font-style:italic;margin:auto;">No news yet — check back soon!</div>'
@@ -11798,7 +11805,7 @@ setInterval(()=>{ if(!document.hidden) tickOfflineGold(); }, 10000);
 
 <div id="quest-panel" style="display:none;position:fixed;inset:0;z-index:300;align-items:center;justify-content:center;will-change:transform;transform:translateZ(0);">
   <div style="position:absolute;inset:0;background:rgba(0,0,0,0.55);" onclick="closeQuestPanel()"></div>
-  <div id="quest-inner" style="position:relative;z-index:1;width:min(820px,95vw);background:linear-gradient(160deg,#0a1428,#060a18);border:2px solid rgba(80,160,255,0.5);border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,80,0.7);">
+  <div id="quest-inner" style="position:relative;z-index:1;width:min(1020px,95vw);background:linear-gradient(160deg,#0a1428,#060a18);border:2px solid rgba(80,160,255,0.5);border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,80,0.7);">
     <!-- Header -->
     <div style="background:linear-gradient(90deg,#0e1e4a,#1a3a7a,#0e1e4a);padding:22px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(80,160,255,0.3);">
       <div style="font-family:'Cinzel Decorative',serif;font-size:2rem;font-weight:700;color:#a0d0ff;letter-spacing:2px;">📜 Quests</div>
@@ -11841,7 +11848,7 @@ setInterval(()=>{ if(!document.hidden) tickOfflineGold(); }, 10000);
 <div id="tut-float-hint" style="display:none;position:fixed;top:16px;left:50%;transform:translateX(-50%);background:linear-gradient(160deg,#2a1e08,#1a1208);border:1.5px solid rgba(255,200,60,0.55);border-radius:12px;padding:10px 22px;font-family:Cinzel,serif;font-size:0.88rem;font-weight:700;color:#FFE878;box-shadow:0 4px 20px rgba(0,0,0,0.7);z-index:9500;pointer-events:none;white-space:nowrap;animation:tutBounce 0.7s ease-in-out infinite alternate;"></div>
 <div id="expand-panel" style="display:none;position:fixed;inset:0;z-index:300;align-items:center;justify-content:center;will-change:transform;transform:translateZ(0);">
   <div style="position:absolute;inset:0;background:rgba(0,0,0,0.55);" onclick="closeExpandPanel()"></div>
-  <div id="expand-inner" style="position:relative;z-index:1;width:min(700px,95vw);background:linear-gradient(160deg,#0a180a,#060e06);border:2px solid rgba(80,200,80,0.45);border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(0,60,0,0.7);">
+  <div id="expand-inner" style="position:relative;z-index:1;width:min(900px,95vw);background:linear-gradient(160deg,#0a180a,#060e06);border:2px solid rgba(80,200,80,0.45);border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(0,60,0,0.7);">
     <div style="background:linear-gradient(90deg,#0e2a0e,#1a4a1a,#0e2a0e);padding:22px 28px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid rgba(80,200,80,0.25);position:relative;">
       <div style="font-family:'Cinzel Decorative',serif;font-size:1.4rem;font-weight:700;color:#88ee88;letter-spacing:2px;">Expand Island</div>
       <button onclick="closeExpandPanel()" style="position:absolute;right:20px;background:rgba(0,0,0,0.3);border:1px solid rgba(80,200,80,0.3);border-radius:50%;width:42px;height:42px;color:#88ee88;cursor:pointer;font-size:1.3rem;display:flex;align-items:center;justify-content:center;">✕</button>
