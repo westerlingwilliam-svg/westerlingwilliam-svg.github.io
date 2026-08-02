@@ -11205,9 +11205,7 @@ function getBreedingOdds(t1, t2){
   if(combo==='lightning+lightning') return [{type:'thunderlord',pct:3},{type:'lightning',pct:97}];
 
   // Ice + Water → 5% frost
-  if(combo==='ice+water') return [{type:'obsidian', unlock:9, visible:7, cost:156000},
-    {type:'coral',    unlock:9, visible:7, cost:220000},
-    {type:'frost',pct:5},{type:'ice',pct:47.5},{type:'water',pct:47.5}];
+  if(combo==='ice+water') return [{type:'frost',pct:5},{type:'ice',pct:47.5},{type:'water',pct:47.5}];
 
   // 2 of same new special → 10%
   if(t1===t2 && isNewSpecial(t1)) return [{type:t1,pct:10},{type:'mystery',pct:90}];
@@ -11241,6 +11239,7 @@ function getBreedingOdds(t1, t2){
   if(combo==='earth+water') return [{type:'mud',pct:5},{type:'earth',pct:47.5},{type:'water',pct:47.5}];
   if(combo==='earth+fire')  return [{type:'magma',pct:5},{type:'earth',pct:47.5},{type:'fire',pct:47.5}];
   if(combo==='earth+grass') return [{type:'forest',pct:5},{type:'earth',pct:47.5},{type:'grass',pct:47.5}];
+  if(combo==='grass+water') return [{type:'coral',pct:5},{type:'grass',pct:47.5},{type:'water',pct:47.5}];
   if(combo==='lightning+water') return [{type:'storm',pct:5},{type:'lightning',pct:47.5},{type:'water',pct:47.5}];
   if(combo==='fire+lightning') return [{type:'plasma',pct:5},{type:'lightning',pct:47.5},{type:'fire',pct:47.5}];
   if(combo==='earth+lightning') return [{type:'quake',pct:5},{type:'lightning',pct:47.5},{type:'earth',pct:47.5}];
