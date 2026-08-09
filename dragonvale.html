@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-html,body{width:100%;height:100%;overflow:hidden;}
+html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(180deg,#4f9be0 0%,#8ecdf0 55%,#d0eefb 100%);}
 #canvas{display:block;position:fixed;inset:0;}
 #ui{position:fixed;inset:0;pointer-events:none;}
 
@@ -29,6 +29,27 @@ html,body{width:100%;height:100%;overflow:hidden;}
 .res-val.bump{animation:goldbump 0.3s ease-out;}
 @keyframes goldbump{0%{transform:scale(1)}50%{transform:scale(1.25);color:#fff}100%{transform:scale(1)}}
 .res-val.f{color:#88ee66;text-shadow:0 1px 4px rgba(0,0,0,0.8),0 0 12px rgba(60,180,0,0.4);}
+/* Same stone-block mottling as the shop panel (#sh-body), retinted to fit the Account panel's dark blue-gray palette */
+#account-panel::before{content:'';position:absolute;inset:0;pointer-events:none;border-radius:inherit;z-index:0;background:
+    repeating-linear-gradient(0deg,transparent 0,transparent 41px,rgba(0,0,0,0.22) 41px,rgba(0,0,0,0.22) 43px,transparent 43px,transparent 97px,rgba(0,0,0,0.16) 97px,rgba(0,0,0,0.16) 99px),
+    repeating-linear-gradient(90deg,transparent 0,transparent 54px,rgba(0,0,0,0.18) 54px,rgba(0,0,0,0.18) 56px,transparent 56px,transparent 122px,rgba(0,0,0,0.13) 122px,rgba(0,0,0,0.13) 124px),
+    repeating-linear-gradient(0deg,rgba(255,255,255,0.03) 0px,rgba(255,255,255,0.03) 1px,transparent 1px,transparent 42px),
+    repeating-linear-gradient(90deg,rgba(255,255,255,0.025) 0px,rgba(255,255,255,0.025) 1px,transparent 1px,transparent 55px);}
+#account-panel::after{content:'';position:absolute;inset:0;pointer-events:none;border-radius:inherit;z-index:0;background:
+    radial-gradient(circle at 8% 30%, rgba(255,210,80,0.1) 0%, transparent 3%),
+    radial-gradient(circle at 23% 62%, rgba(255,210,80,0.07) 0%, transparent 2.5%),
+    radial-gradient(circle at 41% 18%, rgba(255,210,80,0.08) 0%, transparent 2%),
+    radial-gradient(circle at 58% 70%, rgba(255,210,80,0.06) 0%, transparent 3%),
+    radial-gradient(circle at 72% 35%, rgba(255,210,80,0.07) 0%, transparent 2.5%),
+    radial-gradient(circle at 88% 60%, rgba(255,210,80,0.06) 0%, transparent 3%),
+    radial-gradient(circle at 15% 85%, rgba(0,0,0,0.25) 0%, transparent 1.5%),
+    radial-gradient(circle at 65% 12%, rgba(0,0,0,0.22) 0%, transparent 1.5%),
+    radial-gradient(circle at 92% 88%, rgba(0,0,0,0.25) 0%, transparent 1.5%),
+    radial-gradient(circle at 35% 45%, rgba(0,0,0,0.2) 0%, transparent 1.3%);}
+#account-panel>*{position:relative;z-index:1;}
+#account-panel .panel-close-btn{position:absolute;top:8px;right:8px;width:clamp(30px,3.4vw,40px);height:clamp(30px,3.4vw,40px);border:2.5px solid rgba(0,0,0,0.4);border-radius:50%;background:rgba(0,0,0,0.2);color:#e8dfc8;font-size:clamp(0.85rem,1.2vw,1.1rem);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.18s;box-shadow:inset 0 1px 0 rgba(255,255,255,0.1),inset 0 -2px 3px rgba(0,0,0,0.3);z-index:2;}
+#account-panel .panel-close-btn:hover{background:rgba(0,0,0,0.45);}
+#account-btn:hover{transform:scale(1.06);box-shadow:0 6px 20px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,0.2);}
 #game-title{
   position:absolute;left:50%;top:14px;transform:translateX(-50%);
   font-family:'Cinzel Decorative',serif;
@@ -89,6 +110,25 @@ html,body{width:100%;height:100%;overflow:hidden;}
 }
 #shop-btn::after{content:'';position:absolute;top:3px;left:3px;right:3px;bottom:3px;border-radius:16px;pointer-events:none;border:1px solid rgba(0,0,0,0.25);box-shadow:inset 0 0 10px rgba(0,0,0,0.25);}
 #shop-btn:hover{border-color:rgba(212,175,55,0.9);box-shadow:0 6px 24px rgba(0,0,0,0.6),0 0 24px rgba(212,175,55,0.25);transform:translateY(-2px);}
+#account-btn{position:absolute;pointer-events:all;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,0.22) 0%, transparent 8%),
+    radial-gradient(circle at 68% 30%, rgba(0,0,0,0.18) 0%, transparent 10%),
+    radial-gradient(circle at 35% 70%, rgba(0,0,0,0.22) 0%, transparent 12%),
+    radial-gradient(circle at 78% 75%, rgba(255,255,255,0.1) 0%, transparent 9%),
+    radial-gradient(circle at 50% 50%, rgba(0,0,0,0.12) 0%, transparent 14%),
+    linear-gradient(105deg, transparent 38%, rgba(0,0,0,0.15) 39%, transparent 41%),
+    linear-gradient(20deg, transparent 60%, rgba(0,0,0,0.12) 61%, transparent 63%),
+    linear-gradient(150deg,#9a9286,#6e6658 45%,#3e382c);
+  border:2px solid rgba(212,175,55,0.6);border-radius:clamp(18px,2.2vw,28px);width:clamp(108px,11vw,144px);height:clamp(108px,11vw,144px);padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.15),inset 0 -2px 4px rgba(0,0,0,0.3);transition:all .2s;overflow:hidden;box-sizing:border-box;}
+#account-btn::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:
+    repeating-linear-gradient(115deg, rgba(0,0,0,0.05) 0px, rgba(0,0,0,0.05) 1px, transparent 1px, transparent 4px),
+    repeating-linear-gradient(25deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 5px);
+}
+#account-btn::after{content:'';position:absolute;top:3px;left:3px;right:3px;bottom:3px;border-radius:16px;pointer-events:none;border:1px solid rgba(0,0,0,0.25);box-shadow:inset 0 0 10px rgba(0,0,0,0.25);}
+#account-btn:hover{border-color:rgba(212,175,55,0.9);box-shadow:0 6px 24px rgba(0,0,0,0.6),0 0 24px rgba(212,175,55,0.25);transform:translateY(-2px);}
+#account-btn .label{position:relative;z-index:1;font-family:'Cinzel Decorative',serif;font-size:1.3rem;font-weight:700;color:#FFD700;letter-spacing:1.5px;text-shadow:0 2px 3px rgba(0,0,0,0.6),0 0 8px rgba(255,210,0,0.25);}
 #shop-btn .label{position:relative;z-index:1;font-family:'Cinzel Decorative',serif;font-size:1.3rem;font-weight:700;color:#FFD700;letter-spacing:1.5px;text-shadow:0 2px 3px rgba(0,0,0,0.6),0 0 8px rgba(255,210,0,0.25);}
 #home-btn{pointer-events:all;position:fixed;right:14px;top:50%;transform:translateY(-50%);width:clamp(50px,5vw,66px);height:clamp(50px,5vw,66px);display:flex;align-items:center;justify-content:center;background:rgba(8,5,2,0.82);border:1.5px solid rgba(212,175,55,0.45);border-radius:50%;backdrop-filter:blur(12px);box-shadow:0 3px 14px rgba(0,0,0,0.5);font-size:clamp(1.1rem,1.5vw,1.4rem);text-decoration:none;transition:all .2s;z-index:100;}
 #home-btn:hover{border-color:rgba(212,175,55,0.85);box-shadow:0 4px 18px rgba(0,0,0,0.6),0 0 14px rgba(212,175,55,0.2);transform:translateY(-2px);}
@@ -346,13 +386,13 @@ html,body{width:100%;height:100%;overflow:hidden;}
 #cheat-submit{font-family:Cinzel,serif;font-size:0.8rem;font-weight:700;padding:10px 28px;background:linear-gradient(180deg,#c8920a,#7a5200);border:1.5px solid rgba(255,200,60,0.5);border-radius:20px;color:#fff8e0;cursor:pointer;margin-right:8px;}
 #cheat-cancel{font-family:Cinzel,serif;font-size:0.8rem;padding:10px 20px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,200,60,0.2);border-radius:20px;color:#aaa;cursor:pointer;}
 
-#hatchery-menu{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:300;width:clamp(320px,88vw,1100px);max-height:92vh;overflow-y:visible;background:linear-gradient(180deg,#1e1c18,#2a2820);border:1.5px solid rgba(220,190,120,0.25);border-radius:22px;padding:clamp(16px,2vw,28px) clamp(16px,2vw,28px) clamp(20px,2.5vw,36px);box-shadow:0 8px 60px rgba(0,0,0,0.8);display:none;}
+#hatchery-menu{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:300;width:clamp(320px,88vw,1100px);max-height:92vh;overflow-y:visible;background:linear-gradient(180deg,#1e1c18,#2a2820);border:1.5px solid rgba(220,190,120,0.25);border-radius:22px;padding:clamp(16px,2vw,28px) clamp(16px,2vw,28px) clamp(20px,2.5vw,36px);box-shadow:0 8px 60px rgba(0,0,0,0.8);display:none;font-size:clamp(0.85rem,1.6vw,1.25rem);}
 #hatchery-menu.open{display:block;}
-.hatch-slot{flex:1;background:rgba(0,0,0,0.3);border:1.5px solid rgba(200,170,90,0.2);border-radius:18px;padding:14px 10px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:220px;position:relative;}
+.hatch-slot{flex:1;background:rgba(0,0,0,0.3);border:1.5px solid rgba(200,170,90,0.2);border-radius:18px;padding:0.7em 0.5em;display:flex;flex-direction:column;align-items:center;gap:0.4em;min-height:11em;position:relative;box-sizing:border-box;min-width:0;}
 .hatch-slot.empty{border-style:dashed;opacity:0.5;}
-.hatch-slot canvas{border-radius:10px;}
-.hatch-timer{font-family:Cinzel,serif;font-size:0.75rem;color:rgba(220,200,120,0.8);letter-spacing:1px;}
-.hatch-btn{background:linear-gradient(180deg,#2a9a20,#156010);border:1.5px solid rgba(80,220,60,0.6);color:#fff;font-family:Cinzel,serif;font-size:0.8rem;font-weight:700;padding:9px 0;border-radius:14px;cursor:pointer;width:100%;box-shadow:0 0 14px rgba(60,200,40,0.4);animation:hatchGlow 1s ease-in-out infinite alternate;}
+.hatch-slot canvas{border-radius:10px;width:min(100%,160px);height:auto;}
+.hatch-timer{font-family:Cinzel,serif;font-size:0.75em;color:rgba(220,200,120,0.8);letter-spacing:1px;}
+.hatch-btn{background:linear-gradient(180deg,#2a9a20,#156010);border:1.5px solid rgba(80,220,60,0.6);color:#fff;font-family:Cinzel,serif;font-size:0.8em;font-weight:700;padding:0.45em 0;border-radius:14px;cursor:pointer;width:100%;box-shadow:0 0 14px rgba(60,200,40,0.4);animation:hatchGlow 1s ease-in-out infinite alternate;}
 @keyframes hatchGlow{from{box-shadow:0 0 10px rgba(60,200,40,0.3);}to{box-shadow:0 0 22px rgba(60,220,40,0.7);}}
 
 #quest-list::-webkit-scrollbar{width:6px;}
@@ -365,31 +405,19 @@ html,body{width:100%;height:100%;overflow:hidden;}
   100%{transform:scale(1);box-shadow:0 4px 20px rgba(0,40,120,0.5),0 0 0 0 rgba(220,50,50,0);}
 }
 #quest-btn.quest-ready{animation:questPulse 1.8s ease-in-out infinite;border-color:rgba(220,50,50,0.9)!important;}
-
-#expand-btn{position:absolute;pointer-events:all;
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,255,255,0.18) 0%, transparent 8%),
-    radial-gradient(circle at 68% 30%, rgba(0,0,0,0.15) 0%, transparent 10%),
-    radial-gradient(circle at 35% 70%, rgba(0,0,0,0.2) 0%, transparent 12%),
-    linear-gradient(105deg, transparent 38%, rgba(0,0,0,0.12) 39%, transparent 41%),
-    linear-gradient(150deg,#2a5a2a,#1a3a1a 45%,#0e1e0e);
-  border:2px solid rgba(80,200,80,0.55);border-radius:clamp(18px,2.2vw,28px);
+#relocate-btn{display:none;position:absolute;bottom:clamp(20px,2.5vw,32px);z-index:150;
+  background:radial-gradient(circle at 22% 18%,rgba(255,255,255,0.18) 0%,transparent 8%),
+    radial-gradient(circle at 68% 30%,rgba(0,0,0,0.18) 0%,transparent 10%),
+    linear-gradient(150deg,#4a3218,#2a1a08 60%,#160d04);
+  border:2px solid rgba(255,170,50,0.75);border-radius:clamp(18px,2.2vw,28px);
   width:clamp(108px,11vw,144px);height:clamp(108px,11vw,144px);
-  padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:2px;cursor:pointer;overflow:hidden;box-sizing:border-box;
-  box-shadow:0 4px 20px rgba(0,60,0,0.5),inset 0 1px 0 rgba(255,255,255,0.12),inset 0 -2px 4px rgba(0,0,0,0.3);
-  transition:all .2s;}
-#expand-btn::before{content:'';position:absolute;inset:0;pointer-events:none;
-  background:repeating-linear-gradient(135deg,transparent 0,transparent 6px,rgba(255,255,255,0.025) 6px,rgba(255,255,255,0.025) 7px),
-  radial-gradient(ellipse at 50% 0%,rgba(120,255,120,0.12) 0%,transparent 60%);border-radius:inherit;}
-#expand-btn .label{font-family:'Cinzel',serif;font-size:clamp(1.25rem,1.7vw,1.7rem);font-weight:700;color:#88ee88;letter-spacing:1px;text-shadow:0 1px 4px rgba(0,0,0,0.8);position:relative;z-index:1;line-height:1.2;text-align:center;}
-#expand-btn .icon{font-size:clamp(1.8rem,2.6vw,2.6rem);position:relative;z-index:1;line-height:1;}
-#expand-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,100,0,0.5),inset 0 1px 0 rgba(255,255,255,0.18);}
-
-#news-btn::before{content:'';position:absolute;inset:0;pointer-events:none;
-  background:repeating-linear-gradient(135deg,transparent 0,transparent 6px,rgba(255,255,255,0.025) 6px,rgba(255,255,255,0.025) 7px),
-  radial-gradient(ellipse at 50% 0%,rgba(255,230,80,0.18) 0%,transparent 60%);border-radius:inherit;}
-#news-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(180,120,0,0.6),inset 0 1px 0 rgba(255,240,100,0.2);}
+  padding:0;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  cursor:pointer;overflow:visible;box-sizing:border-box;pointer-events:all;
+  box-shadow:0 4px 20px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.12);
+  animation:questPulse 1.8s ease-in-out infinite;}
+#relocate-btn:hover{transform:translateY(-2px);}
+#relocate-btn .icon{font-size:clamp(1.8rem,2.6vw,2.6rem);position:relative;z-index:1;line-height:1;}
+#relocate-badge{position:absolute;top:-8px;right:-8px;min-width:24px;height:24px;padding:0 5px;border-radius:12px;background:#ff5533;border:2px solid #1a1008;display:flex;align-items:center;justify-content:center;font-family:Cinzel,serif;font-size:0.8rem;font-weight:700;color:#fff;}
 
 .dragon-elem-badge{position:absolute;bottom:6px;left:6px;display:flex;gap:3px;z-index:2;}
 .dragon-elem-badge span{font-size:1rem;line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.8));}
@@ -441,7 +469,6 @@ body.placing #hud>*{pointer-events:none!important;}
 @media (max-width: 700px) { #habitat-menu-content { zoom: 0.6; } }
 @media (max-width: 900px) { #habitat-menu-content { zoom: 0.75; } }
 </style>
-#news-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(180,120,0,0.6);}
 
 </head>
 <body>
@@ -473,20 +500,18 @@ body.placing #hud>*{pointer-events:none!important;}
   <button id="shop-btn" onclick="openShop()">
     <span class="label">SHOP</span>
   </button>
-  <button id="expand-btn" onclick="openExpandPanel()" style="position:absolute;bottom:clamp(20px,2.5vw,32px);right:calc(clamp(20px,2vw,32px) + (clamp(108px,11vw,144px) + 28px)*2);">
-    <span class="label">EXPAND</span>
-  </button>
-  <button id="settings-btn" onclick="openSettingsPanel()" style="position:absolute;bottom:clamp(20px,2.5vw,32px);right:calc(clamp(20px,2vw,32px) + (clamp(108px,11vw,144px) + 28px)*5);background:radial-gradient(circle at 22% 18%,rgba(255,255,255,0.12) 0%,transparent 8%),linear-gradient(150deg,#2a2a2a,#1a1a1a 45%,#0e0e0e);border:2px solid rgba(180,180,180,0.4);border-radius:clamp(18px,2.2vw,28px);width:clamp(108px,11vw,144px);height:clamp(108px,11vw,144px);padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;box-sizing:border-box;pointer-events:all;box-shadow:0 4px 20px rgba(0,0,0,0.4);">
-    <span style="font-size:clamp(2rem,3vw,3rem);">⚙️</span>
-  </button>
-  <button id="news-btn" onclick="openNewsPanel()" style="position:absolute;bottom:clamp(20px,2.5vw,32px);right:calc(clamp(20px,2vw,32px) + (clamp(108px,11vw,144px) + 28px)*3);background:linear-gradient(150deg,#7a5a00,#4a3500 45%,#2a1e00);border:2px solid rgba(220,180,40,0.7);border-radius:clamp(18px,2.2vw,28px);width:clamp(108px,11vw,144px);height:clamp(108px,11vw,144px);padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;box-sizing:border-box;pointer-events:all;">
-    <span style="font-family:Cinzel,serif;font-size:clamp(1.05rem,1.4vw,1.4rem);font-weight:700;color:#ffd860;letter-spacing:1px;text-shadow:0 1px 4px rgba(0,0,0,0.8);">UPDATES</span>
-  </button>
-  <button id="news2-btn" onclick="openNewsPanel2()" style="position:absolute;bottom:clamp(20px,2.5vw,32px);right:calc(clamp(20px,2vw,32px) + (clamp(108px,11vw,144px) + 28px)*4);background:radial-gradient(circle at 22% 18%,rgba(255,255,255,0.18) 0%,transparent 8%),radial-gradient(circle at 68% 30%,rgba(0,0,0,0.15) 0%,transparent 10%),radial-gradient(circle at 35% 70%,rgba(0,0,0,0.2) 0%,transparent 12%),linear-gradient(105deg,transparent 38%,rgba(0,0,0,0.12) 39%,transparent 41%),linear-gradient(150deg,#0a2a4a,#051828 45%,#020e1a);border:2px solid rgba(80,160,255,0.55);border-radius:clamp(18px,2.2vw,28px);width:clamp(108px,11vw,144px);height:clamp(108px,11vw,144px);padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;overflow:hidden;box-sizing:border-box;pointer-events:all;box-shadow:0 4px 20px rgba(0,60,180,0.4),inset 0 1px 0 rgba(100,180,255,0.12),inset 0 -2px 4px rgba(0,0,0,0.3);transition:all .2s;">
+  <button id="news2-btn" onclick="openNewsPanel2()" style="position:absolute;bottom:clamp(20px,2.5vw,32px);right:calc(clamp(20px,2vw,32px) + (clamp(108px,11vw,144px) + 28px)*2);background:radial-gradient(circle at 22% 18%,rgba(255,255,255,0.18) 0%,transparent 8%),radial-gradient(circle at 68% 30%,rgba(0,0,0,0.15) 0%,transparent 10%),radial-gradient(circle at 35% 70%,rgba(0,0,0,0.2) 0%,transparent 12%),linear-gradient(105deg,transparent 38%,rgba(0,0,0,0.12) 39%,transparent 41%),linear-gradient(150deg,#0a2a4a,#051828 45%,#020e1a);border:2px solid rgba(80,160,255,0.55);border-radius:clamp(18px,2.2vw,28px);width:clamp(108px,11vw,144px);height:clamp(108px,11vw,144px);padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;overflow:hidden;box-sizing:border-box;pointer-events:all;box-shadow:0 4px 20px rgba(0,60,180,0.4),inset 0 1px 0 rgba(100,180,255,0.12),inset 0 -2px 4px rgba(0,0,0,0.3);transition:all .2s;">
     <span style="font-family:Cinzel,serif;font-size:clamp(1.25rem,1.7vw,1.7rem);font-weight:700;color:#7ac8ff;letter-spacing:1px;text-shadow:0 0 12px rgba(80,160,255,0.7),0 1px 4px rgba(0,0,0,0.8);position:relative;z-index:1;">NEWS</span>
   </button>
   <button id="quest-btn" onclick="openQuestPanel()" style="position:absolute;bottom:clamp(20px,2.5vw,32px);right:calc(clamp(20px,2vw,32px) + clamp(108px,11vw,144px) + 28px);">
     <span class="label">QUESTS</span>
+  </button>
+  <button id="account-btn" onclick="openAccountPanel()" style="position:absolute;bottom:clamp(20px,2.5vw,32px);right:calc(clamp(20px,2vw,32px) + (clamp(108px,11vw,144px) + 28px)*3);">
+    <span style="font-size:clamp(2rem,3vw,3rem);position:relative;z-index:1;line-height:1;">⚙️</span>
+  </button>
+  <button id="relocate-btn" onclick="openRelocatePanel()" title="Misplaced buildings" style="right:calc(clamp(20px,2vw,32px) + (clamp(108px,11vw,144px) + 28px)*4);">
+    <span class="icon">📍</span>
+    <span id="relocate-badge">0</span>
   </button>
 </div>
 
@@ -508,7 +533,7 @@ body.placing #hud>*{pointer-events:none!important;}
     <div id="sh-tabs">
       <button class="sh-tab active" data-tab="dragons">Dragons</button>
       <button id="sh-tab-habitats" class="sh-tab" data-tab="habitats">Habitats</button>
-      <button class="sh-tab" data-tab="decor">Decor</button>
+      <button class="sh-tab" data-tab="islands">Islands</button>
       <button id="sh-tab-items" class="sh-tab" data-tab="items">Buildings</button>
     </div>
     <div id="sh-body">
@@ -765,20 +790,26 @@ body.placing #hud>*{pointer-events:none!important;}
 
         </div>
       </div>
-      <div class="sh-panel" data-panel="decor" style="display:none">
+      <div class="sh-panel" data-panel="islands" style="display:none">
         <div style="position:relative;">
         <div class="s-divider"><div class="s-line"></div><div class="s-rune">✦ MDCCCXLVII ✦</div><div class="s-line"></div></div>
         <div class="s-pillars">
           <div class="s-pillar"></div><div class="s-pillar"></div><div class="s-pillar"></div>
           <div class="s-pillar"></div><div class="s-pillar"></div><div class="s-pillar"></div>
         </div>
+        </div>
         <div class="s-arch"></div>
 
-        <div class="s-empty">
-          <div class="s-empty-title">Coming Soon</div>
-          <div class="s-empty-text">The merchants are still preparing their wares. Check back soon, dragon tamer.</div>
+        <div class="dragon-grid">
+          <div class="dragon-card">
+            <div class="dragon-card-frame">
+              <canvas class="island-canvas" width="220" height="220"></canvas>
+            </div>
+            <div class="dragon-card-name">New Island</div>
+            <div class="dragon-card-desc">Somewhere beyond the clouds, another floating isle awaits its first dragons.</div>
+            <button id="island-buy-btn" class="dragon-card-buy" onclick="buyIsland()">🔒 Level 20</button>
+          </div>
         </div>
-      </div>
       </div>
       <div class="sh-panel" data-panel="items" style="display:none">
         <div style="position:relative;">
@@ -896,12 +927,730 @@ function drawCloud(x, y, s, a) {
 // ── ISLAND ────────────────────────────────────────────────────────
 function sr(s){const x=Math.sin(s)*43758.5453;return x-Math.floor(x);}
 
+// ══════════════════════════════════════════════════════
+// FLOATING ISLAND ARTWORK (procedural isometric island)
+// Self-contained inside an IIFE so none of its internals collide
+// with the rest of the game. Builds its geometry once, then caches
+// a fully-rendered canvas that the game just stamps down each frame.
+// ══════════════════════════════════════════════════════
+const FloatingIsland = (() => {
+  const TAU = Math.PI * 2;
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
+
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      let t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+
+  const LW = 840, LH = 800;
+  const CX = 420, CY = 330;
+  const R = 400;
+  const NEXP = 3.2;
+  const UX = 0.551, UY = 0.401;
+  const ZT = 400;
+
+  const proj = p => ({ x: CX + (p.x - p.y) * UX, y: CY + (p.x + p.y) * UY - (p.z || 0) });
+
+  const KAM = (() => { const v = [1, 1, 2 * UY]; const n = Math.hypot(v[0], v[1], v[2]);
+    return [v[0]/n, v[1]/n, v[2]/n]; })();
+  const LJUS = (() => { const v = [0.06, 0.60, 0.80]; const n = Math.hypot(v[0], v[1], v[2]);
+    return [v[0]/n, v[1]/n, v[2]/n]; })();
+
+  function skal(a, r) {
+    const c = Math.cos(a), s = Math.sin(a);
+    const k = Math.pow(Math.pow(Math.abs(c), NEXP) + Math.pow(Math.abs(s), NEXP), -1 / NEXP);
+    return { x: R * r * k * c, y: R * r * k * s };
+  }
+  const inneOm = (x, y, m) =>
+    Math.pow(Math.abs(x) / R, NEXP) + Math.pow(Math.abs(y) / R, NEXP) <= Math.pow(m, NEXP);
+
+  const sub = (a, b) => ({ x: a.x - b.x, y: a.y - b.y, z: (a.z||0) - (b.z||0) });
+  const kryss = (a, b) => ({ x: a.y*b.z - a.z*b.y, y: a.z*b.x - a.x*b.z, z: a.x*b.y - a.y*b.x });
+  const prick = (a, b) => a.x*b[0] + a.y*b[1] + a.z*b[2];
+  function normera(v) { const n = Math.hypot(v.x, v.y, v.z) || 1; return { x:v.x/n, y:v.y/n, z:v.z/n }; }
+
+  function normal(pts, ref) {
+    let n = null;
+    for (let i = 2; i < pts.length && !n; i++) {
+      const c = kryss(sub(pts[1], pts[0]), sub(pts[i], pts[0]));
+      if (Math.hypot(c.x, c.y, c.z) > 1e-6) n = normera(c);
+    }
+    if (!n) return { x:0, y:0, z:1 };
+    const mitt = pts.reduce((s,p) => ({ x:s.x+p.x/pts.length, y:s.y+p.y/pts.length, z:s.z+(p.z||0)/pts.length }), {x:0,y:0,z:0});
+    const utat = sub(mitt, ref);
+    if (n.x*utat.x + n.y*utat.y + n.z*utat.z < 0) n = { x:-n.x, y:-n.y, z:-n.z };
+    return n;
+  }
+
+  const STENRAMP = [
+    [0.00, [58, 56, 60]], [0.22, [88, 86, 90]], [0.45, [132, 130, 130]],
+    [0.68, [178, 175, 170]], [0.86, [214, 211, 203]], [1.00, [238, 235, 226]]
+  ];
+  function rampa(t) {
+    t = clamp(t, 0, 1);
+    for (let i = 1; i < STENRAMP.length; i++) {
+      if (t <= STENRAMP[i][0]) {
+        const [p0, c0] = STENRAMP[i-1], [p1, c1] = STENRAMP[i];
+        const f = (t - p0) / (p1 - p0);
+        return [Math.round(lerp(c0[0],c1[0],f)), Math.round(lerp(c0[1],c1[1],f)), Math.round(lerp(c0[2],c1[2],f))];
+      }
+    }
+    return STENRAMP[STENRAMP.length-1][1];
+  }
+  const rgbStr = (c, m = 1, a = 1) =>
+    `rgba(${clamp(Math.round(c[0]*m),0,255)},${clamp(Math.round(c[1]*m),0,255)},${clamp(Math.round(c[2]*m),0,255)},${a})`;
+
+  const BAGE = (() => {
+    const n = 1440, vinklar = [0], langder = [0];
+    let f = skal(0, 1), tot = 0;
+    for (let i = 1; i <= n; i++) {
+      const a = i / n * TAU, p = skal(a, 1);
+      tot += Math.hypot(p.x - f.x, p.y - f.y);
+      f = p; vinklar.push(a); langder.push(tot);
+    }
+    return { vinklar, langder, tot };
+  })();
+  function vidBage(s) {
+    s = ((s % BAGE.tot) + BAGE.tot) % BAGE.tot;
+    let lo = 0, hi = BAGE.langder.length - 1;
+    while (lo < hi - 1) { const m = (lo + hi) >> 1; (BAGE.langder[m] <= s) ? lo = m : hi = m; }
+    const f = (s - BAGE.langder[lo]) / (BAGE.langder[hi] - BAGE.langder[lo] || 1);
+    return lerp(BAGE.vinklar[lo], BAGE.vinklar[hi], f);
+  }
+
+  function byggYta(pts3, ref, seed, extra) {
+    const n = normal(pts3, ref);
+    if (prick(n, KAM) <= 0.02) return null;
+    const sp = pts3.map(proj);
+    let dj = 0;
+    for (const p of pts3) dj += p.x + p.y;
+    const y = { sp, li: clamp(prick(n, LJUS) * 0.5 + 0.5, 0, 1), djup: dj / pts3.length, seed };
+    if (extra) Object.assign(y, extra);
+    return y;
+  }
+
+  function iPolygon(px, py, poly) {
+    let inne = false;
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      const a = poly[i], b = poly[j];
+      if ((a.y > py) !== (b.y > py) && px < (b.x - a.x) * (py - a.y) / (b.y - a.y) + a.x) inne = !inne;
+    }
+    return inne;
+  }
+
+  function gorSprickor(sp, seed, antal) {
+    const rnd = mulberry32(seed), ut = [];
+    let cx = 0, cy = 0;
+    for (const p of sp) { cx += p.x / sp.length; cy += p.y / sp.length; }
+    let area = 0;
+    for (let i = 0; i < sp.length; i++) {
+      const a = sp[i], b = sp[(i + 1) % sp.length];
+      area += a.x * b.y - b.x * a.y;
+    }
+    area = Math.abs(area) / 2;
+    if (area < 90) return ut;
+    for (let i = 0; i < antal; i++) {
+      const e = Math.floor(rnd() * sp.length);
+      const a = sp[e], b = sp[(e + 1) % sp.length];
+      const t = 0.15 + rnd() * 0.7;
+      let x = lerp(a.x, b.x, t), y = lerp(a.y, b.y, t);
+      x += (cx - x) * 0.03; y += (cy - y) * 0.03;
+      let ang = Math.atan2(cy - y, cx - x) + (rnd() - 0.5) * 1.1;
+      const langd = Math.hypot(cx - x, cy - y) * (0.45 + rnd() * 0.8);
+      const seg = 2 + Math.floor(rnd() * 3);
+      const pts = [{ x, y }];
+      for (let s = 0; s < seg; s++) {
+        ang += (rnd() - 0.5) * 0.85;
+        const nx = x + Math.cos(ang) * langd / seg, ny = y + Math.sin(ang) * langd / seg;
+        if (!iPolygon(nx, ny, sp)) break;
+        x = nx; y = ny;
+        pts.push({ x, y });
+      }
+      if (pts.length < 2) continue;
+      const gren = rnd() > 0.55 && pts.length > 2;
+      ut.push({ pts, bredd: 0.9 + rnd() * 1.5 });
+      if (gren) {
+        const start = pts[pts.length - 2];
+        let gx = start.x, gy = start.y, ga = ang + (rnd() > 0.5 ? 1 : -1) * (0.6 + rnd() * 0.7);
+        const gp = [{ x: gx, y: gy }];
+        for (let s = 0; s < 2; s++) {
+          ga += (rnd() - 0.5) * 0.6;
+          const gnx = gx + Math.cos(ga) * langd / seg * 0.6, gny = gy + Math.sin(ga) * langd / seg * 0.6;
+          if (!iPolygon(gnx, gny, sp)) break;
+          gx = gnx; gy = gny;
+          gp.push({ x: gx, y: gy });
+        }
+        if (gp.length > 1) ut.push({ pts: gp, bredd: 0.6 + rnd() * 0.7 });
+      }
+    }
+    return ut;
+  }
+
+  const NRIB = 60;
+  const RINGAR = [
+    { f: 1.000, z: 0,    jit: 0.000, zj: 0 },
+    { f: 0.930, z: -70,  jit: 0.050, zj: 26 },
+    { f: 0.780, z: -160, jit: 0.065, zj: 30 },
+    { f: 0.560, z: -250, jit: 0.075, zj: 30 },
+    { f: 0.330, z: -320, jit: 0.080, zj: 26 },
+    { f: 0.130, z: -372, jit: 0.070, zj: 18 },
+    { f: 0.020, z: -400, jit: 0.030, zj: 6 }
+  ];
+
+  const klippa = (() => {
+    const rnd = mulberry32(4711);
+    const ribb = [], vridning = [];
+    for (let i = 0; i < NRIB; i++) {
+      ribb.push(1 + (rnd() - 0.35) * 0.13 + 0.045 * Math.sin(i * 1.7) + 0.03 * Math.sin(i * 0.6));
+      vridning.push((rnd() - 0.5) * 0.035);
+    }
+    const ringar = RINGAR.map((rg, j) => {
+      const pts = [];
+      for (let i = 0; i < NRIB; i++) {
+        const a = i / NRIB * TAU + vridning[i] * (j > 0 ? 1 : 0);
+        const rj = j === 0 ? 1 : ribb[i] * (1 + (rnd() - 0.5) * rg.jit);
+        const p = skal(a, rg.f * (j === 0 ? 1 : rj));
+        pts.push({ x: p.x, y: p.y, z: rg.z + (j === 0 ? 0 : (rnd() - 0.5) * rg.zj) });
+      }
+      return pts;
+    });
+    const spets = { x: (rnd()-0.5)*12, y: (rnd()-0.5)*12, z: -ZT };
+    const mitt = { x: 0, y: 0, z: -ZT * 0.45 };
+
+    const ytor = [];
+    for (let j = 0; j < ringar.length - 1; j++) {
+      for (let i = 0; i < NRIB; i++) {
+        const i2 = (i + 1) % NRIB;
+        const q = [ringar[j][i], ringar[j][i2], ringar[j+1][i2], ringar[j+1][i]];
+        const y = byggYta(q, mitt, 100 + j * 97 + i * 13);
+        if (y) { y.typ = 'klippa'; ytor.push(y); }
+      }
+    }
+    for (let i = 0; i < NRIB; i++) {
+      const i2 = (i + 1) % NRIB;
+      const sista = ringar[ringar.length - 1];
+      const y = byggYta([sista[i], sista[i2], spets], mitt, 9000 + i * 31);
+      if (y) { y.typ = 'klippa'; ytor.push(y); }
+    }
+    for (const y of ytor) y.sprickor = gorSprickor(y.sp, y.seed + 5, 1 + Math.floor(mulberry32(y.seed)() * 2));
+    ytor.sort((a, b) => a.djup - b.djup);
+    return { ytor, ringar };
+  })();
+
+  const stenar = (() => {
+    const rnd = mulberry32(90210);
+    const ut = [];
+    let nr = 0;
+
+    function gorSten(a, skalning) {
+      const i = nr++;
+      const bas = skal(a, 1);
+      const rd = normera({ x: bas.x, y: bas.y, z: 0 });
+      const td = { x: -rd.y, y: rd.x, z: 0 };
+      const utOff = (-7 + rnd() * 13) * skalning;
+      const c = { x: bas.x + rd.x * utOff, y: bas.y + rd.y * utOff, z: 0 };
+
+      const horn = 5 + Math.floor(rnd() * 2);
+      const bredd = (22 + rnd() * 14) * skalning;
+      const djup = (18 + rnd() * 13) * skalning;
+      const hog = (rnd() < 0.17 ? 52 + rnd() * 30 : 24 + rnd() * 26) * (0.72 + 0.28 * skalning);
+      const lut = (rnd() - 0.3) * 9;
+      const vrid = rnd() * TAU;
+
+      const fot = [], topp = [];
+      const krymp = 0.52 + rnd() * 0.26;
+      for (let j = 0; j < horn; j++) {
+        const b = vrid + j / horn * TAU + (rnd() - 0.5) * 0.34;
+        const rj = 0.78 + rnd() * 0.42;
+        const bx = Math.cos(b) * bredd * rj, by = Math.sin(b) * djup * rj;
+        fot.push({ x: c.x + td.x * bx + rd.x * by, y: c.y + td.y * bx + rd.y * by, z: -6 - rnd() * 8 });
+        const k = krymp * (0.82 + rnd() * 0.36);
+        const tx = bx * k, ty = by * k;
+        topp.push({
+          x: c.x + td.x * tx + rd.x * (ty + lut),
+          y: c.y + td.y * tx + rd.y * (ty + lut),
+          z: hog * (0.80 + rnd() * 0.34)
+        });
+      }
+      const mitt = { x: c.x + rd.x * lut * 0.5, y: c.y + rd.y * lut * 0.5, z: hog * 0.45 };
+      const ytor = [];
+      for (let j = 0; j < horn; j++) {
+        const y = byggYta([fot[j], fot[(j + 1) % horn], topp[(j + 1) % horn], topp[j]],
+                          mitt, 200 + i * 53 + j * 7);
+        if (y) { y.typ = 'sten'; ytor.push(y); }
+      }
+      const yt = byggYta(topp, mitt, 700 + i * 53);
+      if (yt) { yt.typ = 'topp'; ytor.push(yt); }
+      for (const y of ytor) y.sprickor = gorSprickor(y.sp, y.seed + 3, y.typ === 'topp' ? 1 : 2);
+
+      ut.push({
+        ytor,
+        fotSp: fot.map(proj),
+        djup: c.x + c.y,
+        skugga: fot.map(p => proj({ x: c.x + (p.x - c.x) * 1.25, y: c.y + (p.y - c.y) * 1.25, z: 0 }))
+      });
+    }
+
+    const antal = 78;
+    let s = 0;
+    for (let i = 0; i < antal; i++) {
+      s += BAGE.tot / antal * (0.86 + rnd() * 0.28);
+      gorSten(vidBage(s), 1);
+    }
+
+    const prov = 720;
+    for (let i = 0; i < prov; i++) {
+      const a = i / prov * TAU;
+      const p = proj(skal(a, 1));
+      if (ut.some(st => iPolygon(p.x, p.y, st.fotSp))) continue;
+      gorSten(a, 0.88);
+    }
+
+    ut.sort((a, b) => a.djup - b.djup);
+    return ut;
+  })();
+
+  const smasten = (() => {
+    const rnd = mulberry32(31337);
+    const ut = [];
+    for (let i = 0; i < 46; i++) {
+      const a = rnd() * TAU;
+      const bas = skal(a, 0.90 + rnd() * 0.13);
+      const rd = normera({ x: bas.x, y: bas.y, z: 0 });
+      const td = { x: -rd.y, y: rd.x, z: 0 };
+      const stor = 4 + rnd() * 7;
+      const h = stor * (0.7 + rnd() * 0.9);
+      const horn = 4 + Math.floor(rnd() * 2);
+      const fot = [], topp = [];
+      for (let j = 0; j < horn; j++) {
+        const b = j / horn * TAU + rnd() * 0.4, rj = 0.7 + rnd() * 0.6;
+        const bx = Math.cos(b) * stor * rj, by = Math.sin(b) * stor * 0.8 * rj;
+        fot.push({ x: bas.x + td.x*bx + rd.x*by, y: bas.y + td.y*bx + rd.y*by, z: 0 });
+        topp.push({ x: bas.x + td.x*bx*0.6 + rd.x*by*0.6, y: bas.y + td.y*bx*0.6 + rd.y*by*0.6, z: h });
+      }
+      const mitt = { x: bas.x, y: bas.y, z: h * 0.5 };
+      const ytor = [];
+      for (let j = 0; j < horn; j++) {
+        const y = byggYta([fot[j], fot[(j+1)%horn], topp[(j+1)%horn], topp[j]], mitt, 3000 + i*11 + j);
+        if (y) ytor.push(y);
+      }
+      const yt = byggYta(topp, mitt, 3500 + i * 11);
+      if (yt) ytor.push(yt);
+      for (const y of ytor) y.sprickor = [];
+      ut.push({ ytor, djup: bas.x + bas.y });
+    }
+    return ut;
+  })();
+
+  const GRASFARG = ['#5faa2b', '#6cb832', '#79c53b', '#549c26', '#86d047', '#489021'];
+  const BLOMFARG = [
+    ['#fdfdf2', '#f5d13a'], ['#f7e04a', '#e8a021'], ['#f58fc0', '#f7e04a'],
+    ['#c77df0', '#fdfdf2'], ['#7ab6f5', '#f7e04a'], ['#f26d5b', '#f7e04a'],
+    ['#fdfdf2', '#e8846b'], ['#f9a03f', '#fdfdf2']
+  ];
+
+  const gras = (() => {
+    const rnd = mulberry32(1701);
+    const kontur = [];
+    for (let i = 0; i < 288; i++) kontur.push(proj(skal(i / 288 * TAU, 1)));
+
+    const flackar = [];
+    for (let i = 0; i < 190; i++) {
+      let x, y;
+      do { x = (rnd() * 2 - 1) * R; y = (rnd() * 2 - 1) * R; } while (!inneOm(x, y, 0.99));
+      const p = proj({ x, y, z: 0 });
+      const ljus = rnd() > 0.45;
+      flackar.push({
+        x: p.x, y: p.y,
+        r: 26 + rnd() * 96,
+        c: ljus ? [136, 200, 74] : [62, 128, 34],
+        a: 0.05 + rnd() * 0.16
+      });
+    }
+
+    const strdn = [];
+    for (let i = 0; i < 6000; i++) {
+      let x, y;
+      do { x = (rnd() * 2 - 1) * R; y = (rnd() * 2 - 1) * R; } while (!inneOm(x, y, 0.982));
+      const p = proj({ x, y, z: 0 });
+      const nara = 0.72 + 0.5 * ((p.y - (CY - 260)) / 520);
+      const h = (4 + rnd() * 6.5) * nara;
+      const lut = (rnd() - 0.5) * 1.15;
+      const tx = p.x + Math.sin(lut) * h * 0.85, ty = p.y - Math.cos(lut) * h;
+      strdn.push({
+        x: p.x, y: p.y, tx, ty,
+        cx: p.x + Math.sin(lut) * h * 0.22, cy: p.y - h * 0.55,
+        w: 0.55 + rnd() * 0.5,
+        k: Math.floor(rnd() * GRASFARG.length)
+      });
+    }
+
+    const blommor = [];
+    for (let i = 0; i < 105; i++) {
+      let x, y;
+      do { x = (rnd() * 2 - 1) * R; y = (rnd() * 2 - 1) * R; } while (!inneOm(x, y, 0.93));
+      const p = proj({ x, y, z: 0 });
+      const par = BLOMFARG[Math.floor(rnd() * BLOMFARG.length)];
+      blommor.push({
+        x: p.x, y: p.y - 1.5,
+        r: (2.1 + rnd() * 1.5) * (0.8 + 0.4 * ((p.y - (CY - 260)) / 520)),
+        rot: rnd() * TAU, c: par[0], cc: par[1], n: rnd() > 0.25 ? 5 : 6
+      });
+    }
+
+    const prickar = [];
+    for (let i = 0; i < 240; i++) {
+      let x, y;
+      do { x = (rnd() * 2 - 1) * R; y = (rnd() * 2 - 1) * R; } while (!inneOm(x, y, 0.95));
+      const p = proj({ x, y, z: 0 });
+      prickar.push({ x: p.x, y: p.y, r: 0.9 + rnd() * 1.6,
+        c: rnd() > 0.5 ? 'rgba(41,74,24,0.85)' : 'rgba(30,54,20,0.7)' });
+    }
+
+    const tofsar = [];
+    for (let i = 0; i < 150; i++) {
+      const a = i / 150 * TAU + rnd() * 0.02;
+      const p = proj(skal(a, 0.995 + rnd() * 0.02));
+      tofsar.push({ x: p.x, y: p.y, s: 4 + rnd() * 5, lut: (rnd() - 0.5) * 0.7,
+        k: Math.floor(rnd() * GRASFARG.length) });
+    }
+
+    return { kontur, flackar, strdn, blommor, prickar, tofsar };
+  })();
+
+  function laggTillKorn(ytor) {
+    for (const y of ytor) {
+      const rnd = mulberry32(y.seed + 77);
+      let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+      for (const p of y.sp) { x0 = Math.min(x0, p.x); y0 = Math.min(y0, p.y); x1 = Math.max(x1, p.x); y1 = Math.max(y1, p.y); }
+      const korn = [];
+      const mal = Math.min(26, Math.round((x1 - x0) * (y1 - y0) / 120));
+      let forsok = 0;
+      while (korn.length < mal && forsok++ < mal * 8) {
+        const px = x0 + rnd() * (x1 - x0), py = y0 + rnd() * (y1 - y0);
+        if (!iPolygon(px, py, y.sp)) continue;
+        korn.push({ x: px, y: py, r: 0.35 + rnd() * 0.9, l: rnd() > 0.45 });
+      }
+      y.korn = korn;
+    }
+  }
+  laggTillKorn(klippa.ytor);
+  for (const s of stenar) laggTillKorn(s.ytor);
+
+  function bana(ctx, sp) {
+    ctx.beginPath();
+    ctx.moveTo(sp[0].x, sp[0].y);
+    for (let i = 1; i < sp.length; i++) ctx.lineTo(sp[i].x, sp[i].y);
+    ctx.closePath();
+  }
+  function ruta(y) {
+    if (!y.bb) {
+      let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+      for (const p of y.sp) { x0 = Math.min(x0,p.x); y0 = Math.min(y0,p.y); x1 = Math.max(x1,p.x); y1 = Math.max(y1,p.y); }
+      y.bb = { x0, y0, x1, y1 };
+    }
+    return y.bb;
+  }
+  const syns = (bb, vis) => !(bb.x1 < vis.x0 || bb.x0 > vis.x1 || bb.y1 < vis.y0 || bb.y0 > vis.y1);
+
+  function ritaYta(ctx, y, skala, vis) {
+    const bb = ruta(y);
+    if (!syns(bb, vis)) return;
+    const c = rampa(y.li);
+
+    bana(ctx, y.sp);
+    if (!y.grad || y.gradCtx !== ctx) {
+      const g = ctx.createLinearGradient(bb.x0, bb.y0, bb.x1 * 0.25 + bb.x0 * 0.75, bb.y1);
+      g.addColorStop(0, rgbStr(c, 1.11));
+      g.addColorStop(0.55, rgbStr(c, 1.0));
+      g.addColorStop(1, rgbStr(c, 0.84));
+      y.grad = g; y.gradCtx = ctx;
+    }
+    ctx.fillStyle = y.grad;
+    ctx.fill();
+
+    ctx.strokeStyle = `rgba(44,42,47,${0.26 + 0.26 * (1 - y.li)})`;
+    ctx.lineWidth = 1.0;
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+
+    let bi = 0, bmy = Infinity;
+    for (let i = 0; i < y.sp.length; i++) {
+      const a = y.sp[i], b = y.sp[(i + 1) % y.sp.length];
+      const my = (a.y + b.y) / 2;
+      if (my < bmy) { bmy = my; bi = i; }
+    }
+    const a1 = y.sp[bi], b1 = y.sp[(bi + 1) % y.sp.length];
+    ctx.beginPath();
+    ctx.moveTo(a1.x, a1.y); ctx.lineTo(b1.x, b1.y);
+    ctx.strokeStyle = `rgba(255,254,246,${0.14 + 0.30 * y.li})`;
+    ctx.lineWidth = 1.3; ctx.lineCap = 'round';
+    ctx.stroke();
+
+    if (skala > 3.2 && y.korn && y.korn.length) {
+      for (const k of y.korn) {
+        ctx.beginPath();
+        ctx.arc(k.x, k.y, k.r, 0, TAU);
+        ctx.fillStyle = k.l ? 'rgba(255,253,246,0.30)' : 'rgba(52,50,54,0.26)';
+        ctx.fill();
+      }
+    }
+
+    if (skala > 0.75 && y.sprickor && y.sprickor.length) {
+      for (const s of y.sprickor) {
+        ctx.beginPath();
+        ctx.moveTo(s.pts[0].x + 1.0, s.pts[0].y + 1.0);
+        for (let i = 1; i < s.pts.length; i++) ctx.lineTo(s.pts[i].x + 1.0, s.pts[i].y + 1.0);
+        ctx.strokeStyle = 'rgba(255,255,250,0.22)';
+        ctx.lineWidth = s.bredd * 0.85; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(s.pts[0].x, s.pts[0].y);
+        for (let i = 1; i < s.pts.length; i++) ctx.lineTo(s.pts[i].x, s.pts[i].y);
+        ctx.strokeStyle = `rgba(44,42,46,${0.42 + 0.2 * (1 - y.li)})`;
+        ctx.lineWidth = s.bredd;
+        ctx.stroke();
+      }
+    }
+  }
+
+  function ritaGras(ctx, skala, vis) {
+    const k = gras.kontur;
+    ctx.save();
+    bana(ctx, k);
+    ctx.clip();
+
+    if (!ritaGras.grad || ritaGras.gradCtx !== ctx) {
+      const g = ctx.createRadialGradient(CX - 60, CY - 70, 30, CX - 20, CY - 20, 520);
+      g.addColorStop(0, '#82c93e');
+      g.addColorStop(0.45, '#6cb832');
+      g.addColorStop(0.82, '#57a428');
+      g.addColorStop(1, '#478d22');
+      ritaGras.grad = g; ritaGras.gradCtx = ctx;
+    }
+    ctx.fillStyle = ritaGras.grad;
+    ctx.fillRect(CX - 470, CY - 330, 940, 680);
+
+    for (const f of gras.flackar) {
+      if (f.x + f.r < vis.x0 || f.x - f.r > vis.x1 || f.y + f.r < vis.y0 || f.y - f.r > vis.y1) continue;
+      if (!f.grad || f.gradCtx !== ctx) {
+        const rg = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r);
+        rg.addColorStop(0, `rgba(${f.c[0]},${f.c[1]},${f.c[2]},${f.a})`);
+        rg.addColorStop(1, `rgba(${f.c[0]},${f.c[1]},${f.c[2]},0)`);
+        f.grad = rg; f.gradCtx = ctx;
+      }
+      ctx.fillStyle = f.grad;
+      ctx.fillRect(f.x - f.r, f.y - f.r, f.r * 2, f.r * 2);
+    }
+
+    bana(ctx, k);
+    ctx.strokeStyle = 'rgba(38,74,22,0.34)';
+    ctx.lineWidth = 34; ctx.lineJoin = 'round';
+    ctx.stroke();
+    bana(ctx, k);
+    ctx.strokeStyle = 'rgba(30,60,18,0.30)';
+    ctx.lineWidth = 12;
+    ctx.stroke();
+
+    const antal = skala < 1.4 ? 1600 : skala < 2.4 ? 2800 : skala < 4.0 ? 4400 : 6000;
+    const s = gras.strdn;
+    for (let b = 0; b < GRASFARG.length; b++) {
+      ctx.beginPath();
+      let n = 0;
+      for (let i = 0; i < antal; i++) {
+        const d = s[i];
+        if (d.k !== b) continue;
+        if (d.x < vis.x0 - 12 || d.x > vis.x1 + 12 || d.y < vis.y0 - 14 || d.y > vis.y1 + 14) continue;
+        ctx.moveTo(d.x - d.w, d.y);
+        ctx.quadraticCurveTo(d.cx - d.w * 0.5, d.cy, d.tx, d.ty);
+        ctx.quadraticCurveTo(d.cx + d.w * 0.5, d.cy, d.x + d.w, d.y);
+        ctx.closePath();
+        n++;
+      }
+      if (n) { ctx.fillStyle = GRASFARG[b]; ctx.fill(); }
+    }
+
+    for (const p of gras.prickar) {
+      if (p.x < vis.x0 || p.x > vis.x1 || p.y < vis.y0 || p.y > vis.y1) continue;
+      ctx.beginPath();
+      ctx.ellipse(p.x, p.y, p.r * 1.3, p.r, 0, 0, TAU);
+      ctx.fillStyle = p.c;
+      ctx.fill();
+    }
+
+    for (const f of gras.blommor) {
+      if (f.x < vis.x0 - 6 || f.x > vis.x1 + 6 || f.y < vis.y0 - 6 || f.y > vis.y1 + 6) continue;
+      if (skala * f.r < 2.6) {
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, f.r * 0.95, 0, TAU);
+        ctx.fillStyle = f.c;
+        ctx.fill();
+        continue;
+      }
+      ctx.beginPath();
+      ctx.ellipse(f.x + 0.5, f.y + f.r * 0.7, f.r * 1.05, f.r * 0.5, 0, 0, TAU);
+      ctx.fillStyle = 'rgba(34,68,20,0.28)';
+      ctx.fill();
+      for (let i = 0; i < f.n; i++) {
+        const a = f.rot + i / f.n * TAU;
+        ctx.beginPath();
+        ctx.ellipse(f.x + Math.cos(a) * f.r * 0.62, f.y + Math.sin(a) * f.r * 0.52,
+                    f.r * 0.52, f.r * 0.40, a, 0, TAU);
+        ctx.fillStyle = f.c;
+        ctx.fill();
+      }
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.r * 0.34, 0, TAU);
+      ctx.fillStyle = f.cc;
+      ctx.fill();
+    }
+    ctx.restore();
+
+    for (const t of gras.tofsar) {
+      if (t.x < vis.x0 - 10 || t.x > vis.x1 + 10 || t.y < vis.y0 - 12 || t.y > vis.y1 + 12) continue;
+      ctx.save();
+      ctx.translate(t.x, t.y); ctx.rotate(t.lut);
+      ctx.beginPath();
+      for (let i = -1; i <= 1; i++) {
+        const h = t.s * (1 - Math.abs(i) * 0.3);
+        ctx.moveTo(i * t.s * 0.3 - 0.7, 1);
+        ctx.quadraticCurveTo(i * t.s * 0.4, -h * 0.6, i * t.s * 0.7, -h);
+        ctx.quadraticCurveTo(i * t.s * 0.15, -h * 0.5, i * t.s * 0.3 + 0.7, 1);
+        ctx.closePath();
+      }
+      ctx.fillStyle = GRASFARG[t.k];
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  function ritaBase(ctx, skala, vis) {
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'butt';
+    for (const y of klippa.ytor) ritaYta(ctx, y, skala, vis);
+    ritaGras(ctx, skala, vis);
+  }
+
+  function ritaBorderRocks(ctx, skala, vis) {
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'butt';
+    const alla = ritaScen.alla || (ritaScen.alla =
+      [...stenar, ...smasten].sort((a, b) => a.djup - b.djup));
+
+    for (const s of alla) {
+      if (s.skugga) {
+        ctx.save();
+        ctx.shadowColor = 'rgba(26,54,16,0.55)';
+        ctx.shadowBlur = 9;
+        ctx.shadowOffsetY = 3;
+        bana(ctx, s.skugga);
+        ctx.fillStyle = 'rgba(26,54,16,0.5)';
+        ctx.fill();
+        ctx.restore();
+      }
+      for (const y of s.ytor) ritaYta(ctx, y, skala, vis);
+    }
+  }
+
+  function ritaScen(ctx, skala, vis) {
+    ritaBase(ctx, skala, vis);
+    ritaBorderRocks(ctx, skala, vis);
+  }
+
+  // Grass bounding box within the LW×LH logical canvas (precomputed —
+  // used by the game to line the play grid up exactly with the grass)
+  const GRASS_BBOX = { x0: 65.048, y0: 71.677, x1: 774.952, y1: 588.323 };
+
+  let _cache = null;
+  function getCanvas(scale) {
+    scale = scale || 2;
+    if (_cache && _cache.scale === scale) return _cache.canvas;
+    const c = document.createElement('canvas');
+    c.width = Math.round(LW * scale);
+    c.height = Math.round(LH * scale);
+    const cctx = c.getContext('2d');
+    cctx.setTransform(scale, 0, 0, scale, 0, 0);
+    ritaScen(cctx, scale, { x0: -20, y0: -20, x1: LW + 20, y1: LH + 20 });
+    _cache = { canvas: c, scale };
+    return c;
+  }
+
+  // Base layer only (rock underside + grass, no border rocks) — used so the
+  // game can sandwich its placement-grid overlay between the base and the
+  // border rocks, instead of the grid lines cutting across rocks that
+  // visually poke up above the flat grass line.
+  let _baseCache = null;
+  function getBaseCanvas(scale) {
+    scale = scale || 2;
+    if (_baseCache && _baseCache.scale === scale) return _baseCache.canvas;
+    const c = document.createElement('canvas');
+    c.width = Math.round(LW * scale);
+    c.height = Math.round(LH * scale);
+    const cctx = c.getContext('2d');
+    cctx.setTransform(scale, 0, 0, scale, 0, 0);
+    ritaBase(cctx, scale, { x0: -20, y0: -20, x1: LW + 20, y1: LH + 20 });
+    _baseCache = { canvas: c, scale };
+    return c;
+  }
+
+  // Border rocks only, on a transparent canvas — drawn by the game on top
+  // of its grid overlay so the rocks always appear in front of the grid.
+  let _rocksCache = null;
+  function getBorderRocksCanvas(scale) {
+    scale = scale || 2;
+    if (_rocksCache && _rocksCache.scale === scale) return _rocksCache.canvas;
+    const c = document.createElement('canvas');
+    c.width = Math.round(LW * scale);
+    c.height = Math.round(LH * scale);
+    const cctx = c.getContext('2d');
+    cctx.setTransform(scale, 0, 0, scale, 0, 0);
+    ritaBorderRocks(cctx, scale, { x0: -20, y0: -20, x1: LW + 20, y1: LH + 20 });
+    _rocksCache = { canvas: c, scale };
+    return c;
+  }
+
+  // Point-in-polygon test against the actual grass contour (not just its
+  // bounding box) — nx,ny are normalized 0..1 coordinates within the
+  // GRASS_BBOX rectangle (i.e. the same rectangle the game stretches to
+  // fill its placement grid). Lets the game reject grid cells that fall
+  // in a rounded-off corner where there's no grass, just open sky.
+  function isGrass(nx, ny){
+    const px = GRASS_BBOX.x0 + nx*(GRASS_BBOX.x1-GRASS_BBOX.x0);
+    const py = GRASS_BBOX.y0 + ny*(GRASS_BBOX.y1-GRASS_BBOX.y0);
+    return iPolygon(px, py, gras.kontur);
+  }
+
+  return { getCanvas, getBaseCanvas, getBorderRocksCanvas, LW, LH, GRASS_BBOX, isGrass, getGrassContour: () => gras.kontur };
+})();
+
+let _cloudSeeds=null;
+const CLOUD_WRAP_W = 10000; // wide enough to cover the extended pan range once a second island is owned
+function _initClouds(){
+  if(_cloudSeeds) return;
+  _cloudSeeds=[];
+  for(let i=0;i<26;i++){
+    _cloudSeeds.push({
+      wx: (Math.random()-0.5)*CLOUD_WRAP_W,  // world-space X position
+      wy: -950 + Math.random()*700,          // world-space Y position (up in the sky, above the island)
+      s: 70+Math.random()*130,               // bigger clouds
+      speed: 0.6+Math.random()*1.4,          // much slower drift
+      seed: Math.random()*1000
+    });
+  }
+}
+
 function drawIsland(W, H, cam) {
   const cx = W/2 + cam.x;
   const cy = H/2 + cam.y;
   const z = cam.zoom;
 
-  const gridCols = game.expansions ? 36 : 18;
+  const gridCols = ISLAND_GRID_COLS;
   const gridSize = 18;
   const cellSize = 64 * z;
   const playW = gridCols * cellSize;
@@ -909,104 +1658,108 @@ function drawIsland(W, H, cam) {
   const left = cx - playW/2, top = cy - playH/2;
   const right = cx + playW/2, bot = cy + playH/2;
 
-  // ── FOREST FLOOR BASE (solid dark fill — fully covered by pattern below, no gradient math needed) ──
-  ctx.fillStyle = '#16240e';
-  ctx.fillRect(0, 0, W, H);
+  // ── SKY BACKGROUND ──
+  const skyG = ctx.createLinearGradient(0,0,0,H);
+  skyG.addColorStop(0,'#4f9be0');
+  skyG.addColorStop(0.55,'#8ecdf0');
+  skyG.addColorStop(1,'#d0eefb');
+  ctx.fillStyle = skyG;
+  ctx.fillRect(0,0,W,H);
 
-  // ── TREES: seamless tiled pattern covers the whole forest, including right up to the wall ──
-  drawForestPattern(W, H, cam, left, top, right, bot);
-
-    // ── STONE BORDER WALL (richer, more ornate) ──
-  const wallT = 14 * z;
-
-  // Outer shadow
-  ctx.fillStyle = 'rgba(0,0,0,0.35)';
-  ctx.fillRect(left-wallT-3, top-wallT-3, playW+wallT*2+6, playH+wallT*2+6);
-
-  // Base wall slab with gradient
-  const wallG = ctx.createLinearGradient(left-wallT, top-wallT, right+wallT, bot+wallT);
-  wallG.addColorStop(0, '#7a7264');
-  wallG.addColorStop(0.5, '#5e5648');
-  wallG.addColorStop(1, '#3a3428');
-  ctx.fillStyle = wallG;
-  ctx.fillRect(left-wallT, top-wallT, playW+wallT*2, playH+wallT*2);
-
-  // Inner shadow (where wall meets grass)
-  ctx.strokeStyle = 'rgba(0,0,0,0.4)'; ctx.lineWidth = 3*z;
-  ctx.strokeRect(left+1, top+1, playW-2, playH-2);
-
-  // Stone block pattern along the wall (proper masonry, not just dots)
-  const blockSize = 18*z;
-  function drawWallBlocks(x0,y0,wL,hL,horizontal){
-    const n = horizontal ? Math.ceil(wL/blockSize) : Math.ceil(hL/blockSize);
-    for(let i=0;i<n;i++){
-      const t=i/n;
-      const bx = horizontal ? x0+i*blockSize : x0;
-      const by = horizontal ? y0 : y0+i*blockSize;
-      const bw = horizontal ? blockSize : wL;
-      const bh = horizontal ? hL : blockSize;
-      const seed = sr(Math.round(bx*0.3)*13+Math.round(by*0.3)*17+5000);
-      const light = sr(Math.round(bx*0.3)*7+Math.round(by*0.3)*23+5000);
-      ctx.fillStyle = `hsl(32,${10+light*8}%,${30+light*22}%)`;
-      ctx.beginPath();
-      ctx.roundRect(bx+1.5, by+1.5, bw-3, bh-3, 2.5*z);
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 0.8;
-      ctx.stroke();
-      // highlight
-      ctx.fillStyle = `rgba(255,255,255,${(0.04+light*0.06)||0})`;
-      ctx.beginPath();
-      ctx.roundRect(bx+2, by+2, bw*0.5, bh*0.3, 2*z);
-      ctx.fill();
-    }
-  }
-  drawWallBlocks(left-wallT, top-wallT, playW+wallT*2, wallT, true);   // top
-  drawWallBlocks(left-wallT, bot, playW+wallT*2, wallT, true);          // bottom
-  drawWallBlocks(left-wallT, top, wallT, playH, false);                 // left
-  drawWallBlocks(right, top, wallT, playH, false);                      // right
-
-  // Corner towers (small decorative stone pillars)
-  [[left-wallT,top-wallT],[right,top-wallT],[left-wallT,bot],[right,bot]].forEach(([px,py])=>{
-    const cG = _safeRG(ctx,px+wallT*0.3,py+wallT*0.3,0,px+wallT*0.5,py+wallT*0.5,wallT*0.9);
-    cG.addColorStop(0,'#8a8272'); cG.addColorStop(1,'#48422e');
-    ctx.fillStyle=cG;
-    ctx.beginPath(); ctx.roundRect(px,py,wallT,wallT,3*z); ctx.fill();
-    ctx.strokeStyle='rgba(0,0,0,0.3)'; ctx.lineWidth=1; ctx.stroke();
-  });
-
-  // Outer rim highlight
-  ctx.strokeStyle='rgba(220,210,190,0.3)'; ctx.lineWidth=1.5*z;
-  ctx.strokeRect(left-wallT+1, top-wallT+1, playW+wallT*2-2, playH+wallT*2-2);
-
-  // ── GRASS PLAY AREA — untouched logic, just keep as is ──
+  // ── DRIFTING CLOUDS — anchored to world space (same cx/cy/zoom as the
+  //    island) so panning or zooming the camera moves them exactly like
+  //    the island, instead of staying fixed on the screen ──
+  _initClouds();
+  const t = performance.now()/1000;
   ctx.save();
-  ctx.beginPath(); ctx.rect(left, top, playW, playH); ctx.clip();
+  ctx.globalAlpha=0.88;
+  ctx.fillStyle='#ffffff';
+  const wrapW = CLOUD_WRAP_W;
+  _cloudSeeds.forEach(cl=>{
+    const wx = (((cl.wx + t*cl.speed*20) % wrapW) + wrapW) % wrapW - wrapW/2;
+    const x = cx + wx*z;
+    const y = cy + cl.wy*z;
+    const s = cl.s*z;
+    [[-1,0,1],[-0.4,-0.3,0.85],[0.3,-0.35,0.95],[0.9,-0.05,0.75],[0.1,0.15,1.1]].forEach(([dx,dy,dr])=>{
+      ctx.beginPath();
+      ctx.ellipse(x+dx*s, y+dy*s*0.6, s*dr*0.55, s*dr*0.36, 0, 0, Math.PI*2);
+      ctx.fill();
+    });
+  });
+  ctx.restore();
 
-  const gG = ctx.createLinearGradient(left, top, right, bot);
-  gG.addColorStop(0,'#5cc82c'); gG.addColorStop(0.5,'#4ab420'); gG.addColorStop(1,'#388a16');
-  ctx.fillStyle = gG; ctx.fillRect(left, top, playW, playH);
+  // ── FLOATING ISLAND — cached procedural artwork, scaled so its grass
+  //    lines up exactly with the existing placement grid. The rocky
+  //    underside naturally hangs below/around the grid, giving the
+  //    "floating island" silhouette against the sky. Rendered in two
+  //    layers (base, then border rocks) with the grid overlay sandwiched
+  //    between them, so the grid lines never cut across a rock that
+  //    visually pokes up above the flat grass line. ──
+  const islandBase = FloatingIsland.getBaseCanvas(2);
+  const bb = FloatingIsland.GRASS_BBOX;
+  const grassW = bb.x1-bb.x0, grassH = bb.y1-bb.y0;
+  const scaleX = playW/grassW, scaleY = playH/grassH;
+  const destX = left - bb.x0*scaleX;
+  const destY = top - bb.y0*scaleY;
+  ctx.drawImage(islandBase, destX, destY, FloatingIsland.LW*scaleX, FloatingIsland.LH*scaleY);
 
-  for(let gy=0; gy<gridSize; gy++){
-    for(let gx=0; gx<gridCols; gx++){
-      if((gx+gy)%2===0){
-        ctx.fillStyle='rgba(255,255,255,0.025)';
-        ctx.fillRect(left+gx*cellSize, top+gy*cellSize, cellSize, cellSize);
-      }
-    }
+  // ── SECOND ISLAND — purchased separately in the shop (Islands tab).
+  //    Purely decorative for now, sits up and slightly over to the right
+  //    of the main island (closer/higher, staggered rather than dead
+  //    level with it), matching its scale so it reads as the same world. ──
+  let destX2=0, destY2=0, _hasSecondIsland=(game.islands||0)>=1;
+  if(_hasSecondIsland){
+    const gap = SECOND_ISLAND_GAP_X*z;
+    const yOff = SECOND_ISLAND_OFFSET_Y*z;
+    destX2 = right + gap - bb.x0*scaleX;
+    destY2 = destY + yOff;
+    ctx.drawImage(islandBase, destX2, destY2, FloatingIsland.LW*scaleX, FloatingIsland.LH*scaleY);
   }
-  ctx.strokeStyle='rgba(0,0,0,0.04)'; ctx.lineWidth=1;
+
+  // ── Subtle grid overlay — clipped to the actual grass contour, not the
+  //    rectangle, so lines never show up over the rocky border ──
+  ctx.save();
+  const _kontur = FloatingIsland.getGrassContour();
+  ctx.beginPath();
+  ctx.moveTo(destX + _kontur[0].x*scaleX, destY + _kontur[0].y*scaleY);
+  for(let i=1;i<_kontur.length;i++) ctx.lineTo(destX + _kontur[i].x*scaleX, destY + _kontur[i].y*scaleY);
+  ctx.closePath();
+  ctx.clip();
+  ctx.strokeStyle='rgba(0,0,0,0.07)'; ctx.lineWidth=1;
   for(let gx=0;gx<=gridCols;gx++){
     ctx.beginPath(); ctx.moveTo(left+gx*cellSize, top); ctx.lineTo(left+gx*cellSize, bot); ctx.stroke();
   }
   for(let gy=0;gy<=gridSize;gy++){
     ctx.beginPath(); ctx.moveTo(left, top+gy*cellSize); ctx.lineTo(right, top+gy*cellSize); ctx.stroke();
   }
-
-  const sg = _safeRG(ctx,left+playW*0.3, top+playH*0.25, 0, cx, cy, playW*0.7);
-  sg.addColorStop(0,'rgba(180,255,90,0.18)'); sg.addColorStop(1,'transparent');
-  ctx.fillStyle=sg; ctx.fillRect(left,top,playW,playH);
-
   ctx.restore();
+}
+
+// Draws just the rocky border that runs along the island's edge — called
+// separately, AFTER buildings and habitats but BEFORE the status-bubble
+// popups, so anything placed near the edge tucks naturally behind the
+// rocks/grass edge instead of floating unnaturally on top of them, while
+// the popups themselves still always show up in front of everything.
+function drawIslandBorderRocks(W, H, cam) {
+  const cx = W/2 + cam.x, cy = H/2 + cam.y, z = cam.zoom;
+  const gridCols = ISLAND_GRID_COLS, gridSize = 18, cellSize = 64*z;
+  const playW = gridCols*cellSize, playH = gridSize*cellSize;
+  const left = cx-playW/2, top = cy-playH/2, right = cx+playW/2;
+
+  const islandRocks = FloatingIsland.getBorderRocksCanvas(2);
+  const bb = FloatingIsland.GRASS_BBOX;
+  const grassW = bb.x1-bb.x0, grassH = bb.y1-bb.y0;
+  const scaleX = playW/grassW, scaleY = playH/grassH;
+  const destX = left - bb.x0*scaleX;
+  const destY = top - bb.y0*scaleY;
+  ctx.drawImage(islandRocks, destX, destY, FloatingIsland.LW*scaleX, FloatingIsland.LH*scaleY);
+
+  if((game.islands||0)>=1){
+    const gap = SECOND_ISLAND_GAP_X*z, yOff = SECOND_ISLAND_OFFSET_Y*z;
+    const destX2 = right + gap - bb.x0*scaleX;
+    const destY2 = destY + yOff;
+    ctx.drawImage(islandRocks, destX2, destY2, FloatingIsland.LW*scaleX, FloatingIsland.LH*scaleY);
+  }
 }
 
 
@@ -1313,6 +2066,7 @@ function mixColor(hex, hex2, t) {
 // ── CAMERA ───────────────────────────────────────────────────────
 const cam = { x: 0, y: 0, zoom: 1.0, vx: 0, vy: 0 };
 const CAM_ZOOM_MIN = 0.35, CAM_ZOOM_MAX = 2.0;
+function getCamZoomMin(){ return (game.islands||0)>=1 ? 0.16 : CAM_ZOOM_MIN; }
 
 // Mouse/touch drag
 let dragStartX=0, dragStartY=0, isDragging=false;
@@ -1342,7 +2096,7 @@ canvas.addEventListener('wheel', e=>{
   const factor=e.deltaY>0?0.92:1.09;
   const beforeX=(e.clientX-W/2-cam.x)/cam.zoom;
   const beforeY=(e.clientY-H/2-cam.y)/cam.zoom;
-  cam.zoom=Math.max(CAM_ZOOM_MIN, Math.min(CAM_ZOOM_MAX, cam.zoom*factor));
+  cam.zoom=Math.max(getCamZoomMin(), Math.min(CAM_ZOOM_MAX, cam.zoom*factor));
   cam.x=e.clientX-W/2-beforeX*cam.zoom;
   cam.y=e.clientY-H/2-beforeY*cam.zoom;
 },{passive:false});
@@ -1379,7 +2133,7 @@ canvas.addEventListener('touchmove',e=>{
       const pcy=(e.touches[0].clientY+e.touches[1].clientY)/2;
       const bx=(pcx-W/2-cam.x)/cam.zoom;
       const by=(pcy-H/2-cam.y)/cam.zoom;
-      cam.zoom=Math.max(CAM_ZOOM_MIN,Math.min(CAM_ZOOM_MAX,cam.zoom*factor));
+      cam.zoom=Math.max(getCamZoomMin(),Math.min(CAM_ZOOM_MAX,cam.zoom*factor));
       cam.x=pcx-W/2-bx*cam.zoom;
       cam.y=pcy-H/2-by*cam.zoom;
     }
@@ -1394,9 +2148,11 @@ let off = 0;
 function render(ms) {
   // Camera inertia
   if(!isDragging){ cam.x+=cam.vx*0.12; cam.y+=cam.vy*0.12; cam.vx*=0.88; cam.vy*=0.88; }
-  // Pan limits — generous so you can always pan freely
-  const maxPanX = 18 * 64 * cam.zoom * 0.6;
-  const maxPanY = 18 * 64 * cam.zoom * 0.6;
+  // Pan limits — generous so you can always pan freely; extended further
+  // once a second island is owned, so you can actually pan/scroll over to see it
+  const _extraPan = (game.islands||0)>=1 ? (ISLAND_GRID_COLS*64*cam.zoom*1.5) : 0;
+  const maxPanX = 18 * 64 * cam.zoom * 0.6 + _extraPan;
+  const maxPanY = 18 * 64 * cam.zoom * 0.6 + _extraPan*0.4;
   cam.x=Math.max(-maxPanX,Math.min(maxPanX,cam.x));
   if(Math.abs(cam.x)>=maxPanX) cam.vx=0;
   cam.y=Math.max(-maxPanY,Math.min(maxPanY,cam.y));
@@ -1407,29 +2163,17 @@ function render(ms) {
   const t = ms/1000;
   ctx.clearRect(0,0,W,H);
 
-  // Sky
-  const sky=ctx.createLinearGradient(0,0,0,H);
-  sky.addColorStop(0,'#2ea8da'); sky.addColorStop(0.5,'#52bde8'); sky.addColorStop(1,'#80d0f0');
-  ctx.fillStyle=sky; ctx.fillRect(0,0,W,H);
-
-  // Clouds
-  off = (t*10) % (W+300);
-  [[100,70,0.9,0.82],[400,110,1.1,0.72],[680,55,0.78,0.68],[950,95,1.0,0.78],[1180,130,0.88,0.65],[-80,185,0.65,0.42],[530,195,0.72,0.4],[870,210,0.68,0.38]].forEach(([x,y,s,a]) => {
-    drawCloud(((x+off)%(W+380))-180, y, s, a);
-  });
-
-  // Faint bottom haze
-  ctx.save(); ctx.globalAlpha=0.3;
-  const haze=ctx.createLinearGradient(0,H*0.8,0,H);
-  haze.addColorStop(0,'transparent'); haze.addColorStop(1,'#c8e8f8');
-  ctx.fillStyle=haze; ctx.fillRect(0,H*0.8,W,H*0.2); ctx.restore();
-
-  // Island — rendered directly every frame. The forest is now a cheap bucketed
-  // pattern fill (not per-frame tree generation), so this is fast even without caching.
+  // Island — draws its own sky background, clouds, and the island artwork,
+  // then everything placed on it. (An older sky+cloud pass used to run here
+  // too, fully hidden behind this one every frame — removed since it was
+  // pure wasted work: 8 clouds × 7 radial gradients each, invisible.)
   drawIsland(W, H, cam);
   drawBuildings();
   drawShrine();
   drawPlacedHabitats();
+  drawIslandBorderRocks(W, H, cam);
+  drawHabitatBubbles();
+  drawBuildingOverlays();
   drawPlacementGhost();
   drawBuildingPlacementGhost();
   // Update income display every 2 seconds
@@ -1444,7 +2188,6 @@ const game = {
   food: 100,
   xp: 0,
   level: 1,
-  expansions: 0,
   placedHabitats: [],
   buildings: [],
   shrine: {gx:Math.floor((18-3)/2), gy:Math.floor((18-3)/2)}, // unique pre-placed blue stone plate
@@ -1594,31 +2337,61 @@ function dragonGPM(dragonType, level){
   return base * _lateGameGpmMult(lv+1);
 }
 const HABITAT_SIZE = 5;
+const DRAGON_LOD_COLOR = {
+  fire:'#ff6644', grass:'#44cc44', earth:'#cc9944', ice:'#88ddee', water:'#3388dd',
+  poison:'#aa44cc', bluefire:'#4488ff', mud:'#886644', frost:'#aaddff', magma:'#ff5522',
+  forest:'#227733', obsidian:'#443344', coral:'#ff8888', lightning:'#ffee44',
+  storm:'#6699ff', plasma:'#ff7733', quake:'#bb8833', thunderlord:'#ffcc00'
+};
+const ISLAND_GRID_COLS = 36; // was previously 18, or 36 after buying "Expand" — the island now always covers the full grid
+const SECOND_ISLAND_GAP_X = 60;      // world units — horizontal gap from the main island's right edge
+const SECOND_ISLAND_OFFSET_Y = -340; // world units — negative = higher up than the main island
 
-function getGridCoords(){
+
+function getGridCoords(island){
   const z=cam.zoom, cx=W/2+cam.x, cy=H/2+cam.y;
-  const _cols=game.expansions?36:18; const playW=_cols*64*z, playH=18*64*z;
+  const _cols=ISLAND_GRID_COLS; const playW=_cols*64*z, playH=18*64*z;
   const left=cx-playW/2, top=cy-playH/2;
+  if(island===1){
+    const gap=SECOND_ISLAND_GAP_X*z, yOff=SECOND_ISLAND_OFFSET_Y*z;
+    return {left:left+playW+gap, top:top+yOff, cellSize:64*z};
+  }
   return {left, top, cellSize:64*z};
 }
 
+// Determines which island (0 or 1) a screen point falls over, and returns
+// the grid cell on that island. Only considers island 1 if it's owned.
 function screenToGrid(sx, sy){
-  const {left,top,cellSize}=getGridCoords();
+  if((game.islands||0)>=1){
+    const g1=getGridCoords(1);
+    const playW=ISLAND_GRID_COLS*g1.cellSize, playH=18*g1.cellSize;
+    if(sx>=g1.left && sx<=g1.left+playW && sy>=g1.top && sy<=g1.top+playH){
+      return { gx: Math.floor((sx-g1.left)/g1.cellSize), gy: Math.floor((sy-g1.top)/g1.cellSize), island:1 };
+    }
+  }
+  const {left,top,cellSize}=getGridCoords(0);
   return {
     gx: Math.floor((sx-left)/cellSize),
-    gy: Math.floor((sy-top)/cellSize)
+    gy: Math.floor((sy-top)/cellSize),
+    island: 0
   };
 }
 
-function gridToScreen(gx, gy){
-  const {left,top,cellSize}=getGridCoords();
+function gridToScreen(gx, gy, island){
+  const {left,top,cellSize}=getGridCoords(island);
   return {x: left+gx*cellSize, y: top+gy*cellSize};
 }
 
-function isValidPlacement(gx, gy, excludeIdx=-1){
-  const _maxCols=game.expansions?36:18;
+function isValidPlacement(gx, gy, excludeIdx=-1, island=0){
+  const _maxCols=ISLAND_GRID_COLS;
   if(gx<0||gy<0||gx+HABITAT_SIZE>_maxCols||gy+HABITAT_SIZE>18){
 return false;
+  }
+  // Must actually sit on the island's grass — reject the grid's rounded-off
+  // corners that would otherwise let a habitat float over open sky.
+  const _corners=[[gx,gy],[gx+HABITAT_SIZE,gy],[gx,gy+HABITAT_SIZE],[gx+HABITAT_SIZE,gy+HABITAT_SIZE],[gx+HABITAT_SIZE/2,gy+HABITAT_SIZE/2]];
+  for(const [_cgx,_cgy] of _corners){
+    if(!FloatingIsland.isGrass(_cgx/_maxCols, _cgy/18)) return false;
   }
   // Reduced collision zone — tighter vertically
   const cSzX = HABITAT_SIZE - 1;
@@ -1626,6 +2399,7 @@ return false;
   for(let i=0;i<game.placedHabitats.length;i++){
     if(i===excludeIdx) continue;
     const h=game.placedHabitats[i];
+    if((h.island||0)!==island) continue;
     if(gx<h.gx+cSzX && gx+cSzX>h.gx &&
        gy<h.gy+cSzY && gy+cSzY>h.gy){
 return false;
@@ -1633,13 +2407,14 @@ return false;
   }
   // Block placement on any farm/hatchery/breeder buildings
   for(const b of (game.buildings||[])){
+    if((b.island||0)!==island) continue;
     const bcx=b.gx+BUILDING_SIZE/2, bcy=b.gy+BUILDING_SIZE/2;
     const hcx=gx+HABITAT_SIZE/2,   hcy=gy+HABITAT_SIZE/2;
     const threshX=HABITAT_SIZE/2+BUILDING_SIZE/2-2;
     const threshY=HABITAT_SIZE/2+BUILDING_SIZE/2-3;
     if(Math.abs(hcx-bcx)<threshX && Math.abs(hcy-bcy)<threshY) return false;
   }
-  const sh=game.shrine;
+  const sh=getShrine(island);
   if(sh){
     const hBBrx=HABITAT_SIZE*108/310;
     const hBBry=HABITAT_SIZE*64/310;
@@ -1690,6 +2465,20 @@ function getDragonRoam(habitatIdx, dragonIdx, dragonType){
 
 const BUILDING_SIZE = 4; // grid cells
 const SHRINE_SIZE = 3;
+// Each island has its own shrine — game.shrines[0] is the main island's,
+// game.shrines[1] is the second island's (only exists once that island is
+// bought). They share the same look/logic for now (no per-island themes
+// yet), but are tracked as fully separate objects so that's possible later.
+function getShrine(island){
+  if(!game.shrines) game.shrines=[];
+  if(island===0 && !game.shrines[0]){
+    game.shrines[0]={gx:Math.floor((18-SHRINE_SIZE)/2), gy:Math.floor((18-SHRINE_SIZE)/2)};
+  }
+  if(island===1 && !game.shrines[1] && (game.islands||0)>=1){
+    game.shrines[1]={gx:Math.floor((18-SHRINE_SIZE)/2), gy:Math.floor((18-SHRINE_SIZE)/2)};
+  }
+  return game.shrines[island]||null;
+}
 
 function startBuildingPlacement(type, cost){
   const mid=Math.floor((18-BUILDING_SIZE)/2);
@@ -1705,10 +2494,12 @@ function confirmBuildingPlacement(){
   game.placement=null;
 }
 
+let _buildingOverlays=[];
 function drawBuildings(){
   if(!game.buildings) game.buildings=[];
   const now=Date.now();
-  const _overlays=[];
+  _buildingOverlays=[];
+  const _overlays=_buildingOverlays;
   // Update breed state
   (game.buildings||[]).forEach(b=>{
     if(b.breedState&&!b.breedState.done&&Date.now()-b.breedState.startTime>=b.breedState.duration){
@@ -1716,15 +2507,33 @@ function drawBuildings(){
     }
   });
   game.buildings.forEach((b,bi)=>{
-    const {left,top,cellSize}=getGridCoords();
+    const {left,top,cellSize}=getGridCoords(b.island||0);
     const px=left+b.gx*cellSize, py=top+b.gy*cellSize;
     const size=Math.round(BUILDING_SIZE*cellSize);
+
+    // Skip the expensive per-frame building artwork entirely if it's not
+    // actually visible on screen right now
+    const _cullMarginB = size*0.3;
+    if(px+size < -_cullMarginB || px > W+_cullMarginB || py+size < -_cullMarginB || py > H+_cullMarginB) return;
+
     const oc=getHabitatCache('bld_'+b.type, size);
     const qSize=oc.width;
-    if(b.type==='hatchery') drawHatchery(oc.getContext('2d'),qSize,qSize,now/1000);
-    else if(b.type==='breeder') drawBreederCave(oc.getContext('2d'),qSize,qSize,now/1000);
-    else if(b.type==='vault') drawVault(oc.getContext('2d'),qSize,qSize,now/1000);
-    else drawFarmHouse(oc.getContext('2d'),qSize,qSize,now/1000);
+    const _nowMsB=performance.now();
+    const _bgIntervalB = qSize < 60 ? 300 : 60;
+    if(!b._bgSnap || b._bgSnap.width!==qSize || _nowMsB-(b._bgSnapAt||0) > _bgIntervalB){
+      if(!b._bgSnap || b._bgSnap.width!==qSize){
+        b._bgSnap=document.createElement('canvas');
+        b._bgSnap.width=qSize; b._bgSnap.height=qSize;
+      }
+      const bCtx=b._bgSnap.getContext('2d');
+      if(b.type==='hatchery') drawHatchery(bCtx,qSize,qSize,_nowMsB/1000);
+      else if(b.type==='breeder') drawBreederCave(bCtx,qSize,qSize,_nowMsB/1000);
+      else if(b.type==='vault') drawVault(bCtx,qSize,qSize,_nowMsB/1000);
+      else drawFarmHouse(bCtx,qSize,qSize,_nowMsB/1000);
+      b._bgSnapAt=_nowMsB;
+    }
+    oc.getContext('2d').clearRect(0,0,qSize,qSize);
+    oc.getContext('2d').drawImage(b._bgSnap,0,0);
     ctx.drawImage(oc, px, py, size, size);
 
     // Draw breeding dragons flying inside the cave
@@ -1778,115 +2587,82 @@ function drawBuildings(){
       });
     }
 
-    // Breeder timer overlay
+    // Breeder timer/ready bubble
     if(b.type==='breeder' && b.breedState){
-      const bs=b.breedState;
-      const bx2=px+size*0.5, by2=py+size*0.08;
-      const ps2=size*0.18, pw2=size*0.75, fs2=Math.max(9,size*0.09)+'px';
-      if(bs.done){
-        _overlays.push({bx:bx2,by:by2,size,type:'breed_ready'});
+      const bs=Math.max(0.7,Math.min(2.2,cam.zoom));
+      if(b.breedState.done){
+        _overlays.push({bx:px+size*0.5, by:py+size*0.08, size, bs, type:'breed_ready'});
       } else {
-        const rem=Math.ceil((bs.startTime+bs.duration-now)/1000);
-        _overlays.push({bx:bx2,by:by2,size,type:'breed_timer',rem});
+        const rem=Math.ceil((b.breedState.startTime+b.breedState.duration-now)/1000);
+        _overlays.push({bx:px+size*0.5, by:py+size*0.08, size, bs, type:'breed_timer', rem});
       }
     }
-    // Hatchery egg timer — deferred to draw on top
+    // Hatchery egg ready/timer bubble
     if(b.type==='hatchery' && b.eggs && b.eggs.length>0){
-      _overlays.push({bx:px+size*0.5, by:py+size*0.08, size, eggs:b.eggs, now});
+      const bs=Math.max(0.7,Math.min(2.2,cam.zoom));
+      _overlays.push({bx:px+size*0.5, by:py+size*0.08, size, bs, eggs:b.eggs});
     }
 
-    // Crop timer overlay (also deferred)
-    if(b.crop){
-      // handled below, will be drawn on top
-    }
     if(b.crop && b.cropEnd){
-      const crop=CROPS.find(cr=>cr.id===b.crop);
+      const bs=Math.max(0.7,Math.min(2.2,cam.zoom));
       const ready=now>=b.cropEnd;
-      const bx=px+size*0.5, by=py+size*0.08;
-      const ps=size*0.18, pw=size*0.65, fs=Math.max(9,size*0.09)+'px';
-      ctx.save(); ctx.translate(bx,by);
-      if(ready){
-        const pulse=game.settings?.advancedGraphics!==false?1+Math.sin(now/300)*0.06:1; ctx.scale(pulse,pulse);
-        ctx.fillStyle='rgba(20,60,10,0.92)';
-        ctx.beginPath(); ctx.roundRect(-pw/2,-ps/2,pw,ps,ps*0.5); ctx.fill();
-        ctx.strokeStyle='rgba(80,220,60,0.8)'; ctx.lineWidth=size*0.012;
-        ctx.beginPath(); ctx.roundRect(-pw/2,-ps/2,pw,ps,ps*0.5); ctx.stroke();
-        ctx.fillStyle='#88ee66'; ctx.font='bold '+fs+' Cinzel,serif';
-        ctx.textAlign='center'; ctx.textBaseline='middle';
-        ctx.fillText((crop?crop.icon:'🌾')+' Ready!', 0, 1);
-      } else {
-        const remaining=Math.ceil((b.cropEnd-now)/1000);
-        const mins=Math.floor(remaining/60), secs=remaining%60;
-        const pct=1-(b.cropEnd-now)/(b.cropDuration*1000);
-        ctx.fillStyle='rgba(10,20,5,0.88)';
-        ctx.beginPath(); ctx.roundRect(-pw/2,-ps/2,pw,ps,ps*0.5); ctx.fill();
-        ctx.strokeStyle='rgba(100,180,40,0.6)'; ctx.lineWidth=size*0.01;
-        ctx.beginPath(); ctx.roundRect(-pw/2,-ps/2,pw,ps,ps*0.5); ctx.stroke();
-        ctx.fillStyle='#ccee88'; ctx.font='bold '+fs+' Cinzel,serif';
-        ctx.textAlign='center'; ctx.textBaseline='middle';
-        ctx.fillText((mins>0?mins+'m ':'')+secs+'s', 0, 1);
-      }
-      ctx.restore();
+      _overlays.push({bx:px+size*0.5, by:py+size*0.08, size, bs, type:ready?'crop_ready':'crop_timer', b});
     }
   });
-  // Draw egg overlays on top of all buildings
-  _overlays.forEach(({bx,by,size,eggs,now,type,rem})=>{
-    if(type==='breed_ready'){
-      const ps=size*0.18, pw=size*0.82, fs=Math.max(9,size*0.09)+'px';
-      const pulse=game.settings?.advancedGraphics!==false?1+Math.sin(performance.now()/280)*0.07:1;
-      ctx.save(); ctx.translate(bx,by); ctx.scale(pulse,pulse);
-      ctx.fillStyle='rgba(60,0,120,0.92)';
-      ctx.beginPath(); ctx.roundRect(-pw/2,-ps/2,pw,ps,ps*0.5); ctx.fill();
-      ctx.strokeStyle='rgba(160,80,255,0.9)'; ctx.lineWidth=size*0.012;
-      ctx.beginPath(); ctx.roundRect(-pw/2,-ps/2,pw,ps,ps*0.5); ctx.stroke();
-      ctx.fillStyle='#cc88ff'; ctx.font='bold '+fs+' Cinzel,serif';
-      ctx.textAlign='center'; ctx.textBaseline='middle';
-      ctx.fillText('Egg Ready!', 0, 1);
-      ctx.restore(); return;
-    }
-    if(type==='breed_timer'){
-      const ps=size*0.18, pw=size*0.65, fs=Math.max(9,size*0.09)+'px';
-      ctx.save(); ctx.translate(bx,by);
-      ctx.fillStyle='rgba(30,0,60,0.88)';
-      ctx.beginPath(); ctx.roundRect(-pw/2,-ps/2,pw,ps,ps*0.5); ctx.fill();
-      ctx.strokeStyle='rgba(120,40,200,0.6)'; ctx.lineWidth=size*0.01;
-      ctx.beginPath(); ctx.roundRect(-pw/2,-ps/2,pw,ps,ps*0.5); ctx.stroke();
-      ctx.fillStyle='#cc88ff'; ctx.font='bold '+fs+' Cinzel,serif';
-      ctx.textAlign='center'; ctx.textBaseline='middle';
-      const m=Math.floor(rem/60), s2=rem%60;
-      ctx.fillText('🧬 '+(m>0?m+'m ':'')+s2+'s', 0, 1);
-      ctx.restore(); return;
-    }
-    if(!eggs) return;
-    const ps=size*0.18, pw=size*0.82, fs=Math.max(9,size*0.09)+'px';
-    ctx.save(); ctx.translate(bx,by);
-    const anyReady=eggs.some(e=>now>=e.startTime+e.duration);
-    if(anyReady){
-      const pulse=game.settings?.advancedGraphics!==false?1+Math.sin(now/280)*0.07:1; ctx.scale(pulse,pulse);
-      ctx.fillStyle='rgba(10,50,10,0.92)';
-      ctx.beginPath(); ctx.roundRect(-pw/2,-ps/2,pw,ps,ps*0.5); ctx.fill();
-      ctx.strokeStyle='rgba(80,220,60,0.9)'; ctx.lineWidth=size*0.012;
-      ctx.beginPath(); ctx.roundRect(-pw/2,-ps/2,pw,ps,ps*0.5); ctx.stroke();
-      ctx.fillStyle='#88ee66'; ctx.font='bold '+fs+' Cinzel,serif';
-      ctx.textAlign='center'; ctx.textBaseline='middle';
-      ctx.fillText('Ready To Hatch', 0, 1);
-    } else {
-      const soonest=eggs.reduce((a,e)=>(!a||e.startTime+e.duration<a.startTime+a.duration)?e:a,null);
-      if(soonest){
-        const remaining=Math.ceil((soonest.startTime+soonest.duration-now)/1000);
-        const mins=Math.floor(remaining/60), secs=remaining%60;
-        const pct=1-(soonest.startTime+soonest.duration-now)/soonest.duration;
-        const pw2=size*0.65;
-        ctx.fillStyle='rgba(15,15,30,0.88)';
-        ctx.beginPath(); ctx.roundRect(-pw2/2,-ps/2,pw2,ps,ps*0.5); ctx.fill();
-        ctx.strokeStyle='rgba(200,160,60,0.5)'; ctx.lineWidth=size*0.01;
-        ctx.beginPath(); ctx.roundRect(-pw2/2,-ps/2,pw2,ps,ps*0.5); ctx.stroke();
-        ctx.fillStyle='#d4b860'; ctx.font='bold '+fs+' Cinzel,serif';
-        ctx.textAlign='center'; ctx.textBaseline='middle';
-        ctx.fillText('🥚 '+(mins>0?mins+'m ':'')+secs+'s', 0, 1);
+}
+
+// Draws every building's floating status bubble (ready/timer pills) — called
+// AFTER habitats too, so a bubble never gets covered by a nearby habitat or
+// building. Pill width is measured from the actual text so it always hugs
+// the label tightly instead of guessing a fixed (often too-wide) size.
+function _drawBubblePill(bx,by,bs,text,fillColor,strokeColor,textColor,pulseKey){
+  const fs=Math.round(14*bs);
+  ctx.font='bold '+fs+'px Cinzel,serif';
+  const textW=ctx.measureText(text).width;
+  const padX=16*bs;
+  const pw=textW+padX*2, ps=30*bs;
+  const pulse=(pulseKey && game.settings?.advancedGraphics!==false) ? 1+Math.sin(performance.now()/(pulseKey==='fast'?280:300))*0.065 : 1;
+  ctx.save();
+  ctx.translate(bx,by);
+  if(pulse!==1) ctx.scale(pulse,pulse);
+  ctx.fillStyle=fillColor;
+  ctx.beginPath(); ctx.roundRect(-pw/2,-ps/2,pw,ps,ps*0.5); ctx.fill();
+  ctx.strokeStyle=strokeColor; ctx.lineWidth=1.8*bs;
+  ctx.beginPath(); ctx.roundRect(-pw/2,-ps/2,pw,ps,ps*0.5); ctx.stroke();
+  ctx.fillStyle=textColor; ctx.font='bold '+fs+'px Cinzel,serif';
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(text, 0, 1);
+  ctx.restore();
+}
+function drawBuildingOverlays(){
+  const now=Date.now();
+  _buildingOverlays.forEach(o=>{
+    const bs=o.bs||Math.max(0.7,Math.min(2.2,cam.zoom));
+    if(o.type==='crop_ready'){
+      const crop=CROPS.find(cr=>cr.id===o.b.crop);
+      _drawBubblePill(o.bx,o.by,bs,(crop?crop.icon:'🌾')+' Ready!','rgba(20,60,10,0.92)','rgba(80,220,60,0.8)','#88ee66','fast');
+    } else if(o.type==='crop_timer'){
+      const remaining=Math.ceil((o.b.cropEnd-now)/1000);
+      const mins=Math.floor(remaining/60), secs=remaining%60;
+      _drawBubblePill(o.bx,o.by,bs,(mins>0?mins+'m ':'')+secs+'s','rgba(10,20,5,0.88)','rgba(100,180,40,0.6)','#ccee88',null);
+    } else if(o.type==='breed_ready'){
+      _drawBubblePill(o.bx,o.by,bs,'Egg Ready!','rgba(60,0,120,0.92)','rgba(160,80,255,0.9)','#cc88ff','fast');
+    } else if(o.type==='breed_timer'){
+      const m=Math.floor(o.rem/60), s2=o.rem%60;
+      _drawBubblePill(o.bx,o.by,bs,'🧬 '+(m>0?m+'m ':'')+s2+'s','rgba(30,0,60,0.88)','rgba(120,40,200,0.6)','#cc88ff',null);
+    } else if(o.eggs){
+      const anyReady=o.eggs.some(e=>now>=e.startTime+e.duration);
+      if(anyReady){
+        _drawBubblePill(o.bx,o.by,bs,'Ready To Hatch','rgba(10,50,10,0.92)','rgba(80,220,60,0.9)','#88ee66','fast');
+      } else {
+        const soonest=o.eggs.reduce((a,e)=>(!a||e.startTime+e.duration<a.startTime+a.duration)?e:a,null);
+        if(soonest){
+          const remaining=Math.ceil((soonest.startTime+soonest.duration-now)/1000);
+          const mins=Math.floor(remaining/60), secs=remaining%60;
+          _drawBubblePill(o.bx,o.by,bs,'🥚 '+(mins>0?mins+'m ':'')+secs+'s','rgba(15,15,30,0.88)','rgba(200,160,60,0.5)','#d4b860',null);
+        }
       }
     }
-    ctx.restore();
   });
 }
 
@@ -3301,13 +4077,22 @@ function drawSideEarthDragon(ctx, W, H, p){
   ctx.restore();
 }
 
+let _habitatBubbles=[];
 function drawPlacedHabitats(){
-  const _bubbles=[];
+  const _bubbles=_habitatBubbles=[];
   game.placedHabitats.forEach((h,i)=>{
-    const {left,top,cellSize}=getGridCoords();
+    const {left,top,cellSize}=getGridCoords(h.island||0);
     const px=left+h.gx*cellSize, py=top+h.gy*cellSize;
     const size=Math.round(HABITAT_SIZE*cellSize);
     if(!size || size <= 0) return;
+
+    // Skip all the expensive per-frame rendering (background + every
+    // dragon's glow-heavy artwork) entirely if this habitat isn't
+    // currently visible on screen — huge win once many habitats are
+    // spread across the island and the camera only shows part of it.
+    const _cullMargin = size*0.3;
+    if(px+size < -_cullMargin || px > W+_cullMargin || py+size < -_cullMargin || py > H+_cullMargin) return;
+
     // Dragon size scales WITH zoom so they look right in the world
     const dragonSize=Math.round(size*0.22);
     const pad=Math.round(dragonSize*0.6);
@@ -3327,7 +4112,8 @@ function drawPlacedHabitats(){
     const qSize=oc.width; // actual (quantized) canvas resolution
     const octx=oc.getContext('2d');
     const _ag=game.settings?.advancedGraphics!==false;
-    const _t=_ag?performance.now()/1000:0;
+    const _nowMsBg=performance.now();
+    const _t=_ag?_nowMsBg/1000:0;
     if(h.type==='lightning'){
       // Cache once — expensive crystal code never runs per-frame
       if(!h._litBg||h._litBg.width!==oc.width){
@@ -3335,12 +4121,30 @@ function drawPlacedHabitats(){
         drawLightningHabitat(bg.getContext('2d'),bg.width,bg.height,0); h._litBg=bg;
       }
       octx.clearRect(0,0,oc.width,oc.height); octx.drawImage(h._litBg,0,0);
+    } else {
+      // The background art (water ripples, fire flicker, grass sway) is
+      // expensive and doesn't need to be rebuilt at full 60fps to read as
+      // smooth ambient motion — cache a snapshot and only regenerate it
+      // ~16 times a second. octx itself is still cleared and recomposited
+      // from that snapshot every single frame, so dragons drawn on top
+      // right after this never leave a ghost trail.
+      const _bgInterval = qSize < 60 ? 300 : 60;
+      if(!h._bgSnap || h._bgSnap.width!==qSize || _nowMsBg-(h._bgSnapAt||0) > _bgInterval){
+        if(!h._bgSnap || h._bgSnap.width!==qSize){
+          h._bgSnap=document.createElement('canvas');
+          h._bgSnap.width=qSize; h._bgSnap.height=qSize;
+        }
+        const bgCtx=h._bgSnap.getContext('2d');
+        if(h.type==='grass') drawGrassHabitat(bgCtx,qSize,qSize,_t);
+        else if(h.type==='earth') drawEarthHabitat(bgCtx,qSize,qSize,_t);
+        else if(h.type==='ice') drawIceHabitat(bgCtx,qSize,qSize,_t);
+        else if(h.type==='water') drawWaterHabitat(bgCtx,qSize,qSize,_t);
+        else drawFireHabitat(bgCtx,qSize,qSize,_t);
+        h._bgSnapAt=_nowMsBg;
+      }
+      octx.clearRect(0,0,qSize,qSize);
+      octx.drawImage(h._bgSnap,0,0);
     }
-    else if(h.type==='grass') drawGrassHabitat(octx,qSize,qSize,_t);
-    else if(h.type==='earth') drawEarthHabitat(octx,qSize,qSize,_t);
-    else if(h.type==='ice') drawIceHabitat(octx,qSize,qSize,_t);
-    else if(h.type==='water') drawWaterHabitat(octx,qSize,qSize,_t);
-    else drawFireHabitat(octx,qSize,qSize,_t);
 
     // Draw dragons on habitat canvas so they scale with habitat
     if(game.settings?.showHabitatDragons!==false) h.dragons.forEach((d,di)=>{
@@ -3350,38 +4154,64 @@ function drawPlacedHabitats(){
       const phys=_miniDragonPhysList[di%3];
 
       const cacheKey=`mini_${i}_${di}_${qDragonSize}`;
-      if(!_habitatCache[cacheKey]||_habitatCache[cacheKey].width!==qMocW){
-        const mc=document.createElement('canvas');
-        mc.width=qMocW; mc.height=qMocH;
-        _habitatCache[cacheKey]=mc;
+      let moc=_habitatCache[cacheKey];
+      if(!moc||moc.width!==qMocW){
+        moc=document.createElement('canvas');
+        moc.width=qMocW; moc.height=qMocH;
+        moc._lastDraw=-Infinity;
+        _habitatCache[cacheKey]=moc;
       }
-      const moc=_habitatCache[cacheKey];
-      const mctx=moc.getContext('2d');
-      mctx.clearRect(0,0,qMocW,qMocH);
-      mctx.save();
-      mctx.translate(qPad,qPad);
-      const origClear=mctx.clearRect.bind(mctx);
-      mctx.clearRect=()=>{};
-      if(d==='grass') drawSideGrassDragon(mctx, qDragonSize, qDragonSize, phys);
-      else if(d==='earth') drawSideEarthDragon(mctx, qDragonSize, qDragonSize, phys);
-      else if(d==='poison') drawSidePoisonDragon(mctx, qDragonSize, qDragonSize, phys);
-      else if(d==='ice') drawSideIceDragon(mctx, qDragonSize, qDragonSize, phys);
-      else if(d==='bluefire') drawSideBluefireDragon(mctx, qDragonSize, qDragonSize, phys);
-      else if(d==='water') drawSideWaterDragon(mctx, qDragonSize, qDragonSize, phys);
-      else if(d==='mud') drawSideMudDragon(mctx, qDragonSize, qDragonSize, phys);
-      else if(d==='frost') drawSideFrostDragon(mctx, qDragonSize, qDragonSize, phys);
-      else if(d==='magma') drawSideMagmaDragon(mctx, qDragonSize, qDragonSize, phys);
-      else if(d==='forest') drawSideForestDragon(mctx, qDragonSize, qDragonSize, phys);
-      else if(d==='obsidian') drawSideObsidianDragon(mctx, qDragonSize, qDragonSize, phys);
-      else if(d==='coral') drawSideCoralDragon(mctx, qDragonSize, qDragonSize, phys);
-      else if(d==='lightning') drawSideLightningDragon(mctx, qDragonSize, qDragonSize, phys);
-      else if(d==='storm') drawSideStormDragon(mctx, qDragonSize, qDragonSize, phys);
-      else if(d==='plasma') drawSidePlasmaDragon(mctx, qDragonSize, qDragonSize, phys);
-      else if(d==='quake') drawSideQuakeDragon(mctx, qDragonSize, qDragonSize, phys);
-      else if(d==='thunderlord') drawSideThunderlordDragon(mctx, qDragonSize, qDragonSize, phys);
-      else drawSideDragon(mctx, qDragonSize, qDragonSize, phys);
-      mctx.clearRect=origClear;
-      mctx.restore();
+      const _nowMs=performance.now();
+      // Below this pixel size the fine detail (glows, spikes, shading) is
+      // imperceptible anyway — common once zoomed out far enough to see
+      // both islands — so just draw a cheap colored blob instead of
+      // running the full glow-heavy procedural artwork for every dragon.
+      if(qDragonSize < 16){
+        if(!moc._isLod){
+          moc._isLod=true; moc._lastDraw=-Infinity;
+        }
+        if(_nowMs-(moc._lastDraw||-Infinity) > 200){
+          moc._lastDraw=_nowMs;
+          const mctx=moc.getContext('2d');
+          mctx.clearRect(0,0,qMocW,qMocH);
+          const cx=qMocW/2, cy=qMocH/2, r=qDragonSize*0.42;
+          mctx.fillStyle=DRAGON_LOD_COLOR[d]||'#cc8844';
+          mctx.beginPath(); mctx.ellipse(cx,cy,r*1.3,r*0.85,0,0,Math.PI*2); mctx.fill();
+          mctx.fillStyle='rgba(255,255,255,0.35)';
+          mctx.beginPath(); mctx.ellipse(cx-r*0.3,cy-r*0.3,r*0.4,r*0.25,0,0,Math.PI*2); mctx.fill();
+        }
+      } else {
+      if(moc._isLod){ moc._isLod=false; moc._lastDraw=-Infinity; }
+      if(_nowMs-(moc._lastDraw||-Infinity) > 45){ // ~22fps redraw cap — the glow-heavy art itself doesn't need to be rebuilt at full 60fps to look smooth
+        moc._lastDraw=_nowMs;
+        const mctx=moc.getContext('2d');
+        mctx.clearRect(0,0,qMocW,qMocH);
+        mctx.save();
+        mctx.translate(qPad,qPad);
+        const origClear=mctx.clearRect.bind(mctx);
+        mctx.clearRect=()=>{};
+        if(d==='grass') drawSideGrassDragon(mctx, qDragonSize, qDragonSize, phys);
+        else if(d==='earth') drawSideEarthDragon(mctx, qDragonSize, qDragonSize, phys);
+        else if(d==='poison') drawSidePoisonDragon(mctx, qDragonSize, qDragonSize, phys);
+        else if(d==='ice') drawSideIceDragon(mctx, qDragonSize, qDragonSize, phys);
+        else if(d==='bluefire') drawSideBluefireDragon(mctx, qDragonSize, qDragonSize, phys);
+        else if(d==='water') drawSideWaterDragon(mctx, qDragonSize, qDragonSize, phys);
+        else if(d==='mud') drawSideMudDragon(mctx, qDragonSize, qDragonSize, phys);
+        else if(d==='frost') drawSideFrostDragon(mctx, qDragonSize, qDragonSize, phys);
+        else if(d==='magma') drawSideMagmaDragon(mctx, qDragonSize, qDragonSize, phys);
+        else if(d==='forest') drawSideForestDragon(mctx, qDragonSize, qDragonSize, phys);
+        else if(d==='obsidian') drawSideObsidianDragon(mctx, qDragonSize, qDragonSize, phys);
+        else if(d==='coral') drawSideCoralDragon(mctx, qDragonSize, qDragonSize, phys);
+        else if(d==='lightning') drawSideLightningDragon(mctx, qDragonSize, qDragonSize, phys);
+        else if(d==='storm') drawSideStormDragon(mctx, qDragonSize, qDragonSize, phys);
+        else if(d==='plasma') drawSidePlasmaDragon(mctx, qDragonSize, qDragonSize, phys);
+        else if(d==='quake') drawSideQuakeDragon(mctx, qDragonSize, qDragonSize, phys);
+        else if(d==='thunderlord') drawSideThunderlordDragon(mctx, qDragonSize, qDragonSize, phys);
+        else drawSideDragon(mctx, qDragonSize, qDragonSize, phys);
+        mctx.clearRect=origClear;
+        mctx.restore();
+      }
+      }
 
       octx.save();
       octx.translate(roam.px*qSize, roam.py*qSize);
@@ -3423,10 +4253,15 @@ function drawPlacedHabitats(){
       ctx.strokeRect(r.x,r.y,r.w,r.h); ctx.setLineDash([]);
     }
   });
-  // Draw all coin bubbles on top, scaled with zoom
+}
+
+// Draws the "Collect gold" coin bubbles — called separately, after the
+// island's border rocks, so a bubble on a habitat near the edge never
+// gets covered by the rocks.
+function drawHabitatBubbles(){
   const bs=Math.max(0.7,Math.min(2.2,cam.zoom));
   const bw=80*bs, bh=38*bs, br=19*bs;
-  _bubbles.forEach(({bx,by,gold,pct})=>{
+  _habitatBubbles.forEach(({bx,by,gold,pct})=>{
     const pulse=game.settings?.advancedGraphics!==false?1+Math.sin(performance.now()/400)*0.06:1;
     ctx.save();
     ctx.translate(bx,by);
@@ -3460,7 +4295,8 @@ function habitatOutlineRect(px, py, size){
 
 function drawBuildingPlacementGhost(){
   if(!game.placement||!game.placement.isBuilding) return;
-  const {left,top,cellSize}=getGridCoords();
+  const _island=game.placement.island||0;
+  const {left,top,cellSize}=getGridCoords(_island);
   const {gx,gy}=game.placement;
   const px=left+gx*cellSize, py=top+gy*cellSize;
   const size=Math.round(BUILDING_SIZE*cellSize);
@@ -3472,7 +4308,14 @@ function drawBuildingPlacementGhost(){
   else if(game.placement.type==='water') drawWaterHabitat(oc.getContext('2d'),qSize,qSize,performance.now()/1000);
   else drawFarmHouse(oc.getContext('2d'),qSize,qSize,performance.now()/1000);
   ctx.save(); ctx.globalAlpha=0.7; ctx.drawImage(oc, px, py, size, size); ctx.restore();
-  const bValid=!isBuildingOverlap(gx,gy,game.placement.moveIdx!=null?game.placement.moveIdx:-1);
+  const _maxColsG=ISLAND_GRID_COLS;
+  let bValid=(gx>=0&&gy>=0&&gx+BUILDING_SIZE<=_maxColsG&&gy+BUILDING_SIZE<=18)&&!isBuildingOverlap(gx,gy,game.placement.moveIdx!=null?game.placement.moveIdx:-1,_island);
+  if(bValid){
+    const _cornersG=[[gx,gy],[gx+BUILDING_SIZE,gy],[gx,gy+BUILDING_SIZE],[gx+BUILDING_SIZE,gy+BUILDING_SIZE],[gx+BUILDING_SIZE/2,gy+BUILDING_SIZE/2]];
+    for(const [_cgx,_cgy] of _cornersG){
+      if(!FloatingIsland.isGrass(_cgx/_maxColsG, _cgy/18)){ bValid=false; break; }
+    }
+  }
   ctx.strokeStyle=bValid?'rgba(80,200,80,0.9)':'rgba(200,50,50,0.9)';
   ctx.fillStyle=bValid?'rgba(80,200,80,0.12)':'rgba(200,50,50,0.22)';
   ctx.lineWidth=2.5; ctx.setLineDash([5,3]);
@@ -3483,11 +4326,12 @@ function drawBuildingPlacementGhost(){
 function drawPlacementGhost(){
   if(!game.placement) return;
   if(game.placement.isShrine||game.placement.isBuilding) return; // handled separately
-  const {left,top,cellSize}=getGridCoords();
+  const _island=game.placement.island||0;
+  const {left,top,cellSize}=getGridCoords(_island);
   const {gx,gy}=game.placement;
   const px=left+gx*cellSize, py=top+gy*cellSize;
   const size=game.placement.isBuilding?Math.round(BUILDING_SIZE*cellSize):Math.round(HABITAT_SIZE*cellSize);
-  const valid=isValidPlacement(gx,gy);
+  const valid=isValidPlacement(gx,gy,-1,_island);
   const oc=getHabitatCache((game.placement.isBuilding?'bld_':'')+game.placement.type, size);
   const qSize=oc.width;
   if(game.placement.isBuilding){
@@ -3533,38 +4377,203 @@ function cancelPlacement(){
   document.getElementById('place-bar').style.display='none';
 }
 
-function isBuildingOverlap(gx,gy,excludeIdx=-1){
+// Checks whether a footprint still sits fully on real island grass — used
+// to catch habitats/buildings that were placed before the island had an
+// actual shape (back when it was just a plain rectangle).
+function _footprintStillValid(gx, gy, size, island){
+  const _cols=ISLAND_GRID_COLS;
+  if(gx<0||gy<0||gx+size>_cols||gy+size>18) return false;
+  const corners=[[gx,gy],[gx+size,gy],[gx,gy+size],[gx+size,gy+size],[gx+size/2,gy+size/2]];
+  for(const [cgx,cgy] of corners){
+    if(!FloatingIsland.isGrass(cgx/_cols, cgy/18)) return false;
+  }
+  return true;
+}
+
+// Pulls any habitat/building/shrine sitting somewhere that's no longer
+// valid land off the map and into game.pendingRelocate, so the player can
+// place it again from a dedicated button instead of it floating over sky.
+function _relocateOrphanedItems(){
+  if(!game.pendingRelocate) game.pendingRelocate=[];
+  let found=false;
+  for(let i=game.placedHabitats.length-1;i>=0;i--){
+    const h=game.placedHabitats[i];
+    if(!_footprintStillValid(h.gx,h.gy,HABITAT_SIZE,h.island||0)){
+      game.pendingRelocate.push({...h, kind:'habitat'});
+      game.placedHabitats.splice(i,1);
+      found=true;
+    }
+  }
+  for(let i=(game.buildings||[]).length-1;i>=0;i--){
+    const b=game.buildings[i];
+    if(!_footprintStillValid(b.gx,b.gy,BUILDING_SIZE,b.island||0)){
+      game.pendingRelocate.push({...b, kind:'building'});
+      game.buildings.splice(i,1);
+      found=true;
+    }
+  }
+  if(game.shrines){
+    for(let si=0; si<game.shrines.length; si++){
+      const s=game.shrines[si];
+      if(s && !_footprintStillValid(s.gx,s.gy,SHRINE_SIZE,si)){
+        game.pendingRelocate.push({...s, kind:'shrine'});
+        game.shrines[si]=null;
+        found=true;
+      }
+    }
+  }
+  if(found) saveGame();
+}
+
+const RELOCATE_ICONS = { hatchery:'🥚', breeder:'🧬', vault:'🏦', farm:'🌾', shrine:'💠' };
+function _relocateIcon(item){
+  if(item.kind==='habitat') return (ELEMENT_ICONS[item.type]||'🐉');
+  if(item.kind==='shrine') return RELOCATE_ICONS.shrine;
+  return RELOCATE_ICONS[item.type]||'🏗️';
+}
+function _relocateLabel(item){
+  if(item.kind==='habitat') return (HABITAT_NAMES[item.type]||item.type);
+  if(item.kind==='shrine') return 'Shrine';
+  return (item.type||'Building').replace(/^\w/,c=>c.toUpperCase());
+}
+
+function updateRelocateButton(){
+  const btn=document.getElementById('relocate-btn');
+  if(!btn) return;
+  const items=game.pendingRelocate||[];
+  btn.style.display = items.length>0 ? 'flex' : 'none';
+  const badge=document.getElementById('relocate-badge');
+  if(badge) badge.textContent=items.length;
+}
+
+function closeRelocatePanel(){
+  const el=document.getElementById('relocate-panel');
+  const bd=document.getElementById('panel-backdrop');
+  if(el) el.style.animation='panelBoxOutCentered .16s ease both';
+  if(bd) bd.style.animation='panelBgFadeOut .16s ease both';
+  setTimeout(()=>{ if(el) el.remove(); if(bd) bd.remove(); game.panelOpen=false; }, 160);
+}
+
+function openRelocatePanel(){
+  let el=document.getElementById('relocate-panel');
+  if(!el){
+    closeAllPanelsGlobal(); showPanelBackdrop();
+    game.panelOpen=true;
+    el=document.createElement('div');
+    el.id='relocate-panel';
+    el.className='panel-anim-box-centered';
+    el.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(92vw,520px);max-height:80vh;overflow-y:auto;background:linear-gradient(160deg,#20242a,#12151a);border-radius:22px;padding:clamp(20px,3.5vw,36px);z-index:300;box-shadow:0 8px 60px rgba(0,0,0,0.8),0 0 0 3px #6e6a5c,0 0 0 5px #38362e;';
+    document.body.appendChild(el);
+  } else {
+    const bd=document.getElementById('panel-backdrop'); if(bd) bd.style.animation='none';
+    el.style.animation='none';
+  }
+  const items=game.pendingRelocate||[];
+  let html=`<button onclick="closeRelocatePanel()" class="panel-close-btn">✕</button>
+    <div style="text-align:center;margin-bottom:6px;">
+      <div style="font-family:Cinzel,serif;font-size:1.3rem;font-weight:700;color:#ffb84d;">Misplaced Buildings</div>
+    </div>
+    <div style="font-family:serif;font-style:italic;font-size:0.85rem;color:rgba(220,200,180,0.65);text-align:center;margin-bottom:20px;">These were left over from before the island had a real shape. Give each one a new spot on the island.</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">`;
+  if(items.length===0){
+    html+=`<div style="text-align:center;font-family:Cinzel,serif;color:rgba(200,200,200,0.5);padding:20px;">Nothing to place — you're all set!</div>`;
+  } else {
+    items.forEach((item,idx)=>{
+      html+=`<div style="display:flex;align-items:center;gap:14px;background:rgba(255,150,40,0.08);border:1.5px solid rgba(255,150,40,0.3);border-radius:14px;padding:12px 16px;">
+        <div style="font-size:1.8rem;flex-shrink:0;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.5));">${_relocateIcon(item)}</div>
+        <div style="flex:1;font-family:Cinzel,serif;font-size:0.95rem;color:#f0d8b0;">${_relocateLabel(item)}</div>
+        <button onclick="startRelocatePlacement(${idx})" style="flex-shrink:0;background:linear-gradient(180deg,#ffaa44,#cc7722);border:1.5px solid rgba(255,200,120,0.6);color:#2a1a08;font-family:Cinzel,serif;font-weight:700;font-size:0.82rem;padding:9px 18px;border-radius:16px;cursor:pointer;">Place</button>
+      </div>`;
+    });
+  }
+  html+=`</div>`;
+  el.innerHTML=html;
+}
+
+function startRelocatePlacement(idx){
+  const item=(game.pendingRelocate||[])[idx];
+  if(!item) return;
+  closeRelocatePanel();
+  const size=item.kind==='habitat'?HABITAT_SIZE:item.kind==='shrine'?SHRINE_SIZE:BUILDING_SIZE;
+  const midG=Math.floor((18-size)/2);
+  game.placement={
+    type:item.type, cost:0, gx:midG, gy:midG, island:0,
+    isBuilding:item.kind==='building',
+    isShrine:item.kind==='shrine',
+    shrineIsland: item.kind==='shrine'?0:undefined,
+    relocateIdx: idx
+  };
+  document.getElementById('place-bar').style.display='block';
+}
+
+function isBuildingOverlap(gx,gy,excludeIdx=-1,island=0){
+  // Reduced collision zone — tighter vertically, matching the same relaxed
+  // spacing already used for habitat-vs-habitat and habitat-vs-building placement
+  const cSzXb = BUILDING_SIZE - 0.8;
+  const cSzYb = BUILDING_SIZE - 2;
   for(const h of game.placedHabitats){
-    if(gx<h.gx+HABITAT_SIZE&&gx+BUILDING_SIZE>h.gx&&gy<h.gy+HABITAT_SIZE&&gy+BUILDING_SIZE>h.gy) return true;
+    if((h.island||0)!==island) continue;
+    const cSzXh = HABITAT_SIZE - 1;
+    const cSzYh = HABITAT_SIZE - 2.5;
+    if(gx<h.gx+cSzXh&&gx+cSzXb>h.gx&&gy<h.gy+cSzYh&&gy+cSzYb>h.gy) return true;
   }
   for(let i=0;i<(game.buildings||[]).length;i++){
     if(i===excludeIdx) continue;
     const b=game.buildings[i];
-    if(gx<b.gx+BUILDING_SIZE&&gx+BUILDING_SIZE>b.gx&&gy<b.gy+BUILDING_SIZE&&gy+BUILDING_SIZE>b.gy) return true;
+    if((b.island||0)!==island) continue;
+    if(gx<b.gx+cSzXb&&gx+cSzXb>b.gx&&gy<b.gy+cSzYb&&gy+cSzYb>b.gy) return true;
   }
-  if(game.shrine){const s=game.shrine;if(gx<s.gx+SHRINE_SIZE&&gx+BUILDING_SIZE>s.gx&&gy<s.gy+SHRINE_SIZE&&gy+BUILDING_SIZE>s.gy) return true;}
+  const s=getShrine(island);
+  if(s){
+    const cSzXs = SHRINE_SIZE - 0.6, cSzYs = SHRINE_SIZE - 1.5;
+    if(gx<s.gx+cSzXs&&gx+cSzXb>s.gx&&gy<s.gy+cSzYs&&gy+cSzYb>s.gy) return true;
+  }
   return false;
 }
 
 function confirmBuildingPlacement2(){
   if(!game.placement||!game.placement.isBuilding) return;
   const {type,cost,gx,gy,moveIdx}=game.placement;
-  const _maxColsB=game.expansions?36:18;
+  const _island=game.placement.island||0;
+  const _maxColsB=ISLAND_GRID_COLS;
   if(gx<0||gy<0||gx+BUILDING_SIZE>_maxColsB||gy+BUILDING_SIZE>18){
     showNotification("Can't place outside the island!",'error'); return;
   }
-  if(isBuildingOverlap(gx,gy,moveIdx!=null?moveIdx:-1)){
+  {
+    const _cornersB=[[gx,gy],[gx+BUILDING_SIZE,gy],[gx,gy+BUILDING_SIZE],[gx+BUILDING_SIZE,gy+BUILDING_SIZE],[gx+BUILDING_SIZE/2,gy+BUILDING_SIZE/2]];
+    for(const [_cgx,_cgy] of _cornersB){
+      if(!FloatingIsland.isGrass(_cgx/_maxColsB, _cgy/18)){
+        showNotification("Can't place outside the island!",'error'); return;
+      }
+    }
+  }
+  if(isBuildingOverlap(gx,gy,moveIdx!=null?moveIdx:-1,_island)){
     showNotification('Cannot place here — overlaps another building!','error');
+    return;
+  }
+  if(game.placement.relocateIdx!=null){
+    const item=(game.pendingRelocate||[])[game.placement.relocateIdx];
+    if(!item) return;
+    const {kind,...rest}=item;
+    if(!game.buildings) game.buildings=[];
+    game.buildings.push({...rest,gx,gy,island:_island});
+    game.pendingRelocate.splice(game.placement.relocateIdx,1);
+    game.placement=null;
+    document.getElementById('place-bar').style.display='none';
+    updateRelocateButton();
+    saveGame();
+    showNotification('Building placed!','success');
     return;
   }
   if(moveIdx!=null){
     // Moving existing building
     game.buildings[moveIdx].gx=gx;
     game.buildings[moveIdx].gy=gy;
+    game.buildings[moveIdx].island=_island;
   } else {
     if(!spendGold(cost)) return;
     if(!game.buildings) game.buildings=[];
-    game.buildings.push({type,gx,gy,crop:null,cropEnd:null,cropDuration:null,level:type==='vault'?1:undefined});
+    game.buildings.push({type,gx,gy,island:_island,crop:null,cropEnd:null,cropDuration:null,level:type==='vault'?1:undefined});
   }
   game.placement=null;
   document.getElementById('place-bar').style.display='none';
@@ -3574,11 +4583,26 @@ function confirmPlacement(){
   if(!game.placement) return;
   if(game.placement.isBuilding){ confirmBuildingPlacement(); saveGame(); return; }
   const {type,cost,gx,gy}=game.placement;
-  if(!isValidPlacement(gx,gy)) return;
+  const _island=game.placement.island||0;
+  if(!isValidPlacement(gx,gy,-1,_island)) return;
+  if(game.placement.relocateIdx!=null){
+    const item=(game.pendingRelocate||[])[game.placement.relocateIdx];
+    if(!item) return;
+    const {kind,...rest}=item;
+    game.placedHabitats.push({...rest,gx,gy,island:_island,dragons:[...rest.dragons],dragonLevels:[...(rest.dragonLevels||rest.dragons.map(()=>1))]});
+    game.pendingRelocate.splice(game.placement.relocateIdx,1);
+    game.placement=null;
+    document.getElementById('place-bar').style.display='none';
+    document.getElementById('hud').style.pointerEvents=''; document.body.classList.remove('placing');
+    updateRelocateButton();
+    saveGame();
+    showNotification('Habitat placed!','success');
+    return;
+  }
   if(game.placement.isHabitatMove){
     // Moving: restore snapshot at new position, no gold cost
     const s=game.placement.snapshot;
-    game.placedHabitats.push({...s,gx,gy,dragons:[...s.dragons],dragonLevels:[...s.dragonLevels]});
+    game.placedHabitats.push({...s,gx,gy,island:_island,dragons:[...s.dragons],dragonLevels:[...s.dragonLevels]});
     game.placement=null;
     document.getElementById('place-bar').style.display='none';
     document.getElementById('hud').style.pointerEvents=''; document.body.classList.remove('placing');
@@ -3589,7 +4613,7 @@ function confirmPlacement(){
     return;
   }
   if(!spendGold(cost)) return;
-  const newHabitat={type,gx,gy,dragons:[],dragonLevels:[],gold:0};
+  const newHabitat={type,gx,gy,island:_island,dragons:[],dragonLevels:[],gold:0};
   game.placedHabitats.push(newHabitat);
   game.placement=null;
   document.getElementById('place-bar').style.display='none';
@@ -3603,10 +4627,11 @@ canvas.addEventListener('mousemove', e=>{
   const {cellSize}=getGridCoords();
   const bsz=game.placement.isShrine?SHRINE_SIZE:game.placement.isBuilding?BUILDING_SIZE:HABITAT_SIZE;
   const halfPx=Math.round(bsz*cellSize/2);
-  const {gx,gy}=screenToGrid(e.clientX-rect.left-halfPx, e.clientY-rect.top-halfPx);
-  const _maxC=game.expansions?36:18;
+  const {gx,gy,island}=screenToGrid(e.clientX-rect.left-halfPx, e.clientY-rect.top-halfPx);
+  const _maxC=ISLAND_GRID_COLS;
   game.placement.gx=Math.max(0,Math.min(_maxC-bsz,gx));
   game.placement.gy=Math.max(0,Math.min(18-bsz,gy));
+  game.placement.island=game.placement.isShrine?(game.placement.shrineIsland||0):island; // shrine stays locked to its own island
 });
 canvas.addEventListener('touchmove', e=>{
   if(!game.placement) return;
@@ -3615,10 +4640,11 @@ canvas.addEventListener('touchmove', e=>{
   const {cellSize}=getGridCoords();
   const bsz=game.placement.isShrine?SHRINE_SIZE:game.placement.isBuilding?BUILDING_SIZE:HABITAT_SIZE;
   const halfPx=Math.round(bsz*cellSize/2);
-  const {gx,gy}=screenToGrid(touch.clientX-rect.left-halfPx, touch.clientY-rect.top-halfPx);
-  const _maxCT=game.expansions?36:18;
+  const {gx,gy,island}=screenToGrid(touch.clientX-rect.left-halfPx, touch.clientY-rect.top-halfPx);
+  const _maxCT=ISLAND_GRID_COLS;
   game.placement.gx=Math.max(0,Math.min(_maxCT-bsz,gx));
   game.placement.gy=Math.max(0,Math.min(18-bsz,gy));
+  game.placement.island=game.placement.isShrine?(game.placement.shrineIsland||0):island; // shrine stays locked to its own island
 },{passive:true});
 
 // Click to place / select habitat
@@ -3630,35 +4656,56 @@ canvas.addEventListener('click', e=>{
   if(game.placement){
     if(game.placement.isShrine){
       const {gx,gy}=game.placement;
-      // Check overlaps with habitats and buildings
+      const _shIsland=game.placement.island||0;
+      const _maxColsS=ISLAND_GRID_COLS;
+      // Check overlaps with habitats and buildings on the SAME island only
       let blocked=false;
       for(const h of game.placedHabitats){
+        if((h.island||0)!==_shIsland) continue;
         if(gx<h.gx+HABITAT_SIZE&&gx+SHRINE_SIZE>h.gx&&gy<h.gy+HABITAT_SIZE&&gy+SHRINE_SIZE>h.gy){ blocked=true; break; }
       }
       for(const b of (game.buildings||[])){
+        if((b.island||0)!==_shIsland) continue;
         if(gx<b.gx+BUILDING_SIZE&&gx+SHRINE_SIZE>b.gx&&gy<b.gy+BUILDING_SIZE&&gy+SHRINE_SIZE>b.gy){ blocked=true; break; }
       }
+      if(!blocked){
+        const _cornersS=[[gx,gy],[gx+SHRINE_SIZE,gy],[gx,gy+SHRINE_SIZE],[gx+SHRINE_SIZE,gy+SHRINE_SIZE],[gx+SHRINE_SIZE/2,gy+SHRINE_SIZE/2]];
+        for(const [_cgx,_cgy] of _cornersS){
+          if(!FloatingIsland.isGrass(_cgx/_maxColsS, _cgy/18)){ blocked=true; break; }
+        }
+      }
       if(blocked){ showNotification('Cannot place here — overlaps another building or habitat!','error'); return; }
-      game.shrine={gx,gy}; game.placement=null; document.getElementById('place-bar').style.display='none'; document.getElementById('hud').style.pointerEvents=''; document.body.classList.remove('placing'); return;
+      if(!game.shrines) game.shrines=[];
+      game.shrines[_shIsland]={gx,gy};
+      if(game.placement.relocateIdx!=null){
+        game.pendingRelocate.splice(game.placement.relocateIdx,1);
+        updateRelocateButton();
+        showNotification('Shrine placed!','success');
+      }
+      game.placement=null; document.getElementById('place-bar').style.display='none'; document.getElementById('hud').style.pointerEvents=''; document.body.classList.remove('placing'); saveGame(); return;
     }
     if(game.placement.isBuilding){ confirmBuildingPlacement2(); return; }
     confirmPlacement(); return;
   }
 
-  const {left,top,cellSize}=getGridCoords();
+  const {cellSize}=getGridCoords(0);
 
-  // Shrine click — open info panel
-  if(game.shrine){
-    const spx=left+game.shrine.gx*cellSize, spy=top+game.shrine.gy*cellSize;
+  // Shrine click — open the info panel for whichever island's shrine was clicked
+  for(let si=0; si<2; si++){
+    const s=getShrine(si);
+    if(!s) continue;
+    const {left:sLeft,top:sTop}=getGridCoords(si);
+    const spx=sLeft+s.gx*cellSize, spy=sTop+s.gy*cellSize;
     const ssz=Math.round(SHRINE_SIZE*cellSize);
     if(sx>=spx&&sx<=spx+ssz&&sy>=spy&&sy<=spy+ssz){
-      openShrineMenu(); return;
+      openShrineMenu(si); return;
     }
   }
 
   // Building clicks
   if(game.buildings) for(let i=game.buildings.length-1;i>=0;i--){
     const b=game.buildings[i];
+    const {left,top}=getGridCoords(b.island||0);
     const px=left+b.gx*cellSize, py=top+b.gy*cellSize;
     const size=Math.round(BUILDING_SIZE*cellSize);
     const bMargin=size*0.15;
@@ -3669,6 +4716,7 @@ canvas.addEventListener('click', e=>{
   if(game.pendingDragon){
     for(let i=0;i<game.placedHabitats.length;i++){
       const h=game.placedHabitats[i];
+      const {left,top}=getGridCoords(h.island||0);
       const px=left+h.gx*cellSize, py=top+h.gy*cellSize, size=HABITAT_SIZE*cellSize;
       if(sx>=px&&sx<=px+size&&sy>=py&&sy<=py+size){
         const pd=game.pendingDragon;
@@ -3690,6 +4738,7 @@ canvas.addEventListener('click', e=>{
 
   for(let i=game.placedHabitats.length-1;i>=0;i--){
     const h=game.placedHabitats[i];
+    const {left,top}=getGridCoords(h.island||0);
     const px=left+h.gx*cellSize, py=top+h.gy*cellSize, size=HABITAT_SIZE*cellSize;
     // Use visual oval bounding box for click detection
     const vr=habitatOutlineRect(px,py,size);
@@ -3701,7 +4750,7 @@ canvas.addEventListener('click', e=>{
         if(game.panelOpen){ openHabitatMenu(i); return; }
         // Collect gold
         const collected=Math.floor(h.gold);
-        game.gold+=collected;
+        addGold(collected);
         h.gold=0;
         if(collected>=goldMax) addXP(40);
         updateGoldUI(true);
@@ -3732,12 +4781,13 @@ function closeAllPanelsGlobal(){
   // Vault
   const vm=document.getElementById('vault-menu');
   if(vm) vm.remove();
-  // Settings
-  const sp=document.getElementById('settings-panel');
-  if(sp) sp.remove();
-  // News (Updates panel + News panel)
-  const np=document.getElementById('news-panel');
-  if(np) np.remove();
+  // Account
+  const ap=document.getElementById('account-panel');
+  if(ap) ap.remove();
+  // Relocate
+  const rp=document.getElementById('relocate-panel');
+  if(rp) rp.remove();
+  // News (merged News+Updates panel)
   const np2=document.getElementById('news2-panel');
   if(np2) np2.remove();
   // Backdrop
@@ -3923,7 +4973,7 @@ function openHabitatMenu(idx){
         const dragonTypeToSell=srcHab.dragons[si];
         const sellValue=Math.round((DRAGON_COST[dragonTypeToSell]||250)/2);
         const ok=await gameConfirm('Sell this dragon? You will receive '+sellValue.toLocaleString()+' 🪙.','Sell');
-        if(ok){const h=game.placedHabitats[hi];h.dragons.splice(si,1);if(h.dragonLevels)h.dragonLevels.splice(si,1);game.gold+=sellValue;updateGoldUI();Object.keys(_dragonRoamState).filter(k=>k.startsWith(hi+'_')).forEach(k=>delete _dragonRoamState[k]);saveGame();openHabitatMenu(hi);}
+        if(ok){const h=game.placedHabitats[hi];h.dragons.splice(si,1);if(h.dragonLevels)h.dragonLevels.splice(si,1);addGold(sellValue);updateGoldUI();Object.keys(_dragonRoamState).filter(k=>k.startsWith(hi+'_')).forEach(k=>delete _dragonRoamState[k]);saveGame();openHabitatMenu(hi);}
       };})();
       card.appendChild(sellDBtn);
     }
@@ -3979,13 +5029,13 @@ function moveSelectedHabitat(){
   if(!h) return;
   // Save a full deep copy of the habitat so cancel can restore it exactly
   const snapshot={
-    type:h.type, gx:h.gx, gy:h.gy,
+    type:h.type, gx:h.gx, gy:h.gy, island:h.island||0,
     dragons:[...h.dragons],
     dragonLevels:[...(h.dragonLevels||h.dragons.map(()=>1))],
     gold:h.gold||0
   };
   game.placement={
-    type:h.type, cost:0, gx:h.gx, gy:h.gy,
+    type:h.type, cost:0, gx:h.gx, gy:h.gy, island:h.island||0,
     isHabitatMove:true,
     moveIdx:idx,
     snapshot
@@ -4030,6 +5080,7 @@ document.querySelectorAll('.dragon-grid').forEach(grid=>{
 });
 function maxHabitats(){
   const lv=game.level||1;
+  if(lv>=30) return 18;
   if(lv>=20) return 16;
   if(lv>=18) return 14;
   if(lv>=16) return 12;
@@ -4057,7 +5108,12 @@ document.querySelectorAll('.dragon-card-buy').forEach(btn=>{
 
     if(isHabitat){
       const habitatType=isHabitat.dataset.habitat||'fire';
-      if(game.placedHabitats.length>=maxHabitats()){ showNotification(`Reach level ${(Math.floor((game.level)/5)+1)*5} to unlock more habitats!`,'error'); return; }
+      if(game.placedHabitats.length>=maxHabitats()){
+        const lv=game.level||1;
+        const tiers=[5,9,12,14,16,18,20,30];
+        const nextLv=tiers.find(t=>t>lv)||(lv+5);
+        showNotification(`Reach level ${nextLv} to unlock more habitats!`,'error'); return;
+      }
       if(habitatType==='earth'&&(game.level||1)<6){ showNotification('Earth Habitat unlocks at Level 6!','error'); return; }
       if(habitatType==='ice'&&(game.level||1)<12){ showNotification('Ice Habitat unlocks at Level 12!','error'); return; }
       if(habitatType==='water'&&(game.level||1)<16){ showNotification('Water Habitat unlocks at Level 16!','error'); return; }
@@ -4182,7 +5238,7 @@ document.querySelectorAll('.sh-tab').forEach(btn=>{
     document.querySelectorAll('.sh-panel').forEach(p=>{
       p.style.display = (p.dataset.panel === target) ? '' : 'none';
     });
-    requestAnimationFrame(()=>{ initDragonCanvases(); initHabitatCanvases(); initBuildingCanvases(); });
+    requestAnimationFrame(()=>{ initDragonCanvases(); initHabitatCanvases(); initBuildingCanvases(); initIslandCanvases(); });
   };
 });
 
@@ -8420,7 +9476,10 @@ const CROPS = [
 ];
 
 
-function openShrineMenu(){
+let _openShrineIsland=0;
+function openShrineMenu(island){
+  island=island||0;
+  _openShrineIsland=island;
   game.panelOpen=true;
   closeHabitatMenu(); closeFarmMenu(); closeQuestPanel();
   let el=document.getElementById('shrine-menu');
@@ -8436,15 +9495,24 @@ function openShrineMenu(){
       <button onclick="closeShrineMenu()" style="background:none;border:none;color:#aaa;font-size:1.5rem;cursor:pointer;">✕</button>
     </div>
     <div style="font-family:serif;font-style:italic;font-size:1rem;color:rgba(140,180,255,0.7);margin-bottom:24px;">A mysterious relic of unknown origin. Its blue gem pulses with ancient energy.</div>
-    <button onclick="closeShrineMenu();startShrineMove();" style="background:linear-gradient(180deg,#1a3a70,#0c1e40);border:1.5px solid rgba(60,140,255,0.5);color:#88bbff;font-family:Cinzel,serif;font-size:1rem;padding:14px 36px;border-radius:24px;cursor:pointer;">✦ Move</button>
+    <button onclick="closeShrineMenu();startShrineMove(${island});" style="background:linear-gradient(180deg,#1a3a70,#0c1e40);border:1.5px solid rgba(60,140,255,0.5);color:#88bbff;font-family:Cinzel,serif;font-size:1rem;padding:14px 36px;border-radius:24px;cursor:pointer;">✦ Move</button>
   `;
 }
 function closeShrineMenu(){ const el=document.getElementById('shrine-menu'); if(el) el.remove(); const bd=document.getElementById('panel-backdrop'); if(bd) bd.remove(); }
-function startShrineMove(){ closeShrineMenu(); game.placement={isShrine:true,gx:game.shrine.gx,gy:game.shrine.gy}; }
+function startShrineMove(island){
+  island=island||0;
+  closeShrineMenu();
+  const s=getShrine(island);
+  if(!s) return;
+  game.placement={isShrine:true, shrineIsland:island, island:island, gx:s.gx, gy:s.gy};
+  document.getElementById('place-bar').style.display='block';
+}
 
 function openFarmMenu(buildingIdx){
   game.panelOpen=true;
+  if(_farmCloseTimer){ clearTimeout(_farmCloseTimer); _farmCloseTimer=null; }
   closeAllPanelsGlobal(); showPanelBackdrop();
+  { const bd=document.getElementById('panel-backdrop'); if(bd) bd.style.animation='none'; }
     closeHabitatMenu(); closeShrineMenu(); closeQuestPanel();
   const b=game.buildings[buildingIdx];
   if(!b) return;
@@ -8455,21 +9523,23 @@ function openFarmMenu(buildingIdx){
     el.className='panel-anim-box-centered';
     el.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:300;width:clamp(320px,80vw,780px);height:min(74vh,620px);display:flex;flex-direction:column;overflow:hidden;background:linear-gradient(160deg,#1a1208,#0e0a04);border:1.5px solid rgba(255,200,60,0.4);border-radius:22px;padding:clamp(24px,3.5vw,44px);box-shadow:0 8px 60px rgba(0,0,0,0.8);font-size:clamp(0.95rem,1.5vw,1.4rem);';
     document.body.appendChild(el);
+  } else {
+    el.style.animation='none'; // cancel any in-flight closing animation from a stale close call
   }
   const now=Date.now();
   const growing=b.crop&&b.cropEnd&&now<b.cropEnd;
   const ready=b.crop&&b.cropEnd&&now>=b.cropEnd;
   let html=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-shrink:0;">
-    <div style="font-family:Cinzel,serif;font-size:1.3rem;font-weight:700;color:#FFE060;">🌾 Farm</div>
-    <div style="display:flex;gap:8px;align-items:center;"><button onclick="startBuildingMove(${buildingIdx})" style="background:rgba(255,200,60,0.12);border:1px solid rgba(255,200,60,0.3);color:#FFE060;font-family:Cinzel,serif;font-size:0.72rem;padding:5px 12px;border-radius:14px;cursor:pointer;">✦ Move</button><button onclick="closeFarmMenu()" style="background:none;border:none;color:#aaa;font-size:1.3rem;cursor:pointer;">✕</button></div>
+    <div style="font-family:Cinzel,serif;font-size:1.3em;font-weight:700;color:#FFE060;">🌾 Farm</div>
+    <div style="display:flex;gap:8px;align-items:center;"><button onclick="startBuildingMove(${buildingIdx})" style="background:rgba(255,200,60,0.12);border:1px solid rgba(255,200,60,0.3);color:#FFE060;font-family:Cinzel,serif;font-size:0.72em;padding:5px 12px;border-radius:14px;cursor:pointer;">✦ Move</button><button onclick="closeFarmMenu()" style="background:none;border:none;color:#aaa;font-size:1.3em;cursor:pointer;">✕</button></div>
   </div>`;
   if(ready){
     const crop=CROPS.find(cr=>cr.id===b.crop);
     html+=`<div style="flex:1;display:flex;align-items:center;justify-content:center;min-height:0;">
       <div style="background:rgba(80,180,60,0.15);border:1px solid rgba(80,200,60,0.4);border-radius:12px;padding:28px;text-align:center;width:100%;max-width:360px;">
-        <div style="font-size:2.6rem">${crop.icon}</div>
-        <div style="font-family:Cinzel,serif;color:#88ee66;font-size:1.05rem;margin-top:10px;">${crop.name} ready to harvest!</div>
-        <button onclick="harvestCrop(${buildingIdx})" style="margin-top:16px;background:linear-gradient(180deg,#44aa22,#226610);border:1.5px solid rgba(80,200,60,0.5);color:#fff;font-family:Cinzel,serif;font-size:0.95rem;padding:12px 32px;border-radius:20px;cursor:pointer;">Harvest +${crop.food} 🍖</button>
+        <div style="font-size:2.6em">${crop.icon}</div>
+        <div style="font-family:Cinzel,serif;color:#88ee66;font-size:1.05em;margin-top:10px;">${crop.name} ready to harvest!</div>
+        <button onclick="harvestCrop(${buildingIdx})" style="margin-top:16px;background:linear-gradient(180deg,#44aa22,#226610);border:1.5px solid rgba(80,200,60,0.5);color:#fff;font-family:Cinzel,serif;font-size:0.95em;padding:12px 32px;border-radius:20px;cursor:pointer;">Harvest +${crop.food} 🍖</button>
       </div>
     </div>`;
   } else if(growing){
@@ -8479,28 +9549,28 @@ function openFarmMenu(buildingIdx){
     const pct=1-(b.cropEnd-now)/(b.cropDuration*1000);
     html+=`<div style="flex:1;display:flex;align-items:center;justify-content:center;min-height:0;">
       <div style="background:rgba(40,60,20,0.3);border:1px solid rgba(100,180,40,0.3);border-radius:12px;padding:28px;text-align:center;width:100%;max-width:360px;">
-        <div style="font-size:2.2rem">${crop.icon}</div>
-        <div style="font-family:Cinzel,serif;color:#ccee88;font-size:1rem;margin:10px 0;">${crop.name} growing…</div>
+        <div style="font-size:2.2em">${crop.icon}</div>
+        <div style="font-family:Cinzel,serif;color:#ccee88;font-size:1em;margin:10px 0;">${crop.name} growing…</div>
         <div style="background:rgba(0,0,0,0.3);border-radius:6px;height:10px;margin:10px 0;overflow:hidden;">
           <div style="background:linear-gradient(90deg,#44aa22,#88dd44);height:100%;width:${Math.round(pct*100)}%;border-radius:6px;"></div>
         </div>
-        <div style="font-family:Cinzel,serif;color:#aaa;font-size:0.85rem;">${mins}m ${secs}s remaining</div>
+        <div style="font-family:Cinzel,serif;color:#aaa;font-size:0.85em;">${mins}m ${secs}s remaining</div>
       </div>
     </div>`;
   } else {
-    html+=`<div style="font-family:Cinzel,serif;font-size:0.78rem;color:#aaa;margin-bottom:10px;text-align:center;flex-shrink:0;">Choose a crop to plant:</div><div style="flex:1;min-height:0;display:flex;flex-direction:column;gap:10px;overflow-y:auto;padding-right:6px;scrollbar-width:thin;scrollbar-color:rgba(255,200,60,0.3) transparent;">`;
+    html+=`<div style="font-family:Cinzel,serif;font-size:0.78em;color:#aaa;margin-bottom:10px;text-align:center;flex-shrink:0;">Choose a crop to plant:</div><div style="flex:1;min-height:0;display:flex;flex-direction:column;gap:10px;overflow-y:auto;padding-right:6px;scrollbar-width:thin;scrollbar-color:rgba(255,200,60,0.3) transparent;">`;
     CROPS.forEach(crop=>{
     if(crop.minLevel && (game.level||1)<crop.minLevel) return; // hide if locked
       const mins=Math.floor(crop.time/60), secs=crop.time%60;
       const timeStr=mins>0?`${mins}m${secs>0?' '+secs+'s':''}`:`${secs}s`;
       html+=`<button onclick="plantCrop(${buildingIdx},'${crop.id}')" style="display:flex;align-items:center;gap:12px;background:rgba(255,200,60,0.08);border:1.5px solid rgba(255,200,60,0.25);border-radius:12px;padding:12px 16px;cursor:pointer;color:#fff;text-align:left;flex-shrink:0;" onmouseover="this.style.background='rgba(255,200,60,0.18)'" onmouseout="this.style.background='rgba(255,200,60,0.08)'">
-        <div style="font-size:2rem;flex-shrink:0">${crop.icon}</div>
+        <div style="font-size:2em;flex-shrink:0">${crop.icon}</div>
         <div style="flex:1">
-          <div style="font-family:Cinzel,serif;font-size:1.05rem;font-weight:700;color:#FFE060;">${crop.name}</div>
-          <div style="font-size:0.88rem;color:#aaa;margin-top:4px;">${crop.desc}</div>
-          <div style="font-family:Cinzel,serif;font-size:0.88rem;color:#88cc44;margin-top:4px;">⏱ ${timeStr} · +${crop.food} 🍖</div>
+          <div style="font-family:Cinzel,serif;font-size:1.05em;font-weight:700;color:#FFE060;">${crop.name}</div>
+          <div style="font-size:0.88em;color:#aaa;margin-top:4px;">${crop.desc}</div>
+          <div style="font-family:Cinzel,serif;font-size:0.88em;color:#88cc44;margin-top:4px;">⏱ ${timeStr} · +${crop.food} 🍖</div>
         </div>
-        <div style="font-family:Cinzel,serif;font-size:0.85rem;color:#FFE060;flex-shrink:0">🪙 ${crop.cost}</div>
+        <div style="font-family:Cinzel,serif;font-size:0.85em;color:#FFE060;flex-shrink:0">🪙 ${crop.cost}</div>
       </button>`;
     });
     html+=`</div>`;
@@ -8508,19 +9578,21 @@ function openFarmMenu(buildingIdx){
   el.innerHTML=html;
 }
 
+let _farmCloseTimer=null;
 function closeFarmMenu(){
   const el=document.getElementById('farm-menu');
   const bd=document.getElementById('panel-backdrop');
   if(el) el.style.animation='panelBoxOutCentered .16s ease both';
   if(bd) bd.style.animation='panelBgFadeOut .16s ease both';
-  setTimeout(()=>{ game.panelOpen=false; if(el) el.remove(); if(bd) bd.remove(); }, 160);
+  if(_farmCloseTimer) clearTimeout(_farmCloseTimer);
+  _farmCloseTimer=setTimeout(()=>{ game.panelOpen=false; if(el) el.remove(); if(bd) bd.remove(); _farmCloseTimer=null; }, 160);
 }
 
 function startBuildingMove(buildingIdx){
   closeFarmMenu();
   const b=game.buildings[buildingIdx];
   if(!b) return;
-  game.placement={isBuilding:true, type:b.type, cost:0, gx:b.gx, gy:b.gy, moveIdx:buildingIdx};
+  game.placement={isBuilding:true, type:b.type, cost:0, gx:b.gx, gy:b.gy, island:b.island||0, moveIdx:buildingIdx};
 }
 
 const VAULT_MAX_LEVEL=5;
@@ -8579,6 +9651,38 @@ function upgradeVault(buildingIdx){
   saveGame();
   showNotification(`🏦 Vault upgraded to level ${b.level}!`,'success');
   openVaultMenu(buildingIdx);
+}
+
+function centerCameraOnSecondIsland(){
+  cam.zoom = Math.max(getCamZoomMin(), Math.min(CAM_ZOOM_MAX, 0.55));
+  const z = cam.zoom;
+  const cellSize = 64*z;
+  const playW = ISLAND_GRID_COLS*cellSize;
+  const playH = 18*cellSize;
+  const bb = FloatingIsland.GRASS_BBOX;
+  const grassW = bb.x1-bb.x0, grassH = bb.y1-bb.y0;
+  const scaleX = playW/grassW, scaleY = playH/grassH;
+  const gap = SECOND_ISLAND_GAP_X*z;
+  const yOff = SECOND_ISLAND_OFFSET_Y*z;
+  // Solve for cam.x/cam.y so the second island's center lands at screen center
+  cam.x = -(playW/2 + gap - bb.x0*scaleX + (FloatingIsland.LW*scaleX)/2);
+  cam.y = playH/2 + bb.y0*scaleY - yOff - (FloatingIsland.LH*scaleY)/2;
+  cam.vx=0; cam.vy=0;
+}
+function buyIsland(){
+  if((game.islands||0)>=1) return;
+  if((game.level||1)<20){ showNotification('New Island unlocks at Level 20!','error'); return; }
+  const cost=100000;
+  if(!spendGold(cost)){ showNotification(`Not enough gold! (Need ${cost.toLocaleString()} 🪙)`, 'error'); return; }
+  game.islands=1;
+  if(!game.shrines) game.shrines=[];
+  game.shrines[1]={gx:Math.floor((18-SHRINE_SIZE)/2), gy:Math.floor((18-SHRINE_SIZE)/2)};
+  updateGoldUI();
+  saveGame();
+  updateShopButtons();
+  closeShop();
+  centerCameraOnSecondIsland();
+  showNotification('🏝️ A new island has risen beside yours, with its own ancient shrine!','success');
 }
 
 function plantCrop(buildingIdx, cropId){
@@ -8681,34 +9785,52 @@ function drawBlueStonePlate(ctx, W, H, t){
 
 
 function drawShrine(){
-  if(!game.shrine) game.shrine={gx:Math.floor((18-SHRINE_SIZE)/2), gy:Math.floor((18-SHRINE_SIZE)/2)};
-  if(!game.shrine) return;
-  const {left,top,cellSize}=getGridCoords();
-  const {gx,gy}=game.shrine;
-  const px=left+gx*cellSize, py=top+gy*cellSize;
-  const size=Math.round(SHRINE_SIZE*cellSize);
-  const oc=getHabitatCache('shrine', size);
-  drawBlueStonePlate(oc.getContext('2d'), oc.width, oc.width, performance.now()/1000);
-  ctx.drawImage(oc, px, py, size, size);
+  for(let si=0; si<2; si++){
+    const shrine=getShrine(si);
+    if(!shrine) continue;
+    const {left,top,cellSize}=getGridCoords(si);
+    const {gx,gy}=shrine;
+    const px=left+gx*cellSize, py=top+gy*cellSize;
+    const size=Math.round(SHRINE_SIZE*cellSize);
+    const oc=getHabitatCache('shrine'+si, size);
+    drawBlueStonePlate(oc.getContext('2d'), oc.width, oc.width, performance.now()/1000);
+    ctx.drawImage(oc, px, py, size, size);
 
-  // Glow border
-  ctx.save();
-  ctx.strokeStyle=`rgba(60,140,255,${(0.5+Math.sin(performance.now()/600)*0.3)||0})`;
-  ctx.lineWidth=2.5; ctx.setLineDash([5,4]);
-  ctx.strokeRect(px+size*0.05, py+size*0.05, size*0.9, size*0.9);
-  ctx.setLineDash([]);
-  ctx.restore();
+    // Move indicator if THIS island's shrine is the one being moved
+    if(game.placement&&game.placement.isShrine&&(game.placement.shrineIsland||0)===si){
+      const {gx:mgx,gy:mgy}=game.placement;
+      const mpx=left+mgx*cellSize, mpy=top+mgy*cellSize;
+      const moc=getHabitatCache('shrine_ghost'+si, size);
+      drawBlueStonePlate(moc.getContext('2d'), moc.width, moc.width, performance.now()/1000);
+      ctx.save(); ctx.globalAlpha=0.6; ctx.drawImage(moc, mpx, mpy, size, size); ctx.restore();
 
-  // Move indicator if shrine is being moved
-  if(game.placement&&game.placement.isShrine){
-    const {gx:mgx,gy:mgy}=game.placement;
-    const mpx=left+mgx*cellSize, mpy=top+mgy*cellSize;
-    const moc=getHabitatCache('shrine_ghost', size);
-    drawBlueStonePlate(moc.getContext('2d'), moc.width, moc.width, performance.now()/1000);
-    ctx.save(); ctx.globalAlpha=0.6; ctx.drawImage(moc, mpx, mpy, size, size); ctx.restore();
-    ctx.strokeStyle='rgba(60,180,255,0.9)'; ctx.lineWidth=2.5; ctx.setLineDash([5,3]);
-    ctx.strokeRect(mpx+size*0.05, mpy+size*0.05, size*0.9, size*0.9);
-    ctx.setLineDash([]);
+      const _maxColsSh=ISLAND_GRID_COLS;
+      let sValid = (mgx>=0&&mgy>=0&&mgx+SHRINE_SIZE<=_maxColsSh&&mgy+SHRINE_SIZE<=18);
+      if(sValid){
+        for(const h of game.placedHabitats){
+          if((h.island||0)!==si) continue;
+          if(mgx<h.gx+HABITAT_SIZE&&mgx+SHRINE_SIZE>h.gx&&mgy<h.gy+HABITAT_SIZE&&mgy+SHRINE_SIZE>h.gy){ sValid=false; break; }
+        }
+      }
+      if(sValid){
+        for(const b of (game.buildings||[])){
+          if((b.island||0)!==si) continue;
+          if(mgx<b.gx+BUILDING_SIZE&&mgx+SHRINE_SIZE>b.gx&&mgy<b.gy+BUILDING_SIZE&&mgy+SHRINE_SIZE>b.gy){ sValid=false; break; }
+        }
+      }
+      if(sValid){
+        const _cornersSh=[[mgx,mgy],[mgx+SHRINE_SIZE,mgy],[mgx,mgy+SHRINE_SIZE],[mgx+SHRINE_SIZE,mgy+SHRINE_SIZE],[mgx+SHRINE_SIZE/2,mgy+SHRINE_SIZE/2]];
+        for(const [_cgx,_cgy] of _cornersSh){
+          if(!FloatingIsland.isGrass(_cgx/_maxColsSh, _cgy/18)){ sValid=false; break; }
+        }
+      }
+      ctx.strokeStyle=sValid?'rgba(80,200,80,0.9)':'rgba(200,50,50,0.9)';
+      ctx.fillStyle=sValid?'rgba(80,200,80,0.15)':'rgba(200,50,50,0.22)';
+      ctx.lineWidth=2.5; ctx.setLineDash([5,3]);
+      ctx.fillRect(mpx+size*0.05, mpy+size*0.05, size*0.9, size*0.9);
+      ctx.strokeRect(mpx+size*0.05, mpy+size*0.05, size*0.9, size*0.9);
+      ctx.setLineDash([]);
+    }
   }
 }
 
@@ -8838,6 +9960,26 @@ function _observeCardVisibility(cv){
   io.observe(cv);
 }
 
+function initIslandCanvases(){
+  document.querySelectorAll('canvas.island-canvas').forEach(cv=>{
+    if(cv._islandInit) return;
+    cv._islandInit=true;
+    const ictx=cv.getContext('2d');
+    const dpr=window.devicePixelRatio||1;
+    const SIZE=220;
+    cv.width=SIZE*dpr; cv.height=SIZE*dpr;
+    cv.style.width=SIZE+'px'; cv.style.height=SIZE+'px';
+    ictx.setTransform(dpr,0,0,dpr,0,0);
+    // Draw the same cached island artwork used in-game, scaled to fit the card frame
+    const src = FloatingIsland.getCanvas(2);
+    const pad = FloatingIsland.LW*0.22; // generous margin so the whole island is visible, zoomed out
+    const scale = Math.min(SIZE/(FloatingIsland.LW+pad*2), SIZE/(FloatingIsland.LH+pad*2));
+    const dw = FloatingIsland.LW*scale, dh = FloatingIsland.LH*scale;
+    const dx = (SIZE-dw)/2, dy = (SIZE-dh)/2;
+    ictx.drawImage(src, dx, dy, dw, dh);
+  });
+}
+
 function initBuildingCanvases(){
   document.querySelectorAll('canvas.building-canvas').forEach(cv=>{
     if(cv._buildingInit) return;
@@ -8924,7 +10066,7 @@ function initDragonCanvases() {
   });
 }
 const _origOpenShop = openShop;
-openShop = function(){ _origOpenShop(); requestAnimationFrame(()=>{ initDragonCanvases(); initHabitatCanvases(); initBuildingCanvases(); }); };
+openShop = function(){ _origOpenShop(); requestAnimationFrame(()=>{ initDragonCanvases(); initHabitatCanvases(); initBuildingCanvases(); initIslandCanvases(); }); };
 
 
 // ══════════════════════════════════════════════════════
@@ -9696,7 +10838,7 @@ function claimQuest(qid){
   if(!game.questsClaimed) game.questsClaimed={};
   if(game.questsClaimed[qid]) return;
   game.questsClaimed[qid]=true;
-  game.gold+=q.gold;
+  addGold(q.gold);
   updateGoldUI();
   saveGame();
   renderQuestList();
@@ -9707,7 +10849,7 @@ function claimQuest(qid){
     showNotification(`Quest complete! +${q.gold}🪙 · Bonus: Place a free Grass Habitat!`,'success');
     addXP(q.xp||0); updateXPBar();
     setTimeout(()=>{
-      const mid=Math.floor((game.expansions?36:18)/2)-Math.floor(HABITAT_SIZE/2);
+      const mid=Math.floor(ISLAND_GRID_COLS/2)-Math.floor(HABITAT_SIZE/2);
       game.placement={type:'grass',cost:0,gx:mid,gy:mid,isFreeReward:true};
       document.getElementById('place-bar').style.display='block';
       document.getElementById('place-label').textContent='🎁 Place your free Grass Habitat!';
@@ -9803,25 +10945,33 @@ const PLAYER_MAX_LEVEL = 30;
 
 function saveGame(){
   try {
+    accumulatePlaytime();
     const data = {
       lastSave: Date.now(),
-      expansions: game.expansions||0,
       gold: Math.floor(game.gold),
       food: game.food||0,
       xp: game.xp||0,
       level: game.level||1,
       overflowXP: game.overflowXP||0,
-      shrine: game.shrine,
+      shrines: game.shrines||[],
+      avatar: game.avatar||'🧑',
+      username: game.username||'Dragon Keeper',
+      settings: game.settings||{},
+      totalXP: game.totalXP||0,
+      totalGoldEarned: game.totalGoldEarned||0,
+      islands: game.islands||0,
+      pendingRelocate: game.pendingRelocate||[],
+      totalPlaytime: game.totalPlaytime||0,
       questsDone: game.questsDone||{},
       questsClaimed: game.questsClaimed||{},
       placedHabitats: game.placedHabitats.map(h=>({
-        type:h.type, gx:h.gx, gy:h.gy,
+        type:h.type, gx:h.gx, gy:h.gy, island:h.island||0,
         dragons:[...h.dragons],
         dragonLevels:[...(h.dragonLevels||h.dragons.map(()=>1))],
         gold:Math.floor(h.gold||0)
       })),
       buildings: (game.buildings||[]).map(b=>({
-        type:b.type, gx:b.gx, gy:b.gy,
+        type:b.type, gx:b.gx, gy:b.gy, island:b.island||0,
         crop:b.crop||null, cropEnd:b.cropEnd||null, cropDuration:b.cropDuration||null,
         breedState:b.breedState||null,
         eggs:(b.eggs||[]).map(e=>({...e})),
@@ -9863,8 +11013,16 @@ function loadGame(){
     game.xp = data.xp||0;
     game.level = data.level||1;
     game.overflowXP = data.overflowXP||0;
-    game.expansions = data.expansions||0;
-    if(data.shrine) game.shrine = data.shrine;
+    if(data.shrines) game.shrines = data.shrines;
+    else if(data.shrine) game.shrines = [data.shrine]; // migrate old single-shrine saves
+    game.avatar = data.avatar||'🧑';
+    game.username = data.username||'Dragon Keeper';
+    game.settings = data.settings||{};
+    game.totalXP = data.totalXP||0;
+    game.totalGoldEarned = data.totalGoldEarned||0;
+    game.islands = data.islands||0;
+    game.pendingRelocate = data.pendingRelocate||[];
+    game.totalPlaytime = data.totalPlaytime||0;
     game.questsDone = data.questsDone||{};
     game.questsClaimed = data.questsClaimed||{};
     game.placedHabitats = (data.placedHabitats||[]).map(h=>({
@@ -9900,6 +11058,19 @@ const _wrap = (fn, name) => {
 };
 
 // Load on startup — handle both before and after DOMContentLoaded
+let _playtimeCheckpoint=Date.now();
+function accumulatePlaytime(){
+  const now=Date.now();
+  game.totalPlaytime=(game.totalPlaytime||0)+(now-_playtimeCheckpoint)/1000;
+  _playtimeCheckpoint=now;
+}
+function formatPlaytime(totalSec){
+  const s=Math.floor(totalSec);
+  const d=Math.floor(s/86400), h=Math.floor((s%86400)/3600), m=Math.floor((s%3600)/60);
+  if(d>0) return `${d}d ${h}h`;
+  if(h>0) return `${h}h ${m}m`;
+  return `${m}m`;
+}
 function _initOnLoad(){
   const loaded = loadGame();
   if(loaded){
@@ -9907,9 +11078,20 @@ function _initOnLoad(){
     updateGoldUI();
     reconcileOverflowXP(); // auto-levels up with banked XP if the cap was raised since last session
   }
+  // Backfill totalXP: for players who already had level/XP progress before
+  // this tracking existed, make sure the total never reads lower than what
+  // their current level + banked overflow already implies they've earned.
+  game.totalXP=Math.max(game.totalXP||0, computeMinTotalXP());
+  game.totalGoldEarned=Math.max(game.totalGoldEarned||0, Math.floor(game.gold||0));
+  _playtimeCheckpoint=Date.now();
+  updateAccountBtn();
+  _relocateOrphanedItems();
+  updateRelocateButton();
 }
 if(document.readyState==='loading') window.addEventListener('DOMContentLoaded',_initOnLoad);
 else _initOnLoad();
+setInterval(accumulatePlaytime, 15000); // keep the running total fresh even if the tab stays open a long time
+window.addEventListener('beforeunload', accumulatePlaytime);
 
 
 // ══════════════════════════════════════════════════════
@@ -9917,6 +11099,13 @@ else _initOnLoad();
 // ══════════════════════════════════════════════════════
 // (PLAYER_MAX_LEVEL is declared up near SAVE_KEY, before _initOnLoad())
 
+function computeMinTotalXP(){
+  let sum=0;
+  for(let i=1;i<(game.level||1);i++) sum+=xpForLevel(i);
+  sum+=game.xp||0;
+  sum+=game.overflowXP||0;
+  return sum;
+}
 function xpForLevel(lv){
   let xp=157;
   for(let i=1;i<lv;i++) xp=Math.floor(xp*(i<5?1.3:1.2));
@@ -9936,9 +11125,15 @@ function showXPPopup(amount){
   el.style.animation='xpFloat 1.4s ease-out forwards';
 }
 
+function addGold(amount){
+  if(!amount) return;
+  game.gold+=amount;
+  if(amount>0) game.totalGoldEarned=(game.totalGoldEarned||0)+amount;
+}
 function addXP(amount){
   showXPPopup(amount);
   if(!amount||amount<=0) return;
+  game.totalXP=(game.totalXP||0)+amount;
   if((game.level||1) >= PLAYER_MAX_LEVEL){
     // Already at the level cap — bank the XP instead of losing it, so a
     // future increase to PLAYER_MAX_LEVEL can level the player up using
@@ -10120,7 +11315,7 @@ async function sellHabitat(){
   const sellValue=Math.floor((habitatCosts[h.type]||500)/2);
   const ok=await gameConfirm(`Sell this ${HABITAT_NAMES[h.type]||h.type}? You will receive ${sellValue} 🪙.`,'Sell');
   if(ok){
-    game.gold+=sellValue;
+    addGold(sellValue);
     game.placedHabitats.splice(idx,1);
     Object.keys(_dragonRoamState).filter(k=>k.startsWith(idx+'_')).forEach(k=>delete _dragonRoamState[k]);
     updateGoldUI();
@@ -10211,6 +11406,15 @@ function updateShopButtons(){
     if(hasVault){ vaultBtn.disabled=true; vaultBtn.textContent='Built'; vaultBtn.style.opacity='1'; vaultBtn.style.cursor='default'; vaultBtn.style.background='linear-gradient(180deg,#3a424a,#20242a)'; vaultBtn.style.borderColor='rgba(160,180,200,0.5)'; vaultBtn.style.color='#c8d4de'; }
     else if((game.level||1)<16){ vaultBtn.disabled=true; vaultBtn.textContent='🔒 Level 16'; vaultBtn.style.opacity='0.5'; vaultBtn.style.cursor='default'; vaultBtn.style.background=''; vaultBtn.style.borderColor=''; vaultBtn.style.color=''; }
     else { vaultBtn.disabled=false; vaultBtn.innerHTML='<span class="dc-coin">🪙</span><span>50000</span>'; vaultBtn.style.opacity='1'; vaultBtn.style.cursor='pointer'; vaultBtn.style.background='linear-gradient(180deg,#3a424a,#20242a)'; vaultBtn.style.borderColor='rgba(160,180,200,0.5)'; vaultBtn.style.color='#c8d4de'; }
+  }
+
+  // ── Island buy button lock state (unlocks at Level 20) ──
+  const islandBtn=document.getElementById('island-buy-btn');
+  if(islandBtn){
+    const hasIsland=(game.islands||0)>=1;
+    if(hasIsland){ islandBtn.disabled=true; islandBtn.textContent='Built'; islandBtn.style.opacity='1'; islandBtn.style.cursor='default'; islandBtn.style.background=''; islandBtn.style.borderColor=''; islandBtn.style.color=''; }
+    else if(lv<20){ islandBtn.disabled=true; islandBtn.textContent='🔒 Level 20'; islandBtn.style.opacity='0.7'; islandBtn.style.cursor='default'; islandBtn.style.background=''; islandBtn.style.borderColor=''; islandBtn.style.color=''; }
+    else { islandBtn.disabled=false; islandBtn.innerHTML='<span class="dc-coin">🪙</span><span>100000</span>'; islandBtn.style.opacity='1'; islandBtn.style.cursor='pointer'; islandBtn.style.background=''; islandBtn.style.borderColor=''; islandBtn.style.color=''; }
   }
 
   // ── Farm buy button lock state ──
@@ -10844,7 +12048,7 @@ function renderHatcherySlots(){
       slot.appendChild(cv);
       // Dragon type label
       const lbl=document.createElement('div');
-      lbl.style.cssText='font-family:Cinzel,serif;font-size:0.9rem;color:rgba(220,200,120,0.8);text-transform:capitalize;';
+      lbl.style.cssText='font-family:Cinzel,serif;font-size:0.9em;color:rgba(220,200,120,0.8);text-transform:capitalize;text-align:center;';
       lbl.textContent=egg.dragonType+' Dragon';
       slot.appendChild(lbl);
       if(ready){
@@ -10870,11 +12074,11 @@ function renderHatcherySlots(){
     } else {
       // Empty slot
       const emp=document.createElement('div');
-      emp.style.cssText='font-size:2rem;opacity:0.3;margin-top:auto;margin-bottom:auto;';
+      emp.style.cssText='font-size:2em;opacity:0.3;margin-top:auto;margin-bottom:auto;';
       emp.textContent='🥚';
       slot.appendChild(emp);
       const lbl=document.createElement('div');
-      lbl.style.cssText='font-family:Cinzel,serif;font-size:0.65rem;color:rgba(180,160,100,0.4);margin-top:auto;';
+      lbl.style.cssText='font-family:Cinzel,serif;font-size:0.65em;color:rgba(180,160,100,0.4);margin-top:auto;';
       lbl.textContent='Empty';
       slot.appendChild(lbl);
     }
@@ -10888,7 +12092,7 @@ function startHatcheryMove(){
   const b=(game.buildings||[])[idx];
   if(!b) return;
   closeHatcheryMenu();
-  game.placement={isBuilding:true, type:b.type, cost:0, gx:b.gx, gy:b.gy, moveIdx:idx};
+  game.placement={isBuilding:true, type:b.type, cost:0, gx:b.gx, gy:b.gy, island:b.island||0, moveIdx:idx};
   document.getElementById('place-bar').style.display='block';
   document.getElementById('place-label').textContent='Move your Hatchery';
 }
@@ -10917,51 +12121,11 @@ function hatchEgg(eggIdx){
 
 
 
-function closeExpandPanel(){
-  const el=document.getElementById('expand-panel');
-  if(!el || el.style.display==='none') return;
-  const bg=el.querySelector(':scope > div:first-child'), box=document.getElementById('expand-inner');
-  closePanelAnimated(bg, box, ()=>{ el.style.display='none'; });
-}
-
-
-function buyExpansion(){
-  const cost=20000;
-  if((game.level||1)<10){ showNotification('Island Expansion unlocks at Level 10!','error'); return; }
-  if(game.gold<cost){ showNotification('Not enough gold! (Need 20,000 🪙)','error'); return; }
-  game.gold-=cost;
-  game.expansions=1;
-  updateGoldUI();
-  saveGame();
-  showNotification('Island expanded! New area unlocked to the right. 🗺️','success');
-  closeExpandPanel();
-}
-
-function openExpandPanel(){
-  closeHabitatMenu(); closeFarmMenu(); closeShrineMenu(); closeQuestPanel();
-  // Update info text
-  const hasExp=!!game.expansions;
-  const info=document.getElementById('expand-info');
-
-  const btn=document.getElementById('buy-expansion-btn');
-  if(btn){
-    if(hasExp){ btn.textContent='✅ Expansion Owned'; btn.disabled=true; btn.style.opacity='0.5'; btn.style.cursor='default'; }
-    else if((game.level||1)<10){ btn.textContent='🔒 Level 10'; btn.disabled=true; btn.style.opacity='0.5'; btn.style.cursor='default'; }
-    else { btn.textContent='Expand Island'; btn.disabled=false; btn.style.opacity='1'; btn.style.cursor='pointer'; }
-  }
-  document.getElementById('expand-panel').style.display='flex';
-  const el=document.getElementById('expand-panel');
-  const bg=el.querySelector(':scope > div:first-child'), box=document.getElementById('expand-inner');
-  if(bg){ bg.style.animation='none'; void bg.offsetWidth; bg.style.animation='panelBgFadeIn .2s ease both'; }
-  if(box){ box.style.animation='none'; void box.offsetWidth; box.style.animation='panelBoxIn .3s cubic-bezier(0.34,1.56,0.64,1) both'; }
-}
-
-
 function moveBreeder(idx){
   const b=game.buildings[idx];
   if(!b) return;
   document.getElementById('breeder-menu').remove();
-  game.placement={type:'breeder',cost:0,gx:b.gx,gy:b.gy,isBuilding:true,moveIdx:idx};
+  game.placement={type:'breeder',cost:0,gx:b.gx,gy:b.gy,island:b.island||0,isBuilding:true,moveIdx:idx};
 }
 
 function openBreederMenu(idx){
@@ -10972,28 +12136,28 @@ function openBreederMenu(idx){
   if(el) el.remove();
   el=document.createElement('div');
   el.id='breeder-menu';
-  el.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(96vw,1100px);max-height:92vh;overflow-y:auto;background:linear-gradient(160deg,#120a1e,#080510);border:1.5px solid rgba(160,80,255,0.45);border-radius:20px;padding:36px 36px 40px;z-index:300;box-shadow:0 20px 60px rgba(0,0,0,0.8);';
+  el.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(96vw,1100px);max-height:92vh;overflow-y:auto;background:linear-gradient(160deg,#120a1e,#080510);border:1.5px solid rgba(160,80,255,0.45);border-radius:20px;padding:36px 36px 40px;z-index:350;box-shadow:0 20px 60px rgba(0,0,0,0.8);font-size:clamp(0.85rem,1.68vw,1.2rem);';
   el.innerHTML=`
-    <button onclick="document.getElementById('breeder-menu').remove();const bd=document.getElementById('panel-backdrop');if(bd)bd.remove();game.panelOpen=false;" style="position:absolute;top:14px;right:16px;font-family:Cinzel,serif;font-size:0.88rem;font-weight:700;padding:8px 14px;border-radius:50%;width:38px;height:38px;background:rgba(40,20,60,0.5);border:1.5px solid rgba(160,80,255,0.3);color:#cc88ff;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
-    <button onclick="moveBreeder(${idx})" style="position:absolute;top:14px;left:16px;font-family:Cinzel,serif;font-size:0.82rem;font-weight:700;padding:9px 18px;border-radius:18px;background:rgba(40,20,60,0.4);border:1.5px solid rgba(160,80,255,0.25);color:rgba(180,120,255,0.8);cursor:pointer;">✦ Move</button>
-    <div style="font-family:'Cinzel Decorative',serif;font-size:1.3rem;font-weight:700;color:#cc88ff;text-align:center;margin-bottom:6px;">Breeding Cave</div>
-    <div style="font-family:serif;font-size:0.95rem;color:rgba(180,140,220,0.7);text-align:center;margin-bottom:22px;font-style:italic;">Select two dragons to breed a new egg</div>
+    <button onclick="document.getElementById('breeder-menu').remove();const bd=document.getElementById('panel-backdrop');if(bd)bd.remove();game.panelOpen=false;" style="position:absolute;top:14px;right:16px;font-family:Cinzel,serif;font-size:0.88em;font-weight:700;padding:8px 14px;border-radius:50%;width:38px;height:38px;background:rgba(40,20,60,0.5);border:1.5px solid rgba(160,80,255,0.3);color:#cc88ff;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+    <button onclick="moveBreeder(${idx})" style="position:absolute;top:14px;left:16px;font-family:Cinzel,serif;font-size:0.82em;font-weight:700;padding:9px 18px;border-radius:18px;background:rgba(40,20,60,0.4);border:1.5px solid rgba(160,80,255,0.25);color:rgba(180,120,255,0.8);cursor:pointer;">✦ Move</button>
+    <div style="font-family:'Cinzel Decorative',serif;font-size:1.3em;font-weight:700;color:#cc88ff;text-align:center;margin-bottom:6px;">Breeding Cave</div>
+    <div style="font-family:serif;font-size:0.95em;color:rgba(180,140,220,0.7);text-align:center;margin-bottom:22px;font-style:italic;">Select two dragons to breed a new egg</div>
     <div style="position:relative;display:flex;justify-content:center;align-items:center;gap:24px;margin-bottom:28px;">
       <div id="breed-slot-0" style="width:240px;height:240px;background:rgba(80,20,140,0.3);border:2px dashed rgba(160,80,255,0.4);border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;" onclick="openDragonPicker(0)">
-        <div style="font-size:4rem;color:rgba(160,80,255,0.5);">+</div>
-        <div style="font-family:Cinzel,serif;font-size:0.95rem;color:rgba(160,100,220,0.6);">Choose Dragon</div>
+        <div style="font-size:4em;color:rgba(160,80,255,0.5);">+</div>
+        <div style="font-family:Cinzel,serif;font-size:0.95em;color:rgba(160,100,220,0.6);">Choose Dragon</div>
       </div>
-      <div style="font-size:2.5rem;color:rgba(160,80,255,0.6);">❤️</div>
+      <div style="font-size:2.5em;color:rgba(160,80,255,0.6);">❤️</div>
       <div id="breed-slot-1" style="width:240px;height:240px;background:rgba(80,20,140,0.3);border:2px dashed rgba(160,80,255,0.4);border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;" onclick="openDragonPicker(1)">
-        <div style="font-size:4rem;color:rgba(160,80,255,0.5);">+</div>
-        <div style="font-family:Cinzel,serif;font-size:0.95rem;color:rgba(160,100,220,0.6);">Choose Dragon</div>
+        <div style="font-size:4em;color:rgba(160,80,255,0.5);">+</div>
+        <div style="font-family:Cinzel,serif;font-size:0.95em;color:rgba(160,100,220,0.6);">Choose Dragon</div>
       </div>
       <div id="breed-odds-panel" style="position:absolute;right:-10px;top:0;width:110px;background:rgba(40,0,80,0.4);border:1px solid rgba(160,80,255,0.25);border-radius:14px;padding:12px;min-height:200px;">
-        <div style="font-family:Cinzel,serif;font-size:0.75rem;color:rgba(160,100,220,0.5);text-align:center;margin-top:24px;">Select both<br>dragons to<br>see odds</div>
+        <div style="font-family:Cinzel,serif;font-size:0.75em;color:rgba(160,100,220,0.5);text-align:center;margin-top:24px;">Select both<br>dragons to<br>see odds</div>
       </div>
     </div>
     <div style="display:flex;justify-content:center;">
-      <button id="breed-action-btn" onclick="startBreeding(${idx})" style="font-family:Cinzel,serif;font-size:1.4rem;font-weight:700;padding:20px 70px;border-radius:32px;background:linear-gradient(180deg,#6a2aaa,#3a0a7a);border:1.5px solid rgba(160,80,255,0.5);color:#e8c8ff;cursor:pointer;box-shadow:0 4px 20px rgba(100,0,200,0.4);letter-spacing:1px;">Breed</button>
+      <button id="breed-action-btn" onclick="startBreeding(${idx})" style="font-family:Cinzel,serif;font-size:1.4em;font-weight:700;padding:20px 70px;border-radius:32px;background:linear-gradient(180deg,#6a2aaa,#3a0a7a);border:1.5px solid rgba(160,80,255,0.5);color:#e8c8ff;cursor:pointer;box-shadow:0 4px 20px rgba(100,0,200,0.4);letter-spacing:1px;">Breed</button>
     </div>
   `;
   document.body.appendChild(el);
@@ -11013,7 +12177,6 @@ function openDragonPicker(slotIdx){
   game.placedHabitats.forEach((h, hi)=>{
     h.dragons.forEach((type, di)=>{
       const lv = (h.dragonLevels&&h.dragonLevels[di])||1;
-      if(type==='frost') return; // Frost is breed-exclusive — can't be used in breeder
       if(lv < 5) return; // Must be at least Level 5 to breed
       // Don't show dragons already in the other slot
       const other = _breedSlots[1-slotIdx];
@@ -11104,17 +12267,17 @@ function updateBreedSlots(){
       slot.innerHTML='';
       slot.appendChild(cv);
       const nm=document.createElement('div');
-      nm.style.cssText=`font-family:Cinzel,serif;font-size:0.72rem;font-weight:700;color:${dragonColors[sel.type]||'#cc88ff'};margin-top:6px;`;
+      nm.style.cssText=`font-family:Cinzel,serif;font-size:0.72em;font-weight:700;color:${dragonColors[sel.type]||'#cc88ff'};margin-top:6px;`;
       nm.textContent=dragonNames[sel.type]||sel.type;
       slot.appendChild(nm);
       const lv=document.createElement('div');
-      lv.style.cssText='font-family:Cinzel,serif;font-size:0.62rem;color:rgba(200,160,255,0.7);margin-top:2px;';
+      lv.style.cssText='font-family:Cinzel,serif;font-size:0.62em;color:rgba(200,160,255,0.7);margin-top:2px;';
       lv.textContent='Level '+sel.level;
       slot.appendChild(lv);
       slot.style.borderStyle='solid';
       slot.style.borderColor='rgba(160,80,255,0.7)';
     } else {
-      slot.innerHTML='<div style="font-size:3rem;color:rgba(160,80,255,0.5);">+</div><div style="font-family:Cinzel,serif;font-size:0.72rem;color:rgba(160,100,220,0.6);">Choose Dragon</div>';
+      slot.innerHTML='<div style="font-size:3em;color:rgba(160,80,255,0.5);">+</div><div style="font-family:Cinzel,serif;font-size:0.72em;color:rgba(160,100,220,0.6);">Choose Dragon</div>';
       slot.style.borderStyle='dashed';
       slot.style.borderColor='rgba(160,80,255,0.4)';
     }
@@ -11124,7 +12287,7 @@ function updateBreedSlots(){
   if(oddsPanel){
     if(_breedSlots[0]&&_breedSlots[1]){
       const odds=getBreedingOdds(_breedSlots[0].type,_breedSlots[1].type);
-      oddsPanel.innerHTML='<div style="font-family:Cinzel,serif;font-size:0.72rem;font-weight:700;color:#cc88ff;margin-bottom:6px;text-align:center;">Odds</div>';
+      oddsPanel.innerHTML='<div style="font-family:Cinzel,serif;font-size:0.72em;font-weight:700;color:#cc88ff;margin-bottom:6px;text-align:center;">Odds</div>';
       odds.forEach(o=>{
         const row=document.createElement('div');
         row.style.cssText='display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;gap:4px;';
@@ -11157,13 +12320,13 @@ function updateBreedSlots(){
         else if(o.type==='thunderlord') drawThunderlordDragon(cv.getContext('2d'),36,36,ph);
         else drawFireDragon(cv.getContext('2d'),36,36,ph);
         const pct=document.createElement('span');
-        pct.style.cssText='font-family:Cinzel,serif;font-size:0.72rem;font-weight:700;color:#cc88ff;flex-shrink:0;';
+        pct.style.cssText='font-family:Cinzel,serif;font-size:0.72em;font-weight:700;color:#cc88ff;flex-shrink:0;';
         pct.textContent=o.pct+'%';
         row.appendChild(cv); row.appendChild(pct);
         oddsPanel.appendChild(row);
       });
     } else {
-      oddsPanel.innerHTML='<div style="font-family:Cinzel,serif;font-size:0.68rem;color:rgba(160,100,220,0.5);text-align:center;margin-top:20px;">Select both<br>dragons to<br>see odds</div>';
+      oddsPanel.innerHTML='<div style="font-family:Cinzel,serif;font-size:0.68em;color:rgba(160,100,220,0.5);text-align:center;margin-top:20px;">Select both<br>dragons to<br>see odds</div>';
     }
   }
   // Update breed button cost display
@@ -11172,7 +12335,7 @@ function updateBreedSlots(){
     if(_breedSlots[0]&&_breedSlots[1]){
       const divisor=(_breedSlots[0].type==='water'||_breedSlots[1].type==='water')?1.5:3;
       const cost=Math.round(((DRAGON_COST[_breedSlots[0].type]||300)+(DRAGON_COST[_breedSlots[1].type]||300))/divisor);
-      breedBtn.innerHTML=`Breed<br><span style="font-size:0.7rem;opacity:0.7;font-weight:400;letter-spacing:0.5px;">${cost.toLocaleString()} 🪙</span>`;
+      breedBtn.innerHTML=`Breed<br><span style="font-size:0.7em;opacity:0.7;font-weight:400;letter-spacing:0.5px;">${cost.toLocaleString()} 🪙</span>`;
     } else {
       breedBtn.textContent='Breed';
     }
@@ -11214,6 +12377,17 @@ function getBreedingOdds(t1, t2){
   // Plasma never grant a Thunderlord chance — they're plain newSpecials,
   // identical to Coral/Obsidian/Forest/etc, handled by the generic rules below.
   if(combo==='lightning+lightning') return [{type:'thunderlord',pct:3},{type:'lightning',pct:97}];
+
+  // Frost already owned as a parent: flat 5% bonus per Frost parent (10%
+  // if both are Frost). Same pattern as Thunderlord above — never dilutes
+  // the other parent's normal percentage.
+  if(t1==='frost'||t2==='frost'){
+    const frPct=(t1==='frost'?5:0)+(t2==='frost'?5:0);
+    if(t1===t2) return [{type:'frost',pct:frPct},{type:'mystery',pct:100-frPct}];
+    const other=t1==='frost'?t2:t1;
+    const otherPct=isSpecial(other)?10:45;
+    return [{type:'frost',pct:frPct},{type:other,pct:otherPct},{type:'mystery',pct:100-frPct-otherPct}];
+  }
 
   // Ice + Water → 5% frost
   if(combo==='ice+water') return [{type:'frost',pct:5},{type:'ice',pct:47.5},{type:'water',pct:47.5}];
@@ -11312,171 +12486,169 @@ function collectBreedEgg(buildingIdx){
 
 
 
-function closeSettingsPanel(){
-  const el=document.getElementById('settings-panel');
+const AVATAR_OPTIONS=['🧑','🧔','👩','🧙','🧙‍♀️','🥷','👸','🤴','🐉','🐲','🦎','🔥','⚡','❄️','🌊','🪨','🌿','👑','🎭','😺'];
+function updateAccountBtn(){
+  // The account button now always shows a static "ACCOUNT" label (matching
+  // the other bottom-row buttons); the avatar itself is only shown inside
+  // the Account panel. Kept as a no-op function since it's still called
+  // from a few places (init, avatar selection).
+}
+let _avatarPickerOpen=false, _editingUsername=false, _accountTab='account';
+function selectAvatar(emoji){
+  game.avatar=emoji;
+  _avatarPickerOpen=false;
+  saveGame();
+  updateAccountBtn();
+  openAccountPanel();
+}
+function toggleAvatarPicker(){ _avatarPickerOpen=!_avatarPickerOpen; openAccountPanel(); }
+function setAccountTab(tab){ _accountTab=tab; _avatarPickerOpen=false; openAccountPanel(); }
+function startEditUsername(){ _editingUsername=true; openAccountPanel();
+  setTimeout(()=>{ const inp=document.getElementById('username-input'); if(inp){ inp.focus(); inp.select(); } },10);
+}
+function saveUsername(name){
+  game.username=(name||'').trim().slice(0,18)||'Dragon Keeper';
+  _editingUsername=false;
+  saveGame();
+  openAccountPanel();
+}
+function closeAccountPanel(){
+  const el=document.getElementById('account-panel');
   const bd=document.getElementById('panel-backdrop');
+  _avatarPickerOpen=false; _editingUsername=false; _accountTab='account';
   if(el) el.style.animation='panelBoxOutCentered .16s ease both';
   if(bd) bd.style.animation='panelBgFadeOut .16s ease both';
   setTimeout(()=>{ if(el) el.remove(); if(bd) bd.remove(); game.panelOpen=false; }, 160);
 }
-function openSettingsPanel(){
-  let el=document.getElementById('settings-panel');
-  if(el){ closeSettingsPanel(); return; }
-  showPanelBackdrop(); game.panelOpen=true;
-  if(!game.settings) game.settings={};
-  el=document.createElement('div'); el.id='settings-panel'; el.className='panel-anim-box-centered';
-  el.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(92vw,560px);background:linear-gradient(160deg,#141414,#1e1e1e);border:2px solid rgba(180,180,180,0.2);border-radius:22px;padding:44px 36px 36px;z-index:300;box-shadow:0 8px 60px rgba(0,0,0,0.8);';
-  function _settingsRender(){
+// Sizes a panel to a fixed aspect ratio (baseW x baseH) that scales
+// uniformly with the viewport — unlike using independent vw/vh clamp()
+// expressions for width and height, which reach their caps at different
+// screen sizes and end up stretching the panel out of proportion.
+function sizeFixedRatioPanel(el, baseW, baseH, maxScale){
+  maxScale = maxScale||1.35;
+  const scale = Math.min(maxScale, window.innerWidth*0.92/baseW, window.innerHeight*0.88/baseH);
+  el.style.width = Math.round(baseW*scale)+'px';
+  el.style.height = Math.round(baseH*scale)+'px';
+}
+window.addEventListener('resize', ()=>{
+  const el=document.getElementById('account-panel');
+  if(el) sizeFixedRatioPanel(el, 560, 500);
+});
+
+function openAccountPanel(){
+  let el=document.getElementById('account-panel');
+  if(!el){
+    closeAllPanelsGlobal(); showPanelBackdrop();
+    game.panelOpen=true;
+    el=document.createElement('div');
+    el.id='account-panel';
+    el.className='panel-anim-box-centered';
+    el.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);overflow-y:auto;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(160deg,#20242a,#12151a);border-radius:22px;padding:clamp(20px,3.5vw,40px);z-index:300;box-shadow:0 8px 60px rgba(0,0,0,0.8),0 0 0 3px #6e6a5c,0 0 0 5px #38362e;';
+    document.body.appendChild(el);
+  } else {
+    const bd=document.getElementById('panel-backdrop'); if(bd) bd.style.animation='none';
+    el.style.animation='none';
+  }
+  sizeFixedRatioPanel(el, 560, 500);
+  const cur=game.avatar||'🧑';
+
+  // ── Avatar picker takes over the whole panel — no tabs/stats/username visible ──
+  if(_avatarPickerOpen){
+    let html=`<button onclick="closeAccountPanel()" class="panel-close-btn">✕</button>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:22px;">
+      <button onclick="_avatarPickerOpen=false;openAccountPanel();" title="Back" style="background:none;border:none;color:#aaa;font-size:1.4rem;cursor:pointer;line-height:1;">←</button>
+      <div style="font-family:Cinzel,serif;font-size:1.4rem;font-weight:700;color:#FFE060;">Choose Avatar</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;">`;
+    AVATAR_OPTIONS.forEach(a=>{
+      const active=a===cur;
+      html+=`<button onclick="selectAvatar('${a}')" style="aspect-ratio:1;border-radius:14px;border:2px solid ${active?'rgba(255,210,80,0.8)':'rgba(255,255,255,0.12)'};background:${active?'rgba(255,210,80,0.18)':'rgba(255,255,255,0.05)'};font-size:1.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.12s;">${a}</button>`;
+    });
+    html+=`</div>`;
+    el.innerHTML=html;
+    return;
+  }
+
+  // ── Close button — fixed top-right circle ──
+  let html=`<button onclick="closeAccountPanel()" class="panel-close-btn">✕</button>`;
+
+  // ── Header (title only) ──
+  html+=`<div style="margin-bottom:18px;text-align:center;">
+    <div style="font-family:Cinzel,serif;font-size:1.4rem;font-weight:700;color:#FFE060;">${_accountTab==='settings'?'Settings':'Account'}</div>
+  </div>`;
+
+  // ── Tab bar ──
+  html+=`<div style="display:flex;gap:8px;margin-bottom:18px;background:rgba(0,0,0,0.25);border-radius:14px;padding:5px;">
+    <button onclick="setAccountTab('account')" style="flex:1;padding:10px;border-radius:10px;border:none;cursor:pointer;font-family:Cinzel,serif;font-size:0.88rem;font-weight:700;background:${_accountTab==='account'?'rgba(255,210,80,0.18)':'transparent'};color:${_accountTab==='account'?'#FFE060':'#8fa0ae'};">Account</button>
+    <button onclick="setAccountTab('settings')" style="flex:1;padding:10px;border-radius:10px;border:none;cursor:pointer;font-family:Cinzel,serif;font-size:0.88rem;font-weight:700;background:${_accountTab==='settings'?'rgba(255,210,80,0.18)':'transparent'};color:${_accountTab==='settings'?'#FFE060':'#8fa0ae'};">Settings</button>
+  </div>`;
+
+  if(_accountTab==='settings'){
+    if(!game.settings) game.settings={};
     const on=game.settings.showHabitatDragons!==false, ag=game.settings.advancedGraphics!==false;
-    window._settingsRender = _settingsRender;
-    el.innerHTML=`
-      <button onclick="closeSettingsPanel()" style="position:absolute;top:14px;right:16px;background:rgba(60,60,60,0.5);border:1.5px solid rgba(180,180,180,0.2);border-radius:50%;width:38px;height:38px;color:#ccc;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;">✕</button>
-      <div style="font-family:'Cinzel Decorative',serif;font-size:1.5rem;font-weight:700;color:#ccc;text-align:center;margin-bottom:28px;">⚙️ Inställningar</div>
+    html+=`
+      <div style="background:rgba(255,210,80,0.06);border:1px solid rgba(255,210,80,0.18);border-radius:14px;padding:16px 18px;margin-bottom:20px;">
+        <div style="font-family:'IM Fell English',serif;font-style:italic;font-size:0.88rem;line-height:1.6;color:rgba(220,228,205,0.8);">Even the mightiest dragon rests its wings from time to time. Tune the Vale to suit your journey — a lighter sky for a smoother flight, or every scale and ember rendered in full for the true spectacle.</div>
+      </div>
       <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.08);">
         <div><div style="font-family:Cinzel,serif;font-size:0.95rem;color:#ccc;font-weight:700;">Drakar i habitat</div><div style="font-family:Cinzel,serif;font-size:0.75rem;color:rgba(180,180,180,0.5);margin-top:4px;">Stäng av för bättre prestanda</div></div>
-        <div onclick="game.settings.showHabitatDragons=!(game.settings.showHabitatDragons!==false);saveGame();_settingsRender();" style="width:52px;height:28px;border-radius:14px;background:${on?'#44aa44':'#444'};cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0;"><div style="position:absolute;top:3px;left:${on?'24px':'3px'};width:22px;height:22px;border-radius:50%;background:#fff;transition:left 0.2s;"></div></div>
+        <div onclick="game.settings.showHabitatDragons=!(game.settings.showHabitatDragons!==false);saveGame();openAccountPanel();" style="width:52px;height:28px;border-radius:14px;background:${on?'#44aa44':'#444'};cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0;"><div style="position:absolute;top:3px;left:${on?'24px':'3px'};width:22px;height:22px;border-radius:50%;background:#fff;transition:left 0.2s;"></div></div>
       </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 0;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.08);">
         <div><div style="font-family:Cinzel,serif;font-size:0.95rem;color:#ccc;font-weight:700;">Avancerad grafik</div><div style="font-family:Cinzel,serif;font-size:0.75rem;color:rgba(180,180,180,0.5);margin-top:4px;">Stäng av för bästa prestanda</div></div>
-        <div onclick="game.settings.advancedGraphics=!(game.settings.advancedGraphics!==false);saveGame();_settingsRender();" style="width:52px;height:28px;border-radius:14px;background:${ag?'#44aa44':'#444'};cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0;"><div style="position:absolute;top:3px;left:${ag?'24px':'3px'};width:22px;height:22px;border-radius:50%;background:#fff;transition:left 0.2s;"></div></div>
+        <div onclick="game.settings.advancedGraphics=!(game.settings.advancedGraphics!==false);saveGame();openAccountPanel();" style="width:52px;height:28px;border-radius:14px;background:${ag?'#44aa44':'#444'};cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0;"><div style="position:absolute;top:3px;left:${ag?'24px':'3px'};width:22px;height:22px;border-radius:50%;background:#fff;transition:left 0.2s;"></div></div>
       </div>
-    `;
+      <div style="text-align:center;font-family:'IM Fell English',serif;font-style:italic;font-size:0.8rem;color:rgba(200,210,180,0.4);margin-top:20px;">"A wise keeper knows their island as well as their own hoard."</div>`;
+    el.innerHTML=html;
+    return;
   }
-  _settingsRender();
-  document.body.appendChild(el);
-}
 
-function closeNewsPanel(){
-  const el=document.getElementById('news-panel');
-  if(!el) return;
-  closePanelAnimated(null, el, ()=>{ el.remove(); const bd=document.getElementById('panel-backdrop'); if(bd) bd.remove(); }, true);
-}
-function openNewsPanel(){
-  let el=document.getElementById('news-panel');
-  if(el){ closeNewsPanel(); return; }
-  el=document.createElement('div');
-  el.id='news-panel';
-  el.className='panel-anim-sheet';
-  el.style.cssText='position:fixed;z-index:300;bottom:0;left:50%;transform:translateX(-50%);width:min(880px,100vw);background:linear-gradient(160deg,#1e1500,#100c00);border:2px solid rgba(220,180,40,0.5);border-bottom:none;border-radius:18px 18px 0 0;padding:28px 28px 40px;z-index:200;box-shadow:0 -4px 32px rgba(120,80,0,0.6);max-height:80vh;display:flex;flex-direction:column;';
+  const uname=game.username||'Dragon Keeper';
+  const dragonCount=game.placedHabitats.reduce((s,h)=>s+h.dragons.length,0);
+  accumulatePlaytime();
+  const playtimeStr=formatPlaytime(game.totalPlaytime||0);
+  const totalXPStr=Math.floor(game.totalXP||0).toLocaleString();
 
-  const news = [
-    { date:'2026-08-01', title:'⚡ Lightning Update — Version 1.1.0', items:[
-      '5 new dragons: ⚡ Lightning, ⚡💧 Storm, ⚡🪨 Quake, ⚡🔥 Plasma & ⚡⚡ Thunderlord Dragon',
-      'Brand new element: Lightning',
-      'New Lightning Habitat — a storm-charged crystal arena',
-      'Thunderlord Dragon is Breed Exclusive — breed two lightning-family dragons for a chance at it',
-      'New building: 🏦 Gold Vault — upgrade through 5 levels for up to +50% gold cap on every habitat',
-      'Player level cap increased to Level 30',
-      'New Settings tab with 2 toggles: habitat dragon visibility and advanced graphics',
-    ]},
-    { date:'2026-07-18', title:'💾 Fix Save Game Data — Version 1.0.3', items:[
-      'Fixed an issue where game progress was not saved between sessions',
-    ]},
-    { date:'2026-07-18', title:'🐛 Bug Fixes — Version 1.0.2', items:[
-      'Fixed Obsidian and Coral dragons showing incorrectly in habitat menu',
-      'Fixed habitat unlock levels not working in shop',
-      'Fixed news panel — all posts now stay visible permanently',
-    ]},
-    { date:'2026-07-14', title:'🖥️ Pre-Release — Version 1.0.1', items:[
-      '2 new dragons: 🖤 Obsidian Dragon and 🪸 Coral Dragon',
-      'Jimmie Vale is now available as a downloadable desktop app!',
-      'Auto-updates — the app updates itself when a new version is released',
-      'Frost Dragon max GPM increased to 1,300/min',
-      'Special dragons now max out at Level 20',
-      'New crop: Dragon\'s Soul — 45 min, 10,000 food (Level 18)',
-      'New 4th Farm slot unlocks at Level 18',
-      'Habitat and dragon unlock levels rebalanced',
-      'Anti-cheat: gold collect cooldown (30 seconds per habitat)',
-      'News panel now shows all posts — nothing disappears',
-    ]},
-    { date:'2026-07-14', title:'🌊 Aquatic Update — Version 1.0.0', items:[
-      '5 new dragons: Water, Mud, Frost, Magma & Forest Dragon',
-      'Frost Dragon is Breed Exclusive — breed Ice + Water for a 5% chance',
-      'New Water Habitat with animated palm trees and a shimmering pool',
-      'Dragon Shop now sorted by price, lowest to highest',
-      'New progressive unlock system — dragons appear as you level up',
-      'Frost Dragon card visible in shop with Breed Exclusive badge',
-    ]},
-    { date:'2026-07-11', title:'✨ Quality of Life Update', items:[
-      'Sort button in the Dragon Market — filter by element',
-      'Multi-select: combine Fire + Ice to find Blue Fire Dragon',
-      'Save button applies filter, resets when you close the shop',
-      'All button highlights when no filter is active',
-      'Element badges on each dragon card (🔥🌿🪨❄️)',
-    ]},
-    { date:'2026-07-10', title:'⚖️ Major Balance Update', items:[
-      'Poison Dragon: now Lv.12 required, costs 15,000🪙',
-      'Blue Fire Dragon: now Lv.15 required, costs 25,000🪙',
-      'Earth Dragon: costs 2,000🪙 · Ice Dragon: costs 4,000🪙',
-      'Grass Habitat: 1,500🪙 · Earth Habitat: 2,500🪙',
-      'Farms now tiered: 300🪙 → 800🪙 → 2,000🪙',
-      'Breeding time extended to 20 minutes',
-      'Random breeding results only produce Fire or Grass dragons',
-      'Gold NEWS button added to the left of EXPAND',
-      'Habitat menus now show correct habitat name',
-      '"skiptime" — secret code to instantly hatch all eggs',
-      'Food display now shows comma separators (1,000🍖)',
-    ]},
-    { date:'2026-07-09', title:'🐉 Dragon Visual Polish', items:[
-      'Poison, Ice and Blue Fire side-view dragons fully redrawn',
-      'Ice dragon: angular horn behind head, ice spikes on back, snowflake tail tip',
-      'Poison dragon: poison vial on head, green spots, floating particles',
-      'Blue Fire dragon: blue flame particles and breath',
-      'Removed double horns and overlapping spine leaves from all three',
-    ]},
-    { date:'2026-07-08', title:'🧬 Breeding Odds Rework', items:[
-      'Ice + Fire → 10% Blue Fire, 45% Ice, 45% Fire',
-      'Blue Fire + Blue Fire → 20% Blue Fire, 80% random',
-      'Any special + any normal → 10% special, 45% normal, 45% random',
-      '2 different specials → 10% each, 80% random',
-      'Level locks: Earth Lv.4 · Ice Lv.10 · Poison Lv.12 · Blue Fire Lv.15',
-    ]},
-    { date:'2026-07-07', title:'⚗️ Breeding System', items:[
-      'Breeding Cave building unlocked at Level 5 (2,000🪙)',
-      'Breed two dragons for a chance at rare offspring',
-      'Special combos: Grass+Fire → Poison, Ice+Fire → Blue Fire',
-      'Special dragons (Poison, Blue Fire) always have 10% chance in breeding',
-    ]},
-    { date:'2026-07-07', title:'❄️ Ice Update', items:[
-      'Ice Dragon added — unlocks at Level 11',
-      'Ice Habitat added — holds up to 5,000🪙, unlocks at Level 11',
-      'Blue Fire Dragon added — unlocks at Level 15, goes in Ice or Fire habitat',
-    ]},
-    { date:'2026-07-06', title:'☠️ Poison Dragon', items:[
-      'Poison Dragon added — goes in Grass or Fire habitat',
-      'Gives 30🪙/min at Lv.1 and 650🪙/min at max level',
-    ]},
-    { date:'2026-07-06', title:'🏗️ Buildings', items:[
-      'Breeding Cave — 2,000🪙, Level 5 required',
-      'Dragon Hatchery — Free, store and hatch dragon eggs',
-      'Farm — grow food for your dragons (up to 3 farms)',
-      'New crop: Moon Petal (Level 10) — 5,000🪙, 20 min, 2,300🍖',
-    ]},
-    { date:'2026-07-05', title:'🐉 Core Game', items:[
-      'Fire Dragon, Grass Dragon, Earth Dragon — the original trio',
-      'Fire, Grass and Earth habitats',
-      'Gold generation, food system, dragon leveling up to Level 15',
-      'Camera with zoom and pan, drag-and-drop placement',
-    ]},
-  ];
-
-  el.innerHTML=`
-    <button onclick="closeNewsPanel()" style="position:absolute;top:14px;right:16px;background:rgba(60,40,0,0.5);border:1.5px solid rgba(220,180,40,0.3);border-radius:50%;width:38px;height:38px;color:#ffd860;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;">✕</button>
-    <div style="font-family:'Cinzel Decorative',serif;font-size:1.3rem;font-weight:700;color:#ffd860;text-align:center;margin-bottom:20px;flex-shrink:0;">📰 News & Updates</div>
-    <div id="news-scroll" style="overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:14px;scrollbar-width:thin;scrollbar-color:rgba(220,180,40,0.3) transparent;padding-right:4px;">
-      ${news.map(n=>`
-        <div style="background:rgba(255,200,50,0.06);border:1px solid rgba(220,180,40,0.2);border-radius:12px;padding:14px 16px;position:relative;">
-          <div style="position:absolute;top:10px;right:12px;font-family:Cinzel,serif;font-size:0.65rem;color:rgba(220,180,40,0.5);">${n.date}</div>
-          <div style="font-family:Cinzel,serif;font-size:0.92rem;font-weight:700;color:#ffd860;margin-bottom:8px;">${n.title}</div>
-          <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;">
-            ${n.items.map(i=>`<li style="font-family:serif;font-size:0.78rem;color:rgba(255,220,140,0.8);">${i}</li>`).join('')}
-          </ul>
-        </div>`).join('')}
+  html+=`<div style="display:flex;align-items:center;gap:18px;margin-bottom:24px;">
+    <div style="position:relative;flex-shrink:0;">
+      <div style="width:84px;height:84px;border-radius:50%;border:3px solid rgba(255,210,80,0.6);background:radial-gradient(circle at 35% 30%,#5a6a7a,#2a3440 70%);display:flex;align-items:center;justify-content:center;font-size:2.7rem;box-shadow:0 4px 20px rgba(0,0,0,0.5);">${cur}</div>
+      <button onclick="toggleAvatarPicker()" title="Change avatar" style="position:absolute;bottom:-4px;right:-4px;width:30px;height:30px;border-radius:50%;background:rgba(255,210,80,0.9);border:2px solid #20242a;color:#20242a;font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">✎</button>
     </div>
-  `;
-  document.body.appendChild(el);
-}
+    <div style="flex:1;min-width:0;">
+      <div style="font-family:Cinzel,serif;font-size:0.72rem;color:#8fa0ae;letter-spacing:1px;margin-bottom:4px;">USERNAME</div>`;
+  if(_editingUsername){
+    html+=`<input id="username-input" type="text" value="${uname.replace(/"/g,'&quot;')}" maxlength="18" onkeydown="if(event.key==='Enter')saveUsername(this.value);if(event.key==='Escape'){_editingUsername=false;openAccountPanel();}" onblur="saveUsername(this.value)" style="width:100%;background:rgba(255,255,255,0.08);border:1.5px solid rgba(255,210,80,0.5);border-radius:8px;padding:6px 10px;font-family:Cinzel,serif;font-size:1.15rem;color:#fff;box-sizing:border-box;">`;
+  } else {
+    html+=`<div onclick="startEditUsername()" style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+      <div style="font-family:Cinzel,serif;font-size:1.25rem;color:#fff;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${uname}</div>
+      <span style="font-family:Cinzel,serif;font-size:0.85rem;font-weight:700;color:#20242a;background:rgba(255,210,80,0.9);padding:2px 9px;border-radius:10px;flex-shrink:0;">Lv${game.level||1}</span>
+      <span style="color:#8fa0ae;font-size:0.9rem;flex-shrink:0;">✎</span>
+    </div>`;
+  }
+  html+=`</div>
+  </div>`;
 
+  html+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:14px;text-align:center;">
+      <div style="font-family:Cinzel,serif;font-size:1.5rem;font-weight:700;color:#FFE060;">${totalXPStr}</div>
+      <div style="font-family:Cinzel,serif;font-size:0.7rem;color:#8fa0ae;letter-spacing:0.5px;margin-top:2px;">TOTAL XP</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:14px;text-align:center;">
+      <div style="font-family:Cinzel,serif;font-size:1.5rem;font-weight:700;color:#FFE060;">${Math.floor(game.totalGoldEarned||0).toLocaleString()}</div>
+      <div style="font-family:Cinzel,serif;font-size:0.7rem;color:#8fa0ae;letter-spacing:0.5px;margin-top:2px;">GOLD</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:14px;text-align:center;">
+      <div style="font-family:Cinzel,serif;font-size:1.5rem;font-weight:700;color:#FFE060;">${dragonCount}</div>
+      <div style="font-family:Cinzel,serif;font-size:0.7rem;color:#8fa0ae;letter-spacing:0.5px;margin-top:2px;">DRAGONS</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:14px;text-align:center;">
+      <div style="font-family:Cinzel,serif;font-size:1.5rem;font-weight:700;color:#FFE060;">${playtimeStr}</div>
+      <div style="font-family:Cinzel,serif;font-size:0.7rem;color:#8fa0ae;letter-spacing:0.5px;margin-top:2px;">PLAYTIME</div>
+    </div>
+  </div>`;
+
+  el.innerHTML=html;
+}
 
 // ── SECRET CODE: type "skiptime" to instantly hatch all eggs ──
 (function(){
@@ -11727,38 +12899,160 @@ function updateNewsBadge(){
   }
 }
 
+const UPDATES_LOG = [
+  { date:'2026-08-01', title:'⚡ Lightning Update — Version 1.1.0', items:[
+    '5 new dragons: ⚡ Lightning, ⚡💧 Storm, ⚡🪨 Quake, ⚡🔥 Plasma & ⚡⚡ Thunderlord Dragon',
+    'Brand new element: Lightning',
+    'New Lightning Habitat — a storm-charged crystal arena',
+    'Thunderlord Dragon is Breed Exclusive — breed two lightning-family dragons for a chance at it',
+    'New building: 🏦 Gold Vault — upgrade through 5 levels for up to +50% gold cap on every habitat',
+    'Player level cap increased to Level 30',
+    'New Settings tab with 2 toggles: habitat dragon visibility and advanced graphics',
+  ]},
+  { date:'2026-07-18', title:'💾 Fix Save Game Data — Version 1.0.3', items:[
+    'Fixed an issue where game progress was not saved between sessions',
+  ]},
+  { date:'2026-07-18', title:'🐛 Bug Fixes — Version 1.0.2', items:[
+    'Fixed Obsidian and Coral dragons showing incorrectly in habitat menu',
+    'Fixed habitat unlock levels not working in shop',
+    'Fixed news panel — all posts now stay visible permanently',
+  ]},
+  { date:'2026-07-14', title:'🖥️ Pre-Release — Version 1.0.1', items:[
+    '2 new dragons: 🖤 Obsidian Dragon and 🪸 Coral Dragon',
+    'Jimmie Vale is now available as a downloadable desktop app!',
+    'Auto-updates — the app updates itself when a new version is released',
+    'Frost Dragon max GPM increased to 1,300/min',
+    'Special dragons now max out at Level 20',
+    'New crop: Dragon\'s Soul — 45 min, 10,000 food (Level 18)',
+    'New 4th Farm slot unlocks at Level 18',
+    'Habitat and dragon unlock levels rebalanced',
+    'Anti-cheat: gold collect cooldown (30 seconds per habitat)',
+    'News panel now shows all posts — nothing disappears',
+  ]},
+  { date:'2026-07-14', title:'🌊 Aquatic Update — Version 1.0.0', items:[
+    '5 new dragons: Water, Mud, Frost, Magma & Forest Dragon',
+    'Frost Dragon is Breed Exclusive — breed Ice + Water for a 5% chance',
+    'New Water Habitat with animated palm trees and a shimmering pool',
+    'Dragon Shop now sorted by price, lowest to highest',
+    'New progressive unlock system — dragons appear as you level up',
+    'Frost Dragon card visible in shop with Breed Exclusive badge',
+  ]},
+  { date:'2026-07-11', title:'✨ Quality of Life Update', items:[
+    'Sort button in the Dragon Market — filter by element',
+    'Multi-select: combine Fire + Ice to find Blue Fire Dragon',
+    'Save button applies filter, resets when you close the shop',
+    'All button highlights when no filter is active',
+    'Element badges on each dragon card (🔥🌿🪨❄️)',
+  ]},
+  { date:'2026-07-10', title:'⚖️ Major Balance Update', items:[
+    'Poison Dragon: now Lv.12 required, costs 15,000🪙',
+    'Blue Fire Dragon: now Lv.15 required, costs 25,000🪙',
+    'Earth Dragon: costs 2,000🪙 · Ice Dragon: costs 4,000🪙',
+    'Grass Habitat: 1,500🪙 · Earth Habitat: 2,500🪙',
+    'Farms now tiered: 300🪙 → 800🪙 → 2,000🪙',
+    'Breeding time extended to 20 minutes',
+    'Random breeding results only produce Fire or Grass dragons',
+    'Gold NEWS button added to the left of EXPAND',
+    'Habitat menus now show correct habitat name',
+    '"skiptime" — secret code to instantly hatch all eggs',
+    'Food display now shows comma separators (1,000🍖)',
+  ]},
+  { date:'2026-07-09', title:'🐉 Dragon Visual Polish', items:[
+    'Poison, Ice and Blue Fire side-view dragons fully redrawn',
+    'Ice dragon: angular horn behind head, ice spikes on back, snowflake tail tip',
+    'Poison dragon: poison vial on head, green spots, floating particles',
+    'Blue Fire dragon: blue flame particles and breath',
+    'Removed double horns and overlapping spine leaves from all three',
+  ]},
+  { date:'2026-07-08', title:'🧬 Breeding Odds Rework', items:[
+    'Ice + Fire → 10% Blue Fire, 45% Ice, 45% Fire',
+    'Blue Fire + Blue Fire → 20% Blue Fire, 80% random',
+    'Any special + any normal → 10% special, 45% normal, 45% random',
+    '2 different specials → 10% each, 80% random',
+    'Level locks: Earth Lv.4 · Ice Lv.10 · Poison Lv.12 · Blue Fire Lv.15',
+  ]},
+  { date:'2026-07-07', title:'⚗️ Breeding System', items:[
+    'Breeding Cave building unlocked at Level 5 (2,000🪙)',
+    'Breed two dragons for a chance at rare offspring',
+    'Special combos: Grass+Fire → Poison, Ice+Fire → Blue Fire',
+    'Special dragons (Poison, Blue Fire) always have 10% chance in breeding',
+  ]},
+  { date:'2026-07-07', title:'❄️ Ice Update', items:[
+    'Ice Dragon added — unlocks at Level 11',
+    'Ice Habitat added — holds up to 5,000🪙, unlocks at Level 11',
+    'Blue Fire Dragon added — unlocks at Level 15, goes in Ice or Fire habitat',
+  ]},
+  { date:'2026-07-06', title:'☠️ Poison Dragon', items:[
+    'Poison Dragon added — goes in Grass or Fire habitat',
+    'Gives 30🪙/min at Lv.1 and 650🪙/min at max level',
+  ]},
+  { date:'2026-07-06', title:'🏗️ Buildings', items:[
+    'Breeding Cave — 2,000🪙, Level 5 required',
+    'Dragon Hatchery — Free, store and hatch dragon eggs',
+    'Farm — grow food for your dragons (up to 3 farms)',
+    'New crop: Moon Petal (Level 10) — 5,000🪙, 20 min, 2,300🍖',
+  ]},
+  { date:'2026-07-05', title:'🐉 Core Game', items:[
+    'Fire Dragon, Grass Dragon, Earth Dragon — the original trio',
+    'Fire, Grass and Earth habitats',
+    'Gold generation, food system, dragon leveling up to Level 15',
+    'Camera with zoom and pan, drag-and-drop placement',
+  ]},
+];
+
+let _news2Tab='news';
+function setNews2Tab(tab){ _news2Tab=tab; openNewsPanel2(); }
+
 function closeNewsPanel2(){
   const el=document.getElementById('news2-panel');
   if(!el) return;
   el.style.animation='panelBoxOutCentered .16s ease both';
-  setTimeout(()=>{ el.remove(); const bd=document.getElementById('panel-backdrop'); if(bd) bd.remove(); }, 160);
+  setTimeout(()=>{ el.remove(); const bd=document.getElementById('panel-backdrop'); if(bd) bd.remove(); _news2Tab='news'; }, 160);
 }
 function openNewsPanel2(){
   let el=document.getElementById('news2-panel');
-  if(el){ closeNewsPanel2(); return; }
+  if(!el){
+    markAllNewsRead(); // clears the notification dot; posts themselves stay visible permanently
+    el=document.createElement('div');
+    el.id='news2-panel';
+    el.className='panel-anim-box-centered';
+    el.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(92vw,82vh,760px);height:min(92vw,82vh,760px);max-width:96vw;max-height:92vh;overflow-y:auto;background:linear-gradient(160deg,#020e1a,#051828);border:2px solid rgba(80,160,255,0.4);border-radius:22px;padding:clamp(24px,4vw,44px) clamp(20px,3.5vw,36px) clamp(20px,3.5vw,36px);z-index:300;box-shadow:0 8px 60px rgba(0,60,180,0.6);display:flex;flex-direction:column;';
+    document.body.appendChild(el);
+  } else {
+    const bd=document.getElementById('panel-backdrop'); if(bd) bd.style.animation='none';
+    el.style.animation='none';
+  }
 
-  markAllNewsRead(); // clears the notification dot; posts themselves stay visible permanently
-
-  el=document.createElement('div');
-  el.id='news2-panel';
-  el.className='panel-anim-box-centered';
-  el.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(92vw,760px);height:min(92vw,760px);background:linear-gradient(160deg,#020e1a,#051828);border:2px solid rgba(80,160,255,0.4);border-radius:22px;padding:44px 36px 36px;z-index:300;box-shadow:0 8px 60px rgba(0,60,180,0.6);display:flex;flex-direction:column;';
-
-  const postsHtml = NEWS2_POSTS.length===0
-    ? '<div style="font-family:Cinzel,serif;color:rgba(120,180,255,0.7);font-size:0.95rem;text-align:center;font-style:italic;margin:auto;">No news yet — check back soon!</div>'
-    : NEWS2_POSTS.map(p=>`
-        <div style="background:rgba(80,160,255,0.06);border:1px solid rgba(80,160,255,0.2);border-radius:16px;padding:24px;position:relative;flex-shrink:0;box-sizing:border-box;">
-          <div style="position:absolute;top:14px;right:16px;font-family:Cinzel,serif;font-size:0.8rem;color:rgba(80,160,255,0.5);">${p.date}</div>
-          <div style="font-family:Cinzel,serif;font-size:1.25rem;font-weight:700;color:#7ac8ff;margin-bottom:14px;">${p.title}</div>
-          <div style="font-family:serif;font-size:1.05rem;color:rgba(150,210,255,0.85);line-height:1.6;">${p.body}</div>
+  let bodyHtml;
+  if(_news2Tab==='updates'){
+    bodyHtml = UPDATES_LOG.map(n=>`
+        <div style="background:rgba(255,200,50,0.06);border:1px solid rgba(220,180,40,0.2);border-radius:12px;padding:14px 16px;position:relative;">
+          <div style="position:absolute;top:10px;right:12px;font-family:Cinzel,serif;font-size:0.65rem;color:rgba(220,180,40,0.5);">${n.date}</div>
+          <div style="font-family:Cinzel,serif;font-size:0.92rem;font-weight:700;color:#ffd860;margin-bottom:8px;">${n.title}</div>
+          <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;">
+            ${n.items.map(i=>`<li style="font-family:serif;font-size:0.78rem;color:rgba(255,220,140,0.8);">${i}</li>`).join('')}
+          </ul>
         </div>`).join('');
+  } else {
+    bodyHtml = NEWS2_POSTS.length===0
+      ? '<div style="font-family:Cinzel,serif;color:rgba(120,180,255,0.7);font-size:0.95rem;text-align:center;font-style:italic;margin:auto;">No news yet — check back soon!</div>'
+      : NEWS2_POSTS.map(p=>`
+          <div style="background:rgba(80,160,255,0.06);border:1px solid rgba(80,160,255,0.2);border-radius:16px;padding:24px;position:relative;flex-shrink:0;box-sizing:border-box;">
+            <div style="position:absolute;top:14px;right:16px;font-family:Cinzel,serif;font-size:0.8rem;color:rgba(80,160,255,0.5);">${p.date}</div>
+            <div style="font-family:Cinzel,serif;font-size:1.25rem;font-weight:700;color:#7ac8ff;margin-bottom:14px;">${p.title}</div>
+            <div style="font-family:serif;font-size:1.05rem;color:rgba(150,210,255,0.85);line-height:1.6;">${p.body}</div>
+          </div>`).join('');
+  }
 
   el.innerHTML=`
     <button onclick="closeNewsPanel2()" style="position:absolute;top:14px;right:16px;background:rgba(0,30,80,0.5);border:1.5px solid rgba(80,160,255,0.3);border-radius:50%;width:38px;height:38px;color:#7ac8ff;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;">✕</button>
-    <div style="font-family:'Cinzel Decorative',serif;font-size:1.9rem;font-weight:700;color:#7ac8ff;text-align:center;margin-bottom:28px;flex-shrink:0;text-shadow:0 0 16px rgba(80,160,255,0.5);">📡 News</div>
-    <div style="overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:14px;scrollbar-width:thin;scrollbar-color:rgba(80,160,255,0.3) transparent;">${postsHtml}</div>
+    <div style="font-family:'Cinzel Decorative',serif;font-size:1.7rem;font-weight:700;color:${_news2Tab==='updates'?'#ffd860':'#7ac8ff'};text-align:center;margin-bottom:18px;flex-shrink:0;text-shadow:0 0 16px ${_news2Tab==='updates'?'rgba(255,210,80,0.5)':'rgba(80,160,255,0.5)'};">${_news2Tab==='updates'?'Updates':'News'}</div>
+    <div style="display:flex;gap:8px;margin-bottom:22px;background:rgba(0,0,0,0.25);border-radius:14px;padding:5px;flex-shrink:0;">
+      <button onclick="setNews2Tab('news')" style="flex:1;padding:10px;border-radius:10px;border:none;cursor:pointer;font-family:Cinzel,serif;font-size:0.88rem;font-weight:700;background:${_news2Tab==='news'?'rgba(80,160,255,0.18)':'transparent'};color:${_news2Tab==='news'?'#7ac8ff':'#6a8aa8'};">News</button>
+      <button onclick="setNews2Tab('updates')" style="flex:1;padding:10px;border-radius:10px;border:none;cursor:pointer;font-family:Cinzel,serif;font-size:0.88rem;font-weight:700;background:${_news2Tab==='updates'?'rgba(255,210,80,0.18)':'transparent'};color:${_news2Tab==='updates'?'#ffd860':'#a89868'};">Updates</button>
+    </div>
+    <div style="overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:14px;scrollbar-width:thin;scrollbar-color:rgba(80,160,255,0.3) transparent;">${bodyHtml}</div>
   `;
-  document.body.appendChild(el);
 }
 
 updateNewsBadge();
@@ -11841,34 +13135,15 @@ setInterval(()=>{ if(!document.hidden) tickOfflineGold(); }, 10000);
 
 <div id="hatchery-menu">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-    <div style="font-family:'Cinzel Decorative',serif;font-size:0.9rem;color:#d4b870;letter-spacing:2px;">🥚 Dragon Hatchery</div>
+    <div style="font-family:'Cinzel Decorative',serif;font-size:0.9em;color:#d4b870;letter-spacing:2px;">🥚 Dragon Hatchery</div>
     <div style="display:flex;gap:8px;align-items:center;">
-      <button id="hatchery-move-btn" onclick="startHatcheryMove()" style="background:rgba(255,200,60,0.12);border:1px solid rgba(255,200,60,0.3);color:#FFE060;font-family:Cinzel,serif;font-size:0.72rem;padding:5px 12px;border-radius:14px;cursor:pointer;">✦ Move</button>
-      <button onclick="closeHatcheryMenu()" style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.15);border-radius:50%;width:28px;height:28px;color:#aaa;cursor:pointer;font-size:0.9rem;">✕</button>
+      <button id="hatchery-move-btn" onclick="startHatcheryMove()" style="background:rgba(255,200,60,0.12);border:1px solid rgba(255,200,60,0.3);color:#FFE060;font-family:Cinzel,serif;font-size:0.72em;padding:5px 12px;border-radius:14px;cursor:pointer;">✦ Move</button>
+      <button onclick="closeHatcheryMenu()" style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.15);border-radius:50%;width:28px;height:28px;color:#aaa;cursor:pointer;font-size:0.9em;">✕</button>
     </div>
   </div>
   <div id="hatchery-slots" style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;"></div>
 </div>
 <div id="tut-float-hint" style="display:none;position:fixed;top:16px;left:50%;transform:translateX(-50%);background:linear-gradient(160deg,#2a1e08,#1a1208);border:1.5px solid rgba(255,200,60,0.55);border-radius:12px;padding:10px 22px;font-family:Cinzel,serif;font-size:0.88rem;font-weight:700;color:#FFE878;box-shadow:0 4px 20px rgba(0,0,0,0.7);z-index:9500;pointer-events:none;white-space:nowrap;animation:tutBounce 0.7s ease-in-out infinite alternate;"></div>
-<div id="expand-panel" style="display:none;position:fixed;inset:0;z-index:300;align-items:center;justify-content:center;will-change:transform;transform:translateZ(0);">
-  <div style="position:absolute;inset:0;background:rgba(0,0,0,0.55);" onclick="closeExpandPanel()"></div>
-  <div id="expand-inner" style="position:relative;z-index:1;width:min(900px,95vw);background:linear-gradient(160deg,#0a180a,#060e06);border:2px solid rgba(80,200,80,0.45);border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(0,60,0,0.7);">
-    <div style="background:linear-gradient(90deg,#0e2a0e,#1a4a1a,#0e2a0e);padding:22px 28px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid rgba(80,200,80,0.25);position:relative;">
-      <div style="font-family:'Cinzel Decorative',serif;font-size:1.4rem;font-weight:700;color:#88ee88;letter-spacing:2px;">Expand Island</div>
-      <button onclick="closeExpandPanel()" style="position:absolute;right:20px;background:rgba(0,0,0,0.3);border:1px solid rgba(80,200,80,0.3);border-radius:50%;width:42px;height:42px;color:#88ee88;cursor:pointer;font-size:1.3rem;display:flex;align-items:center;justify-content:center;">✕</button>
-    </div>
-    <div style="padding:32px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;text-align:center;">
-      <div style="background:rgba(20,50,20,0.6);border:1.5px solid rgba(80,200,80,0.3);border-radius:16px;padding:28px 40px;text-align:center;width:100%;max-width:400px;margin:0 auto;">
-        <div style="font-size:3rem;margin-bottom:12px;">🗺️</div>
-        <div style="font-family:'Cinzel Decorative',serif;font-size:1.1rem;font-weight:700;color:#88ee88;margin-bottom:8px;">Island Expansion</div>
-        <div style="font-size:0.82rem;color:rgba(140,200,140,0.7);margin-bottom:18px;">Unlock a brand new 18 × 18 area to the right of your island — double your building space!</div>
-        <div style="font-family:Cinzel,serif;font-size:1rem;color:rgba(255,220,80,0.9);margin-bottom:14px;">🪙 20,000 Gold</div>
-        <button onclick="buyExpansion()" id="buy-expansion-btn" style="background:linear-gradient(180deg,#2a6a2a,#1a4a1a);border:1.5px solid rgba(80,200,80,0.5);border-radius:20px;padding:13px 36px;font-family:Cinzel,serif;font-size:0.95rem;font-weight:700;color:#88ee88;cursor:pointer;display:inline-block;">🗺️ Expand Island</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div id="dragon-picker" style="display:none;position:fixed;inset:0;z-index:9000;align-items:center;justify-content:center;">
   <div style="position:absolute;inset:0;background:rgba(0,0,0,0.65);" onclick="closeDragonPicker()"></div>
   <div style="position:relative;z-index:1;width:min(760px,95vw);background:linear-gradient(160deg,#120a1e,#080510);border:2px solid rgba(160,80,255,0.5);border-radius:20px;overflow:hidden;box-shadow:0 24px 60px rgba(60,0,120,0.7);">
