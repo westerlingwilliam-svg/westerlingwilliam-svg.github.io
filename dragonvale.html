@@ -10819,6 +10819,7 @@ function openQuestPanel(){
   if(!el) return;
   const bg=el.querySelector(':scope > div:first-child'), box=document.getElementById('quest-inner');
   el.style.display='flex';
+  if(box) sizeFixedRatioPanel(box, 900, 720);
   if(bg){ bg.style.animation='none'; void bg.offsetWidth; bg.style.animation='panelBgFadeIn .2s ease both'; }
   if(box){ box.style.animation='none'; void box.offsetWidth; box.style.animation='panelBoxIn .3s cubic-bezier(0.34,1.56,0.64,1) both'; }
   renderQuestList();
@@ -12532,7 +12533,9 @@ function sizeFixedRatioPanel(el, baseW, baseH, maxScale){
 }
 window.addEventListener('resize', ()=>{
   const el=document.getElementById('account-panel');
-  if(el) sizeFixedRatioPanel(el, 560, 500);
+  if(el) sizeFixedRatioPanel(el, 560, 440);
+  const qel=document.getElementById('quest-inner');
+  if(qel && document.getElementById('quest-panel').style.display!=='none') sizeFixedRatioPanel(qel, 900, 720);
 });
 
 function openAccountPanel(){
@@ -12549,7 +12552,7 @@ function openAccountPanel(){
     const bd=document.getElementById('panel-backdrop'); if(bd) bd.style.animation='none';
     el.style.animation='none';
   }
-  sizeFixedRatioPanel(el, 560, 500);
+  sizeFixedRatioPanel(el, 560, 440);
   const cur=game.avatar||'🧑';
 
   // ── Avatar picker takes over the whole panel — no tabs/stats/username visible ──
@@ -13103,13 +13106,13 @@ setInterval(()=>{ if(!document.hidden) tickOfflineGold(); }, 10000);
 
 <div id="quest-panel" style="display:none;position:fixed;inset:0;z-index:300;align-items:center;justify-content:center;will-change:transform;transform:translateZ(0);">
   <div style="position:absolute;inset:0;background:rgba(0,0,0,0.55);" onclick="closeQuestPanel()"></div>
-  <div id="quest-inner" style="position:relative;z-index:1;width:min(1020px,95vw);background:linear-gradient(160deg,#0a1428,#060a18);border:2px solid rgba(80,160,255,0.5);border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,80,0.7);">
+  <div id="quest-inner" style="position:relative;z-index:1;display:flex;flex-direction:column;background:linear-gradient(160deg,#0a1428,#060a18);border:2px solid rgba(80,160,255,0.5);border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,80,0.7);">
     <!-- Header -->
     <div style="background:linear-gradient(90deg,#0e1e4a,#1a3a7a,#0e1e4a);padding:22px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(80,160,255,0.3);">
       <div style="font-family:'Cinzel Decorative',serif;font-size:2rem;font-weight:700;color:#a0d0ff;letter-spacing:2px;">📜 Quests</div>
       <button onclick="closeQuestPanel()" style="background:rgba(0,0,0,0.3);border:1px solid rgba(80,160,255,0.3);border-radius:50%;width:42px;height:42px;color:#a0d0ff;cursor:pointer;font-size:1.3rem;display:flex;align-items:center;justify-content:center;">✕</button>
     </div>
-    <div id="quest-list" style="padding:16px 20px;display:flex;flex-direction:column;gap:12px;height:60vh;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(80,160,255,0.4) transparent;"></div>
+    <div id="quest-list" style="padding:16px 20px;display:flex;flex-direction:column;gap:12px;flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(80,160,255,0.4) transparent;"></div>
   </div>
 </div>
 <div id="game-confirm">
