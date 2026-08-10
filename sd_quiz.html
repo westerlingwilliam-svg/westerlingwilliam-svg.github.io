@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SD-Quiz | Jimmie.Fun</title>
+<style>
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(-45deg, #001f3f, #005293, #003d6e, #001a33);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    margin: 0;
+    min-height: 100vh;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .wrap { width: 100%; max-width: 640px; }
+
+  .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; min-height: 22px; }
+  .back-link {
+    color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.85rem;
+    font-weight: 700; letter-spacing: 1px; display: flex; align-items: center; gap: 6px;
+    background: none; border: none; cursor: pointer; font-family: inherit; padding: 0;
+  }
+  .back-link:hover { color: #fecc00; }
+
+  h1 {
+    text-align: center; font-size: 2.4rem; margin: 0 0 6px; color: #fecc00;
+    text-shadow: 0 0 20px rgba(254,204,0,0.5), 3px 3px 0px #005293;
+    letter-spacing: 2px;
+  }
+  .subtitle { text-align: center; color: rgba(255,255,255,0.65); font-size: 0.95rem; margin-bottom: 26px; }
+
+  .flag-icon { width: 38px; height: 25px; display: inline-block; vertical-align: middle; margin: 0 10px; filter: drop-shadow(0 0 6px rgba(254,204,0,0.5)); }
+  .flag-icon svg { display: block; width: 100%; height: 100%; }
+
+  .card {
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-bottom: 4px solid #fecc00;
+    border-radius: 20px;
+    padding: 32px 28px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+  }
+
+  /* Difficulty menu */
+  .diff-list { display: flex; flex-direction: column; gap: 14px; }
+  .diff-card {
+    position: relative;
+    display: flex; align-items: center; gap: 16px;
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid rgba(255,255,255,0.15);
+    border-left: 5px solid var(--diff-color, #fecc00);
+    border-radius: 14px;
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: 0.18s;
+    text-align: left;
+  }
+  .diff-card:hover { background: rgba(255,255,255,0.11); transform: translateX(4px); }
+  .diff-icon { font-size: 2rem; flex-shrink: 0; width: 46px; text-align: center; }
+  .diff-info { flex: 1; min-width: 0; }
+  .diff-name { font-size: 1.15rem; font-weight: 900; letter-spacing: 0.5px; color: var(--diff-color, #fecc00); text-transform: uppercase; }
+  .diff-meta { font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 3px; }
+  .diff-best {
+    flex-shrink: 0; text-align: right; font-size: 0.78rem; color: rgba(255,255,255,0.55);
+    font-weight: 700; line-height: 1.4;
+  }
+  .diff-best .num { font-size: 1.1rem; color: white; }
+  .diff-done-badge {
+    position: absolute; top: -9px; right: -9px;
+    background: linear-gradient(135deg,#4ade80,#16a34a);
+    color: #04260f; font-size: 0.65rem; font-weight: 900;
+    padding: 5px 10px; border-radius: 20px; letter-spacing: 0.5px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.4); border: 2px solid #002a52;
+    display: flex; align-items: center; gap: 4px;
+  }
+
+  /* Progress bar */
+  .progress-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; font-size:0.8rem; color: rgba(255,255,255,0.6); font-weight:700; letter-spacing:0.5px;}
+  .progress-track { height:8px; border-radius:6px; background: rgba(255,255,255,0.12); overflow:hidden; margin-bottom: 26px;}
+  .progress-fill { height:100%; background: linear-gradient(90deg,#fecc00,#ffe680); border-radius:6px; transition: width 0.35s ease; }
+
+  .question { font-size: 1.25rem; font-weight: 700; line-height: 1.5; margin-bottom: 24px; min-height: 3.4em; }
+
+  .options { display: flex; flex-direction: column; gap: 12px; }
+  .option {
+    text-align: left;
+    background: rgba(255,255,255,0.06);
+    border: 1.5px solid rgba(255,255,255,0.18);
+    color: white;
+    padding: 15px 18px;
+    border-radius: 12px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .option:hover:not(.locked) { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.4); transform: translateX(3px); }
+  .option .letter {
+    flex-shrink:0; width:28px; height:28px; border-radius:50%;
+    background: rgba(255,255,255,0.12); display:flex; align-items:center; justify-content:center;
+    font-weight:900; font-size:0.85rem;
+  }
+  .option.correct { background: rgba(60,190,90,0.28); border-color: #4ade80; }
+  .option.correct .letter { background: #4ade80; color: #003300; }
+  .option.wrong { background: rgba(220,60,60,0.28); border-color: #f87171; }
+  .option.wrong .letter { background: #f87171; color: #3a0000; }
+  .option.locked { cursor: default; }
+  .option.dim { opacity: 0.45; }
+
+  .explain {
+    margin-top: 18px; font-size: 0.9rem; line-height: 1.6; color: rgba(255,255,255,0.8);
+    background: rgba(0,0,0,0.2); border-left: 3px solid #fecc00; border-radius: 8px;
+    padding: 14px 16px; display: none;
+  }
+  .explain.show { display: block; }
+
+  .next-btn {
+    display: block; width: 100%; margin-top: 22px; padding: 15px; border: none;
+    background: #fecc00; color: #002a52; font-weight: 900; font-size: 1rem;
+    border-radius: 14px; cursor: pointer; letter-spacing: 1px; text-transform: uppercase;
+    box-shadow: 0 6px 0 #b38f00; transition: 0.15s; opacity: 0; pointer-events: none;
+  }
+  .next-btn.show { opacity: 1; pointer-events: all; }
+  .next-btn:hover { background: #fff; }
+  .next-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #b38f00; }
+
+  /* Result screen */
+  .result { text-align: center; }
+  .result .score-num { font-size: 4.5rem; font-weight: 900; color: #fecc00; text-shadow: 0 0 30px rgba(254,204,0,0.5); line-height: 1; margin-bottom: 4px; }
+  .result .score-label { font-size: 1rem; color: rgba(255,255,255,0.65); margin-bottom: 10px; letter-spacing: 1px; }
+  .result .best-line { font-size: 0.85rem; color: rgba(255,220,120,0.85); font-weight: 700; margin-bottom: 22px; min-height: 1.3em; }
+  .result .verdict { font-size: 1.15rem; font-weight: 700; margin-bottom: 24px; line-height: 1.5; }
+  .result-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .btn-secondary {
+    background: rgba(255,255,255,0.1); color: white; border: 1.5px solid rgba(255,255,255,0.3);
+    padding: 13px 26px; border-radius: 14px; font-weight: 700; cursor: pointer; font-size: 0.9rem;
+    text-decoration: none; display:inline-block; font-family: inherit;
+  }
+  .btn-secondary:hover { background: rgba(255,255,255,0.2); }
+  .btn-primary {
+    background: #fecc00; color: #002a52; border: none;
+    padding: 13px 26px; border-radius: 14px; font-weight: 900; cursor: pointer; font-size: 0.9rem;
+    text-decoration: none; display:inline-block; box-shadow: 0 5px 0 #b38f00;
+  }
+  .btn-primary:hover { background: #fff; }
+  .btn-primary:active { transform: translateY(3px); box-shadow: 0 2px 0 #b38f00; }
+
+  .fact-source { text-align:center; font-size:0.68rem; color: rgba(255,255,255,0.35); margin-top: 22px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="top-bar">
+    <a href="games.html" class="back-link" id="top-back-link">← Tillbaka till spelen</a>
+  </div>
+
+  <h1><span class="flag-icon"><svg viewBox="0 0 16 10"><rect width="16" height="10" fill="#005293"/><rect x="5" y="0" width="2" height="10" fill="#fecc00"/><rect x="0" y="4" width="16" height="2" fill="#fecc00"/></svg></span>SD-QUIZ<span class="flag-icon"><svg viewBox="0 0 16 10"><rect width="16" height="10" fill="#005293"/><rect x="5" y="0" width="2" height="10" fill="#fecc00"/><rect x="0" y="4" width="16" height="2" fill="#fecc00"/></svg></span></h1>
+  <div class="subtitle" id="subtitle-text">Hur mycket vet du om Sverigedemokraternas historia och fakta?</div>
+
+  <div class="card">
+
+    <div id="menu-view">
+      <div class="diff-list" id="diff-list"></div>
+    </div>
+
+    <div id="quiz-view" style="display:none;">
+      <div class="progress-row">
+        <span id="q-counter">Fråga 1 av 8</span>
+        <span id="q-score">Rätt: 0</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+
+      <div class="question" id="question-text"></div>
+      <div class="options" id="options-list"></div>
+      <div class="explain" id="explain-box"></div>
+      <button class="next-btn" id="next-btn" onclick="nextQuestion()">Nästa fråga →</button>
+    </div>
+
+    <div id="result-view" class="result" style="display:none;">
+      <div class="score-num" id="final-score">0/8</div>
+      <div class="score-label">RÄTT SVAR</div>
+      <div class="best-line" id="best-line"></div>
+      <div class="verdict" id="verdict-text"></div>
+      <div class="result-actions">
+        <button class="btn-primary" onclick="restartQuiz()">Spela igen</button>
+        <button class="btn-secondary" onclick="showMenu()">Byt svårighetsgrad</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="fact-source">Fakta baserade på bl.a. Wikipedia, Sverigedemokraternas vitbok (2022) och Politikkollen.</div>
+</div>
+
+<script>
+const DIFFICULTIES = {
+  easy: {
+    label: "Lätt",
+    icon: "🟢",
+    color: "#4ade80",
+    desc: "Grundläggande fakta — ett bra ställe att börja på.",
+    questions: [
+      {
+        q: "Vilket år grundades Sverigedemokraterna?",
+        options: ["1979", "1988", "1994", "2001"],
+        correct: 1,
+        explain: "SD grundades den 6 februari 1988 i Stockholm."
+      },
+      {
+        q: "Vem är Sverigedemokraternas partiledare sedan 2005?",
+        options: ["Anders Klarström", "Mikael Jansson", "Jimmie Åkesson", "Björn Söder"],
+        correct: 2,
+        explain: "Jimmie Åkesson har lett partiet sedan 2005 och är den som partiet oftast förknippas med idag."
+      },
+      {
+        q: "Vilken blomma är Sverigedemokraternas partisymbol?",
+        options: ["Blåklint", "Blåsippa", "Liljekonvalj", "Solros"],
+        correct: 1,
+        explain: "Blåsippan blev SD:s nya partisymbol 2006, då den ersatte den tidigare brinnande facklan."
+      },
+      {
+        q: "Vilka färger domineras SD:s partisymbol och logga av?",
+        options: ["Rött och vitt", "Blått och gult", "Grönt och brunt", "Svart och grått"],
+        correct: 1,
+        explain: "SD använder den svenska flaggans färger, blått och gult, genomgående i sin grafiska profil."
+      },
+      {
+        q: "Vilken sakfråga förknippas SD allra mest med?",
+        options: ["Miljöpolitik", "Invandring/migration", "Utrikeshandel", "Rymdforskning"],
+        correct: 1,
+        explain: "Migration och integration har varit partiets mest profilerande fråga sedan det slog igenom i svensk politik."
+      },
+      {
+        q: "Sitter Sverigedemokraterna i Sveriges riksdag idag?",
+        options: ["Ja", "Nej, de klarade inte spärren senast", "Bara i EU-parlamentet", "Bara i kommunfullmäktige"],
+        correct: 0,
+        explain: "SD är sedan 2010 representerat i riksdagen och är efter valet 2022 riksdagens näst största parti."
+      },
+      {
+        q: "Vad heter SD:s ungdomsförbund idag?",
+        options: ["Ungsvenskarna (SDU)", "Nationell Ungdom", "SD-Grön", "Moderata Ungdomsförbundet"],
+        correct: 0,
+        explain: "SD:s nuvarande ungdomsförbund heter Ungsvenskarna SDU, bildat 2015 efter att partiet brutit med sitt tidigare, självständiga ungdomsförbund."
+      },
+      {
+        q: "I vilken stad grundades SD?",
+        options: ["Malmö", "Göteborg", "Stockholm", "Uppsala"],
+        correct: 2,
+        explain: "SD grundades i Stockholm 1988, även om en av de tidigaste lokalavdelningarna bildades i Malmö kort därefter."
+      }
+    ]
+  },
+  medium: {
+    label: "Medel",
+    icon: "🟡",
+    color: "#fbbf24",
+    desc: "Kräver lite mer koll på detaljer och siffror.",
+    questions: [
+      {
+        q: "Vilken symbol använde SD som partisymbol fram till 2006?",
+        options: ["En brinnande fackla", "En örn", "Ett lejon", "En kompassros"],
+        correct: 0,
+        explain: "Fram till 2006 användes en brinnande fackla i flaggans färger som partisymbol, innan den byttes mot blåsippan."
+      },
+      {
+        q: "I vilket val tog sig SD för första gången in i riksdagen?",
+        options: ["2002", "2006", "2010", "2014"],
+        correct: 2,
+        explain: "SD klarade fyraprocentsspärren i riksdagsvalet 2010 och blev därmed representerade i Sveriges riksdag för första gången."
+      },
+      {
+        q: "Ungefär hur stor andel av rösterna fick SD i riksdagsvalet 2022?",
+        options: ["ca 10%", "ca 15%", "ca 20,5%", "ca 28%"],
+        correct: 2,
+        explain: "SD fick omkring 20,5% av rösterna 2022 och blev riksdagens näst största parti, samt en del av regeringsunderlaget."
+      },
+      {
+        q: "Vilken kampanjorganisation från 1980-talet brukar nämnas som en av rötterna till SD:s grundande?",
+        options: ["Bevara Sverige Svenskt (BSS)", "Moderata Ungdomsförbundet", "Ny Demokrati", "Fria Moderata Studentförbundet"],
+        correct: 0,
+        explain: "Flera av grundarna hade sin bakgrund i Bevara Sverige Svenskt (BSS), vilket bekräftas även i partiets egen vitbok från 2022."
+      },
+      {
+        q: "Vad heter avtalet som formade SD:s samarbete med regeringen Kristersson efter 2022?",
+        options: ["Sverigeavtalet", "Tidöavtalet", "Riksdagsavtalet", "Januariavtalet"],
+        correct: 1,
+        explain: "Tidöavtalet, uppkallat efter Tidö slott, tecknades 2022 mellan M, KD, L och SD och la grunden för regeringsunderlaget."
+      },
+      {
+        q: "Hur brukar statsvetare vanligen beskriva SD:s ideologiska inriktning?",
+        options: [
+          "Liberalt och marknadsvänligt",
+          "Socialkonservativt och nationalistiskt",
+          "Miljöfokuserat och partipolitiskt obundet",
+          "Klassiskt socialistiskt"
+        ],
+        correct: 1,
+        explain: "SD beskriver sig själva som socialkonservativa med en nationalistisk grundsyn."
+      },
+      {
+        q: "Vilket år bröt SD med sitt dåvarande, självständiga ungdomsförbund SDU och bildade det nya, partiintegrerade Ungsvenskarna SDU?",
+        options: ["2010", "2015", "2018", "2020"],
+        correct: 1,
+        explain: "Efter en långdragen konflikt uteslöts SDU:s ledning, bland andra Gustav Kasselstrand och William Hahne, ur SD 2015. Partiet bildade då Ungsvenskarna SDU, som — till skillnad från det gamla förbundet — inte är en fristående organisation. Det gamla SDU:s ledarskikt grundade senare partiet Alternativ för Sverige."
+      },
+      {
+        q: "Vilket år bytte SD partisymbol till blåsippan?",
+        options: ["1995", "2001", "2006", "2014"],
+        correct: 2,
+        explain: "Bytet från den brinnande facklan till blåsippan skedde 2006."
+      }
+    ]
+  },
+  hard: {
+    label: "Svår",
+    icon: "🔴",
+    color: "#f87171",
+    desc: "Detaljerad historia — för dig som verkligen läst på.",
+    questions: [
+      {
+        q: "Vem var Sverigedemokraternas första partiledare?",
+        options: ["Jimmie Åkesson", "Mikael Jansson", "Anders Klarström", "Björn Söder"],
+        correct: 2,
+        explain: "Anders Klarström, med bakgrund i Nordiska Rikspartiet, blev SD:s första partiledare vid grundandet 1988."
+      },
+      {
+        q: "Vem efterträdde Anders Klarström som partiledare 1995?",
+        options: ["Sven Davidson", "Mikael Jansson", "Gustaf Ekström", "Björn Söder"],
+        correct: 1,
+        explain: "Mikael Jansson, tidigare centerpartist, tog över ledarskapet 1995 i samband med att partiet inledde en omprofilering."
+      },
+      {
+        q: "Vad är det exakta grundandedatumet för SD?",
+        options: ["6 februari 1988", "21 mars 1988", "1 maj 1989", "17 juni 1990"],
+        correct: 0,
+        explain: "SD grundades lördagen den 6 februari 1988."
+      },
+      {
+        q: "Ungefär hur många röster fick SD i sitt första riksdagsval 1988?",
+        options: ["cirka 100", "cirka 1 100", "cirka 11 000", "cirka 110 000"],
+        correct: 1,
+        explain: "SD ställde upp i riksdagsvalet redan 1988 och fick då omkring 1 118 röster."
+      },
+      {
+        q: "Vilket parti bildade Tor Paulsson efter att ha uteslutits ur SD 2001?",
+        options: ["Nationaldemokraterna", "Folkfronten", "Alternativ för Sverige", "Medborgerlig Samling"],
+        correct: 0,
+        explain: "Efter uteslutningen 2001 bildade Tor Paulsson, tillsammans med en grupp avhoppare, partiet Nationaldemokraterna."
+      },
+      {
+        q: "Vem skrev SD:s första partiprogram?",
+        options: ["Ulf Ranshede", "Johan Rinderheim", "Gösta Bergqvist", "Fritz Håkansson"],
+        correct: 1,
+        explain: "Johan Rinderheim, en av grundarna, skrev partiets första partiprogram 1988."
+      },
+      {
+        q: "I vilken stad hölls den första lokalavdelningens årsmöte, kort efter grundandet 1988?",
+        options: ["Göteborg", "Malmö", "Uppsala", "Örebro"],
+        correct: 1,
+        explain: "En lokalavdelning bildades tidigt i Malmö, och dess första årsmöte hölls den 21 februari 1988."
+      },
+      {
+        q: "Vilket parti gick BSS samman med 1987 för att bilda Sverigepartiet, föregångaren till SD?",
+        options: ["Framstegspartiet", "Ny Demokrati", "Kristen Demokratisk Samling", "Centerpartiet"],
+        correct: 0,
+        explain: "1987 gick Bevara Sverige Svenskt (BSS) samman med det främlingsfientliga Framstegspartiet och bildade Sverigepartiet, ett samgående som föregick SD:s grundande 1988."
+      }
+    ]
+  }
+};
+
+const STORAGE_KEY = 'sdquiz_bestscores_v1';
+let currentDiff = null;
+let current = 0;
+let score = 0;
+let answered = false;
+
+function loadBestScores(){
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+  catch(e){ return {}; }
+}
+function saveBestScore(diffKey, s){
+  const scores = loadBestScores();
+  if(!scores[diffKey] || s > scores[diffKey]) scores[diffKey] = s;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(scores));
+}
+
+function renderMenu(){
+  const scores = loadBestScores();
+  const list = document.getElementById('diff-list');
+  list.innerHTML = '';
+  Object.keys(DIFFICULTIES).forEach(key=>{
+    const d = DIFFICULTIES[key];
+    const max = d.questions.length;
+    const best = scores[key] || 0;
+    const done = best >= max;
+    const card = document.createElement('div');
+    card.className = 'diff-card';
+    card.style.setProperty('--diff-color', d.color);
+    card.onclick = () => startQuiz(key);
+    card.innerHTML = `
+      ${done ? `<div class="diff-done-badge">✓ AVKLARAD</div>` : ''}
+      <div class="diff-icon">${d.icon}</div>
+      <div class="diff-info">
+        <div class="diff-name">${d.label}</div>
+        <div class="diff-meta">${d.desc}</div>
+      </div>
+      <div class="diff-best">BÄSTA RESULTAT<br><span class="num">${best}/${max}</span></div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function showMenu(){
+  document.getElementById('menu-view').style.display = 'block';
+  document.getElementById('quiz-view').style.display = 'none';
+  document.getElementById('result-view').style.display = 'none';
+  document.getElementById('subtitle-text').textContent = 'Hur mycket vet du om Sverigedemokraternas historia och fakta?';
+  renderMenu();
+}
+
+function startQuiz(diffKey){
+  currentDiff = diffKey;
+  current = 0; score = 0; answered = false;
+  document.getElementById('menu-view').style.display = 'none';
+  document.getElementById('result-view').style.display = 'none';
+  document.getElementById('quiz-view').style.display = 'block';
+  const d = DIFFICULTIES[diffKey];
+  document.getElementById('subtitle-text').textContent = `Svårighetsgrad: ${d.icon} ${d.label}`;
+  renderQuestion();
+}
+
+function renderQuestion(){
+  answered = false;
+  const qs = DIFFICULTIES[currentDiff].questions;
+  const item = qs[current];
+  document.getElementById('q-counter').textContent = `Fråga ${current+1} av ${qs.length}`;
+  document.getElementById('q-score').textContent = `Rätt: ${score}`;
+  document.getElementById('progress-fill').style.width = ((current)/qs.length*100)+'%';
+  document.getElementById('question-text').textContent = item.q;
+
+  const letters = ['A','B','C','D'];
+  const list = document.getElementById('options-list');
+  list.innerHTML = '';
+  item.options.forEach((opt, i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = `<span class="letter">${letters[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => selectAnswer(i, btn);
+    list.appendChild(btn);
+  });
+
+  document.getElementById('explain-box').classList.remove('show');
+  document.getElementById('explain-box').textContent = '';
+  document.getElementById('next-btn').classList.remove('show');
+}
+
+function selectAnswer(i, btnEl){
+  if(answered) return;
+  answered = true;
+  const qs = DIFFICULTIES[currentDiff].questions;
+  const item = qs[current];
+  const allBtns = document.querySelectorAll('.option');
+  allBtns.forEach((b, idx)=>{
+    b.classList.add('locked');
+    if(idx !== i && idx !== item.correct) b.classList.add('dim');
+    if(idx === item.correct) b.classList.add('correct');
+  });
+  if(i === item.correct){
+    score++;
+  } else {
+    btnEl.classList.add('wrong');
+  }
+  document.getElementById('q-score').textContent = `Rätt: ${score}`;
+  const explainBox = document.getElementById('explain-box');
+  explainBox.textContent = item.explain;
+  explainBox.classList.add('show');
+  document.getElementById('next-btn').classList.add('show');
+  document.getElementById('next-btn').textContent = (current === qs.length-1) ? 'Se resultat →' : 'Nästa fråga →';
+}
+
+function nextQuestion(){
+  const qs = DIFFICULTIES[currentDiff].questions;
+  current++;
+  if(current >= qs.length){
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResult(){
+  const qs = DIFFICULTIES[currentDiff].questions;
+  const max = qs.length;
+  const scoresBefore = loadBestScores();
+  const prevBest = scoresBefore[currentDiff] || 0;
+  const isNewBest = score > prevBest;
+  saveBestScore(currentDiff, score);
+
+  document.getElementById('progress-fill').style.width = '100%';
+  document.getElementById('quiz-view').style.display = 'none';
+  document.getElementById('result-view').style.display = 'block';
+  document.getElementById('final-score').textContent = `${score}/${max}`;
+
+  const bestLine = document.getElementById('best-line');
+  if(score === max) bestLine.textContent = '🏆 Alla rätt — nivån är avklarad!';
+  else if(isNewBest) bestLine.textContent = '✨ Nytt bästa resultat!';
+  else bestLine.textContent = `Bästa resultat på ${DIFFICULTIES[currentDiff].label}: ${Math.max(score,prevBest)}/${max}`;
+
+  let verdict;
+  const pct = score/max;
+  if(pct === 1) verdict = "Perfekt! Du kan din SD-historia utan och innan. 🎯";
+  else if(pct >= 0.7) verdict = "Riktigt bra! Du har koll på de flesta fakta. 👍";
+  else if(pct >= 0.4) verdict = "Helt okej — men det finns mer att lära sig!";
+  else verdict = "Dags att läsa på lite! Testa igen och se om du kan förbättra dig.";
+  document.getElementById('verdict-text').textContent = verdict;
+}
+
+function restartQuiz(){
+  startQuiz(currentDiff);
+}
+
+showMenu();
+</script>
+
+</body>
+</html>
