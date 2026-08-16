@@ -110,6 +110,27 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(180d
 }
 #shop-btn::after{content:'';position:absolute;top:3px;left:3px;right:3px;bottom:3px;border-radius:16px;pointer-events:none;border:1px solid rgba(0,0,0,0.25);box-shadow:inset 0 0 10px rgba(0,0,0,0.25);}
 #shop-btn:hover{border-color:rgba(212,175,55,0.9);box-shadow:0 6px 24px rgba(0,0,0,0.6),0 0 24px rgba(212,175,55,0.25);transform:translateY(-2px);}
+#battle-btn{display:none;position:absolute;bottom:clamp(18px,2.3vw,30px);left:clamp(20px,2vw,32px);pointer-events:all;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,0.2) 0%, transparent 8%),
+    radial-gradient(circle at 68% 30%, rgba(0,0,0,0.22) 0%, transparent 10%),
+    radial-gradient(circle at 35% 70%, rgba(0,0,0,0.24) 0%, transparent 12%),
+    radial-gradient(circle at 78% 75%, rgba(255,120,80,0.1) 0%, transparent 9%),
+    linear-gradient(105deg, transparent 38%, rgba(0,0,0,0.16) 39%, transparent 41%),
+    linear-gradient(150deg,#6a2620,#3a1410 45%,#1e0806);
+  border:3px solid rgba(220,60,50,0.85);border-radius:clamp(20px,2.4vw,30px);width:clamp(122px,12.5vw,164px);height:clamp(122px,12.5vw,164px);padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;box-shadow:0 5px 24px rgba(0,0,0,0.55),inset 0 1px 0 rgba(255,255,255,0.14),inset 0 -2px 4px rgba(0,0,0,0.35),0 0 0 4px rgba(220,60,50,0.15);transition:all .2s;overflow:hidden;box-sizing:border-box;}
+#battle-btn::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:
+    repeating-linear-gradient(115deg, rgba(0,0,0,0.06) 0px, rgba(0,0,0,0.06) 1px, transparent 1px, transparent 4px),
+    repeating-linear-gradient(25deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 5px);
+}
+#battle-btn::after{content:'';position:absolute;top:4px;left:4px;right:4px;bottom:4px;border-radius:18px;pointer-events:none;border:1px solid rgba(255,140,100,0.35);box-shadow:inset 0 0 14px rgba(0,0,0,0.35);}
+#battle-btn:hover{border-color:rgba(255,90,70,1);box-shadow:0 7px 28px rgba(0,0,0,0.65),0 0 28px rgba(220,50,40,0.4),0 0 0 4px rgba(220,60,50,0.22);transform:translateY(-3px);}
+#battle-btn .corner{position:absolute;width:10px;height:10px;border:2px solid rgba(255,140,100,0.5);pointer-events:none;z-index:1;}
+#battle-btn .corner.tl{top:8px;left:8px;border-right:none;border-bottom:none;border-radius:4px 0 0 0;}
+#battle-btn .corner.br{bottom:8px;right:8px;border-left:none;border-top:none;border-radius:0 0 4px 0;}
+#battle-btn .sword{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:5em;opacity:0.32;z-index:0;filter:drop-shadow(0 2px 3px rgba(0,0,0,0.7)) grayscale(0.3);pointer-events:none;line-height:1;}
+#battle-btn .label{position:relative;z-index:1;font-family:'Cinzel Decorative',serif;font-size:1.2rem;font-weight:700;color:#ff8866;letter-spacing:1.5px;text-shadow:0 2px 3px rgba(0,0,0,0.6),0 0 10px rgba(255,60,40,0.35);}
 #account-btn{position:absolute;pointer-events:all;
   background:
     radial-gradient(circle at 22% 18%, rgba(255,255,255,0.22) 0%, transparent 8%),
@@ -176,6 +197,383 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(180d
 .sh-tab{flex:1;padding:9px 6px;font-family:'Cinzel',serif;font-size:0.6rem;font-weight:700;letter-spacing:1px;color:rgba(220,225,205,0.45);text-align:center;cursor:pointer;border:1px solid rgba(0,0,0,0.3);background:linear-gradient(180deg,#5a584e,#46443c);border-radius:6px;text-transform:uppercase;transition:.15s;position:relative;box-shadow:inset 0 1px 0 rgba(255,255,255,0.06),inset 0 -2px 3px rgba(0,0,0,0.25);}
 .sh-tab.active{color:#f0ead0;background:linear-gradient(180deg,#7a7868,#5e5c50);border-color:rgba(140,170,100,0.4);box-shadow:0 0 8px rgba(120,150,80,0.25),inset 0 1px 0 rgba(255,255,255,0.12);}
 .sh-tab:hover:not(.active){background:linear-gradient(180deg,#666458,#525044);color:rgba(225,230,210,0.7);}
+
+/* ══════ BATTLE PANEL — same structure/scaling as the shop, red theme ══════ */
+#battle-overlay{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;}
+#battle-overlay.open{display:flex;}
+#battle-bg{position:absolute;inset:0;background:rgba(10,4,3,0.8);backdrop-filter:blur(6px);}
+#battle-panel-main{position:relative;z-index:2;width:520px;height:480px;display:flex;flex-direction:column;border-radius:10px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.75),0 0 0 3px #7a3a30,0 0 0 5px #2e0f0a;transform-origin:center center;}
+
+/* Header — scorched dark stone with red glow */
+#bt-header{background:
+    radial-gradient(circle at 18% 25%, rgba(255,120,80,0.1) 0%, transparent 10%),
+    radial-gradient(circle at 70% 60%, rgba(0,0,0,0.25) 0%, transparent 12%),
+    radial-gradient(circle at 45% 85%, rgba(120,30,20,0.18) 0%, transparent 14%),
+    linear-gradient(180deg,#5a2c24,#3a1a14 55%,#26100c);
+  border-bottom:3px solid #2a0e0a;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden;}
+#bt-header::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0,transparent 39px,rgba(0,0,0,0.18) 39px,rgba(0,0,0,0.18) 41px),repeating-linear-gradient(0deg,transparent 0,transparent 27px,rgba(0,0,0,0.12) 27px,rgba(0,0,0,0.12) 29px);pointer-events:none;}
+#bt-header::after{content:'';position:absolute;top:-6px;right:-6px;width:60px;height:40px;background:
+    radial-gradient(circle at 80% 20%, rgba(220,50,40,0.4) 0%, transparent 45%),
+    radial-gradient(circle at 50% 40%, rgba(180,40,30,0.3) 0%, transparent 50%);
+  pointer-events:none;}
+.bt-torch{display:flex;flex-direction:column;align-items:center;gap:2px;position:relative;z-index:1;flex-shrink:0;}
+.bt-center-group{display:flex;align-items:center;gap:10px;position:relative;z-index:1;min-width:0;}
+.bt-flame{width:14px;height:20px;background:radial-gradient(ellipse at 50% 85%,#ffdaaa,#ff4422,transparent);border-radius:50% 50% 35% 35%;animation:fl .35s ease-in-out infinite alternate;filter:drop-shadow(0 0 6px rgba(255,60,30,0.7));}
+.bt-tbase{width:7px;height:13px;background:linear-gradient(180deg,#5a3018,#2a1006);border-radius:2px;}
+.bt-center{text-align:center;position:relative;z-index:1;min-width:0;}
+.bt-title{font-family:'Cinzel Decorative',serif;font-size:clamp(0.82rem,2.6vw,1.35rem);font-weight:700;color:#ffd8c8;text-shadow:0 2px 4px rgba(0,0,0,0.6),0 0 14px rgba(220,60,40,0.4);letter-spacing:2.5px;white-space:nowrap;}
+.bt-sub{font-family:'IM Fell English',serif;font-style:italic;font-size:0.7rem;color:rgba(255,200,180,0.55);letter-spacing:2px;margin-top:2px;}
+#bt-close{flex-shrink:0;width:36px;height:36px;border:1.5px solid rgba(0,0,0,0.35);border-radius:50%;background:rgba(0,0,0,0.22);color:#ffd8c8;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.18s;position:relative;z-index:1;font-family:'Cinzel',serif;box-shadow:inset 0 1px 0 rgba(255,255,255,0.1),inset 0 -2px 3px rgba(0,0,0,0.3);}
+#bt-close:hover{background:rgba(0,0,0,0.38);}
+
+/* Tabs — charred slabs */
+#bt-tabs{background:linear-gradient(180deg,#4a2420,#2e1310);display:flex;gap:5px;padding:7px 9px;border-bottom:2px solid #200b08;}
+.bt-tab{flex:1;padding:9px 6px;font-family:'Cinzel',serif;font-size:0.68rem;font-weight:700;letter-spacing:1px;color:rgba(255,210,195,0.45);text-align:center;cursor:pointer;border:1px solid rgba(0,0,0,0.35);background:linear-gradient(180deg,#5a3028,#43201a);border-radius:6px;text-transform:uppercase;transition:.15s;position:relative;box-shadow:inset 0 1px 0 rgba(255,255,255,0.06),inset 0 -2px 3px rgba(0,0,0,0.25);}
+.bt-tab.active{color:#ffe8dc;background:linear-gradient(180deg,#8a3830,#6a2620);border-color:rgba(255,110,80,0.5);box-shadow:0 0 8px rgba(220,60,40,0.35),inset 0 1px 0 rgba(255,255,255,0.12);}
+.bt-tab:hover:not(.active){background:linear-gradient(180deg,#6a3428,#4e241c);color:rgba(255,220,205,0.7);}
+
+/* Body — scorched stone floor */
+#bt-body{flex:1;overflow:auto;position:relative;background:
+    radial-gradient(circle at 12% 10%, rgba(180,50,35,0.12) 0%, transparent 16%),
+    radial-gradient(circle at 85% 22%, rgba(150,40,30,0.1) 0%, transparent 14%),
+    radial-gradient(circle at 30% 75%, rgba(200,60,40,0.1) 0%, transparent 18%),
+    radial-gradient(circle at 75% 85%, rgba(130,35,25,0.1) 0%, transparent 16%),
+    linear-gradient(160deg,#3e2622,#2a1815);
+  min-height:260px;
+  scrollbar-width:thin;scrollbar-color:rgba(220,80,60,0.6) rgba(0,0,0,0.25);}
+#bt-body::-webkit-scrollbar{width:9px;}
+#bt-body::-webkit-scrollbar-track{background:rgba(0,0,0,0.25);border-radius:6px;margin:4px 0;}
+#bt-body::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#d9503e,#8a2818);border-radius:6px;border:1.5px solid rgba(255,150,120,0.4);}
+#bt-body::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#ea6050,#a53422);}
+#bt-body::before{content:'';position:absolute;inset:0;pointer-events:none;background:
+    repeating-linear-gradient(0deg,transparent 0,transparent 41px,rgba(0,0,0,0.18) 41px,rgba(0,0,0,0.18) 43px,transparent 43px,transparent 97px,rgba(0,0,0,0.13) 97px,rgba(0,0,0,0.13) 99px),
+    repeating-linear-gradient(90deg,transparent 0,transparent 54px,rgba(0,0,0,0.15) 54px,rgba(0,0,0,0.15) 56px,transparent 56px,transparent 122px,rgba(0,0,0,0.11) 122px,rgba(0,0,0,0.11) 124px);}
+.bt-panel{position:relative;z-index:1;padding:8px 20px;text-align:center;min-height:100%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.bt-panel[data-panel="battles"]{justify-content:flex-start;padding-top:16px;padding-bottom:16px;height:100%;overflow:hidden;}
+#battle-list{width:100%;height:100%;display:flex;flex-direction:column;gap:14px;overflow-y:auto;padding-right:8px;box-sizing:border-box;scrollbar-width:thin;scrollbar-color:rgba(220,80,60,0.65) rgba(0,0,0,0.3);}
+#battle-list::-webkit-scrollbar{width:10px;}
+#battle-list::-webkit-scrollbar-track{background:rgba(0,0,0,0.3);border-radius:6px;margin:2px 0;}
+#battle-list::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#e0604c,#8a2818);border-radius:6px;border:2px solid rgba(255,170,140,0.5);background-clip:padding-box;}
+#battle-list::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#f07460,#a53422);background-clip:padding-box;}
+.bt-placeholder-icon{font-size:2.8rem;margin-bottom:14px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.6));}
+.bt-placeholder-title{font-family:'Cinzel Decorative',serif;font-size:1.15rem;font-weight:700;color:#ffb499;margin-bottom:10px;text-shadow:0 0 12px rgba(255,60,40,0.35);}
+.bt-placeholder-text{font-family:'IM Fell English',serif;font-style:italic;font-size:0.9rem;line-height:1.7;color:rgba(255,215,200,0.7);max-width:320px;}
+.bt-soon-badge{display:inline-block;margin-top:20px;background:rgba(220,60,50,0.15);border:1.5px solid rgba(220,60,50,0.45);border-radius:20px;padding:8px 20px;font-family:Cinzel,serif;font-size:0.78rem;font-weight:700;color:#ff9977;letter-spacing:1px;}
+
+.battle-card{width:100%;box-sizing:border-box;display:flex;align-items:center;gap:14px;background:linear-gradient(160deg,rgba(120,40,30,0.28),rgba(30,10,7,0.55));border:2px solid rgba(220,80,60,0.5);border-radius:14px;padding:12px 14px;box-shadow:0 8px 20px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.08);text-align:left;}
+.battle-card-frame{width:72px;height:72px;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#6a2a1e,#220906 75%);border:2px solid rgba(220,80,60,0.45);border-radius:12px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;box-shadow:inset 0 2px 10px rgba(0,0,0,0.55),0 0 14px rgba(220,60,40,0.15);}
+.battle-card-frame::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(0,0,0,0.08) 0px,rgba(0,0,0,0.08) 1px,transparent 1px,transparent 5px);pointer-events:none;}
+.battle-card-icon{font-size:2rem;filter:drop-shadow(0 3px 5px rgba(0,0,0,0.65));position:relative;z-index:1;}
+.theme-svg{position:relative;z-index:1;width:100%;height:100%;display:block;border-radius:10px;overflow:hidden;filter:drop-shadow(0 3px 5px rgba(0,0,0,0.5));}
+.theme-thunderlord .theme-svg{width:80%;height:80%;filter:none;}
+
+/* The First Battle — no extra scenery, just a brighter, glowing sword */
+.battle-card-frame.theme-first .battle-card-icon{
+  filter:drop-shadow(0 3px 5px rgba(0,0,0,0.65)) drop-shadow(0 0 10px rgba(255,210,120,0.85)) drop-shadow(0 0 18px rgba(255,150,50,0.5));
+  animation:swordGlow 1.8s ease-in-out infinite alternate;
+}
+@keyframes swordGlow{0%{filter:drop-shadow(0 3px 5px rgba(0,0,0,0.65)) drop-shadow(0 0 8px rgba(255,210,120,0.7)) drop-shadow(0 0 14px rgba(255,150,50,0.4));}100%{filter:drop-shadow(0 3px 5px rgba(0,0,0,0.65)) drop-shadow(0 0 14px rgba(255,220,140,1)) drop-shadow(0 0 24px rgba(255,160,60,0.7));}}
+
+/* The Subaquatic Nightmare — real animated wave layers + a few rising bubbles */
+.theme-water .wave-back{animation:waveDriftBack 3.6s ease-in-out infinite;}
+.theme-water .wave-front{animation:waveDriftFront 2.6s ease-in-out infinite;}
+@keyframes waveDriftBack{0%{transform:translateX(0);}50%{transform:translateX(-14px);}100%{transform:translateX(0);}}
+@keyframes waveDriftFront{0%{transform:translateX(0);}50%{transform:translateX(12px);}100%{transform:translateX(0);}}
+.battle-card-frame.theme-water::after{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:2;
+  background:
+    radial-gradient(circle 2.5px at 24% 30%, rgba(210,240,255,0.85) 0%, transparent 100%),
+    radial-gradient(circle 2px at 42% 20%, rgba(210,240,255,0.75) 0%, transparent 100%),
+    radial-gradient(circle 3px at 68% 26%, rgba(210,240,255,0.8) 0%, transparent 100%);
+  animation:bubbleRise 3s ease-in-out infinite;
+}
+@keyframes bubbleRise{0%{transform:translateY(6px);opacity:0.5;}50%{transform:translateY(-6px);opacity:1;}100%{transform:translateY(6px);opacity:0.5;}}
+
+/* Skyfall Reckoning — a real storm cloud with a flickering lightning bolt */
+.theme-storm .bolt{animation:stormBolt 1.3s steps(3) infinite;transform-origin:center;filter:drop-shadow(0 0 6px rgba(255,230,90,0.8));}
+.theme-storm .bolt2{animation-delay:0.5s;animation-duration:1.1s;}
+@keyframes stormBolt{0%,60%,100%{opacity:0.35;}20%,40%{opacity:1;}}
+
+/* Wrath of the Thunderlord — a real crown with gems, over a regal rainbow shimmer */
+.battle-card-frame.theme-thunderlord::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(120deg,rgba(255,60,60,0.25),rgba(255,200,50,0.3),rgba(80,220,120,0.25),rgba(80,160,255,0.3),rgba(180,80,255,0.25));
+  background-size:300% 300%;
+  animation:thunderlordShimmer 3s linear infinite;
+}
+.battle-card-frame.theme-thunderlord .theme-svg{animation:crownGleam 2.2s ease-in-out infinite alternate;}
+@keyframes crownGleam{0%{filter:drop-shadow(0 3px 5px rgba(0,0,0,0.5)) drop-shadow(0 0 4px rgba(255,220,120,0.4));}100%{filter:drop-shadow(0 3px 5px rgba(0,0,0,0.5)) drop-shadow(0 0 12px rgba(255,220,120,0.9));}}
+@keyframes thunderlordShimmer{0%{background-position:0% 50%;}100%{background-position:300% 50%;}}
+.battle-card-info{flex:1;min-width:0;}
+.battle-card-title{font-family:'Cinzel Decorative',serif;font-size:0.98rem;font-weight:700;color:#ffb499;margin-bottom:3px;text-shadow:0 0 10px rgba(255,60,40,0.4);letter-spacing:0.3px;}
+.battle-card-desc{font-family:'IM Fell English',serif;font-style:italic;font-size:0.74rem;color:rgba(255,215,200,0.65);line-height:1.35;margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.battle-card-lvl{font-family:Cinzel,serif;font-size:0.66rem;font-weight:700;color:rgba(255,190,140,0.85);letter-spacing:0.5px;}
+.battle-card-play{flex-shrink:0;background:linear-gradient(180deg,#d9503e,#8a2818);border:1.5px solid rgba(255,150,120,0.65);color:#fff;font-family:Cinzel,serif;font-weight:700;font-size:0.78rem;padding:9px 20px;border-radius:20px;cursor:pointer;letter-spacing:1px;box-shadow:0 4px 0 #5a1a10,0 6px 14px rgba(0,0,0,0.4);transition:.15s;}
+.battle-card-play:hover{background:linear-gradient(180deg,#ea6050,#a53422);transform:translateY(-1px);}
+.battle-card-play:active{transform:translateY(3px);box-shadow:0 1px 0 #5a1a10;}
+
+/* ══════ FULL-SCREEN BATTLE SCENE — covers absolutely everything ══════ */
+#battle-scene{display:none;position:fixed;inset:0;z-index:5000;background:#5fa8e0;}
+#battle-scene.open{display:block;}
+#battle-scene-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
+#battle-giveup-btn{
+  position:absolute;top:34px;left:18px;z-index:2;
+  font-family:Cinzel,serif;font-weight:700;font-size:0.92rem;
+  color:#fff;letter-spacing:1px;
+  background:linear-gradient(180deg,#5a2018,#2e0f0a);
+  border:2px solid rgba(220,80,60,0.75);border-radius:14px;
+  padding:10px 20px;cursor:pointer;
+  box-shadow:0 4px 0 #1a0805,0 8px 18px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.12);
+  transition:.15s;
+}
+#battle-giveup-btn:hover{background:linear-gradient(180deg,#7a2a20,#3e140e);transform:translateY(-1px);}
+#battle-giveup-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #1a0805;}
+
+/* ══════ Health bars ══════ */
+.battle-hp-bar{position:absolute;top:22px;z-index:2;width:clamp(90px,26vw,210px);}
+.battle-hp-bar{left:16%;}
+.battle-hp-bar.right{left:auto;right:16%;}
+.battle-hp-bar .hp-label{font-family:Cinzel,serif;font-weight:700;font-size:0.85rem;color:#fff;text-shadow:0 2px 3px rgba(0,0,0,0.7);margin-bottom:5px;}
+.battle-hp-bar.right .hp-label{text-align:right;}
+.hp-track{height:24px;border-radius:12px;background:rgba(0,0,0,0.5);border:2px solid rgba(0,0,0,0.6);overflow:hidden;box-shadow:inset 0 1px 3px rgba(0,0,0,0.6);position:relative;}
+.hp-fill{height:100%;width:100%;background:linear-gradient(180deg,#5fdb5f,#2fa62f);border-radius:10px;transition:width .4s cubic-bezier(0.34,0.1,0.4,1);box-shadow:inset 0 1px 0 rgba(255,255,255,0.35);}
+.hp-fill.hp-mid{background:linear-gradient(180deg,#ffd15f,#e8a02a);}
+.hp-fill.hp-low{background:linear-gradient(180deg,#ff6a5f,#c4271b);}
+.hp-text{font-family:Cinzel,serif;font-size:0.68rem;font-weight:700;color:rgba(255,255,255,0.85);text-shadow:0 1px 2px rgba(0,0,0,0.7);margin-top:4px;text-align:center;}
+
+#battle-vs{position:absolute;top:36px;left:50%;transform:translateX(-50%);z-index:2;font-family:'Cinzel Decorative',serif;font-weight:700;font-size:2.4rem;color:#ffe27a;text-shadow:0 0 10px #fff,0 0 26px rgba(255,200,60,0.95),0 0 46px rgba(255,160,30,0.7),0 2px 4px rgba(0,0,0,0.7);letter-spacing:1px;}
+
+.battle-identity{position:absolute;top:24px;left:50%;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  width:66px;height:66px;border-radius:16px;overflow:hidden;
+  background:linear-gradient(160deg,#5a4a38,#221a12);
+  border:2px solid rgba(255,200,90,0.6);
+  box-shadow:0 4px 12px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.12);
+}
+.battle-identity{transform:translateX(calc(-100% - 40px));}
+.battle-identity.right{transform:translateX(40px);}
+.identity-avatar{flex:1;width:100%;display:flex;align-items:center;justify-content:center;font-size:1.7rem;}
+.identity-name{width:100%;text-align:center;font-family:Cinzel,serif;font-weight:700;font-size:0.55rem;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,0.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:rgba(0,0,0,0.45);padding:3px 2px;box-sizing:border-box;}
+
+#battle-top-frame{position:absolute;top:0;left:0;right:0;height:112px;z-index:1;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(255,255,255,0.12) 0%, transparent 10%),
+    radial-gradient(circle at 72% 55%, rgba(0,0,0,0.28) 0%, transparent 14%),
+    radial-gradient(circle at 40% 90%, rgba(0,0,0,0.22) 0%, transparent 16%),
+    radial-gradient(circle at 88% 20%, rgba(255,255,255,0.06) 0%, transparent 8%),
+    linear-gradient(180deg,#6a5744,#3a2f22 60%,#221a12);
+  box-shadow:0 8px 24px rgba(0,0,0,0.55),inset 0 -2px 4px rgba(0,0,0,0.4),inset 0 2px 0 rgba(255,255,255,0.08);
+}
+#battle-top-frame::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:
+    repeating-linear-gradient(90deg,transparent 0,transparent 58px,rgba(0,0,0,0.14) 58px,rgba(0,0,0,0.14) 61px),
+    repeating-linear-gradient(0deg,transparent 0,transparent 30px,rgba(0,0,0,0.1) 30px,rgba(0,0,0,0.1) 32px);
+}
+#battle-top-frame::after{content:'';position:absolute;left:0;right:0;bottom:0;height:4px;
+  background:linear-gradient(90deg,transparent,rgba(255,195,90,0.75) 15%,rgba(255,215,130,0.9) 50%,rgba(255,195,90,0.75) 85%,transparent);
+  box-shadow:0 0 10px rgba(255,180,70,0.5);
+}
+.battle-frame-rivet{position:absolute;top:14px;width:10px;height:10px;border-radius:50%;z-index:1;
+  background:radial-gradient(circle at 35% 30%,#e8c877,#8a6a2e 70%);
+  box-shadow:0 2px 3px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,0.4);
+}
+
+
+/* ══════ Attack button ══════ */
+#battle-attack-buttons{position:absolute;bottom:clamp(20px,3vw,36px);left:18px;z-index:2;display:flex;gap:16px;}
+.atk-square-btn{
+  width:clamp(112px,12vw,150px);height:clamp(112px,12vw,150px);
+  font-family:Cinzel,serif;color:#fff;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  background:linear-gradient(180deg,var(--el-top),var(--el-bottom));
+  border:3px solid var(--el-border);border-radius:20px;
+  cursor:pointer;padding:8px;box-sizing:border-box;
+  box-shadow:0 7px 0 var(--el-shadow),0 14px 28px rgba(0,0,0,0.45),inset 0 1px 0 rgba(255,255,255,0.15);
+  transition:.15s;
+  position:relative;overflow:hidden;
+}
+.atk-square-btn:hover{background:linear-gradient(180deg,var(--el-hover-top),var(--el-hover-bottom));transform:translateY(-2px);}
+.atk-square-btn:active{transform:translateY(6px);box-shadow:0 1px 0 var(--el-shadow);}
+.atk-square-btn:disabled{opacity:0.45;cursor:default;transform:none;box-shadow:0 7px 0 var(--el-shadow),0 14px 28px rgba(0,0,0,0.45);}
+.atk-square-btn .atk-icon{position:relative;z-index:1;font-size:clamp(1.8rem,2.8vw,2.3rem);text-shadow:0 2px 3px rgba(0,0,0,0.5);}
+.atk-square-btn .atk-eff{position:relative;z-index:1;font-size:clamp(0.68rem,1.05vw,0.82rem);font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,0.6);white-space:nowrap;}
+.atk-square-btn .atk-dmg{position:relative;z-index:1;font-size:clamp(0.62rem,0.95vw,0.75rem);font-weight:700;color:rgba(255,255,255,0.8);white-space:nowrap;}
+.atk-square-btn::before,.atk-square-btn::after{content:'';position:absolute;pointer-events:none;}
+
+/* Fire — flickering embers rising from the bottom */
+.atk-square-btn.elm-fire::before{
+  inset:0;
+  background:
+    radial-gradient(circle at 26% 88%, rgba(255,210,90,0.8) 0%, transparent 10%),
+    radial-gradient(circle at 62% 92%, rgba(255,160,50,0.7) 0%, transparent 9%),
+    radial-gradient(circle at 44% 78%, rgba(255,240,160,0.55) 0%, transparent 7%),
+    radial-gradient(circle at 80% 82%, rgba(255,120,40,0.6) 0%, transparent 8%);
+  animation:emberFlicker 1.1s ease-in-out infinite alternate;
+}
+.atk-square-btn.elm-fire::after{
+  top:-10%;left:-10%;right:-10%;bottom:-10%;
+  background:radial-gradient(circle at 50% 100%, rgba(255,140,40,0.35) 0%, transparent 45%);
+  animation:emberGlow 1.6s ease-in-out infinite alternate;
+}
+@keyframes emberFlicker{0%{opacity:0.55;transform:translateY(0);}100%{opacity:1;transform:translateY(-3px);}}
+@keyframes emberGlow{0%{opacity:0.5;}100%{opacity:0.9;}}
+
+/* Grass — drifting leaf shapes */
+.atk-square-btn.elm-grass::before{
+  inset:0;
+  background:
+    radial-gradient(ellipse 10px 5px at 24% 20%, rgba(200,255,150,0.55) 0%, transparent 100%),
+    radial-gradient(ellipse 8px 4px at 74% 30%, rgba(180,255,130,0.5) 0%, transparent 100%),
+    radial-gradient(ellipse 9px 4px at 40% 85%, rgba(210,255,170,0.45) 0%, transparent 100%);
+  animation:leafSway 2.4s ease-in-out infinite alternate;
+}
+@keyframes leafSway{0%{transform:rotate(-3deg) translateX(-1px);}100%{transform:rotate(3deg) translateX(1px);}}
+
+/* Earth — cracked stone texture */
+.atk-square-btn.elm-earth::before{
+  inset:0;
+  background:
+    repeating-linear-gradient(115deg, rgba(0,0,0,0.16) 0px, rgba(0,0,0,0.16) 1.5px, transparent 1.5px, transparent 12px),
+    repeating-linear-gradient(35deg, rgba(255,255,255,0.08) 0px, rgba(255,255,255,0.08) 1px, transparent 1px, transparent 14px);
+}
+.atk-square-btn.elm-earth::after{
+  bottom:6px;left:10px;right:10px;height:3px;border-radius:2px;
+  background:rgba(0,0,0,0.25);
+}
+
+/* Ice — faceted crystal shine sweeping across */
+.atk-square-btn.elm-ice::before{
+  inset:0;
+  background:
+    repeating-linear-gradient(60deg, transparent 0px, transparent 10px, rgba(255,255,255,0.14) 10px, rgba(255,255,255,0.14) 12px),
+    repeating-linear-gradient(-60deg, transparent 0px, transparent 14px, rgba(255,255,255,0.1) 14px, rgba(255,255,255,0.1) 16px);
+}
+.atk-square-btn.elm-ice::after{
+  top:-40%;left:-60%;width:60%;height:220%;
+  background:linear-gradient(100deg, transparent 40%, rgba(255,255,255,0.5) 48%, transparent 56%);
+  animation:iceShine 2.8s ease-in-out infinite;
+}
+@keyframes iceShine{0%{transform:translateX(0);}50%{transform:translateX(260%);}100%{transform:translateX(260%);}}
+
+/* Water — rippling waves along the bottom */
+.atk-square-btn.elm-water::before{
+  inset:0;
+  background:
+    radial-gradient(ellipse 60px 14px at 30% 105%, rgba(180,220,255,0.5) 0%, transparent 70%),
+    radial-gradient(ellipse 60px 14px at 75% 100%, rgba(160,205,255,0.45) 0%, transparent 70%);
+  animation:waterRipple 2.2s ease-in-out infinite alternate;
+}
+@keyframes waterRipple{0%{transform:translateY(0);opacity:0.7;}100%{transform:translateY(-4px);opacity:1;}}
+
+/* Lightning — jagged spark flickers */
+.atk-square-btn.elm-lightning::before{
+  inset:0;
+  background:
+    linear-gradient(115deg, transparent 46%, rgba(255,255,200,0.55) 49%, rgba(255,255,200,0.55) 51%, transparent 54%),
+    linear-gradient(65deg, transparent 62%, rgba(255,255,180,0.4) 65%, transparent 68%);
+  animation:boltFlicker 0.9s steps(2) infinite;
+}
+@keyframes boltFlicker{0%,100%{opacity:0.4;}50%{opacity:1;}}
+
+/* Mega Blast — Thunderlord's signature move, animated rainbow gradient */
+.atk-square-btn.elm-megablast{
+  background:linear-gradient(120deg,#ff3b3b,#ff9c33,#ffe64d,#4dff7a,#4db8ff,#b34dff,#ff3b3b);
+  background-size:400% 400%;
+  animation:rainbowShift 2.4s linear infinite;
+  border-color:rgba(255,255,255,0.8);
+  box-shadow:0 7px 0 #3a1a4a,0 14px 28px rgba(0,0,0,0.5),0 0 20px rgba(255,255,255,0.3),inset 0 1px 0 rgba(255,255,255,0.3);
+}
+.atk-square-btn.elm-megablast:hover{transform:translateY(-2px);}
+.atk-square-btn.elm-megablast:active{transform:translateY(6px);box-shadow:0 1px 0 #3a1a4a;}
+.atk-square-btn.elm-megablast .atk-icon{animation:rainbowSpin 3s linear infinite;display:inline-block;}
+@keyframes rainbowShift{0%{background-position:0% 50%;}100%{background-position:400% 50%;}}
+@keyframes rainbowSpin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+
+/* Absolute Zero — Frost's signature move, pulsing icy shimmer */
+.atk-square-btn.elm-absolutezero{
+  background:linear-gradient(180deg,#c8f2ff,#4fb8e8 55%,#1d6fa8);
+  border-color:rgba(255,255,255,0.85);
+  box-shadow:0 7px 0 #0e3a56,0 14px 28px rgba(0,0,0,0.5),0 0 22px rgba(140,220,255,0.55),inset 0 1px 0 rgba(255,255,255,0.4);
+  animation:frostPulse 1.6s ease-in-out infinite alternate;
+}
+.atk-square-btn.elm-absolutezero:hover{transform:translateY(-2px);}
+.atk-square-btn.elm-absolutezero:active{transform:translateY(6px);box-shadow:0 1px 0 #0e3a56;}
+.atk-square-btn.elm-absolutezero .atk-icon{animation:frostShiver 1.1s ease-in-out infinite;display:inline-block;}
+@keyframes frostPulse{0%{box-shadow:0 7px 0 #0e3a56,0 14px 28px rgba(0,0,0,0.5),0 0 14px rgba(140,220,255,0.4),inset 0 1px 0 rgba(255,255,255,0.4);}100%{box-shadow:0 7px 0 #0e3a56,0 14px 28px rgba(0,0,0,0.5),0 0 28px rgba(180,235,255,0.85),inset 0 1px 0 rgba(255,255,255,0.4);}}
+@keyframes frostShiver{0%,100%{transform:rotate(0deg);}25%{transform:rotate(-6deg);}75%{transform:rotate(6deg);}}
+
+/* ══════ Victory / defeat banner ══════ */
+#battle-result-banner{display:none;position:absolute;inset:0;z-index:3;align-items:center;justify-content:center;flex-direction:column;gap:20px;background:rgba(5,3,2,0.55);backdrop-filter:blur(3px);}
+#battle-result-banner.show{display:flex;}
+#battle-result-text{font-family:'Cinzel Decorative',serif;font-size:clamp(2.2rem,6vw,3.6rem);font-weight:700;letter-spacing:3px;text-shadow:0 4px 12px rgba(0,0,0,0.7);animation:resultPop .4s cubic-bezier(0.34,1.56,0.64,1) both;}
+#battle-result-text.victory{color:#ffd85f;text-shadow:0 0 30px rgba(255,210,60,0.6),0 4px 12px rgba(0,0,0,0.7);}
+#battle-result-text.defeat{color:#ff6a5a;text-shadow:0 0 30px rgba(255,60,40,0.5),0 4px 12px rgba(0,0,0,0.7);}
+@keyframes resultPop{0%{opacity:0;transform:scale(0.7);}100%{opacity:1;transform:scale(1);}}
+#battle-result-btn{font-family:Cinzel,serif;font-weight:700;font-size:1rem;color:#fff;background:linear-gradient(180deg,#5a2018,#2e0f0a);border:2px solid rgba(220,80,60,0.75);border-radius:16px;padding:13px 36px;cursor:pointer;box-shadow:0 4px 0 #1a0805,0 8px 18px rgba(0,0,0,0.4);}
+#battle-result-rewards{font-family:Cinzel,serif;font-weight:700;font-size:1.1rem;color:#ffe27a;text-shadow:0 0 12px rgba(255,200,60,0.5),0 2px 3px rgba(0,0,0,0.7);letter-spacing:0.5px;}
+#battle-result-btn:hover{background:linear-gradient(180deg,#7a2a20,#3e140e);}
+
+/* ══════ Swap-choice banner (shown when a dragon faints and 2+ remain) ══════ */
+#battle-swapchoice-banner{display:none;position:absolute;inset:0;z-index:4;align-items:center;justify-content:center;flex-direction:column;gap:22px;background:rgba(5,3,2,0.72);backdrop-filter:blur(4px);}
+#battle-swapchoice-banner.show{display:flex;}
+#battle-swapchoice-title{font-family:'Cinzel Decorative',serif;font-size:clamp(1.3rem,3vw,1.9rem);font-weight:700;color:#ffe27a;text-shadow:0 0 16px rgba(255,200,60,0.6),0 3px 6px rgba(0,0,0,0.7);}
+#battle-swapchoice-options{display:flex;gap:24px;}
+.swapchoice-card{width:130px;background:linear-gradient(160deg,#5a4a38,#221a12);border:2.5px solid rgba(255,200,90,0.6);border-radius:16px;padding:12px;cursor:pointer;transition:.15s;display:flex;flex-direction:column;align-items:center;box-shadow:0 6px 16px rgba(0,0,0,0.5);}
+.swapchoice-card:hover{transform:translateY(-4px);border-color:rgba(255,220,130,0.95);box-shadow:0 10px 22px rgba(0,0,0,0.6),0 0 20px rgba(255,190,60,0.3);}
+.swapchoice-card canvas{width:100%;aspect-ratio:1;border-radius:10px;background:radial-gradient(circle at 35% 30%,#3a2a1a,#1a1008 75%);margin-bottom:8px;}
+.swapchoice-card .sc-name{font-family:Cinzel,serif;font-weight:700;font-size:0.85rem;color:#ffe8dc;}
+.swapchoice-card .sc-lvl{font-family:Cinzel,serif;font-size:0.72rem;color:rgba(255,220,180,0.7);margin-top:2px;}
+
+/* ══════ Battle setup menu — pick 3 dragons before entering the arena ══════ */
+#battle-setup-overlay{display:none;position:fixed;inset:0;z-index:400;align-items:center;justify-content:center;}
+#battle-setup-overlay.open{display:flex;}
+#battle-setup-bg{position:absolute;inset:0;background:rgba(10,4,3,0.8);backdrop-filter:blur(6px);}
+#battle-setup-box{position:relative;z-index:2;width:460px;height:360px;padding:28px 32px;box-shadow:0 24px 60px rgba(0,0,0,0.75),0 0 0 3px #7a3a30,0 0 0 5px #2e0f0a;text-align:center;animation:battleBoxIn .3s cubic-bezier(0.34,1.56,0.64,1) both;overflow-y:auto;box-sizing:border-box;background:linear-gradient(160deg,#3e2622,#1c0f0c);border-radius:20px;transform-origin:center center;}
+#bs-close{position:absolute;top:14px;right:16px;width:36px;height:36px;border:1.5px solid rgba(0,0,0,0.35);border-radius:50%;background:rgba(0,0,0,0.25);color:#ffd8c8;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+#bs-close:hover{background:rgba(0,0,0,0.4);}
+#bs-title{font-family:'Cinzel Decorative',serif;font-size:1.4rem;font-weight:700;color:#ffb499;text-shadow:0 0 14px rgba(255,60,40,0.4);margin-bottom:8px;}
+#bs-sub{font-family:'IM Fell English',serif;font-style:italic;font-size:0.9rem;color:rgba(255,215,200,0.6);margin-bottom:26px;}
+#bs-slots{display:flex;justify-content:center;align-items:flex-start;gap:18px;margin-bottom:30px;flex-wrap:wrap;}
+.bs-col{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.bs-leader{border-color:rgba(255,200,80,0.85)!important;box-shadow:0 0 20px rgba(255,180,50,0.4),inset 0 0 12px rgba(255,180,50,0.15)!important;}
+.bs-leader-corner{position:absolute;width:14px;height:14px;border:2px solid rgba(255,200,80,0.9);pointer-events:none;}
+.bs-leader-corner.tl{top:-3px;left:-3px;border-right:none;border-bottom:none;border-radius:5px 0 0 0;}
+.bs-leader-corner.tr{top:-3px;right:-3px;border-left:none;border-bottom:none;border-radius:0 5px 0 0;}
+.bs-leader-corner.bl{bottom:-3px;left:-3px;border-right:none;border-top:none;border-radius:0 0 0 5px;}
+.bs-leader-corner.br{bottom:-3px;right:-3px;border-left:none;border-top:none;border-radius:0 0 5px 0;}
+.bs-leader-label{font-family:'Cinzel Decorative',serif;font-size:0.75rem;font-weight:700;color:#ffcc55;letter-spacing:2px;text-shadow:0 0 10px rgba(255,190,60,0.5);}
+.bs-slot{width:110px;height:110px;border-radius:16px;background:radial-gradient(circle at 35% 30%,#5a2a1e,#220906 75%);border:2.5px dashed rgba(220,80,60,0.5);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:.15s;position:relative;overflow:hidden;}
+.bs-slot:hover{border-color:rgba(255,110,80,0.85);transform:translateY(-2px);}
+.bs-slot.filled{border-style:solid;border-color:rgba(255,140,110,0.7);box-shadow:0 0 16px rgba(220,60,40,0.3);}
+.bs-slot .bs-plus{font-size:2.2rem;color:rgba(255,150,120,0.55);font-weight:300;}
+.bs-slot .bs-canvas{width:100%;height:100%;display:block;}
+.bs-slot .bs-lvl{position:absolute;bottom:5px;left:5px;font-family:Cinzel,serif;font-size:0.6rem;font-weight:700;color:#ffe8dc;background:rgba(0,0,0,0.6);border:1px solid rgba(255,150,120,0.4);padding:1px 6px;border-radius:8px;}
+.bs-slot .bs-remove{position:absolute;top:-8px;right:-8px;width:22px;height:22px;border-radius:50%;background:#8a2a20;border:1.5px solid rgba(255,150,120,0.6);color:#fff;font-size:0.75rem;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1;}
+#bs-start-btn{background:linear-gradient(180deg,#d9503e,#8a2818);border:1.5px solid rgba(255,150,120,0.65);color:#fff;font-family:Cinzel,serif;font-weight:700;font-size:1rem;padding:14px 44px;border-radius:24px;cursor:pointer;letter-spacing:1.5px;box-shadow:0 5px 0 #5a1a10,0 8px 20px rgba(0,0,0,0.4);transition:.15s;}
+#bs-start-btn:hover{background:linear-gradient(180deg,#ea6050,#a53422);transform:translateY(-1px);}
+#bs-start-btn:active{transform:translateY(4px);box-shadow:0 1px 0 #5a1a10;}
+#bs-start-btn:disabled{opacity:0.4;cursor:default;box-shadow:0 5px 0 #5a1a10;transform:none;}
+
+/* ══════ Dragon picker for battle slots ══════ */
+#battle-dragon-picker{display:none;position:fixed;inset:0;z-index:410;align-items:center;justify-content:center;}
+#battle-dragon-picker.open{display:flex;}
+#bdp-bg{position:absolute;inset:0;background:rgba(0,0,0,0.7);}
+#bdp-box{position:relative;z-index:2;width:min(92vw,520px);max-height:74vh;background:linear-gradient(160deg,#3e2622,#1c0f0c);border-radius:20px;padding:clamp(22px,3.5vw,32px);box-shadow:0 24px 60px rgba(0,0,0,0.75),0 0 0 3px #7a3a30,0 0 0 5px #2e0f0a;display:flex;flex-direction:column;animation:battleBoxIn .3s cubic-bezier(0.34,1.56,0.64,1) both;}
+#bdp-close{position:absolute;top:14px;right:16px;width:36px;height:36px;border:1.5px solid rgba(0,0,0,0.35);border-radius:50%;background:rgba(0,0,0,0.25);color:#ffd8c8;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+#bdp-close:hover{background:rgba(0,0,0,0.4);}
+#bdp-title{font-family:'Cinzel Decorative',serif;font-size:1.15rem;font-weight:700;color:#ffb499;text-align:center;margin-bottom:16px;flex-shrink:0;}
+#bdp-list{overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,130px));justify-content:center;gap:12px;padding-right:8px;scrollbar-width:thin;scrollbar-color:rgba(220,80,60,0.5) rgba(0,0,0,0.2);}
+#bdp-list::-webkit-scrollbar{width:8px;}
+#bdp-list::-webkit-scrollbar-track{background:rgba(0,0,0,0.2);border-radius:6px;}
+#bdp-list::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#d9503e,#8a2818);border-radius:6px;border:1px solid rgba(255,150,120,0.3);}
+#bdp-list::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#ea6050,#a53422);}
+.bdp-item{background:rgba(255,255,255,0.04);border:1.5px solid rgba(220,80,60,0.35);border-radius:12px;padding:8px;display:flex;flex-direction:column;align-items:center;cursor:pointer;transition:.15s;}
+.bdp-item:hover{background:rgba(255,255,255,0.09);border-color:rgba(255,110,80,0.7);transform:translateY(-2px);}
+.bdp-item.disabled{opacity:0.3;cursor:default;pointer-events:none;}
+.bdp-frame{position:relative;width:100%;aspect-ratio:1;border-radius:9px;background:radial-gradient(circle at 35% 30%,#3a1a14,#1a0906 75%);overflow:hidden;margin-bottom:6px;}
+.bdp-canvas{width:100%;height:100%;display:block;}
+.bdp-item .bdp-lvl{position:absolute;bottom:3px;left:3px;font-family:Cinzel,serif;font-size:0.55rem;font-weight:700;color:#ffe8dc;background:rgba(0,0,0,0.6);border:1px solid rgba(255,150,120,0.4);padding:1px 5px;border-radius:8px;line-height:1.3;}
+.bdp-item .bdp-name{font-family:Cinzel,serif;font-size:0.72rem;font-weight:700;color:#ffe8dc;text-align:center;line-height:1.2;}
+#bdp-empty{text-align:center;font-family:'IM Fell English',serif;font-style:italic;color:rgba(255,215,200,0.6);padding:20px;grid-column:1/-1;}
 
 /* Body — old mossy stone floor */
 #sh-body{flex:1;overflow:hidden;position:relative;background:
@@ -253,14 +651,51 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(180d
 
 /* Habitat context menu */
 #habitat-menu{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;pointer-events:none;will-change:transform;transform:translateZ(0);background:rgba(0,0,0,0.55);}
-#habitat-dragons-row{display:flex;flex-direction:row;gap:16px;justify-content:center;flex:1;margin:16px 0;}
+
+/* ══════ Dragon detail panel ══════ */
+#dragon-detail-overlay{display:none;position:fixed;inset:0;z-index:410;align-items:center;justify-content:center;}
+#dragon-detail-overlay.open{display:flex;}
+#dragon-detail-bg{position:absolute;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(4px);}
+#dragon-detail-box{position:relative;z-index:2;width:min(92vw,560px);max-height:86vh;overflow-y:auto;background:linear-gradient(160deg,#2e2c28,#1a1814);border-radius:22px;padding:28px 30px 26px;box-shadow:0 20px 60px rgba(0,0,0,0.8),0 0 0 3px #6e6a5c,0 0 0 5px #38362e;animation:battleBoxIn .28s cubic-bezier(0.34,1.56,0.64,1) both;box-sizing:border-box;}
+#dragon-detail-close{position:absolute;top:14px;right:16px;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,0.3);border:1.5px solid rgba(255,255,255,0.15);color:#ddd;font-size:0.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:1;}
+#dragon-detail-close:hover{background:rgba(0,0,0,0.45);}
+#dragon-detail-layout{display:flex;gap:26px;align-items:stretch;}
+#dragon-detail-left{flex:0 0 auto;width:180px;display:flex;flex-direction:column;gap:12px;}
+#dragon-detail-right{flex:1;min-width:0;display:flex;flex-direction:column;text-align:left;}
+#dragon-detail-canvas-wrap{width:180px;height:180px;background:radial-gradient(circle at 35% 30%,#3a3830,#1a1814 75%);border:2px solid rgba(220,190,90,0.35);border-radius:16px;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:inset 0 2px 10px rgba(0,0,0,0.5);}
+#dragon-detail-canvas-wrap canvas{width:100%;height:100%;}
+#dragon-detail-name{font-family:'Cinzel Decorative',serif;font-size:1.3rem;font-weight:700;color:#f0d8a0;margin-bottom:14px;text-shadow:0 0 12px rgba(255,210,120,0.35);}
+#dragon-detail-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.dd-stat{background:rgba(0,0,0,0.25);border:1px solid rgba(220,190,90,0.25);border-radius:12px;padding:8px 6px;display:flex;flex-direction:column;gap:2px;}
+.dd-label{font-family:Cinzel,serif;font-size:0.62rem;font-weight:700;color:rgba(230,210,160,0.6);text-transform:uppercase;letter-spacing:0.5px;}
+.dd-value{font-family:Cinzel,serif;font-size:1.05rem;font-weight:700;color:#f0d8a0;}
+#dragon-detail-attacks-label{font-family:Cinzel,serif;font-size:0.7rem;font-weight:700;color:rgba(230,210,160,0.6);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;}
+#dragon-detail-attacks{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.dd-attack-chip{background:rgba(220,190,90,0.12);border:1px solid rgba(220,190,90,0.35);border-radius:16px;padding:6px 12px;font-family:Cinzel,serif;font-size:0.78rem;font-weight:700;color:#e8dfc8;}
+#dragon-detail-right #dragon-detail-actions{margin-top:auto;}
+#dragon-detail-actions{display:flex;flex-direction:column;gap:10px;}
+#dragon-detail-actions button{width:100%;font-family:Cinzel,serif;font-size:0.95rem;font-weight:700;border-radius:14px;padding:12px 0;cursor:pointer;box-sizing:border-box;}
+#dd-move-btn{color:#88ee88;background:linear-gradient(180deg,#2a6a2a,#1a4a1a);border:1px solid rgba(80,200,80,0.4);}
+#dd-upgrade-btn{color:#ffe27a;background:linear-gradient(180deg,#8a6a1a,#5a4410);border:1px solid rgba(255,210,90,0.4);width:100%;font-family:Cinzel,serif;font-size:0.9rem;font-weight:700;border-radius:14px;padding:12px 0;cursor:pointer;box-sizing:border-box;}
+#dd-upgrade-btn:disabled{opacity:0.5;cursor:default;}
+#dragon-detail-flavor{flex:1;background:rgba(0,0,0,0.22);border:1px solid rgba(220,190,90,0.25);border-radius:14px;padding:12px 12px;display:flex;flex-direction:column;gap:8px;min-height:0;}
+#dragon-detail-flavor-badges{display:flex;gap:6px;justify-content:center;font-size:1.1rem;}
+#dragon-detail-flavor-text{font-family:'IM Fell English',serif;font-style:italic;font-size:0.78rem;line-height:1.45;color:rgba(220,210,180,0.75);text-align:center;}
+#dd-sell-btn{color:#ffaaaa;background:rgba(120,20,20,0.3);border:1px solid rgba(200,60,60,0.35);}
+@media (max-width:480px){
+  #dragon-detail-layout{flex-direction:column;align-items:center;}
+  #dragon-detail-left{width:180px;}
+  #dragon-detail-right{text-align:center;}
+  #dragon-detail-attacks{justify-content:center;}
+}
+
 #habitat-menu.open>div{pointer-events:all;}
 #habitat-menu.open{display:flex !important;}
-#habitat-menu-content{pointer-events:all;will-change:transform;transform:translateZ(0);isolation:isolate;width:min(96vw,1100px);display:flex;flex-direction:column;background:linear-gradient(180deg,#2e2c28 0%,#3a3830 100%);border:1.5px solid rgba(220,210,180,0.25);border-radius:20px;padding:clamp(16px,2.5vw,28px) clamp(14px,2.5vw,28px) clamp(20px,3vw,32px);box-shadow:0 20px 60px rgba(0,0,0,0.8),0 0 0 1px rgba(255,255,255,0.04);}
+#habitat-menu-content{pointer-events:all;isolation:isolate;width:740px;height:400px;display:flex;flex-direction:column;background:linear-gradient(180deg,#2e2c28 0%,#3a3830 100%);border:1.5px solid rgba(220,210,180,0.25);border-radius:20px;padding:24px 24px 28px;box-shadow:0 20px 60px rgba(0,0,0,0.8),0 0 0 1px rgba(255,255,255,0.04);box-sizing:border-box;transform-origin:center center;}
 #habitat-menu-title{font-family:'Cinzel Decorative',serif;font-size:1.8rem;color:#c8b890;text-align:center;margin-bottom:14px;letter-spacing:2px;text-transform:uppercase;}
-#habitat-dragons-row{display:flex;gap:8px;justify-content:center;margin-bottom:12px;}
-.dragon-slot-card{width:clamp(140px,25vw,260px);display:flex;flex-direction:column;align-items:center;gap:6px;}
-.dragon-slot-img{width:clamp(140px,25vw,260px);height:clamp(140px,25vw,260px);border-radius:10px;background:linear-gradient(160deg,#2a2822,#1c1a16);border:1.5px solid rgba(255,180,40,0.3);box-shadow:inset 0 0 18px rgba(0,0,0,0.7),0 2px 8px rgba(0,0,0,0.4);position:relative;overflow:visible;display:flex;align-items:center;justify-content:center;}
+#habitat-dragons-row{display:flex;flex-direction:row;gap:16px;justify-content:center;flex:1;margin:0 0 12px;}
+.dragon-slot-card{width:220px;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.dragon-slot-img{width:220px;height:220px;border-radius:10px;background:linear-gradient(160deg,#2a2822,#1c1a16);border:1.5px solid rgba(255,180,40,0.3);box-shadow:inset 0 0 18px rgba(0,0,0,0.7),0 2px 8px rgba(0,0,0,0.4);position:relative;overflow:visible;display:flex;align-items:center;justify-content:center;}
 .dragon-slot-img.empty{border-color:rgba(255,255,255,0.1);background:rgba(0,0,0,0.2);}
 .dragon-slot-img.empty::after{content:'+';font-size:2.6rem;color:rgba(255,255,255,0.2);line-height:1;}
 .dragon-level-tag{position:absolute;top:-8px;right:-8px;background:linear-gradient(135deg,#d4a017,#8a6200);color:#fff8e0;font-family:'Cinzel',serif;font-size:0.78rem;font-weight:700;padding:4px 10px;border-radius:10px;box-shadow:0 2px 4px rgba(0,0,0,0.4);letter-spacing:0.5px;border:1px solid rgba(255,220,100,0.4);}
@@ -386,7 +821,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(180d
 #cheat-submit{font-family:Cinzel,serif;font-size:0.8rem;font-weight:700;padding:10px 28px;background:linear-gradient(180deg,#c8920a,#7a5200);border:1.5px solid rgba(255,200,60,0.5);border-radius:20px;color:#fff8e0;cursor:pointer;margin-right:8px;}
 #cheat-cancel{font-family:Cinzel,serif;font-size:0.8rem;padding:10px 20px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,200,60,0.2);border-radius:20px;color:#aaa;cursor:pointer;}
 
-#hatchery-menu{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:300;width:clamp(320px,88vw,1100px);max-height:92vh;overflow-y:visible;background:linear-gradient(180deg,#1e1c18,#2a2820);border:1.5px solid rgba(220,190,120,0.25);border-radius:22px;padding:clamp(16px,2vw,28px) clamp(16px,2vw,28px) clamp(20px,2.5vw,36px);box-shadow:0 8px 60px rgba(0,0,0,0.8);display:none;font-size:clamp(0.85rem,1.6vw,1.25rem);}
+#hatchery-menu{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:300;width:640px;height:370px;overflow-y:visible;background:linear-gradient(180deg,#1e1c18,#2a2820);border:1.5px solid rgba(220,190,120,0.25);border-radius:22px;padding:24px 24px 28px;box-shadow:0 8px 60px rgba(0,0,0,0.8);display:none;font-size:1.05rem;box-sizing:border-box;transform-origin:center center;}
 #hatchery-menu.open{display:block;}
 .hatch-slot{flex:1;background:rgba(0,0,0,0.3);border:1.5px solid rgba(200,170,90,0.2);border-radius:18px;padding:0.7em 0.5em;display:flex;flex-direction:column;align-items:center;gap:0.4em;min-height:11em;position:relative;box-sizing:border-box;min-width:0;}
 .hatch-slot.empty{border-style:dashed;opacity:0.5;}
@@ -458,6 +893,7 @@ body.placing #hud>*{pointer-events:none!important;}
 @keyframes panelBoxIn{0%{opacity:0;transform:scale(0.88) translateY(16px);}100%{opacity:1;transform:scale(1) translateY(0);}}
 @keyframes panelBoxOut{0%{opacity:1;transform:scale(1) translateY(0);}100%{opacity:0.0;transform:scale(0.9) translateY(10px);}}
 @keyframes panelBoxInCentered{0%{opacity:0;transform:translate(-50%,-50%) scale(0.88) translateY(16px);}100%{opacity:1;transform:translate(-50%,-50%) scale(1) translateY(0);}}
+@keyframes battleBoxIn{0%{opacity:0;transform:scale(0.88) translateY(16px);}100%{opacity:1;transform:scale(1) translateY(0);}}
 @keyframes panelBoxOutCentered{0%{opacity:1;transform:translate(-50%,-50%) scale(1) translateY(0);}100%{opacity:0;transform:translate(-50%,-50%) scale(0.9) translateY(10px);}}
 @keyframes sheetSlideIn{from{opacity:0;transform:translate(-50%,50px);}to{opacity:1;transform:translate(-50%,0);}}
 @keyframes sheetSlideOut{from{opacity:1;transform:translate(-50%,0);}to{opacity:0;transform:translate(-50%,50px);}}
@@ -512,6 +948,12 @@ body.placing #hud>*{pointer-events:none!important;}
   <button id="relocate-btn" onclick="openRelocatePanel()" title="Misplaced buildings" style="right:calc(clamp(20px,2vw,32px) + (clamp(108px,11vw,144px) + 28px)*4);">
     <span class="icon">📍</span>
     <span id="relocate-badge">0</span>
+  </button>
+  <button id="battle-btn" onclick="openBattleMenu()">
+    <span class="corner tl"></span>
+    <span class="corner br"></span>
+    <span class="sword">⚔️</span>
+    <span class="label">BATTLE</span>
   </button>
 </div>
 
@@ -858,6 +1300,39 @@ body.placing #hud>*{pointer-events:none!important;}
   </div>
 </div>
   </div>
+
+<div id="battle-overlay">
+  <div id="battle-bg" onclick="closeBattlePanel()"></div>
+  <div id="battle-panel-main">
+    <div id="bt-header">
+      <div style="width:36px;flex-shrink:0;"></div>
+      <div class="bt-center-group">
+        <div class="bt-torch"><div class="bt-flame"></div><div class="bt-tbase"></div></div>
+        <div class="bt-center">
+          <div class="bt-title">BATTLE ARENA</div>
+          <div class="bt-sub">Glory Awaits the Bold</div>
+        </div>
+        <div class="bt-torch"><div class="bt-flame"></div><div class="bt-tbase"></div></div>
+      </div>
+      <button id="bt-close" onclick="closeBattlePanel()">✕</button>
+    </div>
+    <div id="bt-tabs">
+      <button class="bt-tab active" data-tab="battles" onclick="switchBattleTab('battles')">Battles</button>
+      <button class="bt-tab" data-tab="quests" onclick="switchBattleTab('quests')">Quests</button>
+    </div>
+    <div id="bt-body">
+      <div class="bt-panel" data-panel="battles">
+        <div id="battle-list"></div>
+      </div>
+      <div class="bt-panel" data-panel="quests" style="display:none;">
+        <div class="bt-placeholder-icon">📜</div>
+        <div class="bt-placeholder-title">Battle Quests</div>
+        <div class="bt-placeholder-text">Soon you'll be able to take on special battle quests to win rare rewards with your dragons.</div>
+        <div class="bt-soon-badge">🚧 COMING SOON</div>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <div id="shop-help-overlay">
@@ -4454,6 +4929,965 @@ function closeRelocatePanel(){
   setTimeout(()=>{ if(el) el.remove(); if(bd) bd.remove(); game.panelOpen=false; }, 160);
 }
 
+function openBattleMenu(){
+  const el=document.getElementById('battle-overlay');
+  if(!el) return;
+  closeAllPanelsGlobal();
+  const bg=document.getElementById('battle-bg'), panel=document.getElementById('battle-panel-main');
+  el.classList.add('open');
+  bg.style.animation='none'; void bg.offsetWidth; bg.style.animation='panelBgFadeIn .2s ease both';
+  panel.style.opacity='0';
+  scaleBattlePanel();
+  renderBattleList();
+  requestAnimationFrame(()=>{ panel.style.transition='opacity .22s ease'; panel.style.opacity='1'; });
+}
+function closeBattlePanel(){
+  const el=document.getElementById('battle-overlay');
+  if(!el) return;
+  const bg=document.getElementById('battle-bg'), panel=document.getElementById('battle-panel-main');
+  bg.style.animation='panelBgFadeOut .16s ease both';
+  panel.style.transition='opacity .16s ease'; panel.style.opacity='0';
+  setTimeout(()=>{ el.classList.remove('open'); panel.style.transition=''; panel.style.opacity=''; }, 160);
+}
+function scaleBattlePanel(){
+  const panel=document.getElementById('battle-panel-main');
+  if(!panel) return;
+  const scaleX=window.innerWidth/520;
+  const scaleY=window.innerHeight/500;
+  const scale=Math.min(scaleX,scaleY,2.6);
+  panel.style.transform=`scale(${Math.max(0.5,scale)})`;
+}
+window.addEventListener('resize',scaleBattlePanel);
+function switchBattleTab(tab){
+  document.querySelectorAll('.bt-tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===tab));
+  document.querySelectorAll('.bt-panel').forEach(p=>{ p.style.display = (p.dataset.panel===tab) ? '' : 'none'; });
+}
+// ══════ Full-screen battle scene: grass field, background trees, sky + clouds ══════
+let _battleSceneActive=false;
+let _battleSceneClouds=null;
+let _battleCanvas=null, _battleCtx=null;
+
+function _initBattleClouds(){
+  if(_battleSceneClouds) return;
+  _battleSceneClouds=[];
+  for(let i=0;i<7;i++){
+    _battleSceneClouds.push({
+      x: Math.random(),
+      y: 0.06+Math.random()*0.34,
+      s: 46+Math.random()*70,
+      speed: 1+Math.random()*2.2
+    });
+  }
+}
+
+function _battleTrees(seedCount, W){
+  // Deterministic-ish tree placement spread across the width
+  const trees=[];
+  const n=seedCount;
+  for(let i=0;i<n;i++){
+    const fx=(i+0.5)/n + (Math.sin(i*12.9898)*0.5)*0.06;
+    trees.push({ fx: Math.max(0.02,Math.min(0.98,fx)), sz: 0.75+((i*37)%100)/100*0.5, dep: i%2 });
+  }
+  return trees;
+}
+
+let _battleLastFrame=null;
+let _battleParticles=[];
+const RAINBOW_COLORS=['255,60,60','255,160,40','255,230,50','80,220,90','60,160,255','160,80,240'];
+function spawnHitParticles(x,y,size,rainbow){
+  const count=rainbow?46:20;
+  for(let i=0;i<count;i++){
+    const ang=Math.random()*Math.PI*2;
+    const spd=(rainbow?(4+Math.random()*8):(2+Math.random()*5))*(size/220);
+    _battleParticles.push({
+      x, y,
+      vx:Math.cos(ang)*spd, vy:Math.sin(ang)*spd,
+      life:1, decay:rainbow?(0.9+Math.random()*0.8):(1.4+Math.random()*1.2),
+      r:(rainbow?(4+Math.random()*6):(3+Math.random()*4))*(size/220),
+      color: rainbow ? RAINBOW_COLORS[i%RAINBOW_COLORS.length] : (Math.random()<0.5 ? '255,60,40' : '255,140,60')
+    });
+  }
+}
+function _updateAndDrawParticles(ctx,dt){
+  for(let i=_battleParticles.length-1;i>=0;i--){
+    const p=_battleParticles[i];
+    p.life-=p.decay*dt;
+    if(p.life<=0){ _battleParticles.splice(i,1); continue; }
+    p.x+=p.vx; p.y+=p.vy;
+    p.vx*=0.92; p.vy*=0.92;
+    ctx.save();
+    ctx.globalAlpha=Math.max(0,p.life);
+    ctx.fillStyle=`rgba(${p.color},1)`;
+    ctx.shadowColor=`rgba(${p.color},0.8)`; ctx.shadowBlur=8;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r*Math.max(0.2,p.life),0,Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+}
+function drawBattleScene(now){
+  if(!_battleSceneActive || !_battleCtx) return;
+  const ctx=_battleCtx;
+  const W=_battleLogicalW||_battleCanvas.width, H=_battleLogicalH||_battleCanvas.height;
+  const t=now/1000;
+  const dt=Math.min(0.05,(now-(_battleLastFrame||now))/1000);
+  _battleLastFrame=now;
+  ctx.clearRect(0,0,W,H);
+
+  // Sky
+  const sky=ctx.createLinearGradient(0,0,0,H*0.7);
+  sky.addColorStop(0,'#3d8fd6'); sky.addColorStop(0.6,'#7cc0ee'); sky.addColorStop(1,'#bfe4fb');
+  ctx.fillStyle=sky; ctx.fillRect(0,0,W,H*0.72);
+
+  // Clouds
+  _initBattleClouds();
+  ctx.save();
+  ctx.globalAlpha=0.9; ctx.fillStyle='#ffffff';
+  _battleSceneClouds.forEach(cl=>{
+    const cw=W+400;
+    const x=((cl.x*cw + t*cl.speed*10) % cw) - 200;
+    const y=cl.y*H*0.6;
+    const s=cl.s;
+    [[-1,0,1],[-0.4,-0.3,0.85],[0.3,-0.35,0.95],[0.9,-0.05,0.75],[0.1,0.15,1.1]].forEach(([dx,dy,dr])=>{
+      ctx.beginPath();
+      ctx.ellipse(x+dx*s, y+dy*s*0.6, s*dr*0.55, s*dr*0.36, 0, 0, Math.PI*2);
+      ctx.fill();
+    });
+  });
+  ctx.restore();
+
+  // Distant tree line (background, darker/smaller, behind the grass horizon)
+  const horizonY=H*0.48;
+  const farTrees=_battleTrees(10, W);
+  farTrees.forEach(tr=>{
+    const tx=tr.fx*W;
+    const sz=(110+tr.sz*70)*(W/1400>1?1:W/1400);
+    _drawBattleTree(ctx, tx, horizonY+8, sz*0.9, '#2f5f2a', '#244a20', 0.85);
+  });
+
+  // Grass ground
+  const grd=ctx.createLinearGradient(0,horizonY,0,H);
+  grd.addColorStop(0,'#6fbf3e'); grd.addColorStop(0.5,'#57a72e'); grd.addColorStop(1,'#3f8a1f');
+  ctx.fillStyle=grd;
+  ctx.fillRect(0,horizonY,W,H-horizonY);
+  // Soft horizon blend
+  ctx.fillStyle='rgba(255,255,255,0.08)';
+  ctx.fillRect(0,horizonY,W,10);
+
+  // Simple grass texture blades near the bottom
+  ctx.strokeStyle='rgba(30,80,10,0.35)'; ctx.lineWidth=2;
+  for(let i=0;i<40;i++){
+    const gx=(i*97.3)%W;
+    const gy=horizonY+20+((i*53.7)%(H-horizonY-20));
+    ctx.beginPath();
+    ctx.moveTo(gx,gy);
+    ctx.lineTo(gx+4,gy-10);
+    ctx.stroke();
+  }
+
+  // Attack lunge state — drives whichever side is attacking forward-and-back,
+  // deals damage at the moment of impact, and triggers a brief hit flash
+  let lungePlayer=0, lungeEnemy=0;
+  if(_battleCombat.animating){
+    const elapsed=now-_battleCombat.attackStartTime;
+    const dur=520;
+    const prog=Math.min(1, elapsed/dur);
+    const lunge=(prog<0.5 ? (prog/0.5) : (1-(prog-0.5)/0.5)) * Math.min(W,H)*0.14;
+    if(_battleCombat.turn==='player') lungePlayer=lunge; else lungeEnemy=lunge;
+    if(!_battleCombat.hitApplied && prog>=0.5){
+      _battleCombat.hitApplied=true;
+      const isPlayerTurn=_battleCombat.turn==='player';
+      const attacker = isPlayerTurn ? _playerRoster[_playerActive] : _enemyRoster[_enemyActive];
+      const defender = isPlayerTurn ? _enemyRoster[_enemyActive] : _playerRoster[_playerActive];
+      const isMegaBlast = _battleCombat.attackElement==='megablast';
+      const isAbsoluteZero = _battleCombat.attackElement==='absolutezero';
+      let dmg;
+      if(isMegaBlast){
+        dmg = attacker.level*20; // flat, ignores type effectiveness entirely — Lv.20 = 400
+        attacker.usedMegaBlast=true;
+      } else if(isAbsoluteZero){
+        dmg = attacker.level*20; // same flat formula as Mega Blast — Lv.20 = 400
+        attacker.usedAbsoluteZero=true;
+      } else {
+        const eff=getTypeEffectivenessForElement(_battleCombat.attackElement||FIRST_ELEMENT[attacker.type], defender.type);
+        dmg=Math.round((attacker.level*5+Math.floor(Math.random()*6))*eff); // level*5 base (Lv.20 = 100) + 0-5 random bonus, scaled by type effectiveness
+      }
+      const isSpecialMove = isMegaBlast || isAbsoluteZero;
+      if(isPlayerTurn){
+        _enemyRoster[_enemyActive].hp=Math.max(0,_enemyRoster[_enemyActive].hp-dmg);
+        spawnHitParticles(W*0.66, horizonY+(H-horizonY)*0.1+Math.sin(t*1.8+1.7)*10, Math.min(W,H)*0.38, isSpecialMove);
+      } else {
+        _playerRoster[_playerActive].hp=Math.max(0,_playerRoster[_playerActive].hp-dmg);
+        spawnHitParticles(W*0.34, horizonY+(H-horizonY)*0.1+Math.sin(t*1.8)*10, Math.min(W,H)*0.38, isSpecialMove);
+      }
+      updateBattleHUD();
+    }
+    if(prog>=1){
+      _battleCombat.animating=false;
+      _resolveTurnEnd();
+    }
+  }
+
+  // Update death animation (either side) — plays out then fires its callback,
+  // which handles the roster swap / outcome check
+  if(_deathAnim){
+    _deathAnim.t += dt*1000;
+    if(_deathAnim.t>=_deathAnim.dur){
+      const cb=_deathAnim.onComplete;
+      _deathAnim=null;
+      if(cb) cb();
+    }
+  }
+  // Update voluntary swap animation — out phase slides the old dragon off,
+  // then in phase slides the new one in from the same side
+  if(_battleSwapAnim){
+    _battleSwapAnim.t += dt*1000;
+    if(_battleSwapAnim.phase==='out' && _battleSwapAnim.t>=_battleSwapAnim.dur){
+      _setPlayerActive(_battleSwapAnim.inIdx);
+      _battleSwapAnim.phase='in'; _battleSwapAnim.t=0;
+    } else if(_battleSwapAnim.phase==='in' && _battleSwapAnim.t>=_battleSwapAnim.dur){
+      _battleSwapAnim=null;
+      if(_battleCombat.turn==='player' && !_battleCombat.over) renderAttackButtons();
+    }
+  }
+
+  // Active player dragon — flies gently up and down on the left side, wings
+  // actually flapping via the same physics step used for habitat dragons
+  const pActive=_playerRoster[_playerActive];
+  const lSize=Math.min(W,H)*0.38;
+  const pBaseX=W*0.34, pBaseY=horizonY+(H-horizonY)*0.1;
+  ctx.fillStyle='rgba(0,0,0,0.22)';
+  ctx.beginPath(); ctx.ellipse(pBaseX, pBaseY+lSize*0.44, lSize*0.3, lSize*0.08, 0, 0, Math.PI*2); ctx.fill();
+  if(_deathAnim && _deathAnim.side==='player'){
+    const prog=_deathAnim.t/_deathAnim.dur;
+    const fallY=pBaseY + prog*lSize*0.85;
+    ctx.save(); ctx.globalAlpha=Math.max(0,1-prog);
+    ctx.drawImage(_deathAnim.canvas, pBaseX-lSize/2, fallY-lSize/2, lSize, lSize);
+    ctx.restore();
+  } else if(_battleSwapAnim){
+    const prog=_battleSwapAnim.t/_battleSwapAnim.dur;
+    if(_battleSwapAnim.phase==='out'){
+      const outDragon=_playerRoster[_battleSwapAnim.outIdx];
+      const slideX=pBaseX - prog*W*0.55;
+      ctx.save(); ctx.globalAlpha=Math.max(0,1-prog*0.4);
+      ctx.drawImage(outDragon.sideCanvas, slideX-lSize/2, pBaseY-lSize/2, lSize, lSize);
+      ctx.restore();
+    } else {
+      const inDragon=_playerRoster[_playerActive];
+      stepDragonPhysics(inDragon.phys, dt);
+      _drawDragonSidePortrait(inDragon.sideCanvas.getContext('2d'), inDragon.type, inDragon.sideCanvas.width, inDragon.phys);
+      const slideX=(pBaseX - W*0.55) + prog*W*0.55;
+      ctx.drawImage(inDragon.sideCanvas, slideX-lSize/2, pBaseY-lSize/2, lSize, lSize);
+    }
+  } else if(pActive){
+    stepDragonPhysics(pActive.phys, dt);
+    const lctx=pActive.sideCanvas.getContext('2d');
+    _drawDragonSidePortrait(lctx, pActive.type, pActive.sideCanvas.width, pActive.phys);
+    const bob=Math.sin(t*1.8)*10;
+    const lx=pBaseX+lungePlayer, ly=pBaseY+bob;
+    ctx.drawImage(pActive.sideCanvas, lx-lSize/2, ly-lSize/2, lSize, lSize);
+  }
+
+  // Player bench — every roster dragon except the active one, dimmed if fainted
+  _drawBenchColumn(ctx, _playerRoster.map((d,i)=>({d,i})).filter(o=>o.i!==_playerActive), 18, false);
+
+  // Active enemy dragon — mirrors the player's, flies on the right side of the field
+  const eActive=_enemyRoster[_enemyActive];
+  const eSize=Math.min(W,H)*0.38;
+  const eBaseX=W*0.66, eBaseY=horizonY+(H-horizonY)*0.1;
+  ctx.fillStyle='rgba(0,0,0,0.22)';
+  ctx.beginPath(); ctx.ellipse(eBaseX, eBaseY+eSize*0.44, eSize*0.3, eSize*0.08, 0, 0, Math.PI*2); ctx.fill();
+  if(_deathAnim && _deathAnim.side==='enemy'){
+    const prog=_deathAnim.t/_deathAnim.dur;
+    const fallY=eBaseY + prog*eSize*0.85;
+    ctx.save(); ctx.globalAlpha=Math.max(0,1-prog);
+    ctx.translate(eBaseX, fallY); ctx.scale(-1,1);
+    ctx.drawImage(_deathAnim.canvas, -eSize/2, -eSize/2, eSize, eSize);
+    ctx.restore();
+  } else if(eActive){
+    stepDragonPhysics(eActive.phys, dt);
+    const ectx=eActive.sideCanvas.getContext('2d');
+    _drawDragonSidePortrait(ectx, eActive.type, eActive.sideCanvas.width, eActive.phys);
+    const ebob=Math.sin(t*1.8+1.7)*10;
+    const ex=eBaseX-lungeEnemy, ey=eBaseY+ebob;
+    // Flip horizontally so the enemy faces left, toward the player
+    ctx.save();
+    ctx.translate(ex, ey); ctx.scale(-1,1);
+    ctx.drawImage(eActive.sideCanvas, -eSize/2, -eSize/2, eSize, eSize);
+    ctx.restore();
+  }
+
+  // Enemy bench — mirrored along the right edge of the screen
+  _drawBenchColumn(ctx, _enemyRoster.map((d,i)=>({d,i})).filter(o=>o.i!==_enemyActive), W-18-Math.min(130,W*0.12), true);
+
+  // Hit particle bursts — drawn last, on top of everything
+  _updateAndDrawParticles(ctx, dt);
+
+  requestAnimationFrame(drawBattleScene);
+}
+
+function _drawBenchColumn(ctx, benchEntries, benchX, isEnemy){
+  const H=_battleLogicalH||_battleCanvas.height, W=_battleLogicalW||_battleCanvas.width;
+  const benchSize=Math.min(130, W*0.12);
+  let benchY=H*0.24;
+  if(!isEnemy) _playerBenchHitboxes=[];
+  benchEntries.forEach(entry=>{
+    const b=entry.d, rosterIdx=entry.i;
+    const fainted=b.hp<=0;
+    const swappable = !isEnemy && !fainted && _playerTurnsSinceSwap>=3 && _battleCombat.turn==='player' && !_battleCombat.animating && !_battleSwapAnim && !_deathAnim && !_battleCombat.over;
+    ctx.save();
+    if(fainted) ctx.globalAlpha=0.4;
+    ctx.fillStyle='rgba(20,10,6,0.55)';
+    ctx.strokeStyle= isEnemy ? 'rgba(80,120,220,0.6)' : (swappable ? 'rgba(120,255,140,0.85)' : 'rgba(220,80,60,0.6)');
+    ctx.lineWidth=2.5;
+    _roundRectPath(ctx, benchX, benchY, benchSize, benchSize, 10);
+    ctx.fill(); ctx.stroke();
+    ctx.save();
+    _roundRectPath(ctx, benchX+3, benchY+3, benchSize-6, benchSize-6, 8);
+    ctx.clip();
+    const zoom=benchSize*1.15;
+    const cx=benchX+benchSize/2, cy=benchY+benchSize/2;
+    ctx.drawImage(b.frontCanvas, cx-zoom/2, cy-zoom/2, zoom, zoom);
+    if(fainted){ ctx.fillStyle='rgba(20,20,20,0.5)'; ctx.fillRect(benchX+3,benchY+3,benchSize-6,benchSize-6); }
+    // Swap cooldown shading — darkens the dragon and shows turns remaining
+    if(!isEnemy && !fainted && _playerTurnsSinceSwap<3){
+      ctx.fillStyle='rgba(10,10,10,0.6)';
+      ctx.fillRect(benchX+3,benchY+3,benchSize-6,benchSize-6);
+      ctx.fillStyle='#fff'; ctx.font='bold 22px Cinzel,serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(String(3-_playerTurnsSinceSwap), cx, cy);
+    }
+    ctx.restore();
+    // level badge
+    ctx.fillStyle='rgba(0,0,0,0.65)';
+    _roundRectPath(ctx, benchX+4, benchY+benchSize-22, 40, 17, 8);
+    ctx.fill();
+    ctx.fillStyle='#ffe8dc'; ctx.font='bold 12px Cinzel,serif'; ctx.textAlign='left'; ctx.textBaseline='middle';
+    ctx.fillText('Lv.'+b.level, benchX+8, benchY+benchSize-13);
+    ctx.restore();
+    if(!isEnemy) _playerBenchHitboxes.push({x:benchX,y:benchY,w:benchSize,h:benchSize,rosterIdx,swappable});
+    benchY += benchSize+16;
+  });
+}
+
+function _roundRectPath(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+
+function _drawBattleTree(ctx, x, y, sz, colDark, colDarker, alpha){
+  ctx.save();
+  ctx.globalAlpha=alpha;
+  // Trunk
+  ctx.fillStyle='#4a3018';
+  ctx.fillRect(x-sz*0.05, y-sz*0.05, sz*0.1, sz*0.32);
+  // Foliage — layered blobs
+  const blobs=[[0,-0.55,0.5],[-0.28,-0.4,0.36],[0.28,-0.4,0.36],[0,-0.25,0.42]];
+  blobs.forEach(([bx,by,br],i)=>{
+    ctx.fillStyle= i===3 ? colDark : colDarker;
+    ctx.beginPath();
+    ctx.arc(x+bx*sz, y+by*sz, br*sz, 0, Math.PI*2);
+    ctx.fill();
+  });
+  ctx.restore();
+}
+
+let _battleLogicalW=0, _battleLogicalH=0;
+function resizeBattleCanvas(){
+  if(!_battleCanvas) return;
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  _battleLogicalW=window.innerWidth; _battleLogicalH=window.innerHeight;
+  _battleCanvas.width=Math.round(_battleLogicalW*dpr);
+  _battleCanvas.height=Math.round(_battleLogicalH*dpr);
+  _battleCtx.setTransform(dpr,0,0,dpr,0,0);
+}
+window.addEventListener('resize', ()=>{ if(_battleSceneActive) resizeBattleCanvas(); });
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  const canvasEl=document.getElementById('battle-scene-canvas');
+  if(!canvasEl) return;
+  canvasEl.addEventListener('click', (e)=>{
+    if(!_battleSceneActive) return;
+    const rect=canvasEl.getBoundingClientRect();
+    const sx=e.clientX-rect.left, sy=e.clientY-rect.top;
+    for(const hb of _playerBenchHitboxes){
+      if(sx>=hb.x && sx<=hb.x+hb.w && sy>=hb.y && sy<=hb.y+hb.h){
+        if(hb.swappable) _startSwapAnimation(hb.rosterIdx);
+        return;
+      }
+    }
+  });
+});
+
+let _battleSlots=[null,null,null];
+
+const BATTLES=[
+  {
+    id:'first_battle',
+    name:'The First Battle',
+    desc:"Prove your dragons' strength in the arena's very first challenge.",
+    icon:'⚔️', theme:'first',
+    levelRange:'Lv. 3-5',
+    enemies:{ leader:{type:'fire', level:3}, bench:[{type:'grass', level:4}, {type:'earth', level:5}] }
+  },
+  {
+    id:'subaquatic_nightmare',
+    name:'The Subaquatic Nightmare',
+    desc:'Dive into a den of water-born dragons lurking in the deep.',
+    icon:'🌊', theme:'water',
+    levelRange:'Lv. 8-10',
+    enemies:{ leader:{type:'water', level:8}, bench:[{type:'coral', level:9}, {type:'frost', level:10}] }
+  },
+  {
+    id:'skyfall_reckoning',
+    name:'Skyfall Reckoning',
+    desc:'Storm-charged dragons crash down from the clouds above.',
+    icon:'⛈️', theme:'storm',
+    levelRange:'Lv. 13-15',
+    enemies:{ leader:{type:'lightning', level:13}, bench:[{type:'storm', level:14}, {type:'plasma', level:15}] }
+  },
+  {
+    id:'wrath_of_thunderlord',
+    name:'Wrath of the Thunderlord',
+    desc:'The legendary Thunderlord and its molten guard await — only the boldest dare challenge them.',
+    icon:'👑', theme:'thunderlord',
+    levelRange:'Lv. 18-20',
+    enemies:{ leader:{type:'thunderlord', level:20}, bench:[{type:'obsidian', level:18}, {type:'magma', level:19}] }
+  }
+];
+let _currentBattleEnemies=null;
+
+function _battleCardIconHTML(b){
+  if(b.theme==='water'){
+    return `<svg class="theme-svg" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="waterBase" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#3a86c8"/><stop offset="100%" stop-color="#0f3c6e"/>
+        </linearGradient>
+        <linearGradient id="waveGradBack" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#7fd0f5"/><stop offset="100%" stop-color="#2f7fc2"/>
+        </linearGradient>
+        <linearGradient id="waveGradFront" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#4fabe8"/><stop offset="100%" stop-color="#155a96"/>
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="100" height="100" fill="url(#waterBase)"/>
+      <path class="wave-back" d="M-20,32 Q-8,20 4,32 T28,32 T52,32 T76,32 T100,32 T124,32 V110 H-20 Z" fill="url(#waveGradBack)"/>
+      <path class="wave-front" d="M-20,52 Q-8,38 4,52 T28,52 T52,52 T76,52 T100,52 T124,52 V110 H-20 Z" fill="url(#waveGradFront)"/>
+      <circle cx="26" cy="16" r="2.6" fill="#e8f7ff" opacity="0.85"/>
+      <circle cx="52" cy="10" r="1.9" fill="#e8f7ff" opacity="0.7"/>
+      <circle cx="74" cy="18" r="2.3" fill="#e8f7ff" opacity="0.8"/>
+    </svg>`;
+  }
+  if(b.theme==='storm'){
+    return `<svg class="theme-svg" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="stormSky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1c1c2c"/><stop offset="100%" stop-color="#3a3a52"/>
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="100" height="100" fill="url(#stormSky)"/>
+      <ellipse cx="-5" cy="24" rx="34" ry="20" fill="#33334a"/>
+      <ellipse cx="30" cy="14" rx="36" ry="22" fill="#3d3d58"/>
+      <ellipse cx="65" cy="20" rx="34" ry="21" fill="#35354c"/>
+      <ellipse cx="102" cy="26" rx="32" ry="19" fill="#2e2e42"/>
+      <ellipse cx="48" cy="30" rx="55" ry="16" fill="#26263a"/>
+      <polygon class="bolt bolt1" points="42,38 24,66 37,66 28,92 58,54 43,54" fill="#ffe64d"/>
+      <polygon class="bolt bolt2" points="74,42 62,62 71,62 60,86 84,58 73,58" fill="#fff6c2"/>
+    </svg>`;
+  }
+  if(b.theme==='thunderlord'){
+    return `<svg class="theme-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="crownGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffe57a"/><stop offset="60%" stop-color="#e0a82e"/><stop offset="100%" stop-color="#a3721a"/>
+        </linearGradient>
+      </defs>
+      <polygon points="18,72 18,42 34,58 50,26 66,58 82,42 82,72" fill="url(#crownGrad)" stroke="#7a5410" stroke-width="2.5" stroke-linejoin="round"/>
+      <rect x="16" y="72" width="68" height="10" rx="2" fill="url(#crownGrad)" stroke="#7a5410" stroke-width="2.5"/>
+      <circle cx="18" cy="42" r="5.5" fill="#e64444" stroke="#7a1a1a" stroke-width="1.5"/>
+      <circle cx="50" cy="26" r="6.5" fill="#4a8cf5" stroke="#1a3a7a" stroke-width="1.5"/>
+      <circle cx="82" cy="42" r="5.5" fill="#44c86a" stroke="#1a5a2a" stroke-width="1.5"/>
+    </svg>`;
+  }
+  return `<div class="battle-card-icon">${b.icon}</div>`;
+}
+
+function renderBattleList(){
+  const list=document.getElementById('battle-list');
+  if(!list) return;
+  list.innerHTML=BATTLES.map(b=>`
+    <div class="battle-card">
+      <div class="battle-card-frame theme-${b.theme}">${_battleCardIconHTML(b)}</div>
+      <div class="battle-card-info">
+        <div class="battle-card-title">${b.name}</div>
+        <div class="battle-card-desc">${b.desc}</div>
+        <div class="battle-card-lvl">${b.levelRange}</div>
+      </div>
+      <button class="battle-card-play" onclick="playBattle('${b.id}')">▶ PLAY</button>
+    </div>
+  `).join('');
+}
+
+function playBattle(battleId){
+  const battle=BATTLES.find(b=>b.id===battleId);
+  if(!battle) return;
+  closeBattlePanel();
+  _currentBattleEnemies=battle.enemies;
+  openBattleSetup();
+}
+
+function openBattleSetup(){
+  const el=document.getElementById('battle-setup-overlay');
+  el.classList.add('open');
+  scaleBattleSetupBox();
+  renderBattleSlots();
+}
+function closeBattleSetup(){
+  document.getElementById('battle-setup-overlay').classList.remove('open');
+}
+
+function _dragonShortName(type){
+  if(!type) return '???';
+  return type.charAt(0).toUpperCase()+type.slice(1);
+}
+
+// Shared helper: draws a dragon's real "front-facing" card art into a canvas
+// context — used by both the battle slot boxes and the dragon picker list.
+function _drawDragonPortrait(dctx, type, size){
+  const phys={t:0,wing:0,wingV:0,bob:0,bobV:0,sway:0,swayV:0,swayDir:1,tailSwing:0,tailV:0};
+  if(type==='grass') drawGrassDragon(dctx,size,size,phys);
+  else if(type==='earth') drawEarthDragon(dctx,size,size,phys);
+  else if(type==='poison') drawPoisonDragon(dctx,size,size,phys);
+  else if(type==='ice') drawIceDragon(dctx,size,size,phys);
+  else if(type==='bluefire') drawBluefireDragon(dctx,size,size,phys);
+  else if(type==='water') drawWaterDragon(dctx,size,size,phys);
+  else if(type==='mud') drawMudDragon(dctx,size,size,phys);
+  else if(type==='frost') drawFrostDragon(dctx,size,size,phys);
+  else if(type==='magma') drawMagmaDragon(dctx,size,size,phys);
+  else if(type==='forest') drawForestDragon(dctx,size,size,phys);
+  else if(type==='obsidian') drawObsidianDragon(dctx,size,size,phys);
+  else if(type==='coral') drawCoralDragon(dctx,size,size,phys);
+  else if(type==='lightning') drawLightningDragon(dctx,size,size,phys);
+  else if(type==='storm') drawStormDragon(dctx,size,size,phys);
+  else if(type==='plasma') drawPlasmaDragon(dctx,size,size,phys);
+  else if(type==='quake') drawQuakeDragon(dctx,size,size,phys);
+  else if(type==='thunderlord') drawThunderlordDragon(dctx,size,size,phys);
+  else drawFireDragon(dctx,size,size,phys);
+}
+
+// Side-view variant (same style used for dragons roaming inside habitats) —
+// used for the leader dragon standing in the battle arena.
+function _drawDragonSidePortrait(dctx, type, canvasSize, phys){
+  phys = phys || {t:0,wing:0,wingV:0,bob:0,bobV:0,sway:0,swayV:0,swayDir:1,tailSwing:0,tailV:0};
+  // Side-view dragons draw well outside their nominal box (wings, tail, neck) —
+  // give them the same generous padding used for the habitat mini-dragons so
+  // nothing gets clipped by the canvas edge.
+  const pad=Math.round(canvasSize*0.27);
+  const coreSize=canvasSize-pad*2;
+  dctx.clearRect(0,0,canvasSize,canvasSize);
+  dctx.save();
+  dctx.translate(pad,pad);
+  const origClear=dctx.clearRect.bind(dctx);
+  dctx.clearRect=()=>{};
+  if(type==='grass') drawSideGrassDragon(dctx,coreSize,coreSize,phys);
+  else if(type==='earth') drawSideEarthDragon(dctx,coreSize,coreSize,phys);
+  else if(type==='poison') drawSidePoisonDragon(dctx,coreSize,coreSize,phys);
+  else if(type==='ice') drawSideIceDragon(dctx,coreSize,coreSize,phys);
+  else if(type==='bluefire') drawSideBluefireDragon(dctx,coreSize,coreSize,phys);
+  else if(type==='water') drawSideWaterDragon(dctx,coreSize,coreSize,phys);
+  else if(type==='mud') drawSideMudDragon(dctx,coreSize,coreSize,phys);
+  else if(type==='frost') drawSideFrostDragon(dctx,coreSize,coreSize,phys);
+  else if(type==='magma') drawSideMagmaDragon(dctx,coreSize,coreSize,phys);
+  else if(type==='forest') drawSideForestDragon(dctx,coreSize,coreSize,phys);
+  else if(type==='obsidian') drawSideObsidianDragon(dctx,coreSize,coreSize,phys);
+  else if(type==='coral') drawSideCoralDragon(dctx,coreSize,coreSize,phys);
+  else if(type==='lightning') drawSideLightningDragon(dctx,coreSize,coreSize,phys);
+  else if(type==='storm') drawSideStormDragon(dctx,coreSize,coreSize,phys);
+  else if(type==='plasma') drawSidePlasmaDragon(dctx,coreSize,coreSize,phys);
+  else if(type==='quake') drawSideQuakeDragon(dctx,coreSize,coreSize,phys);
+  else if(type==='thunderlord') drawSideThunderlordDragon(dctx,coreSize,coreSize,phys);
+  else drawSideDragon(dctx,coreSize,coreSize,phys);
+  dctx.clearRect=origClear;
+  dctx.restore();
+}
+
+function renderBattleSlots(){
+  const wrap=document.getElementById('bs-slots');
+  wrap.innerHTML='';
+  _battleSlots.forEach((slot,i)=>{
+    const col=document.createElement('div');
+    col.className='bs-col';
+
+    const div=document.createElement('div');
+    const isLeader=(i===0);
+    div.className='bs-slot'+(isLeader?' bs-leader':'')+(slot?' filled':'');
+    if(isLeader){
+      div.appendChild(_el('div','bs-leader-corner tl'));
+      div.appendChild(_el('div','bs-leader-corner tr'));
+      div.appendChild(_el('div','bs-leader-corner bl'));
+      div.appendChild(_el('div','bs-leader-corner br'));
+    }
+    if(slot){
+      const remove=document.createElement('div');
+      remove.className='bs-remove'; remove.textContent='✕';
+      remove.onclick=(e)=>removeBattleSlot(i,e);
+      div.appendChild(remove);
+      const canvas=document.createElement('canvas');
+      canvas.width=160; canvas.height=160;
+      canvas.className='bs-canvas';
+      _drawDragonPortrait(canvas.getContext('2d'), slot.type, 160);
+      div.appendChild(canvas);
+      const lvl=document.createElement('div');
+      lvl.className='bs-lvl'; lvl.textContent='Lv.'+slot.level;
+      div.appendChild(lvl);
+      div.onclick=()=>openBattleDragonPicker(i);
+    } else {
+      const plus=_el('div','bs-plus'); plus.textContent='+';
+      div.appendChild(plus);
+      div.onclick=()=>openBattleDragonPicker(i);
+    }
+    col.appendChild(div);
+
+    if(isLeader){
+      const label=document.createElement('div');
+      label.className='bs-leader-label';
+      label.textContent='LEADER';
+      col.appendChild(label);
+    }
+
+    wrap.appendChild(col);
+  });
+  const startBtn=document.getElementById('bs-start-btn');
+  const anySelected=_battleSlots.some(s=>s!==null);
+  startBtn.disabled=!anySelected;
+}
+function _el(tag,cls){ const e=document.createElement(tag); e.className=cls; return e; }
+
+function removeBattleSlot(i,e){
+  if(e) e.stopPropagation();
+  _battleSlots[i]=null;
+  renderBattleSlots();
+}
+
+let _battleSlotBeingEdited=null;
+function openBattleDragonPicker(slotIdx){
+  _battleSlotBeingEdited=slotIdx;
+  const el=document.getElementById('battle-dragon-picker');
+  el.classList.add('open');
+  const list=document.getElementById('bdp-list');
+  list.innerHTML='';
+
+  // Which dragons are already sitting in a different slot? (identified by habitat+dragon index)
+  const usedKeys=new Set();
+  _battleSlots.forEach((s,i)=>{ if(s && i!==slotIdx) usedKeys.add(s.habitatIdx+'_'+s.dragonIdx); });
+
+  const allDragons=[];
+  game.placedHabitats.forEach((h,hi)=>{
+    (h.dragons||[]).forEach((type,di)=>{
+      if(!type) return; // skip empty/corrupt slots
+      const level=(h.dragonLevels && h.dragonLevels[di])||1;
+      allDragons.push({type,level,habitatIdx:hi,dragonIdx:di});
+    });
+  });
+
+  if(allDragons.length===0){
+    list.innerHTML='<div id="bdp-empty">You don\'t have any dragons yet — go place a habitat and hatch some eggs!</div>';
+    return;
+  }
+
+  allDragons.forEach(d=>{
+    const key=d.habitatIdx+'_'+d.dragonIdx;
+    const used=usedKeys.has(key);
+    const item=document.createElement('div');
+    item.className='bdp-item'+(used?' disabled':'');
+
+    const frame=document.createElement('div');
+    frame.className='bdp-frame';
+    const canvas=document.createElement('canvas');
+    canvas.width=180; canvas.height=180;
+    canvas.className='bdp-canvas';
+    _drawDragonPortrait(canvas.getContext('2d'), d.type, 180);
+    frame.appendChild(canvas);
+    const lvl=document.createElement('div');
+    lvl.className='bdp-lvl';
+    lvl.textContent='Lv.'+d.level;
+    frame.appendChild(lvl);
+    item.appendChild(frame);
+
+    const name=document.createElement('div');
+    name.className='bdp-name';
+    name.textContent=_dragonShortName(d.type);
+    item.appendChild(name);
+
+    if(!used) item.onclick=()=>{
+      _battleSlots[_battleSlotBeingEdited]={type:d.type,level:d.level,habitatIdx:d.habitatIdx,dragonIdx:d.dragonIdx};
+      closeBattleDragonPicker();
+      renderBattleSlots();
+    };
+    list.appendChild(item);
+  });
+}
+function closeBattleDragonPicker(){
+  document.getElementById('battle-dragon-picker').classList.remove('open');
+}
+
+function startBattleFromSetup(){
+  if(!_battleSlots.some(s=>s!==null)) return;
+  closeBattleSetup();
+  enterBattleArena();
+}
+
+let _playerRoster=[], _enemyRoster=[];
+let _playerTurnsSinceSwap=3; // 3 = ready to swap; resets to 0 on any swap (voluntary or forced by death)
+let _battleSwapAnim=null;    // {phase:'out'|'in', t, dur, outIdx, inIdx}
+let _deathAnim=null;         // {side, t, dur, canvas, type, onComplete}
+let _playerBenchHitboxes=[]; // rebuilt every frame by _drawBenchColumn
+let _playerActive=0, _enemyActive=0;
+
+function _rosterMaxHP(level){ return 60 + level*20; }
+
+function _buildRosterEntry(type, level){
+  const sideCanvas=document.createElement('canvas'); sideCanvas.width=240; sideCanvas.height=240;
+  const frontCanvas=document.createElement('canvas'); frontCanvas.width=240; frontCanvas.height=240;
+  _drawDragonPortrait(frontCanvas.getContext('2d'), type, 240);
+  return {
+    type, level,
+    maxHp:_rosterMaxHP(level), hp:_rosterMaxHP(level),
+    sideCanvas, phys:makeDragonPhysics(),
+    frontCanvas,
+    usedMegaBlast:false,
+    usedAbsoluteZero:false
+  };
+}
+
+function _buildBattleLineup(){
+  _playerRoster = _battleSlots.filter(s=>s).map(s=>_buildRosterEntry(s.type, s.level));
+  _enemyRoster = _currentBattleEnemies
+    ? [_currentBattleEnemies.leader, ..._currentBattleEnemies.bench].map(s=>_buildRosterEntry(s.type, s.level))
+    : [];
+  _playerActive=0; _enemyActive=0;
+}
+
+// Finds the next living dragon in a roster, starting from (and including)
+// fromIdx. Returns -1 if the whole roster has fainted.
+function _nextAlive(roster, fromIdx){
+  for(let i=fromIdx;i<roster.length;i++) if(roster[i].hp>0) return i;
+  for(let i=0;i<fromIdx;i++) if(roster[i].hp>0) return i;
+  return -1;
+}
+
+let _battleCombat={animating:false,attackStartTime:0,hitApplied:false,over:false,turn:'player'};
+
+function enterBattleArena(){
+  const scene=document.getElementById('battle-scene');
+  _battleCanvas=document.getElementById('battle-scene-canvas');
+  _battleCtx=_battleCanvas.getContext('2d');
+  scene.classList.add('open');
+  _battleSceneActive=true;
+  _battleLastFrame=null;
+  _battleParticles=[];
+  _playerTurnsSinceSwap=3;
+  _battleSwapAnim=null;
+  _deathAnim=null;
+  _playerBenchHitboxes=[];
+  _buildBattleLineup();
+
+  _battleCombat={
+    animating:false, attackStartTime:0, hitApplied:false,
+    over:false, turn:'player'
+  };
+  document.getElementById('battle-result-banner').classList.remove('show');
+  document.getElementById('battle-swapchoice-banner').classList.remove('show');
+  updateBattleHUD();
+  renderAttackButtons();
+
+  // Player identity — pulled from Account settings
+  document.getElementById('battle-player-avatar').textContent = game.avatar||'🧑';
+  document.getElementById('battle-player-name').textContent = game.username||'Player';
+  // Enemy identity — fixed name, random avatar from the same picker options
+  document.getElementById('battle-enemy-avatar').textContent = AVATAR_OPTIONS[Math.floor(Math.random()*AVATAR_OPTIONS.length)];
+  document.getElementById('battle-enemy-name').textContent = 'Roderick63';
+
+  // Hide the normal game UI completely while in battle
+  const ui=document.getElementById('ui'); if(ui) ui.style.display='none';
+  const acc=document.getElementById('account-btn'); if(acc) acc.style.display='none';
+  resizeBattleCanvas();
+  requestAnimationFrame(drawBattleScene);
+}
+
+function updateBattleHUD(){
+  const p=_playerRoster[_playerActive], e=_enemyRoster[_enemyActive];
+  const setBar=(fillId,textId,labelId,entry)=>{
+    const pct=entry?Math.max(0,Math.min(100,(entry.hp/entry.maxHp)*100)):0;
+    const fill=document.getElementById(fillId);
+    fill.style.width=pct+'%';
+    fill.classList.toggle('hp-mid', pct<=50 && pct>20);
+    fill.classList.toggle('hp-low', pct<=20);
+    document.getElementById(textId).textContent = entry ? `${Math.max(0,Math.round(entry.hp))}/${entry.maxHp}` : '0/0';
+    document.getElementById(labelId).textContent = entry ? `Lv.${entry.level} ${_dragonShortName(entry.type)}` : 'Fainted';
+  };
+  setBar('player-hp-fill','player-hp-text','player-hp-label',p);
+  setBar('enemy-hp-fill','enemy-hp-text','enemy-hp-label',e);
+}
+
+function battleAttack(element){
+  if(_battleCombat.animating || _battleCombat.over || _battleCombat.turn!=='player' || _battleSwapAnim || _deathAnim) return;
+  _battleCombat.animating=true;
+  _battleCombat.hitApplied=false;
+  _battleCombat.attackElement=element;
+  _battleCombat.attackStartTime=performance.now();
+  document.querySelectorAll('.atk-square-btn').forEach(b=>b.disabled=true);
+}
+
+function _enemyTakeTurn(){
+  if(!_battleSceneActive || _battleCombat.over) return;
+  const eDragon=_enemyRoster[_enemyActive];
+  if(eDragon.type==='thunderlord' && !eDragon.usedMegaBlast && Math.random()<0.35){
+    _battleCombat.attackElement='megablast';
+  } else if(eDragon.type==='frost' && !eDragon.usedAbsoluteZero && Math.random()<0.35){
+    _battleCombat.attackElement='absolutezero';
+  } else {
+    const elements=[...new Set(DRAGON_ELEMENTS[eDragon.type]||[eDragon.type])];
+    _battleCombat.attackElement=elements[Math.floor(Math.random()*elements.length)];
+  }
+  _battleCombat.animating=true;
+  _battleCombat.hitApplied=false;
+  _battleCombat.attackStartTime=performance.now();
+}
+
+function _continueToEnemyTurn(){
+  _battleCombat.turn='enemy';
+  document.querySelectorAll('.atk-square-btn').forEach(b=>b.disabled=true);
+  setTimeout(()=>{ _enemyTakeTurn(); }, 550);
+}
+function _continueToPlayerTurn(){
+  _battleCombat.turn='player';
+  renderAttackButtons();
+}
+
+// Called once an attack's lunge animation finishes. If the target fainted,
+// plays a fall-and-fade death animation first, THEN (once it completes)
+// swaps in the next dragon — auto-picking if only one remains, or opening a
+// choice menu for the player if two remain. Victory/defeat only fires once
+// a whole roster has fainted.
+function _resolveTurnEnd(){
+  if(_battleCombat.turn==='player'){
+    _playerTurnsSinceSwap=Math.min(3,_playerTurnsSinceSwap+1);
+    if(_enemyRoster[_enemyActive].hp<=0){
+      _startDeathAnimation('enemy', _enemyRoster[_enemyActive], ()=>{
+        const next=_nextAlive(_enemyRoster, _enemyActive+1);
+        if(next===-1){ _declareBattleOutcome('VICTORY'); return; }
+        _enemyActive=next;
+        updateBattleHUD();
+        renderAttackButtons();
+        _continueToEnemyTurn();
+      });
+    } else {
+      _continueToEnemyTurn();
+    }
+  } else {
+    if(_playerRoster[_playerActive].hp<=0){
+      _startDeathAnimation('player', _playerRoster[_playerActive], ()=>{
+        const aliveIdxs=_playerRoster.map((d,i)=>d.hp>0?i:-1).filter(i=>i!==-1);
+        if(aliveIdxs.length===0){ _declareBattleOutcome('DEFEAT'); return; }
+        if(aliveIdxs.length===1){
+          _setPlayerActive(aliveIdxs[0]);
+          _continueToPlayerTurn();
+        } else {
+          _showSwapChoiceMenu(aliveIdxs, (chosenIdx)=>{
+            _setPlayerActive(chosenIdx);
+            _continueToPlayerTurn();
+          });
+        }
+      });
+    } else {
+      _continueToPlayerTurn();
+    }
+  }
+}
+
+// Switches the player's active dragon (used by both the forced post-death
+// swap and the voluntary bench-click swap) and resets the swap cooldown.
+function _setPlayerActive(idx){
+  _playerActive=idx;
+  _playerTurnsSinceSwap=0;
+  updateBattleHUD();
+  renderAttackButtons();
+}
+
+function _startDeathAnimation(side, dragon, onComplete){
+  const canvas = side==='player' ? dragon.sideCanvas : dragon.sideCanvas;
+  _deathAnim={side, t:0, dur:700, canvas, onComplete};
+}
+
+function _showSwapChoiceMenu(aliveIdxs, callback){
+  const banner=document.getElementById('battle-swapchoice-banner');
+  const opts=document.getElementById('battle-swapchoice-options');
+  opts.innerHTML='';
+  aliveIdxs.forEach(idx=>{
+    const d=_playerRoster[idx];
+    const card=document.createElement('div');
+    card.className='swapchoice-card';
+    const canvas=document.createElement('canvas');
+    canvas.width=160; canvas.height=160;
+    _drawDragonPortrait(canvas.getContext('2d'), d.type, 160);
+    card.appendChild(canvas);
+    const name=document.createElement('div');
+    name.className='sc-name'; name.textContent=_dragonShortName(d.type);
+    card.appendChild(name);
+    const lvl=document.createElement('div');
+    lvl.className='sc-lvl'; lvl.textContent='Lv.'+d.level;
+    card.appendChild(lvl);
+    card.onclick=()=>{
+      banner.classList.remove('show');
+      callback(idx);
+    };
+    opts.appendChild(card);
+  });
+  banner.classList.add('show');
+}
+
+// Voluntary swap — triggered by clicking a bench dragon. Plays the same
+// slide-out/slide-in transition as a forced swap.
+function _startSwapAnimation(newIdx){
+  if(_battleSwapAnim || _deathAnim || _battleCombat.animating || _battleCombat.over) return;
+  if(_battleCombat.turn!=='player' || _playerTurnsSinceSwap<3) return;
+  if(newIdx===_playerActive || !_playerRoster[newIdx] || _playerRoster[newIdx].hp<=0) return;
+  document.querySelectorAll('.atk-square-btn').forEach(b=>b.disabled=true);
+  _battleSwapAnim={phase:'out', t:0, dur:340, outIdx:_playerActive, inIdx:newIdx};
+}
+
+function _declareBattleOutcome(result){
+  _battleCombat.over=true;
+  const bannerText=document.getElementById('battle-result-text');
+  bannerText.textContent=result;
+  bannerText.className = result==='VICTORY' ? 'victory' : 'defeat';
+  const rewardsEl=document.getElementById('battle-result-rewards');
+  if(result==='VICTORY'){
+    addXP(100);
+    addGold(300);
+    saveGame();
+    rewardsEl.textContent='+100 XP   +300 🪙';
+    rewardsEl.style.display='block';
+  } else {
+    rewardsEl.textContent='';
+    rewardsEl.style.display='none';
+  }
+  document.getElementById('battle-result-banner').classList.add('show');
+  document.querySelectorAll('.atk-square-btn').forEach(b=>b.disabled=true);
+}
+
+function closeBattleScene(){
+  _battleSceneActive=false;
+  const scene=document.getElementById('battle-scene');
+  scene.classList.remove('open');
+  const ui=document.getElementById('ui'); if(ui) ui.style.display='';
+  const acc=document.getElementById('account-btn'); if(acc) acc.style.display='';
+}
+
 function openRelocatePanel(){
   let el=document.getElementById('relocate-panel');
   if(!el){
@@ -4787,6 +6221,16 @@ function closeAllPanelsGlobal(){
   // Relocate
   const rp=document.getElementById('relocate-panel');
   if(rp) rp.remove();
+  // Dragon detail
+  const ddo=document.getElementById('dragon-detail-overlay');
+  if(ddo) ddo.classList.remove('open');
+  // Battle
+  const bo=document.getElementById('battle-overlay');
+  if(bo) bo.classList.remove('open');
+  const bso=document.getElementById('battle-setup-overlay');
+  if(bso) bso.classList.remove('open');
+  const bdp=document.getElementById('battle-dragon-picker');
+  if(bdp) bdp.classList.remove('open');
   // News (merged News+Updates panel)
   const np2=document.getElementById('news2-panel');
   if(np2) np2.remove();
@@ -4837,6 +6281,169 @@ const ELEMENT_ICONS = {
   lightning:'⚡', storm:'⚡💧', plasma:'⚡🔥', quake:'⚡🪨', thunderlord:'⚡⚡'
 };
 
+// Same flavor text shown on each dragon's card in the shop.
+const DRAGON_DESC = {
+  fire:'A classic dragon of flame and fury. First of its kind.',
+  grass:'A gentle creature of the meadows, covered in soft leaves.',
+  earth:'A stoic guardian of stone and soil.',
+  ice:'A frozen beast that breathes blizzards.',
+  water:'A graceful sea creature that glides through rivers and oceans.',
+  lightning:'A pure elemental born from a single bolt of lightning.',
+  poison:'A venomous predator lurking in dark swamps.',
+  mud:'A murky, earthen dragon born where river meets stone.',
+  storm:'Born from the clash of ocean and sky, it rides the tempest.',
+  forest:'An ancient guardian of the deep woods, wrapped in living leaves.',
+  quake:'Its roar sends shockwaves through stone, splitting the earth with arcs of lightning.',
+  bluefire:'Burns with an ethereal blue flame.',
+  plasma:'A skeleton of firebolt arcs wrapped in scorching plasma energy.',
+  magma:'Born in volcanic depths, its scales glow with molten fury.',
+  obsidian:'Forged from volcanic glass, its cracks pulse with inner fire.',
+  coral:'A vibrant sea creature with brilliant coral fins and a warm smile.',
+  frost:'A delicate, crystalline dragon that freezes all in its path.',
+  thunderlord:'Born of two storms as one. Sovereign of the skies, feared by all.'
+};
+
+// The "first" (left-most) element of each dragon type, matching the order
+// shown in ELEMENT_ICONS above — used to color the Attack button.
+const FIRST_ELEMENT = {
+  fire:'fire', grass:'grass', earth:'earth', ice:'ice', water:'water', lightning:'lightning',
+  poison:'grass', bluefire:'fire', mud:'water', frost:'ice',
+  magma:'fire', forest:'earth', obsidian:'earth', coral:'water',
+  storm:'lightning', plasma:'lightning', quake:'lightning', thunderlord:'lightning'
+};
+
+// Every dragon's full element composition (1 entry for pure types, 2 for
+// hybrids). Order doesn't matter here — FIRST_ELEMENT above is what decides
+// which element a dragon actually attacks WITH; this list is what a dragon
+// can be attacked's effectiveness is calculated AGAINST.
+const DRAGON_ELEMENTS = {
+  fire:['fire'], grass:['grass'], earth:['earth'], water:['water'], ice:['ice'], lightning:['lightning'],
+  poison:['grass','fire'], bluefire:['fire','ice'], mud:['water','earth'], frost:['ice','water'],
+  magma:['fire','earth'], forest:['earth','grass'], obsidian:['earth','fire'], coral:['water','grass'],
+  storm:['lightning','water'], plasma:['lightning','fire'], quake:['lightning','earth'], thunderlord:['lightning','lightning']
+};
+
+// Base 6x6 single-element type chart: TYPE_CHART[attacker][defender] = multiplier.
+const TYPE_CHART = {
+  fire:      {fire:1,   grass:2,   earth:0.5, water:0.5, ice:2,   lightning:1},
+  grass:     {fire:0.5, grass:1,   earth:2,   water:2,   ice:1,   lightning:1},
+  earth:     {fire:2,   grass:0.5, earth:1,   water:0.5, ice:1,   lightning:2},
+  water:     {fire:2,   grass:0.5, earth:2,   water:1,   ice:1,   lightning:0.5},
+  ice:       {fire:0.5, grass:1,   earth:1,   water:1,   ice:1,   lightning:1},
+  lightning: {fire:1,   grass:1,   earth:0.5, water:2,   ice:1,   lightning:1}
+};
+
+// Effectiveness of ONE specific attacking element against a defending
+// dragon (using ALL of its elements, multiplied together — this is what
+// produces the 0.25x/0.5x/1x/2x/4x range for dragons with two elements).
+function getTypeEffectivenessForElement(attackEl, defenderType){
+  const defElements = DRAGON_ELEMENTS[defenderType] || [defenderType];
+  let mult = 1;
+  defElements.forEach(defEl=>{
+    mult *= (TYPE_CHART[attackEl] && TYPE_CHART[attackEl][defEl]!==undefined) ? TYPE_CHART[attackEl][defEl] : 1;
+  });
+  return mult;
+}
+// Convenience wrapper using a dragon's FIRST element (kept for anything
+// that just wants "the" effectiveness of a dragon type as a whole).
+function getTypeEffectiveness(attackerType, defenderType){
+  return getTypeEffectivenessForElement(FIRST_ELEMENT[attackerType]||attackerType, defenderType);
+}
+
+function _effectivenessLabel(mult){
+  if(mult>=4) return 'Devastating!';
+  if(mult>=2) return 'Effective';
+  if(mult>=1) return 'Neutral';
+  if(mult>=0.5) return 'Not Very Eff.';
+  return 'Barely Eff.';
+}
+function _effectivenessColor(mult){
+  if(mult>=4) return '#ff3d3d';
+  if(mult>=2) return '#4ade80';
+  if(mult>=1) return '#e8e8e8';
+  if(mult>=0.5) return '#ffb84d';
+  return '#a0a0a0';
+}
+
+const ELEMENT_BATTLE_COLORS = {
+  fire:    {top:'#e2503c', bottom:'#8f2415', border:'rgba(255,150,110,0.8)', shadow:'#5a1710', hoverTop:'#f2604c', hoverBottom:'#a53222'},
+  grass:   {top:'#4fae3a', bottom:'#276b1c', border:'rgba(150,255,120,0.75)', shadow:'#163d10', hoverTop:'#5fc04a', hoverBottom:'#337c22'},
+  earth:   {top:'#a97a44', bottom:'#6b4a22', border:'rgba(230,190,130,0.75)', shadow:'#3c2711', hoverTop:'#b98a54', hoverBottom:'#7b5a2c'},
+  ice:     {top:'#5cc4e8', bottom:'#2a7fa0', border:'rgba(180,240,255,0.8)', shadow:'#164556', hoverTop:'#6cd4f8', hoverBottom:'#3a8fb0'},
+  water:   {top:'#3f7fd0', bottom:'#1f4d8a', border:'rgba(140,190,255,0.8)', shadow:'#12294c', hoverTop:'#4f8fe0', hoverBottom:'#2f5d9a'},
+  lightning:{top:'#e8c93c', bottom:'#a3860f', border:'rgba(255,240,140,0.85)', shadow:'#4a3c06', hoverTop:'#f8d94c', hoverBottom:'#b3961f'}
+};
+
+// Builds one square attack button per unique element the active player
+// dragon has (1 for pure types, 2 for hybrids — Thunderlord's lightning+
+// lightning collapses to a single button since both elements are the same).
+// Each button shows that element's own effectiveness + damage range against
+// the enemy's current active dragon, and attacks using that specific element.
+function renderAttackButtons(){
+  const container=document.getElementById('battle-attack-buttons');
+  if(!container) return;
+  container.innerHTML='';
+  const p=_playerRoster[_playerActive], e=_enemyRoster[_enemyActive];
+  if(!p||!e) return;
+  const locked = _battleCombat.animating || _battleCombat.over || _battleCombat.turn!=='player' || _battleSwapAnim || _deathAnim;
+
+  // One attack button per unique element the dragon has — hybrids get both.
+  const elements=[...new Set(DRAGON_ELEMENTS[p.type]||[p.type])];
+  elements.forEach(el=>{
+    const c=ELEMENT_BATTLE_COLORS[el];
+    const mult=getTypeEffectivenessForElement(el, e.type);
+    const dmgMin=Math.round(p.level*5*mult);
+    const dmgMax=Math.round((p.level*5+5)*mult);
+    const btn=document.createElement('button');
+    btn.className='atk-square-btn elm-'+el;
+    btn.style.setProperty('--el-top',c.top);
+    btn.style.setProperty('--el-bottom',c.bottom);
+    btn.style.setProperty('--el-border',c.border);
+    btn.style.setProperty('--el-shadow',c.shadow);
+    btn.style.setProperty('--el-hover-top',c.hoverTop);
+    btn.style.setProperty('--el-hover-bottom',c.hoverBottom);
+    btn.disabled=locked;
+    btn.onclick=()=>battleAttack(el);
+    btn.innerHTML=`
+      <span class="atk-icon">${ELEMENT_ICONS[el]}</span>
+      <span class="atk-eff" style="color:${_effectivenessColor(mult)}">${_effectivenessLabel(mult)} ${mult}x</span>
+      <span class="atk-dmg">${dmgMin}-${dmgMax} dmg</span>
+    `;
+    container.appendChild(btn);
+  });
+
+  // Thunderlord's signature move — once per match, flat damage, ignores
+  // type effectiveness entirely.
+  if(p.type==='thunderlord' && !p.usedMegaBlast){
+    const dmg=p.level*20; // level*20 so Lv.20 = 400, as specified
+    const mb=document.createElement('button');
+    mb.className='atk-square-btn elm-megablast';
+    mb.disabled=locked;
+    mb.onclick=()=>battleAttack('megablast');
+    mb.innerHTML=`
+      <span class="atk-icon">🌈</span>
+      <span class="atk-eff" style="color:#fff;">Mega Blast</span>
+      <span class="atk-dmg">${dmg} dmg</span>
+    `;
+    container.appendChild(mb);
+  }
+
+  // Frost's signature move — same one-time, flat-damage rule as Mega Blast.
+  if(p.type==='frost' && !p.usedAbsoluteZero){
+    const dmg=p.level*20; // Lv.20 = 400, matching Mega Blast's formula
+    const az=document.createElement('button');
+    az.className='atk-square-btn elm-absolutezero';
+    az.disabled=locked;
+    az.onclick=()=>battleAttack('absolutezero');
+    az.innerHTML=`
+      <span class="atk-icon">❄️</span>
+      <span class="atk-eff" style="color:#fff;">Absolute Zero</span>
+      <span class="atk-dmg">${dmg} dmg</span>
+    `;
+    container.appendChild(az);
+  }
+}
+
 function openHabitatMenu(idx){
   game.panelOpen=true;
   closeAllPanelsGlobal(); showPanelBackdrop();
@@ -4846,6 +6453,7 @@ function openHabitatMenu(idx){
   if(!h) return;
   const menu=document.getElementById('habitat-menu');
   menu.classList.add('open'); menu.style.display='flex';
+  scaleHabitatMenu();
   const titleEl=document.getElementById('habitat-menu-title');
   if(titleEl) titleEl.textContent=HABITAT_NAMES[h.type]||'Habitat';
 
@@ -4858,7 +6466,7 @@ function openHabitatMenu(idx){
     card.className='dragon-slot-card';
 
     const imgBox=document.createElement('div');
-    const slotSz=Math.round(Math.min(window.innerWidth*0.25,260))+'px';
+    const slotSz='220px';
     imgBox.className='dragon-slot-img'+(dragon?'':' empty');
     imgBox.style.width=slotSz; imgBox.style.height=slotSz;
     card.style.width=slotSz;
@@ -4866,7 +6474,7 @@ function openHabitatMenu(idx){
     if(dragon){
       // Static snapshot of the correct dragon type
       const cv=document.createElement('canvas');
-      const sz=Math.round(Math.min(window.innerWidth*0.25, 260)); cv.width=sz; cv.height=sz;
+      const sz=220; cv.width=sz; cv.height=sz;
       cv.style.width=sz+'px'; cv.style.height=sz+'px';
       cv.style.borderRadius='10px';
       const staticPhys={t:0,wing:0,wingV:0,bob:0,bobV:0,sway:0,swayV:0,swayDir:1,tailSwing:0,tailV:0};
@@ -4910,75 +6518,140 @@ function openHabitatMenu(idx){
     card.appendChild(imgBox);
 
     if(dragon){
-      // Move Dragon button
-      const moveDBtn=document.createElement('button');
-      moveDBtn.style.cssText='width:100%;margin-top:clamp(4px,0.8vw,8px);font-family:Cinzel,serif;font-size:1.15rem;font-weight:700;color:#88ee88;background:linear-gradient(180deg,#2a6a2a,#1a4a1a);border:1px solid rgba(80,200,80,0.4);border-radius:clamp(10px,1.5vw,16px);padding:clamp(10px,1.5vw,16px) 0;cursor:pointer;';
-      moveDBtn.textContent='Move Dragon';
-      moveDBtn.onclick=(()=>{const si=i,hi=idx;return ()=>{
-        const srcHab=game.placedHabitats[hi];
-        const dragonType=srcHab.dragons[si];
-        const habitatTypeRaw=DRAGON_HABITAT[dragonType];
-        const habitatTypes=Array.isArray(habitatTypeRaw)?habitatTypeRaw:[habitatTypeRaw];
-        const options=game.placedHabitats.map((h,ii)=>({h,ii})).filter(({h,ii})=>ii!==hi&&habitatTypes.includes(h.type)&&h.dragons.length<3);
-        if(!options.length){showNotification('No compatible habitat with space found!','error');return;}
-        // Show picker
-        const existing=document.getElementById('dragon-move-picker');if(existing)existing.remove();
-        const picker=document.createElement('div');
-        picker.id='dragon-move-picker';
-        picker.style.cssText='position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;';
-        const box=document.createElement('div');
-        box.style.cssText='background:linear-gradient(160deg,#2e2c28,#1e1c18);border:1.5px solid rgba(220,190,80,0.4);border-radius:18px;padding:24px 28px;min-width:260px;box-shadow:0 8px 40px rgba(0,0,0,0.7);';
-        box.innerHTML='<div style="font-family:Cinzel Decorative,serif;font-size:1.1rem;color:#c8b890;text-align:center;margin-bottom:16px;">Move to which habitat?</div>';
-        options.forEach(({h,ii})=>{
-          const btn=document.createElement('button');
-          btn.style.cssText='display:block;width:100%;margin-bottom:10px;font-family:Cinzel,serif;font-size:0.95rem;font-weight:700;color:#e8dfc8;background:linear-gradient(180deg,#5a5848,#42403a);border:1px solid rgba(255,210,80,0.3);border-radius:16px;padding:12px 18px;cursor:pointer;';
-          btn.textContent=(HABITAT_NAMES[h.type]||h.type)+' ('+(3-h.dragons.length)+' slots free)';
-          btn.onclick=()=>{
-            const lv=(srcHab.dragonLevels&&srcHab.dragonLevels[si])||1;
-            h.dragons.push(dragonType);if(!h.dragonLevels)h.dragonLevels=[];h.dragonLevels.push(lv);
-            srcHab.dragons.splice(si,1);if(srcHab.dragonLevels)srcHab.dragonLevels.splice(si,1);
-            saveGame();picker.remove();closeHabitatMenu();showNotification('Dragon moved!','success');
-          };
-          box.appendChild(btn);
-        });
-        const cancelBtn=document.createElement('button');
-        cancelBtn.style.cssText='display:block;width:100%;font-family:Cinzel,serif;font-size:0.85rem;color:#aaa;background:none;border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:10px;cursor:pointer;';
-        cancelBtn.textContent='Cancel';cancelBtn.onclick=()=>picker.remove();
-        box.appendChild(cancelBtn);picker.appendChild(box);document.body.appendChild(picker);
-      };})();
-      card.appendChild(moveDBtn);
-
-      const upBtn=document.createElement('button');
-      upBtn.className='slot-upgrade-btn';
-      const lv2=(h.dragonLevels&&h.dragonLevels[i])||1;
-      const dragonType2=h.dragons[i]||'fire';
-      if(lv2>=maxLevelForDragon(dragonType2)){
-        upBtn.textContent='MAX';
-        upBtn.style.opacity='0.5';
-        upBtn.style.cursor='default';
-      } else {
-        const cost=Math.round(LEVEL_COST[lv2+1] * dragonFoodMult(dragonType2));
-        upBtn.textContent='Upgrade — '+cost+' 🍖';
-        upBtn.onclick=(()=>{ const slotIdx=i,habIdx=idx; return ()=>upgradeHabitatDragon(habIdx,slotIdx); })();
-      }
-      card.appendChild(upBtn);
-      // Sell dragon button — always shown regardless of level
-      const sellDBtn=document.createElement('button');
-      sellDBtn.style.cssText='width:100%;font-family:Cinzel,serif;font-size:1.15rem;font-weight:700;color:#ffaaaa;background:rgba(120,20,20,0.3);border:1px solid rgba(200,60,60,0.35);border-radius:clamp(10px,1.5vw,16px);padding:clamp(8px,1.1vw,13px) 0;cursor:pointer;margin-top:clamp(3px,0.5vw,6px);';
-      sellDBtn.textContent='Sell Dragon';
-      sellDBtn.onclick=(()=>{const si=i,hi=idx;return async()=>{
-        const totalDragons=game.placedHabitats.reduce((s,h)=>s+h.dragons.length,0);
-        if(totalDragons<=1){ showNotification("You can't sell your last dragon!",'error'); return; }
-        const srcHab=game.placedHabitats[hi];
-        const dragonTypeToSell=srcHab.dragons[si];
-        const sellValue=Math.round((DRAGON_COST[dragonTypeToSell]||250)/2);
-        const ok=await gameConfirm('Sell this dragon? You will receive '+sellValue.toLocaleString()+' 🪙.','Sell');
-        if(ok){const h=game.placedHabitats[hi];h.dragons.splice(si,1);if(h.dragonLevels)h.dragonLevels.splice(si,1);addGold(sellValue);updateGoldUI();Object.keys(_dragonRoamState).filter(k=>k.startsWith(hi+'_')).forEach(k=>delete _dragonRoamState[k]);saveGame();openHabitatMenu(hi);}
-      };})();
-      card.appendChild(sellDBtn);
+      imgBox.style.cursor='pointer';
+      imgBox.onclick=(()=>{ const si=i, hi=idx; return ()=>openDragonDetailMenu(hi,si); })();
     }
 
     row.appendChild(card);
+  }
+}
+
+// ══════ Dragon detail panel — opened by clicking a dragon's image in the
+// habitat menu. Shows level/HP/damage/attacks, plus Move/Upgrade/Sell. ══════
+function openDragonDetailMenu(habIdx, slotIdx){
+  const h=game.placedHabitats[habIdx];
+  if(!h) return;
+  const dragonType=h.dragons[slotIdx];
+  if(!dragonType) return;
+  const level=(h.dragonLevels&&h.dragonLevels[slotIdx])||1;
+
+  let el=document.getElementById('dragon-detail-overlay');
+  if(!el){
+    el=document.createElement('div');
+    el.id='dragon-detail-overlay';
+    el.innerHTML=`<div id="dragon-detail-bg"></div><div id="dragon-detail-box"></div>`;
+    document.body.appendChild(el);
+    document.getElementById('dragon-detail-bg').onclick=closeDragonDetailMenu;
+  }
+  el.classList.add('open');
+
+  const maxHp=60+level*20;
+  const dmgMin=Math.round(level*5), dmgMax=Math.round(level*5+5);
+  const elements=[...new Set(DRAGON_ELEMENTS[dragonType]||[dragonType])];
+  const gpm=Math.round(dragonGPM(dragonType,level));
+
+  const box=document.getElementById('dragon-detail-box');
+  box.innerHTML=`
+    <button id="dragon-detail-close" onclick="closeDragonDetailMenu()">✕</button>
+    <div id="dragon-detail-layout">
+      <div id="dragon-detail-left">
+        <div id="dragon-detail-canvas-wrap"><canvas id="dragon-detail-canvas" width="220" height="220"></canvas></div>
+        <button id="dd-upgrade-btn"></button>
+        <div id="dragon-detail-flavor">
+          <div id="dragon-detail-flavor-badges">${elements.map(el=>`<span>${ELEMENT_ICONS[el]}</span>`).join('')}</div>
+          <div id="dragon-detail-flavor-text">${DRAGON_DESC[dragonType]||''}</div>
+        </div>
+      </div>
+      <div id="dragon-detail-right">
+        <div id="dragon-detail-name">${_dragonShortName(dragonType)}</div>
+        <div id="dragon-detail-stats">
+          <div class="dd-stat"><span class="dd-label">Level</span><span class="dd-value">${level}</span></div>
+          <div class="dd-stat"><span class="dd-label">HP</span><span class="dd-value">${maxHp}</span></div>
+          <div class="dd-stat"><span class="dd-label">Damage</span><span class="dd-value">${dmgMin}-${dmgMax}</span></div>
+          <div class="dd-stat"><span class="dd-label">Income</span><span class="dd-value">+${gpm}/min</span></div>
+        </div>
+        <div id="dragon-detail-attacks-label">Attacks</div>
+        <div id="dragon-detail-attacks">
+          ${elements.map(el=>`<span class="dd-attack-chip">${ELEMENT_ICONS[el]} ${el.charAt(0).toUpperCase()+el.slice(1)}</span>`).join('')}
+        </div>
+        <div id="dragon-detail-actions">
+          <button id="dd-move-btn">Move Dragon</button>
+          <button id="dd-sell-btn">Sell Dragon</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const dctx=document.getElementById('dragon-detail-canvas').getContext('2d');
+  _drawDragonPortrait(dctx, dragonType, 220);
+
+  document.getElementById('dd-move-btn').onclick=()=>_ddMoveDragon(habIdx, slotIdx);
+
+  const upBtn=document.getElementById('dd-upgrade-btn');
+  if(level>=maxLevelForDragon(dragonType)){
+    upBtn.textContent='MAX';
+    upBtn.disabled=true;
+  } else {
+    const cost=Math.round(LEVEL_COST[level+1] * dragonFoodMult(dragonType));
+    upBtn.textContent='Upgrade — '+cost+' 🍖';
+    upBtn.onclick=()=>{ upgradeHabitatDragon(habIdx, slotIdx); openDragonDetailMenu(habIdx, slotIdx); };
+  }
+
+  document.getElementById('dd-sell-btn').onclick=()=>_ddSellDragon(habIdx, slotIdx);
+}
+
+function closeDragonDetailMenu(){
+  const el=document.getElementById('dragon-detail-overlay');
+  if(el) el.classList.remove('open');
+}
+
+function _ddMoveDragon(hi, si){
+  const srcHab=game.placedHabitats[hi];
+  const dragonType=srcHab.dragons[si];
+  const habitatTypeRaw=DRAGON_HABITAT[dragonType];
+  const habitatTypes=Array.isArray(habitatTypeRaw)?habitatTypeRaw:[habitatTypeRaw];
+  const options=game.placedHabitats.map((h,ii)=>({h,ii})).filter(({h,ii})=>ii!==hi&&habitatTypes.includes(h.type)&&h.dragons.length<3);
+  if(!options.length){showNotification('No compatible habitat with space found!','error');return;}
+  const existing=document.getElementById('dragon-move-picker');if(existing)existing.remove();
+  const picker=document.createElement('div');
+  picker.id='dragon-move-picker';
+  picker.style.cssText='position:fixed;inset:0;z-index:520;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;';
+  const box=document.createElement('div');
+  box.style.cssText='background:linear-gradient(160deg,#2e2c28,#1e1c18);border:1.5px solid rgba(220,190,80,0.4);border-radius:18px;padding:24px 28px;min-width:260px;box-shadow:0 8px 40px rgba(0,0,0,0.7);';
+  box.innerHTML='<div style="font-family:Cinzel Decorative,serif;font-size:1.1rem;color:#c8b890;text-align:center;margin-bottom:16px;">Move to which habitat?</div>';
+  options.forEach(({h,ii})=>{
+    const btn=document.createElement('button');
+    btn.style.cssText='display:block;width:100%;margin-bottom:10px;font-family:Cinzel,serif;font-size:0.95rem;font-weight:700;color:#e8dfc8;background:linear-gradient(180deg,#5a5848,#42403a);border:1px solid rgba(255,210,80,0.3);border-radius:16px;padding:12px 18px;cursor:pointer;';
+    btn.textContent=(HABITAT_NAMES[h.type]||h.type)+' ('+(3-h.dragons.length)+' slots free)';
+    btn.onclick=()=>{
+      const lv=(srcHab.dragonLevels&&srcHab.dragonLevels[si])||1;
+      h.dragons.push(dragonType);if(!h.dragonLevels)h.dragonLevels=[];h.dragonLevels.push(lv);
+      srcHab.dragons.splice(si,1);if(srcHab.dragonLevels)srcHab.dragonLevels.splice(si,1);
+      saveGame();picker.remove();closeDragonDetailMenu();closeHabitatMenu();showNotification('Dragon moved!','success');
+    };
+    box.appendChild(btn);
+  });
+  const cancelBtn=document.createElement('button');
+  cancelBtn.style.cssText='display:block;width:100%;font-family:Cinzel,serif;font-size:0.85rem;color:#aaa;background:none;border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:10px;cursor:pointer;';
+  cancelBtn.textContent='Cancel';cancelBtn.onclick=()=>picker.remove();
+  box.appendChild(cancelBtn);picker.appendChild(box);document.body.appendChild(picker);
+}
+
+async function _ddSellDragon(hi, si){
+  const totalDragons=game.placedHabitats.reduce((s,h)=>s+h.dragons.length,0);
+  if(totalDragons<=1){ showNotification("You can't sell your last dragon!",'error'); return; }
+  const srcHab=game.placedHabitats[hi];
+  const dragonTypeToSell=srcHab.dragons[si];
+  const sellValue=Math.round((DRAGON_COST[dragonTypeToSell]||250)/2);
+  const ok=await gameConfirm('Sell this dragon? You will receive '+sellValue.toLocaleString()+' 🪙.','Sell');
+  if(ok){
+    const h=game.placedHabitats[hi];
+    h.dragons.splice(si,1); if(h.dragonLevels) h.dragonLevels.splice(si,1);
+    addGold(sellValue); updateGoldUI();
+    Object.keys(_dragonRoamState).filter(k=>k.startsWith(hi+'_')).forEach(k=>delete _dragonRoamState[k]);
+    saveGame();
+    closeDragonDetailMenu();
+    openHabitatMenu(hi);
   }
 }
 
@@ -5007,6 +6680,7 @@ function closeHabitatMenu(){ game.panelOpen=false; const bd=document.getElementB
   const menu=document.getElementById('habitat-menu');
   menu.classList.remove('open');
   menu.style.display='none';
+  closeDragonDetailMenu();
 }
 
 function addDragonToSelected(){
@@ -5228,6 +6902,44 @@ function scaleShop(){
 }
 window.addEventListener('resize',scaleShop);
 scaleShop();
+
+function scaleHabitatMenu(){
+  const panel=document.getElementById('habitat-menu-content');
+  if(!panel) return;
+  const scaleX=window.innerWidth/740, scaleY=window.innerHeight/400;
+  const scale=Math.min(scaleX,scaleY,1.1);
+  panel.style.transform=`scale(${Math.max(0.5,scale)})`;
+}
+function scaleHatcheryMenu(){
+  const panel=document.getElementById('hatchery-menu');
+  if(!panel) return;
+  const scaleX=window.innerWidth/640, scaleY=window.innerHeight/370;
+  const scale=Math.min(scaleX,scaleY,1.1);
+  panel.style.transform=`translate(-50%,-50%) scale(${Math.max(0.5,scale)})`;
+}
+function scaleBreederMenu(){
+  const panel=document.getElementById('breeder-menu');
+  if(!panel) return;
+  const scaleX=window.innerWidth/820, scaleY=window.innerHeight/470;
+  const scale=Math.min(scaleX,scaleY,1.1);
+  panel.style.transform=`translate(-50%,-50%) scale(${Math.max(0.5,scale)})`;
+}
+function scaleBattleSetupBox(){
+  const panel=document.getElementById('battle-setup-box');
+  if(!panel) return;
+  const scaleX=window.innerWidth/460, scaleY=window.innerHeight/360;
+  const scale=Math.min(scaleX,scaleY,1.1);
+  panel.style.transform=`scale(${Math.max(0.5,scale)})`;
+}
+window.addEventListener('resize',()=>{
+  const hm=document.getElementById('habitat-menu');
+  if(hm && hm.classList.contains('open')) scaleHabitatMenu();
+  const ha=document.getElementById('hatchery-menu');
+  if(ha && ha.classList.contains('open')) scaleHatcheryMenu();
+  const br=document.getElementById('breeder-menu');
+  if(br) scaleBreederMenu();
+});
+
 function openShopHelp(){document.getElementById('shop-help-overlay').classList.add('open');}
 function closeShopHelp(){document.getElementById('shop-help-overlay').classList.remove('open');}
 document.querySelectorAll('.sh-tab').forEach(btn=>{
@@ -11086,6 +12798,7 @@ function _initOnLoad(){
   game.totalGoldEarned=Math.max(game.totalGoldEarned||0, Math.floor(game.gold||0));
   _playtimeCheckpoint=Date.now();
   updateAccountBtn();
+  updateBattleBtnVisibility();
   _relocateOrphanedItems();
   updateRelocateButton();
 }
@@ -11131,6 +12844,12 @@ function addGold(amount){
   game.gold+=amount;
   if(amount>0) game.totalGoldEarned=(game.totalGoldEarned||0)+amount;
 }
+function updateBattleBtnVisibility(){
+  const btn=document.getElementById('battle-btn');
+  if(!btn) return;
+  btn.style.display = (game.level||1) >= 2 ? 'flex' : 'none';
+}
+
 function addXP(amount){
   showXPPopup(amount);
   if(!amount||amount<=0) return;
@@ -11157,6 +12876,7 @@ function addXP(amount){
     game.xp=0;
   }
   updateXPBar();
+  updateBattleBtnVisibility();
 }
 
 // Spends any banked overflow XP against the current level cap. Call this
@@ -11509,6 +13229,7 @@ function openHatcheryMenu(buildingIdx){
     closeHabitatMenu(); closeFarmMenu(); closeShrineMenu();
   _hatcheryIdx=buildingIdx;
   document.getElementById('hatchery-menu').classList.add('open');
+  scaleHatcheryMenu();
   renderHatcherySlots();
   if(_hatcheryRaf) clearInterval(_hatcheryRaf);
   _hatcheryRaf=setInterval(renderHatcherySlots, 1000);
@@ -12137,31 +13858,34 @@ function openBreederMenu(idx){
   if(el) el.remove();
   el=document.createElement('div');
   el.id='breeder-menu';
-  el.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(96vw,1100px);max-height:92vh;overflow-y:auto;background:linear-gradient(160deg,#120a1e,#080510);border:1.5px solid rgba(160,80,255,0.45);border-radius:20px;padding:36px 36px 40px;z-index:350;box-shadow:0 20px 60px rgba(0,0,0,0.8);font-size:clamp(0.85rem,1.68vw,1.2rem);';
+  el.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:820px;height:470px;overflow:hidden;background:linear-gradient(160deg,#120a1e,#080510);border:1.5px solid rgba(160,80,255,0.45);border-radius:20px;padding:28px 32px 30px;z-index:350;box-shadow:0 20px 60px rgba(0,0,0,0.8);font-size:1.05rem;box-sizing:border-box;transform-origin:center center;';
   el.innerHTML=`
     <button onclick="document.getElementById('breeder-menu').remove();const bd=document.getElementById('panel-backdrop');if(bd)bd.remove();game.panelOpen=false;" style="position:absolute;top:14px;right:16px;font-family:Cinzel,serif;font-size:0.88em;font-weight:700;padding:8px 14px;border-radius:50%;width:38px;height:38px;background:rgba(40,20,60,0.5);border:1.5px solid rgba(160,80,255,0.3);color:#cc88ff;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
     <button onclick="moveBreeder(${idx})" style="position:absolute;top:14px;left:16px;font-family:Cinzel,serif;font-size:0.82em;font-weight:700;padding:9px 18px;border-radius:18px;background:rgba(40,20,60,0.4);border:1.5px solid rgba(160,80,255,0.25);color:rgba(180,120,255,0.8);cursor:pointer;">✦ Move</button>
     <div style="font-family:'Cinzel Decorative',serif;font-size:1.3em;font-weight:700;color:#cc88ff;text-align:center;margin-bottom:6px;">Breeding Cave</div>
-    <div style="font-family:serif;font-size:0.95em;color:rgba(180,140,220,0.7);text-align:center;margin-bottom:22px;font-style:italic;">Select two dragons to breed a new egg</div>
-    <div style="position:relative;display:flex;justify-content:center;align-items:center;gap:24px;margin-bottom:28px;">
-      <div id="breed-slot-0" style="width:240px;height:240px;background:rgba(80,20,140,0.3);border:2px dashed rgba(160,80,255,0.4);border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;" onclick="openDragonPicker(0)">
-        <div style="font-size:4em;color:rgba(160,80,255,0.5);">+</div>
-        <div style="font-family:Cinzel,serif;font-size:0.95em;color:rgba(160,100,220,0.6);">Choose Dragon</div>
-      </div>
-      <div style="font-size:2.5em;color:rgba(160,80,255,0.6);">❤️</div>
-      <div id="breed-slot-1" style="width:240px;height:240px;background:rgba(80,20,140,0.3);border:2px dashed rgba(160,80,255,0.4);border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;" onclick="openDragonPicker(1)">
-        <div style="font-size:4em;color:rgba(160,80,255,0.5);">+</div>
-        <div style="font-family:Cinzel,serif;font-size:0.95em;color:rgba(160,100,220,0.6);">Choose Dragon</div>
-      </div>
-      <div id="breed-odds-panel" style="position:absolute;right:-10px;top:0;width:110px;background:rgba(40,0,80,0.4);border:1px solid rgba(160,80,255,0.25);border-radius:14px;padding:12px;min-height:200px;">
-        <div style="font-family:Cinzel,serif;font-size:0.75em;color:rgba(160,100,220,0.5);text-align:center;margin-top:24px;">Select both<br>dragons to<br>see odds</div>
+    <div style="font-family:serif;font-size:0.95em;color:rgba(180,140,220,0.7);text-align:center;margin-bottom:20px;font-style:italic;">Select two dragons to breed a new egg</div>
+    <div style="display:flex;justify-content:center;align-items:flex-start;">
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <div style="display:flex;justify-content:center;align-items:center;gap:24px;margin-bottom:24px;">
+          <div id="breed-slot-0" style="width:230px;height:230px;background:rgba(80,20,140,0.3);border:2px dashed rgba(160,80,255,0.4);border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;" onclick="openDragonPicker(0)">
+            <div style="font-size:4em;color:rgba(160,80,255,0.5);">+</div>
+            <div style="font-family:Cinzel,serif;font-size:0.95em;color:rgba(160,100,220,0.6);">Choose Dragon</div>
+          </div>
+          <div style="font-size:2.5em;color:rgba(160,80,255,0.6);">❤️</div>
+          <div id="breed-slot-1" style="width:230px;height:230px;background:rgba(80,20,140,0.3);border:2px dashed rgba(160,80,255,0.4);border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;" onclick="openDragonPicker(1)">
+            <div style="font-size:4em;color:rgba(160,80,255,0.5);">+</div>
+            <div style="font-family:Cinzel,serif;font-size:0.95em;color:rgba(160,100,220,0.6);">Choose Dragon</div>
+          </div>
+        </div>
+        <button id="breed-action-btn" onclick="startBreeding(${idx})" style="font-family:Cinzel,serif;font-size:1.3em;font-weight:700;padding:16px 60px;border-radius:32px;background:linear-gradient(180deg,#6a2aaa,#3a0a7a);border:1.5px solid rgba(160,80,255,0.5);color:#e8c8ff;cursor:pointer;box-shadow:0 4px 20px rgba(100,0,200,0.4);letter-spacing:1px;">Breed</button>
       </div>
     </div>
-    <div style="display:flex;justify-content:center;">
-      <button id="breed-action-btn" onclick="startBreeding(${idx})" style="font-family:Cinzel,serif;font-size:1.4em;font-weight:700;padding:20px 70px;border-radius:32px;background:linear-gradient(180deg,#6a2aaa,#3a0a7a);border:1.5px solid rgba(160,80,255,0.5);color:#e8c8ff;cursor:pointer;box-shadow:0 4px 20px rgba(100,0,200,0.4);letter-spacing:1px;">Breed</button>
+    <div id="breed-odds-panel" style="position:absolute;bottom:22px;right:24px;max-width:calc(100% - 48px);display:flex;align-items:center;gap:14px;background:rgba(40,0,80,0.5);border:1px solid rgba(160,80,255,0.3);border-radius:14px;padding:10px 16px;box-sizing:border-box;">
+      <div style="font-family:Cinzel,serif;font-size:0.75em;color:rgba(160,100,220,0.55);">Select both dragons to see odds</div>
     </div>
   `;
   document.body.appendChild(el);
+  scaleBreederMenu();
 }
 
 
@@ -12283,51 +14007,56 @@ function updateBreedSlots(){
       slot.style.borderColor='rgba(160,80,255,0.4)';
     }
   });
-  // Update odds panel
+  // Update odds panel — each result is a small icon+percent stack, laid
+  // out horizontally so more results make the panel wider, not taller
   const oddsPanel=document.getElementById('breed-odds-panel');
   if(oddsPanel){
     if(_breedSlots[0]&&_breedSlots[1]){
       const odds=getBreedingOdds(_breedSlots[0].type,_breedSlots[1].type);
-      oddsPanel.innerHTML='<div style="font-family:Cinzel,serif;font-size:0.72em;font-weight:700;color:#cc88ff;margin-bottom:6px;text-align:center;">Odds</div>';
+      oddsPanel.innerHTML='';
+      const label=document.createElement('div');
+      label.style.cssText='font-family:Cinzel,serif;font-size:0.7em;font-weight:700;color:#cc88ff;flex-shrink:0;margin-right:2px;';
+      label.textContent='Odds';
+      oddsPanel.appendChild(label);
       odds.forEach(o=>{
-        const row=document.createElement('div');
-        row.style.cssText='display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;gap:4px;';
+        const item=document.createElement('div');
+        item.style.cssText='display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;';
         const cv=document.createElement('canvas');
-        cv.width=36; cv.height=36; cv.style.cssText='width:36px;height:36px;border-radius:6px;flex-shrink:0;';
+        cv.width=32; cv.height=32; cv.style.cssText='width:32px;height:32px;border-radius:6px;';
         const ph={t:0,wing:0,wingV:0,bob:0,bobV:0,sway:0,swayV:0,swayDir:1,tailSwing:0,tailV:0};
         if(o.type==='mystery'){
           const mctx=cv.getContext('2d');
           mctx.fillStyle='rgba(80,20,140,0.4)';
-          mctx.beginPath(); mctx.roundRect(0,0,36,36,6); mctx.fill();
+          mctx.beginPath(); mctx.roundRect(0,0,32,32,6); mctx.fill();
           mctx.fillStyle='rgba(200,150,255,0.9)';
-          mctx.font='bold 22px serif'; mctx.textAlign='center'; mctx.textBaseline='middle';
-          mctx.fillText('?',18,18);
-        } else if(o.type==='earth') drawEarthDragon(cv.getContext('2d'),36,36,ph);
-        else if(o.type==='grass') drawGrassDragon(cv.getContext('2d'),36,36,ph);
-        else if(o.type==='poison') drawPoisonDragon(cv.getContext('2d'),36,36,ph);
-        else if(o.type==='ice') drawIceDragon(cv.getContext('2d'),36,36,ph);
-        else if(o.type==='bluefire') drawBluefireDragon(cv.getContext('2d'),36,36,ph);
-        else if(o.type==='water') drawWaterDragon(cv.getContext('2d'),36,36,ph);
-        else if(o.type==='mud') drawMudDragon(cv.getContext('2d'),36,36,ph);
-        else if(o.type==='frost') drawFrostDragon(cv.getContext('2d'),36,36,ph);
-        else if(o.type==='magma') drawMagmaDragon(cv.getContext('2d'),36,36,ph);
-        else if(o.type==='forest') drawForestDragon(cv.getContext('2d'),36,36,ph);
-        else if(o.type==='obsidian') drawObsidianDragon(cv.getContext('2d'),36,36,ph);
-        else if(o.type==='coral') drawCoralDragon(cv.getContext('2d'),36,36,ph);
-        else if(o.type==='lightning') drawLightningDragon(cv.getContext('2d'),36,36,ph);
-        else if(o.type==='storm') drawStormDragon(cv.getContext('2d'),36,36,ph);
-        else if(o.type==='plasma') drawPlasmaDragon(cv.getContext('2d'),36,36,ph);
-        else if(o.type==='quake') drawQuakeDragon(cv.getContext('2d'),36,36,ph);
-        else if(o.type==='thunderlord') drawThunderlordDragon(cv.getContext('2d'),36,36,ph);
-        else drawFireDragon(cv.getContext('2d'),36,36,ph);
+          mctx.font='bold 19px serif'; mctx.textAlign='center'; mctx.textBaseline='middle';
+          mctx.fillText('?',16,16);
+        } else if(o.type==='earth') drawEarthDragon(cv.getContext('2d'),32,32,ph);
+        else if(o.type==='grass') drawGrassDragon(cv.getContext('2d'),32,32,ph);
+        else if(o.type==='poison') drawPoisonDragon(cv.getContext('2d'),32,32,ph);
+        else if(o.type==='ice') drawIceDragon(cv.getContext('2d'),32,32,ph);
+        else if(o.type==='bluefire') drawBluefireDragon(cv.getContext('2d'),32,32,ph);
+        else if(o.type==='water') drawWaterDragon(cv.getContext('2d'),32,32,ph);
+        else if(o.type==='mud') drawMudDragon(cv.getContext('2d'),32,32,ph);
+        else if(o.type==='frost') drawFrostDragon(cv.getContext('2d'),32,32,ph);
+        else if(o.type==='magma') drawMagmaDragon(cv.getContext('2d'),32,32,ph);
+        else if(o.type==='forest') drawForestDragon(cv.getContext('2d'),32,32,ph);
+        else if(o.type==='obsidian') drawObsidianDragon(cv.getContext('2d'),32,32,ph);
+        else if(o.type==='coral') drawCoralDragon(cv.getContext('2d'),32,32,ph);
+        else if(o.type==='lightning') drawLightningDragon(cv.getContext('2d'),32,32,ph);
+        else if(o.type==='storm') drawStormDragon(cv.getContext('2d'),32,32,ph);
+        else if(o.type==='plasma') drawPlasmaDragon(cv.getContext('2d'),32,32,ph);
+        else if(o.type==='quake') drawQuakeDragon(cv.getContext('2d'),32,32,ph);
+        else if(o.type==='thunderlord') drawThunderlordDragon(cv.getContext('2d'),32,32,ph);
+        else drawFireDragon(cv.getContext('2d'),32,32,ph);
         const pct=document.createElement('span');
-        pct.style.cssText='font-family:Cinzel,serif;font-size:0.72em;font-weight:700;color:#cc88ff;flex-shrink:0;';
+        pct.style.cssText='font-family:Cinzel,serif;font-size:0.62em;font-weight:700;color:#cc88ff;white-space:nowrap;';
         pct.textContent=o.pct+'%';
-        row.appendChild(cv); row.appendChild(pct);
-        oddsPanel.appendChild(row);
+        item.appendChild(cv); item.appendChild(pct);
+        oddsPanel.appendChild(item);
       });
     } else {
-      oddsPanel.innerHTML='<div style="font-family:Cinzel,serif;font-size:0.68em;color:rgba(160,100,220,0.5);text-align:center;margin-top:20px;">Select both<br>dragons to<br>see odds</div>';
+      oddsPanel.innerHTML='<div style="font-family:Cinzel,serif;font-size:0.75em;color:rgba(160,100,220,0.55);">Select both dragons to see odds</div>';
     }
   }
   // Update breed button cost display
@@ -12536,6 +14265,8 @@ window.addEventListener('resize', ()=>{
   if(el) sizeFixedRatioPanel(el, 560, 440);
   const qel=document.getElementById('quest-inner');
   if(qel && document.getElementById('quest-panel').style.display!=='none') sizeFixedRatioPanel(qel, 900, 720);
+  const bsel=document.getElementById('battle-setup-box');
+  if(bsel && document.getElementById('battle-setup-overlay').classList.contains('open')) scaleBattleSetupBox();
 });
 
 function openAccountPanel(){
@@ -12594,11 +14325,11 @@ function openAccountPanel(){
         <div style="font-family:'IM Fell English',serif;font-style:italic;font-size:0.88rem;line-height:1.6;color:rgba(220,228,205,0.8);">Even the mightiest dragon rests its wings from time to time. Tune the Vale to suit your journey — a lighter sky for a smoother flight, or every scale and ember rendered in full for the true spectacle.</div>
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.08);">
-        <div><div style="font-family:Cinzel,serif;font-size:0.95rem;color:#ccc;font-weight:700;">Drakar i habitat</div><div style="font-family:Cinzel,serif;font-size:0.75rem;color:rgba(180,180,180,0.5);margin-top:4px;">Stäng av för bättre prestanda</div></div>
+        <div><div style="font-family:Cinzel,serif;font-size:0.95rem;color:#ccc;font-weight:700;">Dragons in habitats</div><div style="font-family:Cinzel,serif;font-size:0.75rem;color:rgba(180,180,180,0.5);margin-top:4px;">Turn off for better performance</div></div>
         <div onclick="game.settings.showHabitatDragons=!(game.settings.showHabitatDragons!==false);saveGame();openAccountPanel();" style="width:52px;height:28px;border-radius:14px;background:${on?'#44aa44':'#444'};cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0;"><div style="position:absolute;top:3px;left:${on?'24px':'3px'};width:22px;height:22px;border-radius:50%;background:#fff;transition:left 0.2s;"></div></div>
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.08);">
-        <div><div style="font-family:Cinzel,serif;font-size:0.95rem;color:#ccc;font-weight:700;">Avancerad grafik</div><div style="font-family:Cinzel,serif;font-size:0.75rem;color:rgba(180,180,180,0.5);margin-top:4px;">Stäng av för bästa prestanda</div></div>
+        <div><div style="font-family:Cinzel,serif;font-size:0.95rem;color:#ccc;font-weight:700;">Advanced graphics</div><div style="font-family:Cinzel,serif;font-size:0.75rem;color:rgba(180,180,180,0.5);margin-top:4px;">Turn off for best performance</div></div>
         <div onclick="game.settings.advancedGraphics=!(game.settings.advancedGraphics!==false);saveGame();openAccountPanel();" style="width:52px;height:28px;border-radius:14px;background:${ag?'#44aa44':'#444'};cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0;"><div style="position:absolute;top:3px;left:${ag?'24px':'3px'};width:22px;height:22px;border-radius:50%;background:#fff;transition:left 0.2s;"></div></div>
       </div>
       <div style="text-align:center;font-family:'IM Fell English',serif;font-style:italic;font-size:0.8rem;color:rgba(200,210,180,0.4);margin-top:20px;">"A wise keeper knows their island as well as their own hoard."</div>`;
@@ -12787,9 +14518,62 @@ function resetDragonFilter(){
 
 const NEWS2_POSTS = [
   {
+    id:'battlesystem-2026-08-17',
+    date:'2026-08-17',
+    title:'⚔️ Battle System Arrives',
+    body:`<div style="position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;pointer-events:none;opacity:0.14;">
+        <div style="position:absolute;top:10px;left:10%;width:70px;height:70px;background:rgba(220,60,40,0.35);border-radius:50%;filter:blur(20px);"></div>
+        <div style="position:absolute;bottom:0;right:10%;width:80px;height:80px;background:rgba(80,120,255,0.3);border-radius:50%;filter:blur(20px);"></div>
+      </div>
+      <p style="margin:0 0 10px;font-size:1rem;line-height:1.6;">Your dragons can finally do more than collect gold — step into the arena! A brand new turn-based Battle system has landed, complete with a whole roster of opponents.</p>
+      <p style="margin:10px 0 6px;font-size:0.82rem;opacity:0.85;"><b>🏟️ Four Battles</b></p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 12px;">
+        <div style="background:rgba(220,60,40,0.1);border:1px solid rgba(220,80,60,0.3);border-radius:10px;padding:8px 10px;font-size:0.78rem;">⚔️ <b>The First Battle</b><br><span style="opacity:0.7;">Lv. 3-5</span></div>
+        <div style="background:rgba(60,140,220,0.12);border:1px solid rgba(80,160,240,0.3);border-radius:10px;padding:8px 10px;font-size:0.78rem;">🌊 <b>Subaquatic Nightmare</b><br><span style="opacity:0.7;">Lv. 8-10</span></div>
+        <div style="background:rgba(140,140,160,0.12);border:1px solid rgba(160,160,180,0.3);border-radius:10px;padding:8px 10px;font-size:0.78rem;">⛈️ <b>Skyfall Reckoning</b><br><span style="opacity:0.7;">Lv. 13-15</span></div>
+        <div style="background:rgba(230,190,60,0.12);border:1px solid rgba(240,200,80,0.35);border-radius:10px;padding:8px 10px;font-size:0.78rem;">👑 <b>Wrath of the Thunderlord</b><br><span style="opacity:0.7;">Lv. 18-20</span></div>
+      </div>
+      <p style="margin:10px 0 6px;font-size:0.82rem;opacity:0.85;"><b>🎯 How it works</b></p>
+      <ul style="margin:0;padding-left:18px;font-size:0.78rem;line-height:1.7;opacity:0.8;">
+        <li>Pick up to 3 dragons before each fight — your first pick becomes the Leader who takes the field</li>
+        <li>Real turn-based combat: attack, then your opponent strikes back</li>
+        <li>Full type effectiveness — 0.25x up to 4x damage depending on matchups, with hybrid dragons attacking through either of their elements</li>
+        <li>Swap dragons mid-battle every 3 turns (or when one faints) with a proper slide-in/out animation</li>
+        <li>Thunderlord's <b>Mega Blast</b> and Frost's <b>Absolute Zero</b> — devastating once-per-match signature moves that ignore type effectiveness entirely</li>
+        <li>Win to earn +100 XP and +300 gold</li>
+      </ul>
+      <div style="margin-top:12px;text-align:center;font-size:0.72rem;opacity:0.5;letter-spacing:1px;">～ ⚔️ ～ ⚔️ ～ ⚔️ ～</div>
+    </div>`
+  },
+  {
+    id:'islands-2026-08-10',
+    date:'2026-08-10',
+    title:'🏝️ Island Rework',
+    body:`<div style="position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;pointer-events:none;opacity:0.14;">
+        <div style="position:absolute;top:20px;left:15%;width:60px;height:60px;background:rgba(120,220,150,0.3);border-radius:50%;filter:blur(18px);"></div>
+        <div style="position:absolute;bottom:10px;right:12%;width:70px;height:70px;background:rgba(90,170,230,0.3);border-radius:50%;filter:blur(18px);"></div>
+      </div>
+      <p style="margin:0 0 10px;font-size:1rem;line-height:1.6;">The ground beneath Jimmie Vale has been completely rebuilt. Instead of a flat, walled-off patch of forest, your park now sits on a real <b>floating island</b> — rocky cliffs, patches of grass and all — drifting through the sky.</p>
+      <p style="margin:10px 0 6px;font-size:0.82rem;opacity:0.85;"><b>🏝️ A Second Island</b></p>
+      <p style="margin:0 0 10px;font-size:0.85rem;line-height:1.6;opacity:0.85;">Once you hit Level 20, an entirely new island can be purchased and settled beside your first — each with its own shrine, and enough room to keep expanding your park.</p>
+      <p style="margin:10px 0 6px;font-size:0.82rem;opacity:0.85;"><b>💠 Shrines, One Per Island</b></p>
+      <p style="margin:0 0 10px;font-size:0.85rem;line-height:1.6;opacity:0.85;">Every island now has its own ancient shrine — movable, but locked to its home island.</p>
+      <p style="margin:10px 0 6px;font-size:0.82rem;opacity:0.85;"><b>📍 Misplaced Buildings</b></p>
+      <p style="margin:0 0 10px;font-size:0.85rem;line-height:1.6;opacity:0.85;">Had a habitat sitting somewhere the new island shape doesn't cover? A new button appears automatically so you can give it a proper new home, no progress lost.</p>
+      <ul style="margin:0;padding-left:18px;font-size:0.78rem;line-height:1.7;opacity:0.8;">
+        <li>Zoom out much further to take in the full view of both islands at once</li>
+        <li>Slower, larger, more atmospheric clouds drifting overhead</li>
+        <li>Major performance improvements for parks with lots of habitats and dragons</li>
+      </ul>
+      <div style="margin-top:12px;text-align:center;font-size:0.72rem;opacity:0.5;letter-spacing:1px;">～ 🏝️ ～ 🏝️ ～ 🏝️ ～</div>
+    </div>`
+  },
+  {
     id:'lightning-2026-08-01',
     date:'2026-08-01',
-    title:'⚡ Lightning Update — Version 1.1.0',
+    title:'⚡ Lightning Update',
     body:`<div style="position:relative;overflow:hidden;">
       <div style="position:absolute;inset:0;pointer-events:none;opacity:0.16;">
         <div style="position:absolute;top:-10px;left:20%;width:2px;height:50px;background:linear-gradient(180deg,transparent,rgba(255,230,120,0.9),transparent);transform:rotate(12deg);"></div>
@@ -12820,13 +14604,13 @@ const NEWS2_POSTS = [
   {
     id:'savefix-2026-07-18',
     date:'2026-07-18',
-    title:'💾 Fix Save Game Data — Version 1.0.3',
+    title:'💾 Fix Save Game Data',
     body:'Fixed an issue where game progress was not saved between sessions in the desktop app.'
   },
   {
     id:'bugfix-2026-07-18',
     date:'2026-07-18',
-    title:'🐛 Bug Fixes — Version 1.0.2',
+    title:'🐛 Bug Fixes',
     body:`<ul style="margin:0;padding-left:20px;line-height:1.8;">
       <li>Fixed Obsidian and Coral dragons showing incorrectly in the habitat menu</li>
       <li>Fixed habitat unlock levels not working in the shop</li>
@@ -12836,9 +14620,9 @@ const NEWS2_POSTS = [
   {
     id:'prerelease-2026-07-14',
     date:'2026-07-14',
-    title:'🖥️ Pre-Release — Version 1.0.1',
+    title:'🖥️ Pre-Release',
     body:`<div style="position:relative;overflow:hidden;">
-      <p style="margin:0 0 10px;font-size:1rem;line-height:1.6;">Jimmie Vale är nu tillgängligt som en nedladdningsbar app! Ladda ner och spela direkt på din dator.</p>
+      <p style="margin:0 0 10px;font-size:1rem;line-height:1.6;">Jimmie Vale is now available as a downloadable app! Download and play straight on your computer.</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0;">
         <div style="background:rgba(90,80,100,0.15);border:1px solid rgba(150,130,170,0.3);border-radius:10px;padding:8px 10px;font-size:0.78rem;">🖤 <b>Obsidian Dragon</b><br><span style="opacity:0.7;">Forged in volcanic glass, 65/min</span></div>
         <div style="background:rgba(255,120,150,0.12);border:1px solid rgba(255,140,170,0.3);border-radius:10px;padding:8px 10px;font-size:0.78rem;">🪸 <b>Coral Dragon</b><br><span style="opacity:0.7;">Vibrant sea creature, 85/min</span></div>
@@ -12857,7 +14641,7 @@ const NEWS2_POSTS = [
   {
     id:'aquatic-2026-07-14',
     date:'2026-07-14',
-    title:'🌊 Aquatic Update — Version 1.0.0',
+    title:'🌊 Aquatic Update',
     body:`<div style="position:relative;overflow:hidden;">
       <div style="position:absolute;inset:0;pointer-events:none;opacity:0.18;">
         <div style="position:absolute;bottom:-10px;left:0;right:0;height:60px;background:linear-gradient(180deg,transparent,rgba(80,160,255,0.8));border-radius:50% 50% 0 0/30px 30px 0 0;"></div>
@@ -12903,6 +14687,23 @@ function updateNewsBadge(){
 }
 
 const UPDATES_LOG = [
+  { date:'2026-08-17', title:'⚔️ Battle System Arrives — Version 1.3.0', items:[
+    'Brand new Battle system — take your dragons into the arena for real, turn-based fights',
+    '4 battles to challenge: The First Battle (Lv. 3-5), The Subaquatic Nightmare (Lv. 8-10), Skyfall Reckoning (Lv. 13-15) and Wrath of the Thunderlord (Lv. 18-20)',
+    'Pick up to 3 dragons before each fight — your first pick becomes the Leader who takes the field',
+    'Full type effectiveness system — 0.25x up to 4x damage depending on matchups, hybrid dragons can attack with either of their elements',
+    'Swap dragons mid-battle every 3 turns (or when one faints), with slide-in/out animations',
+    'New signature moves: Thunderlord’s Mega Blast and Frost’s Absolute Zero — once-per-match attacks that ignore type effectiveness',
+    'Win a battle for +100 XP and +300 gold',
+  ]},
+  { date:'2026-08-10', title:'🏝️ Island Rework — Version 1.2.0', items:[
+    'Completely rebuilt island ground — a real floating island with rocky cliffs and grass, replacing the old flat forest',
+    'New: a second island can be purchased at Level 20 and settled beside your first',
+    'Every island now has its own ancient shrine, movable but locked to its home island',
+    'New 📍 button appears automatically to help you re-place any building left over from before the island had its new shape',
+    'Zoom out much further to see both islands at once, with slower and larger background clouds',
+    'Major performance improvements for parks with lots of habitats and dragons',
+  ]},
   { date:'2026-08-01', title:'⚡ Lightning Update — Version 1.1.0', items:[
     '5 new dragons: ⚡ Lightning, ⚡💧 Storm, ⚡🪨 Quake, ⚡🔥 Plasma & ⚡⚡ Thunderlord Dragon',
     'Brand new element: Lightning',
@@ -13147,6 +14948,72 @@ setInterval(()=>{ if(!document.hidden) tickOfflineGold(); }, 10000);
   <div id="hatchery-slots" style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;"></div>
 </div>
 <div id="tut-float-hint" style="display:none;position:fixed;top:16px;left:50%;transform:translateX(-50%);background:linear-gradient(160deg,#2a1e08,#1a1208);border:1.5px solid rgba(255,200,60,0.55);border-radius:12px;padding:10px 22px;font-family:Cinzel,serif;font-size:0.88rem;font-weight:700;color:#FFE878;box-shadow:0 4px 20px rgba(0,0,0,0.7);z-index:9500;pointer-events:none;white-space:nowrap;animation:tutBounce 0.7s ease-in-out infinite alternate;"></div>
+<div id="battle-scene">
+  <canvas id="battle-scene-canvas"></canvas>
+  <div id="battle-top-frame"></div>
+  <div class="battle-frame-rivet" style="left:18px;"></div>
+  <div class="battle-frame-rivet" style="right:18px;"></div>
+  <div class="battle-frame-rivet" style="left:50%;transform:translateX(-50%);"></div>
+  <button id="battle-giveup-btn" onclick="closeBattleScene()">✕ Give Up</button>
+
+  <div id="battle-hp-player" class="battle-hp-bar">
+    <div class="hp-label" id="player-hp-label">Lv.1 Dragon</div>
+    <div class="hp-track"><div class="hp-fill" id="player-hp-fill"></div></div>
+    <div class="hp-text" id="player-hp-text">100/100</div>
+  </div>
+
+  <div id="battle-hp-enemy" class="battle-hp-bar right">
+    <div class="hp-label" id="enemy-hp-label">Lv.1 Dragon</div>
+    <div class="hp-track"><div class="hp-fill" id="enemy-hp-fill"></div></div>
+    <div class="hp-text" id="enemy-hp-text">100/100</div>
+  </div>
+
+  <div id="battle-player-identity" class="battle-identity">
+    <div class="identity-avatar" id="battle-player-avatar">🧑</div>
+    <div class="identity-name" id="battle-player-name">Player</div>
+  </div>
+
+  <div id="battle-enemy-identity" class="battle-identity right">
+    <div class="identity-avatar" id="battle-enemy-avatar">🧑</div>
+    <div class="identity-name" id="battle-enemy-name">Roderick63</div>
+  </div>
+
+  <div id="battle-vs">VS</div>
+
+  <div id="battle-attack-buttons"></div>
+
+  <div id="battle-result-banner">
+    <div id="battle-result-text">VICTORY</div>
+    <div id="battle-result-rewards"></div>
+    <button id="battle-result-btn" onclick="closeBattleScene()">Return</button>
+  </div>
+
+  <div id="battle-swapchoice-banner">
+    <div id="battle-swapchoice-title">Choose Your Next Dragon</div>
+    <div id="battle-swapchoice-options"></div>
+  </div>
+</div>
+
+<div id="battle-setup-overlay">
+  <div id="battle-setup-bg" onclick="closeBattleSetup()"></div>
+  <div id="battle-setup-box">
+    <button id="bs-close" onclick="closeBattleSetup()">✕</button>
+    <div id="bs-title">Choose Your Dragons</div>
+    <div id="bs-sub">Pick up to three dragons to bring into battle</div>
+    <div id="bs-slots"></div>
+    <button id="bs-start-btn" onclick="startBattleFromSetup()">Start Battle</button>
+  </div>
+</div>
+
+<div id="battle-dragon-picker">
+  <div id="bdp-bg" onclick="closeBattleDragonPicker()"></div>
+  <div id="bdp-box">
+    <button id="bdp-close" onclick="closeBattleDragonPicker()">✕</button>
+    <div id="bdp-title">Select a Dragon</div>
+    <div id="bdp-list"></div>
+  </div>
+</div>
+
 <div id="dragon-picker" style="display:none;position:fixed;inset:0;z-index:9000;align-items:center;justify-content:center;">
   <div style="position:absolute;inset:0;background:rgba(0,0,0,0.65);" onclick="closeDragonPicker()"></div>
   <div style="position:relative;z-index:1;width:min(760px,95vw);background:linear-gradient(160deg,#120a1e,#080510);border:2px solid rgba(160,80,255,0.5);border-radius:20px;overflow:hidden;box-shadow:0 24px 60px rgba(60,0,120,0.7);">
