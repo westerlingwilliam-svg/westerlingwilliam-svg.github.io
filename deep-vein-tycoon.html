@@ -882,8 +882,8 @@ button.mt:active { transform: translateY(2px); box-shadow: 0 1px 0 color-mix(in 
 
 /* ---------- world map ---------- */
 .m-head.t-map { --h1: #3f9c6a; --h2: #1f6a44; }
-.nav-spacer { flex: 0 0 132px; }
-#btnMap { flex: 0 0 132px; justify-content: center; }
+.nav-spacer { flex: 0 0 178px; }
+#btnMap { flex: 0 0 178px; min-width: 0; justify-content: center; }
 #btnMap span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 :root[data-layout="mobile"] .nav-spacer { display: none; }
 :root[data-layout="mobile"] #btnMap { flex: 0 0 auto; }
@@ -995,7 +995,402 @@ button.mt:active { transform: translateY(2px); box-shadow: 0 1px 0 color-mix(in 
 }
 .mine-unlock { border-color: #7a3d02; background: linear-gradient(#ffe06a, #f09a14); color: #4a2300; box-shadow: inset 0 2px 0 rgba(255,255,255,.55), 0 3px 0 #7a3d02; }
 .mine-go:active, .mine-unlock:active:not(:disabled) { transform: translateY(2px); }
+:root[data-layout="mobile"] .mine-card, .mine-card.narrow { grid-template-columns: 50px 1fr; }
+:root[data-layout="mobile"] .mine-card > .mine-go,
+:root[data-layout="mobile"] .mine-card > .mine-unlock,
+:root[data-layout="mobile"] .mine-card > .mine-here { grid-column: 1 / -1; width: 100%; text-align: center; }
+:root[data-layout="mobile"] .mine-art { width: 50px; height: 50px; font-size: 25px; }
+@media (max-width: 460px) {
+  .mine-card { grid-template-columns: 50px 1fr; }
+  .mine-card > .mine-go, .mine-card > .mine-unlock, .mine-card > .mine-here { grid-column: 1 / -1; width: 100%; text-align: center; }
+}
 .mine-unlock:disabled { border-color: #5a4a3a; background: linear-gradient(#b3a597, #857566); color: #fff; box-shadow: inset 0 2px 0 rgba(255,255,255,.25), 0 3px 0 #5a4a3a; cursor: not-allowed; }
+
+/* ---------- buy 1 / 5 / 10 ---------- */
+.bx-buys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; width: 100%; margin-top: auto; }
+.bx-buys .bx-buy {
+  height: 46px;
+  margin: 0;
+  padding: 0 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.05;
+  font-size: 14px;
+}
+.bx-buy small { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 10.5px; opacity: .95; }
+:root[data-layout="mobile"] .bx-grid { gap: 8px; }
+:root[data-layout="mobile"] .bx-card { padding: 10px 7px; }
+:root[data-layout="mobile"] .bx-buys { gap: 4px; }
+:root[data-layout="mobile"] .bx-buys .bx-buy { height: 46px; font-size: 14px; }
+:root[data-layout="mobile"] .bx-buy small { font-size: 9.5px; }
+:root[data-layout="mobile"] .bx-list { font-size: 10px; }
+
+/* ---------- box opening show ---------- */
+body.fx-on .backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; }
+body.fx-on .modal { visibility: hidden; }
+.bfx { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; overflow: hidden; cursor: pointer; --glow: #ffd84d; }
+.bfx.hidden { display: none; }
+.bfx-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--glow) 26%, rgb(18, 9, 4)), rgb(8, 4, 2) 72%);
+  opacity: .97;
+  animation: bfxFade .35s ease-out both;
+}
+.bfx-rays {
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  width: 180vmax;
+  height: 180vmax;
+  margin: -90vmax 0 0 -90vmax;
+  background: repeating-conic-gradient(from 0deg, color-mix(in srgb, var(--glow) 60%, transparent) 0deg 7deg, transparent 7deg 18deg);
+  -webkit-mask-image: radial-gradient(circle, #000 0, transparent 50%);
+  mask-image: radial-gradient(circle, #000 0, transparent 50%);
+  opacity: 0;
+  pointer-events: none;
+}
+.phase-open .bfx-rays { animation: bfxRaysIn .5s ease-out forwards, bfxSpin 16s linear infinite; }
+.bfx-stage { position: relative; display: flex; flex-direction: column; align-items: center; gap: 44px; }
+.bfx-box { position: relative; width: 160px; height: 140px; transform: translateY(-120vh); }
+.phase-drop .bfx-box { animation: bfxDrop .62s cubic-bezier(.3, 1.45, .5, 1) forwards; }
+.phase-shake .bfx-box { transform: none; animation: bfxShake 1.05s ease-in-out forwards; }
+.phase-open .bfx-box { transform: none; animation: bfxGone .45s .2s ease-in forwards; }
+.bfx-body {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 104px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  border: 5px solid var(--bx2);
+  background: var(--bx1);
+  box-shadow: inset 0 -12px 0 rgba(0,0,0,.2), inset 0 6px 0 rgba(255,255,255,.25), 0 14px 0 rgba(0,0,0,.3);
+  font-size: 50px;
+  overflow: hidden;
+}
+.bfx-body::before, .bfx-body::after { content: ''; position: absolute; top: 0; bottom: 0; width: 14px; background: var(--bx2); opacity: .85; }
+.bfx-body::before { left: 20%; }
+.bfx-body::after { right: 20%; }
+.bfx-body span { position: relative; z-index: 1; filter: drop-shadow(0 3px 0 rgba(0,0,0,.25)); }
+.bfx-lid {
+  position: absolute;
+  left: -10px;
+  right: -10px;
+  top: 12px;
+  height: 38px;
+  z-index: 2;
+  border-radius: 13px;
+  border: 5px solid var(--bx2);
+  background: var(--bx1);
+  box-shadow: inset 0 -7px 0 rgba(0,0,0,.18), inset 0 5px 0 rgba(255,255,255,.3);
+}
+.bfx-lid::after { content: ''; position: absolute; left: 50%; bottom: -14px; width: 22px; height: 18px; margin-left: -11px; border-radius: 0 0 6px 6px; background: var(--bx2); }
+.phase-open .bfx-lid { animation: bfxLid .75s cubic-bezier(.2, .8, .3, 1) forwards; }
+.bfx-glow { position: absolute; left: 50%; top: 55%; width: 12px; height: 12px; margin: -6px; border-radius: 50%; }
+.phase-shake .bfx-glow { animation: bfxGlow 1.05s ease-in forwards; }
+.bfx-box.bx-crate { --bx1: linear-gradient(#cf9352, #8a5424); --bx2: #5a3414; }
+.bfx-box.bx-chest { --bx1: linear-gradient(#7a828f, #3b414b); --bx2: #d4a017; }
+.bfx-box.bx-vault { --bx1: linear-gradient(#fff0a0, #e0960c); --bx2: #7a4a04; }
+.bfx-box.bx-crystal { --bx1: linear-gradient(#d8faff, #3aa6d8); --bx2: #1f5f8a; }
+.bfx-name { font-family: 'Lilita One', 'Fredoka', sans-serif; font-size: 24px; color: #fff; text-shadow: 0 3px 0 rgba(0,0,0,.45); }
+.bfx-name b { font-weight: 400; color: #ffd84d; }
+.phase-open .bfx-name { animation: bfxGone .3s ease-in forwards; }
+.bfx-burst { position: absolute; left: 50%; top: 45%; width: 40px; height: 40px; margin: -20px; border-radius: 50%; background: radial-gradient(circle, #fff 0, var(--glow) 55%, transparent 70%); opacity: 0; pointer-events: none; }
+.phase-open .bfx-burst { animation: bfxBurst .7s ease-out forwards; }
+.bfx-sparks { position: absolute; left: 50%; top: 45%; width: 0; height: 0; pointer-events: none; }
+.bfx-sparks i { position: absolute; left: -4px; top: -4px; width: 8px; height: 8px; border-radius: 50%; background: var(--glow); box-shadow: 0 0 10px var(--glow); opacity: 0; }
+.phase-open .bfx-sparks i { animation: bfxSpark var(--t) ease-out forwards; }
+.bfx-skip { position: absolute; bottom: max(26px, env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); color: rgba(255,255,255,.65); font-size: 13px; font-weight: 600; }
+.bfx-results {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: max(20px, env(safe-area-inset-top, 0px)) 14px max(20px, env(safe-area-inset-bottom, 0px));
+  overflow-y: auto;
+  cursor: default;
+  scrollbar-width: none;
+}
+.bfx-results::-webkit-scrollbar { display: none; }
+.bfx-results > :first-child { margin-top: auto; }
+.bfx-results > :last-child { margin-bottom: auto; }
+.phase-results .bfx-results { justify-content: flex-start; }
+.phase-results .bfx-results { display: flex; }
+.phase-results .bfx-stage, .phase-results .bfx-skip { display: none; }
+.bfx-title { font-family: 'Lilita One', 'Fredoka', sans-serif; font-size: 34px; color: #fff; text-shadow: 0 3px 0 rgba(0,0,0,.45), 0 0 24px var(--glow); margin-bottom: 8px; animation: pop .45s cubic-bezier(.2, 1.5, .4, 1) both; text-align: center; }
+.bfx-counts { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 12px; margin-bottom: 14px; font-size: 13px; font-weight: 700; color: #fff; }
+.bfx-counts span::before { content: ''; display: inline-block; width: 8px; height: 8px; margin-right: 4px; border-radius: 50%; background: var(--rc); }
+.bfx-grid { margin-top: 6px; }
+.bfx-grid.single { width: min(250px, 78vw); }
+.bfx-grid.single .mt { padding: 24px 14px 18px; }
+.bfx-grid.single .mt-face { width: 116px; height: 116px; border-radius: 30px; }
+.bfx-grid.single .mt-name { font-size: 21px; }
+.bfx-grid.single .mt-chip { font-size: 19px; padding: 2px 12px; }
+.bfx-grid.single .mt-rar { font-size: 12px; }
+.bfx-grid.single .mt-eff { font-size: 13px; }
+.bfx-grid.multi { display: grid; grid-template-columns: repeat(5, 112px); gap: 12px 10px; padding-top: 4px; }
+.bfx-grid.multi .mt { padding: 10px 6px 9px; }
+.bfx-grid.multi .mt-face { width: 56px; height: 56px; border-radius: 16px; }
+.bfx-grid.multi .mt-eff { display: none; }
+.bfx-grid.multi .mt-name { font-size: 12.5px; }
+@media (max-width: 680px) {
+  .bfx-grid.multi { grid-template-columns: repeat(4, minmax(0, 1fr)); width: 100%; max-width: 440px; gap: 12px 6px; }
+  .bfx-grid.multi .mt { padding: 8px 3px 7px; border-radius: 14px; }
+  .bfx-grid.multi .mt-face { width: 44px; height: 44px; border-radius: 13px; }
+  .bfx-grid.multi .mt-chip { font-size: 11px; padding: 0 6px; }
+  .bfx-grid.multi .mt-name { font-size: 11px; margin-top: 3px; }
+  .bfx-grid.multi .mt-rar { font-size: 8.5px; letter-spacing: .06em; }
+  .bfx-title { font-size: 28px; }
+}
+.bfx-card { position: relative; display: flex; perspective: 700px; }
+.bfx-card.wait { opacity: 0; transform: scale(.2) translateY(30px); }
+.bfx-card.in { animation: bfxPop .6s cubic-bezier(.2, 1.6, .4, 1) both; }
+.bfx-card > .mt { position: relative; z-index: 1; }
+.bfx-flash, .bfx-ring { position: absolute; pointer-events: none; opacity: 0; }
+.bfx-flash { inset: -30%; z-index: 0; border-radius: 50%; background: radial-gradient(circle, var(--rc) 0, transparent 62%); }
+.bfx-ring { inset: -4px; z-index: 2; border-radius: 20px; border: 3px solid var(--rc); }
+.bfx-card.in .bfx-flash { animation: bfxFlash .8s ease-out both; }
+.bfx-card.in .bfx-ring { animation: bfxRing .7s ease-out both; }
+.bfx-card.in.r-epic .bfx-ring.two, .bfx-card.in.r-legendary .bfx-ring.two, .bfx-card.in.r-mythic .bfx-ring.two { animation: bfxRing .8s .18s ease-out both; }
+.bfx-card.in.r-legendary .bfx-flash, .bfx-card.in.r-mythic .bfx-flash { animation: bfxFlashBig 1.1s ease-out both; }
+.bfx-card.in.r-legendary > .mt, .bfx-card.in.r-mythic > .mt { animation: bfxHalo 1.6s ease-in-out .5s infinite alternate; }
+.bfx-results .later { opacity: 0; pointer-events: none; transition: opacity .4s; }
+.bfx-results.done .later { opacity: 1; pointer-events: auto; }
+.bfx-results .bfx-actions { animation: none; }
+.bfx-title.bump-in { animation: bfxTitle .5s cubic-bezier(.2, 1.6, .4, 1) both; }
+.bfx-spot { position: absolute; left: 50%; top: 50%; z-index: 6; width: min(236px, 68vw); transform: translate(-50%, -50%); display: none; pointer-events: none; }
+.bfx-spot.show { display: block; animation: bfxSpotIn .5s cubic-bezier(.2, 1.5, .4, 1); }
+.bfx-spot .mt { position: relative; z-index: 1; padding: 22px 14px 16px; }
+.bfx-spot .mt-face { width: 112px; height: 112px; border-radius: 28px; }
+.bfx-spot .mt-name { font-size: 20px; }
+.bfx-spot .mt-chip { font-size: 18px; padding: 2px 12px; }
+.bfx-spot .mt-rar { font-size: 12px; }
+.bfx-spot .mt-eff { font-size: 13px; }
+.bfx-spot.show .bfx-flash { animation: bfxFlashBig 1s ease-out both; }
+.bfx-spot.show .bfx-ring { animation: bfxRing .8s ease-out both; }
+.bfx-spot.show .bfx-ring.two { animation: bfxRing .9s .2s ease-out both; }
+.bfx-spot.show.r-legendary .mt, .bfx-spot.show.r-mythic .mt { animation: bfxHalo .7s ease-in-out infinite alternate; }
+.bfx-spot.show.r-mythic .bfx-spot-rar { animation: bfxMythic 1.2s linear infinite; }
+.bfx-spot-rar {
+  position: absolute;
+  left: -40px;
+  right: -40px;
+  top: -48px;
+  z-index: 2;
+  text-align: center;
+  font-family: 'Lilita One', 'Fredoka', sans-serif;
+  font-size: 32px;
+  color: #fff;
+  text-shadow: 0 3px 0 rgba(0,0,0,.45), 0 0 22px var(--rc);
+  animation: bfxTitle .5s cubic-bezier(.2, 1.6, .4, 1) both;
+}
+.bfx-results.spotting .bfx-grid { opacity: .28; transition: opacity .2s; }
+.bfx-results.spotting .bfx-title { opacity: .5; }
+@keyframes bfxSpotIn {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(.2) rotate(-18deg); }
+  60% { opacity: 1; transform: translate(-50%, -50%) scale(1.1) rotate(4deg); }
+  100% { opacity: 1; transform: translate(-50%, -50%); }
+}
+@keyframes bfxMythic { 0% { color: #ff6b8a; } 33% { color: #ffd84d; } 66% { color: #8affc0; } 100% { color: #ff6b8a; } }
+@keyframes bfxPop {
+  0% { opacity: 0; transform: scale(.2) rotate(-14deg) translateY(40px); }
+  55% { opacity: 1; transform: scale(1.14) rotate(4deg) translateY(-6px); }
+  75% { transform: scale(.96) rotate(-1deg); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes bfxFlash { 0% { opacity: .95; transform: scale(.3); } 100% { opacity: 0; transform: scale(1.4); } }
+@keyframes bfxFlashBig { 0% { opacity: 1; transform: scale(.3); } 40% { opacity: .9; } 100% { opacity: 0; transform: scale(2.2); } }
+@keyframes bfxRing { 0% { opacity: .95; transform: scale(.85); } 100% { opacity: 0; transform: scale(1.4); } }
+@keyframes bfxHalo { from { box-shadow: 0 0 20px -6px var(--rc), 0 4px 0 color-mix(in srgb, var(--rc) 55%, #000); } to { box-shadow: 0 0 44px 2px var(--rc), 0 4px 0 color-mix(in srgb, var(--rc) 55%, #000); } }
+@keyframes bfxTitle { 0% { transform: scale(.6); opacity: .3; } 60% { transform: scale(1.12); opacity: 1; } 100% { transform: none; } }
+.bfx-card .mt { flex: 1; width: 100%; box-shadow: 0 0 34px -6px var(--rc), 0 4px 0 color-mix(in srgb, var(--rc) 55%, #000); }
+.bfx-actions { display: grid; gap: 10px; width: min(320px, 90vw); margin-top: 20px; animation: bfxFade .4s .35s both; }
+.bfx-actions .mg-sec { margin: 0; }
+@keyframes bfxFade { from { opacity: 0; } }
+.bfx-bg { animation-name: bfxBgIn; }
+@keyframes bfxBgIn { from { opacity: 0; } to { opacity: .97; } }
+@keyframes bfxRaysIn { to { opacity: .6; } }
+@keyframes bfxSpin { to { transform: rotate(360deg); } }
+@keyframes bfxDrop { from { transform: translateY(-120vh) rotate(-8deg); } to { transform: none; } }
+@keyframes bfxShake {
+  0%, 100% { transform: none; }
+  10% { transform: rotate(-3deg); }
+  20% { transform: rotate(4deg); }
+  30% { transform: rotate(-6deg) translateY(-3px); }
+  40% { transform: rotate(7deg); }
+  50% { transform: rotate(-9deg) scale(1.04); }
+  60% { transform: rotate(10deg) scale(1.07); }
+  70% { transform: rotate(-11deg) scale(1.1) translateY(-4px); }
+  80% { transform: rotate(11deg) scale(1.13); }
+  90% { transform: rotate(-6deg) scale(1.18); }
+}
+@keyframes bfxLid { to { transform: translate(60px, -300px) rotate(40deg); opacity: 0; } }
+@keyframes bfxGone { to { transform: scale(.3) translateY(30px); opacity: 0; } }
+@keyframes bfxGlow { from { box-shadow: 0 0 0 0 var(--glow); } to { box-shadow: 0 0 70px 60px var(--glow); } }
+@keyframes bfxBurst { 0% { opacity: 1; transform: scale(0); } 60% { opacity: .9; } 100% { opacity: 0; transform: scale(28); } }
+@keyframes bfxSpark { 0% { opacity: 1; transform: rotate(var(--a)) translateX(0) scale(1); } 100% { opacity: 0; transform: rotate(var(--a)) translateX(var(--d)) scale(.3); } }
+@keyframes bfxCardIn { from { opacity: 0; transform: translateY(50px) rotateY(100deg) scale(.5); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .bfx *, .bfx-card { animation-duration: .01s !important; animation-delay: 0s !important; }
+}
+
+/* ---------- collection manage mode ---------- */
+.coll-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.coll-head p { flex: 1; margin: 0; }
+.mg-manage {
+  flex: 0 0 auto;
+  height: 36px;
+  padding: 0 13px;
+  border-radius: 11px;
+  border: 2px solid #3d1e70;
+  background: linear-gradient(#c7a2ff, #7a45d0);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,.4), 0 2px 0 #3d1e70;
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.mg-manage.on { border-color: var(--edge-dk); background: var(--panel-hi); box-shadow: 0 2px 0 var(--edge-dk); color: var(--text); }
+.mg-manage:active { transform: translateY(2px); }
+.sel-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.sel-chip {
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 2px solid var(--rc, var(--edge));
+  background: var(--panel-hi);
+  color: var(--text);
+  font-weight: 700;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+.sel-chip.on { background: var(--rc); color: #fff; }
+.sel-chip.clear { --rc: var(--edge-dk); }
+.sel-chip:disabled { opacity: .45; cursor: default; }
+.mt.sel-off { opacity: .62; }
+.mt.sel-on { outline: 3px solid var(--rc); outline-offset: 2px; }
+.mt.sel-on::after, .mt.sel-off::after {
+  content: '';
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  z-index: 2;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 700;
+}
+.mt.sel-off::after { border: 2px solid var(--rc); background: rgba(255,255,255,.55); }
+.mt.sel-on::after { content: '✓'; background: var(--rc); color: #fff; box-shadow: 0 2px 0 rgba(0,0,0,.25); }
+.sel-bar { position: sticky; bottom: -18px; z-index: 3; margin: 14px -16px -18px; padding: 12px 16px 16px; background: linear-gradient(rgba(0,0,0,0), var(--panel) 32%); }
+.sel-bar .big-btn { box-shadow: inset 0 3px 0 rgba(255,255,255,.45), 0 5px 0 #1c5e1a, 0 8px 20px var(--shadow); }
+
+/* ---------- research: maxed upgrades are gold ---------- */
+.rs-buy.max, .rs-buy.max:disabled {
+  border-color: #7a3d02;
+  background: linear-gradient(#fff08a, #f0a414);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,.6), 0 3px 0 #7a3d02, 0 0 14px -2px rgba(255, 200, 60, .8);
+  color: #4a2300;
+  text-shadow: 0 1px 0 rgba(255,255,255,.5);
+  cursor: default;
+}
+.rs-card.maxed { border-color: rgba(217, 138, 11, .55); background: var(--panel-hi); background: linear-gradient(90deg, rgba(255, 200, 60, .25), var(--panel-hi) 70%); }
+.rs-card.maxed .rs-pips i.on { background: linear-gradient(#fff08a, #f0a414); box-shadow: 0 0 4px rgba(255, 200, 60, .8); }
+.rs-card.maxed .rs-eff { color: var(--gold-dk); }
+
+/* ---------- collection: four managers per row ---------- */
+.mt-grid.coll-grid, :root[data-layout="mobile"] .mt-grid.coll-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px 7px; }
+.coll-grid .mt { padding: 9px 4px 7px; border-radius: 14px; }
+.coll-grid .mt-face { width: 48px; height: 48px; border-radius: 14px; }
+.coll-grid .mt .mt-chip { font-size: 11.5px; padding: 0 6px; margin-top: -8px; }
+.coll-grid .mt-name { font-size: 11.5px; margin-top: 4px; }
+.coll-grid .mt-rar { font-size: 8.5px; letter-spacing: .06em; }
+.coll-grid .mt-eff { display: none; }
+.coll-grid .mt-rar { margin-bottom: 6px; }
+.coll-grid .mt > .mt-sell { margin-top: auto; }
+.coll-grid .mt-sell { height: 29px; padding: 0 2px; border-radius: 9px; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.05; white-space: nowrap; }
+.coll-grid .mt-sell .ms-l { font-size: 8.5px; letter-spacing: .08em; text-transform: uppercase; opacity: .9; }
+.coll-grid .mt-sell .ms-p { font-family: 'Lilita One', 'Fredoka', sans-serif; font-weight: 400; font-size: 12.5px; }
+.coll-grid .mt.sel-on::after, .coll-grid .mt.sel-off::after { top: 4px; right: 4px; width: 18px; height: 18px; font-size: 11px; }
+:root[data-layout="mobile"] .coll-grid .mt-face { width: 42px; height: 42px; border-radius: 12px; }
+:root[data-layout="mobile"] .coll-grid .mt-name { font-size: 10.5px; }
+:root[data-layout="mobile"] .coll-grid .mt-sell .ms-p { font-size: 11.5px; }
+
+/* ---------- red sell buttons ---------- */
+.mt-sell {
+  border-color: #8a1f16;
+  background: linear-gradient(#ff7a6a, #d8392a);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,.4), 0 2px 0 #8a1f16;
+}
+.mt-sell:active { box-shadow: inset 0 2px 0 rgba(255,255,255,.4), 0 0 0 #8a1f16; }
+.mt-sell.armed { border-color: #5a0f08; background: linear-gradient(#ffb04a, #e0461f); box-shadow: inset 0 2px 0 rgba(255,255,255,.4), 0 2px 0 #5a0f08; }
+.coll-grid .mt-sell { width: 86%; align-self: center; border-width: 1.5px; }
+.coll-grid .mt-sell .ms-l { font-size: 7.5px; }
+.coll-grid .mt-sell .ms-p { font-size: 11px; }
+:root[data-layout="mobile"] .coll-grid .mt-sell .ms-p { font-size: 10.5px; }
+.sel-bar .big-btn.sell { border-color: #6d1a12; background: linear-gradient(#ff7a6a, #c42d1f); box-shadow: inset 0 3px 0 rgba(255,255,255,.4), 0 5px 0 #6d1a12, 0 8px 20px var(--shadow); }
+.sel-bar .big-btn.sell:disabled { border-color: #5a4a3a; background: linear-gradient(#b3a597, #857566); box-shadow: inset 0 3px 0 rgba(255,255,255,.25), 0 5px 0 #5a4a3a; }
+.sel-bar .big-btn.sell.red { border-color: #5a0f08; background: linear-gradient(#ffb04a, #e0461f); }
+.sel-bar .big-btn.sell, :root[data-layout="mobile"] .sel-bar .big-btn.sell { min-height: 46px; padding: 6px 14px; font-size: 17px; border-radius: 14px; }
+
+/* ---------- hold a manager to start Manage ---------- */
+.coll-grid .mt.lp { cursor: pointer; -webkit-touch-callout: none; touch-action: pan-y; }
+.coll-grid .mt.lp.holding { transform: scale(.93); transition: transform .48s ease-out, box-shadow .48s; box-shadow: 0 0 0 3px var(--rc), 0 0 18px -2px var(--rc); }
+.coll-grid .mt.lp::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 5px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--rc);
+  transform: scaleX(0);
+  transform-origin: left;
+  opacity: .8;
+}
+.coll-grid .mt.lp.holding::before { transform: scaleX(1); transition: transform .48s linear; }
+
+/* ---------- window header stays put while the content scrolls ---------- */
+.modal > .m-head { position: sticky; top: 0; z-index: 6; }
+
+/* ---------- bottom bar: fits any window width ---------- */
+.research-btn { min-width: 0; overflow: hidden; white-space: nowrap; }
+.research-btn .lbl { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+#btnMap { min-width: 0; overflow: hidden; }
+@media (max-width: 900px) {
+  .nav-spacer { display: none; }
+  #btnMap { flex: 0 1 auto; max-width: 170px; padding: 0 14px; }
+}
+@media (max-width: 720px) {
+  #btnMap { flex: 0 0 auto; }
+  #btnMap span { display: none; }
+  .research-btn { font-size: 16px; gap: 6px; padding: 0 8px; }
+  .research-btn .res-badge { display: none; }
+  .research-btn.ready::after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    right: 7px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #ffd84d;
+    box-shadow: 0 0 0 2px rgba(0,0,0,.3);
+  }
+}
+@media (max-width: 420px) { .research-btn .lbl { font-size: 15px; } }
 
 /* ---------- modals ---------- */
 .backdrop {
@@ -1058,6 +1453,33 @@ button.mt:active { transform: translateY(2px); box-shadow: 0 1px 0 color-mix(in 
   font-size: 11px;
   font-weight: 700;
 }
+.em-tag {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: linear-gradient(#5fe0a0, #1f9e5a);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+.mine-body .mine-boost { margin-top: 3px; padding: 3px 8px; border-radius: 9px; background: rgba(47, 174, 106, .14); color: var(--text); }
+.mine-body .mine-boost b { display: inline; font-size: inherit; color: #1f9e5a; }
+:root[data-theme="dark"] .mine-body .mine-boost b { color: #7ee0a8; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .mine-body .mine-boost b { color: #7ee0a8; } }
+.map-boost {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  z-index: 1;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(15, 60, 36, .82);
+  color: #d8ffe8;
+  font-size: 12px;
+  font-weight: 600;
+}
+.map-boost b { color: #8affc0; }
 .rb-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px; }
 .rb-step {
   padding: 8px 4px;
@@ -1256,7 +1678,7 @@ button.mt:active { transform: translateY(2px); box-shadow: 0 1px 0 color-mix(in 
       <div class="coin" id="hudCoin">$</div>
       <div class="cash-text">
         <div class="cash-val" id="cash">0</div>
-        <div class="ips"><span class="rb-tag hidden" id="rbTag"></span><span id="ips">0</span>/s<span class="idle-tag off" id="idleTag">no idle income</span></div>
+        <div class="ips"><span class="rb-tag hidden" id="rbTag"></span><span class="em-tag hidden" id="emTag"></span><span id="ips">0</span>/s<span class="idle-tag off" id="idleTag">no idle income</span></div>
       </div>
     </div>
     <div class="gem-pill" title="Gems"><div class="gem" id="hudGem">💎</div><span id="gems">0</span></div>
@@ -1314,7 +1736,7 @@ let LOAD_X;
 let WH_X;
 let WH_W;
 let WH_DOOR_X;
-const MAX_SHAFTS = 11;
+const MAX_SHAFTS = 13;
 // Level cap for every mineshaft.
 const SHAFT_MAX_LEVEL = 100;
 function shaftMaxLevel() { return SHAFT_MAX_LEVEL; }
@@ -1413,6 +1835,7 @@ const ORES_COAL = [
   { name: 'Topaz',    c: '#ff9b21', g: '#ffd28a', d: '#8a4700' },
   { name: 'Voidstone',c: '#5b2bd1', g: '#c38bff', d: '#1f0a52' },
   { name: 'Diamond',  c: '#a8f4ff', g: '#ffffff', d: '#3b9fb5' },
+  { name: 'Cosmic Opal', c: '#c9a8ff', g: '#fff4ff', d: '#5a3aa8' },
 ];
 const ORES_EMERALD = [
   { name: 'Quartz',        c: '#e6e1f2', g: '#ffffff', d: '#8e86a8' },
@@ -1426,6 +1849,8 @@ const ORES_EMERALD = [
   { name: 'Tsavorite',     c: '#1fbf4a', g: '#9aff9a', d: '#0a5a20' },
   { name: 'Emerald',       c: '#10b060', g: '#8affc0', d: '#044a24' },
   { name: 'Green Diamond', c: '#8dffbf', g: '#ffffff', d: '#2e9e66' },
+  { name: 'Hiddenite',     c: '#c4f5a0', g: '#f4ffe8', d: '#4a7a3a' },
+  { name: 'Verdant Star',  c: '#3cffa0', g: '#eafff4', d: '#067a42' },
 ];
 const THEMES = {
   coal: {
@@ -1440,6 +1865,17 @@ const THEMES = {
   },
 };
 const MINE_ORDER = ['coal', 'emerald'];
+// Every Emerald shaft at max level adds +10% to everything the Coal Mine earns.
+const EMERALD_BOOST_PER_SHAFT = 0.1;
+function emeraldShafts() {
+  if (S.activeMine === 'emerald') return S.shafts;
+  const d = S.mineData && S.mineData.emerald;
+  return d && Array.isArray(d.shafts) ? d.shafts : [];
+}
+function emeraldMaxed() { return emeraldShafts().filter((s) => s.level >= shaftMaxLevel()).length; }
+function coalBoost() { return 1 + EMERALD_BOOST_PER_SHAFT * emeraldMaxed(); }
+function mineBonus() { return THEME.id === 'coal' ? coalBoost() : 1; }
+const pct = (m) => Math.round((m - 1) * 100);
 let ORES = ORES_COAL;
 let THEME = THEMES.coal;
 function applyTheme(id) {
@@ -1562,7 +1998,8 @@ const Shaft = {
   walk: (L) => (105 + Math.min(95, L * 0.9)) * (1 + 0.08 * RS('boots')) * LAY.minerSpeed,
   mine: (L) => Math.max(0.7, 2.0 - L * 0.008),
   cost: (i, L) => 12 * Math.pow(10.5, i) * Math.pow(1.13, L - 1),
-  unlock: (i) => 220 * Math.pow(19, i - 1),
+  // Shafts 12 and 13 grow ×12 instead of ×19 so the deepest veins stay within reach.
+  unlock: (i) => (i <= 10 ? 220 * Math.pow(19, i - 1) : 220 * Math.pow(19, 9) * Math.pow(12, i - 10)),
   managerCost: (i) => 55 * Math.pow(14, i),
 };
 const Elev = {
@@ -1616,7 +2053,7 @@ function idleRate() {
   if (!S.elevator.manager || !S.warehouse.manager) return 0;
   let p = 0;
   S.shafts.forEach((s, i) => { if (s.manager) p += shaftRate(i); });
-  return Math.min(p, elevRate(), wareRate()) * areaCash('warehouse', 0) * rebirthMult() * THEME.mult;
+  return Math.min(p, elevRate(), wareRate()) * areaCash('warehouse', 0) * rebirthMult() * THEME.mult * mineBonus();
 }
 function managerCost(kind, i) {
   if (kind === 'shaft') return Shaft.managerCost(i);
@@ -1646,7 +2083,6 @@ const RARITIES = [
 ];
 const BUFFS = {
   cash:  { icon: '💰', name: 'Cash' },
-  speed: { icon: '⚡', name: 'Speed' },
 };
 const fmtMult = (v) => (v % 1 ? v.toFixed(1) : String(v));
 function getMgr(id) {
@@ -1659,11 +2095,11 @@ function areaMgr(kind, i) {
   if (kind === 'shaft') return S.shafts[i] ? getMgr(S.shafts[i].manager) : null;
   return getMgr(kind === 'elevator' ? S.elevator.manager : S.warehouse.manager);
 }
-function areaCash(kind, i) { const m = areaMgr(kind, i); return m && m.buff === 'cash' ? mgrMult(m) : 1; }
-function areaSpeed(kind, i) { const m = areaMgr(kind, i); return m && m.buff === 'speed' ? mgrMult(m) : 1; }
-function buffText(m) { return `${BUFFS[m.buff].icon} ×${fmtMult(mgrMult(m))} ${BUFFS[m.buff].name}`; }
+function areaCash(kind, i) { const m = areaMgr(kind, i); return m ? mgrMult(m) : 1; }
+// All managers are multipliers now; speed only comes from Overdrive and events.
+function areaSpeed() { return 1; }
+function buffText(m) { return `${BUFFS.cash.icon} ×${fmtMult(mgrMult(m))} ${BUFFS.cash.name}`; }
 function buffEffect(m, kind) {
-  if (m.buff === 'speed') return `Works ×${fmtMult(mgrMult(m))} faster`;
   if (kind === 'shaft') return `×${fmtMult(mgrMult(m))} ore per trip`;
   if (kind === 'elevator') return `×${fmtMult(mgrMult(m))} lift capacity`;
   if (kind === 'warehouse') return `×${fmtMult(mgrMult(m))} sale price`;
@@ -1714,7 +2150,9 @@ function areaLabel(kind, i) { return kind === 'shaft' ? `Mineshaft ${i + 1}` : k
 function areaIcon(kind) { return kind === 'shaft' ? '⛏️' : kind === 'elevator' ? '🛗' : '🏭'; }
 function migrateManagers(b, d) {
   if (!Array.isArray(b.managers)) b.managers = [];
-  b.managers = b.managers.filter((m) => m && typeof m.id === 'number' && RARITIES[m.r] && BUFFS[m.buff]);
+  // Old Speed managers keep their rarity and become multipliers.
+  b.managers.forEach((m) => { if (m && typeof m === 'object' && m.buff !== 'cash') m.buff = 'cash'; });
+  b.managers = b.managers.filter((m) => m && typeof m.id === 'number' && RARITIES[m.r] && BUFFS.cash);
   const a = d && d.assign && typeof d.assign === 'object' ? d.assign : {};
   b.assign = { elevator: a.elevator || null, warehouse: a.warehouse || null, shafts: Array.isArray(a.shafts) ? a.shafts.slice(0, MAX_SHAFTS) : [] };
   let maxId = b.managers.reduce((mx, m) => Math.max(mx, m.id), 0);
@@ -1722,7 +2160,7 @@ function migrateManagers(b, d) {
   if (d && !d.assign) {
     // Saves from before the lucky-box update: every hired manager becomes an Uncommon one.
     const legacy = (old) => {
-      const m = { id: b.nextMgrId++, seed: old.seed | 0, r: 1, buff: (old.seed | 0) % 2 ? 'cash' : 'speed' };
+      const m = { id: b.nextMgrId++, seed: old.seed | 0, r: 1, buff: 'cash' };
       b.managers.push(m);
       return m.id;
     };
@@ -1811,6 +2249,7 @@ function mergeState(d) {
 let S = defaultState();
 
 function save() {
+  if (R.loadFailed) return;
   S.lastSave = now();
   try {
     const copy = Object.assign({}, S);
@@ -2117,7 +2556,7 @@ function tapWarehouse() {
 }
 
 function earn(amount, wx, wy) {
-  const mult = (eventActive('rush') ? 2 : 1) * rebirthMult() * THEME.mult;
+  const mult = (eventActive('rush') ? 2 : 1) * rebirthMult() * THEME.mult * mineBonus();
   const v = amount * mult;
   S.cash += v;
   S.totalEarned += v;
@@ -2400,7 +2839,7 @@ function collectGeode() {
   const g = R.geode;
   if (!g) return;
   const gems = 1 + Math.floor(Math.random() * (2 + RS('luck') * 0.25));
-  const cash = Math.max(25, flowInfo().min * 30) * rebirthMult() * THEME.mult;
+  const cash = Math.max(25, flowInfo().min * 30) * rebirthMult() * THEME.mult * mineBonus();
   S.gems += gems;
   S.cash += cash;
   S.totalEarned += cash;
@@ -3099,7 +3538,7 @@ function drawHireSign(cx, cy) {
 function drawMgrBadge(x, y, m) {
   if (!m) return;
   const rar = RARITIES[m.r];
-  const label = `${BUFFS[m.buff].icon}×${fmtMult(mgrMult(m))}`;
+  const label = `${BUFFS.cash.icon}×${fmtMult(mgrMult(m))}`;
   ctx.font = `400 9px ${FONT_D}`;
   const w = ctx.measureText(label).width + 14;
   ctx.fillStyle = 'rgba(0,0,0,0.4)';
@@ -3156,6 +3595,19 @@ function drawWarehouse() {
   ctx.lineWidth = 2;
   ctx.stroke();
   txt('DEPOT', x + w / 2, 171.5, 14, '#ffd24d', 'center', FONT_D);
+  if (THEME.id === 'coal' && emeraldMaxed() > 0) {
+    const label = `💚 +${pct(coalBoost())}% cash`;
+    ctx.font = `400 10px ${FONT_D}`;
+    const bw = ctx.measureText(label).width + 16;
+    ctx.fillStyle = 'rgba(0,0,0,0.35)';
+    rr(x + w / 2 - bw / 2, 185.5, bw, 15, 7.5); ctx.fill();
+    ctx.fillStyle = '#1f9e5a';
+    rr(x + w / 2 - bw / 2, 184, bw, 15, 7.5); ctx.fill();
+    ctx.strokeStyle = '#8affc0';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    txt(label, x + w / 2, 192, 10, '#ffffff', 'center', FONT_D, 'rgba(0,0,0,0.35)', 2);
+  }
 
   const dx = WH_DOOR_X, dw = LAY.doorW, dt = 228, pw = LAY.panelW;
   const ig = ctx.createLinearGradient(0, dt, 0, base - 8);
@@ -4673,6 +5125,37 @@ function closeModal() {
   UI.actions = {};
 }
 modalRoot.addEventListener('pointerdown', (e) => { if (e.target === modalRoot && !UI.locked) closeModal(); });
+const LongPress = { timer: 0, el: null, x: 0, y: 0 };
+function lpCancel() {
+  clearTimeout(LongPress.timer);
+  if (LongPress.el) LongPress.el.classList.remove('holding');
+  LongPress.el = null;
+}
+modalEl.addEventListener('pointerdown', (e) => {
+  const t = e.target.closest('[data-lp]');
+  if (!t) return;
+  lpCancel();
+  LongPress.el = t;
+  LongPress.x = e.clientX;
+  LongPress.y = e.clientY;
+  t.classList.add('holding');
+  LongPress.timer = setTimeout(() => {
+    const id = +t.dataset.lp;
+    lpCancel();
+    UI.collManage = true;
+    UI.sel = new Set([id]);
+    UI.bulkArm = false;
+    UI.lpQuietUntil = performance.now() + 500;
+    Snd.tone(660, 0.08, 'triangle', 0.2);
+    buzz(30);
+    renderMgrBody();
+  }, 480);
+});
+modalEl.addEventListener('pointermove', (e) => {
+  if (LongPress.el && Math.hypot(e.clientX - LongPress.x, e.clientY - LongPress.y) > 10) lpCancel();
+});
+['pointerup', 'pointercancel', 'pointerleave'].forEach((ev) => modalEl.addEventListener(ev, lpCancel));
+modalEl.addEventListener('contextmenu', (e) => { if (e.target.closest('[data-lp]')) e.preventDefault(); });
 modalEl.addEventListener('click', (e) => {
   const b = e.target.closest('[data-act]');
   if (!b) return;
@@ -4824,7 +5307,7 @@ function openUpgrade(kind, i) {
         celebrateArea(kind, i);
       }
       if (def.maxLevel && def.obj.level >= def.maxLevel) {
-        toast(`🏆 ${def.title} reached its max level (${def.maxLevel})!`);
+        toast(`🏆 ${def.title} reached its max level (${def.maxLevel})!` + (kind === 'shaft' && THEME.id === 'emerald' ? ` Coal Mine now earns +${pct(coalBoost())}%.` : ''));
         celebrateArea(kind, i);
       }
       refresh();
@@ -4879,7 +5362,7 @@ function rollRarity(odds) {
   return odds.findIndex((o) => o > 0);
 }
 function createManager(r) {
-  const m = { id: S.nextMgrId++, seed: S.nextSeed, r, buff: Math.random() < 0.5 ? 'cash' : 'speed' };
+  const m = { id: S.nextMgrId++, seed: S.nextSeed, r, buff: 'cash' };
   S.nextSeed += 1 + Math.floor(Math.random() * 7);
   S.managers.push(m);
   return m;
@@ -4907,7 +5390,7 @@ function autoAssign() {
 function paintFaces() {
   modalEl.querySelectorAll('canvas.mg-face').forEach((c) => paintPortrait(c, +c.dataset.seed, c.dataset.col));
 }
-function mgrChip(m) { return `<span class="mt-chip">${BUFFS[m.buff].icon} ×${fmtMult(mgrMult(m))}</span>`; }
+function mgrChip(m) { return `<span class="mt-chip">${BUFFS.cash.icon} ×${fmtMult(mgrMult(m))}</span>`; }
 function mgrFace(m, size, cls) {
   const rar = RARITIES[m.r];
   return `<canvas class="mg-face ${cls || ''}" data-seed="${m.seed}" data-col="${rar.color}" width="${size}" height="${size}"></canvas>`;
@@ -4917,7 +5400,7 @@ function mgrTile(m, o) {
   o = o || {};
   const rar = RARITIES[m.r];
   const tag = o.act ? 'button' : 'div';
-  const attrs = o.act ? `data-act="${o.act}" data-id="${m.id}"` : '';
+  const attrs = (o.act ? `data-act="${o.act}" data-id="${m.id}"` : '') + (o.attrs ? ' ' + o.attrs : '');
   return `<${tag} class="mt r-${rar.id}${o.cls ? ' ' + o.cls : ''}" ${attrs}>
     ${o.flag ? `<span class="mt-flag">${o.flag}</span>` : ''}
     ${mgrFace(m, 128, 'mt-face')}
@@ -4949,7 +5432,7 @@ function slotHtml(a) {
     </button>`;
   } else {
     const best = bestFreeFor(a.kind);
-    const sub = best ? `Best free: ${managerFirst(best.seed)} · ${BUFFS[best.buff].icon} ×${fmtMult(mgrMult(best))}`
+    const sub = best ? `Best free: ${managerFirst(best.seed)} · ${BUFFS.cash.icon} ×${fmtMult(mgrMult(best))}`
       : S.managers.length ? 'No free managers right now' : 'Get one from a lucky box';
     inner = `<button class="sl-empty" ${attrs}><span class="sl-plus">+</span><span><b>Assign a manager</b><small>${sub}</small></span></button>`;
   }
@@ -4984,9 +5467,9 @@ function pickHtml() {
   // Only managers without a job are offered, so nobody gets pulled away from another spot by mistake.
   const free = sortedManagers().filter((m) => !assignedWhere(m.id));
   const tiles = free.map((m) => mgrTile(m, { act: 'choose', eff: buffEffect(m, kind) })).join('');
-  const hint = kind === 'warehouse' ? 'A 💰 Cash manager here multiplies every sale.'
-    : kind === 'elevator' ? '💰 Cash gives bigger loads, ⚡ Speed gives faster trips.'
-    : '💰 Cash gives more ore per trip, ⚡ Speed makes miners faster.';
+  const hint = kind === 'warehouse' ? 'The multiplier here boosts every sale.'
+    : kind === 'elevator' ? 'The multiplier here makes every lift load bigger.'
+    : 'The multiplier here gives more ore per trip.';
   const current = cur ? `<div class="pk-cur">
       <span class="pk-cur-lbl">Current</span>
       <div class="pk-cur-row r-${RARITIES[cur.r].id}">
@@ -5012,7 +5495,7 @@ function boxesHtml() {
       <div class="bx-ic">${b.icon}</div><b>${b.name}</b>
       <div class="bx-odds">${odds}</div>
       <div class="bx-list">${list}</div>
-      <button class="bx-buy ${b.cur}" data-act="buy" data-box="${b.id}" id="bxb_${b.id}">${boxPrice(b)}</button>
+      <div class="bx-buys">${BUY_COUNTS.map((n) => `<button class="bx-buy ${b.cur}" data-act="buy" data-box="${b.id}" data-n="${n}" id="bxb_${b.id}_${n}" aria-label="Buy ${n} for ${boxPriceN(b, n)}">×${n}<small>${boxPriceN(b, n)}</small></button>`).join('')}</div>
     </div>`;
   }).join('');
   return `<p class="m-muted" style="margin:0 0 10px">Every box holds one random manager. Pricier boxes give better odds. Rarer managers have much stronger buffs.</p>
@@ -5046,23 +5529,53 @@ function collectionHtml() {
   if (!S.managers.length) return emptyBoxesCta();
   const free = sortedManagers().filter((m) => !assignedWhere(m.id));
   if (!free.length) {
+    UI.collManage = false;
     return `<div class="mg-empty"><div class="mg-empty-ic">🏢</div><b>Everyone is working</b>
       <span>All ${S.managers.length} of your managers have a job. Managers you aren't using show up here, and you can sell them.</span>
       <button class="big-btn purple" data-act="tab" data-tab="boxes"><span>Open more boxes</span><span>🎁</span></button></div>`;
   }
-  const counts = RARITIES.map((r, k) => {
-    const n = free.filter((m) => m.r === k).length;
-    return n ? `<span class="r-${r.id}">${n} ${r.name}</span>` : '';
-  }).join('');
+  if (!UI.sel) UI.sel = new Set();
+  for (const id of [...UI.sel]) if (!free.some((m) => m.id === id)) UI.sel.delete(id);
+  const manage = !!UI.collManage;
+  const headRow = `<div class="coll-head">
+      <p class="m-muted">${manage ? 'Tap a rarity to select all of it, or tap managers one by one.' : 'Hold a manager, or tap Manage, to select and sell.'}</p>
+      <button class="mg-manage${manage ? ' on' : ''}" data-act="manage">${manage ? 'Done' : '☑️ Manage'}</button>
+    </div>`;
+  let top;
+  if (manage) {
+    const chips = RARITIES.map((r, k) => {
+      const ofR = free.filter((m) => m.r === k);
+      if (!ofR.length) return '';
+      const all = ofR.every((m) => UI.sel.has(m.id));
+      return `<button class="sel-chip r-${r.id}${all ? ' on' : ''}" data-act="selr" data-r="${k}">${all ? '✓ ' : ''}${r.name} · ${ofR.length}</button>`;
+    }).join('');
+    top = `<div class="sel-chips">${chips}<button class="sel-chip clear" data-act="selnone" ${UI.sel.size ? '' : 'disabled'}>Clear</button></div>`;
+  } else {
+    const counts = RARITIES.map((r, k) => {
+      const n = free.filter((m) => m.r === k).length;
+      return n ? `<span class="r-${r.id}">${n} ${r.name}</span>` : '';
+    }).join('');
+    top = `<div class="bx-legend" style="margin:0 0 12px;justify-content:flex-start">${counts}</div>`;
+  }
   const tiles = free.map((m) => {
+    if (manage) return mgrTile(m, { act: 'selt', cls: UI.sel.has(m.id) ? 'sel-on' : 'sel-off' });
+    return mgrTile(m, { cls: 'lp', attrs: `data-lp="${m.id}"` });
     const rar = RARITIES[m.r];
     const armed = UI.retireArm === m.id;
-    const btn = `<button class="mt-sell${armed ? ' armed' : ''}" data-act="sell" data-id="${m.id}">${armed ? 'Tap to confirm' : 'Sell $' + fmt(rar.sell)}</button>`;
+    const btn = `<button class="mt-sell${armed ? ' armed' : ''}" data-act="sell" data-id="${m.id}">${armed ? '<span class="ms-l">Tap to</span><span class="ms-p">confirm</span>' : `<span class="ms-l">Sell</span><span class="ms-p">$${fmt(rar.sell)}</span>`}</button>`;
     return mgrTile(m, { btn });
   }).join('');
-  return `<p class="m-muted" style="margin:0 0 8px">Managers without a job. Sell the ones you don't need.</p>
-    <div class="bx-legend" style="margin:0 0 12px;justify-content:flex-start">${counts}</div>
-    <div class="mt-grid">${tiles}</div>`;
+  let bar = '';
+  if (manage) {
+    const picked = free.filter((m) => UI.sel.has(m.id));
+    const total = picked.reduce((a, m) => a + RARITIES[m.r].sell, 0);
+    bar = `<div class="sel-bar">
+      <button class="big-btn sell${UI.bulkArm ? ' red' : ''}" data-act="sellsel" ${picked.length ? '' : 'disabled'}>
+        <span>${UI.bulkArm ? 'Tap again to sell' : picked.length ? `Sell ${picked.length} selected` : 'Select managers to sell'}</span>
+        <span class="bb-c">$${fmt(total)}</span>
+      </button></div>`;
+  }
+  return `${headRow}${top}<div class="mt-grid coll-grid">${tiles}</div>${bar}`;
 }
 function areaViewHtml() {
   const { kind, i } = UI.pickFor;
@@ -5104,8 +5617,10 @@ function renderMgrBody() {
 }
 function mgrRefresh() {
   for (const b of BOXES) {
-    const btn = document.getElementById('bxb_' + b.id);
-    if (btn) btn.disabled = !canBuyBox(b);
+    for (const n of BUY_COUNTS) {
+      const btn = document.getElementById(`bxb_${b.id}_${n}`);
+      if (btn) btn.disabled = !canBuyBoxN(b, n);
+    }
   }
   const again = document.getElementById('rvAgain');
   if (again && UI.reveal) again.disabled = !canBuyBox(UI.reveal.box);
@@ -5119,36 +5634,259 @@ function mgrRefresh() {
     else { st.className = 'status'; st.textContent = 'Overdrive ready'; btn.disabled = false; }
   }
 }
-function buyBox(id) {
+/* ---------- lucky box opening show ---------- */
+const BUY_COUNTS = [1, 5, 10];
+const canBuyBoxN = (b, n) => (b.cur === 'gems' ? S.gems : S.cash) >= b.price * n;
+const boxPriceN = (b, n) => (b.cur === 'gems' ? `💎 ${fmt(b.price * n)}` : '$' + fmt(b.price * n));
+const BoxFx = { el: null, timers: [], state: null };
+function fxEl() {
+  if (!BoxFx.el) {
+    const d = document.createElement('div');
+    d.id = 'boxFx';
+    d.className = 'bfx hidden';
+    d.setAttribute('role', 'dialog');
+    d.setAttribute('aria-label', 'Opening lucky box');
+    document.body.appendChild(d);
+    d.addEventListener('click', onFxClick);
+    BoxFx.el = d;
+  }
+  return BoxFx.el;
+}
+function fxLater(ms, fn) { BoxFx.timers.push(setTimeout(fn, ms)); }
+function clearFxTimers() { BoxFx.timers.forEach(clearTimeout); BoxFx.timers = []; }
+function playBoxFx(box, got) {
+  const el = fxEl();
+  clearFxTimers();
+  const best = got.reduce((a, m) => Math.max(a, m.r), 0);
+  BoxFx.state = { box, got, best, phase: 'drop' };
+  el.style.setProperty('--glow', RARITIES[best].color);
+  const sparks = Array.from({ length: 18 }, (_, k) => {
+    const a = (k / 18) * 360, d = 120 + (k % 3) * 60;
+    return `<i style="--a:${a}deg;--d:${d}px;--t:${0.5 + (k % 4) * 0.08}s"></i>`;
+  }).join('');
+  el.innerHTML = `
+    <div class="bfx-bg"></div>
+    <div class="bfx-rays"></div>
+    <div class="bfx-stage">
+      <div class="bfx-box bx-${box.id}">
+        <div class="bfx-glow"></div>
+        <div class="bfx-body"><span>${box.icon}</span></div>
+        <div class="bfx-lid"></div>
+      </div>
+      <div class="bfx-name">${box.name}${got.length > 1 ? ` <b>×${got.length}</b>` : ''}</div>
+    </div>
+    <div class="bfx-burst"></div>
+    <div class="bfx-sparks">${sparks}</div>
+    <div class="bfx-results"></div>
+    <div class="bfx-spot"></div>
+`;
+  el.className = 'bfx phase-drop';
+  document.body.classList.add('fx-on');
+  Snd.tone(220, 0.35, 'triangle', 0.25, 110);
+  fxLater(620, () => {
+    if (!BoxFx.state) return;
+    BoxFx.state.phase = 'shake';
+    el.classList.add('phase-shake');
+    Snd.tone(140, 0.12, 'square', 0.18);
+    buzz(20);
+    for (let k = 0; k < 7; k++) fxLater(k * 135, () => Snd.tone(260 + k * 70, 0.05, 'square', 0.1 + k * 0.015));
+  });
+  fxLater(1650, fxOpen);
+}
+function fxOpen() {
+  const st = BoxFx.state;
+  if (!st || st.phase === 'open' || st.phase === 'results') return;
+  st.phase = 'open';
+  BoxFx.el.classList.add('phase-shake', 'phase-open');
+  Snd.tone(700, 0.3, 'sine', 0.3, 2100);
+  Snd.tone(1400, 0.4, 'triangle', 0.15, null, 0.05);
+  buzz(st.best >= 4 ? 80 : 40);
+  if (st.best >= 3) R.shake = st.best >= 4 ? 0.5 : 0.3;
+  fxLater(700, fxResults);
+}
+function fxResults() {
+  const st = BoxFx.state;
+  if (!st || st.phase === 'results') return;
+  clearFxTimers();
+  st.phase = 'results';
+  const el = BoxFx.el;
+  el.classList.add('phase-open', 'phase-results');
+  const multi = st.got.length > 1;
+  // Worst first, best last: the reveal builds up to the top pull.
+  const order = multi ? [...st.got].sort((a, b) => a.r - b.r || a.id - b.id) : st.got;
+  st.order = order;
+  st.shown = 0;
+  const cards = order.map((m, k) => `<div class="bfx-card wait r-${RARITIES[m.r].id}" data-k="${k}">
+      <span class="bfx-flash"></span><span class="bfx-ring"></span><span class="bfx-ring two"></span>
+      ${mgrTile(m, { eff: buffEffect(m) })}
+    </div>`).join('');
+  const empty = firstEmptyArea();
+  const n = st.got.length;
+  const resBox = el.querySelector('.bfx-results');
+  if (!resBox) return;
+  resBox.innerHTML = `
+    <div class="bfx-title" id="fxTitle">${multi ? `0 / ${n}` : ''}</div>
+    <div class="bfx-counts later" id="fxCounts"></div>
+    <div class="bfx-grid ${multi ? 'multi' : 'single'}">${cards}</div>
+    <div class="bfx-actions later">
+      ${!multi && empty ? `<button class="big-btn purple" data-fx="assign"><span>Put at ${areaLabel(empty.kind, empty.i)}</span><span>🤝</span></button>` : ''}
+      ${multi && empty ? `<button class="big-btn purple" data-fx="auto"><span>Auto-assign best</span><span>✨</span></button>` : ''}
+      <button class="big-btn" data-fx="again" ${canBuyBoxN(st.box, n) ? '' : 'disabled'}><span>Open ${n} more</span><span class="bb-c">${boxPriceN(st.box, n)}</span></button>
+      <button class="mg-sec" data-fx="done">Done</button>
+    </div>`;
+  el.querySelectorAll('canvas.mg-face').forEach((c) => paintPortrait(c, +c.dataset.seed, c.dataset.col));
+  st.revealing = true;
+  fxLater(multi ? 250 : 120, fxRevealNext);
+}
+const REVEAL_NOTES = [392, 494, 587, 698, 880, 1046];
+function fxRevealCard(k, quiet) {
+  const st = BoxFx.state;
+  const card = BoxFx.el.querySelector(`.bfx-card[data-k="${k}"]`);
+  if (!st || !card || !card.classList.contains('wait')) return;
+  const m = st.order[k];
+  card.classList.remove('wait');
+  card.classList.add('in');
+  st.shown = Math.max(st.shown, k + 1);
+  const title = document.getElementById('fxTitle');
+  if (title && st.order.length > 1) title.textContent = `${st.shown} / ${st.order.length}`;
+  if (!quiet) {
+    Snd.tone(REVEAL_NOTES[m.r], 0.16, 'triangle', 0.22);
+    if (m.r >= 2) Snd.tone(REVEAL_NOTES[m.r] * 1.5, 0.22, 'sine', 0.16, null, 0.06);
+    if (m.r >= 4) Snd.tone(REVEAL_NOTES[m.r] * 2, 0.5, 'sine', 0.18, null, 0.14);
+    buzz(m.r >= 4 ? 45 : m.r >= 2 ? 18 : 8);
+    if (m.r >= 3) R.shake = m.r >= 4 ? 0.35 : 0.2;
+  }
+}
+// Every pulled manager gets a big spotlight popup, then flies into its slot in the grid.
+const SPOT_HOLD = [520, 600, 800, 1050, 1450, 1850];
+function fxSpotlight(k) {
+  const st = BoxFx.state;
+  if (!st) return;
+  const m = st.order[k];
+  const rar = RARITIES[m.r];
+  const spot = BoxFx.el.querySelector('.bfx-spot');
+  const res = BoxFx.el.querySelector('.bfx-results');
+  if (!spot) { fxRevealCard(k, false); fxLater(300, fxRevealNext); return; }
+  if (res) res.classList.add('spotting');
+  spot.removeAttribute('style');
+  spot.className = 'bfx-spot';
+  void spot.offsetWidth;
+  spot.className = `bfx-spot show r-${rar.id}`;
+  spot.innerHTML = `<span class="bfx-flash"></span><span class="bfx-ring"></span><span class="bfx-ring two"></span>
+    <div class="bfx-spot-rar">${rar.name}!</div>
+    ${mgrTile(m, { eff: buffEffect(m) })}`;
+  spot.querySelectorAll('canvas.mg-face').forEach((c) => paintPortrait(c, +c.dataset.seed, c.dataset.col));
+  Snd.tone(REVEAL_NOTES[m.r], 0.18, 'triangle', 0.24);
+  if (m.r >= 2) Snd.tone(REVEAL_NOTES[m.r] * 1.5, 0.24, 'sine', 0.17, null, 0.07);
+  if (m.r >= 4) { Snd.tone(REVEAL_NOTES[m.r] * 2, 0.6, 'sine', 0.2, null, 0.16); Snd.tone(REVEAL_NOTES[m.r] * 3, 0.5, 'sine', 0.1, null, 0.3); }
+  buzz(m.r >= 4 ? 60 : m.r >= 2 ? 22 : 8);
+  if (m.r >= 3) R.shake = m.r >= 4 ? 0.4 : 0.22;
+  fxLater(SPOT_HOLD[m.r], () => {
+    const card = BoxFx.el.querySelector(`.bfx-card[data-k="${k}"]`);
+    if (!card) { fxRevealCard(k, true); fxRevealNext(); return; }
+    const cr = card.getBoundingClientRect(), sr = spot.getBoundingClientRect();
+    const dx = cr.left + cr.width / 2 - (sr.left + sr.width / 2);
+    const dy = cr.top + cr.height / 2 - (sr.top + sr.height / 2);
+    const sc = Math.max(0.2, cr.width / Math.max(1, sr.width));
+    spot.style.transition = 'transform .34s cubic-bezier(.55, 0, .75, .45), opacity .34s ease-in';
+    spot.style.transform = `translate(-50%, -50%) translate(${dx}px, ${dy}px) scale(${sc}) rotate(8deg)`;
+    spot.style.opacity = '0.15';
+    fxLater(320, () => {
+      spot.className = 'bfx-spot';
+      spot.removeAttribute('style');
+      if (res) res.classList.remove('spotting');
+      fxRevealCard(k, true);
+      Snd.tone(260 + m.r * 40, 0.06, 'triangle', 0.14);
+      fxLater(90, fxRevealNext);
+    });
+  });
+}
+function fxRevealNext() {
+  const st = BoxFx.state;
+  if (!st || !st.revealing) return;
+  const k = st.shown;
+  if (k >= st.order.length) { fxRevealDone(); return; }
+  if (st.order.length === 1) { fxRevealCard(0, false); fxLater(650, fxRevealNext); return; }
+  fxSpotlight(k);
+}
+function fxRevealDone() {
+  const st = BoxFx.state;
+  if (!st) return;
+  clearFxTimers();
+  for (let k = 0; k < st.order.length; k++) fxRevealCard(k, true);
+  st.revealing = false;
+  const spot = BoxFx.el.querySelector('.bfx-spot');
+  if (spot) { spot.className = 'bfx-spot'; spot.removeAttribute('style'); spot.innerHTML = ''; }
+  const multi = st.order.length > 1;
+  const title = document.getElementById('fxTitle');
+  if (title) {
+    title.textContent = multi ? `${st.order.length} new managers!` : `${RARITIES[st.best].name}!`;
+    title.classList.remove('bump-in');
+    void title.offsetWidth;
+    title.classList.add('bump-in');
+  }
+  const counts = document.getElementById('fxCounts');
+  if (counts && multi) {
+    counts.innerHTML = RARITIES.map((r, k) => {
+      const c = st.got.filter((m) => m.r === k).length;
+      return c ? `<span class="r-${r.id}">${c} ${r.name}</span>` : '';
+    }).join('');
+  }
+  const res = BoxFx.el.querySelector('.bfx-results');
+  if (res) { res.classList.remove('spotting'); res.classList.add('done'); }
+  Snd.reveal(st.best);
+  if (st.best >= 3) spawnConfetti(WORLD_W / 2, R.camY + (VH / SCALE) * 0.3, 40 + st.best * 15);
+  if (st.best >= 4) {
+    const top = [...st.order].sort((a, b) => b.r - a.r)[0];
+    toast(`${st.best === 5 ? '🌟' : '⭐'} ${RARITIES[st.best].name} manager: ${managerName(top.seed)}!`);
+  }
+}
+function closeFx() {
+  clearFxTimers();
+  if (BoxFx.el) { BoxFx.el.className = 'bfx hidden'; BoxFx.el.innerHTML = ''; }
+  document.body.classList.remove('fx-on');
+  BoxFx.state = null;
+  renderMgrBody();
+}
+function onFxClick(e) {
+  const st = BoxFx.state;
+  if (!st) return;
+  const b = e.target.closest('[data-fx]');
+  // The opening can't be skipped: every manager gets its moment.
+  if (!b) return;
+  if (b.disabled) return;
+  const a = b.dataset.fx;
+  if (a === 'done') closeFx();
+  else if (a === 'again') { const box = st.box, n = st.got.length; closeFx(); buyBox(box.id, n); }
+  else if (a === 'assign') {
+    const empty = firstEmptyArea();
+    if (empty) assignTo(empty.kind, empty.i, st.got[0].id);
+    UI.mgrTab = 'assign';
+    closeFx();
+  } else if (a === 'auto') {
+    autoAssign();
+    Snd.upgrade();
+    toast('✨ Your best managers are now in the best spots');
+    UI.mgrTab = 'assign';
+    closeFx();
+  }
+}
+function buyBox(id, n) {
+  n = n || 1;
   const b = BOXES.find((x) => x.id === id);
   if (!b) return;
-  if (!canBuyBox(b)) {
+  if (!canBuyBoxN(b, n)) {
     Snd.deny();
-    toast(b.cur === 'gems' ? `You need ${b.price - S.gems} more gems` : `You need $${fmt(b.price - S.cash)} more`);
+    const have = b.cur === 'gems' ? S.gems : S.cash;
+    toast(b.cur === 'gems' ? `You need ${fmt(b.price * n - have)} more gems` : `You need $${fmt(b.price * n - have)} more`);
     return;
   }
-  if (b.cur === 'gems') S.gems -= b.price; else S.cash -= b.price;
-  const m = createManager(rollRarity(b.odds));
-  S.boxesOpened = (S.boxesOpened || 0) + 1;
-  UI.reveal = { m, box: b };
-  UI.revealShown = false;
-  UI.mgrTab = 'reveal';
-  renderMgrBody();
-  Snd.click();
-  buzz(15);
+  if (b.cur === 'gems') S.gems -= b.price * n; else S.cash -= b.price * n;
+  const got = [];
+  for (let k = 0; k < n; k++) got.push(createManager(rollRarity(b.odds)));
+  S.boxesOpened = (S.boxesOpened || 0) + n;
   save();
-  setTimeout(() => {
-    if (UI.mgrTab !== 'reveal' || !UI.reveal || UI.reveal.m !== m || !$('#mgBody')) return;
-    UI.revealShown = true;
-    renderMgrBody();
-    Snd.reveal(m.r);
-    buzz(m.r >= 4 ? 70 : m.r >= 2 ? 30 : 12);
-    if (m.r >= 3) {
-      R.shake = m.r >= 4 ? 0.5 : 0.3;
-      spawnConfetti(WORLD_W / 2, R.camY + (VH / SCALE) * 0.35, 30 + m.r * 15);
-    }
-    if (m.r >= 4) toast(`${m.r === 5 ? '🌟' : '⭐'} ${RARITIES[m.r].name} manager: ${managerName(m.seed)}!`);
-  }, 950);
+  playBoxFx(b, got);
 }
 function assignTo(kind, i, id) {
   const m = getMgr(id);
@@ -5160,7 +5898,46 @@ function assignTo(kind, i, id) {
   save();
 }
 const mgrActions = {
-  tab: (b) => { UI.mgrTab = b.dataset.tab; UI.retireArm = null; renderMgrBody(); },
+  tab: (b) => { UI.mgrTab = b.dataset.tab; UI.retireArm = null; UI.collManage = false; UI.bulkArm = false; renderMgrBody(); },
+  manage: () => { UI.collManage = !UI.collManage; UI.sel = new Set(); UI.bulkArm = false; Snd.click(); renderMgrBody(); },
+  selt: (b) => {
+    if (performance.now() < (UI.lpQuietUntil || 0)) return;
+    const id = +b.dataset.id;
+    if (!UI.sel) UI.sel = new Set();
+    if (UI.sel.has(id)) UI.sel.delete(id); else UI.sel.add(id);
+    UI.bulkArm = false;
+    Snd.tone(UI.sel.has(id) ? 660 : 440, 0.05, 'triangle', 0.15);
+    renderMgrBody();
+  },
+  selr: (b) => {
+    const r = +b.dataset.r;
+    if (!UI.sel) UI.sel = new Set();
+    const ofR = S.managers.filter((m) => m.r === r && !assignedWhere(m.id));
+    const all = ofR.every((m) => UI.sel.has(m.id));
+    for (const m of ofR) { if (all) UI.sel.delete(m.id); else UI.sel.add(m.id); }
+    UI.bulkArm = false;
+    Snd.click();
+    renderMgrBody();
+  },
+  selnone: () => { UI.sel = new Set(); UI.bulkArm = false; renderMgrBody(); },
+  sellsel: () => {
+    const picked = S.managers.filter((m) => UI.sel && UI.sel.has(m.id) && !assignedWhere(m.id));
+    if (!picked.length) return;
+    if (picked.some((m) => m.r >= 2) && !UI.bulkArm) { UI.bulkArm = true; Snd.deny(); renderMgrBody(); return; }
+    const total = picked.reduce((a, m) => a + RARITIES[m.r].sell, 0);
+    const ids = new Set(picked.map((m) => m.id));
+    S.managers = S.managers.filter((m) => !ids.has(m.id));
+    S.cash += total;
+    S.totalEarned += total;
+    UI.sel = new Set();
+    UI.bulkArm = false;
+    Snd.coin();
+    Snd.tone(1320, 0.2, 'triangle', 0.18, null, 0.08);
+    buzz(25);
+    toast(`💰 Sold ${picked.length} manager${picked.length > 1 ? 's' : ''} for $${fmt(total)}`);
+    save();
+    renderMgrBody();
+  },
   pick: (b) => {
     UI.pickFor = { kind: b.dataset.kind, i: +b.dataset.i };
     UI.pickBack = UI.mgrTab === 'area' ? 'area' : 'assign';
@@ -5194,7 +5971,7 @@ const mgrActions = {
     toast('✨ Your best managers are now in the best spots');
     renderMgrBody();
   },
-  buy: (b) => buyBox(b.dataset.box),
+  buy: (b) => buyBox(b.dataset.box, +b.dataset.n || 1),
   quick: () => {
     const empty = firstEmptyArea();
     if (!empty || !UI.reveal) return;
@@ -5314,11 +6091,15 @@ function openResearch() {
       const l = RS(r.id);
       let pips = '';
       for (let k = 0; k < RESEARCH_MAX; k++) pips += `<i class="${k < l ? 'on' : ''}"></i>`;
+      const maxed = l >= RESEARCH_MAX;
+      const card = $('#rb_' + r.id).closest('.rs-card');
+      if (card) card.classList.toggle('maxed', maxed);
       const pe = $('#rp_' + r.id);
       if (pe.innerHTML !== pips) pe.innerHTML = pips;
       $('#re_' + r.id).textContent = l >= RESEARCH_MAX ? r.eff(l) + ' (max)' : l === 0 ? 'Next: ' + r.eff(1) : r.eff(l) + ' → ' + r.eff(l + 1);
       const btn = $('#rb_' + r.id);
-      if (l >= RESEARCH_MAX) { btn.textContent = 'Max'; btn.disabled = true; }
+      btn.classList.toggle('max', maxed);
+      if (maxed) { btn.textContent = '★ Max'; btn.disabled = true; }
       else {
         const c = researchCost(r, l);
         btn.textContent = `💎 ${c}`;
@@ -5385,7 +6166,14 @@ function focusEvent() {
 
 /* ---------- rebirth ---------- */
 function canRebirth() { return S.rebirths < MAX_REBIRTHS && S.cash >= REBIRTH_REQ[S.rebirths]; }
+function updateBoostTag() {
+  const tag = $('#emTag');
+  const on = THEME.id === 'coal' && emeraldMaxed() > 0;
+  const want = on ? `💚 +${pct(coalBoost())}%` : '';
+  if (tag.textContent !== want) { tag.textContent = want; tag.classList.toggle('hidden', !on); }
+}
 function updateRebirthHud() {
+  updateBoostTag();
   const ready = canRebirth();
   const btn = $('#btnRebirth');
   if (btn.classList.contains('ready') !== ready) btn.classList.toggle('ready', ready);
@@ -5442,6 +6230,7 @@ function openRebirth() {
 }
 function doRebirth() {
   if (!canRebirth()) return;
+  makeBackup('rebirth');
   const old = S;
   S = defaultState();
   S.rebirths = old.rebirths + 1;
@@ -5714,7 +6503,7 @@ function mineCardHtml(id) {
   let stats, btn;
   if (here) {
     stats = `<span>${shafts} / ${MAX_SHAFTS} shafts · idle $${fmt(idleRate())}/s</span>`;
-    btn = `<span class="mine-here">📍 You are here</span>`;
+    btn = '';
   } else if (open) {
     const pend = minePending(id);
     stats = `<span>${shafts} / ${MAX_SHAFTS} shafts · idle $${fmt(mineIdleRate(id))}/s</span>` + (pend > 1 ? `<span class="mine-pend">+$${fmt(pend)} waiting</span>` : '');
@@ -5723,12 +6512,16 @@ function mineCardHtml(id) {
     stats = `<span>Starts with $${fmt(th.startCash)} and its own shafts</span>`;
     btn = `<button class="mine-unlock" data-act="unlock" data-m="${id}" id="unl_${id}">🔓 $${fmt(th.unlock)}</button>`;
   }
+  const maxed = emeraldMaxed();
+  const boostLine = id === 'coal'
+    ? `<span class="mine-boost">💚 Emerald boost: <b>+${pct(coalBoost())}% cash</b>${maxed ? '' : ' · max an Emerald shaft to start'}</span>`
+    : `<span class="mine-boost">💚 Each maxed shaft here: <b>+10% cash</b> in the Coal Mine · ${maxed} / ${MAX_SHAFTS} maxed</span>`;
   return `<div class="mine-card mine-${id}${here ? ' here' : ''}${open ? '' : ' locked'}">
     <div class="mine-art"><span>${th.gem}</span></div>
     <div class="mine-body">
       <b>${th.name}${th.mult > 1 ? ` <em>×${th.mult} value</em>` : ''}</b>
-      <span class="mine-desc">${th.desc}</span>
       ${stats}
+      ${boostLine}
     </div>
     ${btn}
   </div>`;
@@ -5742,11 +6535,11 @@ function renderMap() {
         <path d="M70 118 C 150 30, 240 160, 330 64" />
       </svg>
       <span class="map-deco d1">🌲</span><span class="map-deco d2">⛰️</span><span class="map-deco d3">🌲</span><span class="map-deco d4">🌊</span>
+      <span class="map-boost">💚 Coal Mine boost <b>+${pct(coalBoost())}%</b></span>
       ${mapPinHtml('coal', 17.5, 69)}
       ${mapPinHtml('emerald', 82.5, 38)}
     </div>
-    <div class="map-list">${MINE_ORDER.map(mineCardHtml).join('')}</div>
-    <p class="m-muted" style="margin:10px 0 0;text-align:center">Each mine has its own cash, shafts and upgrades. Gems, research, managers and rebirths are shared. Mines you leave keep earning at their idle rate.</p>`;
+    <div class="map-list">${MINE_ORDER.map(mineCardHtml).join('')}</div>`;
   mapRefresh();
 }
 function mapRefresh() {
@@ -5768,6 +6561,57 @@ function updateMapHud() {
   if (lbl && lbl.textContent !== THEME.name) lbl.textContent = THEME.name;
 }
 
+
+/* ---------- save backups ---------- */
+const BACKUP_KEY = SAVE_KEY + '-backups';
+const BACKUP_KEEP = 5;
+function readBackups() {
+  try {
+    const a = JSON.parse(localStorage.getItem(BACKUP_KEY) || '[]');
+    return Array.isArray(a) ? a.filter((b) => b && b.data && typeof b.at === 'number') : [];
+  } catch (e) { return []; }
+}
+function backupSummary(st) {
+  const coal = st.activeMine === 'coal' ? st.shafts : st.mineData && st.mineData.coal ? st.mineData.coal.shafts : [];
+  const emer = st.activeMine === 'emerald' ? st.shafts : st.mineData && st.mineData.emerald ? st.mineData.emerald.shafts : null;
+  return {
+    mine: (THEMES[st.activeMine] || THEMES.coal).name,
+    coal: (coal || []).length,
+    emerald: emer ? emer.length : 0,
+    cash: st.cash,
+    managers: (st.managers || []).length,
+    rebirths: st.rebirths || 0,
+  };
+}
+function makeBackup(reason) {
+  if (R.loadFailed) return;
+  try {
+    const copy = JSON.parse(JSON.stringify(S));
+    const list = readBackups();
+    const top = list[0];
+    // Skip identical auto backups taken close together.
+    if (reason === 'auto' && top && now() - top.at < 60000) return;
+    list.unshift({ at: now(), reason, summary: backupSummary(copy), data: copy });
+    localStorage.setItem(BACKUP_KEY, JSON.stringify(list.slice(0, BACKUP_KEEP)));
+  } catch (e) { /* storage full or unavailable */ }
+}
+function restoreBackup(i) {
+  const b = readBackups()[i];
+  if (!b) return;
+  R.loadFailed = false;
+  S = mergeState(b.data);
+  applyTheme(S.activeMine);
+  resetRuntime();
+  syncEntities(false);
+  R.dispCash = S.cash;
+  save();
+  closeModal();
+  R.flash = 0.8;
+  Snd.buy();
+  toast(`🛟 Backup restored: ${b.summary.mine}, ${b.summary.coal} Coal shafts, $${fmt(b.summary.cash)}`);
+}
+const BACKUP_REASON = { load: 'On load', auto: 'Auto', rebirth: 'Before rebirth', reset: 'Before reset', travel: 'Before travel' };
+
 /* ---------- stats, settings, offline ---------- */
 function openStats() {
   const html = head('t-stats', '📊', 'Mine report', 'Where your money comes from') + `
@@ -5783,6 +6627,7 @@ function openStats() {
     const ir = idleRate();
     $('#sKv').innerHTML = [
       ['Mine', `${THEME.name}${THEME.mult > 1 ? ' (×' + THEME.mult + ' value)' : ''}`],
+      ['Emerald boost', THEME.id === 'coal' ? `+${pct(coalBoost())}% (${emeraldMaxed()} maxed)` : `${emeraldMaxed()} / ${MAX_SHAFTS} maxed`],
       ['Cash', '$' + fmt(S.cash)],
       ['Gems', S.gems + ' 💎'],
       ['Rebirths', `${S.rebirths} / ${MAX_REBIRTHS} (×${rebirthMult()} income)`],
@@ -5809,6 +6654,7 @@ function openStats() {
   openModal(html, {}, refresh);
 }
 function openSettings() {
+  UI.restoreArm = null;
   const html = head('t-set', '⚙️', 'Settings', 'Your progress saves automatically on this device') + `
     <div class="m-body">
       <div class="set-sec">
@@ -5843,6 +6689,10 @@ function openSettings() {
         <div class="set-title">Your save</div>
         <div class="set-card"><div class="kv" id="setKv"></div></div>
       </div>
+      <div class="set-sec">
+        <div class="set-title">Backups</div>
+        <div class="set-card" id="bkList"></div>
+      </div>
       <div class="set-sec danger">
         <div class="set-title">Danger zone</div>
         <div class="set-card">
@@ -5876,9 +6726,29 @@ function openSettings() {
     ].map(([k, v]) => `<span>${k}</span><b>${v}</b>`).join('');
     const kv = $('#setKv');
     if (kv.innerHTML !== rows) kv.innerHTML = rows;
+    const bks = readBackups();
+    const bkHtml = bks.length ? bks.map((b, i) => {
+      const s = b.summary || {};
+      const ago = Math.max(0, (now() - b.at) / 1000);
+      const armed = UI.restoreArm === i;
+      return `<div class="set-row bk-row">
+        <span class="set-ic">🛟</span>
+        <div class="set-txt"><b>${ago < 60 ? 'Just now' : fmtTime(ago) + ' ago'} · ${BACKUP_REASON[b.reason] || 'Backup'}</b>
+          <span>${s.coal || 1} Coal shafts${s.emerald ? ` · ${s.emerald} Emerald shafts` : ''} · $${fmt(s.cash || 0)} · ${s.managers || 0} managers${s.rebirths ? ` · rebirth ${s.rebirths}` : ''}</span></div>
+        <button class="mg-mini${armed ? ' armed' : ''}" data-act="restore" data-i="${i}">${armed ? 'Sure?' : 'Restore'}</button>
+      </div>`;
+    }).join('') : '<div class="set-row"><span class="set-ic">🛟</span><div class="set-txt"><b>No backups yet</b><span>A backup is saved when the game loads, every 5 minutes and before a rebirth.</span></div></div>';
+    const bl = $('#bkList');
+    if (bl.innerHTML !== bkHtml) bl.innerHTML = bkHtml;
   };
   openModal(html, {
     sound: () => { toggleSound(); refresh(); },
+    restore: (b) => {
+      const i = +b.dataset.i;
+      if (UI.restoreArm !== i) { UI.restoreArm = i; Snd.deny(); refresh(); return; }
+      UI.restoreArm = null;
+      restoreBackup(i);
+    },
     vibe: () => {
       S.vibrate = !S.vibrate;
       if (S.vibrate) buzz(20);
@@ -5949,6 +6819,8 @@ function toggleSound() {
   save();
 }
 function resetGame() {
+  makeBackup('reset');
+  R.loadFailed = false;
   try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* ignore */ }
   S = defaultState();
   applyTheme('coal');
@@ -6076,6 +6948,7 @@ cv.addEventListener('wheel', (e) => {
   hideScrollHint();
 }, { passive: false });
 window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && BoxFx.state) { const st = BoxFx.state; if (st.phase === 'results' && !st.revealing) closeFx(); return; }
   if (e.key === 'Escape' && !modalRoot.classList.contains('hidden')) { if (!UI.locked) closeModal(); return; }
   if (!modalRoot.classList.contains('hidden')) return;
   const step = VH / SCALE * 0.4;
@@ -6125,17 +6998,23 @@ function frame(t) {
   dt = Math.min(dt, 0.1);
   R.time += dt;
   S.playTime += dt;
-  updateMiners(dt);
-  updateCabin(dt);
-  updateTrans(dt);
-  updateAmbient(dt);
-  updateEvents(dt);
-  updateParticles(dt);
-  updateCamera(dt);
-  render();
-  updateHud(dt);
+  try {
+    updateMiners(dt);
+    updateCabin(dt);
+    updateTrans(dt);
+    updateAmbient(dt);
+    updateEvents(dt);
+    updateParticles(dt);
+    updateCamera(dt);
+    render();
+    updateHud(dt);
+  } catch (err) {
+    if (!R.errLogged) { R.errLogged = true; console.error('Frame error (the game keeps running):', err); }
+  }
   saveT -= dt;
   if (saveT <= 0) { saveT = 5; save(); }
+  R.backupT = (R.backupT || 300) - dt;
+  if (R.backupT <= 0) { R.backupT = 300; makeBackup('auto'); }
   requestAnimationFrame(frame);
 }
 document.addEventListener('visibilitychange', () => {
@@ -6156,8 +7035,21 @@ function init() {
   const pref = loadLayoutPref();
   applyLayout(pref || recommendedLayout());
   if (LAY.mode === 'mobile') R.camX = 0;
-  const saved = loadSave();
-  S = mergeState(saved);
+  let saved = null;
+  let raw = null;
+  try { raw = localStorage.getItem(SAVE_KEY); } catch (e) { raw = null; }
+  if (raw) {
+    try { saved = JSON.parse(raw); } catch (e) { R.loadFailed = true; }
+  }
+  try {
+    S = mergeState(saved);
+  } catch (e) {
+    console.error('Could not load save:', e);
+    R.loadFailed = true;
+    S = defaultState();
+  }
+  if (R.loadFailed) setTimeout(() => toast('⚠️ Your save could not be loaded. It is kept safe and was not overwritten. You can restore a backup in Settings.'), 800);
+  else if (saved) makeBackup('load');
   applyTheme(S.activeMine);
   syncEntities(false);
   R.dispCash = S.cash;
