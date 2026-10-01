@@ -1668,6 +1668,171 @@ body.fx-on .modal { visibility: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .modal, .toast, .coin.bump, .gem.bump, #eventChip { animation: none; }
 }
+
+/* ======================= polish pass ======================= */
+:root { --sheen: .38; --card-shadow: 0 2px 0 rgba(0,0,0,.05), 0 8px 16px -10px rgba(70,35,8,.45); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sheen: .05; --card-shadow: 0 2px 0 rgba(0,0,0,.25), 0 10px 18px -10px rgba(0,0,0,.7); } }
+:root[data-theme="dark"] { --sheen: .05; --card-shadow: 0 2px 0 rgba(0,0,0,.25), 0 10px 18px -10px rgba(0,0,0,.7); }
+:root[data-layout="mobile"] body { background: radial-gradient(ellipse at 50% 0%, #2c1b0e, #0a0603 70%) fixed; }
+
+/* wooden bars with brass trim and nail heads */
+.woodbar {
+  background:
+    linear-gradient(rgba(255, 228, 180, .18), rgba(255, 228, 180, 0) 42%),
+    repeating-linear-gradient(91deg, rgba(0,0,0,.08) 0 1px, transparent 1px 11px, rgba(255,240,210,.04) 11px 12px, transparent 12px 33px),
+    repeating-linear-gradient(0deg, rgba(0,0,0,.05) 0 2px, transparent 2px 8px),
+    linear-gradient(#8f5a2b, #5f3616 55%, #482811);
+}
+#hud {
+  border-bottom: 0;
+  box-shadow: inset 0 2px 0 rgba(255, 225, 170, .3), inset 0 -2px 0 rgba(0,0,0,.25), 0 3px 0 #d9a23a, 0 5px 0 #6b4210, 0 12px 20px rgba(0,0,0,.45);
+}
+#bottombar {
+  border-top: 0;
+  box-shadow: inset 0 3px 0 rgba(255, 225, 170, .22), 0 -3px 0 #d9a23a, 0 -5px 0 #6b4210, 0 -12px 20px rgba(0,0,0,.45);
+}
+#hud::before, #hud::after, #bottombar::before, #bottombar::after {
+  content: '';
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff1c4, #c9922f 55%, #6b4210);
+  box-shadow: 0 1px 0 rgba(0,0,0,.4);
+  pointer-events: none;
+}
+#hud::before { left: 4px; top: 4px; }
+#hud::after { right: 4px; top: 4px; }
+#bottombar::before { left: 4px; bottom: 4px; }
+#bottombar::after { right: 4px; bottom: 4px; }
+
+/* money pills: glass, gold numbers and a slow shine */
+.cash-pill, .gem-pill {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(rgba(18, 9, 3, .78), rgba(42, 22, 9, .62));
+  border: 2px solid rgba(255, 205, 120, .5);
+  box-shadow: inset 0 2px 8px rgba(0,0,0,.55), inset 0 -1px 0 rgba(255, 220, 160, .18), 0 2px 0 rgba(255, 220, 160, .14);
+}
+.gem-pill { border-color: rgba(150, 230, 255, .5); }
+.cash-pill::after, .gem-pill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -60%;
+  width: 45%;
+  background: linear-gradient(100deg, transparent, rgba(255, 244, 210, .2), transparent);
+  animation: pillShine 7s ease-in-out infinite;
+  pointer-events: none;
+}
+.gem-pill::after { animation-delay: 1.4s; }
+@keyframes pillShine { 0%, 72% { left: -60%; } 100% { left: 130%; } }
+.coin { box-shadow: inset 0 -3px 0 rgba(120, 60, 0, .45), inset 0 2px 0 rgba(255, 255, 220, .65), 0 2px 0 #3a1e03, 0 0 14px rgba(255, 200, 60, .4); }
+.gem { box-shadow: inset 0 -3px 0 rgba(0, 40, 60, .35), inset 0 2px 0 rgba(255,255,255,.6), 0 0 12px rgba(120, 220, 255, .35); }
+.cash-val {
+  background: linear-gradient(#fff8d0, #ffd65e 50%, #f3a316);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
+  filter: drop-shadow(0 2px 0 #4a2305);
+}
+
+/* chunky buttons with gloss and a lift on hover */
+.icon-btn, .nav-btn {
+  border: 2px solid #3a1e08;
+  background: linear-gradient(#bd8244, #7d4c1d 58%, #5e3814);
+  box-shadow: inset 0 2px 0 rgba(255, 235, 190, .42), inset 0 -3px 0 rgba(0,0,0,.25), 0 3px 0 #2a1608, 0 6px 10px rgba(0,0,0,.35);
+  transition: transform .12s, filter .12s;
+}
+.icon-btn.ready {
+  border-color: #6e3202;
+  background: linear-gradient(#fff08a, #f3a316);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,.65), 0 3px 0 #6e3202, 0 0 16px rgba(255, 205, 70, .8);
+}
+.research-btn {
+  background: linear-gradient(#a3d8ff, #4d8fdc 55%, #2f6bb8);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,.6), inset 0 -4px 0 rgba(0,0,0,.18), 0 4px 0 #1f3d66, 0 8px 14px rgba(0,0,0,.35);
+  transition: transform .12s, filter .12s;
+}
+.research-btn.mgr {
+  background: linear-gradient(#dcc0ff, #8c58e2 55%, #6a3cc0);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,.55), inset 0 -4px 0 rgba(0,0,0,.18), 0 4px 0 #3d1e70, 0 8px 14px rgba(0,0,0,.35);
+}
+.research-btn::before, .big-btn::before, .boost-all::before, .bx-buy::before, .mine-go::before, .mine-unlock::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: 3px;
+  height: 42%;
+  border-radius: 10px;
+  background: linear-gradient(rgba(255,255,255,.34), rgba(255,255,255,0));
+  pointer-events: none;
+}
+.big-btn, .bx-buy, .mine-go, .mine-unlock { position: relative; overflow: hidden; transition: transform .12s, filter .12s; }
+.big-btn > *, .bx-buy > * { position: relative; }
+.boost-all { overflow: hidden; }
+.boost-all > * { position: relative; }
+@media (hover: hover) {
+  .icon-btn:hover, .nav-btn:hover, .research-btn:hover, .big-btn:not(:disabled):hover, .bx-buy:not(:disabled):hover,
+  .mg-auto:hover, .mine-go:hover, .mine-unlock:not(:disabled):hover, .rs-buy:not(:disabled):hover, .mg-manage:hover, .sel-chip:hover {
+    filter: brightness(1.08) saturate(1.06);
+    transform: translateY(-1px);
+  }
+  button.mt:hover, .sl-mgr:hover, .sl-empty:hover, .lay-card:hover { filter: brightness(1.04); transform: translateY(-2px); transition: transform .15s, filter .15s; }
+  .boost-all:hover { filter: brightness(1.08); }
+}
+
+/* windows: parchment panel, ornate header, layered frame */
+.backdrop { background: radial-gradient(ellipse at center, rgba(22, 11, 4, .42), rgba(8, 4, 2, .78)); }
+.modal {
+  border: 0;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 18% 6%, rgba(255,255,255,var(--sheen)), transparent 38%),
+    radial-gradient(rgba(130, 85, 40, .06) 1px, transparent 1.6px) 0 0 / 15px 15px,
+    var(--panel);
+  box-shadow: 0 0 0 3px var(--edge-dk), 0 0 0 6px rgba(255, 210, 140, .2), 0 10px 0 3px var(--edge-dk), 0 32px 64px var(--shadow);
+}
+.m-head {
+  border-radius: 24px 24px 0 0;
+  border-bottom: 0;
+  background:
+    radial-gradient(ellipse at 28% -30%, rgba(255,255,255,.38), transparent 60%),
+    repeating-linear-gradient(135deg, rgba(255,255,255,.055) 0 9px, transparent 9px 18px),
+    linear-gradient(var(--h1), var(--h2));
+  box-shadow: inset 0 -3px 0 rgba(0,0,0,.18), inset 0 2px 0 rgba(255,255,255,.25), 0 4px 12px rgba(0,0,0,.14);
+}
+.m-title { letter-spacing: .3px; text-shadow: 0 2px 0 rgba(0,0,0,.28), 0 0 20px rgba(255,255,255,.18); }
+.m-icon { box-shadow: inset 0 -3px 0 rgba(0,0,0,.2), inset 0 2px 0 rgba(255,255,255,.38), 0 5px 12px rgba(0,0,0,.22); }
+.m-close {
+  box-shadow: inset 0 2px 0 rgba(255,255,255,.45), inset 0 -2px 0 rgba(0,0,0,.2), 0 3px 0 #6d1a12, 0 6px 12px rgba(0,0,0,.25);
+}
+.stat-row, .set-card, .slot, .perk, .rs-card, .mine-card, .bx-card, .milestone, .mg-sum span, .status, .kv { box-shadow: var(--card-shadow); }
+.set-card .kv { box-shadow: none; }
+.big-btn { letter-spacing: .2px; }
+
+/* notifications */
+.toast {
+  border: 0;
+  border-radius: 16px;
+  background: linear-gradient(rgba(46, 25, 10, .97), rgba(20, 10, 4, .97));
+  box-shadow: 0 0 0 2px #e0a52a, 0 0 0 5px rgba(255, 210, 120, .18), 0 12px 26px rgba(0,0,0,.5);
+}
+#eventChip { box-shadow: 0 0 0 5px rgba(255, 210, 120, .14), 0 10px 24px rgba(0,0,0,.5); }
+
+@media (prefers-reduced-motion: reduce) { .cash-pill::after, .gem-pill::after { animation: none; display: none; } }
+/* close button: pushes in like a real button */
+.m-close { transition: transform .09s ease-out, box-shadow .09s ease-out, filter .12s; }
+@media (hover: hover) { .m-close:hover { filter: brightness(1.08); transform: translateY(calc(-50% + 1px)); box-shadow: inset 0 2px 0 rgba(255,255,255,.45), inset 0 -2px 0 rgba(0,0,0,.2), 0 2px 0 #6d1a12, 0 4px 8px rgba(0,0,0,.22); } }
+.m-close:active { transform: translateY(calc(-50% + 3px)); box-shadow: inset 0 2px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(0,0,0,.2), 0 0 0 #6d1a12, 0 1px 3px rgba(0,0,0,.2); filter: brightness(.95); }
+.cash-text { overflow: hidden; }
+.ips { overflow: hidden; text-overflow: ellipsis; }
+:root[data-layout="mobile"] .ips { font-size: 11px; }
+:root[data-layout="mobile"] .rb-tag, :root[data-layout="mobile"] .em-tag { padding: 0 5px; margin-right: 3px; font-size: 10px; }
+@media (max-width: 400px) { :root[data-layout="mobile"] .em-tag { display: none; } }
 </style>
 </head>
 <body>
@@ -3127,6 +3292,26 @@ function drawSky(xL, xR, top) {
     disk.addColorStop(1, sc);
     ctx.fillStyle = disk;
     circ(sunX, sunY, 21); ctx.fill();
+    if (D.day > 0.25) {
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      const a0 = 0.055 * D.day * (1 - R.rainAmt);
+      for (let k = 0; k < 7; k++) {
+        const ang2 = Math.PI * 0.5 + (k - 3) * 0.21 + Math.sin(R.time * 0.06 + k * 1.7) * 0.035;
+        const len = 560, wdt = 0.035 + (k % 3) * 0.018;
+        const gr2 = ctx.createLinearGradient(sunX, sunY, sunX + Math.cos(ang2) * len, sunY + Math.sin(ang2) * len);
+        gr2.addColorStop(0, rgba(sc, a0 * 2.2));
+        gr2.addColorStop(1, rgba(sc, 0));
+        ctx.fillStyle = gr2;
+        ctx.beginPath();
+        ctx.moveTo(sunX, sunY);
+        ctx.lineTo(sunX + Math.cos(ang2 - wdt) * len, sunY + Math.sin(ang2 - wdt) * len);
+        ctx.lineTo(sunX + Math.cos(ang2 + wdt) * len, sunY + Math.sin(ang2 + wdt) * len);
+        ctx.closePath();
+        ctx.fill();
+      }
+      ctx.restore();
+    }
   }
   const moonX = WORLD_W / 2 + Math.sin(ang) * WORLD_W * 0.575;
   const moonY = 250 + D.h * 205;
@@ -3155,6 +3340,8 @@ function drawSky(xL, xR, top) {
     for (const p of c.puffs) { circ(p.dx, p.dy + 5, p.r); ctx.fill(); }
     ctx.fillStyle = cBody;
     for (const p of c.puffs) { circ(p.dx, p.dy, p.r); ctx.fill(); }
+    ctx.fillStyle = `rgba(255,255,255,${0.3 * D.day * (1 - R.rainAmt)})`;
+    for (const p of c.puffs) { circ(p.dx - p.r * 0.18, p.dy - p.r * 0.34, p.r * 0.55); ctx.fill(); }
     ctx.restore();
   }
 
@@ -3520,6 +3707,7 @@ function drawBooth() {
   addHit(x - 6, y - 12, w + 12, h + 26, () => openManager('elevator', 0));
 }
 function drawHireSign(cx, cy) {
+  R.lights.push({ type: 'hole', x: cx, y: cy, r: 42, a: 0.85 });
   const free = freeManagers().length;
   const hi = free > 0;
   ctx.save();
@@ -3537,6 +3725,7 @@ function drawHireSign(cx, cy) {
 }
 function drawMgrBadge(x, y, m) {
   if (!m) return;
+  R.lights.push({ type: 'hole', x, y, r: 26, a: 0.85 });
   const rar = RARITIES[m.r];
   const label = `${BUFFS.cash.icon}×${fmtMult(mgrMult(m))}`;
   ctx.font = `400 9px ${FONT_D}`;
@@ -4165,6 +4354,8 @@ function drawShaft(i) {
   ctx.stroke();
   if (R.geode && R.geode.i === i) drawGeode(R.geode);
   for (const lx of LAY.lanterns) drawLantern(lx, top, i);
+  R.lights.push({ type: 'point', x: TUNNEL_L + 34, y: fl - 44, r: 100, c: '255,190,120', a: 0.13 });
+  R.lights.push({ type: 'hole', x: STASH_X + STASH_W / 2, y: fl - 18, r: 40, a: 0.75 });
   drawCrate(STASH_X, fl - 32, STASH_W, 29, sh.stash, ore.c, ore.g);
   drawShaftDesk(i, sh, fl);
   const boosted = now() < sh.boostUntil;
@@ -4358,6 +4549,7 @@ function drawMiner(m, fl, ore, boosted) {
   ctx.restore();
   const tilt = m.state === 'mining' ? 0.25 : 0.08;
   R.lights.push({ type: 'cone', x: x + m.face * 8.4, y: y - bob - 38.6, r: 95, dir: m.face, spread: 0.32, tilt, c: '255,238,180', a: 0.2 });
+  R.lights.push({ type: 'hole', x, y: y - 20 - bob, r: 30, a: 0.55 });
 }
 function drawTransporter(t) {
   const walking = t.state === 'toLoad' || t.state === 'toSell' || t.state === 'toHome';
@@ -4614,6 +4806,17 @@ function drawLevelPill(x, y, level, afford, fn, label, maxed) {
     ctx.stroke();
     ctx.fillStyle = 'rgba(255,255,255,0.3)';
     rr(x + 3, y + 2, w - 6, h / 2 - 2, 8); ctx.fill();
+  {
+    const sweep = (R.time * 0.22 + x * 0.0031 + y * 0.0017) % 1;
+    if (sweep < 0.16) {
+      ctx.save();
+      rr(x, y, w, h, 13); ctx.clip();
+      const bx = x - 20 + (sweep / 0.16) * (w + 40);
+      ctx.fillStyle = 'rgba(255,255,255,0.38)';
+      ctx.beginPath(); ctx.moveTo(bx, y); ctx.lineTo(bx + 13, y); ctx.lineTo(bx + 3, y + h); ctx.lineTo(bx - 10, y + h); ctx.closePath(); ctx.fill();
+      ctx.restore();
+    }
+  }
     txt('★ MAX ' + level, x + w / 2, y + h / 2 + 0.5, 12.5, '#ffffff', 'center', FONT_D, 'rgba(90,40,0,0.55)', 3);
     addHit(x - LAY.hitPad, y - LAY.hitPad, w + LAY.hitPad * 2, h + LAY.hitPad * 2 + 4, fn);
     return;
@@ -4632,6 +4835,17 @@ function drawLevelPill(x, y, level, afford, fn, label, maxed) {
   ctx.stroke();
   ctx.fillStyle = 'rgba(255,255,255,0.22)';
   rr(x + 3, y + 2, w - 6, h / 2 - 2, 8); ctx.fill();
+  {
+    const sweep = (R.time * 0.22 + x * 0.0031 + y * 0.0017) % 1;
+    if (sweep < 0.16) {
+      ctx.save();
+      rr(x, y, w, h, 13); ctx.clip();
+      const bx = x - 20 + (sweep / 0.16) * (w + 40);
+      ctx.fillStyle = 'rgba(255,255,255,0.38)';
+      ctx.beginPath(); ctx.moveTo(bx, y); ctx.lineTo(bx + 13, y); ctx.lineTo(bx + 3, y + h); ctx.lineTo(bx - 10, y + h); ctx.closePath(); ctx.fill();
+      ctx.restore();
+    }
+  }
   ctx.fillStyle = 'rgba(0,0,0,0.22)';
   circ(x + 14, y + h / 2, 9); ctx.fill();
   ctx.fillStyle = '#ffffff';
@@ -4683,10 +4897,84 @@ function drawOverlay(top, bot) {
   });
   drawHints();
 }
+
+/* ------------------------- Tunnel lighting -------------------------
+   Tunnels are dark; every light source carves its own lit area out of the
+   darkness, then the additive glow pass adds colour on top. */
+let darkCv = null, darkCtx = null;
+function lightHole(d, L) {
+  const r = L.type === 'pool' ? L.r * 1.1 : L.r * 1.2;
+  const a = L.type === 'hole' ? L.a : Math.min(1, L.a * 2.4 + 0.15);
+  if (L.type === 'pool') {
+    d.save();
+    d.translate(L.x, L.y);
+    d.scale(1, 0.22);
+    const g = d.createRadialGradient(0, 0, 0, 0, 0, r);
+    g.addColorStop(0, `rgba(0,0,0,${a})`);
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    d.fillStyle = g;
+    d.beginPath(); d.arc(0, 0, r, 0, Math.PI * 2); d.fill();
+    d.restore();
+    return;
+  }
+  const g = d.createRadialGradient(L.x, L.y, 0, L.x, L.y, r);
+  g.addColorStop(0, `rgba(0,0,0,${a})`);
+  g.addColorStop(0.55, `rgba(0,0,0,${a * 0.55})`);
+  g.addColorStop(1, 'rgba(0,0,0,0)');
+  d.fillStyle = g;
+  d.beginPath();
+  if (L.type === 'cone') {
+    const base = L.dir > 0 ? L.tilt : Math.PI - L.tilt;
+    d.moveTo(L.x, L.y);
+    d.arc(L.x, L.y, r, base - L.spread * 1.2, base + L.spread * 1.2);
+    d.closePath();
+  } else {
+    d.arc(L.x, L.y, r, 0, Math.PI * 2);
+  }
+  d.fill();
+}
+function drawDarkness(top, bot, sx, sy) {
+  if (bot < SURFACE_Y) return;
+  if (!darkCv) { darkCv = document.createElement('canvas'); darkCtx = darkCv.getContext('2d'); }
+  if (darkCv.width !== cv.width || darkCv.height !== cv.height) { darkCv.width = cv.width; darkCv.height = cv.height; }
+  const d = darkCtx;
+  d.setTransform(1, 0, 0, 1, 0, 0);
+  d.clearRect(0, 0, darkCv.width, darkCv.height);
+  d.setTransform(DPR * SCALE, 0, 0, DPR * SCALE, DPR * (OFFX + sx), DPR * (-R.camY * SCALE + sy));
+  const prev = ctx;
+  ctx = d;
+  try {
+    S.shafts.forEach((sh, i) => {
+      const t = shaftY(i), f = floorY(i);
+      if (f + 24 < top || t - 50 > bot) return;
+      tunnelPath(i, t, f);
+      d.fillStyle = `rgba(10,6,3,${0.4 + Math.min(0.2, i * 0.025)})`;
+      d.fill();
+    });
+  } finally {
+    ctx = prev;
+  }
+  const liftBottom = floorY(S.shafts.length - 1) + 26;
+  d.fillStyle = 'rgba(10,6,3,0.32)';
+  d.fillRect(ELEV_X, SURFACE_Y - 2, ELEV_W, liftBottom - SURFACE_Y + 2);
+  d.globalCompositeOperation = 'destination-out';
+  for (const L of R.lights) {
+    if (L.type === 'star') continue;
+    if (L.y < top - 200 || L.y > bot + 200) continue;
+    lightHole(d, L);
+  }
+  d.globalCompositeOperation = 'source-over';
+  ctx.save();
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.drawImage(darkCv, 0, 0);
+  ctx.restore();
+}
+
 function drawLights() {
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
   for (const L of R.lights) {
+    if (L.type === 'hole') continue;
     if (L.type === 'star') {
       ctx.strokeStyle = `rgba(${L.c},${L.a})`;
       ctx.lineWidth = 1.2;
@@ -5028,6 +5316,7 @@ function render() {
   if (n < MAX_SHAFTS && !(floorY(n) + 24 < top || shaftY(n) - 50 > bot)) drawLocked(n);
   drawCabin();
   if (surf) drawSurfaceFront(xL, xR, top);
+  drawDarkness(top, bot, sx, sy);
   drawParticles();
   drawLights();
   drawOverlay(top, bot);
